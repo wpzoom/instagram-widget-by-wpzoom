@@ -24,12 +24,73 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 		);
 
 		$this->defaults = array(
-			'title'                         => esc_html__( 'Instagram', 'wpzoom-instagram-widget' ),
-			'screen-name'                   => '',
-			'image-limit'                   => 9,
-			'show-view-on-instagram-button' => true,
-			'access-token'                  => ''
+			'title'                           => esc_html__( 'Instagram', 'wpzoom-instagram-widget' ),
+			'screen-name'                     => '',
+			'image-limit'                     => 9,
+			'show-view-on-instagram-button'   => true,
+			'center-view-on-instagram-button' => true,
+			'access-token'                    => ''
 		);
+
+		if ( is_active_widget( false, false, $this->id_base ) || is_active_widget( false, false, 'monster' ) ) {
+			add_action( 'wp_head', array( $this, 'styles' ) );
+		}
+	}
+
+	/**
+	 * Widget specific styles
+	 */
+	public function styles() {
+		?>
+		<style>
+			/* Widget Grid */
+			.zoom-instagram-widget__follow-me { margin-top: 20px; }
+			.zoom-instagram-widget__follow-me--center { text-align: center; }
+
+			.zoom-instagram-widget__item { float: left; margin-right: 10px; margin-bottom: 10px; }
+
+			/* View on Instagram button */
+			.ig-b- { display: inline-block; }
+			.ig-b- img { visibility: hidden; }
+			.ig-b-:hover { background-position: 0 -60px; } .ig-b-:active { background-position: 0 -120px; }
+			.ig-b-v-24 { width: 137px; height: 24px; background: url(//badges.instagram.com/static/images/ig-badge-view-sprite-24.png) no-repeat 0 0; }
+			@media only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (min--moz-device-pixel-ratio: 2), only screen and (-o-min-device-pixel-ratio: 2 / 1), only screen and (min-device-pixel-ratio: 2), only screen and (min-resolution: 192dpi), only screen and (min-resolution: 2dppx) {
+				.ig-b-v-24 { background-image: url(//badges.instagram.com/static/images/ig-badge-view-sprite-24@2x.png); background-size: 160px 178px; }
+			}
+		</style>
+
+		<script>
+			jQuery(function($) {
+				$.fn.zoomInstagramWidget = function () {
+					$(this).each(function () {
+						var $this = $(this);
+						var containerWidth = $this.width();
+						var minWidth = 100;
+						var spacing = 10;
+
+						var perRow = containerWidth / minWidth;
+						var itemWidth = Math.floor((containerWidth - Math.floor(perRow) * spacing) / Math.floor(perRow));
+
+						$this.find('li').each(function(i) {
+							if ( ++i % Math.floor(perRow) == 0 ) {
+								$(this).css('margin-right', '0');
+							} else {
+								$(this).css('margin-right', '');
+							}
+						});
+
+						$this.find('img').width(itemWidth).css('display', 'block');
+					});
+				};
+
+				$(window).on('resize', function() {
+					$('.zoom-instagram-widget').zoomInstagramWidget();
+				});
+
+				$('.zoom-instagram-widget').zoomInstagramWidget();
+			});
+		</script>
+		<?php
 	}
 
 	/**
@@ -81,7 +142,8 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 
 		$instance['image-limit'] = ( 0 !== (int) $new_instance['image-limit'] ) ? (int) $new_instance['image-limit'] : null;
 
-		$instance['show-view-on-instagram-button'] = (bool) $new_instance['show-view-on-instagram-button'];
+		$instance['show-view-on-instagram-button']   = (bool) $new_instance['show-view-on-instagram-button'];
+		$instance['center-view-on-instagram-button'] = (bool) $new_instance['center-view-on-instagram-button'];
 
 		$instance['access-token'] = sanitize_text_field( $new_instance['access-token'] );
 
@@ -121,7 +183,12 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 
 		<p>
 			<input class="checkbox" type="checkbox" <?php checked( $instance['show-view-on-instagram-button'] ); ?> id="<?php echo $this->get_field_id( 'show-view-on-instagram-button' ); ?>" name="<?php echo $this->get_field_name( 'show-view-on-instagram-button' ); ?>" />
-			<label for="<?php echo $this->get_field_id( 'show-view-on-instagram-button' ); ?>"><?php _e(' Display View on Instagram me button', 'wpzoom-instagram-widget' ); ?></label>
+			<label for="<?php echo $this->get_field_id( 'show-view-on-instagram-button' ); ?>"><?php _e(' Display View on Instagram button', 'wpzoom-instagram-widget' ); ?></label>
+		</p>
+
+		<p>
+			<input class="checkbox" type="checkbox" <?php checked( $instance['center-view-on-instagram-button'] ); ?> id="<?php echo $this->get_field_id( 'center-view-on-instagram-button' ); ?>" name="<?php echo $this->get_field_name( 'center-view-on-instagram-button' ); ?>" />
+			<label for="<?php echo $this->get_field_id( 'center-view-on-instagram-button' ); ?>"><?php _e(' Center View on Instagram button', 'wpzoom-instagram-widget' ); ?></label>
 		</p>
 
 		<p>
@@ -165,26 +232,23 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 			<?php endforeach; ?>
 
 		</ul>
+
+		<div style="clear:both;"></div>
 	<?php
 	}
 
 	protected function display_instagram_button( $instance ) {
-		$screen_name                   = $instance['screen-name'];
-		$show_view_on_instagram_button = $instance['show-view-on-instagram-button'];
+		$screen_name                     = $instance['screen-name'];
+		$show_view_on_instagram_button   = $instance['show-view-on-instagram-button'];
+		$center_view_on_instagram_button = $instance['center-view-on-instagram-button'];
 
 		if ( ! $show_view_on_instagram_button ) {
 			return;
 		}
 
 		?>
-		<div class="zoom-instagram-widget__follow-me">
-			<style>.ig-b- { display: inline-block; }
-				.ig-b- img { visibility: hidden; }
-				.ig-b-:hover { background-position: 0 -60px; } .ig-b-:active { background-position: 0 -120px; }
-				.ig-b-v-24 { width: 137px; height: 24px; background: url(//badges.instagram.com/static/images/ig-badge-view-sprite-24.png) no-repeat 0 0; }
-				@media only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (min--moz-device-pixel-ratio: 2), only screen and (-o-min-device-pixel-ratio: 2 / 1), only screen and (min-device-pixel-ratio: 2), only screen and (min-resolution: 192dpi), only screen and (min-resolution: 2dppx) {
-					.ig-b-v-24 { background-image: url(//badges.instagram.com/static/images/ig-badge-view-sprite-24@2x.png); background-size: 160px 178px; } }</style>
-			<a href="<?php printf( 'http://instagram.com/%s?ref=badge', esc_attr( $screen_name ) ); ?>" class="ig-b- ig-b-v-24"><img src="//badges.instagram.com/static/images/ig-badge-view-24.png" alt="Instagram" /></a>
+		<div class="zoom-instagram-widget__follow-me <?php echo ($center_view_on_instagram_button ? 'zoom-instagram-widget__follow-me--center' : ''); ?>">
+			<a href="<?php printf( 'http://instagram.com/%s?ref=badge', esc_attr( $screen_name ) ); ?>" class="ig-b- ig-b-v-24" target="_blank"><img src="//badges.instagram.com/static/images/ig-badge-view-24.png" alt="Instagram" /></a>
 		</div>
 	<?php
 	}
