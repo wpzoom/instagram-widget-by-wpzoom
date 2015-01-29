@@ -47,6 +47,7 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 			.zoom-instagram-widget__follow-me { margin-top: 20px; }
 			.zoom-instagram-widget__follow-me--center { text-align: center; }
 
+			.zoom-instagram-widget__items { list-style: none; }
 			.zoom-instagram-widget__item { float: left; margin-right: 10px; margin-bottom: 10px; }
 
 			/* View on Instagram button */
@@ -67,7 +68,7 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 
 						var minItemsPerRow = 3;
 						var itemSpacing = 10;
-						var desiredItemWidth = 180;
+						var desiredItemWidth = 120;
 
 						var fitPerRow;
 						var itemWidth;
