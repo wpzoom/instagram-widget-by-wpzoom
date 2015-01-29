@@ -62,24 +62,33 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 		<script>
 			jQuery(function($) {
 				$.fn.zoomInstagramWidget = function () {
-					$(this).each(function () {
+					return $(this).each(function () {
 						var $this = $(this);
-						var containerWidth = $this.width();
-						var minWidth = 100;
-						var spacing = 10;
 
-						var perRow = containerWidth / minWidth;
-						var itemWidth = Math.floor((containerWidth - Math.floor(perRow) * spacing) / Math.floor(perRow));
+						var minItemsPerRow = 3;
+						var itemSpacing = 10;
+						var desiredItemWidth = 180;
+
+						var fitPerRow;
+						var itemWidth;
+
+						if ($this.width() / desiredItemWidth < minItemsPerRow) {
+							fitPerRow = minItemsPerRow;
+							itemWidth = Math.floor(($this.width() - 1 - (minItemsPerRow - 1) * itemSpacing) / minItemsPerRow);
+						} else {
+							fitPerRow = Math.floor(($this.width() - 1) / desiredItemWidth);
+							itemWidth = Math.floor(($this.width() - 1 - (fitPerRow - 1) * itemSpacing) / fitPerRow);
+						}
 
 						$this.find('li').each(function(i) {
-							if ( ++i % Math.floor(perRow) == 0 ) {
+							if ( ++i % Math.floor(fitPerRow) == 0 ) {
 								$(this).css('margin-right', '0');
 							} else {
 								$(this).css('margin-right', '');
 							}
 						});
 
-						$this.find('img').width(itemWidth).css('display', 'block');
+						$this.find('img').width(itemWidth);
 					});
 				};
 
