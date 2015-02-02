@@ -29,6 +29,8 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 			'image-limit'                     => 9,
 			'show-view-on-instagram-button'   => true,
 			'center-view-on-instagram-button' => true,
+			'images-per-row'                  => 3,
+			'image-width'                     => 120,
 			'access-token'                    => ''
 		);
 
@@ -42,9 +44,7 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 	 */
 	public function scripts() {
 		wp_enqueue_style( 'zoom-instagram-widget', plugin_dir_url( dirname( __FILE__ ) . '/instagram-widget-by-wpzoom.php' ) . 'css/instagram-widget.css', array(), '20150129' );
-
-		wp_enqueue_script( 'zoom-instagram-widget', plugin_dir_url( dirname( __FILE__ ) . '/instagram-widget-by-wpzoom.php' ) . 'js/instagram-widget.js', array( 'jquery' ), '20150129' );
-		wp_localize_script( 'zoom-instagram-widget', '_zoomInstagramWidget', array() );
+		wp_enqueue_script( 'zoom-instagram-widget', plugin_dir_url( dirname( __FILE__ ) . '/instagram-widget-by-wpzoom.php' ) . 'js/instagram-widget.js', array( 'jquery' ), '20150202' );
 	}
 
 	/**
@@ -96,6 +96,9 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 
 		$instance['image-limit'] = ( 0 !== (int) $new_instance['image-limit'] ) ? (int) $new_instance['image-limit'] : null;
 
+		$instance['images-per-row'] = ( 0 !== (int) $new_instance['images-per-row'] ) ? (int) $new_instance['images-per-row'] : null;
+		$instance['image-width'] = ( 0 !== (int) $new_instance['image-width'] ) ? (int) $new_instance['image-width'] : null;
+
 		$instance['show-view-on-instagram-button']   = (bool) $new_instance['show-view-on-instagram-button'];
 		$instance['center-view-on-instagram-button'] = (bool) $new_instance['center-view-on-instagram-button'];
 
@@ -136,6 +139,26 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 		</p>
 
 		<p>
+			<label for="<?php echo $this->get_field_id( 'images-per-row' ); ?>"><?php esc_html_e( 'Desired # of Images per row:', 'wpzoom-instagram-widget' ); ?></label>
+			<input class="widefat" id="<?php echo $this->get_field_id( 'images-per-row' ); ?>" name="<?php echo $this->get_field_name( 'images-per-row' ); ?>" type="number" min="1" max="20" value="<?php echo esc_attr( $instance['images-per-row'] ); ?>"/>
+		</p>
+
+		<p>
+			<label for="<?php echo $this->get_field_id( 'image-width' ); ?>"><?php esc_html_e( 'Desired Image width in pixels:', 'wpzoom-instagram-widget' ); ?> <small>(Just integer)</small></label>
+			<input class="widefat" id="<?php echo $this->get_field_id( 'image-width' ); ?>" name="<?php echo $this->get_field_name( 'image-width' ); ?>" type="number" min="20" max="300" value="<?php echo esc_attr( $instance['image-width'] ); ?>"/>
+		</p>
+
+		<p>
+			<small>
+				<?php
+				echo wp_kses_post(
+					__( 'Fields above do not influence directly widget appearance. Final number of images per row and image width is calculated depending on browser resolution.', 'wpzoom-instagram-widget' )
+				);
+				?>
+			</small>
+		</p>
+
+		<p>
 			<input class="checkbox" type="checkbox" <?php checked( $instance['show-view-on-instagram-button'] ); ?> id="<?php echo $this->get_field_id( 'show-view-on-instagram-button' ); ?>" name="<?php echo $this->get_field_name( 'show-view-on-instagram-button' ); ?>" />
 			<label for="<?php echo $this->get_field_id( 'show-view-on-instagram-button' ); ?>"><?php _e(' Display View on Instagram button', 'wpzoom-instagram-widget' ); ?></label>
 		</p>
@@ -167,7 +190,7 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 	protected function display_items( $items, $instance ) {
 		$count = 0;
 		?>
-		<ul class="zoom-instagram-widget__items">
+		<ul class="zoom-instagram-widget__items" data-images-per-row="<?php echo esc_attr( $instance['images-per-row'] ); ?>" data-image-width="<?php echo esc_attr( $instance['image-width'] ); ?>">
 
 			<?php foreach ( $items->data as $item ) : ?>
 				<?php

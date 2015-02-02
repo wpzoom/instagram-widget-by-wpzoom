@@ -2,10 +2,12 @@ jQuery(function($) {
     $.fn.zoomInstagramWidget = function () {
         return $(this).each(function () {
             var $this = $(this);
+            var $list = $this.find('.zoom-instagram-widget__items');
 
-            var minItemsPerRow = 3;
+
+            var minItemsPerRow = $list.data('images-per-row');
+            var desiredItemWidth = $list.data('image-width');
             var itemSpacing = 10;
-            var desiredItemWidth = 120;
 
             var fitPerRow;
             var itemWidth;
