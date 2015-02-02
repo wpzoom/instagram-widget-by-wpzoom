@@ -5,6 +5,8 @@
 .zoom-instagram-widget__items { list-style: none; }
 .zoom-instagram-widget__item { float: left; }
 
+.zoom-instagram-widget__items--no-js .zoom-instagram-widget__item { margin-right: 10px; margin-bottom: 10px; }
+
 /* View on Instagram button */
 .ig-b- { display: inline-block; }
 .ig-b- img { visibility: hidden; }
