@@ -5,9 +5,9 @@ jQuery(function($) {
             var $list = $this.find('.zoom-instagram-widget__items');
 
 
-            var minItemsPerRow = $list.data('images-per-row');
+            var minItemsPerRow   = $list.data('images-per-row');
             var desiredItemWidth = $list.data('image-width');
-            var itemSpacing = 10;
+            var itemSpacing      = $list.data('image-spacing');
 
             var fitPerRow;
             var itemWidth;
@@ -24,7 +24,8 @@ jQuery(function($) {
                 if ( ++i % Math.floor(fitPerRow) == 0 ) {
                     $(this).css('margin-right', '0');
                 } else {
-                    $(this).css('margin-right', '');
+                    $(this).css('margin-right', itemSpacing + 'px');
+                    $(this).css('margin-bottom', itemSpacing + 'px');
                 }
             });
 

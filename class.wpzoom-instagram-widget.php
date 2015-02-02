@@ -31,6 +31,7 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 			'center-view-on-instagram-button' => true,
 			'images-per-row'                  => 3,
 			'image-width'                     => 120,
+			'image-spacing'                   => 10,
 			'access-token'                    => ''
 		);
 
@@ -98,6 +99,7 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 
 		$instance['images-per-row'] = ( 0 !== (int) $new_instance['images-per-row'] ) ? (int) $new_instance['images-per-row'] : null;
 		$instance['image-width'] = ( 0 !== (int) $new_instance['image-width'] ) ? (int) $new_instance['image-width'] : null;
+		$instance['image-spacing'] = ( 0 <= (int) $new_instance['image-spacing'] ) ? (int) $new_instance['image-spacing'] : null;
 
 		$instance['show-view-on-instagram-button']   = (bool) $new_instance['show-view-on-instagram-button'];
 		$instance['center-view-on-instagram-button'] = (bool) $new_instance['center-view-on-instagram-button'];
@@ -149,6 +151,11 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 		</p>
 
 		<p>
+			<label for="<?php echo $this->get_field_id( 'image-spacing' ); ?>"><?php esc_html_e( 'Image spacing in pixels:', 'wpzoom-instagram-widget' ); ?> <small>(Just integer)</small></label>
+			<input class="widefat" id="<?php echo $this->get_field_id( 'image-spacing' ); ?>" name="<?php echo $this->get_field_name( 'image-spacing' ); ?>" type="number" min="0" max="50" value="<?php echo esc_attr( $instance['image-spacing'] ); ?>"/>
+		</p>
+
+		<p>
 			<small>
 				<?php
 				echo wp_kses_post(
@@ -190,7 +197,10 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 	protected function display_items( $items, $instance ) {
 		$count = 0;
 		?>
-		<ul class="zoom-instagram-widget__items" data-images-per-row="<?php echo esc_attr( $instance['images-per-row'] ); ?>" data-image-width="<?php echo esc_attr( $instance['image-width'] ); ?>">
+		<ul class="zoom-instagram-widget__items"
+		    data-images-per-row="<?php echo esc_attr( $instance['images-per-row'] ); ?>"
+		    data-image-width="<?php echo esc_attr( $instance['image-width'] ); ?>"
+			data-image-spacing="<?php echo esc_attr( $instance['image-spacing'] ); ?>">
 
 			<?php foreach ( $items->data as $item ) : ?>
 				<?php

@@ -3,7 +3,7 @@
 .zoom-instagram-widget__follow-me--center { text-align: center; }
 
 .zoom-instagram-widget__items { list-style: none; }
-.zoom-instagram-widget__item { float: left; margin-right: 10px; margin-bottom: 10px; }
+.zoom-instagram-widget__item { float: left; }
 
 /* View on Instagram button */
 .ig-b- { display: inline-block; }
