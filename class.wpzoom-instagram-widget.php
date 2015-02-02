@@ -197,7 +197,7 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 	protected function display_items( $items, $instance ) {
 		$count = 0;
 		?>
-		<ul class="zoom-instagram-widget__items"
+		<ul class="zoom-instagram-widget__items zoom-instagram-widget__items--no-js"
 		    data-images-per-row="<?php echo esc_attr( $instance['images-per-row'] ); ?>"
 		    data-image-width="<?php echo esc_attr( $instance['image-width'] ); ?>"
 			data-image-spacing="<?php echo esc_attr( $instance['image-spacing'] ); ?>">

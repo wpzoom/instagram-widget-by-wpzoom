@@ -30,6 +30,7 @@ jQuery(function($) {
             });
 
             $this.find('img').width(itemWidth);
+            $list.removeClass('zoom-instagram-widget__items--no-js');
         });
     };
 
