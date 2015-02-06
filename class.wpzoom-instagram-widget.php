@@ -67,7 +67,7 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 			echo $args['before_title'] . apply_filters( 'widget_title', $instance['title'] ) . $args['after_title'];
 		}
 
-		$items = $this->get_items( $instance['screen-name'] );
+		$items = $this->get_items( $instance['screen-name'], $instance['image-limit'] );
 
 		if ( false === $items ) {
 			$this->display_errors();
@@ -202,10 +202,10 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 		    data-image-width="<?php echo esc_attr( $instance['image-width'] ); ?>"
 			data-image-spacing="<?php echo esc_attr( $instance['image-spacing'] ); ?>">
 
-			<?php foreach ( $items->data as $item ) : ?>
+			<?php foreach ( $items as $item ) : ?>
 				<?php
-				$link = $item->link;
-				$src = $item->images->thumbnail->url;
+				$link = $item['link'];
+				$src = $item['image-url'];
 				?>
 
 				<li class="zoom-instagram-widget__item">
@@ -262,7 +262,7 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 	 *
 	 * @return array|bool Array of tweets or false if method fails
 	 */
-	protected function get_items( $screen_name ) {
+	protected function get_items( $screen_name, $image_limit ) {
 		$transient = 'zoom_instagram_t6e_' . $screen_name;
 
 		if ( false !== ( $result = get_transient( $transient ) ) ) {
@@ -271,7 +271,7 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 
 		$user_id = $this->get_user_id( $screen_name );
 
-		$response = wp_remote_get( sprintf( 'https://api.instagram.com/v1/users/%s/media/recent/?access_token=%s', $user_id, $this->access_token ) );
+		$response = wp_remote_get( sprintf( 'https://api.instagram.com/v1/users/%s/media/recent/?access_token=%s&count=%s', $user_id, $this->access_token, $image_limit ) );
 
 		if ( is_wp_error( $response ) || 200 != wp_remote_retrieve_response_code( $response ) ) {
 			set_transient( $transient, false, MINUTE_IN_SECONDS );
@@ -279,7 +279,15 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 			return false;
 		}
 
-		$result = json_decode( wp_remote_retrieve_body( $response ) );
+		$data = json_decode( wp_remote_retrieve_body( $response ) );
+
+		$result = array();
+		foreach ( $data->data as $item ) {
+			$result[] = array(
+				'link'      => $item->link,
+				'image-url' => $item->images->thumbnail->url
+			);
+		}
 
 		set_transient( $transient, $result, 30 * MINUTE_IN_SECONDS );
 
