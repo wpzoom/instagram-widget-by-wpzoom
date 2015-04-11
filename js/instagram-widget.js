@@ -1,4 +1,6 @@
 jQuery(function($) {
+    var ticking = false;
+
     $.fn.zoomInstagramWidget = function () {
         return $(this).each(function () {
             var $list = $(this);
@@ -32,9 +34,18 @@ jQuery(function($) {
         });
     };
 
-    $(window).on('resize orientationchange', function() {
-        $('.zoom-instagram-widget__items').zoomInstagramWidget();
-    });
+    function requestTick() {
+        if (!ticking) {
+            requestAnimationFrame(update);
+            ticking = true;
+        }
+    }
 
-    $('.zoom-instagram-widget__items').zoomInstagramWidget();
+    function update() {
+        $('.zoom-instagram-widget__items').zoomInstagramWidget();
+        ticking = false;
+    }
+
+    $(window).on('resize orientationchange', requestTick);
+    update();
 });
