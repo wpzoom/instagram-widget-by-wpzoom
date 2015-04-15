@@ -34,5 +34,10 @@ Add a widget and configure it first.
 
 == Changelog ==
 
+= 1.0.1 =
+* Work directly with image list and do not rely on widget ids and classes handled by theme. This broke widget when theme sidebars weren't properly registered.
+* Use requestAnimationFrame for updating image sizes, improved performance and also fixes safari bug.
+* Fix error caused by boolean to string conversion (get|set)_transient.
+
 = 1.0 =
 * Initial release.
