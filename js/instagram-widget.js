@@ -9,15 +9,17 @@ jQuery(function($) {
             var desiredItemWidth = $list.data('image-width');
             var itemSpacing      = $list.data('image-spacing');
 
+            var containerWidth = $list.width();
+
             var fitPerRow;
             var itemWidth;
 
-            if ($list.width() / desiredItemWidth < minItemsPerRow) {
+            if (containerWidth / desiredItemWidth < minItemsPerRow) {
                 fitPerRow = minItemsPerRow;
-                itemWidth = Math.floor(($list.width() - 1 - (minItemsPerRow - 1) * itemSpacing) / minItemsPerRow);
+                itemWidth = Math.floor((containerWidth - 1 - (minItemsPerRow - 1) * itemSpacing) / minItemsPerRow);
             } else {
-                fitPerRow = Math.floor(($list.width() - 1) / desiredItemWidth);
-                itemWidth = Math.floor(($list.width() - 1 - (fitPerRow - 1) * itemSpacing) / fitPerRow);
+                fitPerRow = Math.floor((containerWidth - 1) / desiredItemWidth);
+                itemWidth = Math.floor((containerWidth - 1 - (fitPerRow - 1) * itemSpacing) / fitPerRow);
             }
 
             $list.find('li').each(function(i) {
@@ -36,9 +38,18 @@ jQuery(function($) {
 
     function requestTick() {
         if (!ticking) {
-            requestAnimationFrame(update);
             ticking = true;
+            requestAnimationFrame()(update);
         }
+    }
+
+    function requestAnimationFrame() {
+        return  window.requestAnimationFrame       ||
+                window.webkitRequestAnimationFrame ||
+                window.mozRequestAnimationFrame    ||
+                function (callback){
+                    window.setTimeout(callback, 1000 / 60);
+                };
     }
 
     function update() {
@@ -47,5 +58,5 @@ jQuery(function($) {
     }
 
     $(window).on('resize orientationchange', requestTick);
-    update();
+    requestTick();
 });
