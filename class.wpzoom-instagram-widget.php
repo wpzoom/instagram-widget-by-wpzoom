@@ -69,7 +69,7 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 
 		$items = $this->get_items( $instance['screen-name'], $instance['image-limit'] );
 
-		if ( false === $items ) {
+		if ( ! is_array( $items ) ) {
 			$this->display_errors();
 		} else {
 			$this->display_items( $items, $instance );
