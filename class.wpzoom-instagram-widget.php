@@ -67,7 +67,7 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 			echo $args['before_title'] . apply_filters( 'widget_title', $instance['title'] ) . $args['after_title'];
 		}
 
-		$items = $this->get_items( $instance['screen-name'], $instance['image-limit'] );
+		$items = $this->get_items( $instance['screen-name'], $instance['image-limit'], $instance['image-width'] );
 
 		if ( ! is_array( $items ) ) {
 			$this->display_errors();
@@ -259,10 +259,12 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 
 	/**
 	 * @param $screen_name string Instagram username
+	 * @param $image_limit int    Number of images to retrieve
+	 * @param $image_width int    Desired image width to retrieve
 	 *
 	 * @return array|bool Array of tweets or false if method fails
 	 */
-	protected function get_items( $screen_name, $image_limit ) {
+	protected function get_items( $screen_name, $image_limit, $image_width ) {
 		$transient = 'zoom_instagram_t6e_' . $screen_name;
 
 		if ( false !== ( $result = get_transient( $transient ) ) ) {
@@ -285,7 +287,7 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 		foreach ( $data->data as $item ) {
 			$result[] = array(
 				'link'      => $item->link,
-				'image-url' => $item->images->thumbnail->url
+				'image-url' => $item->images->{ $this->get_best_size( $image_width ) }->url
 			);
 		}
 
@@ -323,5 +325,30 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 		update_option( $user_id_option, $user_id );
 
 		return $user_id;
+	}
+
+	/**
+	 * @param $desired_width int Desired image width in pixels
+     *
+	 * @return string Image size for Instagram API
+	 */
+	protected function get_best_size( $desired_width ) {
+		$size = 'thumbnail';
+		$sizes = array(
+			'thumbnail'           => 150,
+			'low_resolution'      => 306,
+			'standard_resolution' => 640
+		);
+
+		$diff = PHP_INT_MAX;
+
+		foreach ( $sizes as $key => $value ) {
+			if ( abs( $desired_width - $value ) < $diff ) {
+				$size = $key;
+				$diff = abs( $desired_width - $value );
+			}
+		}
+
+		return $size;
 	}
 }
