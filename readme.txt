@@ -1,9 +1,9 @@
 === Instagram Widget by WPZOOM ===
-Contributors: wpzoom, nvartolomei
+Contributors: WPZOOM, nvartolomei
 Donate link: http://wpzoom.com/
 Tags: instagram, widget, timeline, social networks, latest images
 Requires at least: 3.4
-Tested up to: 4.1.1
+Tested up to: 4.2
 Stable tag: trunk
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -33,6 +33,9 @@ Add a widget and configure it first.
 
 
 == Changelog ==
+
+= 1.0.2 =
+* Load higher quality images when needed.
 
 = 1.0.1 =
 * Work directly with image list and do not rely on widget ids and classes handled by theme. This broke widget when theme sidebars weren't properly registered.
