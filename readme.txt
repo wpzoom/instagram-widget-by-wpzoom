@@ -36,6 +36,7 @@ Add a widget and configure it first.
 
 = 1.0.2 =
 * Load higher quality images when needed.
+* Unique cache key for each widget, previously all widgets on the page used same options on subsequent page loads.
 
 = 1.0.1 =
 * Work directly with image list and do not rely on widget ids and classes handled by theme. This broke widget when theme sidebars weren't properly registered.

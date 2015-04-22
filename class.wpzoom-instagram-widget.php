@@ -265,7 +265,7 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 	 * @return array|bool Array of tweets or false if method fails
 	 */
 	protected function get_items( $screen_name, $image_limit, $image_width ) {
-		$transient = 'zoom_instagram_t6e_' . $screen_name;
+		$transient = 'zoom_instagram-' . substr( md5( serialize( func_get_args() ) ), 0, 20 );
 
 		if ( false !== ( $result = get_transient( $transient ) ) ) {
 			return $result;
