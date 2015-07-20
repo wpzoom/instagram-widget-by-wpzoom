@@ -34,6 +34,9 @@ Add a widget and configure it first.
 
 == Changelog ==
 
+= 1.0.3 =
+* Make Instagram image links open a new tab.
+
 = 1.0.2 =
 * Load higher quality images when needed.
 * Unique cache key for each widget, previously all widgets on the page used same options on subsequent page loads.
