@@ -183,7 +183,7 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 				<?php
 				echo wp_kses_post(
 					sprintf(
-						__( 'You can find your Access Token on this <a href="%1$s">address</a>.', 'wpzoom-instagram-widget' ),
+						__( 'You can find your Access Token on this <a href="%1$s" target="_blank">address</a>.', 'wpzoom-instagram-widget' ),
 						'http://www.wpzoom.com/instagram/'
 					)
 				);
@@ -209,12 +209,12 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 				?>
 
 				<li class="zoom-instagram-widget__item">
-					<a href="<?php echo $link; ?>">
+					<a href="<?php echo $link; ?>" target="_blank">
 						<img src="<?php echo $src; ?>" alt="">
 					</a>
 				</li>
 
-				<?php if ( ++$count == $instance['image-limit'] ) break; ?>
+				<?php if ( ++$count === $instance['image-limit'] ) break; ?>
 
 			<?php endforeach; ?>
 
