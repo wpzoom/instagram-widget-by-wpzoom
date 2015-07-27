@@ -34,6 +34,9 @@ Add a widget and configure it first.
 
 == Changelog ==
 
+= 1.0.4 =
+* Look for exact matching username when searching for user id.
+
 = 1.0.3 =
 * Make Instagram image links open a new tab.
 
