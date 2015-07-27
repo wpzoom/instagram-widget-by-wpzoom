@@ -316,11 +316,19 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 
 		$result = json_decode( wp_remote_retrieve_body( $response ) );
 
-		if ( ! isset( $result->data[0] ) ) {
+		if ( ! isset( $result->data ) ) {
 			return false;
 		}
 
-		$user_id = $result->data[0]->id;
+		$user_id = false;
+
+		foreach ( $result->data as $user ) {
+			if ( $user->username === $screen_name ) {
+				$user_id = $user->id;
+
+				break;
+			}
+		}
 
 		update_option( $user_id_option, $user_id );
 
