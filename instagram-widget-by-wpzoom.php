@@ -10,6 +10,7 @@
  * License: GPLv2 or later
  */
 
+require_once( plugin_dir_path( __FILE__ ) . 'class-wpzoom-instagram-widget-settings.php' );
 require_once( plugin_dir_path( __FILE__ ) . 'class.wpzoom-instagram-widget.php' );
 
 add_action( 'widgets_init', 'zoom_instagram_widget_register' );
