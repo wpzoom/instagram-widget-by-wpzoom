@@ -1,0 +1,21 @@
+.zoom-instagram-widget .button-connect {
+    /*height: auto;*/
+    /*padding: 9px 12px;*/
+    color: #fff;
+    border: 1px solid #1c5380;
+    border-radius: 3px;
+    background-color: #6f97b6;
+    background-image: -webkit-linear-gradient(top, #6f97b6, #3f729b);
+    background-image: linear-gradient(to bottom, #6f97b6, #3f729b);
+    background-position: 50% 50%;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1), inset 1px 0 0 rgba(255, 255, 255, 0.05), inset -1px 0 0 rgba(255, 255, 255, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    text-shadow: 0 1px 1px #1c5380;
+}
+
+.zoom-instagram-widget .button-connect:focus,
+.zoom-instagram-widget .button-connect:hover {
+    border-color: #1c5380;
+    color: #fff;
+    background-image: -webkit-linear-gradient(top, #5D87A8, #3f729b);
+    background-image: linear-gradient(to bottom, #5D87A8, #3f729b);
+}

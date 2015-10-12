@@ -31,8 +31,7 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 			'center-view-on-instagram-button' => true,
 			'images-per-row'                  => 3,
 			'image-width'                     => 120,
-			'image-spacing'                   => 10,
-			'access-token'                    => ''
+			'image-spacing'                   => 10
 		);
 
 		if ( is_active_widget( false, false, $this->id_base ) || is_active_widget( false, false, 'monster' ) ) {
@@ -59,7 +58,8 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 	public function widget( $args, $instance ) {
 		$instance = wp_parse_args( (array) $instance, $this->defaults );
 
-		$this->access_token = $instance['access-token'];
+		$options = get_option( 'wpzoom-instagram-widget-settings' );
+		$this->access_token = $options['access-token'];
 
 		echo $args['before_widget'];
 
@@ -103,8 +103,6 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 
 		$instance['show-view-on-instagram-button']   = (bool) $new_instance['show-view-on-instagram-button'];
 		$instance['center-view-on-instagram-button'] = (bool) $new_instance['center-view-on-instagram-button'];
-
-		$instance['access-token'] = sanitize_text_field( $new_instance['access-token'] );
 
 		delete_transient( 'zoom_instagram_t6e_' . $instance['screen-name'] );
 		delete_option( 'zoom_instagram_uid_' . $instance['screen-name'] );
@@ -173,22 +171,6 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 		<p>
 			<input class="checkbox" type="checkbox" <?php checked( $instance['center-view-on-instagram-button'] ); ?> id="<?php echo $this->get_field_id( 'center-view-on-instagram-button' ); ?>" name="<?php echo $this->get_field_name( 'center-view-on-instagram-button' ); ?>" />
 			<label for="<?php echo $this->get_field_id( 'center-view-on-instagram-button' ); ?>"><?php _e(' Center View on Instagram button', 'wpzoom-instagram-widget' ); ?></label>
-		</p>
-
-		<p>
-			<label for="<?php echo $this->get_field_id( 'access-token' ); ?>"><?php esc_html_e( 'Access Token:', 'wpzoom-instagram-widget' ); ?></label>
-			<input class="widefat" id="<?php echo $this->get_field_id( 'access-token' ); ?>" name="<?php echo $this->get_field_name( 'access-token' ); ?>" type="text" value="<?php echo esc_attr( $instance['access-token'] ); ?>"/>
-
-			<small>
-				<?php
-				echo wp_kses_post(
-					sprintf(
-						__( 'You can find your Access Token on this <a href="%1$s" target="_blank">address</a>.', 'wpzoom-instagram-widget' ),
-						'http://www.wpzoom.com/instagram/'
-					)
-				);
-				?>
-			</small>
 		</p>
 
 	<?php
