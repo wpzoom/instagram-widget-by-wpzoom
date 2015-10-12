@@ -44,7 +44,7 @@ class Wpzoom_Instagram_Widget_Settings {
     public function settings_field_access_token() {
         $settings = get_option( 'wpzoom-instagram-widget-settings' );
         ?>
-            <input class="regular-text code" name="wpzoom-instagram-widget-settings[access-token]" value="<?php echo esc_attr( $settings['access-token'] ) ?>" type="text">
+            <input class="regular-text code" id="wpzoom-instagram-widget-settings_access-token" name="wpzoom-instagram-widget-settings[access-token]" value="<?php echo esc_attr( $settings['access-token'] ) ?>" type="text">
             <p class="description">
                 <?php
                 printf(
@@ -95,6 +95,7 @@ class Wpzoom_Instagram_Widget_Settings {
         }
 
         wp_enqueue_style( 'zoom-instagram-widget-admin', plugin_dir_url( dirname( __FILE__ ) . '/instagram-widget-by-wpzoom.php' ) . 'css/admin-instagram-widget.css', array(), '20151012' );
+        wp_enqueue_script( 'zoom-instagram-widget-admin', plugin_dir_url( dirname( __FILE__ ) . '/instagram-widget-by-wpzoom.php' ) . 'js/admin-instagram-widget.js', array( 'jquery' ), '20151012' );
     }
 
     public function sanitize( $input ) {
