@@ -5,7 +5,25 @@ class Wpzoom_Instagram_Widget_Settings {
         add_action( 'admin_menu', array( $this, 'add_admin_menu' ) );
         add_action( 'admin_init', array( $this, 'settings_init' ) );
 
+        add_filter( 'plugin_action_links', array( $this, 'add_action_links' ), 10, 2 );
+
         add_action( 'admin_enqueue_scripts', array( $this, 'scripts' ) );
+    }
+
+    function add_action_links( $links, $file ) {
+        if ( $file != plugin_basename( dirname(__FILE__) . '/instagram-widget-by-wpzoom.php' ) ) {
+            return $links;
+        }
+
+        $settings_link = sprintf(
+            '<a href="%1$s">%2$s</a>',
+            menu_page_url( 'wpzoom-instagram-widget', false ),
+            esc_html__( 'Settings', 'zoom-instagram-widget' )
+        );
+
+        array_unshift( $links, $settings_link );
+
+        return $links;
     }
 
     public function add_admin_menu() {
