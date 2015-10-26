@@ -121,13 +121,23 @@ class Wpzoom_Instagram_Widget_Settings {
 
         $result['access-token'] = sanitize_text_field( $input['access-token'] );
 
-        if ( ! Wpzoom_Instagram_Widget_API::is_access_token_valid( $result['access-token'] ) ) {
-            add_settings_error(
-                'wpzoom-instagram-widget-access-token',
-                esc_attr( 'wpzoom-instagram-widget-access-token-invalid' ),
-                __( 'Provided access token is invalid. Please check you input data.', 'zoom-instagram-widget' ),
-                'error'
-            );
+        $validation_result = Wpzoom_Instagram_Widget_API::is_access_token_valid( $result['access-token'] );
+
+        if ( $validation_result !== true ) {
+            $access_token_error_message = __( 'Provided access token is has been rejected by Instagram Api. Please check your input data.', 'zoom-instagram-widget' );
+
+            if ( is_wp_error( $validation_result ) ) {
+                $access_token_error_message = $validation_result->get_error_message();
+            }
+
+            if ( $validation_result !== true ) {
+                add_settings_error(
+                    'wpzoom-instagram-widget-access-token',
+                    esc_attr( 'wpzoom-instagram-widget-access-token-invalid' ),
+                    $access_token_error_message,
+                    'error'
+                );
+            }
         }
 
         return $result;

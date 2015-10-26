@@ -141,7 +141,11 @@ class Wpzoom_Instagram_Widget_API {
 	public static function is_access_token_valid( $access_token ) {
 		$response = wp_remote_get( sprintf( 'https://api.instagram.com/v1/users/self/feed?access_token=%s', $access_token ) );
 
-		if ( is_wp_error( $response ) || 200 != wp_remote_retrieve_response_code( $response ) ) {
+		if ( is_wp_error( $response ) ) {
+			return $response;
+		}
+
+		if ( 200 != wp_remote_retrieve_response_code( $response ) ) {
 			return false;
 		}
 
