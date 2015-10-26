@@ -10,4 +10,14 @@ jQuery(function($) {
 
         input.parents('form').find('#submit').click();
     }
+
+    $('.zoom-instagram-widget .button-connect').on('click', function(event) {
+        if ($(this).find('.zoom-instagarm-widget-connected').length) {
+            var confirm = window.confirm("Instagram Widget is already connected to Instagram.\r\n\r\nDo you want to connect again?");
+
+            if (!confirm) {
+                event.preventDefault();
+            }
+        }
+    });
 });

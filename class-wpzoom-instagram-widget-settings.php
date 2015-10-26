@@ -89,7 +89,11 @@ class Wpzoom_Instagram_Widget_Settings {
                 <p><?php _e( 'Configure your Instagram Widget here. First auth, then design.', 'zoom-instagram-widget' ); ?></p>
 
                 <a class="button button-connect" href="<?php echo esc_url( $oauth_url ); ?>">
-                    <?php _e( 'Connect with Instagram', 'zoom-instagram-widget' ); ?>
+                    <?php if ( ! Wpzoom_Instagram_Widget_API::getInstance()->is_configured() ) : ?>
+                        <span><?php _e( 'Connect with Instagram', 'zoom-instagram-widget' ); ?></span>
+                    <?php else: ?>
+                        <span class="zoom-instagarm-widget-connected"><?php _e( 'Re-connect with Instagram', 'zoom-instagram-widget' ); ?></span>
+                    <?php endif; ?>
                 </a>
 
                 <form action="options.php" method="post">

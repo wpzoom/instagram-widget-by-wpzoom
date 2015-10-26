@@ -152,7 +152,7 @@ class Wpzoom_Instagram_Widget_API {
 		return true;
 	}
 
-	public function isConfigured() {
+	public function is_configured() {
 		$transient = 'zoom_instagram_is_configured';
 
 		if ( false !== ( $result = get_transient( $transient ) ) ) {
