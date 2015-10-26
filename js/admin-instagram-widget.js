@@ -1,0 +1,23 @@
+'use strict';
+
+jQuery(function($) {
+    var hash = window.location.hash;
+
+    if (hash.indexOf('access_token') > 0) {
+        var input = $('#wpzoom-instagram-widget-settings_access-token');
+
+        input.val(hash.split('=').pop());
+
+        input.parents('form').find('#submit').click();
+    }
+
+    $('.zoom-instagram-widget .button-connect').on('click', function(event) {
+        if ($(this).find('.zoom-instagarm-widget-connected').length) {
+            var confirm = window.confirm("Instagram Widget is already connected to Instagram.\r\n\r\nDo you want to connect again?");
+
+            if (!confirm) {
+                event.preventDefault();
+            }
+        }
+    });
+});

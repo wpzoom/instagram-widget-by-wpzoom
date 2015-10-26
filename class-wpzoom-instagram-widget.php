@@ -2,16 +2,14 @@
 
 class Wpzoom_Instagram_Widget extends WP_Widget {
 	/**
-	 * @var array
+	 * @var Wpzoom_Instagram_Widget_API
 	 */
-	protected $defaults;
+	protected $api;
 
 	/**
-	 * Instagram Access Token
-	 *
-	 * @var string
+	 * @var array Default widget settings.
 	 */
-	protected $access_token;
+	protected $defaults;
 
 	public function __construct() {
 		parent::__construct(
@@ -31,9 +29,10 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 			'center-view-on-instagram-button' => true,
 			'images-per-row'                  => 3,
 			'image-width'                     => 120,
-			'image-spacing'                   => 10,
-			'access-token'                    => ''
+			'image-spacing'                   => 10
 		);
+
+		$this->api = Wpzoom_Instagram_Widget_API::getInstance();
 
 		if ( is_active_widget( false, false, $this->id_base ) || is_active_widget( false, false, 'monster' ) ) {
 			add_action( 'wp_enqueue_scripts', array( $this, 'scripts' ) );
@@ -59,7 +58,21 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 	public function widget( $args, $instance ) {
 		$instance = wp_parse_args( (array) $instance, $this->defaults );
 
-		$this->access_token = $instance['access-token'];
+		/**
+		 * Upgrade step from version 1.0.4 to 1.1.0
+		 *
+		 * This code will execute only for first widget that will be displayed.
+		 */
+		if ( false === get_option( 'wpzoom-instagram-widget-settings' ) ) {
+			if ( isset( $instance['access-token'] ) && '' !== $instance['access-token'] ) {
+				update_option(
+					'wpzoom-instagram-widget-settings',
+					array( 'access-token' => $instance['access-token'] )
+				);
+
+				$this->api->set_access_token( $instance['access-token'] );
+			}
+		}
 
 		echo $args['before_widget'];
 
@@ -67,7 +80,7 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 			echo $args['before_title'] . apply_filters( 'widget_title', $instance['title'] ) . $args['after_title'];
 		}
 
-		$items = $this->get_items( $instance['screen-name'], $instance['image-limit'], $instance['image-width'] );
+		$items = $this->api->get_items( $instance['screen-name'], $instance['image-limit'], $instance['image-width'] );
 
 		if ( ! is_array( $items ) ) {
 			$this->display_errors();
@@ -104,8 +117,6 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 		$instance['show-view-on-instagram-button']   = (bool) $new_instance['show-view-on-instagram-button'];
 		$instance['center-view-on-instagram-button'] = (bool) $new_instance['center-view-on-instagram-button'];
 
-		$instance['access-token'] = sanitize_text_field( $new_instance['access-token'] );
-
 		delete_transient( 'zoom_instagram_t6e_' . $instance['screen-name'] );
 		delete_option( 'zoom_instagram_uid_' . $instance['screen-name'] );
 
@@ -124,6 +135,17 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 	public function form( $instance ) {
 		$instance = wp_parse_args( (array) $instance, $this->defaults );
 		?>
+
+		<?php if ( ! $this->api->is_configured() ) : ?>
+
+			<p style="color: #d54e21">
+				<?php
+				printf( __( 'You need to configure <a href="%1$s">plugin settings</a> before using this widget.', 'zoom-instagram-widget' ),
+					menu_page_url( 'wpzoom-instagram-widget', false ) );
+				 ?>
+			</p>
+
+		<?php endif; ?>
 
 		<p>
 			<label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php esc_html_e( 'Title:', 'wpzoom-instagram-widget' ); ?></label>
@@ -173,22 +195,6 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 		<p>
 			<input class="checkbox" type="checkbox" <?php checked( $instance['center-view-on-instagram-button'] ); ?> id="<?php echo $this->get_field_id( 'center-view-on-instagram-button' ); ?>" name="<?php echo $this->get_field_name( 'center-view-on-instagram-button' ); ?>" />
 			<label for="<?php echo $this->get_field_id( 'center-view-on-instagram-button' ); ?>"><?php _e(' Center View on Instagram button', 'wpzoom-instagram-widget' ); ?></label>
-		</p>
-
-		<p>
-			<label for="<?php echo $this->get_field_id( 'access-token' ); ?>"><?php esc_html_e( 'Access Token:', 'wpzoom-instagram-widget' ); ?></label>
-			<input class="widefat" id="<?php echo $this->get_field_id( 'access-token' ); ?>" name="<?php echo $this->get_field_name( 'access-token' ); ?>" type="text" value="<?php echo esc_attr( $instance['access-token'] ); ?>"/>
-
-			<small>
-				<?php
-				echo wp_kses_post(
-					sprintf(
-						__( 'You can find your Access Token on this <a href="%1$s" target="_blank">address</a>.', 'wpzoom-instagram-widget' ),
-						'http://www.wpzoom.com/instagram/'
-					)
-				);
-				?>
-			</small>
 		</p>
 
 	<?php
@@ -249,114 +255,11 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 		if ( current_user_can( 'edit_theme_options' ) ) {
 			?>
 			<p>
-				<?php _e( 'Instagram Widget misconfigured, check widget settings.', 'wpzoom-instagram-widget' ); ?>
+				<?php _e( 'Instagram Widget misconfigured, check plugin &amp; widget settings.', 'wpzoom-instagram-widget' ); ?>
 			</p>
 		<?php
 		} else {
 			echo "&#8230;";
 		}
-	}
-
-	/**
-	 * @param $screen_name string Instagram username
-	 * @param $image_limit int    Number of images to retrieve
-	 * @param $image_width int    Desired image width to retrieve
-	 *
-	 * @return array|bool Array of tweets or false if method fails
-	 */
-	protected function get_items( $screen_name, $image_limit, $image_width ) {
-		$transient = 'zoom_instagram-' . substr( md5( serialize( func_get_args() ) ), 0, 20 );
-
-		if ( false !== ( $result = get_transient( $transient ) ) ) {
-			return $result;
-		}
-
-		$user_id = $this->get_user_id( $screen_name );
-
-		$response = wp_remote_get( sprintf( 'https://api.instagram.com/v1/users/%s/media/recent/?access_token=%s&count=%s', $user_id, $this->access_token, $image_limit ) );
-
-		if ( is_wp_error( $response ) || 200 != wp_remote_retrieve_response_code( $response ) ) {
-			set_transient( $transient, false, MINUTE_IN_SECONDS );
-
-			return false;
-		}
-
-		$data = json_decode( wp_remote_retrieve_body( $response ) );
-
-		$result = array();
-		foreach ( $data->data as $item ) {
-			$result[] = array(
-				'link'      => $item->link,
-				'image-url' => $item->images->{ $this->get_best_size( $image_width ) }->url
-			);
-		}
-
-		set_transient( $transient, $result, 30 * MINUTE_IN_SECONDS );
-
-		return $result;
-	}
-
-	/**
-	 * @param $screen_name string Instagram username
-	 *
-	 * @return bool|int Instagram user id or false on error
-	 */
-	protected function get_user_id( $screen_name ) {
-		$user_id_option = 'zoom_instagram_uid_' . $screen_name;
-
-		if ( false !== ( $user_id = get_option( $user_id_option ) ) ) {
-			return $user_id;
-		}
-
-		$response = wp_remote_get( sprintf( 'https://api.instagram.com/v1/users/search?q=%s&access_token=%s', $screen_name, $this->access_token ) );
-
-		if ( is_wp_error( $response ) || 200 != wp_remote_retrieve_response_code( $response ) ) {
-			return false;
-		}
-
-		$result = json_decode( wp_remote_retrieve_body( $response ) );
-
-		if ( ! isset( $result->data ) ) {
-			return false;
-		}
-
-		$user_id = false;
-
-		foreach ( $result->data as $user ) {
-			if ( $user->username === $screen_name ) {
-				$user_id = $user->id;
-
-				break;
-			}
-		}
-
-		update_option( $user_id_option, $user_id );
-
-		return $user_id;
-	}
-
-	/**
-	 * @param $desired_width int Desired image width in pixels
-     *
-	 * @return string Image size for Instagram API
-	 */
-	protected function get_best_size( $desired_width ) {
-		$size = 'thumbnail';
-		$sizes = array(
-			'thumbnail'           => 150,
-			'low_resolution'      => 306,
-			'standard_resolution' => 640
-		);
-
-		$diff = PHP_INT_MAX;
-
-		foreach ( $sizes as $key => $value ) {
-			if ( abs( $desired_width - $value ) < $diff ) {
-				$size = $key;
-				$diff = abs( $desired_width - $value );
-			}
-		}
-
-		return $size;
 	}
 }
