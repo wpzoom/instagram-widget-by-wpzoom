@@ -1,6 +1,6 @@
 === Instagram Widget by WPZOOM ===
 Contributors: WPZOOM, nvartolomei
-Donate link: http://wpzoom.com/
+Donate link: http://www.wpzoom.com/
 Tags: instagram, widget, timeline, social networks, latest images
 Requires at least: 3.4
 Tested up to: 4.2
