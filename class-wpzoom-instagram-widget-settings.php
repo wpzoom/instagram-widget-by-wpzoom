@@ -11,7 +11,7 @@ class Wpzoom_Instagram_Widget_Settings {
     }
 
     function add_action_links( $links, $file ) {
-        if ( $file != plugin_basename( dirname(__FILE__) . '/instagram-widget-by-wpzoom.php' ) ) {
+        if ( $file != plugin_basename( dirname( __FILE__ ) . '/instagram-widget-by-wpzoom.php' ) ) {
             return $links;
         }
 

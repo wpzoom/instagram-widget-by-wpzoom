@@ -20,7 +20,7 @@ class Wpzoom_Instagram_Widget_API {
 	 */
 	public static function getInstance()
 	{
-		if (null === self::$instance) {
+		if ( null === self::$instance ) {
 			self::$instance = new self();
 		}
 
