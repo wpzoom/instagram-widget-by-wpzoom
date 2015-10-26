@@ -2,7 +2,12 @@
 
 class Wpzoom_Instagram_Widget extends WP_Widget {
 	/**
-	 * @var array
+	 * @var Wpzoom_Instagram_Widget_API
+	 */
+	protected $api;
+
+	/**
+	 * @var array Default widget settings.
 	 */
 	protected $defaults;
 
@@ -26,6 +31,8 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 			'image-width'                     => 120,
 			'image-spacing'                   => 10
 		);
+
+		$this->api = Wpzoom_Instagram_Widget_API::getInstance();
 
 		if ( is_active_widget( false, false, $this->id_base ) || is_active_widget( false, false, 'monster' ) ) {
 			add_action( 'wp_enqueue_scripts', array( $this, 'scripts' ) );
@@ -57,9 +64,7 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 			echo $args['before_title'] . apply_filters( 'widget_title', $instance['title'] ) . $args['after_title'];
 		}
 
-		$api = Wpzoom_Instagram_Widget_API::getInstance();
-
-		$items = $api->get_items( $instance['screen-name'], $instance['image-limit'], $instance['image-width'] );
+		$items = $this->api->get_items( $instance['screen-name'], $instance['image-limit'], $instance['image-width'] );
 
 		if ( ! is_array( $items ) ) {
 			$this->display_errors();
@@ -114,6 +119,17 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 	public function form( $instance ) {
 		$instance = wp_parse_args( (array) $instance, $this->defaults );
 		?>
+
+		<?php if ( ! $this->api->isConfigured() ) : ?>
+
+			<p style="color: #d54e21">
+				<?php
+				printf( __( 'You need to configure <a href="%1$s">plugin settings</a> before using this widget.', 'zoom-instagram-widget' ),
+					menu_page_url( 'wpzoom-instagram-widget', false ) );
+				 ?>
+			</p>
+
+		<?php endif; ?>
 
 		<p>
 			<label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php esc_html_e( 'Title:', 'wpzoom-instagram-widget' ); ?></label>

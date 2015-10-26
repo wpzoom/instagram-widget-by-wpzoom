@@ -138,7 +138,11 @@ class Wpzoom_Instagram_Widget_Settings {
                     'error'
                 );
             }
+
+            $result['access-token'] = '';
         }
+
+        Wpzoom_Instagram_Widget_API::reset_cache();
 
         return $result;
     }

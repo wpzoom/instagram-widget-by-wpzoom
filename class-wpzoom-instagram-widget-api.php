@@ -151,4 +151,34 @@ class Wpzoom_Instagram_Widget_API {
 
 		return true;
 	}
+
+	public function isConfigured() {
+		$transient = 'zoom_instagram_is_configured';
+
+		if ( false !== ( $result = get_transient( $transient ) ) ) {
+			if ( 'yes' === $result ) {
+				return true;
+			}
+
+			if ( 'no' === $result ) {
+				return false;
+			}
+		}
+
+		$condition = $this->is_access_token_valid( $this->access_token );
+
+		if ( true === $condition ) {
+			set_transient( $transient, 'yes', DAY_IN_SECONDS );
+
+			return true;
+		}
+
+		set_transient( $transient, 'no', DAY_IN_SECONDS );
+
+		return false;
+	}
+
+	public static function reset_cache() {
+		delete_transient( 'zoom_instagram_is_configured' );
+	}
 }
