@@ -121,6 +121,15 @@ class Wpzoom_Instagram_Widget_Settings {
 
         $result['access-token'] = sanitize_text_field( $input['access-token'] );
 
+        if ( ! Wpzoom_Instagram_Widget_API::is_access_token_valid( $result['access-token'] ) ) {
+            add_settings_error(
+                'wpzoom-instagram-widget-access-token',
+                esc_attr( 'wpzoom-instagram-widget-access-token-invalid' ),
+                __( 'Provided access token is invalid. Please check you input data.', 'zoom-instagram-widget' ),
+                'error'
+            );
+        }
+
         return $result;
     }
 }
