@@ -58,6 +58,22 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 	public function widget( $args, $instance ) {
 		$instance = wp_parse_args( (array) $instance, $this->defaults );
 
+		/**
+		 * Upgrade step from version 1.0.4 to 1.1.0
+		 *
+		 * This code will execute only for first widget that will be displayed.
+		 */
+		if ( false === get_option( 'wpzoom-instagram-widget-settings' ) ) {
+			if ( isset( $instance['access-token'] ) && '' !== $instance['access-token'] ) {
+				update_option(
+					'wpzoom-instagram-widget-settings',
+					array( 'access-token' => $instance['access-token'] )
+				);
+
+				$this->api->set_access_token( $instance['access-token'] );
+			}
+		}
+
 		echo $args['before_widget'];
 
 		if ( $instance['title'] ) {
