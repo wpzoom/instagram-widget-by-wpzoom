@@ -239,7 +239,7 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 		if ( current_user_can( 'edit_theme_options' ) ) {
 			?>
 			<p>
-				<?php _e( 'Instagram Widget misconfigured, check widget settings.', 'wpzoom-instagram-widget' ); ?>
+				<?php _e( 'Instagram Widget misconfigured, check plugin &amp; widget settings.', 'wpzoom-instagram-widget' ); ?>
 			</p>
 		<?php
 		} else {
