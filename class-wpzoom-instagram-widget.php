@@ -181,7 +181,7 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 			<small>
 				<?php
 				echo wp_kses_post(
-					__( 'Fields above do not influence directly widget appearance. Final number of images per row and image width is calculated depending on browser resolution.', 'wpzoom-instagram-widget' )
+					__( 'Fields above do not influence directly widget appearance. Final number of images per row and image width is calculated depending on browser resolution. This ensures your photos look beautiful on all devices.', 'wpzoom-instagram-widget' )
 				);
 				?>
 			</small>
