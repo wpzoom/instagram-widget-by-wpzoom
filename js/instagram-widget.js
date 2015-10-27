@@ -33,6 +33,10 @@ jQuery(function($) {
 
             $list.find('img').width(itemWidth);
             $list.removeClass('zoom-instagram-widget__items--no-js');
+
+            if (zoom_instagram_widget.enable_lightbox) {
+                $list.find('a').on('click', showLightboxOnClick);
+            }
         });
     };
 
@@ -59,4 +63,15 @@ jQuery(function($) {
 
     $(window).on('resize orientationchange', requestTick);
     requestTick();
+
+    function showLightboxOnClick(event) {
+        event.preventDefault();
+
+        var src = $(this).find('img').attr('src');
+
+        $("<div></div>").css({
+            'position': 'fixed',
+            'top' : '200px',
+        }).append($('<img>').attr('src', src)).appendTo($('body'));
+    }
 });

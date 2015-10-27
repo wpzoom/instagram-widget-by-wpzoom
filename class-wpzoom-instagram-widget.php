@@ -46,7 +46,8 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 		wp_enqueue_style( 'zoom-instagram-widget', plugin_dir_url( dirname( __FILE__ ) . '/instagram-widget-by-wpzoom.php' ) . 'css/instagram-widget.css', array(), '20150202' );
 		wp_enqueue_script( 'zoom-instagram-widget', plugin_dir_url( dirname( __FILE__ ) . '/instagram-widget-by-wpzoom.php' ) . 'js/instagram-widget.js', array( 'jquery' ), '20150415' );
 		wp_localize_script( 'zoom-instagram-widget', 'zoom_instagram_widget', array(
-			'client_id' => $this->api->get_access_token()
+			'access_token'    => Wpzoom_Instagram_Widget_Settings::get_setting( 'access-token' ),
+			'enable_lightbox' => Wpzoom_Instagram_Widget_Settings::get_setting( 'enable-lightbox' )
 		) );
 	}
 
