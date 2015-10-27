@@ -18,7 +18,7 @@ class Wpzoom_Instagram_Widget_Settings {
         $settings_link = sprintf(
             '<a href="%1$s">%2$s</a>',
             menu_page_url( 'wpzoom-instagram-widget', false ),
-            esc_html__( 'Settings', 'zoom-instagram-widget' )
+            esc_html__( 'Settings', 'wpzoom-instagram-widget' )
         );
 
         array_unshift( $links, $settings_link );
@@ -68,7 +68,7 @@ class Wpzoom_Instagram_Widget_Settings {
                 printf(
                     __(
                         'Access Token is used as key to access your photos from Instagram so they can be displayed. You can also get it manually from <a href="%1$s">there</a>.',
-                        'zoom-instagram-widget'
+                        'wpzoom-instagram-widget'
                     ),
                     'http://www.wpzoom.com/instagram/'
                 );
@@ -84,17 +84,17 @@ class Wpzoom_Instagram_Widget_Settings {
 
             <div class="wrap zoom-instagram-widget">
 
-                <h1><?php _e( 'Instagram Widget by WPZOOM', 'zoom-instagram-widget' ); ?></h1>
+                <h1><?php _e( 'Instagram Widget by WPZOOM', 'wpzoom-instagram-widget' ); ?></h1>
 
-                <p><?php _e( 'Configure your Instagram Widget here. First auth, then design.', 'zoom-instagram-widget' ); ?></p>
+                <p><?php _e( 'Configure your Instagram Widget here. First auth, then design.', 'wpzoom-instagram-widget' ); ?></p>
 
                 <p><?php printf( __( 'If you need more help, please check <a href="%1$s"">plugin documentation</a> or <a href="%2$s">open a support ticket</a>.' ), 'http://www.wpzoom.com/plugins/instagram-widget/', 'https://wordpress.org/support/plugin/instagram-widget-by-wpzoom' ); ?></p>
 
                 <a class="button button-connect" href="<?php echo esc_url( $oauth_url ); ?>">
                     <?php if ( ! Wpzoom_Instagram_Widget_API::getInstance()->is_configured() ) : ?>
-                        <span><?php _e( 'Connect with Instagram', 'zoom-instagram-widget' ); ?></span>
+                        <span><?php _e( 'Connect with Instagram', 'wpzoom-instagram-widget' ); ?></span>
                     <?php else: ?>
-                        <span class="zoom-instagarm-widget-connected"><?php _e( 'Re-connect with Instagram', 'zoom-instagram-widget' ); ?></span>
+                        <span class="zoom-instagarm-widget-connected"><?php _e( 'Re-connect with Instagram', 'wpzoom-instagram-widget' ); ?></span>
                     <?php endif; ?>
                 </a>
 
@@ -120,6 +120,9 @@ class Wpzoom_Instagram_Widget_Settings {
 
         wp_enqueue_style( 'zoom-instagram-widget-admin', plugin_dir_url( dirname( __FILE__ ) . '/instagram-widget-by-wpzoom.php' ) . 'css/admin-instagram-widget.css', array(), '20151012' );
         wp_enqueue_script( 'zoom-instagram-widget-admin', plugin_dir_url( dirname( __FILE__ ) . '/instagram-widget-by-wpzoom.php' ) . 'js/admin-instagram-widget.js', array( 'jquery' ), '20151012' );
+        wp_localize_script( 'zoom-instagram-widget-admin', 'zoom_instagram_widget_admin', array(
+            'i18n_connect_confirm' => __( "Instagram Widget is already connected to Instagram.\r\n\r\nDo you want to connect again?", 'wpzoom-instagram-widget' ),
+        ) );
     }
 
     public function sanitize( $input ) {
@@ -130,7 +133,7 @@ class Wpzoom_Instagram_Widget_Settings {
         $validation_result = Wpzoom_Instagram_Widget_API::is_access_token_valid( $result['access-token'] );
 
         if ( $validation_result !== true ) {
-            $access_token_error_message = __( 'Provided access token is has been rejected by Instagram Api. Please check your input data.', 'zoom-instagram-widget' );
+            $access_token_error_message = __( 'Provided access token is has been rejected by Instagram Api. Please check your input data.', 'wpzoom-instagram-widget' );
 
             if ( is_wp_error( $validation_result ) ) {
                 $access_token_error_message = $validation_result->get_error_message();

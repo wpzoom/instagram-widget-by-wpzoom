@@ -13,7 +13,7 @@ jQuery(function($) {
 
     $('.zoom-instagram-widget .button-connect').on('click', function(event) {
         if ($(this).find('.zoom-instagarm-widget-connected').length) {
-            var confirm = window.confirm("Instagram Widget is already connected to Instagram.\r\n\r\nDo you want to connect again?");
+            var confirm = window.confirm(zoom_instagram_widget_admin.i18n_connect_confirm);
 
             if (!confirm) {
                 event.preventDefault();

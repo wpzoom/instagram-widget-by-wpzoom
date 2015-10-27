@@ -45,6 +45,9 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 	public function scripts() {
 		wp_enqueue_style( 'zoom-instagram-widget', plugin_dir_url( dirname( __FILE__ ) . '/instagram-widget-by-wpzoom.php' ) . 'css/instagram-widget.css', array(), '20150202' );
 		wp_enqueue_script( 'zoom-instagram-widget', plugin_dir_url( dirname( __FILE__ ) . '/instagram-widget-by-wpzoom.php' ) . 'js/instagram-widget.js', array( 'jquery' ), '20150415' );
+		wp_localize_script( 'zoom-instagram-widget', 'zoom_instagram_widget', array(
+			'client_id' => $this->api->get_access_token()
+		) );
 	}
 
 	/**
@@ -140,7 +143,7 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 
 			<p style="color: #d54e21">
 				<?php
-				printf( __( 'You need to configure <a href="%1$s">plugin settings</a> before using this widget.', 'zoom-instagram-widget' ),
+				printf( __( 'You need to configure <a href="%1$s">plugin settings</a> before using this widget.', 'wpzoom-instagram-widget' ),
 					menu_page_url( 'wpzoom-instagram-widget', false ) );
 				 ?>
 			</p>

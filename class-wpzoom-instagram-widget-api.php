@@ -182,6 +182,10 @@ class Wpzoom_Instagram_Widget_API {
 		delete_transient( 'zoom_instagram_is_configured' );
 	}
 
+	public function get_access_token() {
+		return $this->access_token;
+	}
+
 	public function set_access_token( $access_token ) {
 		$this->access_token = $access_token;
 	}
