@@ -1,6 +1,13 @@
 <?php
 
 class Wpzoom_Instagram_Widget_Settings {
+    public $settings = array();
+
+    protected static $default_settings = array(
+        'access_token'    => '',
+        'enable-lightbox' => true
+    );
+
     public function __construct() {
         add_action( 'admin_menu', array( $this, 'add_admin_menu' ) );
         add_action( 'admin_init', array( $this, 'settings_init' ) );
@@ -37,6 +44,8 @@ class Wpzoom_Instagram_Widget_Settings {
     }
 
     public function settings_init() {
+        $this->settings = get_option( 'wpzoom-instagram-widget-settings', self::$default_settings );
+
         register_setting(
             'wpzoom-instagram-widget-settings-group',
             'wpzoom-instagram-widget-settings',
@@ -57,12 +66,19 @@ class Wpzoom_Instagram_Widget_Settings {
             'wpzoom-instagram-widget-settings-group',
             'wpzoom-instagram-widget-settings-general'
         );
+
+        add_settings_field(
+            'wpzoom-instagram-widget-enable-lightbox',
+            __( 'Media Lightbox', 'wpzoom-instagram-widget' ),
+            array( $this, 'settings_fields_enable_lightbox' ),
+            'wpzoom-instagram-widget-settings-group',
+            'wpzoom-instagram-widget-settings-general'
+        );
     }
 
     public function settings_field_access_token() {
-        $settings = get_option( 'wpzoom-instagram-widget-settings' );
         ?>
-            <input class="regular-text code" id="wpzoom-instagram-widget-settings_access-token" name="wpzoom-instagram-widget-settings[access-token]" value="<?php echo esc_attr( $settings['access-token'] ) ?>" type="text">
+            <input class="regular-text code" id="wpzoom-instagram-widget-settings_access-token" name="wpzoom-instagram-widget-settings[access-token]" value="<?php echo esc_attr( $this->settings['access-token'] ) ?>" type="text">
             <p class="description">
                 <?php
                 printf(
@@ -73,6 +89,18 @@ class Wpzoom_Instagram_Widget_Settings {
                     'http://www.wpzoom.com/instagram/'
                 );
                 ?>
+            </p>
+        <?php
+    }
+
+    public function settings_fields_enable_lightbox() {
+        ?>
+            <label for="wpzoom-instagram-widget-settings_enable-lightbox">
+                <input id="wpzoom-instagram-widget-settings_enable-lightbox" name="wpzoom-instagram-widget-settings[enable-lightbox]" value="1" <?php checked( $this->settings['enable-lightbox'], 1 ); ?> type="checkbox">
+                <?php _e( 'Enable Media Lightbox?', 'wpzoom-instagram-widget' ); ?>
+            </label>
+            <p class="description">
+                <?php _e( 'Media Lightbox allows to display big Instagram photos directly on your website in a beautiful manner without redirecting users to Instagram.', 'wpzoom-instagram-widget' ); ?>
             </p>
         <?php
     }
@@ -151,9 +179,22 @@ class Wpzoom_Instagram_Widget_Settings {
             $result['access-token'] = '';
         }
 
+
+        if ( isset( $input['enable-lightbox'] ) ) {
+            $result['enable-lightbox'] = (bool) $input['enable-lightbox'];
+        } else {
+            $result['enable-lightbox'] = false;
+        }
+
         Wpzoom_Instagram_Widget_API::reset_cache();
 
         return $result;
+    }
+
+    public static function get_setting( $setting ) {
+        $settings = wp_parse_args( get_option( 'wpzoom-instagram-widget-settings', self::$default_settings ),  self::$default_settings );
+
+        return isset( $settings[ $setting ] ) ? $settings[ $setting ] : false;
     }
 }
 
