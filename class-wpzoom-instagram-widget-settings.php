@@ -28,8 +28,8 @@ class Wpzoom_Instagram_Widget_Settings {
 
     public function add_admin_menu() {
         add_options_page(
-            'Instagram Widget by WPZOOM',
-            'Instagram Widget by WPZOOM',
+            'Instagram Widget',
+            'Instagram Widget',
             'manage_options',
             'wpzoom-instagram-widget',
             array( $this, 'settings_page' )
@@ -67,7 +67,7 @@ class Wpzoom_Instagram_Widget_Settings {
                 <?php
                 printf(
                     __(
-                        'Access Token is used as key to access your photos from Instagram so they can be displayed. You can also get it manually from <a href="%1$s">there</a>.',
+                        'Access Token is used as key to access your photos from Instagram so they can be displayed. You can also get it manually from <a href="%1$s">here</a>.',
                         'wpzoom-instagram-widget'
                     ),
                     'http://www.wpzoom.com/instagram/'
@@ -78,37 +78,66 @@ class Wpzoom_Instagram_Widget_Settings {
     }
 
     public function settings_page() {
-        $oauth_url = 'https://instagram.com/oauth/authorize/?client_id=fd92b82737834e0595eae6476dc53f07&response_type=token&redirect_uri=http://www.wpzoom.com/instagram/';
+        $oauth_url = 'https://instagram.com/oauth/authorize/?client_id=955bdb2319484968b93de8d6a1032c66&response_type=token&redirect_uri=http://www.wpzoom.com/instagram/';
         $oauth_url .= '?auth_site=' . esc_url( admin_url( 'options-general.php?page=wpzoom-instagram-widget' ) );
         ?>
 
-            <div class="wrap zoom-instagram-widget">
+            <div class="wrap">
 
                 <h1><?php _e( 'Instagram Widget by WPZOOM', 'wpzoom-instagram-widget' ); ?></h1>
 
-                <p><?php _e( 'Configure your Instagram Widget here. First auth, then design.', 'wpzoom-instagram-widget' ); ?></p>
 
-                <p><?php printf( __( 'If you need more help, please check <a href="%1$s"">plugin documentation</a> or <a href="%2$s">open a support ticket</a>.' ), 'http://www.wpzoom.com/plugins/instagram-widget/', 'https://wordpress.org/support/plugin/instagram-widget-by-wpzoom' ); ?></p>
+                <div class="zoom-instagram-widget">
 
-                <a class="button button-connect" href="<?php echo esc_url( $oauth_url ); ?>">
-                    <?php if ( ! Wpzoom_Instagram_Widget_API::getInstance()->is_configured() ) : ?>
-                        <span><?php _e( 'Connect with Instagram', 'wpzoom-instagram-widget' ); ?></span>
-                    <?php else: ?>
-                        <span class="zoom-instagarm-widget-connected"><?php _e( 'Re-connect with Instagram', 'wpzoom-instagram-widget' ); ?></span>
-                    <?php endif; ?>
-                </a>
+                    <h2><?php _e('Connect with Instagram', 'wpzoom-instagram-widget'); ?></h2>
 
-                <form action="options.php" method="post">
+                    <p><?php _e( 'To get started click the button below. You’ll be prompted to authorize WPZOOM to access your Instagram photos.', 'wpzoom-instagram-widget' ); ?></p>
 
-                    <?php
-                    settings_fields( 'wpzoom-instagram-widget-settings-group' );
-                    do_settings_sections( 'wpzoom-instagram-widget-settings-group' );
-                    submit_button();
-                    ?>
+                    <p class="description"><?php _e( 'Due to recent Instagram API changes it is no longer possible to display photos from a different Instagram account than yours. The widget will automatically display the latest photos of the account which was authorized on this page.', 'wpzoom-instagram-widget' ); ?></p>
 
-                </form>
+                    <br />
+
+
+                    <a class="button button-connect" href="<?php echo esc_url( $oauth_url ); ?>">
+                        <?php if ( ! Wpzoom_Instagram_Widget_API::getInstance()->is_configured() ) : ?>
+                            <span><?php _e( 'Connect with Instagram', 'wpzoom-instagram-widget' ); ?></span>
+                        <?php else: ?>
+                            <span class="zoom-instagarm-widget-connected"><?php _e( 'Re-connect with Instagram', 'wpzoom-instagram-widget' ); ?></span>
+                        <?php endif; ?>
+                    </a>
+
+                    <form action="options.php" method="post">
+
+                        <?php
+                        settings_fields( 'wpzoom-instagram-widget-settings-group' );
+                        do_settings_sections( 'wpzoom-instagram-widget-settings-group' );
+                        submit_button();
+                        ?>
+
+                    </form>
+
+                </div>
+
+
+                <div class="zoom-themes-link">
+
+                    <h2>Premium WordPress Themes by WPZOOM</h2>
+
+
+                    <p><?php _e( 'Are you looking to give your website a new look?<br/> Check out our collection of <strong>40 expertly-crafted themes</strong> and find the perfect one for your needs!', 'wpzoom-instagram-widget' ); ?></p>
+
+                    <p><?php printf( __( '<a class="cta-button" target="_blank" href="%1$s"">View our Themes &rarr;</a>' ), 'https://www.wpzoom.com/themes/' ); ?></p>
+
+
+
+
+                </div>
+
 
             </div>
+
+
+
 
         <?php
     }

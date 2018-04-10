@@ -22,14 +22,14 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 		);
 
 		$this->defaults = array(
-			'title'                           => esc_html__( 'Instagram', 'wpzoom-instagram-widget' ),
-			'screen-name'                     => '',
-			'image-limit'                     => 9,
-			'show-view-on-instagram-button'   => true,
-			'center-view-on-instagram-button' => true,
-			'images-per-row'                  => 3,
-			'image-width'                     => 120,
-			'image-spacing'                   => 10
+			'title'                         => esc_html__( 'Instagram', 'wpzoom-instagram-widget' ),
+			'button_text'                   => esc_html__( 'View on Instagram', 'wpzoom-instagram-widget' ),
+			'image-limit'                   => 9,
+			'show-view-on-instagram-button' => true,
+			'show-counts-on-hover'          => false,
+			'images-per-row'                => 3,
+			'image-width'                   => 120,
+			'image-spacing'                 => 10
 		);
 
 		$this->api = Wpzoom_Instagram_Widget_API::getInstance();
@@ -43,8 +43,8 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 	 * Widget specific scripts & styles
 	 */
 	public function scripts() {
-		wp_enqueue_style( 'zoom-instagram-widget', plugin_dir_url( dirname( __FILE__ ) . '/instagram-widget-by-wpzoom.php' ) . 'css/instagram-widget.css', array(), '20150202' );
-		wp_enqueue_script( 'zoom-instagram-widget', plugin_dir_url( dirname( __FILE__ ) . '/instagram-widget-by-wpzoom.php' ) . 'js/instagram-widget.js', array( 'jquery' ), '20150415' );
+		wp_enqueue_style( 'zoom-instagram-widget', plugin_dir_url( dirname( __FILE__ ) . '/instagram-widget-by-wpzoom.php' ) . 'css/instagram-widget.css', array('dashicons'), '20181004' );
+		wp_enqueue_script( 'zoom-instagram-widget', plugin_dir_url( dirname( __FILE__ ) . '/instagram-widget-by-wpzoom.php' ) . 'js/instagram-widget.js', array( 'jquery' ), '20181004' );
 		wp_localize_script( 'zoom-instagram-widget', 'zoom_instagram_widget', array(
 			'client_id' => $this->api->get_access_token()
 		) );
@@ -83,13 +83,13 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 			echo $args['before_title'] . apply_filters( 'widget_title', $instance['title'] ) . $args['after_title'];
 		}
 
-		$items = $this->api->get_items( $instance['screen-name'], $instance['image-limit'], $instance['image-width'] );
+		$items = $this->api->get_items( $instance['image-limit'], $instance['image-width'] );
 
 		if ( ! is_array( $items ) ) {
 			$this->display_errors();
 		} else {
-			$this->display_items( $items, $instance );
-			$this->display_instagram_button( $instance );
+			$this->display_items( $items['items'], $instance );
+			$this->display_instagram_button( $instance, $items['username'] );
 		}
 
 
@@ -107,9 +107,8 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 	 * @return array Updated safe values to be saved.
 	 */
 	public function update( $new_instance, $old_instance ) {
-		$instance['title'] = sanitize_text_field( $new_instance['title'] );
-
-		$instance['screen-name'] = sanitize_text_field( $new_instance['screen-name'] );
+        $instance['title'] = sanitize_text_field( $new_instance['title'] );
+		$instance['button_text'] = sanitize_text_field( $new_instance['button_text'] );
 
 		$instance['image-limit'] = ( 0 !== (int) $new_instance['image-limit'] ) ? (int) $new_instance['image-limit'] : null;
 
@@ -118,10 +117,9 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 		$instance['image-spacing'] = ( 0 <= (int) $new_instance['image-spacing'] ) ? (int) $new_instance['image-spacing'] : null;
 
 		$instance['show-view-on-instagram-button']   = (bool) $new_instance['show-view-on-instagram-button'];
-		$instance['center-view-on-instagram-button'] = (bool) $new_instance['center-view-on-instagram-button'];
+		$instance['show-counts-on-hover']   = (bool) $new_instance['show-counts-on-hover'];
 
-		delete_transient( 'zoom_instagram_t6e_' . $instance['screen-name'] );
-		delete_option( 'zoom_instagram_uid_' . $instance['screen-name'] );
+
 
 		return $instance;
 	}
@@ -155,10 +153,6 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 			<input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo esc_attr( $instance['title'] ); ?>"/>
 		</p>
 
-		<p>
-			<label for="<?php echo $this->get_field_id( 'screen-name' ); ?>"><?php esc_html_e( 'Instagram Username:', 'wpzoom-instagram-widget' ); ?></label>
-			<input class="widefat" id="<?php echo $this->get_field_id( 'screen-name' ); ?>" name="<?php echo $this->get_field_name( 'screen-name' ); ?>" type="text" value="<?php echo esc_attr( $instance['screen-name'] ); ?>"/>
-		</p>
 
 		<p>
 			<label for="<?php echo $this->get_field_id( 'image-limit' ); ?>"><?php esc_html_e( 'Number of Images Shown:', 'wpzoom-instagram-widget' ); ?></label>
@@ -172,7 +166,7 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 
 		<p>
 			<label for="<?php echo $this->get_field_id( 'image-width' ); ?>"><?php esc_html_e( 'Desired Image width in pixels:', 'wpzoom-instagram-widget' ); ?> <small>(Just integer)</small></label>
-			<input class="widefat" id="<?php echo $this->get_field_id( 'image-width' ); ?>" name="<?php echo $this->get_field_name( 'image-width' ); ?>" type="number" min="20" max="300" value="<?php echo esc_attr( $instance['image-width'] ); ?>"/>
+			<input class="widefat" id="<?php echo $this->get_field_id( 'image-width' ); ?>" name="<?php echo $this->get_field_name( 'image-width' ); ?>" type="number" min="20" value="<?php echo esc_attr( $instance['image-width'] ); ?>"/>
 		</p>
 
 		<p>
@@ -192,19 +186,28 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 
 		<p>
 			<input class="checkbox" type="checkbox" <?php checked( $instance['show-view-on-instagram-button'] ); ?> id="<?php echo $this->get_field_id( 'show-view-on-instagram-button' ); ?>" name="<?php echo $this->get_field_name( 'show-view-on-instagram-button' ); ?>" />
-			<label for="<?php echo $this->get_field_id( 'show-view-on-instagram-button' ); ?>"><?php _e(' Display View on Instagram button', 'wpzoom-instagram-widget' ); ?></label>
+			<label for="<?php echo $this->get_field_id( 'show-view-on-instagram-button' ); ?>"><?php _e(' Display <strong>View on Instagram</strong> button', 'wpzoom-instagram-widget' ); ?></label>
 		</p>
 
 		<p>
-			<input class="checkbox" type="checkbox" <?php checked( $instance['center-view-on-instagram-button'] ); ?> id="<?php echo $this->get_field_id( 'center-view-on-instagram-button' ); ?>" name="<?php echo $this->get_field_name( 'center-view-on-instagram-button' ); ?>" />
-			<label for="<?php echo $this->get_field_id( 'center-view-on-instagram-button' ); ?>"><?php _e(' Center View on Instagram button', 'wpzoom-instagram-widget' ); ?></label>
+			<input class="checkbox" type="checkbox" <?php checked( $instance['show-counts-on-hover'] ); ?> id="<?php echo $this->get_field_id( 'show-counts-on-hover' ); ?>" name="<?php echo $this->get_field_name( 'show-counts-on-hover' ); ?>" />
+			<label for="<?php echo $this->get_field_id( 'show-counts-on-hover' ); ?>"><?php _e(' Show on hover <strong>overlay with number of comments and likes</strong>', 'wpzoom-instagram-widget' ); ?></label>
 		</p>
+
+        <p>
+            <label for="<?php echo $this->get_field_id( 'button_text' ); ?>"><?php esc_html_e( 'Button Text:', 'wpzoom-instagram-widget' ); ?></label>
+            <input class="widefat" id="<?php echo $this->get_field_id( 'button_text' ); ?>" name="<?php echo $this->get_field_name( 'button_text' ); ?>" type="text" value="<?php echo esc_attr( $instance['button_text'] ); ?>"/>
+        </p>
+
+
 
 	<?php
 	}
 
 	protected function display_items( $items, $instance ) {
 		$count = 0;
+		$show_overlay = wp_validate_boolean($instance['show-counts-on-hover']);
+		$small_class = (!empty($instance['image-width']) && $instance['image-width'] <= 180) ? 'small' : '';
 		?>
 		<ul class="zoom-instagram-widget__items zoom-instagram-widget__items--no-js"
 		    data-images-per-row="<?php echo esc_attr( $instance['images-per-row'] ); ?>"
@@ -214,14 +217,52 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 			<?php foreach ( $items as $item ) : ?>
 				<?php
 				$link = $item['link'];
-				$src = $item['image-url'];
+                $src = $item['image-url'];
+				$alt = esc_attr($item['image-caption']);
+				$likes    = $item['likes_count'];
+				$comments = $item['comments_count'];
 				?>
 
-				<li class="zoom-instagram-widget__item">
-					<a href="<?php echo $link; ?>" target="_blank">
-						<img src="<?php echo $src; ?>" alt="">
-					</a>
-				</li>
+                <li class="zoom-instagram-widget__item">
+
+	                <?php if($show_overlay): ?>
+	                <div class='hover-layout overlay black <?php echo $small_class?>'>
+
+		                <div class='hover-controls'>
+			                <span  class="dashicons dashicons-heart"></span>
+			                <span class="counter"><?php echo $likes;?></span>
+			                <span class="dashicons dashicons-format-chat"></span>
+			                <span class="counter"><?php echo $comments; ?></span>
+		                </div>
+		                <div class='zoom-instagram-icon-wrap'>
+			                <a class="zoom-svg-instagram-stroke" href="<?php echo $link; ?>" target="_blank" title="<?php echo $alt; ?>"></a>
+		                </div>
+
+
+						<a class='zoom-instagram-link' style="width:<?php echo esc_attr( $instance['image-width'] ); ?>px;
+                        height: <?php echo esc_attr( $instance['image-width'] ); ?>px;
+                        background-image: url('<?php echo $src; ?>');
+                        display: block;
+                        background-size: cover;
+                        background-position: center center;
+                        background-repeat: no-repeat;"
+                        href="<?php echo $link; ?>" target="_blank" title="<?php echo $alt; ?>"
+                    >
+                    </a>
+	                </div>
+	                <?php else: ?>
+		                <a class='zoom-instagram-link' style="width:<?php echo esc_attr( $instance['image-width'] ); ?>px;
+			                height: <?php echo esc_attr( $instance['image-width'] ); ?>px;
+			                background-image: url('<?php echo $src; ?>');
+			                display: block;
+			                background-size: cover;
+			                background-position: center center;
+			                background-repeat: no-repeat;"
+		                   href="<?php echo $link; ?>" target="_blank" title="<?php echo $alt; ?>"
+		                >
+		                </a>
+	                <?php endif; ?>
+                </li>
 
 				<?php if ( ++$count === $instance['image-limit'] ) break; ?>
 
@@ -233,18 +274,16 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 	<?php
 	}
 
-	protected function display_instagram_button( $instance ) {
-		$screen_name                     = $instance['screen-name'];
+	protected function display_instagram_button( $instance, $username) {
 		$show_view_on_instagram_button   = $instance['show-view-on-instagram-button'];
-		$center_view_on_instagram_button = $instance['center-view-on-instagram-button'];
 
 		if ( ! $show_view_on_instagram_button ) {
 			return;
 		}
 
 		?>
-		<div class="zoom-instagram-widget__follow-me <?php echo ($center_view_on_instagram_button ? 'zoom-instagram-widget__follow-me--center' : ''); ?>">
-			<a href="<?php printf( 'http://instagram.com/%s?ref=badge', esc_attr( $screen_name ) ); ?>" class="ig-b- ig-b-v-24" target="_blank"><img src="//badges.instagram.com/static/images/ig-badge-view-24.png" alt="Instagram" /></a>
+		<div class="zoom-instagram-widget__follow-me">
+			<a href="<?php printf( 'http://instagram.com/%s?ref=badge', esc_attr( $username ) ); ?>" class="ig-b- ig-b-v-24" target="_blank"><?php echo esc_attr( $instance['button_text'] ); ?></a>
 		</div>
 	<?php
 	}
