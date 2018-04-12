@@ -29,7 +29,8 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 			'show-counts-on-hover'          => false,
 			'images-per-row'                => 3,
 			'image-width'                   => 120,
-			'image-spacing'                 => 10
+			'image-spacing'                 => 10,
+			'image-resolution'              => 'default_algorithm',
 		);
 
 		$this->api = Wpzoom_Instagram_Widget_API::getInstance();
@@ -83,7 +84,7 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 			echo $args['before_title'] . apply_filters( 'widget_title', $instance['title'] ) . $args['after_title'];
 		}
 
-		$items = $this->api->get_items( $instance['image-limit'], $instance['image-width'] );
+		$items = $this->api->get_items( $instance['image-limit'], $instance['image-width'], $instance['image-resolution'] );
 
 		if ( ! is_array( $items ) ) {
 			$this->display_errors();
@@ -115,6 +116,7 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 		$instance['images-per-row'] = ( 0 !== (int) $new_instance['images-per-row'] ) ? (int) $new_instance['images-per-row'] : null;
 		$instance['image-width'] = ( 0 !== (int) $new_instance['image-width'] ) ? (int) $new_instance['image-width'] : null;
 		$instance['image-spacing'] = ( 0 <= (int) $new_instance['image-spacing'] ) ? (int) $new_instance['image-spacing'] : null;
+		$instance['image-resolution'] = !empty($new_instance['image-resolution']) ?  $new_instance['image-resolution'] : $this->defaults['image-resolution'];
 
 		$instance['show-view-on-instagram-button']   = (bool) $new_instance['show-view-on-instagram-button'];
 		$instance['show-counts-on-hover']   = (bool) $new_instance['show-counts-on-hover'];
@@ -182,6 +184,25 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 				);
 				?>
 			</small>
+		</p>
+
+		<p>
+			<label for="<?php echo $this->get_field_id( 'image-resolution' ); ?>"><?php esc_html_e( 'Set forced image resolution:', 'wpzoom-instagram-widget' ); ?></label>
+			<select class="widefat" id="<?php echo $this->get_field_id( 'image-resolution' ); ?>" name="<?php echo $this->get_field_name( 'image-resolution' ); ?>">
+				<option value="default_algorithm" <?php selected( $instance['image-resolution'], "default_algorithm" ); ?>>
+					<?php _e('By Default Algorithm', 'wpzoom-instagram-widget' ); ?>
+				</option>
+				<option value="thumbnail" <?php selected( $instance['image-resolution'], "thumbnail" ); ?>>
+					<?php _e('Thumbnail ( 150x150px )', 'wpzoom-instagram-widget' ); ?>
+				</option>
+				<option value="low_resolution" <?php selected( $instance['image-resolution'], "low_resolution" ); ?>>
+					<?php _e('Low Resolution ( 320x320px )', 'wpzoom-instagram-widget' ); ?>
+
+				</option>
+				<option value="standard_resolution" <?php selected( $instance['image-resolution'], "standard_resolution" ); ?>>
+					<?php _e('Standart Resolution ( 640x640px )', 'wpzoom-instagram-widget' ); ?>
+				</option>
+			</select>
 		</p>
 
 		<p>

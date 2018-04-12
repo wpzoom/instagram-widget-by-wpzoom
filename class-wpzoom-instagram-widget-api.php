@@ -39,13 +39,13 @@ class Wpzoom_Instagram_Widget_API {
      *
      * @return array|bool Array of tweets or false if method fails
      */
-    public function get_items( $image_limit, $image_width ) {
+    public function get_items( $image_limit, $image_width, $image_resolution = 'default_algorithm' ) {
 
         $transient = 'zoom_instagram_is_configured';
 
         if ( false !== ( $data = get_transient( $transient ) ) && is_object( $data ) && ! empty( $data->data ) ) {
 
-            return $this->processing_response_data( $data, $image_width );
+            return $this->processing_response_data( $data, $image_width, $image_resolution );
         }
 
 
@@ -63,10 +63,10 @@ class Wpzoom_Instagram_Widget_API {
             set_transient( $transient, $data, 30 * MINUTE_IN_SECONDS );
         }
 
-        return $this->processing_response_data( $data, $image_width );
+        return $this->processing_response_data( $data, $image_width, $image_resolution );
     }
 
-    public function processing_response_data($data, $image_width){
+    public function processing_response_data($data, $image_width, $image_resolution = 'default_algorithm'){
 
         $result   = array();
         $username = '';
@@ -79,7 +79,7 @@ class Wpzoom_Instagram_Widget_API {
 
             $result[] = array(
                 'link'           => $item->link,
-                'image-url'      => $item->images->{$this->get_best_size( $image_width )}->url,
+                'image-url'      => $item->images->{$this->get_best_size( $image_width, $image_resolution )}->url,
                 'image-caption'  => ! empty( $item->caption->text ) ? esc_attr( $item->caption->text ) : '',
                 'likes_count'    => ! empty( $item->likes->count ) ? esc_attr( $item->likes->count ) : 0,
                 'comments_count' => ! empty( $item->comments->count ) ? esc_attr( $item->comments->count ) : 0
@@ -135,7 +135,7 @@ class Wpzoom_Instagram_Widget_API {
      *
      * @return string Image size for Instagram API
      */
-    protected function get_best_size( $desired_width ) {
+    protected function get_best_size( $desired_width, $image_resolution = 'default_algorithm' ) {
         $size = 'thumbnail';
         $sizes = array(
             'thumbnail'           => 150,
@@ -144,6 +144,10 @@ class Wpzoom_Instagram_Widget_API {
         );
 
         $diff = PHP_INT_MAX;
+
+        if ( array_key_exists( $image_resolution, $sizes ) ) {
+            return $image_resolution;
+        }
 
         foreach ( $sizes as $key => $value ) {
             if ( abs( $desired_width - $value ) < $diff ) {
