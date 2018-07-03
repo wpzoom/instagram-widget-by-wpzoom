@@ -118,8 +118,8 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 		$instance['image-spacing'] = ( 0 <= (int) $new_instance['image-spacing'] ) ? (int) $new_instance['image-spacing'] : null;
 		$instance['image-resolution'] = !empty($new_instance['image-resolution']) ?  $new_instance['image-resolution'] : $this->defaults['image-resolution'];
 
-		$instance['show-view-on-instagram-button']   = (bool) $new_instance['show-view-on-instagram-button'];
-		$instance['show-counts-on-hover']   = (bool) $new_instance['show-counts-on-hover'];
+		$instance['show-view-on-instagram-button'] = ! empty( $new_instance['show-view-on-instagram-button'] );
+		$instance['show-counts-on-hover']          = ! empty( $new_instance['show-counts-on-hover'] );
 
 
 
