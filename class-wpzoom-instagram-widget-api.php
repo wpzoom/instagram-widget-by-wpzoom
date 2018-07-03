@@ -45,11 +45,11 @@ class Wpzoom_Instagram_Widget_API {
 
         if ( false !== ( $data = get_transient( $transient ) ) && is_object( $data ) && ! empty( $data->data ) ) {
 
-            return $this->processing_response_data( $data, $image_width, $image_resolution );
+            return $this->processing_response_data( $data, $image_width, $image_resolution, $image_limit );
         }
 
-
-        $response = wp_remote_get( sprintf( 'https://api.instagram.com/v1/users/self/media/recent/?access_token=%s&count=%s', $this->access_token, $image_limit ) );
+        $api_image_limit = 30;
+        $response        = wp_remote_get( sprintf( 'https://api.instagram.com/v1/users/self/media/recent/?access_token=%s&count=%s', $this->access_token, $api_image_limit ) );
 
         if ( is_wp_error( $response ) || 200 != wp_remote_retrieve_response_code( $response ) ) {
             set_transient( $transient, false, MINUTE_IN_SECONDS );
@@ -63,18 +63,22 @@ class Wpzoom_Instagram_Widget_API {
             set_transient( $transient, $data, 30 * MINUTE_IN_SECONDS );
         }
 
-        return $this->processing_response_data( $data, $image_width, $image_resolution );
+        return $this->processing_response_data( $data, $image_width, $image_resolution, $image_limit );
     }
 
-    public function processing_response_data($data, $image_width, $image_resolution = 'default_algorithm'){
+    public function processing_response_data( $data, $image_width, $image_resolution = 'default_algorithm', $image_limit ) {
 
         $result   = array();
         $username = '';
 
-        foreach ( $data->data as $item ) {
+        foreach ( $data->data as $key => $item ) {
 
             if ( empty( $username ) ) {
                 $username = $item->user->username;
+            }
+
+            if ( $key === $image_limit ) {
+                break;
             }
 
             $result[] = array(
