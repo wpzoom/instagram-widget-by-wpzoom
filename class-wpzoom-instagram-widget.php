@@ -44,8 +44,8 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 	 * Widget specific scripts & styles
 	 */
 	public function scripts() {
-		wp_enqueue_style( 'zoom-instagram-widget', plugin_dir_url( dirname( __FILE__ ) . '/instagram-widget-by-wpzoom.php' ) . 'css/instagram-widget.css', array('dashicons'), '20181004' );
-		wp_enqueue_script( 'zoom-instagram-widget', plugin_dir_url( dirname( __FILE__ ) . '/instagram-widget-by-wpzoom.php' ) . 'js/instagram-widget.js', array( 'jquery' ), '20181004' );
+		wp_enqueue_style( 'zoom-instagram-widget', plugin_dir_url( dirname( __FILE__ ) . '/instagram-widget-by-wpzoom.php' ) . 'css/instagram-widget.css', array('dashicons'), '1.2.11' );
+		wp_enqueue_script( 'zoom-instagram-widget', plugin_dir_url( dirname( __FILE__ ) . '/instagram-widget-by-wpzoom.php' ) . 'js/instagram-widget.js', array( 'jquery' ), '1.2.10' );
 		wp_localize_script( 'zoom-instagram-widget', 'zoom_instagram_widget', array(
 			'client_id' => $this->api->get_access_token()
 		) );
@@ -158,7 +158,7 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 
 		<p>
 			<label for="<?php echo $this->get_field_id( 'image-limit' ); ?>"><?php esc_html_e( 'Number of Images Shown:', 'wpzoom-instagram-widget' ); ?></label>
-			<input class="widefat" id="<?php echo $this->get_field_id( 'image-limit' ); ?>" name="<?php echo $this->get_field_name( 'image-limit' ); ?>" type="number" min="1" max="20" value="<?php echo esc_attr( $instance['image-limit'] ); ?>"/>
+			<input class="widefat" id="<?php echo $this->get_field_id( 'image-limit' ); ?>" name="<?php echo $this->get_field_name( 'image-limit' ); ?>" type="number" min="1" max="30" value="<?php echo esc_attr( $instance['image-limit'] ); ?>"/>
 		</p>
 
 		<p>
@@ -212,7 +212,7 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 
 		<p>
 			<input class="checkbox" type="checkbox" <?php checked( $instance['show-counts-on-hover'] ); ?> id="<?php echo $this->get_field_id( 'show-counts-on-hover' ); ?>" name="<?php echo $this->get_field_name( 'show-counts-on-hover' ); ?>" />
-			<label for="<?php echo $this->get_field_id( 'show-counts-on-hover' ); ?>"><?php _e(' Show on hover <strong>overlay with number of comments and likes</strong>', 'wpzoom-instagram-widget' ); ?></label>
+			<label for="<?php echo $this->get_field_id( 'show-counts-on-hover' ); ?>"><?php _e(' Show <strong>overlay with number of comments and likes</strong> on hover', 'wpzoom-instagram-widget' ); ?></label>
 		</p>
 
         <p>
@@ -247,7 +247,7 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
                 <li class="zoom-instagram-widget__item">
 
 	                <?php if($show_overlay): ?>
-	                <div class='hover-layout overlay black <?php echo $small_class?>'>
+	                <div class='hover-layout zoom-instagram-widget__overlay zoom-instagram-widget__black <?php echo $small_class?>'>
 
 		                <div class='hover-controls'>
 			                <span  class="dashicons dashicons-heart"></span>
@@ -256,7 +256,7 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 			                <span class="counter"><?php echo $comments; ?></span>
 		                </div>
 		                <div class='zoom-instagram-icon-wrap'>
-			                <a class="zoom-svg-instagram-stroke" href="<?php echo $link; ?>" target="_blank" title="<?php echo $alt; ?>"></a>
+			                <a class="zoom-svg-instagram-stroke" href="<?php echo $link; ?>" rel="noopener" target="_blank" title="<?php echo $alt; ?>"></a>
 		                </div>
 
 
@@ -267,7 +267,7 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
                         background-size: cover;
                         background-position: center center;
                         background-repeat: no-repeat;"
-                        href="<?php echo $link; ?>" target="_blank" title="<?php echo $alt; ?>"
+                        href="<?php echo $link; ?>" target="_blank" rel="noopener" title="<?php echo $alt; ?>"
                     >
                     </a>
 	                </div>
@@ -279,7 +279,7 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 			                background-size: cover;
 			                background-position: center center;
 			                background-repeat: no-repeat;"
-		                   href="<?php echo $link; ?>" target="_blank" title="<?php echo $alt; ?>"
+		                   href="<?php echo $link; ?>" target="_blank" rel="noopener" title="<?php echo $alt; ?>"
 		                >
 		                </a>
 	                <?php endif; ?>
@@ -304,7 +304,7 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 
 		?>
 		<div class="zoom-instagram-widget__follow-me">
-			<a href="<?php printf( 'http://instagram.com/%s?ref=badge', esc_attr( $username ) ); ?>" class="ig-b- ig-b-v-24" target="_blank"><?php echo esc_attr( $instance['button_text'] ); ?></a>
+			<a href="<?php printf( 'http://instagram.com/%s?ref=badge', esc_attr( $username ) ); ?>" class="ig-b- ig-b-v-24" rel="noopener" target="_blank"><?php echo esc_attr( $instance['button_text'] ); ?></a>
 		</div>
 	<?php
 	}

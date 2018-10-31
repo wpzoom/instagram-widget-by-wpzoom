@@ -3,7 +3,7 @@ Contributors: WPZOOM, nvartolomei, ciorici
 Donate link: https://www.wpzoom.com/
 Tags: instagram, widget, timeline, social networks, latest images, feed
 Requires at least: 4.3
-Tested up to: 4.9
+Tested up to: 4.9.8
 Stable tag: trunk
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -56,6 +56,16 @@ Make sure to connect your Instagram account with the plugin. You can do that in 
 
 
 == Changelog ==
+
+= 1.2.11 =
+* Fixed a conflict with some CSS classes
+
+= 1.2.10 =
+* Minor fixes to new overlay feature
+
+= 1.2.9 =
+* New option: show number of likes and comments on image hover
+* Minor bug fixes
 
 = 1.2.8 =
 * Minor bug fix
