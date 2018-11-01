@@ -27,6 +27,7 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 			'image-limit'                   => 9,
 			'show-view-on-instagram-button' => true,
 			'show-counts-on-hover'          => false,
+			'show-user-info'                => false,
 			'images-per-row'                => 3,
 			'image-width'                   => 120,
 			'image-spacing'                 => 10,
@@ -86,9 +87,23 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 
 		$items = $this->api->get_items( $instance['image-limit'], $instance['image-width'], $instance['image-resolution'] );
 
+
 		if ( ! is_array( $items ) ) {
 			$this->display_errors();
 		} else {
+
+			if ( ! empty( $instance['show-user-info'] ) ) {
+				$user_info = $this->api->get_user_info();
+
+				if (
+					is_object( $user_info ) &&
+					! empty( $user_info ) &&
+					! empty( $user_info->data )
+				) {
+					$this->display_user_info( $instance, $user_info );
+				}
+			}
+
 			$this->display_items( $items['items'], $instance );
 			$this->display_instagram_button( $instance, $items['username'] );
 		}
@@ -120,6 +135,7 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 
 		$instance['show-view-on-instagram-button'] = ! empty( $new_instance['show-view-on-instagram-button'] );
 		$instance['show-counts-on-hover']          = ! empty( $new_instance['show-counts-on-hover'] );
+		$instance['show-user-info']                = ! empty( $new_instance['show-user-info'] );
 
 
 
@@ -203,6 +219,10 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 					<?php _e('Standart Resolution ( 640x640px )', 'wpzoom-instagram-widget' ); ?>
 				</option>
 			</select>
+		</p>
+		<p>
+			<input class="checkbox" type="checkbox" <?php checked( $instance['show-user-info'] ); ?> id="<?php echo $this->get_field_id( 'show-user-info' ); ?>" name="<?php echo $this->get_field_name( 'show-user-info' ); ?>" />
+			<label for="<?php echo $this->get_field_id( 'show-user-info' ); ?>"><?php _e(' Display <strong>user details</strong>', 'wpzoom-instagram-widget' ); ?></label>
 		</p>
 
 		<p>
@@ -293,6 +313,75 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 
 		<div style="clear:both;"></div>
 	<?php
+	}
+
+
+	protected function display_user_info( $instance, $user_info ) {
+		?>
+		<div class="zoom-instagram-widget-user-info">
+			<?php if ( ! empty( $user_info->data->profile_picture ) ): ?>
+				<div class="zoom-instagram-widget-user-info-picture">
+					<img width="100" src="<?php echo $user_info->data->profile_picture ?>"
+					     alt="<?php echo esc_attr( $user_info->data->full_name ) ?>"/>
+				</div>
+			<?php endif; ?>
+			<div class="zoom-instagram-widget-user-info-meta">
+				<div class="zoom-instagram-widget-user-info-about-data">
+					<div class="zoom-instagram-widget-user-info-names-wrapper">
+						<?php if ( ! empty( $user_info->data->full_name ) ): ?>
+							<div class="zoom-instagram-widget-user-info-fullname">
+								<?php esc_html_e( $user_info->data->full_name ) ?>
+							</div>
+						<?php endif; ?>
+						<?php if ( ! empty( $user_info->data->username ) ): ?>
+							<div class="zoom-instagram-widget-user-info-username">
+								<?php esc_html_e( '@' . $user_info->data->username ) ?>
+							</div>
+						<?php endif; ?>
+					</div>
+					<div>
+						<a
+							class="zoom-instagram-widget-user-info-follow-button"
+							href="<?php printf( 'http://instagram.com/%s?ref=badge', esc_attr( $user_info->data->username ) ); ?>">
+							<?php _e( 'Follow', 'wpzoom-instagram-widget' ) ?>
+						</a>
+					</div>
+				</div>
+				<div class="zoom-instagram-widget-user-info-stats">
+					<?php if ( ! empty( $user_info->data->counts->media ) ): ?>
+						<div>
+							<div class="zoom-instagram-widget-user-info-counts">
+								<?php echo $user_info->data->counts->media; ?>
+							</div>
+							<div class="zoom-instagram-widget-user-info-counts-subhead">
+								<?php _e( 'posts', 'wpzoom-instagram-widget' ); ?>
+							</div>
+						</div>
+					<?php endif; ?>
+					<?php if ( ! empty( $user_info->data->counts->followed_by ) ): ?>
+						<div class="zoom-instagram-widget-user-info-middle-cell">
+							<div class="zoom-instagram-widget-user-info-counts">
+								<?php echo $user_info->data->counts->followed_by; ?>
+							</div>
+							<div class="zoom-instagram-widget-user-info-counts-subhead">
+								<?php _e( 'followers', 'wpzoom-instagram-widget' ); ?>
+							</div>
+						</div>
+					<?php endif; ?>
+					<?php if ( ! empty( $user_info->data->counts->follows ) ): ?>
+						<div>
+							<div class="zoom-instagram-widget-user-info-counts">
+								<?php echo $user_info->data->counts->follows; ?>
+							</div>
+							<div class="zoom-instagram-widget-user-info-counts-subhead">
+								<?php _e( 'following', 'wpzoom-instagram-widget' ); ?>
+							</div>
+						</div>
+					<?php endif; ?>
+				</div>
+			</div>
+		</div>
+		<?php
 	}
 
 	protected function display_instagram_button( $instance, $username) {

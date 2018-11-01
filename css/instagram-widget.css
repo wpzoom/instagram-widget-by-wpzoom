@@ -147,3 +147,85 @@ a.ig-b-v-24:hover {
     padding-right: 4px;
     font-size: 11px;
 }
+
+/** Instagram user info **/
+
+.zoom-instagram-widget-user-info {
+    display: flex;
+    padding: 10px 0px;
+    justify-content: space-between;
+}
+
+.zoom-instagram-widget-user-info .zoom-instagram-widget-user-info-picture img {
+    border-radius: 50%;
+}
+
+.zoom-instagram-widget-user-info .zoom-instagram-widget-user-info-meta {
+    display: flex;
+    flex-direction: column;
+    margin-left: 10px;
+}
+
+.zoom-instagram-widget-user-info .zoom-instagram-widget-user-info-about-data {
+
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+
+}
+
+.zoom-instagram-widget-user-info .zoom-instagram-widget-user-info-stats{
+
+    justify-content: space-between;
+    display: flex;
+}
+
+.zoom-instagram-widget-user-info .zoom-instagram-widget-user-info-follow-button {
+    padding: 0px 24px;
+    background: #3897f0;
+    border: 1px solid #3897f0;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 26px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    text-transform: none;
+    border-radius: 3px;
+    outline: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block;
+}
+
+.zoom-instagram-widget-user-info .zoom-instagram-widget-user-info-counts{
+    color: #262626;
+    font-weight: 600;
+}
+
+.zoom-instagram-widget-user-info .zoom-instagram-widget-user-info-counts-subhead{
+    color: #999;
+    font-size: 14px;
+}
+
+.zoom-instagram-widget-user-info-grey-color{
+    color: #b0b0b0;
+}
+.zoom-instagram-widget-user-info-middle-cell{
+    padding: 0px 20px;
+}
+
+.zoom-instagram-widget-user-info .zoom-instagram-widget-user-info-fullname{
+    font-weight: 600;
+    font-size: 16px;
+}
+
+.zoom-instagram-widget-user-info .zoom-instagram-widget-user-info-names-wrapper{
+    padding-right: 20px;
+}
+.zoom-instagram-widget-user-info .zoom-instagram-widget-user-info-username{
+    color: #999;
+}
+
+.zoom-instagram-widget-user-info .zoom-instagram-widget-user-info-fullname{
+    color: #262626;
+}

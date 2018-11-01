@@ -61,6 +61,10 @@ class Wpzoom_Instagram_Widget_API {
 
         if ( ! empty( $data->data ) ) {
             set_transient( $transient, $data, 30 * MINUTE_IN_SECONDS );
+        } else {
+            set_transient( $transient, false, MINUTE_IN_SECONDS );
+
+            return false;
         }
 
         return $this->processing_response_data( $data, $image_width, $image_resolution, $image_limit );
@@ -93,6 +97,38 @@ class Wpzoom_Instagram_Widget_API {
         $result = array( 'items' => $result, 'username' => $username );
 
         return $result;
+    }
+
+    public function get_user_info(){
+
+
+        $transient = 'zoom_instagram_user_info';
+
+        if ( false !== ( $data = get_transient( $transient ) ) && is_object( $data ) && ! empty( $data->data ) ) {
+
+            return $data;
+        }
+
+        $response        = wp_remote_get( sprintf( 'https://api.instagram.com/v1/users/self/?access_token=%s', $this->access_token ) );
+
+        if ( is_wp_error( $response ) || 200 != wp_remote_retrieve_response_code( $response ) ) {
+            set_transient( $transient, false, MINUTE_IN_SECONDS );
+
+            return false;
+        }
+
+        $data = json_decode( wp_remote_retrieve_body( $response ) );
+
+        if ( ! empty( $data->data ) ) {
+            set_transient( $transient, $data, 60 * MINUTE_IN_SECONDS );
+        } else {
+            set_transient( $transient, false, MINUTE_IN_SECONDS );
+
+            return false;
+        }
+
+        return $data;
+
     }
 
     /**
