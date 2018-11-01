@@ -244,6 +244,7 @@ class Wpzoom_Instagram_Widget_API {
 
     public static function reset_cache() {
         delete_transient( 'zoom_instagram_is_configured' );
+        delete_transient( 'zoom_instagram_user_info' );
     }
 
     public function get_access_token() {
