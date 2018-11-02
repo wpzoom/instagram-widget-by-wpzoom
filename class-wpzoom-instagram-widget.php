@@ -351,7 +351,7 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 					<?php if ( ! empty( $user_info->data->counts->media ) ): ?>
 						<div>
 							<div class="zoom-instagram-widget-user-info-counts">
-								<?php echo $user_info->data->counts->media; ?>
+								<?php echo $this->format_number($user_info->data->counts->media); ?>
 							</div>
 							<div class="zoom-instagram-widget-user-info-counts-subhead">
 								<?php _e( 'posts', 'wpzoom-instagram-widget' ); ?>
@@ -361,7 +361,7 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 					<?php if ( ! empty( $user_info->data->counts->followed_by ) ): ?>
 						<div class="zoom-instagram-widget-user-info-middle-cell">
 							<div class="zoom-instagram-widget-user-info-counts">
-								<?php echo $user_info->data->counts->followed_by; ?>
+								<?php echo $this->format_number($user_info->data->counts->followed_by); ?>
 							</div>
 							<div class="zoom-instagram-widget-user-info-counts-subhead">
 								<?php _e( 'followers', 'wpzoom-instagram-widget' ); ?>
@@ -371,7 +371,7 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 					<?php if ( ! empty( $user_info->data->counts->follows ) ): ?>
 						<div>
 							<div class="zoom-instagram-widget-user-info-counts">
-								<?php echo $user_info->data->counts->follows; ?>
+								<?php echo $this->format_number($user_info->data->counts->follows); ?>
 							</div>
 							<div class="zoom-instagram-widget-user-info-counts-subhead">
 								<?php _e( 'following', 'wpzoom-instagram-widget' ); ?>
@@ -382,6 +382,20 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 			</div>
 		</div>
 		<?php
+	}
+
+	public function format_number( $num ) {
+
+		if ( $num < 10000 ) {
+			return number_format( $num );
+		}
+
+		$units = array( '', 'k', 'm', 'b', 't' );
+		for ( $i = 0; $num >= 1000; $i ++ ) {
+			$num /= 1000;
+		}
+
+		return round( $num, 1 ) . $units[ $i ];
 	}
 
 	protected function display_instagram_button( $instance, $username) {
