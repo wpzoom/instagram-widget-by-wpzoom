@@ -347,7 +347,8 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 				<div class="zoom-instagram-widget-user-info-stats">
 					<?php if ( ! empty( $user_info->data->counts->media ) ): ?>
 						<div>
-							<div class="zoom-instagram-widget-user-info-counts">
+							<div class="zoom-instagram-widget-user-info-counts"
+							     title="<?php echo number_format($user_info->data->counts->media)?>">
 								<?php echo $this->format_number($user_info->data->counts->media); ?>
 							</div>
 							<div class="zoom-instagram-widget-user-info-counts-subhead">
@@ -357,7 +358,8 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 					<?php endif; ?>
 					<?php if ( ! empty( $user_info->data->counts->followed_by ) ): ?>
 						<div class="zoom-instagram-widget-user-info-middle-cell">
-							<div class="zoom-instagram-widget-user-info-counts">
+							<div class="zoom-instagram-widget-user-info-counts"
+							     title="<?php echo number_format($user_info->data->counts->followed_by)?>">
 								<?php echo $this->format_number($user_info->data->counts->followed_by); ?>
 							</div>
 							<div class="zoom-instagram-widget-user-info-counts-subhead">
@@ -367,7 +369,8 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 					<?php endif; ?>
 					<?php if ( ! empty( $user_info->data->counts->follows ) ): ?>
 						<div>
-							<div class="zoom-instagram-widget-user-info-counts">
+							<div class="zoom-instagram-widget-user-info-counts"
+							     title="<?php echo number_format($user_info->data->counts->follows)?>">
 								<?php echo $this->format_number($user_info->data->counts->follows); ?>
 							</div>
 							<div class="zoom-instagram-widget-user-info-counts-subhead">
@@ -379,8 +382,9 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 			</div>
 
 		</div>
-
-        <div class="zoom-instagram-widget-user-info-bio"><?php esc_html_e( $user_info->data->bio ) ?></div>
+		<?php if ( ! empty( $user_info->data->bio ) ): ?>
+			<div class="zoom-instagram-widget-user-info-bio"><?php echo nl2br( $user_info->data->bio ) ?></div>
+		<?php endif; ?>
 
 		<?php
 	}
