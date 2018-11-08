@@ -321,8 +321,7 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 		<div class="zoom-instagram-widget-user-info">
 			<?php if ( ! empty( $user_info->data->profile_picture ) ): ?>
 				<div class="zoom-instagram-widget-user-info-picture">
-					<img width="100" src="<?php echo $user_info->data->profile_picture ?>"
-					     alt="<?php echo esc_attr( $user_info->data->full_name ) ?>"/>
+					<a target="_blank" rel="noopener" href="<?php printf( 'http://instagram.com/%s?ref=badge', esc_attr( $user_info->data->username ) ); ?>"><img width="90" src="<?php echo $user_info->data->profile_picture ?>" alt="<?php echo esc_attr( $user_info->data->full_name ) ?>"/></a>
 				</div>
 			<?php endif; ?>
 			<div class="zoom-instagram-widget-user-info-meta">
@@ -340,9 +339,7 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 						<?php endif; ?>
 					</div>
 					<div>
-						<a
-							class="zoom-instagram-widget-user-info-follow-button"
-							href="<?php printf( 'http://instagram.com/%s?ref=badge', esc_attr( $user_info->data->username ) ); ?>">
+						<a class="zoom-instagram-widget-user-info-follow-button" target="_blank" rel="noopener" href="<?php printf( 'http://instagram.com/%s?ref=badge', esc_attr( $user_info->data->username ) ); ?>">
 							<?php _e( 'Follow', 'wpzoom-instagram-widget' ) ?>
 						</a>
 					</div>
@@ -380,7 +377,11 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 					<?php endif; ?>
 				</div>
 			</div>
+
 		</div>
+
+        <div class="zoom-instagram-widget-user-info-bio"><?php esc_html_e( $user_info->data->bio ) ?></div>
+
 		<?php
 	}
 
