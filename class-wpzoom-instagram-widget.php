@@ -27,7 +27,8 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 			'image-limit'                   => 9,
 			'show-view-on-instagram-button' => true,
 			'show-counts-on-hover'          => false,
-			'show-user-info'                => false,
+            'show-user-info'                => false,
+			'show-user-bio'                 => false,
 			'images-per-row'                => 3,
 			'image-width'                   => 120,
 			'image-spacing'                 => 10,
@@ -36,9 +37,7 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 
 		$this->api = Wpzoom_Instagram_Widget_API::getInstance();
 
-		if ( is_active_widget( false, false, $this->id_base ) || is_active_widget( false, false, 'monster' ) ) {
-			add_action( 'wp_enqueue_scripts', array( $this, 'scripts' ) );
-		}
+		add_action( 'wp_enqueue_scripts', array( $this, 'scripts' ) );
 	}
 
 	/**
@@ -135,7 +134,8 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 
 		$instance['show-view-on-instagram-button'] = ! empty( $new_instance['show-view-on-instagram-button'] );
 		$instance['show-counts-on-hover']          = ! empty( $new_instance['show-counts-on-hover'] );
-		$instance['show-user-info']                = ! empty( $new_instance['show-user-info'] );
+        $instance['show-user-info']                = ! empty( $new_instance['show-user-info'] );
+		$instance['show-user-bio']                 = ! empty( $new_instance['show-user-bio'] );
 
 
 
@@ -222,8 +222,13 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 		</p>
 		<p>
 			<input class="checkbox" type="checkbox" <?php checked( $instance['show-user-info'] ); ?> id="<?php echo $this->get_field_id( 'show-user-info' ); ?>" name="<?php echo $this->get_field_name( 'show-user-info' ); ?>" />
-			<label for="<?php echo $this->get_field_id( 'show-user-info' ); ?>"><?php _e(' Display <strong>user details</strong>', 'wpzoom-instagram-widget' ); ?></label>
+			<label for="<?php echo $this->get_field_id( 'show-user-info' ); ?>"><?php _e(' Display <strong>User Details</strong>', 'wpzoom-instagram-widget' ); ?></label>
 		</p>
+
+        <p>
+            <input class="checkbox" type="checkbox" <?php checked( $instance['show-user-bio'] ); ?> id="<?php echo $this->get_field_id( 'show-user-bio' ); ?>" name="<?php echo $this->get_field_name( 'show-user-bio' ); ?>" />
+            <label for="<?php echo $this->get_field_id( 'show-user-bio' ); ?>"><?php _e(' Display <strong>Bio in User Details</strong>', 'wpzoom-instagram-widget' ); ?></label>
+        </p>
 
 		<p>
 			<input class="checkbox" type="checkbox" <?php checked( $instance['show-view-on-instagram-button'] ); ?> id="<?php echo $this->get_field_id( 'show-view-on-instagram-button' ); ?>" name="<?php echo $this->get_field_name( 'show-view-on-instagram-button' ); ?>" />
@@ -382,9 +387,14 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 			</div>
 
 		</div>
-		<?php if ( ! empty( $user_info->data->bio ) ): ?>
-			<div class="zoom-instagram-widget-user-info-bio"><?php echo nl2br( $user_info->data->bio ) ?></div>
-		<?php endif; ?>
+		<?php
+            if ( ! empty( $instance['show-user-bio'] ) ) {
+
+                if ( ! empty( $user_info->data->bio ) ): ?>
+        			<div class="zoom-instagram-widget-user-info-bio"><?php echo nl2br( $user_info->data->bio ) ?></div>
+        		<?php endif;
+
+            } ?>
 
 		<?php
 	}

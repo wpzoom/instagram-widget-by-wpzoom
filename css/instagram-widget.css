@@ -217,17 +217,17 @@ a.ig-b-v-24:hover {
 }
 
 .zoom-instagram-widget-user-info .zoom-instagram-widget-user-info-counts{
-    color: #262626;
     font-weight: 600;
 }
 
 .zoom-instagram-widget-user-info .zoom-instagram-widget-user-info-counts-subhead{
-    color: #999;
+    /*color: #999;*/
+    opacity: .7;
     font-size: 14px;
 }
 
 .zoom-instagram-widget-user-info-grey-color{
-    color: #b0b0b0;
+    /*color: #b0b0b0;*/
 }
 .zoom-instagram-widget-user-info-middle-cell{
     padding: 0px 20px;
@@ -243,10 +243,10 @@ a.ig-b-v-24:hover {
     word-break: break-word;
 }
 .zoom-instagram-widget-user-info .zoom-instagram-widget-user-info-username{
-    color: #999;
     font-size: 14px;
     font-weight: 600;
     word-break: break-all;
+    opacity: .7;
 }
 
 .zoom-instagram-widget-user-info-bio {
@@ -256,5 +256,5 @@ a.ig-b-v-24:hover {
 }
 
 .zoom-instagram-widget-user-info .zoom-instagram-widget-user-info-fullname{
-    color: #262626;
+    /*color: #262626;*/
 }
