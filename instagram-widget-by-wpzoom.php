@@ -6,7 +6,7 @@
  * Description: Fully customisable and responsive Instagram timeline widget for WordPress
  * Author: WPZOOM
  * Author URI: https://www.wpzoom.com/
- * Version: 1.3.0
+ * Version: 1.3.1
  * License: GPLv2 or later
  */
 
