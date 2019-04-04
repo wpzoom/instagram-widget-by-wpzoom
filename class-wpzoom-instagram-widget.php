@@ -33,6 +33,7 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 			'image-width'                   => 120,
 			'image-spacing'                 => 10,
 			'image-resolution'              => 'default_algorithm',
+			'username'                      => '',
 		);
 
 		$this->api = Wpzoom_Instagram_Widget_API::getInstance();
@@ -46,9 +47,6 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 	public function scripts() {
 		wp_enqueue_style( 'zoom-instagram-widget', plugin_dir_url( dirname( __FILE__ ) . '/instagram-widget-by-wpzoom.php' ) . 'css/instagram-widget.css', array('dashicons'), '1.2.11' );
 		wp_enqueue_script( 'zoom-instagram-widget', plugin_dir_url( dirname( __FILE__ ) . '/instagram-widget-by-wpzoom.php' ) . 'js/instagram-widget.js', array( 'jquery' ), '1.2.10' );
-		wp_localize_script( 'zoom-instagram-widget', 'zoom_instagram_widget', array(
-			'client_id' => $this->api->get_access_token()
-		) );
 	}
 
 	/**
@@ -84,15 +82,15 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 			echo $args['before_title'] . apply_filters( 'widget_title', $instance['title'] ) . $args['after_title'];
 		}
 
-		$items = $this->api->get_items( $instance['image-limit'], $instance['image-width'], $instance['image-resolution'] );
 
+		$items = $this->api->get_items( $instance['image-limit'], $instance['image-width'], $instance['image-resolution'], $instance['username'] );
 
 		if ( ! is_array( $items ) ) {
 			$this->display_errors();
 		} else {
 
 			if ( ! empty( $instance['show-user-info'] ) ) {
-				$user_info = $this->api->get_user_info();
+				$user_info = $this->api->get_user_info($instance['username']);
 
 				if (
 					is_object( $user_info ) &&
@@ -131,6 +129,7 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 		$instance['image-width'] = ( 0 !== (int) $new_instance['image-width'] ) ? (int) $new_instance['image-width'] : null;
 		$instance['image-spacing'] = ( 0 <= (int) $new_instance['image-spacing'] ) ? (int) $new_instance['image-spacing'] : null;
 		$instance['image-resolution'] = !empty($new_instance['image-resolution']) ?  $new_instance['image-resolution'] : $this->defaults['image-resolution'];
+		$instance['username'] = !empty($new_instance['username']) ?  $new_instance['username'] : $this->defaults['username'];
 
 		$instance['show-view-on-instagram-button'] = ! empty( $new_instance['show-view-on-instagram-button'] );
 		$instance['show-counts-on-hover']          = ! empty( $new_instance['show-counts-on-hover'] );
@@ -200,6 +199,11 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 				);
 				?>
 			</small>
+		</p>
+
+		<p>
+			<label for="<?php echo $this->get_field_id( 'username' ); ?>"><?php esc_html_e( 'Instagram @username:', 'wpzoom-instagram-widget' ); ?></label>
+			<input class="widefat" id="<?php echo $this->get_field_id( 'username' ); ?>" name="<?php echo $this->get_field_name( 'username' ); ?>" type="text" value="<?php echo esc_attr( $instance['username'] ); ?>"/>
 		</p>
 
 		<p>
