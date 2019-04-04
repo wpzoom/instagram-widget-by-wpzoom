@@ -431,7 +431,13 @@ class Wpzoom_Instagram_Widget_API {
             }
         }
 
-        $condition = $this->is_access_token_valid( $this->access_token );
+        if(empty($this->username)){
+            $condition = $this->is_access_token_valid( $this->access_token );
+
+        } else{
+            $condition = true;
+        }
+
 
         if ( true === $condition ) {
             set_transient( $transient, 'yes', DAY_IN_SECONDS );
