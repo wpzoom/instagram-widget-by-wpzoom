@@ -138,7 +138,7 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 		$instance = wp_parse_args( (array) $instance, $this->defaults );
 		?>
 
-		<?php if ( ! $this->api->is_configured() ) : ?>
+		<?php if ( empty($instance['username']) && ! $this->api->is_configured() ) : ?>
 
 			<p style="color: #d54e21">
 				<?php
