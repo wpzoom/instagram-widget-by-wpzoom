@@ -3,7 +3,7 @@ Contributors: WPZOOM, nvartolomei, ciorici
 Donate link: https://www.wpzoom.com/
 Tags: instagram, widget, timeline, social networks, latest images, feed
 Requires at least: 4.3
-Tested up to: 5.1
+Tested up to: 5.2
 Stable tag: trunk
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -19,6 +19,12 @@ Fully customisable and responsive Instagram timeline widget for WordPress.
 
 
 **Instagram Widget by WPZOOM** gives you a WordPress Widget that you can place anywhere you want and be able to fully customize it's design using CSS.
+
+
+= What's New in version 1.4? =
+
+You can now display a public feed limited to 12 photos of any Instagram account you want. You are no longer limited to display just your own feed.
+
 
 = Where I can view a Demo? =
 
@@ -56,6 +62,9 @@ Make sure to connect your Instagram account with the plugin. You can do that in 
 
 
 == Changelog ==
+
+= 1.4.0 =
+* Added an alternative option to display the public feed limited to 12 photos of your account or any other Instagram user.
 
 = 1.3.1 =
 * Minor bug fix with a caching issue

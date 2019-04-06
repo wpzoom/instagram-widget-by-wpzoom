@@ -80,9 +80,11 @@ a.ig-b-v-24:hover {
 .zoom-instagram-widget__item .hover-controls .counter{
     padding-left: 1px;
     padding-right: 12px;
-    font-weight: normal;
+    font-weight: 500;
     color: #FFFFFF;
     font-size: 14px;
+    letter-spacing: 1px;
+    opacity: .8;
     font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif;
 }
 

@@ -3,10 +3,10 @@
 /**
  * Plugin Name: Instagram Widget by WPZOOM
  * Plugin URI: https://www.wpzoom.com/plugins/instagram-widget/
- * Description: Fully customisable and responsive Instagram timeline widget for WordPress
+ * Description: Simple and responsive widget for WordPress to display your Instagram feed
  * Author: WPZOOM
  * Author URI: https://www.wpzoom.com/
- * Version: 1.3.1
+ * Version: 1.4.0
  * License: GPLv2 or later
  */
 

@@ -45,8 +45,8 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 	 * Widget specific scripts & styles
 	 */
 	public function scripts() {
-		wp_enqueue_style( 'zoom-instagram-widget', plugin_dir_url( dirname( __FILE__ ) . '/instagram-widget-by-wpzoom.php' ) . 'css/instagram-widget.css', array('dashicons'), '1.2.11' );
-		wp_enqueue_script( 'zoom-instagram-widget', plugin_dir_url( dirname( __FILE__ ) . '/instagram-widget-by-wpzoom.php' ) . 'js/instagram-widget.js', array( 'jquery' ), '1.2.10' );
+		wp_enqueue_style( 'zoom-instagram-widget', plugin_dir_url( dirname( __FILE__ ) . '/instagram-widget-by-wpzoom.php' ) . 'css/instagram-widget.css', array('dashicons'), '1.4.0' );
+		wp_enqueue_script( 'zoom-instagram-widget', plugin_dir_url( dirname( __FILE__ ) . '/instagram-widget-by-wpzoom.php' ) . 'js/instagram-widget.js', array( 'jquery' ), '1.4.0' );
 	}
 
 	/**
@@ -175,20 +175,27 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 			<input class="widefat" id="<?php echo $this->get_field_id( 'image-spacing' ); ?>" name="<?php echo $this->get_field_name( 'image-spacing' ); ?>" type="number" min="0" max="50" value="<?php echo esc_attr( $instance['image-spacing'] ); ?>"/>
 		</p>
 
-		<p>
-			<small>
-				<?php
-				echo wp_kses_post(
-					__( 'Fields above do not influence directly widget appearance. Final number of images per row and image width is calculated depending on browser resolution. This ensures your photos look beautiful on all devices.', 'wpzoom-instagram-widget' )
-				);
-				?>
-			</small>
+		<p class="description">
+			<?php
+			echo wp_kses_post(
+				__( 'Fields above do not influence directly widget appearance. Final number of images per row and image width is calculated depending on browser resolution. This ensures your photos look beautiful on all devices.', 'wpzoom-instagram-widget' )
+			);
+			?>
 		</p>
 
 		<p>
-			<label for="<?php echo $this->get_field_id( 'username' ); ?>"><?php esc_html_e( 'Instagram @username:', 'wpzoom-instagram-widget' ); ?></label>
+			<label for="<?php echo $this->get_field_id( 'username' ); ?>"><strong><?php esc_html_e( 'Instagram @username:', 'wpzoom-instagram-widget' ); ?></strong></label>
 			<input class="widefat" id="<?php echo $this->get_field_id( 'username' ); ?>" name="<?php echo $this->get_field_name( 'username' ); ?>" type="text" value="<?php echo esc_attr( $instance['username'] ); ?>"/>
 		</p>
+
+        <p class="description">
+
+            <?php
+            printf( __( 'If you have already connected your Instagram account in the <a href="%1$s">plugin settings</a>, leave this field empty. You can use this option if you want to display the feed of a different Instagram account.', 'wpzoom-instagram-widget' ),
+                menu_page_url( 'wpzoom-instagram-widget', false ) );
+             ?>
+
+        </p>
 
 		<p>
 			<label for="<?php echo $this->get_field_id( 'image-resolution' ); ?>"><?php esc_html_e( 'Set forced image resolution:', 'wpzoom-instagram-widget' ); ?></label>
