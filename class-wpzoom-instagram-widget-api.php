@@ -149,7 +149,7 @@ class Wpzoom_Instagram_Widget_API {
                     'standard_resolution' => (object) array(
                         'url'    => $node->thumbnail_resources[4]->src,
                         'width'  => $node->thumbnail_resources[4]->config_width,
-                        'height' => $node->thumbnail_resources[4]->confit_height
+                        'height' => $node->thumbnail_resources[4]->config_height
                     ),
                 ),
                 'likes'        => isset( $node->edge_liked_by ) ? $node->edge_liked_by : 0,
