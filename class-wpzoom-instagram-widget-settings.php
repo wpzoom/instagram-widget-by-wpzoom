@@ -7,7 +7,7 @@ class Wpzoom_Instagram_Widget_Settings {
 
         add_filter( 'plugin_action_links', array( $this, 'add_action_links' ), 10, 2 );
 
-        add_action( 'admin_enqueue_scripts', array( $this, 'scripts' ) );
+        add_action( 'admin_enqueue_scripts', array( $this, 'scripts' ),9 );
     }
 
     function add_action_links( $links, $file ) {
@@ -84,9 +84,7 @@ class Wpzoom_Instagram_Widget_Settings {
             __( '', 'wpzoom-instagram-widget' ),
             array( $this, 'settings_field_username_description' ),
             'wpzoom-instagram-widget-settings-group',
-            'wpzoom-instagram-widget-settings-general',
-            array('class' => 'wpzoom-instagram-widget-without-access-token-group')
-
+            'wpzoom-instagram-widget-settings-general'
         );
 
         add_settings_field(
@@ -97,6 +95,14 @@ class Wpzoom_Instagram_Widget_Settings {
             'wpzoom-instagram-widget-settings-general',
             array('class' => 'wpzoom-instagram-widget-without-access-token-group')
 
+        );
+
+        add_settings_field(
+            'wpzoom-instagram-widget-transient-lifetime',
+            __( 'Check for new Instagram posts every', 'wpzoom-instagram-widget' ),
+            array( $this, 'settings_field_transient_lifetime' ),
+            'wpzoom-instagram-widget-settings-group',
+            'wpzoom-instagram-widget-settings-general'
         );
 
 
@@ -119,6 +125,27 @@ class Wpzoom_Instagram_Widget_Settings {
             <?php endif; ?>
         </a>
         </p>
+        <?php
+    }
+
+    public function settings_field_transient_lifetime() {
+        $settings = get_option( 'wpzoom-instagram-widget-settings' );
+        ?>
+        <input  class="regular-text code"
+                id="wpzoom-instagram-widget-settings_transient-lifetime-value"
+                name="wpzoom-instagram-widget-settings[transient-lifetime-value]"
+                value="<?php echo esc_attr( $settings['transient-lifetime-value'] ) ?>"
+                type="number"
+                min="1">
+
+        <select class="regular-text code"
+                id="wpzoom-instagram-widget-settings_transient-lifetime-type"
+                name="wpzoom-instagram-widget-settings[transient-lifetime-type]"
+                value="<?php echo esc_attr( $settings['transient-lifetime-type'] ) ?>">
+            <option value="hours"><?php _e( 'Hours', 'wpzoom-instagram-widget' ) ?></option>
+            <option value="days"><?php _e( 'Days', 'wpzoom-instagram-widget' ) ?></option>
+            <option value="minutes"><?php _e( 'Minutes', 'wpzoom-instagram-widget' ) ?></option>
+        </select>
         <?php
     }
 
@@ -265,6 +292,8 @@ class Wpzoom_Instagram_Widget_Settings {
 
         $result['username'] = sanitize_text_field( $input['username'] );
         $result['request-type'] = sanitize_text_field( $input['request-type'] );
+        $result['transient-lifetime-value'] = sanitize_text_field( $input['transient-lifetime-value'] );
+        $result['transient-lifetime-type'] = sanitize_text_field( $input['transient-lifetime-type'] );
 
         Wpzoom_Instagram_Widget_API::reset_cache();
 

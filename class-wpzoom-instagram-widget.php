@@ -271,9 +271,9 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 
 		                <div class='hover-controls'>
 			                <span  class="dashicons dashicons-heart"></span>
-			                <span class="counter"><?php echo $likes;?></span>
+			                <span class="counter"><?php echo $this->format_number($likes); ?></span>
 			                <span class="dashicons dashicons-format-chat"></span>
-			                <span class="counter"><?php echo $comments; ?></span>
+			                <span class="counter"><?php echo $this->format_number($comments); ?></span>
 		                </div>
 		                <div class='zoom-instagram-icon-wrap'>
 			                <a class="zoom-svg-instagram-stroke" href="<?php echo $link; ?>" rel="noopener" target="_blank" title="<?php echo $alt; ?>"></a>

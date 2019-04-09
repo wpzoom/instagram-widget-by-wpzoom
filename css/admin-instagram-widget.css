@@ -63,3 +63,13 @@
     background: #2A9B2A;
     color: #fff;
 }
+
+#wpzoom-instagram-widget-settings_transient-lifetime-value{
+    max-width: 150px;
+    float: left;
+}
+
+#wpzoom-instagram-widget-settings_transient-lifetime-type{
+    float: left;
+    max-width: 100px;
+}

@@ -32,6 +32,18 @@ class Wpzoom_Instagram_Widget_API {
         $this->access_token = $options['access-token'];
         $this->username = !empty($options['username']) ? $options['username'] : '';
         $this->request_type = !empty($options['request_type']) ? $options['request_type'] : '';
+        $this->transient_lifetime_type = !empty($options['transient-lifetime-type']) ? $options['transient-lifetime-type'] : 'minutes';
+        $this->transient_lifetime_value = !empty($options['transient-lifetime-value']) ? $options['transient-lifetime-value'] : 30;
+
+    }
+
+    function get_transient_lifetime() {
+
+        $values = array( 'minutes' => MINUTE_IN_SECONDS, 'hours' => HOUR_IN_SECONDS, 'days' => DAY_IN_SECONDS );
+        $keys   = array_keys( $values );
+        $type   = in_array( $this->transient_lifetime_type, $keys ) ? $values[ $this->transient_lifetime_type ] : $values['minutes'];
+
+        return $type * $this->transient_lifetime_value;
     }
 
     function get_user_info_without_token( $user ) {
@@ -188,7 +200,11 @@ class Wpzoom_Instagram_Widget_API {
             return $this->processing_response_data( $data, $image_width, $image_resolution, $image_limit );
         }
 
-        if ( empty( $injected_username ) && ! empty( $this->access_token ) && empty( $this->username ) ) {
+        $is_external_username = ! empty( $this->username ) || ! empty( $injected_username );
+        $external_username    = ! empty( $injected_username ) ? $injected_username : $this->username;
+
+
+        if ( ! empty( $this->access_token ) ) {
             $api_image_limit = 30;
             $response        = wp_remote_get( sprintf( 'https://api.instagram.com/v1/users/self/media/recent/?access_token=%s&count=%s', $this->access_token, $api_image_limit ) );
 
@@ -199,11 +215,29 @@ class Wpzoom_Instagram_Widget_API {
             }
 
             $data = json_decode( wp_remote_retrieve_body( $response ) );
+
+            $token_username = ! empty( $data->data[0]->user->username ) ? $data->data[0]->user->username : '';
+
+
+            if ( ! empty( $token_username ) && ! empty( $is_external_username ) ) {
+
+                if ( $external_username !== $token_username ) {
+
+                    $data = $this->get_items_without_token( $external_username );
+
+                    if ( is_wp_error( $data ) ) {
+                        set_transient( $transient, false, MINUTE_IN_SECONDS );
+
+                        return false;
+                    }
+                }
+            }
         }
 
-        if ( empty( $injected_username ) && ! empty( $this->username ) ) {
+        if ( empty( $this->access_token ) && ! empty( $is_external_username ) ) {
 
-            $data = $this->get_items_without_token( $this->username );
+
+            $data = $this->get_items_without_token( $external_username );
 
             if ( is_wp_error( $data ) ) {
                 set_transient( $transient, false, MINUTE_IN_SECONDS );
@@ -212,22 +246,9 @@ class Wpzoom_Instagram_Widget_API {
             }
 
         }
-
-        if ( ! empty( $injected_username ) ) {
-
-            $data = $this->get_items_without_token( $injected_username );
-
-            if ( is_wp_error( $data ) ) {
-                set_transient( $transient, false, MINUTE_IN_SECONDS );
-
-                return false;
-            }
-
-        }
-
 
         if ( ! empty( $data->data ) ) {
-            set_transient( $transient, $data, 30 * MINUTE_IN_SECONDS );
+            set_transient( $transient, $data, $this->get_transient_lifetime() );
         } else {
             set_transient( $transient, false, MINUTE_IN_SECONDS );
 
@@ -283,7 +304,10 @@ class Wpzoom_Instagram_Widget_API {
             return $data;
         }
 
-        if ( empty( $injected_username ) && ! empty( $this->access_token ) && empty( $this->username ) ) {
+        $is_external_username = ! empty( $this->username ) || ! empty( $injected_username );
+        $external_username    = ! empty( $injected_username ) ? $injected_username : $this->username;
+
+        if ( ! empty( $this->access_token ) ) {
 
             $response = wp_remote_get( sprintf( 'https://api.instagram.com/v1/users/self/?access_token=%s', $this->access_token ) );
 
@@ -295,23 +319,27 @@ class Wpzoom_Instagram_Widget_API {
 
             $data = json_decode( wp_remote_retrieve_body( $response ) );
 
-        }
+            $token_username = ! empty( $data->data->username ) ? $data->data->username : '';
 
-        if ( empty( $injected_username ) && ! empty( $this->username ) ) {
+            if ( ! empty( $token_username ) && ! empty( $is_external_username ) ) {
 
-            $data = $this->get_user_info_without_token( $this->username );
+                if ( $external_username !== $token_username ) {
 
-            if ( is_wp_error( $data ) ) {
-                set_transient( $transient, false, MINUTE_IN_SECONDS );
+                    $data = $this->get_user_info_without_token( $external_username );
 
-                return false;
+                    if ( is_wp_error( $data ) ) {
+                        set_transient( $transient, false, MINUTE_IN_SECONDS );
+
+                        return false;
+                    }
+                }
             }
 
         }
 
-        if ( ! empty( $injected_username ) ) {
+        if ( empty( $this->access_token ) && ! empty( $is_external_username ) ) {
 
-            $data = $this->get_user_info_without_token( $injected_username );
+            $data = $this->get_user_info_without_token( $external_username );
 
             if ( is_wp_error( $data ) ) {
                 set_transient( $transient, false, MINUTE_IN_SECONDS );
@@ -322,7 +350,7 @@ class Wpzoom_Instagram_Widget_API {
         }
 
         if ( ! empty( $data->data ) ) {
-            set_transient( $transient, $data, 60 * MINUTE_IN_SECONDS );
+            set_transient( $transient, $data, $this->get_transient_lifetime() );
         } else {
             set_transient( $transient, false, MINUTE_IN_SECONDS );
 
