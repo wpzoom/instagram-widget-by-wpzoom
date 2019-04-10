@@ -84,7 +84,8 @@ class Wpzoom_Instagram_Widget_Settings {
             __( '', 'wpzoom-instagram-widget' ),
             array( $this, 'settings_field_username_description' ),
             'wpzoom-instagram-widget-settings-group',
-            'wpzoom-instagram-widget-settings-general'
+            'wpzoom-instagram-widget-settings-general',
+            array('class' => 'wpzoom-instagram-widget-without-access-token-group')
         );
 
         add_settings_field(
@@ -130,22 +131,23 @@ class Wpzoom_Instagram_Widget_Settings {
     }
 
     public function settings_field_transient_lifetime() {
-        $settings = get_option( 'wpzoom-instagram-widget-settings' );
+        $settings       = get_option( 'wpzoom-instagram-widget-settings' );
+        $lifetime_value = ! empty( $settings['transient-lifetime-value'] ) ? $settings['transient-lifetime-value'] : 30;
+        $lifetime_type  = ! empty( $settings['transient-lifetime-type'] ) ? $settings['transient-lifetime-type'] : 'minutes';
         ?>
         <input  class="regular-text code"
                 id="wpzoom-instagram-widget-settings_transient-lifetime-value"
                 name="wpzoom-instagram-widget-settings[transient-lifetime-value]"
-                value="<?php echo esc_attr( $settings['transient-lifetime-value'] ) ?>"
+                value="<?php echo esc_attr( $lifetime_value ) ?>"
                 type="number"
                 min="1">
 
         <select class="regular-text code"
                 id="wpzoom-instagram-widget-settings_transient-lifetime-type"
-                name="wpzoom-instagram-widget-settings[transient-lifetime-type]"
-                value="<?php echo esc_attr( $settings['transient-lifetime-type'] ) ?>">
-            <option value="hours"><?php _e( 'Hours', 'wpzoom-instagram-widget' ) ?></option>
-            <option value="days"><?php _e( 'Days', 'wpzoom-instagram-widget' ) ?></option>
-            <option value="minutes"><?php _e( 'Minutes', 'wpzoom-instagram-widget' ) ?></option>
+                name="wpzoom-instagram-widget-settings[transient-lifetime-type]">
+            <option <?php selected( $lifetime_type, 'hours' ); ?> value="hours"><?php _e( 'Hours', 'wpzoom-instagram-widget' ) ?></option>
+            <option <?php selected( $lifetime_type, 'days' ); ?> value="days"><?php _e( 'Days', 'wpzoom-instagram-widget' ) ?></option>
+            <option <?php selected( $lifetime_type, 'minutes' ); ?> value="minutes"><?php _e( 'Minutes', 'wpzoom-instagram-widget' ) ?></option>
         </select>
         <?php
     }
