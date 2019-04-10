@@ -111,6 +111,7 @@ class Wpzoom_Instagram_Widget_Settings {
     public function settings_field_access_token_button() {
         $oauth_url = 'https://instagram.com/oauth/authorize/?client_id=955bdb2319484968b93de8d6a1032c66&response_type=token&redirect_uri=https://www.wpzoom.com/instagram/';
         $oauth_url .= '?auth_site=' . esc_url( admin_url( 'options-general.php?page=wpzoom-instagram-widget' ) );
+        $oauth_url.='&hl=en';
         ?>
 
         <p class="description"><?php _e( 'Using this method, you will be prompted to authorize the plugin to access your Instagram photos. The widget will automatically display the latest photos of the account which was authorized on this page.', 'wpzoom-instagram-widget' ); ?></p>
