@@ -132,8 +132,8 @@ class Wpzoom_Instagram_Widget_Settings {
 
     public function settings_field_transient_lifetime() {
         $settings       = get_option( 'wpzoom-instagram-widget-settings' );
-        $lifetime_value = ! empty( $settings['transient-lifetime-value'] ) ? $settings['transient-lifetime-value'] : 30;
-        $lifetime_type  = ! empty( $settings['transient-lifetime-type'] ) ? $settings['transient-lifetime-type'] : 'minutes';
+        $lifetime_value = ! empty( $settings['transient-lifetime-value'] ) ? $settings['transient-lifetime-value'] : 1;
+        $lifetime_type  = ! empty( $settings['transient-lifetime-type'] ) ? $settings['transient-lifetime-type'] : 'days';
         ?>
         <input  class="regular-text code"
                 id="wpzoom-instagram-widget-settings_transient-lifetime-value"

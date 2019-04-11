@@ -32,8 +32,8 @@ class Wpzoom_Instagram_Widget_API {
         $this->access_token = $options['access-token'];
         $this->username = !empty($options['username']) ? $options['username'] : '';
         $this->request_type = !empty($options['request_type']) ? $options['request_type'] : '';
-        $this->transient_lifetime_type = !empty($options['transient-lifetime-type']) ? $options['transient-lifetime-type'] : 'minutes';
-        $this->transient_lifetime_value = !empty($options['transient-lifetime-value']) ? $options['transient-lifetime-value'] : 30;
+        $this->transient_lifetime_type = !empty($options['transient-lifetime-type']) ? $options['transient-lifetime-type'] : 'days';
+        $this->transient_lifetime_value = !empty($options['transient-lifetime-value']) ? $options['transient-lifetime-value'] : 1;
 
     }
 
