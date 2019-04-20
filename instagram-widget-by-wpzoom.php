@@ -6,7 +6,7 @@
  * Description: Simple and responsive widget for WordPress to display your Instagram feed
  * Author: WPZOOM
  * Author URI: https://www.wpzoom.com/
- * Version: 1.4.0
+ * Version: 1.4.1
  * License: GPLv2 or later
  */
 

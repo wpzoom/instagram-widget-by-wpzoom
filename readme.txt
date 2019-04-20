@@ -64,6 +64,10 @@ Make sure to connect your Instagram account with the plugin. You can do that in 
 
 == Changelog ==
 
+= 1.4.1 =
+* New option in the settings page to control the refresh rate of your Instagram feed.
+* A few more fixes and improvements to the Instagram API integration.
+
 = 1.4.0 =
 * Added an alternative option to display the public feed limited to 12 photos of your account or any other Instagram user.
 
