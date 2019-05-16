@@ -8,6 +8,7 @@ jQuery(function($) {
             var minItemsPerRow   = $list.data('images-per-row');
             var desiredItemWidth = $list.data('image-width');
             var itemSpacing      = $list.data('image-spacing');
+            var imageLazyLoading = $list.data('image-lazy-loading');
 
             var containerWidth = $list.width();
 
@@ -35,6 +36,10 @@ jQuery(function($) {
                 width: itemWidth,
                 height: itemWidth
             });
+
+            if (imageLazyLoading) {
+                $list.find('a.zoom-instagram-link').lazy();
+            }
 
             $list.removeClass('zoom-instagram-widget__items--no-js');
         });
