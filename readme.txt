@@ -3,7 +3,7 @@ Contributors: WPZOOM, nvartolomei, ciorici
 Donate link: https://www.wpzoom.com/
 Tags: instagram, widget, timeline, social networks, latest images, feed
 Requires at least: 4.3
-Tested up to: 5.1
+Tested up to: 5.2
 Requires PHP: 5.6
 Stable tag: trunk
 License: GPLv2 or later
@@ -63,6 +63,9 @@ Make sure to connect your Instagram account with the plugin. You can do that in 
 
 
 == Changelog ==
+
+= 1.4.2 =
+* New feature: "Lazy Load Images". You can enable it the widget settings.
 
 = 1.4.1 =
 * New option in the settings page to control the refresh rate of your Instagram feed.
