@@ -164,6 +164,7 @@ class Wpzoom_Instagram_Widget_API {
                         'height' => $node->thumbnail_resources[4]->config_height
                     ),
                 ),
+                'type' => empty($node->is_video) ? 'image': 'video',
                 'likes'        => isset( $node->edge_liked_by ) ? $node->edge_liked_by : 0,
                 'comments'     => isset( $node->edge_media_to_comment ) ? $node->edge_media_to_comment : 0,
                 'created_time' => $node->taken_at_timestamp,
@@ -184,7 +185,21 @@ class Wpzoom_Instagram_Widget_API {
      *
      * @return array|bool Array of tweets or false if method fails
      */
-    public function get_items( $image_limit, $image_width, $image_resolution = 'default_algorithm', $injected_username = '' ) {
+    public function get_items( $instance ) {
+
+        $sliced               = wp_array_slice_assoc( $instance, array(
+            'image-limit',
+            'image-width',
+            'image-resolution',
+            'username',
+            'disable-video-thumbs'
+        ) );
+
+        $image_limit          = $sliced['image-limit'];
+        $image_width          = $sliced['image-width'];
+        $image_resolution     = ! empty( $sliced['image-resolution'] ) ? $sliced['image-resolution'] : 'default_algorithm';
+        $injected_username    = ! empty( $sliced['username'] ) ? $sliced['username'] : '';
+        $disable_video_thumbs = ! empty( $sliced['disable-video-thumbs'] );
 
         $transient = 'zoom_instagram_is_configured';
 
@@ -197,7 +212,7 @@ class Wpzoom_Instagram_Widget_API {
 
         if ( false !== ( $data = get_transient( $transient ) ) && is_object( $data ) && ! empty( $data->data ) ) {
 
-            return $this->processing_response_data( $data, $image_width, $image_resolution, $image_limit );
+            return $this->processing_response_data( $data, $image_width, $image_resolution, $image_limit, $disable_video_thumbs );
         }
 
         $is_external_username = ! empty( $this->username ) || ! empty( $injected_username );
@@ -258,7 +273,7 @@ class Wpzoom_Instagram_Widget_API {
         return $this->processing_response_data( $data, $image_width, $image_resolution, $image_limit );
     }
 
-    public function processing_response_data( $data, $image_width, $image_resolution = 'default_algorithm', $image_limit ) {
+    public function processing_response_data( $data, $image_width, $image_resolution = 'default_algorithm', $image_limit, $disable_video_thumbs = false ) {
 
         $result   = array();
         $username = '';
@@ -271,6 +286,10 @@ class Wpzoom_Instagram_Widget_API {
 
             if ( $key === $image_limit ) {
                 break;
+            }
+
+            if ( ! empty( $disable_video_thumbs ) && isset( $item->type ) && 'video' == $item->type ) {
+                continue;
             }
 
             $result[] = array(

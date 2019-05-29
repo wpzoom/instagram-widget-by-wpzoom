@@ -30,6 +30,7 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
             'show-user-info'                => false,
 			'show-user-bio'                 => false,
 			'lazy-load-images'              => false,
+			'disable-video-thumbs'          => false,
 			'images-per-row'                => 3,
 			'image-width'                   => 120,
 			'image-spacing'                 => 10,
@@ -69,7 +70,7 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 		}
 
 
-		$items = $this->api->get_items( $instance['image-limit'], $instance['image-width'], $instance['image-resolution'], $instance['username'] );
+		$items = $this->api->get_items( $instance );
 
 		if ( ! is_array( $items ) ) {
 			$this->display_errors();
@@ -122,6 +123,8 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
         $instance['show-user-info']                = ! empty( $new_instance['show-user-info'] );
 		$instance['show-user-bio']                 = ! empty( $new_instance['show-user-bio'] );
 		$instance['lazy-load-images']              = ! empty( $new_instance['lazy-load-images'] );
+		$instance['disable-video-thumbs']          = ! empty( $new_instance['disable-video-thumbs'] );
+
 
 		return $instance;
 	}
@@ -239,6 +242,10 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 		<p>
 			<input class="checkbox" type="checkbox" <?php checked( $instance['lazy-load-images'] ); ?> id="<?php echo $this->get_field_id( 'lazy-load-images' ); ?>" name="<?php echo $this->get_field_name( 'lazy-load-images' ); ?>" />
 			<label for="<?php echo $this->get_field_id( 'lazy-load-images' ); ?>"><?php _e('Lazy load <strong>images</strong>', 'wpzoom-instagram-widget' ); ?></label>
+		</p>
+		<p>
+			<input class="checkbox" type="checkbox" <?php checked( $instance['disable-video-thumbs'] ); ?> id="<?php echo $this->get_field_id( 'disable-video-thumbs' ); ?>" name="<?php echo $this->get_field_name( 'disable-video-thumbs' ); ?>" />
+			<label for="<?php echo $this->get_field_id( 'disable-video-thumbs' ); ?>"><?php _e('Hide video <strong>thumbnails</strong>', 'wpzoom-instagram-widget' ); ?></label>
 		</p>
         <p>
             <label for="<?php echo $this->get_field_id( 'button_text' ); ?>"><?php esc_html_e( 'Button Text:', 'wpzoom-instagram-widget' ); ?></label>
