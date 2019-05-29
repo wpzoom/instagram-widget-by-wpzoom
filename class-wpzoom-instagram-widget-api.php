@@ -270,7 +270,7 @@ class Wpzoom_Instagram_Widget_API {
             return false;
         }
 
-        return $this->processing_response_data( $data, $image_width, $image_resolution, $image_limit );
+        return $this->processing_response_data( $data, $image_width, $image_resolution, $image_limit, $disable_video_thumbs );
     }
 
     public function processing_response_data( $data, $image_width, $image_resolution = 'default_algorithm', $image_limit, $disable_video_thumbs = false ) {
