@@ -289,7 +289,9 @@ class Wpzoom_Instagram_Widget_API {
             }
 
             if ( ! empty( $disable_video_thumbs ) && isset( $item->type ) && 'video' == $item->type ) {
+                $image_limit++;
                 continue;
+
             }
 
             $result[] = array(
