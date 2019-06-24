@@ -1,7 +1,7 @@
-=== Instagram Widget by WPZOOM ===
+=== WPZOOM Widget for Instagram ===
 Contributors: WPZOOM, nvartolomei, ciorici
 Donate link: https://www.wpzoom.com/
-Tags: instagram, widget, timeline, social networks, latest images, feed
+Tags: instagram, widget, timeline, social network, latest images, feed, instagram feed, story, stories
 Requires at least: 4.3
 Tested up to: 5.2
 Requires PHP: 5.6
@@ -19,7 +19,7 @@ Fully customisable and responsive Instagram timeline widget for WordPress.
 > Did you find this plugin helpful? Please consider [leaving a 5-star review](https://wordpress.org/support/view/plugin-reviews/instagram-widget-by-wpzoom).
 
 
-**Instagram Widget by WPZOOM** gives you a WordPress Widget that you can place anywhere you want and be able to fully customize it's design using CSS.
+**WPZOOM Widget for Instagram** gives you a WordPress Widget that you can place anywhere you want and be able to fully customize it's design using CSS.
 
 
 = What's New in version 1.4? =
@@ -63,6 +63,12 @@ Make sure to connect your Instagram account with the plugin. You can do that in 
 
 
 == Changelog ==
+
+= 1.4.4 =
+* New option to hide video thumbnails. Sometimes video thubmanils may show as blank squares, so the new option will help to fix this problem.
+
+= 1.4.3 =
+* Minor bug fix
 
 = 1.4.2 =
 * New feature: "Lazy Load Images". You can enable it the widget settings.

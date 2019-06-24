@@ -1,12 +1,12 @@
 <?php
 
 /**
- * Plugin Name: Instagram Widget by WPZOOM
+ * Plugin Name: WPZOOM Widget for Instagram
  * Plugin URI: https://www.wpzoom.com/plugins/instagram-widget/
  * Description: Simple and responsive widget for WordPress to display your Instagram feed
  * Author: WPZOOM
  * Author URI: https://www.wpzoom.com/
- * Version: 1.4.2
+ * Version: 1.4.4
  * License: GPLv2 or later
  */
 

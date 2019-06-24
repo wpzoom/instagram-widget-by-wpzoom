@@ -215,7 +215,7 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 
 				</option>
 				<option value="standard_resolution" <?php selected( $instance['image-resolution'], "standard_resolution" ); ?>>
-					<?php _e('Standart Resolution ( 640x640px )', 'wpzoom-instagram-widget' ); ?>
+					<?php _e('Standard Resolution ( 640x640px )', 'wpzoom-instagram-widget' ); ?>
 				</option>
 			</select>
 		</p>
@@ -241,7 +241,7 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 
 		<p>
 			<input class="checkbox" type="checkbox" <?php checked( $instance['lazy-load-images'] ); ?> id="<?php echo $this->get_field_id( 'lazy-load-images' ); ?>" name="<?php echo $this->get_field_name( 'lazy-load-images' ); ?>" />
-			<label for="<?php echo $this->get_field_id( 'lazy-load-images' ); ?>"><?php _e('Lazy load <strong>images</strong>', 'wpzoom-instagram-widget' ); ?></label>
+			<label for="<?php echo $this->get_field_id( 'lazy-load-images' ); ?>"><?php _e('Lazy Load <strong>images</strong>', 'wpzoom-instagram-widget' ); ?></label>
 		</p>
 		<p>
 			<input class="checkbox" type="checkbox" <?php checked( $instance['disable-video-thumbs'] ); ?> id="<?php echo $this->get_field_id( 'disable-video-thumbs' ); ?>" name="<?php echo $this->get_field_name( 'disable-video-thumbs' ); ?>" />
