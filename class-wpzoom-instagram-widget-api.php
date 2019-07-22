@@ -34,6 +34,7 @@ class Wpzoom_Instagram_Widget_API {
         $this->request_type = !empty($options['request_type']) ? $options['request_type'] : '';
         $this->transient_lifetime_type = !empty($options['transient-lifetime-type']) ? $options['transient-lifetime-type'] : 'days';
         $this->transient_lifetime_value = !empty($options['transient-lifetime-value']) ? $options['transient-lifetime-value'] : 1;
+        $this->is_embed_stream = ! empty( $options['is-embed-stream'] ) ? wp_validate_boolean( $options['is-embed-stream'] ) : false;
 
     }
 
@@ -294,9 +295,12 @@ class Wpzoom_Instagram_Widget_API {
 
             }
 
+            $best_size = $this->get_best_size( $image_width, $image_resolution );
+            $image_url = $this->is_embed_stream ? $this->convert_to_embed_url( $best_size, $item->link ) : $item->images->{$best_size}->url;
+
             $result[] = array(
                 'link'           => $item->link,
-                'image-url'      => $item->images->{$this->get_best_size( $image_width, $image_resolution )}->url,
+                'image-url'      => $image_url,
                 'image-caption'  => ! empty( $item->caption->text ) ? esc_attr( $item->caption->text ) : '',
                 'likes_count'    => ! empty( $item->likes->count ) ? esc_attr( $item->likes->count ) : 0,
                 'comments_count' => ! empty( $item->comments->count ) ? esc_attr( $item->comments->count ) : 0
@@ -448,6 +452,19 @@ class Wpzoom_Instagram_Widget_API {
         }
 
         return $size;
+    }
+
+    protected function convert_to_embed_url( $size, $link ) {
+        $sizes = array(
+            'thumbnail'           => 't',
+            'low_resolution'      => 'm',
+            'standard_resolution' => 'l'
+        );
+
+        $shortcode = trim( basename( $link ) );
+        $embed_url = sprintf( 'https://instagram.com/p/%1$s/media/?size=%2$s', $shortcode, $sizes[ $size ] );
+
+        return $embed_url;
     }
 
     /**

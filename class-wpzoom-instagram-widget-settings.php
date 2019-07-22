@@ -106,6 +106,14 @@ class Wpzoom_Instagram_Widget_Settings {
             'wpzoom-instagram-widget-settings-general'
         );
 
+        add_settings_field(
+            'wpzoom-instagram-widget-is-embed-stream',
+            __( 'Serve images from Instagram embed links', 'wpzoom-instagram-widget' ),
+            array( $this, 'settings_field_is_embed_stream' ),
+            'wpzoom-instagram-widget-settings-group',
+            'wpzoom-instagram-widget-settings-general'
+        );
+
 
     }
 
@@ -149,6 +157,20 @@ class Wpzoom_Instagram_Widget_Settings {
             <option <?php selected( $lifetime_type, 'days' ); ?> value="days"><?php _e( 'Days', 'wpzoom-instagram-widget' ) ?></option>
             <option <?php selected( $lifetime_type, 'minutes' ); ?> value="minutes"><?php _e( 'Minutes', 'wpzoom-instagram-widget' ) ?></option>
         </select>
+        <?php
+    }
+
+    public function settings_field_is_embed_stream() {
+        $settings       = get_option( 'wpzoom-instagram-widget-settings' );
+        $is_embed_stream = ! empty( $settings['is-embed-stream'] ) ? wp_validate_boolean($settings['is-embed-stream']) : false;
+        ?>
+        <input  class="regular-text code"
+                id="wpzoom-instagram-widget-settings_is-embed-stream"
+                name="wpzoom-instagram-widget-settings[is-embed-stream]"
+                <?php checked(true , $is_embed_stream)?>
+                value="1"
+                type="checkbox">
+
         <?php
     }
 
@@ -297,6 +319,7 @@ class Wpzoom_Instagram_Widget_Settings {
         $result['request-type'] = sanitize_text_field( $input['request-type'] );
         $result['transient-lifetime-value'] = sanitize_text_field( $input['transient-lifetime-value'] );
         $result['transient-lifetime-type'] = sanitize_text_field( $input['transient-lifetime-type'] );
+        $result['is-embed-stream']= ! empty( $input['is-embed-stream'] ) ? wp_validate_boolean($input['is-embed-stream']) : false;
 
         Wpzoom_Instagram_Widget_API::reset_cache();
 
