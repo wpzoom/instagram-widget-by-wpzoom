@@ -114,6 +114,23 @@ class Wpzoom_Instagram_Widget_Settings {
             'wpzoom-instagram-widget-settings-general'
         );
 
+        add_settings_field(
+            'wpzoom-instagram-widget-is-forced-timeout',
+            __( 'Enable request timeout', 'wpzoom-instagram-widget' ),
+            array( $this, 'settings_field_is_forced_timeout' ),
+            'wpzoom-instagram-widget-settings-group',
+            'wpzoom-instagram-widget-settings-general'
+        );
+
+        add_settings_field(
+            'wpzoom-instagram-widget-request-timeout',
+            __( 'Request timeout in seconds.', 'wpzoom-instagram-widget' ),
+            array( $this, 'settings_field_request_timeout' ),
+            'wpzoom-instagram-widget-settings-group',
+            'wpzoom-instagram-widget-settings-general',
+            array('class' => 'wpzoom-instagram-widget-request-timeout')
+        );
+
 
     }
 
@@ -174,6 +191,34 @@ class Wpzoom_Instagram_Widget_Settings {
         <?php
     }
 
+    public function settings_field_is_forced_timeout() {
+        $settings       = get_option( 'wpzoom-instagram-widget-settings' );
+        $is_forced_timeout = ! empty( $settings['is-forced-timeout'] ) ? wp_validate_boolean($settings['is-forced-timeout']) : false;
+        ?>
+        <input  class="regular-text code"
+                id="wpzoom-instagram-widget-settings_is-forced-timeout"
+                name="wpzoom-instagram-widget-settings[is-forced-timeout]"
+            <?php checked(true , $is_forced_timeout)?>
+                value="1"
+                type="checkbox">
+
+        <?php
+    }
+
+    public function settings_field_request_timeout() {
+        $settings       = get_option( 'wpzoom-instagram-widget-settings' );
+        $timeout_value = ! empty( $settings['request-timeout-value'] ) ? $settings['request-timeout-value'] : 15;
+        ?>
+        <input  class="regular-text code"
+                id="wpzoom-instagram-widget-settings_request-timeout-value"
+                name="wpzoom-instagram-widget-settings[request-timeout-value]"
+                value="<?php echo esc_attr( $timeout_value ) ?>"
+                type="number"
+                min="1"
+                max="30">
+        <?php
+    }
+
     public function settings_field_access_token_input() {
         $settings = get_option( 'wpzoom-instagram-widget-settings' );
         ?>
@@ -222,7 +267,7 @@ class Wpzoom_Instagram_Widget_Settings {
         $request_type = empty( $settings['request-type'] ) ? 'with-access-token' : $settings['request-type'];
         ?>
 
-        <div class="wpzoom-instagram-widget-settins-request-type-wrapper">
+        <div class="wpzoom-instagram-widget-settings-request-type-wrapper">
             <p><label for="wpzoom-instagram-widget-settings_with-access-token"><input class="code" id="wpzoom-instagram-widget-settings_with-access-token"
                    name="wpzoom-instagram-widget-settings[request-type]"
                    value="with-access-token" <?php checked( $request_type, 'with-access-token' ) ?> type="radio"> <?php _e('With Access Token', 'wpzoom-instagram-widget')?>&nbsp;&nbsp;</label>
@@ -320,6 +365,8 @@ class Wpzoom_Instagram_Widget_Settings {
         $result['transient-lifetime-value'] = sanitize_text_field( $input['transient-lifetime-value'] );
         $result['transient-lifetime-type'] = sanitize_text_field( $input['transient-lifetime-type'] );
         $result['is-embed-stream']= ! empty( $input['is-embed-stream'] ) ? wp_validate_boolean($input['is-embed-stream']) : false;
+        $result['is-forced-timeout']= ! empty( $input['is-forced-timeout'] ) ? wp_validate_boolean($input['is-forced-timeout']) : false;
+        $result['request-timeout-value'] = sanitize_text_field( $input['request-timeout-value'] );
 
         Wpzoom_Instagram_Widget_API::reset_cache();
 

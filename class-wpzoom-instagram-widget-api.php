@@ -35,7 +35,12 @@ class Wpzoom_Instagram_Widget_API {
         $this->transient_lifetime_type = !empty($options['transient-lifetime-type']) ? $options['transient-lifetime-type'] : 'days';
         $this->transient_lifetime_value = !empty($options['transient-lifetime-value']) ? $options['transient-lifetime-value'] : 1;
         $this->is_embed_stream = ! empty( $options['is-embed-stream'] ) ? wp_validate_boolean( $options['is-embed-stream'] ) : false;
+        $this->is_forced_timeout = ! empty($options['is-forced-timeout']) ? wp_validate_boolean( $options['is-forced-timeout'] ) : false;
+        $this->request_timeout_value = !empty($options['request-timeout-value']) ? $options['request-timeout-value'] : 15;
 
+        if ($this->is_forced_timeout && !empty($this->request_timeout_value)) {
+            $this->set_timeout();
+        }
     }
 
     function get_transient_lifetime() {
@@ -527,5 +532,47 @@ class Wpzoom_Instagram_Widget_API {
 
     public function set_access_token( $access_token ) {
         $this->access_token = $access_token;
+    }
+
+    public function set_timeout()
+    {
+        add_action('http_api_curl', [$this, 'custom_curl_timeout'], 9999, 1);
+        add_filter('http_request_timeout', [$this, 'custom_http_request_timeout'], 9999);
+        add_filter('http_request_args', [$this, 'custom_http_request_args'], 9999, 1);
+    }
+
+    /**
+     * Setting a custom timeout value for cURL. Using a high value for priority,
+     * to ensure the function runs after any other added to the same action hook.
+     *
+     * @param $handle
+     */
+    function custom_curl_timeout($handle)
+    {
+        curl_setopt($handle, CURLOPT_CONNECTTIMEOUT, $this->request_timeout_value);
+        curl_setopt($handle, CURLOPT_TIMEOUT, $this->request_timeout_value);
+    }
+
+    /**
+     * Setting custom timeout for the HTTP request.
+     *
+     * @param $timeout_value
+     * @return int
+     */
+    function custom_http_request_timeout($timeout_value)
+    {
+        return $this->request_timeout_value;
+    }
+
+    /**
+     * Setting custom timeout in HTTP request args.
+     *
+     * @param $r
+     * @return mixed
+     */
+    function custom_http_request_args($r)
+    {
+        $r['timeout'] =$this->request_timeout_value;
+        return $r;
     }
 }

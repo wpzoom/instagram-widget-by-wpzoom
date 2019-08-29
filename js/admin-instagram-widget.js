@@ -2,7 +2,7 @@
 
 jQuery(function($) {
 
-    $('.wpzoom-instagram-widget-settins-request-type-wrapper').find('input[type=radio]').on('change', function (e) {
+    $('.wpzoom-instagram-widget-settings-request-type-wrapper').find('input[type=radio]').on('change', function (e) {
         e.preventDefault();
 
         var activeClass = $(this).val();
@@ -14,7 +14,7 @@ jQuery(function($) {
 
     });
 
-    $('.wpzoom-instagram-widget-settins-request-type-wrapper').find('input[type=radio]:checked').change();
+    $('.wpzoom-instagram-widget-settings-request-type-wrapper').find('input[type=radio]:checked').change();
 
     var hash = window.location.hash;
 
@@ -42,5 +42,9 @@ jQuery(function($) {
         }
     });
 
+    $('#wpzoom-instagram-widget-settings_is-forced-timeout').on('change', function(e){
+        e.preventDefault();
+        $('.wpzoom-instagram-widget-request-timeout')[$(this).is(":checked") ? 'show' :'hide']();
+    }).trigger('change');
 
 });
