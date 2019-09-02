@@ -67,10 +67,12 @@ class Wpzoom_Instagram_Widget_API {
             return new WP_Error( 'empty-json', __( 'Empty json decoded data.', 'wpzoom-instagram-widget' ) );
         }
 
-        if ( isset( $response->entry_data->ProfilePage[0]->graphql->user ) ) {
+        if (isset($response->entry_data->ProfilePage[0]->graphql->user)) {
             $user_info = $response->entry_data->ProfilePage[0]->graphql->user;
+        } elseif (isset($response->graphql->user)) {
+            $user_info = $response->graphql->user;
         } else {
-            return new WP_Error( 'empty-json', __( 'Empty json decoded data.', 'wpzoom-instagram-widget' ) );
+            return new WP_Error('empty-json', __('Empty json decoded data.', 'wpzoom-instagram-widget'));
         }
 
         $converted = new stdClass;
@@ -94,15 +96,42 @@ class Wpzoom_Instagram_Widget_API {
 
     }
 
-    function get_response_without_token( $user ) {
+    function get_response_without_token_from_json( $user ) {
 
         $user = trim( $user );
-        $url  = $url = 'https://instagram.com/' . str_replace( '@', '', $user );
+        $url  = 'https://instagram.com/' . str_replace( '@', '', $user ).'/?__a=1';
 
         $request = wp_remote_get( $url, $this->headers );
 
-        if ( is_wp_error( $request ) || empty( $request ) ) {
+        if ( is_wp_error( $request ) || 200 != wp_remote_retrieve_response_code( $request ) ) {
             return new WP_Error( 'invalid_response', __( 'Invalid response from Instagram', 'wpzoom-instagram-widget' ) );
+        }
+
+        $result = json_decode( wp_remote_retrieve_body( $request ) );
+
+        if ( empty( $result ) ) {
+            return new WP_Error( 'empty-json', __( 'Empty json decoded data.', 'wpzoom-instagram-widget' ) );
+        }
+
+        return $result;
+    }
+
+
+    function get_response_without_token( $user ) {
+
+        $user = trim( $user );
+        $url  = 'https://instagram.com/' . str_replace( '@', '', $user );
+
+        $request = wp_remote_get( $url, $this->headers );
+
+        if (is_wp_error($request) || 200 != wp_remote_retrieve_response_code($request)) {
+            $result = $this->get_response_without_token_from_json($user);
+
+            if (is_wp_error($result)) {
+                return new WP_Error('invalid_response', __('Invalid response from Instagram', 'wpzoom-instagram-widget'));
+            } else {
+                return $result;
+            }
         }
 
         $body = wp_remote_retrieve_body( $request );
@@ -126,7 +155,11 @@ class Wpzoom_Instagram_Widget_API {
         $result = json_decode( $json );
 
         if ( empty( $result ) ) {
-            return new WP_Error( 'empty-json', __( 'Empty json decoded data.', 'wpzoom-instagram-widget' ) );
+            $result = $this->get_response_without_token_from_json($user);
+
+            if(is_wp_error($result)){
+                return new WP_Error( 'empty-json', __( 'Empty json decoded data.', 'wpzoom-instagram-widget' ) );
+            }
         }
 
         return $result;
@@ -134,17 +167,18 @@ class Wpzoom_Instagram_Widget_API {
 
     function get_items_without_token( $user ) {
 
-
         $result = $this->get_response_without_token( $user );
 
         if ( empty( $result ) ) {
             return new WP_Error( 'empty-json', __( 'Empty json decoded data.', 'wpzoom-instagram-widget' ) );
         }
 
-        if ( isset( $result->entry_data->ProfilePage[0]->graphql->user->edge_owner_to_timeline_media->edges ) ) {
+        if (isset($result->entry_data->ProfilePage[0]->graphql->user->edge_owner_to_timeline_media->edges)) {
             $edges = $result->entry_data->ProfilePage[0]->graphql->user->edge_owner_to_timeline_media->edges;
+        } elseif (isset($result->graphql->user->edge_owner_to_timeline_media->edges)) {
+            $edges = $result->graphql->user->edge_owner_to_timeline_media->edges;
         } else {
-            return new WP_Error( 'empty-json', __( 'Empty json decoded data.', 'wpzoom-instagram-widget' ) );
+            return new WP_Error('empty-json', __('Empty json decoded data.', 'wpzoom-instagram-widget'));
         }
 
         $converted       = new stdClass;
