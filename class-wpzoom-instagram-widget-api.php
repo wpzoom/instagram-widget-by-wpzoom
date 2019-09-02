@@ -14,6 +14,13 @@ class Wpzoom_Instagram_Widget_API {
     protected $access_token;
 
     /**
+     * Request headers.
+     *
+     * @var array
+     */
+    public $headers = [];
+
+    /**
      * Returns the *Singleton* instance of this class.
      *
      * @return Wpzoom_Instagram_Widget_API The *Singleton* instance.
@@ -39,7 +46,7 @@ class Wpzoom_Instagram_Widget_API {
         $this->request_timeout_value = !empty($options['request-timeout-value']) ? $options['request-timeout-value'] : 15;
 
         if ($this->is_forced_timeout && !empty($this->request_timeout_value)) {
-            $this->set_timeout();
+            $this->headers['timeout'] = $this->request_timeout_value;
         }
     }
 
@@ -92,7 +99,7 @@ class Wpzoom_Instagram_Widget_API {
         $user = trim( $user );
         $url  = $url = 'https://instagram.com/' . str_replace( '@', '', $user );
 
-        $request = wp_remote_get( $url );
+        $request = wp_remote_get( $url, $this->headers );
 
         if ( is_wp_error( $request ) || empty( $request ) ) {
             return new WP_Error( 'invalid_response', __( 'Invalid response from Instagram', 'wpzoom-instagram-widget' ) );
@@ -227,7 +234,7 @@ class Wpzoom_Instagram_Widget_API {
 
         if ( ! empty( $this->access_token ) ) {
             $api_image_limit = 30;
-            $response        = wp_remote_get( sprintf( 'https://api.instagram.com/v1/users/self/media/recent/?access_token=%s&count=%s', $this->access_token, $api_image_limit ) );
+            $response        = wp_remote_get( sprintf( 'https://api.instagram.com/v1/users/self/media/recent/?access_token=%s&count=%s', $this->access_token, $api_image_limit ), $this->headers );
 
             if ( is_wp_error( $response ) || 200 != wp_remote_retrieve_response_code( $response ) ) {
                 set_transient( $transient, false, MINUTE_IN_SECONDS );
@@ -339,7 +346,7 @@ class Wpzoom_Instagram_Widget_API {
 
         if ( ! empty( $this->access_token ) ) {
 
-            $response = wp_remote_get( sprintf( 'https://api.instagram.com/v1/users/self/?access_token=%s', $this->access_token ) );
+            $response = wp_remote_get( sprintf( 'https://api.instagram.com/v1/users/self/?access_token=%s', $this->access_token ), $this->headers );
 
             if ( is_wp_error( $response ) || 200 != wp_remote_retrieve_response_code( $response ) ) {
                 set_transient( $transient, false, MINUTE_IN_SECONDS );
@@ -403,7 +410,7 @@ class Wpzoom_Instagram_Widget_API {
             return $user_id;
         }
 
-        $response = wp_remote_get( sprintf( 'https://api.instagram.com/v1/users/search?q=%s&access_token=%s', $screen_name, $this->access_token ) );
+        $response = wp_remote_get( sprintf( 'https://api.instagram.com/v1/users/search?q=%s&access_token=%s', $screen_name, $this->access_token ), $this->headers );
 
         if ( is_wp_error( $response ) || 200 != wp_remote_retrieve_response_code( $response ) ) {
             return false;
@@ -532,47 +539,5 @@ class Wpzoom_Instagram_Widget_API {
 
     public function set_access_token( $access_token ) {
         $this->access_token = $access_token;
-    }
-
-    public function set_timeout()
-    {
-        add_action('http_api_curl', [$this, 'custom_curl_timeout'], 9999, 1);
-        add_filter('http_request_timeout', [$this, 'custom_http_request_timeout'], 9999);
-        add_filter('http_request_args', [$this, 'custom_http_request_args'], 9999, 1);
-    }
-
-    /**
-     * Setting a custom timeout value for cURL. Using a high value for priority,
-     * to ensure the function runs after any other added to the same action hook.
-     *
-     * @param $handle
-     */
-    function custom_curl_timeout($handle)
-    {
-        curl_setopt($handle, CURLOPT_CONNECTTIMEOUT, $this->request_timeout_value);
-        curl_setopt($handle, CURLOPT_TIMEOUT, $this->request_timeout_value);
-    }
-
-    /**
-     * Setting custom timeout for the HTTP request.
-     *
-     * @param $timeout_value
-     * @return int
-     */
-    function custom_http_request_timeout($timeout_value)
-    {
-        return $this->request_timeout_value;
-    }
-
-    /**
-     * Setting custom timeout in HTTP request args.
-     *
-     * @param $r
-     * @return mixed
-     */
-    function custom_http_request_args($r)
-    {
-        $r['timeout'] =$this->request_timeout_value;
-        return $r;
     }
 }
