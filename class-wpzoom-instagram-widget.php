@@ -71,9 +71,10 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 
 
 		$items = $this->api->get_items( $instance );
+		$errors = $this->api->errors->get_error_messages();
 
 		if ( ! is_array( $items ) ) {
-			$this->display_errors();
+			$this->display_errors($errors);
 		} else {
 
 			if ( ! empty( $instance['show-user-info'] ) ) {
@@ -435,12 +436,20 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 	 *
 	 * @return void
 	 */
-	protected function display_errors() {
+	protected function display_errors($errors) {
 		if ( current_user_can( 'edit_theme_options' ) ) {
 			?>
 			<p>
 				<?php _e( 'Instagram Widget misconfigured, check plugin &amp; widget settings.', 'wpzoom-instagram-widget' ); ?>
 			</p>
+
+            <?php if ( ! empty( $errors ) ): ?>
+                <ul>
+					<?php foreach ( $errors as $error ): ?>
+                        <li><?php echo $error; ?></li>
+					<?php endforeach; ?>
+                </ul>
+			<?php endif; ?>
 		<?php
 		} else {
 			echo "&#8230;";

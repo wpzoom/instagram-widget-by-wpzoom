@@ -20,6 +20,13 @@ class Wpzoom_Instagram_Widget_API {
      */
     public $headers = [];
 
+	/**
+	 * Errors collector.
+	 *
+	 * @var array|WP_Error
+	 */
+    public $errors = [];
+
     /**
      * Returns the *Singleton* instance of this class.
      *
@@ -48,7 +55,78 @@ class Wpzoom_Instagram_Widget_API {
         if ($this->is_forced_timeout && !empty($this->request_timeout_value)) {
             $this->headers['timeout'] = $this->request_timeout_value;
         }
+
+        $this->errors = new WP_Error();
+
     }
+
+	/**
+	 * Get error messages collection.
+	 *
+	 * @return array
+	 */
+    public function get_errors(){
+        return [
+            'user-info-without-token' => [
+                'code' => 'user-info-without-token',
+                'message' => __('Empty json user info from Public Feed.', 'wpzoom-instagram-widget')
+            ],
+            'response-data-without-token-from-json-invalid-response' => [
+                'code' => 'response-data-without-token-from-json-invalid-response',
+                'message' => __('The request from the Public Feed failed. Invalid server response from Public JSON API url.', 'wpzoom-instagram-widget')
+            ],
+            'response-data-without-token-from-json-invalid-json-format' => [
+                'code' => 'response-data-without-token-from-json-invalid-json-format',
+                'message' => __('The request from the Public Feed failed. Invalid JSON format from Public JSON API url.', 'wpzoom-instagram-widget')
+            ],
+            'response-data-without-token-from-html-invalid-response' => [
+                'code' => 'response-data-without-token-from-html-invalid-response',
+                'message' => __('The request from the Public Feed failed. Invalid server response.', 'wpzoom-instagram-widget')
+            ],
+            'response-data-without-token-from-html-invalid-json-format' => [
+                'code' => 'response-data-without-token-from-html-invalid-json-format',
+                'message' => __('The request from the Public Feed failed. Invalid JSON format from parsed html body.', 'wpzoom-instagram-widget')
+            ],
+            'items-without-token-invalid-response' => [
+                'code' => 'items-without-token-invalid-response',
+                'message' => __('Get items from the Public Feed failed. Invalid response.', 'wpzoom-instagram-widget')
+            ],
+            'items-without-token-invalid-json-structure' => [
+                'code' => 'items-without-token-invalid-json-structure',
+                'message' => __('Get items from the Public Feed failed. Malformed data structure.', 'wpzoom-instagram-widget')
+            ],
+            'items-with-token-invalid-response' => [
+	            'code' => 'items-with-token-invalid-response',
+	            'message' => __('Get items from the Instagram API Feed failed. Invalid response.', 'wpzoom-instagram-widget')
+            ],
+            'items-with-token-invalid-data-structure' => [
+	            'code' => 'items-with-token-invalid-data-structure',
+	            'message' => __('Get items from the Instagram API Feed failed. Malformed data structure.', 'wpzoom-instagram-widget')
+            ],
+            'user-with-token-invalid-response' => [
+	            'code' => 'user-with-token-invalid-response',
+	            'message' => __('Get user data from the Instagram API Feed failed. Invalid response.', 'wpzoom-instagram-widget')
+            ],
+            'user-with-token-invalid-data-structure' => [
+	            'code' => 'user-with-token-invalid-data-structure',
+	            'message' => __('Get user data from the Instagram API Feed failed. Malformed data structure.', 'wpzoom-instagram-widget')
+            ],
+
+        ];
+    }
+
+	/**
+	 * Retrieve error message by key.
+	 *
+	 * @param $key
+	 *
+	 * @return bool|mixed
+	 */
+	public function get_error( $key ) {
+		$errors = $this->get_errors();
+
+		return array_key_exists( $key, $errors ) ? $errors[ $key ] : false;
+	}
 
     function get_transient_lifetime() {
 
@@ -63,8 +141,10 @@ class Wpzoom_Instagram_Widget_API {
 
         $response = $this->get_response_without_token( $user );
 
-        if ( empty( $response ) ) {
-            return new WP_Error( 'empty-json', __( 'Empty json decoded data.', 'wpzoom-instagram-widget' ) );
+        if ( is_wp_error( $response ) ) {
+            $error_data = $this->get_error('user-info-without-token');
+            $this->errors->add($error_data['code'], $error_data['message']);
+            return new WP_Error( $error_data['code'], $error_data['message'] );
         }
 
         if (isset($response->entry_data->ProfilePage[0]->graphql->user)) {
@@ -72,7 +152,9 @@ class Wpzoom_Instagram_Widget_API {
         } elseif (isset($response->graphql->user)) {
             $user_info = $response->graphql->user;
         } else {
-            return new WP_Error('empty-json', __('Empty json decoded data.', 'wpzoom-instagram-widget'));
+            $error_data = $this->get_error('user-info-without-token');
+            $this->errors->add($error_data['code'], $error_data['message']);
+            return new WP_Error( $error_data['code'], $error_data['message'] );
         }
 
         $converted = new stdClass;
@@ -103,14 +185,18 @@ class Wpzoom_Instagram_Widget_API {
 
         $request = wp_remote_get( $url, $this->headers );
 
-        if ( is_wp_error( $request ) || 200 != wp_remote_retrieve_response_code( $request ) ) {
-            return new WP_Error( 'invalid_response', __( 'Invalid response from Instagram', 'wpzoom-instagram-widget' ) );
+        if (is_wp_error($request) || 200 != wp_remote_retrieve_response_code($request)) {
+            $error_data = $this->get_error('response-data-without-token-from-json-invalid-response');
+            $this->errors->add($error_data['code'], $error_data['message']);
+            return new WP_Error($error_data['code'], $error_data['message']);
         }
 
         $result = json_decode( wp_remote_retrieve_body( $request ) );
 
         if ( empty( $result ) ) {
-            return new WP_Error( 'empty-json', __( 'Empty json decoded data.', 'wpzoom-instagram-widget' ) );
+            $error_data = $this->get_error('response-data-without-token-from-json-invalid-json-format');
+            $this->errors->add($error_data['code'], $error_data['message']);
+            return new WP_Error($error_data['code'], $error_data['message']);
         }
 
         return $result;
@@ -125,6 +211,10 @@ class Wpzoom_Instagram_Widget_API {
         $request = wp_remote_get( $url, $this->headers );
 
         if (is_wp_error($request) || 200 != wp_remote_retrieve_response_code($request)) {
+
+            $error_data = $this->get_error('response-data-without-token-from-html-invalid-response');
+            $this->errors->add($error_data['code'], $error_data['message']);
+
             $result = $this->get_response_without_token_from_json($user);
 
             if (is_wp_error($result)) {
@@ -155,6 +245,10 @@ class Wpzoom_Instagram_Widget_API {
         $result = json_decode( $json );
 
         if ( empty( $result ) ) {
+
+            $error_data = $this->get_error('response-data-without-token-from-html-invalid-json-format');
+            $this->errors->add($error_data['code'], $error_data['message']);
+
             $result = $this->get_response_without_token_from_json($user);
 
             if(is_wp_error($result)){
@@ -169,8 +263,10 @@ class Wpzoom_Instagram_Widget_API {
 
         $result = $this->get_response_without_token( $user );
 
-        if ( empty( $result ) ) {
-            return new WP_Error( 'empty-json', __( 'Empty json decoded data.', 'wpzoom-instagram-widget' ) );
+        if (is_wp_error($result)) {
+            $error_data = $this->get_error('items-without-token-invalid-response');
+            $this->errors->add($error_data['code'], $error_data['message']);
+            return new WP_Error($error_data['code'], $error_data['message']);
         }
 
         if (isset($result->entry_data->ProfilePage[0]->graphql->user->edge_owner_to_timeline_media->edges)) {
@@ -178,7 +274,9 @@ class Wpzoom_Instagram_Widget_API {
         } elseif (isset($result->graphql->user->edge_owner_to_timeline_media->edges)) {
             $edges = $result->graphql->user->edge_owner_to_timeline_media->edges;
         } else {
-            return new WP_Error('empty-json', __('Empty json decoded data.', 'wpzoom-instagram-widget'));
+            $error_data = $this->get_error('items-without-token-invalid-json-structure');
+            $this->errors->add($error_data['code'], $error_data['message']);
+            return new WP_Error($error_data['code'], $error_data['message']);
         }
 
         $converted       = new stdClass;
@@ -273,6 +371,9 @@ class Wpzoom_Instagram_Widget_API {
             if ( is_wp_error( $response ) || 200 != wp_remote_retrieve_response_code( $response ) ) {
                 set_transient( $transient, false, MINUTE_IN_SECONDS );
 
+	            $error_data = $this->get_error('items-with-token-invalid-response');
+	            $this->errors->add($error_data['code'], $error_data['message']);
+
                 return false;
             }
 
@@ -313,6 +414,9 @@ class Wpzoom_Instagram_Widget_API {
             set_transient( $transient, $data, $this->get_transient_lifetime() );
         } else {
             set_transient( $transient, false, MINUTE_IN_SECONDS );
+
+	        $error_data = $this->get_error('items-with-token-invalid-data-structure');
+	        $this->errors->add($error_data['code'], $error_data['message']);
 
             return false;
         }
@@ -385,6 +489,9 @@ class Wpzoom_Instagram_Widget_API {
             if ( is_wp_error( $response ) || 200 != wp_remote_retrieve_response_code( $response ) ) {
                 set_transient( $transient, false, MINUTE_IN_SECONDS );
 
+	            $error_data = $this->get_error('user-with-token-invalid-response');
+	            $this->errors->add($error_data['code'], $error_data['message']);
+
                 return false;
             }
 
@@ -424,6 +531,9 @@ class Wpzoom_Instagram_Widget_API {
             set_transient( $transient, $data, $this->get_transient_lifetime() );
         } else {
             set_transient( $transient, false, MINUTE_IN_SECONDS );
+
+	        $error_data = $this->get_error('user-with-token-invalid-data-structure');
+	        $this->errors->add($error_data['code'], $error_data['message']);
 
             return false;
         }
