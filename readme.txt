@@ -1,7 +1,7 @@
-=== WPZOOM Widget for Instagram ===
+=== WPZOOM Social Feed Widget ===
 Contributors: WPZOOM, nvartolomei, ciorici
 Donate link: https://www.wpzoom.com/
-Tags: instagram, widget, timeline, social network, latest images, feed, instagram feed, story, stories
+Tags: instagram, widget, timeline, social network, latest images, feed, instagram feed, story, stories, insta, instagram widget
 Requires at least: 4.3
 Tested up to: 5.2
 Requires PHP: 5.6
@@ -9,9 +9,12 @@ Stable tag: trunk
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Fully customisable and responsive Instagram timeline widget for WordPress.
+Formerly known as "Instagram Widget by WPZOOM". Fully customisable and responsive widget for WordPress to display your Instagram feed.
 
 == Description ==
+
+Formerly known as *Instagram Widget by WPZOOM*, **WPZOOM Social Feed Widget** is a fully customisable and responsive widget for WordPress to display your **Instagram feed**.
+
 
 **[View Demo](http://demo.wpzoom.com/instagram-widget/)**
 
@@ -19,7 +22,7 @@ Fully customisable and responsive Instagram timeline widget for WordPress.
 > Did you find this plugin helpful? Please consider [leaving a 5-star review](https://wordpress.org/support/view/plugin-reviews/instagram-widget-by-wpzoom).
 
 
-**WPZOOM Widget for Instagram** gives you a WordPress Widget that you can place anywhere you want and be able to fully customize it's design using CSS.
+**WPZOOM Social Feed Widget** gives you a WordPress Widget that you can place anywhere you want and be able to fully customize it's design using CSS.
 
 
 = What's New in version 1.4? =
@@ -63,6 +66,10 @@ Make sure to connect your Instagram account with the plugin. You can do that in 
 
 
 == Changelog ==
+
+= 1.5.0 =
+* Refactor of the Public Feed method.
+* Added 2 new options in the settings page to have more control on the connection with the Instagram API on specific hosting
 
 = 1.4.4 =
 * New option to hide video thumbnails. Sometimes video thubmanils may show as blank squares, so the new option will help to fix this problem.

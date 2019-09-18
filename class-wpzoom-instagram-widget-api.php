@@ -81,7 +81,7 @@ class Wpzoom_Instagram_Widget_API {
             ],
             'response-data-without-token-from-html-invalid-response' => [
                 'code' => 'response-data-without-token-from-html-invalid-response',
-                'message' => __('The request from the Public Feed failed. Invalid server response.', 'wpzoom-instagram-widget')
+                'message' => __('The request from the Public Feed failed. Check username.', 'wpzoom-instagram-widget')
             ],
             'response-data-without-token-from-html-invalid-json-format' => [
                 'code' => 'response-data-without-token-from-html-invalid-json-format',
@@ -97,7 +97,7 @@ class Wpzoom_Instagram_Widget_API {
             ],
             'items-with-token-invalid-response' => [
 	            'code' => 'items-with-token-invalid-response',
-	            'message' => __('Get items from the Instagram API Feed failed. Invalid response.', 'wpzoom-instagram-widget')
+	            'message' => __('Geting items from the Instagram API Feed failed. Invalid response.', 'wpzoom-instagram-widget')
             ],
             'items-with-token-invalid-data-structure' => [
 	            'code' => 'items-with-token-invalid-data-structure',
