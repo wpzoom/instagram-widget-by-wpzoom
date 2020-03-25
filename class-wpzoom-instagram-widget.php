@@ -290,12 +290,14 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 	                if($show_overlay):?>
 	                <div class='hover-layout zoom-instagram-widget__overlay zoom-instagram-widget__black <?php echo $small_class?>'>
 
-		                <div class='hover-controls'>
+		                <?php if( !empty($likes) && !empty($comments) ):?>
+                        <div class='hover-controls'>
 			                <span  class="dashicons dashicons-heart"></span>
 			                <span class="counter"><?php echo $this->format_number($likes); ?></span>
 			                <span class="dashicons dashicons-format-chat"></span>
 			                <span class="counter"><?php echo $this->format_number($comments); ?></span>
 		                </div>
+                        <?php endif;?>
 		                <div class='zoom-instagram-icon-wrap'>
 			                <a class="zoom-svg-instagram-stroke" href="<?php echo $link; ?>" rel="noopener" target="_blank" title="<?php echo $alt; ?>"></a>
 		                </div>

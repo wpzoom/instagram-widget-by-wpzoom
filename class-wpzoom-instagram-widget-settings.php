@@ -135,9 +135,14 @@ class Wpzoom_Instagram_Widget_Settings {
     }
 
     public function settings_field_access_token_button() {
-        $oauth_url = 'https://instagram.com/oauth/authorize/?client_id=955bdb2319484968b93de8d6a1032c66&response_type=token&redirect_uri=https://www.wpzoom.com/instagram/';
-        $oauth_url .= '?auth_site=' . esc_url( admin_url( 'options-general.php?page=wpzoom-instagram-widget' ) );
-        $oauth_url.='&hl=en';
+
+        $oauth_url = add_query_arg( [
+		    'client_id'     => '1242932982579434',
+		    'redirect_uri'  => 'https://www.wpzoom.com/instagram-auth/',
+		    'scope'         => 'user_profile,user_media',
+		    'response_type' => 'code',
+		    'state'         => esc_url( admin_url( 'options-general.php?page=wpzoom-instagram-widget' ) )
+	    ], 'https://api.instagram.com/oauth/authorize' );
         ?>
 
         <p class="description"><?php _e( 'Using this method, you will be prompted to authorize the plugin to access your Instagram photos. The widget will automatically display the latest photos of the account which was authorized on this page.', 'wpzoom-instagram-widget' ); ?></p>
@@ -230,7 +235,7 @@ class Wpzoom_Instagram_Widget_Settings {
                         'The Instagram Access Token is a long string of characters unique to your account that grants other applications access to your Instagram feed. You can also get it manually from <a href="%1$s">here</a>.',
                         'wpzoom-instagram-widget'
                     ),
-                    'https://www.wpzoom.com/instagram/'
+                    'https://www.wpzoom.com/instagram-auth/'
                 );
                 ?>
             </p>

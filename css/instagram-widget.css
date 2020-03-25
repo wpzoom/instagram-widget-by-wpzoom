@@ -51,10 +51,23 @@ a.ig-b-v-24:hover {
     -moz-transition: opacity 0.25s ease-in-out;
     -webkit-transition: opacity 0.25s ease-in-out;
 }
+.zoom-instagram-widget__item .hover-controls ~ .zoom-instagram-icon-wrap{
+    bottom: 10%;
+}
+
+.zoom-instagram-widget__item .hover-layout.small .hover-controls ~ .zoom-instagram-icon-wrap{
+    bottom: 6%;
+}
+
+.zoom-instagram-widget__item .hover-layout.small .zoom-instagram-icon-wrap{
+    bottom: calc(50% - 15px);
+}
+
 .zoom-instagram-widget__item .zoom-instagram-icon-wrap{
+    bottom: calc(50% - 15px);
+    height: 30px;
     width: 100%;
     position: absolute;
-    bottom: 10%;
     z-index: 9;
     text-align: center;
 }
@@ -138,9 +151,6 @@ a.ig-b-v-24:hover {
 .zoom-instagram-widget__item .hover-layout.small .zoom-instagram-icon-wrap .zoom-svg-instagram-stroke{
     width: 18px;
     height: 18px;
-}
-.zoom-instagram-widget__item .hover-layout.small .zoom-instagram-icon-wrap{
-    bottom: 6%;
 }
 
 .zoom-instagram-widget__item .hover-layout.small .hover-controls .counter{
