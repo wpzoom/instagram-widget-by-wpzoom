@@ -138,7 +138,7 @@ class Wpzoom_Instagram_Widget_Settings {
 
         $oauth_url = add_query_arg( [
 		    'client_id'     => '1242932982579434',
-		    'redirect_uri'  => 'https://www.wpzoom.com/instagram-auth/',
+		    'redirect_uri'  => 'https://wpzoom.com/instagram-auth/',
 		    'scope'         => 'user_profile,user_media',
 		    'response_type' => 'code',
 		    'state'         => esc_url( admin_url( 'options-general.php?page=wpzoom-instagram-widget' ) )
