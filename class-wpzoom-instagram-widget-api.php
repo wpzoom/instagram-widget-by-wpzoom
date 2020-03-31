@@ -43,9 +43,16 @@ class Wpzoom_Instagram_Widget_API {
 
     protected function __construct() {
         $options = get_option( 'wpzoom-instagram-widget-settings' );
-        $this->access_token = $options['access-token'];
+
+	    $this->request_type = !empty($options['request-type']) ? $options['request-type'] : '';
+	    $this->access_token = $options['access-token'];
+
+	    if('with-basic-access-token' === $this->request_type){
+		    $this->access_token = $options['basic-access-token'];
+	    }
+
+
         $this->username = !empty($options['username']) ? $options['username'] : '';
-        $this->request_type = !empty($options['request_type']) ? $options['request_type'] : '';
         $this->transient_lifetime_type = !empty($options['transient-lifetime-type']) ? $options['transient-lifetime-type'] : 'days';
         $this->transient_lifetime_value = !empty($options['transient-lifetime-value']) ? $options['transient-lifetime-value'] : 1;
         $this->is_embed_stream = ! empty( $options['is-embed-stream'] ) ? wp_validate_boolean( $options['is-embed-stream'] ) : false;
@@ -433,44 +440,52 @@ class Wpzoom_Instagram_Widget_API {
         $external_username    = ! empty( $injected_username ) ? $injected_username : $this->username;
 
 
-        if ( ! empty( $this->access_token ) ) {
+	    if ( ! empty( $this->access_token ) ) {
 
-	        $request_url = add_query_arg( [
-		        'fields'       => 'media_url,media_type,caption,username,permalink,thumbnail_url',
-		        'access_token' => $this->access_token
-	        ],
-		        'https://graph.instagram.com/me/media' );
+		    $request_url = sprintf( 'https://api.instagram.com/v1/users/self/media/recent/?access_token=%s&count=%s', $this->access_token, 30 );
 
-	        $response = wp_remote_get( $request_url, $this->headers );
+		    if ( 'with-basic-access-token' === $this->request_type ) {
+			    $request_url = add_query_arg( [
+				    'fields'       => 'media_url,media_type,caption,username,permalink,thumbnail_url',
+				    'access_token' => $this->access_token
+			    ],
+				    'https://graph.instagram.com/me/media' );
+		    }
 
-            if ( is_wp_error( $response ) || 200 != wp_remote_retrieve_response_code( $response ) ) {
-                set_transient( $transient, false, MINUTE_IN_SECONDS );
+		    $response = wp_remote_get( $request_url, $this->headers );
 
-	            $error_data = $this->get_error('items-with-token-invalid-response');
-	            $this->errors->add($error_data['code'], $error_data['message']);
+		    if ( is_wp_error( $response ) || 200 != wp_remote_retrieve_response_code( $response ) ) {
+			    set_transient( $transient, false, MINUTE_IN_SECONDS );
 
-                return false;
-            }
+			    $error_data = $this->get_error( 'items-with-token-invalid-response' );
+			    $this->errors->add( $error_data['code'], $error_data['message'] );
 
-	        $data = $this->convert_items_to_old_structure( json_decode( wp_remote_retrieve_body( $response ) ) );
+			    return false;
+		    }
 
-            $token_username = ! empty( $data->data[0]->user->username ) ? $data->data[0]->user->username : '';
+		    $data = json_decode( wp_remote_retrieve_body( $response ) );
+
+		    if ( 'with-basic-access-token' === $this->request_type ) {
+			    $data = $this->convert_items_to_old_structure( $data );
+		    }
+
+		    $token_username = ! empty( $data->data[0]->user->username ) ? $data->data[0]->user->username : '';
 
 
-            if ( ! empty( $token_username ) && ! empty( $is_external_username ) ) {
+		    if ( ! empty( $token_username ) && ! empty( $is_external_username ) ) {
 
-                if ( $external_username !== $token_username ) {
+			    if ( $external_username !== $token_username ) {
 
-                    $data = $this->get_items_without_token( $external_username );
+				    $data = $this->get_items_without_token( $external_username );
 
-                    if ( is_wp_error( $data ) ) {
-                        set_transient( $transient, false, MINUTE_IN_SECONDS );
+				    if ( is_wp_error( $data ) ) {
+					    set_transient( $transient, false, MINUTE_IN_SECONDS );
 
-                        return false;
-                    }
-                }
-            }
-        }
+					    return false;
+				    }
+			    }
+		    }
+	    }
 
         if ( empty( $this->access_token ) && ! empty( $is_external_username ) ) {
 
@@ -557,46 +572,54 @@ class Wpzoom_Instagram_Widget_API {
         $is_external_username = ! empty( $this->username ) || ! empty( $injected_username );
         $external_username    = ! empty( $injected_username ) ? $injected_username : $this->username;
 
-        if ( ! empty( $this->access_token ) ) {
+	    if ( ! empty( $this->access_token ) ) {
 
-	        $request_url = add_query_arg( [
-		        'access_token' => $this->access_token,
-		        'fields'       => 'account_type,id,media_count,username'
-	        ],
-		        'https://graph.instagram.com/me' );
+		    $request_url = sprintf( 'https://api.instagram.com/v1/users/self/?access_token=%s', $this->access_token );
 
-            $response = wp_remote_get( $request_url, $this->headers );
+		    if ( 'with-basic-access-token' === $this->request_type ) {
+			    $request_url = add_query_arg( [
+				    'access_token' => $this->access_token,
+				    'fields'       => 'account_type,id,media_count,username'
+			    ],
+				    'https://graph.instagram.com/me' );
+		    }
 
-            if ( is_wp_error( $response ) || 200 != wp_remote_retrieve_response_code( $response ) ) {
-                set_transient( $transient, false, MINUTE_IN_SECONDS );
+		    $response = wp_remote_get( $request_url, $this->headers );
 
-	            $error_data = $this->get_error('user-with-token-invalid-response');
-	            $this->errors->add($error_data['code'], $error_data['message']);
+		    if ( is_wp_error( $response ) || 200 != wp_remote_retrieve_response_code( $response ) ) {
+			    set_transient( $transient, false, MINUTE_IN_SECONDS );
 
-                return false;
-            }
+			    $error_data = $this->get_error( 'user-with-token-invalid-response' );
+			    $this->errors->add( $error_data['code'], $error_data['message'] );
 
-            $data = $this->convert_user_info_to_old_structure(json_decode( wp_remote_retrieve_body( $response ) ));
+			    return false;
+		    }
 
-            $token_username = ! empty( $data->data->username ) ? $data->data->username : '';
+		    $data = json_decode( wp_remote_retrieve_body( $response ) );
 
-            if ( ! empty( $token_username ) && ! empty( $is_external_username ) ) {
+		    if ( 'with-basic-access-token' === $this->request_type ) {
+			    $data = $this->convert_user_info_to_old_structure( $data );
+		    }
 
-                if ( $external_username !== $token_username ) {
+		    $token_username = ! empty( $data->data->username ) ? $data->data->username : '';
 
-                    $data = $this->get_user_info_without_token( $external_username );
+		    if ( ! empty( $token_username ) && ! empty( $is_external_username ) ) {
 
-                    if ( is_wp_error( $data ) ) {
-                        set_transient( $transient, false, MINUTE_IN_SECONDS );
+			    if ( $external_username !== $token_username ) {
 
-                        return false;
-                    }
-                }
-            }
+				    $data = $this->get_user_info_without_token( $external_username );
 
-        }
+				    if ( is_wp_error( $data ) ) {
+					    set_transient( $transient, false, MINUTE_IN_SECONDS );
 
-        if ( empty( $this->access_token ) && ! empty( $is_external_username ) ) {
+					    return false;
+				    }
+			    }
+		    }
+
+	    }
+
+	    if ( empty( $this->access_token ) && ! empty( $is_external_username ) ) {
 
             $data = $this->get_user_info_without_token( $external_username );
 
@@ -704,29 +727,39 @@ class Wpzoom_Instagram_Widget_API {
         return $embed_url;
     }
 
-    /**
-     * Check if given access token is valid for Instagram Api.
-     */
-    public static function is_access_token_valid( $access_token ) {
-	    $request_url = add_query_arg([
-		    'fields' => 'username',
-		    'access_token' => $access_token
+	/**
+	 * Check if given access token is valid for Instagram Api.
+	 */
+	public static function is_access_token_valid( $access_token, $request_type = '' ) {
 
-	    ], 'https://graph.instagram.com/me');
-	    $response = wp_remote_get( $request_url );
+		$request_url = sprintf( 'https://api.instagram.com/v1/users/self/?access_token=%s', $access_token );
 
-        if ( is_wp_error( $response ) ) {
-            return $response;
-        }
+		if ( empty( $access_token ) ) {
+			return false;
+		}
 
-        if ( 200 != wp_remote_retrieve_response_code( $response ) ) {
-            return false;
-        }
+		if ( 'with-basic-access-token' === $request_type ) {
+			$request_url = add_query_arg( [
+				'fields'       => 'username',
+				'access_token' => $access_token
 
-        return true;
-    }
+			], 'https://graph.instagram.com/me' );
+		}
 
-    public function is_configured() {
+		$response = wp_remote_get( $request_url );
+
+		if ( is_wp_error( $response ) ) {
+			return $response;
+		}
+
+		if ( 200 != wp_remote_retrieve_response_code( $response ) ) {
+			return false;
+		}
+
+		return true;
+	}
+
+	public function is_configured() {
         $transient = 'zoom_instagram_is_configured';
 
         if ( false !== ( $result = get_transient( $transient ) ) ) {
@@ -740,7 +773,7 @@ class Wpzoom_Instagram_Widget_API {
         }
 
         if(empty($this->username)){
-            $condition = $this->is_access_token_valid( $this->access_token );
+            $condition = $this->is_access_token_valid( $this->access_token, $this->request_type );
 
         } else{
             $condition = true;
