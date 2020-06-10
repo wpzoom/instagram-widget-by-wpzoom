@@ -346,16 +346,7 @@ class Wpzoom_Instagram_Widget_Settings {
         ?>
 
         <div class="wpzoom-instagram-widget-settings-request-type-wrapper">
-            <div class="label-wrap">
-                <input class="code"
-                       id="wpzoom-instagram-widget-settings_with-access-token"
-                       name="wpzoom-instagram-widget-settings[request-type]"
-                       value="with-access-token" <?php checked( $request_type, 'with-access-token' ) ?>
-                       type="radio">
-                <label for="wpzoom-instagram-widget-settings_with-access-token">
-		            <?php _e( 'With Instagram Legacy API  Access Token (Retired)', 'wpzoom-instagram-widget' ) ?>
-                    &nbsp;</label>
-            </div>
+
             <div class="label-wrap">
                 <input class="code"
                        id="wpzoom-instagram-widget-settings_with-basic-access-token"
@@ -376,6 +367,16 @@ class Wpzoom_Instagram_Widget_Settings {
                 <label for="wpzoom-instagram-widget-settings_without-access-token">
 		            <?php _e( 'Public Feed (12 photos)', 'wpzoom-instagram-widget' ) ?>
                 </label>
+            </div>
+            <div class="label-wrap">
+                <input class="code"
+                       id="wpzoom-instagram-widget-settings_with-access-token"
+                       name="wpzoom-instagram-widget-settings[request-type]"
+                       value="with-access-token" <?php checked( $request_type, 'with-access-token' ) ?>
+                       type="radio">
+                <label for="wpzoom-instagram-widget-settings_with-access-token">
+			        <?php _e( 'With Instagram Legacy API  Access Token (Retired)', 'wpzoom-instagram-widget' ) ?>
+                    &nbsp;</label>
             </div>
 
         </div>
