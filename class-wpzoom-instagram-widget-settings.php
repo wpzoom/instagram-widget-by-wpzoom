@@ -193,8 +193,8 @@ class Wpzoom_Instagram_Widget_Settings {
 			'redirect_uri'  => 'https://wpzoom.com/instagram-auth/',
 			'scope'         => 'user_profile,user_media',
 			'response_type' => 'code',
-			'state'         => base64_encode( admin_url( 'options-general.php?page=wpzoom-instagram-widget' ) )
 		], 'https://api.instagram.com/oauth/authorize' );
+		$oauth_url.='&state='. base64_encode( urlencode(admin_url( 'options-general.php?page=wpzoom-instagram-widget' )) );
 		?>
 
         <p class="description"><?php _e( 'Using this method, you will be prompted to authorize the plugin to access your Instagram photos. The widget will automatically display the latest photos of the account which was authorized on this page.', 'wpzoom-instagram-widget' ); ?></p>
