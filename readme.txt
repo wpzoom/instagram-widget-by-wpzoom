@@ -3,7 +3,7 @@ Contributors: WPZOOM, nvartolomei, ciorici
 Donate link: https://www.wpzoom.com/
 Tags: instagram, widget, timeline, social network, latest images, feed, instagram feed, story, stories, insta, instagram widget
 Requires at least: 4.3
-Tested up to: 5.3
+Tested up to: 5.4
 Requires PHP: 5.6
 Stable tag: trunk
 License: GPLv2 or later
@@ -66,6 +66,10 @@ Make sure to connect your Instagram account with the plugin. You can do that in 
 
 
 == Changelog ==
+
+= 1.6.0 =
+* Added support for the new Instagram Basic Display API.
+* IMPORTANT: On June 29, Instagram will stop supporting its old API which will disrupt feeds created using the old API. If your Instagram account is connected in the plugin settings, you will need to reconnect it again using the new API.
 
 = 1.5.0 =
 * Refactor of the Public Feed method.
@@ -153,3 +157,9 @@ Make sure to connect your Instagram account with the plugin. You can do that in 
 
 = 1.0 =
 * Initial release.
+
+
+== Upgrade Notice ==
+
+= 1.6.0 =
+⚠️ IMPORTANT: On June 29, Instagram will stop supporting its old API which will disrupt feeds created using the old API. If your Instagram account is connected in the plugin settings, you will need to reconnect it again using the new API.
