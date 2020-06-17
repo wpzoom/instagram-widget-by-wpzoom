@@ -770,6 +770,10 @@ class Wpzoom_Instagram_Widget_API {
             if ( 'no' === $result ) {
                 return false;
             }
+
+	        if ( ! empty( $result ) ) {
+		        return true;
+	        }
         }
 
         if(empty($this->username)){
