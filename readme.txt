@@ -67,6 +67,9 @@ Make sure to connect your Instagram account with the plugin. You can do that in 
 
 == Changelog ==
 
+= 1.6.1 =
+* Minor bug fixes
+
 = 1.6.0 =
 * Added support for the new Instagram Basic Display API.
 * IMPORTANT: On June 29, Instagram will stop supporting its old API which will disrupt feeds created using the old API. If your Instagram account is connected in the plugin settings, you will need to reconnect it again using the new API.
