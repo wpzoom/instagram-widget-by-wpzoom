@@ -320,7 +320,7 @@ class Wpzoom_Instagram_Widget_API {
 						'height' => 640
 					),
 				),
-				'type'         => empty( $item->media_type === 'IMAGE' ) ? 'image' : 'video',
+				'type'         => ($item->media_type === 'IMAGE' || $item->media_type === 'CAROUSEL_ALBUM') ? 'image' : 'video',
 				'likes'        => null,
 				'comments'     => null,
 				'created_time' => null,
