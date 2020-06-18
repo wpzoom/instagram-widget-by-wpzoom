@@ -67,6 +67,9 @@ Make sure to connect your Instagram account with the plugin. You can do that in 
 
 == Changelog ==
 
+= 1.6.2 =
+* Minor bug fix with cached plugin assets when updating from an older version
+
 = 1.6.1 =
 * Minor bug fixes
 
