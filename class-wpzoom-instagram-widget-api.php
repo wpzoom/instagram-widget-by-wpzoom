@@ -468,23 +468,6 @@ class Wpzoom_Instagram_Widget_API {
 		    if ( 'with-basic-access-token' === $this->request_type ) {
 			    $data = $this->convert_items_to_old_structure( $data );
 		    }
-
-		    $token_username = ! empty( $data->data[0]->user->username ) ? $data->data[0]->user->username : '';
-
-
-		    if ( ! empty( $token_username ) && ! empty( $is_external_username ) ) {
-
-			    if ( $external_username !== $token_username ) {
-
-				    $data = $this->get_items_without_token( $external_username );
-
-				    if ( is_wp_error( $data ) ) {
-					    set_transient( $transient, false, MINUTE_IN_SECONDS );
-
-					    return false;
-				    }
-			    }
-		    }
 	    }
 
         if ( empty( $this->access_token ) && ! empty( $is_external_username ) ) {
