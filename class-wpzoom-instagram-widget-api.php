@@ -584,22 +584,6 @@ class Wpzoom_Instagram_Widget_API {
 			    $data = $this->convert_user_info_to_old_structure( $data );
 		    }
 
-		    $token_username = ! empty( $data->data->username ) ? $data->data->username : '';
-
-		    if ( ! empty( $token_username ) && ! empty( $is_external_username ) ) {
-
-			    if ( $external_username !== $token_username ) {
-
-				    $data = $this->get_user_info_without_token( $external_username );
-
-				    if ( is_wp_error( $data ) ) {
-					    set_transient( $transient, false, MINUTE_IN_SECONDS );
-
-					    return false;
-				    }
-			    }
-		    }
-
 	    }
 
 	    if ( empty( $this->access_token ) && ! empty( $is_external_username ) ) {
