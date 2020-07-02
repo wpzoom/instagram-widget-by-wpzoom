@@ -16,7 +16,7 @@ Formerly known as "Instagram Widget by WPZOOM". Fully customisable and responsiv
 Formerly known as *Instagram Widget by WPZOOM*, **WPZOOM Social Feed Widget** is a fully customisable and responsive widget for WordPress to display your **Instagram feed**.
 
 
-**[View Demo](http://demo.wpzoom.com/instagram-widget/)**
+**[View Demo](https://demo.wpzoom.com/instagram-widget/)**
 
 
 > Did you find this plugin helpful? Please consider [leaving a 5-star review](https://wordpress.org/support/view/plugin-reviews/instagram-widget-by-wpzoom).
@@ -66,6 +66,10 @@ Make sure to connect your Instagram account with the plugin. You can do that in 
 
 
 == Changelog ==
+
+= 1.6.3 =
+* Minor bug fix when switching from Public Feed to the new API method.
+
 
 = 1.6.2 =
 * Minor bug fix with cached plugin assets when updating from an older version
