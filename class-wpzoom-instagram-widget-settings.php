@@ -166,7 +166,7 @@ class Wpzoom_Instagram_Widget_Settings {
 		$oauth_url .= '?auth_site=' . esc_url( admin_url( 'options-general.php?page=wpzoom-instagram-widget' ) );
 		$oauth_url.='&hl=en';
 
-		$settings = get_option( 'wpzoom-instagram-widget-settings' );
+		$settings = get_option( 'wpzoom-instagram-widget-settings', wpzoom_instagram_get_default_settings() );
 		?>
 
         <p class="description"><?php _e( 'Using this method, you will be prompted to authorize the plugin to access your Instagram photos. The widget will automatically display the latest photos of the account which was authorized on this page.', 'wpzoom-instagram-widget' ); ?></p>
@@ -186,7 +186,7 @@ class Wpzoom_Instagram_Widget_Settings {
 
 	public function settings_field_basic_access_token_button() {
 
-		$settings = get_option( 'wpzoom-instagram-widget-settings' );
+		$settings = get_option( 'wpzoom-instagram-widget-settings', wpzoom_instagram_get_default_settings() );
 
 		$oauth_url = add_query_arg( [
 			'client_id'     => '1242932982579434',
@@ -213,7 +213,7 @@ class Wpzoom_Instagram_Widget_Settings {
 	}
 
     public function settings_field_transient_lifetime() {
-        $settings       = get_option( 'wpzoom-instagram-widget-settings' );
+        $settings       = get_option( 'wpzoom-instagram-widget-settings', wpzoom_instagram_get_default_settings() );
         $lifetime_value = ! empty( $settings['transient-lifetime-value'] ) ? $settings['transient-lifetime-value'] : 1;
         $lifetime_type  = ! empty( $settings['transient-lifetime-type'] ) ? $settings['transient-lifetime-type'] : 'days';
         ?>
@@ -235,7 +235,7 @@ class Wpzoom_Instagram_Widget_Settings {
     }
 
     public function settings_field_is_embed_stream() {
-        $settings       = get_option( 'wpzoom-instagram-widget-settings' );
+        $settings       = get_option( 'wpzoom-instagram-widget-settings', wpzoom_instagram_get_default_settings() );
         $is_embed_stream = ! empty( $settings['is-embed-stream'] ) ? wp_validate_boolean($settings['is-embed-stream']) : false;
         ?>
         <input  class="regular-text code"
@@ -249,7 +249,7 @@ class Wpzoom_Instagram_Widget_Settings {
     }
 
     public function settings_field_is_forced_timeout() {
-        $settings       = get_option( 'wpzoom-instagram-widget-settings' );
+        $settings       = get_option( 'wpzoom-instagram-widget-settings', wpzoom_instagram_get_default_settings() );
         $is_forced_timeout = ! empty( $settings['is-forced-timeout'] ) ? wp_validate_boolean($settings['is-forced-timeout']) : false;
         ?>
         <input  class="regular-text code"
@@ -263,7 +263,7 @@ class Wpzoom_Instagram_Widget_Settings {
     }
 
     public function settings_field_request_timeout() {
-        $settings       = get_option( 'wpzoom-instagram-widget-settings' );
+        $settings       = get_option( 'wpzoom-instagram-widget-settings', wpzoom_instagram_get_default_settings() );
         $timeout_value = ! empty( $settings['request-timeout-value'] ) ? $settings['request-timeout-value'] : 15;
         ?>
         <input  class="regular-text code"
@@ -277,7 +277,7 @@ class Wpzoom_Instagram_Widget_Settings {
     }
 
     public function settings_field_access_token_input() {
-        $settings = get_option( 'wpzoom-instagram-widget-settings' );
+        $settings = get_option( 'wpzoom-instagram-widget-settings', wpzoom_instagram_get_default_settings() );
 	    $access_token = ! empty( $settings['access-token'] ) ? $settings['access-token'] : '';
 
 	    ?>
@@ -297,7 +297,7 @@ class Wpzoom_Instagram_Widget_Settings {
     }
 
 	public function settings_field_basic_access_token_input() {
-		$settings = get_option( 'wpzoom-instagram-widget-settings' );
+		$settings = get_option( 'wpzoom-instagram-widget-settings', wpzoom_instagram_get_default_settings() );
 		$basic_access_token = ! empty( $settings['basic-access-token'] ) ? $settings['basic-access-token'] : '';
 		?>
         <input class="regular-text code" id="wpzoom-instagram-widget-settings_basic-access-token" name="wpzoom-instagram-widget-settings[basic-access-token]" value="<?php echo esc_attr( $basic_access_token ) ?>" type="text">
@@ -324,7 +324,7 @@ class Wpzoom_Instagram_Widget_Settings {
     }
 
     public function settings_field_username() {
-        $settings = get_option( 'wpzoom-instagram-widget-settings' );
+        $settings = get_option( 'wpzoom-instagram-widget-settings', wpzoom_instagram_get_default_settings() );
         ?>
         <input class="regular-text code" id="wpzoom-instagram-widget-settings_username" name="wpzoom-instagram-widget-settings[username]" value="<?php echo esc_attr( $settings['username'] ) ?>" type="text">
         <p class="description">
@@ -341,7 +341,7 @@ class Wpzoom_Instagram_Widget_Settings {
     }
 
     public function settings_field_request_type() {
-        $settings     = get_option( 'wpzoom-instagram-widget-settings' );
+        $settings     = get_option( 'wpzoom-instagram-widget-settings', wpzoom_instagram_get_default_settings() );
         $request_type = empty( $settings['request-type'] ) ? 'with-access-token' : $settings['request-type'];
         ?>
 

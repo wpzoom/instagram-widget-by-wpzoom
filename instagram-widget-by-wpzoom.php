@@ -50,7 +50,7 @@ function wpzoom_instagram_legacy_api_admin_notice() {
 	global $current_user ;
 	$user_id = $current_user->ID;
 
-	$options = get_option( 'wpzoom-instagram-widget-settings' );
+	$options = get_option( 'wpzoom-instagram-widget-settings', wpzoom_instagram_get_default_settings() );
 
 	$request_type = !empty($options['request-type']) ? $options['request-type'] : '';
 
@@ -60,6 +60,20 @@ function wpzoom_instagram_legacy_api_admin_notice() {
 		printf(__('You’re using an <strong>outdated method</strong> to display your <strong>Instagram feed</strong>. This method will be <a target="_blank" href="https://www.instagram.com/developer/">deprecated</a> on <strong>June 29, 2020</strong>, and we recommend go to the <a href="options-general.php?page=wpzoom-instagram-widget">Settings page</a> and <strong>switch</strong> to the new method.<a style="text-decoration: none" class="notice-dismiss" href="%1$s"></a>'), '?wpzoom_instagram_legacy_api_admin_notice=0');
 		echo "</p></div>";
 	}
+}
+
+function wpzoom_instagram_get_default_settings() {
+	return [
+		'access-token'             => '',
+		'basic-access-token'       => '',
+		'request-type'             => 'with-basic-access-token',
+		'username'                 => '',
+		'transient-lifetime-value' => 1,
+		'transient-lifetime-type'  => 'days',
+		'is-embed-stream'          => '',
+		'is-forced-timeout'        => '',
+		'request-timeout-value'    => 15
+	];
 }
 
 function wpzoom_instagram_ignore_legacy_api_admin_notice() {

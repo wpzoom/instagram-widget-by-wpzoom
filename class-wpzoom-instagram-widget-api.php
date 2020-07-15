@@ -42,7 +42,7 @@ class Wpzoom_Instagram_Widget_API {
     }
 
     protected function __construct() {
-        $options = get_option( 'wpzoom-instagram-widget-settings' );
+        $options = get_option( 'wpzoom-instagram-widget-settings' , wpzoom_instagram_get_default_settings());
 
 	    $this->request_type = !empty($options['request-type']) ? $options['request-type'] : '';
 	    $this->access_token = $options['access-token'];
