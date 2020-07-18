@@ -67,9 +67,11 @@ Make sure to connect your Instagram account with the plugin. You can do that in 
 
 == Changelog ==
 
+= 1.6.4 =
+* Minor bug fixes for PHP 7.4
+
 = 1.6.3 =
 * Minor bug fix when switching from Public Feed to the new API method.
-
 
 = 1.6.2 =
 * Minor bug fix with cached plugin assets when updating from an older version
