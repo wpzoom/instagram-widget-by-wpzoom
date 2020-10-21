@@ -1,4 +1,10 @@
 <?php
+/**
+ * Exit if accessed directly.
+ */
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 class Wpzoom_Instagram_Widget_Settings {
     public function __construct() {
@@ -59,30 +65,6 @@ class Wpzoom_Instagram_Widget_Settings {
             array('class' => 'wpzoom-instagram-widget-with-token-group')
         );
 
-
-	    /**
-	     * Instagram with old token.
-	     */
-        add_settings_field(
-            'wpzoom-instagram-widget-access-token-button',
-            __( '', 'wpzoom-instagram-widget' ),
-            array( $this, 'settings_field_access_token_button' ),
-            'wpzoom-instagram-widget-settings-group',
-            'wpzoom-instagram-widget-settings-general',
-            array('class' => 'wpzoom-instagram-widget-with-access-token-group')
-
-        );
-
-        add_settings_field(
-            'wpzoom-instagram-widget-access-token-input',
-            __( 'Access Token', 'wpzoom-instagram-widget' ),
-            array( $this, 'settings_field_access_token_input' ),
-            'wpzoom-instagram-widget-settings-group',
-            'wpzoom-instagram-widget-settings-general',
-            array('class' => 'wpzoom-instagram-widget-with-access-token-group')
-
-        );
-
 	    /**
 	     * Instagram with basic api token.
 	     */
@@ -134,14 +116,6 @@ class Wpzoom_Instagram_Widget_Settings {
         );
 
         add_settings_field(
-            'wpzoom-instagram-widget-is-embed-stream',
-            __( 'Serve images from Instagram embed links', 'wpzoom-instagram-widget' ),
-            array( $this, 'settings_field_is_embed_stream' ),
-            'wpzoom-instagram-widget-settings-group',
-            'wpzoom-instagram-widget-settings-general'
-        );
-
-        add_settings_field(
             'wpzoom-instagram-widget-is-forced-timeout',
             __( 'Enable request timeout', 'wpzoom-instagram-widget' ),
             array( $this, 'settings_field_is_forced_timeout' ),
@@ -160,29 +134,6 @@ class Wpzoom_Instagram_Widget_Settings {
 
 
     }
-
-	public function settings_field_access_token_button() {
-		$oauth_url = 'https://instagram.com/oauth/authorize/?client_id=955bdb2319484968b93de8d6a1032c66&response_type=token&redirect_uri=https://www.wpzoom.com/instagram/';
-		$oauth_url .= '?auth_site=' . esc_url( admin_url( 'options-general.php?page=wpzoom-instagram-widget' ) );
-		$oauth_url.='&hl=en';
-
-		$settings = get_option( 'wpzoom-instagram-widget-settings', wpzoom_instagram_get_default_settings() );
-		?>
-
-        <p class="description"><?php _e( 'Using this method, you will be prompted to authorize the plugin to access your Instagram photos. The widget will automatically display the latest photos of the account which was authorized on this page.', 'wpzoom-instagram-widget' ); ?></p>
-
-        <br />
-
-        <a class="button button-connect" href="<?php echo esc_url( $oauth_url ); ?>">
-			<?php if ( empty( $settings['access-token'] ) ) : ?>
-                <span><?php _e( 'Connect with Instagram', 'wpzoom-instagram-widget' ); ?></span>
-			<?php else: ?>
-                <span class="zoom-instagarm-widget-connected"><?php _e( 'Re-connect with Instagram', 'wpzoom-instagram-widget' ); ?></span>
-			<?php endif; ?>
-        </a>
-        </p>
-		<?php
-	}
 
 	public function settings_field_basic_access_token_button() {
 
@@ -234,20 +185,6 @@ class Wpzoom_Instagram_Widget_Settings {
         <?php
     }
 
-    public function settings_field_is_embed_stream() {
-        $settings       = get_option( 'wpzoom-instagram-widget-settings', wpzoom_instagram_get_default_settings() );
-        $is_embed_stream = ! empty( $settings['is-embed-stream'] ) ? wp_validate_boolean($settings['is-embed-stream']) : false;
-        ?>
-        <input  class="regular-text code"
-                id="wpzoom-instagram-widget-settings_is-embed-stream"
-                name="wpzoom-instagram-widget-settings[is-embed-stream]"
-                <?php checked(true , $is_embed_stream)?>
-                value="1"
-                type="checkbox">
-
-        <?php
-    }
-
     public function settings_field_is_forced_timeout() {
         $settings       = get_option( 'wpzoom-instagram-widget-settings', wpzoom_instagram_get_default_settings() );
         $is_forced_timeout = ! empty( $settings['is-forced-timeout'] ) ? wp_validate_boolean($settings['is-forced-timeout']) : false;
@@ -275,27 +212,7 @@ class Wpzoom_Instagram_Widget_Settings {
                 max="30">
         <?php
     }
-
-    public function settings_field_access_token_input() {
-        $settings = get_option( 'wpzoom-instagram-widget-settings', wpzoom_instagram_get_default_settings() );
-	    $access_token = ! empty( $settings['access-token'] ) ? $settings['access-token'] : '';
-
-	    ?>
-            <input class="regular-text code" id="wpzoom-instagram-widget-settings_access-token" name="wpzoom-instagram-widget-settings[access-token]" value="<?php echo esc_attr( $access_token ) ?>" type="text">
-            <p class="description">
-                <?php
-                printf(
-                    __(
-                        'The Instagram Access Token is a long string of characters unique to your account that grants other applications access to your Instagram feed. You can also get it manually from <a href="%1$s">here</a>.',
-                        'wpzoom-instagram-widget'
-                    ),
-                    'https://www.wpzoom.com/instagram/'
-                );
-                ?>
-            </p>
-        <?php
-    }
-
+    
 	public function settings_field_basic_access_token_input() {
 		$settings = get_option( 'wpzoom-instagram-widget-settings', wpzoom_instagram_get_default_settings() );
 		$basic_access_token = ! empty( $settings['basic-access-token'] ) ? $settings['basic-access-token'] : '';
@@ -342,7 +259,7 @@ class Wpzoom_Instagram_Widget_Settings {
 
     public function settings_field_request_type() {
         $settings     = get_option( 'wpzoom-instagram-widget-settings', wpzoom_instagram_get_default_settings() );
-        $request_type = empty( $settings['request-type'] ) ? 'with-access-token' : $settings['request-type'];
+        $request_type = empty( $settings['request-type'] ) ? 'with-basic-access-token' : $settings['request-type'];
         ?>
 
         <div class="wpzoom-instagram-widget-settings-request-type-wrapper">
@@ -367,16 +284,6 @@ class Wpzoom_Instagram_Widget_Settings {
                 <label for="wpzoom-instagram-widget-settings_without-access-token">
 		            <?php _e( 'Public Feed (12 photos)', 'wpzoom-instagram-widget' ) ?>
                 </label>
-            </div>
-            <div class="label-wrap">
-                <input class="code"
-                       id="wpzoom-instagram-widget-settings_with-access-token"
-                       name="wpzoom-instagram-widget-settings[request-type]"
-                       value="with-access-token" <?php checked( $request_type, 'with-access-token' ) ?>
-                       type="radio">
-                <label for="wpzoom-instagram-widget-settings_with-access-token">
-			        <?php _e( 'With Instagram Legacy API  Access Token (Retired)', 'wpzoom-instagram-widget' ) ?>
-                    &nbsp;</label>
             </div>
 
         </div>
@@ -439,32 +346,8 @@ class Wpzoom_Instagram_Widget_Settings {
     public function sanitize( $input ) {
         $result = array();
 
-        $result['access-token'] = sanitize_text_field( $input['access-token'] );
         $result['basic-access-token'] = sanitize_text_field( $input['basic-access-token'] );
 	    $result['request-type'] = sanitize_text_field( $input['request-type'] );
-
-        if ( ! empty( $result['access-token'] ) && !empty($result['request-type']) && 'with-access-token' === $result['request-type'] ) {
-            $validation_result = Wpzoom_Instagram_Widget_API::is_access_token_valid( $result['access-token'],  $result['request-type']);
-
-            if ( $validation_result !== true ) {
-                $access_token_error_message = __( 'Provided Access Token has been rejected by Instagram Legacy API (Retired). Please try again or use the other option.', 'wpzoom-instagram-widget' );
-
-                if ( is_wp_error( $validation_result ) ) {
-                    $access_token_error_message = $validation_result->get_error_message();
-                }
-
-                if ( $validation_result !== true ) {
-                    add_settings_error(
-                        'wpzoom-instagram-widget-access-token',
-                        esc_attr( 'wpzoom-instagram-widget-access-token-invalid' ),
-                        $access_token_error_message,
-                        'error'
-                    );
-                }
-
-                $result['access-token'] = '';
-            }
-        }
 
 	    if ( ! empty( $result['basic-access-token'] ) && !empty($result['request-type']) && 'with-basic-access-token' === $result['request-type'] ) {
 		    $validation_result = Wpzoom_Instagram_Widget_API::is_access_token_valid( $result['basic-access-token'], $result['request-type'] );
@@ -492,7 +375,6 @@ class Wpzoom_Instagram_Widget_Settings {
         $result['username'] = sanitize_text_field( $input['username'] );
         $result['transient-lifetime-value'] = sanitize_text_field( $input['transient-lifetime-value'] );
         $result['transient-lifetime-type'] = sanitize_text_field( $input['transient-lifetime-type'] );
-        $result['is-embed-stream']= ! empty( $input['is-embed-stream'] ) ? wp_validate_boolean($input['is-embed-stream']) : false;
         $result['is-forced-timeout']= ! empty( $input['is-forced-timeout'] ) ? wp_validate_boolean($input['is-forced-timeout']) : false;
         $result['request-timeout-value'] = sanitize_text_field( $input['request-timeout-value'] );
 
