@@ -178,7 +178,7 @@ class Wpzoom_Instagram_Widget_API {
 				break;
 			}
 
-			if ( ! empty( $disable_video_thumbs ) && isset( $item->type ) && 'video' == $item->type ) {
+			if ( ! empty( $disable_video_thumbs ) && isset( $item->type ) && 'VIDEO' == $item->type ) {
 				$image_limit ++;
 				continue;
 
@@ -188,12 +188,12 @@ class Wpzoom_Instagram_Widget_API {
 			$image_url = $item->images->{$best_size}->url;
 
 			$result[] = array(
-				'link'            => $item->link,
-				'image-url'       => $image_url,
-				'image-id'        => $item->id,
-				'image-caption'   => ! empty( $item->caption->text ) ? esc_attr( $item->caption->text ) : '',
-				'likes_count'     => ! empty( $item->likes->count ) ? esc_attr( $item->likes->count ) : 0,
-				'comments_count'  => ! empty( $item->comments->count ) ? esc_attr( $item->comments->count ) : 0
+				'link'           => $item->link,
+				'image-url'      => $image_url,
+				'image-id'       => $item->id,
+				'image-caption'  => ! empty( $item->caption->text ) ? esc_attr( $item->caption->text ) : '',
+				'likes_count'    => ! empty( $item->likes->count ) ? esc_attr( $item->likes->count ) : 0,
+				'comments_count' => ! empty( $item->comments->count ) ? esc_attr( $item->comments->count ) : 0
 			);
 		}
 
@@ -229,19 +229,6 @@ class Wpzoom_Instagram_Widget_API {
 		}
 
 		return $size;
-	}
-
-	protected function convert_to_embed_url( $size, $link ) {
-		$sizes = array(
-			'thumbnail'           => 't',
-			'low_resolution'      => 'm',
-			'standard_resolution' => 'l'
-		);
-
-		$shortcode = trim( basename( $link ) );
-		$embed_url = sprintf( 'https://instagram.com/p/%1$s/media/?size=%2$s', $shortcode, $sizes[ $size ] );
-
-		return $embed_url;
 	}
 
 	/**
@@ -320,7 +307,7 @@ class Wpzoom_Instagram_Widget_API {
 
 			$converted->data[] = (object) array(
 				'id'           => $item->id,
-				'media_url'    => $item->media_url,
+				'media_url'    => ( 'VIDEO' === $item->media_type ) ? $item->thumbnail_url : $item->media_url,
 				'user'         => (object) array(
 					'id'              => null,
 					'fullname'        => null,
@@ -344,7 +331,7 @@ class Wpzoom_Instagram_Widget_API {
 						'height' => 640
 					),
 				),
-				'type'         => ( $item->media_type === 'IMAGE' || $item->media_type === 'CAROUSEL_ALBUM' ) ? 'image' : 'video',
+				'type'         => $item->media_type,
 				'likes'        => null,
 				'comments'     => null,
 				'created_time' => null,
@@ -411,7 +398,7 @@ class Wpzoom_Instagram_Widget_API {
 						'height' => $node->thumbnail_resources[4]->config_height
 					),
 				),
-				'type'         => empty( $node->is_video ) ? 'image' : 'video',
+				'type'         => $this->get_media_type_without_token( $node->__typename ),
 				'likes'        => isset( $node->edge_liked_by ) ? $node->edge_liked_by : 0,
 				'comments'     => isset( $node->edge_media_to_comment ) ? $node->edge_media_to_comment : 0,
 				'created_time' => $node->taken_at_timestamp,
@@ -505,6 +492,12 @@ class Wpzoom_Instagram_Widget_API {
 		}
 
 		return $result;
+	}
+
+	function get_media_type_without_token( $media_type ) {
+		$media_types = [ 'GraphImage' => 'IMAGE', 'GraphSidecar' => 'CAROUSEL_ALBUM', 'GraphVideo' => 'VIDEO' ];
+
+		return array_key_exists( $media_type, $media_types ) ? $media_types[ $media_type ] : array_shift( $media_types );
 	}
 
 	function get_transient_lifetime() {
