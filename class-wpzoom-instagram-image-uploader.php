@@ -6,15 +6,16 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+/**
+ * Class WPZOOM_Instagram_Image_Uploader
+ */
 class WPZOOM_Instagram_Image_Uploader {
 	public static $ajax_action_name = 'wpzoom_instagram_get_image_async';
-	/**
-	 * @var
-	 */
 	private static $instance;
 	private static $media_metakey_name = 'wpzoom_instagram_media_id';
 	private static $prefix_name = 'wpzoom-share-buttons';
 	private static $post_status_name = 'wpzoom-hidden';
+	private static $transient_name = 'zoom_instagram_is_configured';
 
 	/**
 	 * WPZOOM_Instagram_Image_Uploader constructor.
@@ -38,6 +39,15 @@ class WPZOOM_Instagram_Image_Uploader {
 		return self::$instance;
 	}
 
+	/**
+	 * Get image.
+	 *
+	 * @param $media_size
+	 * @param $media_url
+	 * @param $media_id
+	 *
+	 * @return bool
+	 */
 	static function get_image( $media_size, $media_url, $media_id ) {
 
 		$args  = [
@@ -66,15 +76,50 @@ class WPZOOM_Instagram_Image_Uploader {
 		return false;
 	}
 
+	/**
+	 * Get prefixed image size name.
+	 *
+	 * @param $size
+	 *
+	 * @return string
+	 */
 	public static function get_image_size_name( $size ) {
 
 		return self::$prefix_name . '-' . $size;
 
 	}
 
+	/**
+	 * Get response api from transient.
+	 *
+	 * @return mixed
+	 */
+	function get_api_transient() {
+		return get_transient( self::$transient_name );
+	}
+
+	/**
+	 * Get transient lifetime from settings.
+	 *
+	 * @return float|int
+	 */
+	function get_transient_lifetime() {
+
+		$options = get_option( 'wpzoom-instagram-widget-settings', wpzoom_instagram_get_default_settings() );
+
+		$values = [ 'minutes' => MINUTE_IN_SECONDS, 'hours' => HOUR_IN_SECONDS, 'days' => DAY_IN_SECONDS ];
+		$keys   = array_keys( $values );
+		$type   = in_array( $options['transient-lifetime-type'], $keys ) ? $values[ $options['transient-lifetime-type'] ] : $values['minutes'];
+
+		return $type * $options['transient-lifetime-value'];
+	}
+
+	/**
+	 * Get image from ajax.
+	 */
 	function get_image_async() {
 
-		$sliced = wp_array_slice_assoc( $_POST, [ 'media-id', 'last', 'nonce', 'image-resolution', 'image-width' ] );
+		$sliced = wp_array_slice_assoc( $_POST, [ 'media-id', 'nonce', 'image-resolution', 'image-width' ] );
 		$sliced = array_map( 'sanitize_text_field', $sliced );
 
 		if ( ! wp_verify_nonce( $sliced['nonce'], self::get_nonce_action( $sliced['media-id'] ) ) ) {
@@ -91,17 +136,18 @@ class WPZOOM_Instagram_Image_Uploader {
 			wp_send_json_error( $error, 500 );
 		}
 
-		$args  = array(
+		$args = [
 			'post_type'      => 'attachment',
 			'posts_per_page' => 1,
 			'post_status'    => self::$post_status_name,
-			'meta_query'     => array(
-				array(
+			'meta_query'     => [
+				[
 					'key'   => self::$media_metakey_name,
 					'value' => $sliced['media-id'],
-				),
-			),
-		);
+				],
+			],
+		];
+
 		$query = new WP_Query( $args );
 
 		if ( $query->have_posts() ) {
@@ -110,6 +156,7 @@ class WPZOOM_Instagram_Image_Uploader {
 
 		} else {
 			$attachment_id = self::upload_image( $media_url, $sliced['media-id'] );
+			self::$instance->set_images_to_transient( $attachment_id, $sliced['media-id'] );
 		}
 
 		if ( is_wp_error( $attachment_id ) ) {
@@ -122,18 +169,23 @@ class WPZOOM_Instagram_Image_Uploader {
 
 		$image_src = ! empty( $image_src ) ? $image_src[0] : $media_url;
 
-		if ( wp_validate_boolean( $sliced['last'] ) ) {
-			delete_transient( 'zoom_instagram_is_configured' );
-
-		}
-
 		wp_send_json_success( [ 'image_src' => $image_src ] );
 	}
 
+	/**
+	 * @param $id
+	 *
+	 * @return string
+	 */
 	public static function get_nonce_action( $id ) {
 		return self::$ajax_action_name . '_' . $id;
 	}
 
+	/**
+	 * @param $media_id
+	 *
+	 * @return bool
+	 */
 	public static function get_media_url_by_id( $media_id ) {
 
 		$transient = get_transient( 'zoom_instagram_is_configured' );
@@ -173,35 +225,11 @@ class WPZOOM_Instagram_Image_Uploader {
 
 	}
 
-//	function get_image_async( $media_size, $media_url, $media_id ) {
-//
-//		$args  = array(
-//			'post_type'      => 'attachment',
-//			'posts_per_page' => 1,
-//			'post_status'    => self::$post_status_name,
-//			'meta_query'     => array(
-//				array(
-//					'key'   => self::$media_metakey_name,
-//					'value' => $media_id,
-//				),
-//			),
-//		);
-//		$query = new WP_Query( $args );
-//
-//		if ( $query->have_posts() ) {
-//			$post          = array_shift( $query->posts );
-//			$attachment_id = $post->ID;
-//
-//		} else {
-//			$attachment_id = self::upload_image( $media_url, $media_id );
-//		}
-//
-//
-//		$image_src = wp_get_attachment_image_src( $attachment_id, self::get_image_size_name( $media_size ) );
-//
-//		return ! empty( $image_src ) ? $image_src[0] : $media_url;
-//	}
-
+	/**
+	 * @param $post_data
+	 *
+	 * @return mixed
+	 */
 	public function insert_post_data( $post_data ) {
 
 		$post_data['post_status'] = self::$post_status_name;
@@ -209,6 +237,9 @@ class WPZOOM_Instagram_Image_Uploader {
 		return $post_data;
 	}
 
+	/**
+	 * Register custom post status.
+	 */
 	function custom_post_status() {
 		register_post_status( self::$post_status_name, [
 			'public'              => true,
@@ -236,6 +267,8 @@ class WPZOOM_Instagram_Image_Uploader {
 	}
 
 	/**
+	 * Set image sizes.
+	 *
 	 * @param $sizes
 	 *
 	 * @return array
@@ -259,6 +292,55 @@ class WPZOOM_Instagram_Image_Uploader {
 
 	}
 
+	/**
+	 * Alter transient data object with the new values.
+	 *
+	 * @param $attachment_id
+	 * @param $media_id
+	 */
+	protected function set_images_to_transient( $attachment_id, $media_id ) {
+
+		$transient = self::$instance->get_api_transient();
+
+		if ( ! empty( $transient->data ) ) {
+			foreach ( $transient->data as $key => $item ) {
+				if ( $item->id === $media_id ) {
+					$thumbnail                         = wp_get_attachment_image_src( $attachment_id, self::get_image_size_name( 'thumbnail' ) );
+					$low_resolution                    = wp_get_attachment_image_src( $attachment_id, self::get_image_size_name( 'low_resolution' ) );
+					$standard_resolution               = wp_get_attachment_image_src( $attachment_id, self::get_image_size_name( 'standard_resolution' ) );
+					$item->images->thumbnail->url      = ! empty( $thumbnail ) ? $thumbnail[0] : '';
+					$item->images->low_resolution->url = ! empty( $low_resolution ) ? $low_resolution[0] : '';;
+					$item->images->standard_resolution->url = ! empty( $standard_resolution ) ? $standard_resolution[0] : '';;
+
+					$transient->data[ $key ] = $item;
+				}
+
+
+			}
+
+			$this->set_api_transient( $transient );
+		}
+	}
+
+	/**
+	 * Set api transient.
+	 *
+	 * @param $data
+	 *
+	 * @return bool
+	 */
+	function set_api_transient( $data ) {
+		return set_transient( self::$transient_name, $data, self::$instance->get_transient_lifetime() );
+	}
+
+	/**
+	 * Get best image size.
+	 *
+	 * @param $desired_width
+	 * @param string $image_resolution
+	 *
+	 * @return int|string
+	 */
 	protected function get_best_size( $desired_width, $image_resolution = 'default_algorithm' ) {
 
 		$size = 'thumbnail';

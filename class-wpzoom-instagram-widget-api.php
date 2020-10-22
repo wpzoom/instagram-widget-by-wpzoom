@@ -330,7 +330,6 @@ class Wpzoom_Instagram_Widget_API {
 				'images'       => (object) array(
 					'thumbnail'           => (object) array(
 						'url'    => $this->image_uploader->get_image( 'thumbnail', $item->media_url, $item->id ),
-						// $this->convert_to_embed_url( 'thumbnail', $item->permalink ),
 						'width'  => 150,
 						'height' => 150
 					),

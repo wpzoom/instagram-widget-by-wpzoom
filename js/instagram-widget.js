@@ -56,7 +56,6 @@ jQuery(function ($) {
                 wp.ajax.post('wpzoom_instagram_get_image_async', {
                     'media-id': image['media-id'],
                     nonce: image['nonce'],
-                    last: images.length == 0,
                     'image-resolution': imageResolution,
                     'image-width': desiredItemWidth
                 }).done(function (data) {
