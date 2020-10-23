@@ -276,3 +276,14 @@ a.ig-b-v-24:hover {
     background-position: center center;
     background-repeat: no-repeat
 }
+
+.zoom-instagram-widget__items .svg-icon {
+    position: absolute;
+    width: 32px;
+    padding: 8px;
+    height: 32px;
+    display: flex;
+    top: 0;
+    right: 0;
+    z-index: 1;
+}

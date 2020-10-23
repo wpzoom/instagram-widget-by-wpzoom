@@ -37,6 +37,7 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 			'show-user-bio'                 => false,
 			'lazy-load-images'              => false,
 			'disable-video-thumbs'          => false,
+			'display-media-type-icons'      => false,
 			'images-per-row'                => 3,
 			'image-width'                   => 120,
 			'image-spacing'                 => 10,
@@ -53,9 +54,12 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 	 * Widget specific scripts & styles
 	 */
 	public function scripts() {
-		wp_enqueue_style( 'zoom-instagram-widget', plugin_dir_url( dirname( __FILE__ ) . '/instagram-widget-by-wpzoom.php' ) . 'css/instagram-widget.css', array( 'dashicons' ), '1.6.0' );
+		wp_enqueue_style( 'zoom-instagram-widget', plugin_dir_url( dirname( __FILE__ ) . '/instagram-widget-by-wpzoom.php' ) . 'css/instagram-widget.css', array( 'dashicons' ), '1.6.1' );
 		wp_enqueue_script( 'zoom-instagram-widget-lazy-load', plugin_dir_url( dirname( __FILE__ ) . '/instagram-widget-by-wpzoom.php' ) . 'js/jquery.lazy.min.js', array( 'jquery' ), '1.4.2' );
-		wp_enqueue_script( 'zoom-instagram-widget', plugin_dir_url( dirname( __FILE__ ) . '/instagram-widget-by-wpzoom.php' ) . 'js/instagram-widget.js', array( 'jquery', 'wp-util' ), '1.6.2' );
+		wp_enqueue_script( 'zoom-instagram-widget', plugin_dir_url( dirname( __FILE__ ) . '/instagram-widget-by-wpzoom.php' ) . 'js/instagram-widget.js', array(
+			'jquery',
+			'wp-util'
+		), '1.6.2' );
 	}
 
 	/**
@@ -225,9 +229,11 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 	}
 
 	protected function display_items( $items, $instance ) {
-		$count        = 0;
-		$show_overlay = wp_validate_boolean( $instance['show-counts-on-hover'] );
-		$small_class  = ( ! empty( $instance['image-width'] ) && $instance['image-width'] <= 180 ) ? 'small' : '';
+		$count                 = 0;
+		$show_overlay          = wp_validate_boolean( $instance['show-counts-on-hover'] );
+		$show_media_type_icons = wp_validate_boolean( $instance['display-media-type-icons'] );
+		$small_class           = ( ! empty( $instance['image-width'] ) && $instance['image-width'] <= 180 ) ? 'small' : '';
+		$svg_icons             = plugin_dir_url( __FILE__ ) . 'images/wpzoom-instagram-icons.svg';
 		?>
         <ul class="zoom-instagram-widget__items zoom-instagram-widget__items--no-js"
             data-images-per-row="<?php echo esc_attr( $instance['images-per-row'] ); ?>"
@@ -245,13 +251,16 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 				$media_id     = ! empty( $item['image-id'] ) ? esc_attr( $item['image-id'] ) : null;
 				$alt          = esc_attr( $item['image-caption'] );
 				$likes        = $item['likes_count'];
+				$type         = in_array( $item['type'], [
+					'VIDEO',
+					'CAROUSEL_ALBUM'
+				] ) ? strtolower( $item['type'] ) : false;
 				$comments     = $item['comments_count'];
 
 				if ( ! empty( $media_id ) && empty( $src ) ) {
 
 					$inline_attrs = 'data-media-id="' . esc_attr( $media_id ) . '"';
 					$inline_attrs .= 'data-nonce="' . wp_create_nonce( WPZOOM_Instagram_Image_Uploader::get_nonce_action( $media_id ) ) . '"';
-
 
 					$src = plugin_dir_url( __FILE__ ) . 'images/loading-spinner-transparent.svg';
 				}
@@ -268,6 +277,11 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 
 					if ( $show_overlay ):?>
                         <div class="hover-layout zoom-instagram-widget__overlay zoom-instagram-widget__black <?php echo $small_class ?>">
+							<?php if ( $show_media_type_icons && ! empty( $type ) ): ?>
+                                <svg class="svg-icon" shape-rendering="geometricPrecision">
+                                    <use xlink:href="<?php echo esc_url( $svg_icons ); ?>#<?php echo $type ?>"></use>
+                                </svg>
+							<?php endif; ?>
 
 							<?php if ( ! empty( $likes ) && ! empty( $comments ) ): ?>
                                 <div class="hover-controls">
@@ -294,6 +308,11 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
                            style="<?php echo $inline_style; ?>"
                            href="<?php echo $link; ?>" target="_blank" rel="noopener" title="<?php echo $alt; ?>"
                         >
+							<?php if ( $show_media_type_icons && ! empty( $type ) ): ?>
+                                <svg class="svg-icon" shape-rendering="geometricPrecision">
+                                    <use xlink:href="<?php echo esc_url( $svg_icons ); ?>#<?php echo $type ?>"></use>
+                                </svg>
+							<?php endif; ?>
                         </a>
 					<?php endif; ?>
                 </li>
@@ -354,6 +373,7 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 		$instance['show-user-bio']                 = ! empty( $new_instance['show-user-bio'] );
 		$instance['lazy-load-images']              = ! empty( $new_instance['lazy-load-images'] );
 		$instance['disable-video-thumbs']          = ! empty( $new_instance['disable-video-thumbs'] );
+		$instance['display-media-type-icons']      = ! empty( $new_instance['display-media-type-icons'] );
 
 
 		return $instance;
@@ -505,6 +525,12 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
                    id="<?php echo $this->get_field_id( 'disable-video-thumbs' ); ?>"
                    name="<?php echo $this->get_field_name( 'disable-video-thumbs' ); ?>"/>
             <label for="<?php echo $this->get_field_id( 'disable-video-thumbs' ); ?>"><?php _e( 'Hide video <strong>thumbnails</strong>', 'wpzoom-instagram-widget' ); ?></label>
+        </p>
+        <p>
+            <input class="checkbox" type="checkbox" <?php checked( $instance['display-media-type-icons'] ); ?>
+                   id="<?php echo $this->get_field_id( 'display-media-type-icons' ); ?>"
+                   name="<?php echo $this->get_field_name( 'display-media-type-icons' ); ?>"/>
+            <label for="<?php echo $this->get_field_id( 'display-media-type-icons' ); ?>"><?php _e( 'Show <strong>media type icons</strong>', 'wpzoom-instagram-widget' ); ?></label>
         </p>
         <p>
             <label for="<?php echo $this->get_field_id( 'button_text' ); ?>"><?php esc_html_e( 'Button Text:', 'wpzoom-instagram-widget' ); ?></label>

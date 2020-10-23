@@ -190,6 +190,7 @@ class Wpzoom_Instagram_Widget_API {
 			$result[] = array(
 				'link'           => $item->link,
 				'image-url'      => $image_url,
+				'type'           => $item->type,
 				'image-id'       => $item->id,
 				'image-caption'  => ! empty( $item->caption->text ) ? esc_attr( $item->caption->text ) : '',
 				'likes_count'    => ! empty( $item->likes->count ) ? esc_attr( $item->likes->count ) : 0,
