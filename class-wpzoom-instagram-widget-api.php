@@ -191,7 +191,7 @@ class Wpzoom_Instagram_Widget_API {
 				'link'           => $item->link,
 				'image-url'      => $image_url,
 				'type'           => $item->type,
-				'image-id'       => $item->id,
+				'image-id'       => ! empty( $item->id ) ? esc_attr( $item->id ) : '',
 				'image-caption'  => ! empty( $item->caption->text ) ? esc_attr( $item->caption->text ) : '',
 				'likes_count'    => ! empty( $item->likes->count ) ? esc_attr( $item->likes->count ) : 0,
 				'comments_count' => ! empty( $item->comments->count ) ? esc_attr( $item->comments->count ) : 0

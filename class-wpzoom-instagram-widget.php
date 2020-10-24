@@ -248,7 +248,7 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 				$inline_attrs = '';
 				$link         = $item['link'];
 				$src          = $item['image-url'];
-				$media_id     = ! empty( $item['image-id'] ) ? esc_attr( $item['image-id'] ) : null;
+				$media_id     = $item['image-id'];
 				$alt          = esc_attr( $item['image-caption'] );
 				$likes        = $item['likes_count'];
 				$type         = in_array( $item['type'], [

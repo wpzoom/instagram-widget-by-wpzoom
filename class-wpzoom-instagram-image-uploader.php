@@ -32,7 +32,7 @@ class WPZOOM_Instagram_Image_Uploader {
 			self::$instance = new self();
 			add_action( 'init', self::$instance, 'custom_post_status' );
 			add_action( 'wp_ajax_' . self::$ajax_action_name, [ self::$instance, 'get_image_async' ] );
-			add_action( 'wp_ajax_' . self::$ajax_action_name, [ self::$instance, 'get_image_async' ] );
+			add_action( 'wp_ajax_nopriv_' . self::$ajax_action_name, [ self::$instance, 'get_image_async' ] );
 
 		}
 
