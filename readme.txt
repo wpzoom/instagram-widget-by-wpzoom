@@ -3,7 +3,7 @@ Contributors: WPZOOM, nvartolomei, ciorici
 Donate link: https://www.wpzoom.com/
 Tags: instagram, widget, timeline, social network, latest images, feed, instagram feed, story, stories, insta, instagram widget
 Requires at least: 4.3
-Tested up to: 5.4
+Tested up to: 5.5
 Requires PHP: 5.6
 Stable tag: trunk
 License: GPLv2 or later
@@ -66,6 +66,9 @@ Make sure to connect your Instagram account with the plugin. You can do that in 
 
 
 == Changelog ==
+
+= 1.7.0 =
+* Added support for the new Facebook oEmbed endpoints due to deprecation of the old Instagram oEmbed on October 24, 2020.
 
 = 1.6.4 =
 * Minor bug fixes for PHP 7.4
