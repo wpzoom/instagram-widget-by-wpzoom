@@ -67,6 +67,9 @@ Make sure to connect your Instagram account with the plugin. You can do that in 
 
 == Changelog ==
 
+= 1.7.1 =
+* Minor bug fixes
+
 = 1.7.0 =
 * Added support for the new Facebook oEmbed endpoints due to deprecation of the old Instagram oEmbed on October 24, 2020.
 
