@@ -60,12 +60,15 @@ jQuery(function ($) {
                     'image-width': desiredItemWidth
                 }).done(function (data) {
                     $list.find('li[data-media-id="' + image['media-id'] + '"] .zoom-instagram-link').css('background-image', 'url(' + data.image_src + ')');
+                }).fail(function () {
+                }).always(function () {
                     getAsyncImages(images);
-
                 });
             };
 
-            getAsyncImages(delayedItems.toArray());
+            if (delayedItems.length) {
+                getAsyncImages(delayedItems.toArray());
+            }
 
             $list.find('a.zoom-instagram-link').css({
                 width: itemWidth,

@@ -95,7 +95,7 @@ class WPZOOM_Instagram_Image_Uploader {
 	 * @return mixed
 	 */
 	function get_api_transient() {
-		return get_transient( self::$transient_name );
+		return json_decode( get_transient( self::$transient_name ) );
 	}
 
 	/**
@@ -188,7 +188,7 @@ class WPZOOM_Instagram_Image_Uploader {
 	 */
 	public static function get_media_url_by_id( $media_id ) {
 
-		$transient = get_transient( 'zoom_instagram_is_configured' );
+		$transient = self::$instance->get_api_transient();
 
 		if ( empty( $transient->data ) ) {
 			return false;
@@ -330,7 +330,7 @@ class WPZOOM_Instagram_Image_Uploader {
 	 * @return bool
 	 */
 	function set_api_transient( $data ) {
-		return set_transient( self::$transient_name, $data, self::$instance->get_transient_lifetime() );
+		return set_transient( self::$transient_name, wp_json_encode( $data ), self::$instance->get_transient_lifetime() );
 	}
 
 	/**

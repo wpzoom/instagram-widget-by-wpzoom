@@ -34,8 +34,7 @@ class Wpzoom_Instagram_Widget_API {
 		$options = get_option( 'wpzoom-instagram-widget-settings', wpzoom_instagram_get_default_settings() );
 
 		$this->request_type = ! empty( $options['request-type'] ) ? $options['request-type'] : '';
-		$this->access_token = $options['basic-access-token'];
-
+		$this->access_token = ! empty( $options['basic-access-token'] ) ? $options['basic-access-token'] : '';
 
 		$this->username                 = ! empty( $options['username'] ) ? $options['username'] : '';
 		$this->transient_lifetime_type  = ! empty( $options['transient-lifetime-type'] ) ? $options['transient-lifetime-type'] : 'days';
@@ -103,7 +102,7 @@ class Wpzoom_Instagram_Widget_API {
 			$transient         = $transient . '_' . $injected_username;
 		}
 
-		if ( false !== ( $data = get_transient( $transient ) ) && is_object( $data ) && ! empty( $data->data ) ) {
+		if ( false !== ( $data = json_decode( get_transient( $transient ) ) ) && is_object( $data ) && ! empty( $data->data ) ) {
 
 			return $this->processing_response_data( $data, $image_width, $image_resolution, $image_limit, $disable_video_thumbs );
 		}
@@ -123,7 +122,7 @@ class Wpzoom_Instagram_Widget_API {
 			$response = wp_remote_get( $request_url, $this->headers );
 
 			if ( is_wp_error( $response ) || 200 != wp_remote_retrieve_response_code( $response ) ) {
-				set_transient( $transient, false, MINUTE_IN_SECONDS );
+				set_transient( $transient, wp_json_encode( false ), MINUTE_IN_SECONDS );
 
 				$error_data = $this->get_error( 'items-with-token-invalid-response' );
 				$this->errors->add( $error_data['code'], $error_data['message'] );
@@ -142,7 +141,7 @@ class Wpzoom_Instagram_Widget_API {
 			$data = $this->get_items_without_token( $external_username );
 
 			if ( is_wp_error( $data ) ) {
-				set_transient( $transient, false, MINUTE_IN_SECONDS );
+				set_transient( $transient, wp_json_encode( false ), MINUTE_IN_SECONDS );
 
 				return false;
 			}
@@ -150,9 +149,9 @@ class Wpzoom_Instagram_Widget_API {
 		}
 
 		if ( ! empty( $data->data ) ) {
-			set_transient( $transient, $data, $this->get_transient_lifetime() );
+			set_transient( $transient, wp_json_encode( $data ), $this->get_transient_lifetime() );
 		} else {
-			set_transient( $transient, false, MINUTE_IN_SECONDS );
+			set_transient( $transient, wp_json_encode( false ), MINUTE_IN_SECONDS );
 
 			$error_data = $this->get_error( 'items-with-token-invalid-data-structure' );
 			$this->errors->add( $error_data['code'], $error_data['message'] );
@@ -522,7 +521,7 @@ class Wpzoom_Instagram_Widget_API {
 			$transient         = $transient . '_' . $injected_username;
 		}
 
-		if ( false !== ( $data = get_transient( $transient ) ) && is_object( $data ) && ! empty( $data->data ) ) {
+		if ( false !== ( $data = json_decode( get_transient( $transient ) ) ) && is_object( $data ) && ! empty( $data->data ) ) {
 
 			return $data;
 		}
@@ -541,7 +540,7 @@ class Wpzoom_Instagram_Widget_API {
 			$response = wp_remote_get( $request_url, $this->headers );
 
 			if ( is_wp_error( $response ) || 200 != wp_remote_retrieve_response_code( $response ) ) {
-				set_transient( $transient, false, MINUTE_IN_SECONDS );
+				set_transient( $transient, wp_json_encode( false ), MINUTE_IN_SECONDS );
 
 				$error_data = $this->get_error( 'user-with-token-invalid-response' );
 				$this->errors->add( $error_data['code'], $error_data['message'] );
@@ -559,7 +558,7 @@ class Wpzoom_Instagram_Widget_API {
 			$data = $this->get_user_info_without_token( $external_username );
 
 			if ( is_wp_error( $data ) ) {
-				set_transient( $transient, false, MINUTE_IN_SECONDS );
+				set_transient( $transient, wp_json_encode( false ), MINUTE_IN_SECONDS );
 
 				return false;
 			}
@@ -567,9 +566,9 @@ class Wpzoom_Instagram_Widget_API {
 		}
 
 		if ( ! empty( $data->data ) ) {
-			set_transient( $transient, $data, $this->get_transient_lifetime() );
+			set_transient( $transient, wp_json_encode( $data ), $this->get_transient_lifetime() );
 		} else {
-			set_transient( $transient, false, MINUTE_IN_SECONDS );
+			set_transient( $transient, wp_json_encode( false ), MINUTE_IN_SECONDS );
 
 			$error_data = $this->get_error( 'user-with-token-invalid-data-structure' );
 			$this->errors->add( $error_data['code'], $error_data['message'] );
@@ -650,7 +649,7 @@ class Wpzoom_Instagram_Widget_API {
 	public function is_configured() {
 		$transient = 'zoom_instagram_is_configured';
 
-		if ( false !== ( $result = get_transient( $transient ) ) ) {
+		if ( false !== ( $result = json_decode( get_transient( $transient ) ) ) ) {
 			if ( 'yes' === $result ) {
 				return true;
 			}
@@ -673,12 +672,12 @@ class Wpzoom_Instagram_Widget_API {
 
 
 		if ( true === $condition ) {
-			set_transient( $transient, 'yes', DAY_IN_SECONDS );
+			set_transient( $transient, wp_json_encode( 'yes' ), DAY_IN_SECONDS );
 
 			return true;
 		}
 
-		set_transient( $transient, 'no', DAY_IN_SECONDS );
+		set_transient( $transient, wp_json_encode( 'no' ), DAY_IN_SECONDS );
 
 		return false;
 	}
