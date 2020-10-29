@@ -67,6 +67,9 @@ Make sure to connect your Instagram account with the plugin. You can do that in 
 
 == Changelog ==
 
+= 1.7.2 =
+* Fixing issues with images not loading on specific websites
+
 = 1.7.1 =
 * Minor bug fixes
 
