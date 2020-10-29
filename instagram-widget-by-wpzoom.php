@@ -68,7 +68,7 @@ function wpzoom_instagram_get_default_settings() {
 
 add_action( 'init', function () {
 
-	$option_name = 'wpzoom-instagram-transition-between-4_6-4_7-versions';
+	$option_name = 'wpzoom-instagram-transition-between-4_7-4_8-versions';
 	if ( empty( get_option( $option_name ) ) ) {
 		update_option( $option_name, true );
 		delete_transient( 'zoom_instagram_is_configured' );
