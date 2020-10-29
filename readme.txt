@@ -1,7 +1,7 @@
 === WPZOOM Social Feed Widget ===
 Contributors: WPZOOM, nvartolomei, ciorici
 Donate link: https://www.wpzoom.com/
-Tags: instagram, widget, timeline, social network, latest images, feed, instagram feed, story, stories, insta, instagram widget
+Tags: instagram, instagram feed, instagram gallery, instagram photos, instagram widget, instagram stories, widget, timeline, social network, latest images, feed, story, stories, insta
 Requires at least: 4.3
 Tested up to: 5.5
 Requires PHP: 5.6
