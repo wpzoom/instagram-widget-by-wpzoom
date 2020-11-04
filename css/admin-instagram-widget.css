@@ -120,3 +120,17 @@
 .zoom-instagram-widget .wpzoom-instagram-widget-with-token-group > td {
     padding-right: 0px;
 }
+
+
+.zoom-instagram-user-avatar-media-uploader .remove-avatar {
+    margin: 6px 20px;
+    color: #a00;
+}
+
+.zoom-instagram-user-avatar-media-uploader .file-wrapper{
+    margin-top: 10px;
+}
+#wpzoom-instagram-widget-settings-user-info-biography{
+    width: 100%;
+    min-height: 100px;
+}

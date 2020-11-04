@@ -62,7 +62,13 @@ function wpzoom_instagram_get_default_settings() {
 		'transient-lifetime-value' => 1,
 		'transient-lifetime-type'  => 'days',
 		'is-forced-timeout'        => '',
-		'request-timeout-value'    => 15
+		'request-timeout-value'    => 15,
+		'user-info-avatar'=> '',
+		'user-info-fullname'=> '',
+		'user-info-posts'=> 0,
+		'user-info-followers'=> 0,
+		'user-info-following'=> 0,
+		'user-info-biography'=> '',
 	];
 }
 

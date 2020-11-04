@@ -584,17 +584,34 @@ class Wpzoom_Instagram_Widget_API {
 
 		$converted = new stdClass;
 
+		$user_info_from_settings = get_option( 'wpzoom-instagram-widget-settings', wpzoom_instagram_get_default_settings() );
+
+		$avatar = null;
+
+		if ( ! empty( $user_info_from_settings['user-info-avatar'] ) ) {
+			$img_src = wp_get_attachment_image_src( $user_info_from_settings['user-info-avatar'] );
+			if ( ! empty( $img_src ) && is_array( $img_src ) ) {
+				$avatar = $img_src[0];
+			}
+		}
+
+		$fullname = ! empty( $user_info->username ) ? $user_info->username : null;
+
+		if ( ! empty( $user_info_from_settings['user-info-fullname'] ) ) {
+			$fullname = $user_info_from_settings['user-info-fullname'];
+		}
+
 		$converted->data = (object) array(
-			'bio'             => null,
+			'bio'             => ! empty( $user_info_from_settings['user-info-biography'] ) ? $user_info_from_settings['user-info-biography'] : null,
 			'counts'          => (object) array(
-				'followed_by' => null,
-				'follows'     => null,
-				'media'       => null,
+				'followed_by' => ! empty( $user_info_from_settings['user-info-followers'] ) ? $user_info_from_settings['user-info-followers'] : null,
+				'follows'     => ! empty( $user_info_from_settings['user-info-following'] ) ? $user_info_from_settings['user-info-following'] : null,
+				'media'       => ! empty( $user_info_from_settings['user-info-posts'] ) ? $user_info_from_settings['user-info-posts'] : null,
 			),
-			'full_name'       => ! empty( $user_info->username ) ? $user_info->username : '',
+			'full_name'       => $fullname,
 			'id'              => ! empty( $user_info->id ) ? $user_info->id : '',
 			'is_business'     => null,
-			'profile_picture' => null,
+			'profile_picture' => $avatar,
 			'username'        => ! empty( $user_info->username ) ? $user_info->username : '',
 			'website'         => null
 		);
@@ -602,6 +619,7 @@ class Wpzoom_Instagram_Widget_API {
 		return $converted;
 
 	}
+
 
 	function get_user_info_without_token( $user ) {
 
