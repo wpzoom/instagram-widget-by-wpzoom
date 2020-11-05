@@ -604,9 +604,9 @@ class Wpzoom_Instagram_Widget_API {
 		$converted->data = (object) array(
 			'bio'             => ! empty( $user_info_from_settings['user-info-biography'] ) ? $user_info_from_settings['user-info-biography'] : null,
 			'counts'          => (object) array(
-				'followed_by' => ! empty( $user_info_from_settings['user-info-followers'] ) ? $user_info_from_settings['user-info-followers'] : null,
-				'follows'     => ! empty( $user_info_from_settings['user-info-following'] ) ? $user_info_from_settings['user-info-following'] : null,
-				'media'       => ! empty( $user_info_from_settings['user-info-posts'] ) ? $user_info_from_settings['user-info-posts'] : null,
+				'followed_by' => null,
+				'follows'     => null,
+				'media'       => null,
 			),
 			'full_name'       => $fullname,
 			'id'              => ! empty( $user_info->id ) ? $user_info->id : '',

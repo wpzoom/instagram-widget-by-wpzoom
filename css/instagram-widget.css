@@ -181,6 +181,7 @@ a.ig-b-v-24:hover {
     flex-direction: column;
     margin-left: 15px;
     text-align: left;
+    justify-content: center;
 }
 
 .zoom-instagram-widget-user-info .zoom-instagram-widget-user-info-about-data {

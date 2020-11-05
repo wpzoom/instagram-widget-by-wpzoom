@@ -80,30 +80,6 @@ class Wpzoom_Instagram_Widget_Settings {
 		);
 
 		add_settings_field(
-			'wpzoom-instagram-widget-user-info-posts',
-			__( 'Number of Posts', 'wpzoom-instagram-widget' ),
-			array( $this, 'settings_field_user_info_posts' ),
-			'wpzoom-instagram-widget-settings-group',
-			'wpzoom-instagram-widget-settings-user-info'
-		);
-
-		add_settings_field(
-			'wpzoom-instagram-widget-user-info-followers',
-			__( 'Number of Followers', 'wpzoom-instagram-widget' ),
-			array( $this, 'settings_field_user_info_followers' ),
-			'wpzoom-instagram-widget-settings-group',
-			'wpzoom-instagram-widget-settings-user-info'
-		);
-
-		add_settings_field(
-			'wpzoom-instagram-widget-user-info-following',
-			__( 'Number of Following', 'wpzoom-instagram-widget' ),
-			array( $this, 'settings_field_user_info_following' ),
-			'wpzoom-instagram-widget-settings-group',
-			'wpzoom-instagram-widget-settings-user-info'
-		);
-
-		add_settings_field(
 			'wpzoom-instagram-widget-user-info-biography',
 			__( 'Biography', 'wpzoom-instagram-widget' ),
 			array( $this, 'settings_field_user_info_biography' ),
@@ -374,42 +350,6 @@ class Wpzoom_Instagram_Widget_Settings {
 		<?php
 	}
 
-	public function settings_field_user_info_posts() {
-		$settings        = get_option( 'wpzoom-instagram-widget-settings', wpzoom_instagram_get_default_settings() );
-		$user_info_posts = empty( $settings['user-info-posts'] ) ? 0 : $settings['user-info-posts'];
-		?>
-        <input class="code"
-               id="wpzoom-instagram-widget-settings-user-info-posts"
-               name="wpzoom-instagram-widget-settings[user-info-posts]"
-               value="<?php echo esc_attr( $user_info_posts ) ?>"
-               type="text">
-		<?php
-	}
-
-	public function settings_field_user_info_followers() {
-		$settings        = get_option( 'wpzoom-instagram-widget-settings', wpzoom_instagram_get_default_settings() );
-		$user_info_posts = empty( $settings['user-info-followers'] ) ? 0 : $settings['user-info-followers'];
-		?>
-        <input class="code"
-               id="wpzoom-instagram-widget-settings-user-info-followers"
-               name="wpzoom-instagram-widget-settings[user-info-followers]"
-               value="<?php echo esc_attr( $user_info_posts ) ?>"
-               type="text">
-		<?php
-	}
-
-	public function settings_field_user_info_following() {
-		$settings        = get_option( 'wpzoom-instagram-widget-settings', wpzoom_instagram_get_default_settings() );
-		$user_info_posts = empty( $settings['user-info-following'] ) ? 0 : $settings['user-info-following'];
-		?>
-        <input class="code"
-               id="wpzoom-instagram-widget-settings-user-info-following"
-               name="wpzoom-instagram-widget-settings[user-info-following]"
-               value="<?php echo esc_attr( $user_info_posts ) ?>"
-               type="text">
-		<?php
-	}
-
 	public function settings_field_user_info_avatar() {
 		$settings         = get_option( 'wpzoom-instagram-widget-settings', wpzoom_instagram_get_default_settings() );
 		$user_info_avatar = empty( $settings['user-info-avatar'] ) ? '' : $settings['user-info-avatar'];
@@ -533,9 +473,6 @@ class Wpzoom_Instagram_Widget_Settings {
 		$result['request-timeout-value']    = sanitize_text_field( $input['request-timeout-value'] );
 		$result['user-info-avatar']         = sanitize_text_field( $input['user-info-avatar'] );
 		$result['user-info-fullname']       = sanitize_text_field( $input['user-info-fullname'] );
-		$result['user-info-posts']          = sanitize_text_field( $input['user-info-posts'] );
-		$result['user-info-followers']      = sanitize_text_field( $input['user-info-followers'] );
-		$result['user-info-following']      = sanitize_text_field( $input['user-info-following'] );
 		$result['user-info-biography']      = sanitize_text_field( $input['user-info-biography'] );
 
 		Wpzoom_Instagram_Widget_API::reset_cache();

@@ -65,9 +65,6 @@ function wpzoom_instagram_get_default_settings() {
 		'request-timeout-value'    => 15,
 		'user-info-avatar'=> '',
 		'user-info-fullname'=> '',
-		'user-info-posts'=> 0,
-		'user-info-followers'=> 0,
-		'user-info-following'=> 0,
 		'user-info-biography'=> '',
 	];
 }
