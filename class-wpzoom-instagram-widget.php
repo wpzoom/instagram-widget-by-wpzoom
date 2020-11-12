@@ -49,22 +49,37 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 
 		if ( is_active_widget( false, false, 'wpzoom_instagram_widget' ) ) {
 
-			add_action( 'wp_enqueue_scripts', array( $this, 'scripts' ) );
+			add_action( 'wp_enqueue_scripts', [ $this, 'styles' ] );
+			add_action( 'wp_enqueue_scripts', [ $this, 'register_scripts' ] );
 
 		}
 
 	}
 
 	/**
-	 * Widget specific scripts & styles
+	 * Load widget specific styles.
 	 */
-	public function scripts() {
+	public function styles() {
 		wp_enqueue_style( 'zoom-instagram-widget', plugin_dir_url( dirname( __FILE__ ) . '/instagram-widget-by-wpzoom.php' ) . 'css/instagram-widget.css', array( 'dashicons' ), '1.7.1' );
-		wp_enqueue_script( 'zoom-instagram-widget-lazy-load', plugin_dir_url( dirname( __FILE__ ) . '/instagram-widget-by-wpzoom.php' ) . 'js/jquery.lazy.min.js', array( 'jquery' ), '1.4.2', true );
-		wp_enqueue_script( 'zoom-instagram-widget', plugin_dir_url( dirname( __FILE__ ) . '/instagram-widget-by-wpzoom.php' ) . 'js/instagram-widget.js', array(
+	}
+
+	/**
+	 * Register widget specific scripts.
+	 */
+	public function register_scripts() {
+		wp_register_script( 'zoom-instagram-widget-lazy-load', plugin_dir_url( dirname( __FILE__ ) . '/instagram-widget-by-wpzoom.php' ) . 'js/jquery.lazy.min.js', array( 'jquery' ), '1.4.2', true );
+		wp_register_script( 'zoom-instagram-widget', plugin_dir_url( dirname( __FILE__ ) . '/instagram-widget-by-wpzoom.php' ) . 'js/instagram-widget.js', array(
 			'jquery',
 			'wp-util'
 		), '1.7.1', true );
+	}
+
+	/**
+	 * Load widget specific scripts.
+	 */
+	public function enqueue_scripts() {
+		wp_enqueue_script( 'zoom-instagram-widget-lazy-load' );
+		wp_enqueue_script( 'zoom-instagram-widget' );
 	}
 
 	/**
@@ -76,6 +91,9 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 	 * @param array $instance Saved values from database.
 	 */
 	public function widget( $args, $instance ) {
+
+		$this->enqueue_scripts();
+
 		$instance = wp_parse_args( (array) $instance, $this->defaults );
 
 		echo $args['before_widget'];
