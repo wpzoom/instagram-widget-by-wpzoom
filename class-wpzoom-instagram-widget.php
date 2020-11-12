@@ -47,7 +47,12 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 
 		$this->api = Wpzoom_Instagram_Widget_API::getInstance();
 
-		add_action( 'wp_enqueue_scripts', array( $this, 'scripts' ) );
+		if ( is_active_widget( false, false, 'wpzoom_instagram_widget' ) ) {
+
+			add_action( 'wp_enqueue_scripts', array( $this, 'scripts' ) );
+
+		}
+
 	}
 
 	/**
