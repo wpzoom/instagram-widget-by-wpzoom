@@ -50,6 +50,13 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 		add_action( 'wp_enqueue_scripts', [ $this, 'styles' ] );
 		add_action( 'wp_enqueue_scripts', [ $this, 'register_scripts' ] );
 
+		/**
+		 * Enqueue styles and scripts for SiteOrigin Page Builder.
+		 */
+		add_action('siteorigin_panel_enqueue_admin_scripts', [ $this, 'styles' ]);
+		add_action('siteorigin_panel_enqueue_admin_scripts', [ $this, 'register_scripts' ]);
+		add_action('siteorigin_panel_enqueue_admin_scripts', [ $this, 'enqueue_scripts' ]);
+
 	}
 
 	/**

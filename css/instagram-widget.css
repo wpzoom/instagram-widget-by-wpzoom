@@ -1,10 +1,10 @@
 /* Widget Grid */
 .zoom-instagram-widget__follow-me { margin-top: 15px; text-align: center; }
 
-.zoom-instagram-widget__items { list-style: none; }
+.zoom-instagram-widget__items { list-style: none !important; }
 .zoom-instagram-widget__item { float: left; position: relative; margin-top: 0 !important;}
 
-.zoom-instagram-widget__items--no-js .zoom-instagram-widget__item { margin-right: 10px; margin-bottom: 10px; }
+.zoom-instagram-widget__items--no-js.zoom-instagram-widget__items .zoom-instagram-widget__item { margin-right: 10px; margin-bottom: 10px; }
 
 
 /* View on Instagram button */
