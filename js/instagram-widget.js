@@ -1,18 +1,5 @@
-jQuery(function ($) {
+jQuery(function ($, _) {
     var ticking = false;
-
-    var debounce = function (func, wait, immediate) {
-        var timeout;
-        return function () {
-            var context = this, args = arguments;
-            clearTimeout(timeout);
-            timeout = setTimeout(function () {
-                timeout = null;
-                if (!immediate) func.apply(context, args);
-            }, wait);
-            if (immediate && !timeout) func.apply(context, args);
-        };
-    };
 
     $.fn.zoomLoadAsyncImages = function () {
         return $(this).each(function () {
@@ -136,7 +123,7 @@ jQuery(function ($) {
 
     };
 
-    var debounceInit = debounce(siteOriginInit, 1500);
+    var debounceInit = _.debounce(siteOriginInit, 1500);
     $(document).on('panels_setup_preview', debounceInit);
 
 });

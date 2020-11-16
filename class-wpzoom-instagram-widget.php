@@ -73,6 +73,7 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 		wp_register_script( 'zoom-instagram-widget-lazy-load', plugin_dir_url( dirname( __FILE__ ) . '/instagram-widget-by-wpzoom.php' ) . 'js/jquery.lazy.min.js', array( 'jquery' ), '1.4.2', true );
 		wp_register_script( 'zoom-instagram-widget', plugin_dir_url( dirname( __FILE__ ) . '/instagram-widget-by-wpzoom.php' ) . 'js/instagram-widget.js', array(
 			'jquery',
+			'underscore',
 			'wp-util'
 		), '1.7.1', true );
 	}
