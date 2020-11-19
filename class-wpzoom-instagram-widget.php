@@ -63,19 +63,32 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 	 * Load widget specific styles.
 	 */
 	public function styles() {
-		wp_enqueue_style( 'zoom-instagram-widget', plugin_dir_url( dirname( __FILE__ ) . '/instagram-widget-by-wpzoom.php' ) . 'css/instagram-widget.css', array( 'dashicons' ), '1.7.1' );
+		wp_enqueue_style(
+			'zoom-instagram-widget',
+			plugin_dir_url( __FILE__ ) . 'css/instagram-widget.css',
+			[ 'dashicons' ],
+			filemtime( plugin_dir_path( __FILE__ ) . 'css/instagram-widget.css' )
+		);
 	}
 
 	/**
 	 * Register widget specific scripts.
 	 */
 	public function register_scripts() {
-		wp_register_script( 'zoom-instagram-widget-lazy-load', plugin_dir_url( dirname( __FILE__ ) . '/instagram-widget-by-wpzoom.php' ) . 'js/jquery.lazy.min.js', array( 'jquery' ), '1.4.2', true );
-		wp_register_script( 'zoom-instagram-widget', plugin_dir_url( dirname( __FILE__ ) . '/instagram-widget-by-wpzoom.php' ) . 'js/instagram-widget.js', array(
-			'jquery',
-			'underscore',
-			'wp-util'
-		), '1.7.1', true );
+		wp_register_script(
+			'zoom-instagram-widget-lazy-load',
+			plugin_dir_url( __FILE__ ) . 'js/jquery.lazy.min.js',
+			array( 'jquery' ),
+			filemtime( plugin_dir_path( __FILE__ ) . 'js/jquery.lazy.min.js' ),
+			true
+		);
+		wp_register_script(
+			'zoom-instagram-widget',
+			plugin_dir_url( __FILE__ ) . 'js/instagram-widget.js',
+			[ 'jquery', 'underscore', 'wp-util' ],
+			filemtime( plugin_dir_path( __FILE__ ) . 'js/instagram-widget.js' ),
+			true
+		);
 	}
 
 	/**
@@ -289,7 +302,7 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 					$inline_attrs = 'data-media-id="' . esc_attr( $media_id ) . '"';
 					$inline_attrs .= 'data-nonce="' . wp_create_nonce( WPZOOM_Instagram_Image_Uploader::get_nonce_action( $media_id ) ) . '"';
 
-					$src = plugin_dir_url( __FILE__ ) . 'images/loading-spinner-transparent.svg';
+					$src = $item['original-image-url'];
 				}
 				?>
 

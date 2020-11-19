@@ -187,13 +187,14 @@ class Wpzoom_Instagram_Widget_API {
 			$image_url = $item->images->{$best_size}->url;
 
 			$result[] = array(
-				'link'           => $item->link,
-				'image-url'      => $image_url,
-				'type'           => $item->type,
-				'image-id'       => ! empty( $item->id ) ? esc_attr( $item->id ) : '',
-				'image-caption'  => ! empty( $item->caption->text ) ? esc_attr( $item->caption->text ) : '',
-				'likes_count'    => ! empty( $item->likes->count ) ? esc_attr( $item->likes->count ) : 0,
-				'comments_count' => ! empty( $item->comments->count ) ? esc_attr( $item->comments->count ) : 0
+				'link'               => $item->link,
+				'image-url'          => $image_url,
+				'original-image-url' => $item->media_url,
+				'type'               => $item->type,
+				'image-id'           => ! empty( $item->id ) ? esc_attr( $item->id ) : '',
+				'image-caption'      => ! empty( $item->caption->text ) ? esc_attr( $item->caption->text ) : '',
+				'likes_count'        => ! empty( $item->likes->count ) ? esc_attr( $item->likes->count ) : 0,
+				'comments_count'     => ! empty( $item->comments->count ) ? esc_attr( $item->comments->count ) : 0
 			);
 		}
 

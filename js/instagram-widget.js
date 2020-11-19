@@ -1,4 +1,4 @@
-jQuery(function ($, _) {
+jQuery(function ($) {
     var ticking = false;
 
     $.fn.zoomLoadAsyncImages = function () {
