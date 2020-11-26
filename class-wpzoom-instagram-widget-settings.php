@@ -58,14 +58,14 @@ class Wpzoom_Instagram_Widget_Settings {
 
 		add_settings_section(
 			'wpzoom-instagram-widget-settings-user-info',
-			__( 'User Info', 'wpzoom-instagram-widget' ),
-			'__return_false',
+			__( 'User Details (optional)', 'wpzoom-instagram-widget' ),
+			array( $this, 'settings_field_user_details' ),
 			'wpzoom-instagram-widget-settings-group'
 		);
 
 		add_settings_field(
 			'wpzoom-instagram-widget-user-info-avatar',
-			__( 'User Avatar', 'wpzoom-instagram-widget' ),
+			__( 'Profile Picture', 'wpzoom-instagram-widget' ),
 			array( $this, 'settings_field_user_info_avatar' ),
 			'wpzoom-instagram-widget-settings-group',
 			'wpzoom-instagram-widget-settings-user-info'
@@ -73,7 +73,7 @@ class Wpzoom_Instagram_Widget_Settings {
 
 		add_settings_field(
 			'wpzoom-instagram-widget-user-info-fullname',
-			__( 'User Full Name', 'wpzoom-instagram-widget' ),
+			__( 'Your Name', 'wpzoom-instagram-widget' ),
 			array( $this, 'settings_field_user_info_fullname' ),
 			'wpzoom-instagram-widget-settings-group',
 			'wpzoom-instagram-widget-settings-user-info'
@@ -81,7 +81,7 @@ class Wpzoom_Instagram_Widget_Settings {
 
 		add_settings_field(
 			'wpzoom-instagram-widget-user-info-biography',
-			__( 'Biography', 'wpzoom-instagram-widget' ),
+			__( 'Bio', 'wpzoom-instagram-widget' ),
 			array( $this, 'settings_field_user_info_biography' ),
 			'wpzoom-instagram-widget-settings-group',
 			'wpzoom-instagram-widget-settings-user-info'
@@ -140,7 +140,7 @@ class Wpzoom_Instagram_Widget_Settings {
 
 		add_settings_field(
 			'wpzoom-instagram-widget-transient-lifetime',
-			__( 'Check for new Instagram posts every', 'wpzoom-instagram-widget' ),
+			__( 'Check for new posts every', 'wpzoom-instagram-widget' ),
 			array( $this, 'settings_field_transient_lifetime' ),
 			'wpzoom-instagram-widget-settings-group',
 			'wpzoom-instagram-widget-settings-general'
@@ -156,7 +156,7 @@ class Wpzoom_Instagram_Widget_Settings {
 
 		add_settings_field(
 			'wpzoom-instagram-widget-request-timeout',
-			__( 'Request timeout in seconds.', 'wpzoom-instagram-widget' ),
+			__( 'Request timeout in seconds', 'wpzoom-instagram-widget' ),
 			array( $this, 'settings_field_request_timeout' ),
 			'wpzoom-instagram-widget-settings-group',
 			'wpzoom-instagram-widget-settings-general',
@@ -165,7 +165,7 @@ class Wpzoom_Instagram_Widget_Settings {
 
 		add_settings_field(
 			'wpzoom-instagram-widget-request-timeout',
-			__( 'Request timeout in seconds.', 'wpzoom-instagram-widget' ),
+			__( 'Request timeout in seconds', 'wpzoom-instagram-widget' ),
 			array( $this, 'settings_field_request_timeout' ),
 			'wpzoom-instagram-widget-settings-group',
 			'wpzoom-instagram-widget-settings-general',
@@ -189,6 +189,7 @@ class Wpzoom_Instagram_Widget_Settings {
 		?>
 
         <p class="description"><?php _e( 'Using this method, you will be prompted to authorize the plugin to access your Instagram photos. The widget will automatically display the latest photos of the account which was authorized on this page.', 'wpzoom-instagram-widget' ); ?></p>
+        <p class="description" style="color:#185373;"><strong><?php _e( 'Access tokens are valid for <u>60 days</u>. If the widget stops working, please generate a new Access Token below.', 'wpzoom-instagram-widget' ); ?></strong></p>
 
         <br/>
 
@@ -253,6 +254,10 @@ class Wpzoom_Instagram_Widget_Settings {
                type="number"
                min="1"
                max="30">
+
+
+           <p class="description"><?php _e( 'The default timeout to get your Instagram feed is 15 seconds, but on some servers, this might not be enough time. Enter a higher value like 30 (seconds) and save changes to see if there is a difference.', 'wpzoom-instagram-widget' ); ?></p>
+
 		<?php
 	}
 
@@ -279,11 +284,21 @@ class Wpzoom_Instagram_Widget_Settings {
 
 	public function settings_field_username_description() {
 		?>
+        <p class="description"><?php _e( '<strong style="color:#e44;">This method is no longer supported by Instagram and it will be soon deprecated.</strong>', 'wpzoom-instagram-widget' ); ?></p>
         <p class="description"><?php _e( 'Using this method, a public feed, limited to <strong>12 photos</strong>, will be displayed in the widget.<br/>This option is useful if you want to display the feed of an Instagram account which you don\'t own or you have troubles getting your Access Token.', 'wpzoom-instagram-widget' ); ?></p>
 
         </p>
 		<?php
 	}
+
+    public function settings_field_user_details() {
+        ?>
+        <p class="description"><?php _e( 'Below you can add additional details which you can display in the header of the Instagram Widget.', 'wpzoom-instagram-widget' ); ?></p>
+
+        </p>
+        <?php
+    }
+
 
 	public function settings_field_username() {
 		$settings = get_option( 'wpzoom-instagram-widget-settings', wpzoom_instagram_get_default_settings() );
@@ -318,7 +333,7 @@ class Wpzoom_Instagram_Widget_Settings {
                        value="with-basic-access-token" <?php checked( $request_type, 'with-basic-access-token' ) ?>
                        type="radio">
                 <label for="wpzoom-instagram-widget-settings_with-basic-access-token">
-					<?php _e( 'With Basic Instagram API Access Token (New)', 'wpzoom-instagram-widget' ) ?>
+					<?php _e( 'With Access Token (Instagram API)', 'wpzoom-instagram-widget' ) ?>
                 </label>
             </div>
             <div class="label-wrap">
@@ -356,14 +371,14 @@ class Wpzoom_Instagram_Widget_Settings {
 		?>
         <div class="zoom-instagram-user-avatar-media-uploader"
              data-type="image"
-             data-button-add-text="<?php _e( 'Add User Avatar', 'wpzoom-instagram-widget' ); ?>"
-             data-button-replace-text="<?php _e( 'Replace User Avatar', 'wpzoom-instagram-widget' ); ?>">
-            <a href="#" class="button add-media" title="Upload User Avatar">
+             data-button-add-text="<?php _e( 'Upload a picture', 'wpzoom-instagram-widget' ); ?>"
+             data-button-replace-text="<?php _e( 'Replace Profile Picture', 'wpzoom-instagram-widget' ); ?>">
+            <a href="#" class="button add-media" title="Upload Profile Picture">
                 <span class="wp-media-buttons-icon"></span>
-				<?php _e( 'Add User Avatar', 'wpzoom-instagram-widget' ); ?>
+				<?php _e( 'Upload a picture', 'wpzoom-instagram-widget' ); ?>
             </a>
             <button type="button" class="remove-avatar button-link delete-attachment">
-				<?php _e( 'Remove User Avatar', 'wpzoom-instagram-widget' ) ?>
+				<?php _e( 'Remove Profile Picture', 'wpzoom-instagram-widget' ) ?>
             </button>
             <div class="file-wrapper"></div>
             <input class="attachment-input"
@@ -394,9 +409,9 @@ class Wpzoom_Instagram_Widget_Settings {
 
             <div class="zoom-instagram-widget">
 
-                <h2><?php _e( 'Connect your account', 'wpzoom-instagram-widget' ); ?></h2>
+                <h2><?php _e( 'Connect your Instagram account', 'wpzoom-instagram-widget' ); ?></h2>
 
-                <p><?php _e( 'To get started, select an option below. If you want to show your own feed, use the first option: <strong>With Access Token</strong>. If you want to show the feed of an Instagram account which you don\'t own, use the option <strong>Public Feed</strong>.', 'wpzoom-instagram-widget' ); ?></p>
+                <p><?php _e( 'To get started, select an option below. If you want to show <strong>your own feed</strong>, use the first option. If you want to show the feed of an Instagram account which you don\'t own, use the option <strong>Public Feed</strong>.', 'wpzoom-instagram-widget' ); ?></p>
 
                 <form action="options.php" method="post">
 
@@ -414,7 +429,7 @@ class Wpzoom_Instagram_Widget_Settings {
 
                 <h2><?php _e( 'Premium WordPress Themes by WPZOOM', 'wpzoom-instagram-widget' ); ?></h2>
 
-                <p><?php _e( 'Are you looking to give your website a new look?<br/> Check out our collection of <strong>40 expertly-crafted themes</strong> and find the perfect one for your needs!', 'wpzoom-instagram-widget' ); ?></p>
+                <p><?php _e( 'Are you looking to give your website a new look?<br/> Check out our collection of <strong>45 expertly-crafted themes</strong> and find the perfect one for your needs!', 'wpzoom-instagram-widget' ); ?></p>
 
                 <p><?php printf( __( '<a class="cta-button" target="_blank" href="%1$s"">View our Themes &rarr;</a>' ), 'https://www.wpzoom.com/themes/' ); ?></p>
 
@@ -430,8 +445,8 @@ class Wpzoom_Instagram_Widget_Settings {
 			return;
 		}
 		wp_enqueue_media();
-		wp_enqueue_style( 'zoom-instagram-widget-admin', plugin_dir_url( dirname( __FILE__ ) . '/instagram-widget-by-wpzoom.php' ) . 'css/admin-instagram-widget.css', array(), '1.7.1' );
-		wp_enqueue_script( 'zoom-instagram-widget-admin', plugin_dir_url( dirname( __FILE__ ) . '/instagram-widget-by-wpzoom.php' ) . 'js/admin-instagram-widget.js', array( 'jquery' ), '1.7.1' );
+		wp_enqueue_style( 'zoom-instagram-widget-admin', plugin_dir_url( dirname( __FILE__ ) . '/instagram-widget-by-wpzoom.php' ) . 'css/admin-instagram-widget.css', array(), '1.7.3' );
+		wp_enqueue_script( 'zoom-instagram-widget-admin', plugin_dir_url( dirname( __FILE__ ) . '/instagram-widget-by-wpzoom.php' ) . 'js/admin-instagram-widget.js', array( 'jquery' ), '1.7.3' );
 		wp_localize_script( 'zoom-instagram-widget-admin', 'zoom_instagram_widget_admin', array(
 			'i18n_connect_confirm' => __( "Instagram Widget is already connected to Instagram.\r\n\r\nDo you want to connect again?", 'wpzoom-instagram-widget' ),
 		) );
@@ -447,7 +462,7 @@ class Wpzoom_Instagram_Widget_Settings {
 			$validation_result = Wpzoom_Instagram_Widget_API::is_access_token_valid( $result['basic-access-token'], $result['request-type'] );
 
 			if ( $validation_result !== true ) {
-				$access_token_error_message = __( 'Provided Access Token has been rejected by Basic Instagram API (new). Please try again or use the other option.', 'wpzoom-instagram-widget' );
+				$access_token_error_message = __( 'Provided Access Token expired. Please connect the plugin with your Instagram account again.', 'wpzoom-instagram-widget' );
 
 				if ( is_wp_error( $validation_result ) ) {
 					$access_token_error_message = $validation_result->get_error_message();

@@ -78,8 +78,14 @@
     background-color: #fff6f6;
 }
 
-.zoom-instagram-widget .wpzoom-instagram-widget-with-basic-access-token-group, .zoom-instagram-widget .wpzoom-instagram-widget-without-access-token-group {
+.zoom-instagram-widget .wpzoom-instagram-widget-with-basic-access-token-group,
+.zoom-instagram-widget .wpzoom-instagram-widget-without-access-token-group {
     background-color: #e0f0e3;
+}
+
+.zoom-instagram-widget .wpzoom-instagram-widget-with-basic-access-token-group th,
+.zoom-instagram-widget .wpzoom-instagram-widget-without-access-token-group th {
+    padding-left: 10px;
 }
 
 .zoom-instagram-widget .label-wrap input[type=radio]:checked + label[for='wpzoom-instagram-widget-settings_with-basic-access-token'],
@@ -113,9 +119,11 @@
     z-index: 1;
 }
 
-.zoom-instagram-widget .form-table th {
-    padding-left: 10px;
+.zoom-instagram-widget form h2 {
+    border-top: 2px solid #eee;
+    padding-top: 40px;
 }
+
 
 .zoom-instagram-widget .wpzoom-instagram-widget-with-token-group > td {
     padding-right: 0px;

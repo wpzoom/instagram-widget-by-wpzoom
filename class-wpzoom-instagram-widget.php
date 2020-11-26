@@ -156,7 +156,9 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 		if ( current_user_can( 'edit_theme_options' ) ) {
 			?>
             <p>
-				<?php _e( 'Instagram Widget misconfigured, check plugin &amp; widget settings.', 'wpzoom-instagram-widget' ); ?>
+				<?php _e( 'Instagram Widget misconfigured or yor Access Token <strong>expired</strong>. Please check', 'wpzoom-instagram-widget' ); ?>
+                  <strong><a href="<?php echo admin_url( 'options-general.php?page=wpzoom-instagram-widget' ); ?>" target="_blank"><?php _e( 'Instagram Settings Page', 'wpzoom-instagram-widget' ); ?></a></strong> <?php _e( 'and make sure the plugin is properly configured', 'wpzoom-instagram-widget' ); ?>
+
             </p>
 
 			<?php if ( ! empty( $errors ) ): ?>
@@ -475,6 +477,26 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
         </p>
 
         <p>
+            <label for="<?php echo $this->get_field_id( 'image-resolution' ); ?>"><?php esc_html_e( 'Force image resolution:', 'wpzoom-instagram-widget' ); ?></label>
+            <select class="widefat" id="<?php echo $this->get_field_id( 'image-resolution' ); ?>"
+                    name="<?php echo $this->get_field_name( 'image-resolution' ); ?>">
+                <option value="default_algorithm" <?php selected( $instance['image-resolution'], "default_algorithm" ); ?>>
+                    <?php _e( 'By Default Algorithm', 'wpzoom-instagram-widget' ); ?>
+                </option>
+                <option value="thumbnail" <?php selected( $instance['image-resolution'], "thumbnail" ); ?>>
+                    <?php _e( 'Thumbnail ( 150x150px )', 'wpzoom-instagram-widget' ); ?>
+                </option>
+                <option value="low_resolution" <?php selected( $instance['image-resolution'], "low_resolution" ); ?>>
+                    <?php _e( 'Low Resolution ( 320x320px )', 'wpzoom-instagram-widget' ); ?>
+
+                </option>
+                <option value="standard_resolution" <?php selected( $instance['image-resolution'], "standard_resolution" ); ?>>
+                    <?php _e( 'Standard Resolution ( 640x640px )', 'wpzoom-instagram-widget' ); ?>
+                </option>
+            </select>
+        </p>
+
+        <p>
             <label for="<?php echo $this->get_field_id( 'image-spacing' ); ?>"><?php esc_html_e( 'Image spacing in pixels:', 'wpzoom-instagram-widget' ); ?>
                 <small>(Just integer)</small>
             </label>
@@ -507,25 +529,6 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 
         </p>
 
-        <p>
-            <label for="<?php echo $this->get_field_id( 'image-resolution' ); ?>"><?php esc_html_e( 'Set forced image resolution:', 'wpzoom-instagram-widget' ); ?></label>
-            <select class="widefat" id="<?php echo $this->get_field_id( 'image-resolution' ); ?>"
-                    name="<?php echo $this->get_field_name( 'image-resolution' ); ?>">
-                <option value="default_algorithm" <?php selected( $instance['image-resolution'], "default_algorithm" ); ?>>
-					<?php _e( 'By Default Algorithm', 'wpzoom-instagram-widget' ); ?>
-                </option>
-                <option value="thumbnail" <?php selected( $instance['image-resolution'], "thumbnail" ); ?>>
-					<?php _e( 'Thumbnail ( 150x150px )', 'wpzoom-instagram-widget' ); ?>
-                </option>
-                <option value="low_resolution" <?php selected( $instance['image-resolution'], "low_resolution" ); ?>>
-					<?php _e( 'Low Resolution ( 320x320px )', 'wpzoom-instagram-widget' ); ?>
-
-                </option>
-                <option value="standard_resolution" <?php selected( $instance['image-resolution'], "standard_resolution" ); ?>>
-					<?php _e( 'Standard Resolution ( 640x640px )', 'wpzoom-instagram-widget' ); ?>
-                </option>
-            </select>
-        </p>
         <p>
             <input class="checkbox" type="checkbox" <?php checked( $instance['show-user-info'] ); ?>
                    id="<?php echo $this->get_field_id( 'show-user-info' ); ?>"
