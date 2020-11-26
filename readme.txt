@@ -1,9 +1,9 @@
 === WPZOOM Social Feed Widget ===
-Contributors: WPZOOM, nvartolomei, ciorici
+Contributors: WPZOOM, nvartolomei, ciorici, llemurya
 Donate link: https://www.wpzoom.com/
-Tags: instagram, widget, timeline, social network, latest images, feed, instagram feed, story, stories, insta, instagram widget
+Tags: instagram, instagram feed, instagram gallery, instagram photos, instagram widget, instagram stories, widget, timeline, social network, latest images, feed, story, stories, insta
 Requires at least: 4.3
-Tested up to: 5.2
+Tested up to: 5.6
 Requires PHP: 5.6
 Stable tag: trunk
 License: GPLv2 or later
@@ -16,7 +16,7 @@ Formerly known as "Instagram Widget by WPZOOM". Fully customisable and responsiv
 Formerly known as *Instagram Widget by WPZOOM*, **WPZOOM Social Feed Widget** is a fully customisable and responsive widget for WordPress to display your **Instagram feed**.
 
 
-**[View Demo](http://demo.wpzoom.com/instagram-widget/)**
+**[View Demo](https://demo.wpzoom.com/instagram-widget/)**
 
 
 > Did you find this plugin helpful? Please consider [leaving a 5-star review](https://wordpress.org/support/view/plugin-reviews/instagram-widget-by-wpzoom).
@@ -66,6 +66,34 @@ Make sure to connect your Instagram account with the plugin. You can do that in 
 
 
 == Changelog ==
+
+= 1.7.3 =
+* Multiple improvements and bug fixes
+
+= 1.7.2 =
+* Fixing issues with images not loading on specific websites
+
+= 1.7.1 =
+* Minor bug fixes
+
+= 1.7.0 =
+* Added support for the new Facebook oEmbed endpoints due to deprecation of the old Instagram oEmbed on October 24, 2020.
+
+= 1.6.4 =
+* Minor bug fixes for PHP 7.4
+
+= 1.6.3 =
+* Minor bug fix when switching from Public Feed to the new API method.
+
+= 1.6.2 =
+* Minor bug fix with cached plugin assets when updating from an older version
+
+= 1.6.1 =
+* Minor bug fixes
+
+= 1.6.0 =
+* Added support for the new Instagram Basic Display API.
+* IMPORTANT: On June 29, Instagram will stop supporting its old API which will disrupt feeds created using the old API. If your Instagram account is connected in the plugin settings, you will need to reconnect it again using the new API.
 
 = 1.5.0 =
 * Refactor of the Public Feed method.
@@ -153,3 +181,9 @@ Make sure to connect your Instagram account with the plugin. You can do that in 
 
 = 1.0 =
 * Initial release.
+
+
+== Upgrade Notice ==
+
+= 1.6.0 =
+⚠️ IMPORTANT: On June 29, Instagram will stop supporting its old API which will disrupt feeds created using the old API. If your Instagram account is connected in the plugin settings, you will need to reconnect it again using the new API.
