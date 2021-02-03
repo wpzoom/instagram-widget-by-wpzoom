@@ -60,6 +60,21 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 	}
 
 	/**
+     * Convert $url to file path.
+     *
+	 * @param $url
+	 *
+	 * @return string|string[]
+	 */
+	function convert_url_to_path( $url ) {
+		return str_replace(
+			wp_get_upload_dir()['baseurl'],
+			wp_get_upload_dir()['basedir'],
+			$url
+		);
+	}
+
+	/**
 	 * Load widget specific styles.
 	 */
 	public function styles() {
@@ -288,6 +303,7 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 				<?php
 
 				$inline_attrs = '';
+				$overwrite_src = false;
 				$link         = $item['link'];
 				$src          = $item['image-url'];
 				$media_id     = $item['image-id'];
@@ -304,6 +320,23 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 					$inline_attrs = 'data-media-id="' . esc_attr( $media_id ) . '"';
 					$inline_attrs .= 'data-nonce="' . wp_create_nonce( WPZOOM_Instagram_Image_Uploader::get_nonce_action( $media_id ) ) . '"';
 
+					$overwrite_src = true;
+				}
+
+				if (
+					! empty( $media_id ) &&
+					! empty( $src ) &&
+					! file_exists( $this->convert_url_to_path( $src ) )
+				) {
+
+					$inline_attrs = 'data-media-id="' . esc_attr( $media_id ) . '"';
+					$inline_attrs .= 'data-nonce="' . wp_create_nonce( WPZOOM_Instagram_Image_Uploader::get_nonce_action( $media_id ) ) . '"';
+					$inline_attrs .= 'data-regenerate-thumbnails="1"';
+
+					$overwrite_src = true;
+				}
+
+				if ( $overwrite_src ) {
 					$src = $item['original-image-url'];
 				}
 				?>
@@ -555,6 +588,9 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
                    id="<?php echo $this->get_field_id( 'show-counts-on-hover' ); ?>"
                    name="<?php echo $this->get_field_name( 'show-counts-on-hover' ); ?>"/>
             <label for="<?php echo $this->get_field_id( 'show-counts-on-hover' ); ?>"><?php _e( ' Show <strong>overlay with number of comments and likes</strong> on hover', 'wpzoom-instagram-widget' ); ?></label>
+        </p>
+        <p class="description">
+			<?php _e( 'This option only works with <strong>Public Feed</strong> enabled.', 'wpzoom-instagram-widget' ) ?>
         </p>
 
         <p>

@@ -119,7 +119,7 @@ class WPZOOM_Instagram_Image_Uploader {
 	 */
 	function get_image_async() {
 
-		$sliced = wp_array_slice_assoc( $_POST, [ 'media-id', 'nonce', 'image-resolution', 'image-width' ] );
+		$sliced = wp_array_slice_assoc( $_POST, [ 'media-id', 'nonce', 'image-resolution', 'image-width', 'regenerate-thumbnails' ] );
 		$sliced = array_map( 'sanitize_text_field', $sliced );
 
 		if ( ! wp_verify_nonce( $sliced['nonce'], self::get_nonce_action( $sliced['media-id'] ) ) ) {
@@ -159,6 +159,16 @@ class WPZOOM_Instagram_Image_Uploader {
 			self::$instance->set_images_to_transient( $attachment_id, $sliced['media-id'] );
 		}
 
+
+		if ( wp_validate_boolean( $sliced['regenerate-thumbnails'] ) ) {
+
+			$metadata = $this->regenerate_thumbnails($attachment_id);
+
+			if ( ! is_wp_error( $metadata ) && ! empty( $metadata ) ) {
+				self::$instance->set_images_to_transient( $attachment_id, $sliced['media-id'] );
+			}
+		}
+
 		if ( is_wp_error( $attachment_id ) ) {
 			wp_send_json_error( $attachment_id, 500 );
 		}
@@ -179,6 +189,17 @@ class WPZOOM_Instagram_Image_Uploader {
 	 */
 	public static function get_nonce_action( $id ) {
 		return self::$ajax_action_name . '_' . $id;
+	}
+
+	public function regenerate_thumbnails($attachment_id) {
+		$fullsizepath = get_attached_file( $attachment_id );
+
+		add_filter( 'intermediate_image_sizes_advanced', [ self::$instance, 'set_image_sizes' ], 10 );
+
+		$metadata = wp_generate_attachment_metadata( $attachment_id, $fullsizepath );
+
+		remove_filter( 'intermediate_image_sizes_advanced', [ self::$instance, 'set_image_sizes' ], 10 );
+		return $metadata;
 	}
 
 	/**

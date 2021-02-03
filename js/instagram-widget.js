@@ -11,7 +11,11 @@ jQuery(function ($) {
             var delayedItems = $list.find('li').filter(function () {
                 return $(this).data('media-id');
             }).map(function () {
-                return {'media-id': $(this).attr('data-media-id'), 'nonce': $(this).attr('data-nonce')};
+                return {
+                    'media-id': $(this).attr('data-media-id'),
+                    'nonce': $(this).attr('data-nonce'),
+                    'regenerate-thumbnails': $(this)[0].hasAttribute("data-regenerate-thumbnails")
+                };
             });
 
             var getAsyncImages = function (images) {
@@ -28,7 +32,8 @@ jQuery(function ($) {
                     'media-id': image['media-id'],
                     nonce: image['nonce'],
                     'image-resolution': imageResolution,
-                    'image-width': desiredItemWidth
+                    'image-width': desiredItemWidth,
+                    'regenerate-thumbnails': image['regenerate-thumbnails']
                 }).done(function (data) {
                     $list.find('li[data-media-id="' + image['media-id'] + '"] .zoom-instagram-link').css('background-image', 'url(' + data.image_src + ')');
                 }).fail(function () {

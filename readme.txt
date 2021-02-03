@@ -67,6 +67,9 @@ Make sure to connect your Instagram account with the plugin. You can do that in 
 
 == Changelog ==
 
+= 1.7.4 =
+* Fixing issues with thumbnails that was deleted by third-party plugins.
+
 = 1.7.3 =
 * Multiple improvements and bug fixes
 
