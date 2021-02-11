@@ -31,6 +31,11 @@ function zoom_instagram_widget_register() {
 add_action( 'admin_notices', 'wpzoom_instagram_admin_notice' );
 
 function wpzoom_instagram_admin_notice() {
+
+	if ( ! current_user_can( 'manage_options' ) ) {
+		return;
+	}
+
 	global $current_user;
 	$user_id = $current_user->ID;
 	/* Check that the user hasn't already clicked to ignore the message */
