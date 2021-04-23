@@ -171,7 +171,7 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 		if ( current_user_can( 'edit_theme_options' ) ) {
 			?>
             <p>
-				<?php _e( 'Instagram Widget misconfigured or yor Access Token <strong>expired</strong>. Please check', 'wpzoom-instagram-widget' ); ?>
+				<?php _e( 'Instagram Widget misconfigured or your Access Token <strong>expired</strong>. Please check', 'wpzoom-instagram-widget' ); ?>
                   <strong><a href="<?php echo admin_url( 'options-general.php?page=wpzoom-instagram-widget' ); ?>" target="_blank"><?php _e( 'Instagram Settings Page', 'wpzoom-instagram-widget' ); ?></a></strong> <?php _e( 'and make sure the plugin is properly configured', 'wpzoom-instagram-widget' ); ?>
 
             </p>
