@@ -429,9 +429,9 @@ class Wpzoom_Instagram_Widget_Settings {
 
                 <h2><?php _e( 'Premium WordPress Themes by WPZOOM', 'wpzoom-instagram-widget' ); ?></h2>
 
-                <p><?php _e( 'Are you looking to give your website a new look?<br/> Check out our collection of <strong>45 expertly-crafted themes</strong> and find the perfect one for your needs!', 'wpzoom-instagram-widget' ); ?></p>
+                <p><?php _e( 'Are you looking to give your website a new look?<br/> Check out our collection of <strong>35 expertly-crafted themes</strong> and find the perfect one for your needs!', 'wpzoom-instagram-widget' ); ?></p>
 
-                <p><?php printf( __( '<a class="cta-button" target="_blank" href="%1$s"">View our Themes &rarr;</a>' ), 'https://www.wpzoom.com/themes/' ); ?></p>
+                <p><?php printf( __( '<a class="cta-button" target="_blank" href="%1$s"">Check out our Themes &rarr;</a>' ), 'https://www.wpzoom.com/themes/' ); ?></p>
 
             </div>
 

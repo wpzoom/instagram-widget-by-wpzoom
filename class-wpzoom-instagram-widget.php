@@ -194,8 +194,8 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
         <div class="zoom-instagram-widget-user-info">
 			<?php if ( ! empty( $user_info->data->profile_picture ) ): ?>
                 <div class="zoom-instagram-widget-user-info-picture">
-                    <a target="_blank" rel="noopener"
-                       href="<?php printf( 'http://instagram.com/%s?ref=badge', esc_attr( $user_info->data->username ) ); ?>"><img
+                    <a target="_blank" rel="noopener nofollow"
+                       href="<?php printf( 'https://instagram.com/%s?ref=badge', esc_attr( $user_info->data->username ) ); ?>"><img
                                 width="90" src="<?php echo $user_info->data->profile_picture ?>"
                                 alt="<?php echo esc_attr( $user_info->data->full_name ) ?>"/></a>
                 </div>
@@ -215,8 +215,8 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 						<?php endif; ?>
                     </div>
                     <div>
-                        <a class="zoom-instagram-widget-user-info-follow-button" target="_blank" rel="noopener"
-                           href="<?php printf( 'http://instagram.com/%s?ref=badge', esc_attr( $user_info->data->username ) ); ?>">
+                        <a class="zoom-instagram-widget-user-info-follow-button" target="_blank" rel="noopener nofollow"
+                           href="<?php printf( 'https://instagram.com/%s?ref=badge', esc_attr( $user_info->data->username ) ); ?>">
 							<?php _e( 'Follow', 'wpzoom-instagram-widget' ) ?>
                         </a>
                     </div>
@@ -367,21 +367,21 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
                                 </div>
 							<?php endif; ?>
                             <div class="zoom-instagram-icon-wrap">
-                                <a class="zoom-svg-instagram-stroke" href="<?php echo $link; ?>" rel="noopener"
+                                <a class="zoom-svg-instagram-stroke" href="<?php echo $link; ?>" rel="noopener nofollow"
                                    target="_blank" title="<?php echo $alt; ?>"></a>
                             </div>
 
 
                             <a class="zoom-instagram-link" data-src="<?php echo $src; ?>"
                                style="<?php echo $inline_style; ?>"
-                               href="<?php echo $link; ?>" target="_blank" rel="noopener" title="<?php echo $alt; ?>"
+                               href="<?php echo $link; ?>" target="_blank" rel="noopener nofollow" title="<?php echo $alt; ?>"
                             >
                             </a>
                         </div>
 					<?php else: ?>
                         <a class="zoom-instagram-link" data-src="<?php echo $src; ?>"
                            style="<?php echo $inline_style; ?>"
-                           href="<?php echo $link; ?>" target="_blank" rel="noopener" title="<?php echo $alt; ?>"
+                           href="<?php echo $link; ?>" target="_blank" rel="noopener nofollow" title="<?php echo $alt; ?>"
                         >
 							<?php if ( $show_media_type_icons && ! empty( $type ) ): ?>
                                 <svg class="svg-icon" shape-rendering="geometricPrecision">
@@ -413,8 +413,8 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 
 		?>
         <div class="zoom-instagram-widget__follow-me">
-            <a href="<?php printf( 'http://instagram.com/%s?ref=badge', esc_attr( $username ) ); ?>"
-               class="ig-b- ig-b-v-24" rel="noopener"
+            <a href="<?php printf( 'https://instagram.com/%s?ref=badge', esc_attr( $username ) ); ?>"
+               class="ig-b- ig-b-v-24" rel="noopener nofollow"
                target="_blank"><?php echo esc_attr( $instance['button_text'] ); ?></a>
         </div>
 		<?php
@@ -587,10 +587,7 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
             <input class="checkbox" type="checkbox" <?php checked( $instance['show-counts-on-hover'] ); ?>
                    id="<?php echo $this->get_field_id( 'show-counts-on-hover' ); ?>"
                    name="<?php echo $this->get_field_name( 'show-counts-on-hover' ); ?>"/>
-            <label for="<?php echo $this->get_field_id( 'show-counts-on-hover' ); ?>"><?php _e( ' Show <strong>overlay with number of comments and likes</strong> on hover', 'wpzoom-instagram-widget' ); ?></label>
-        </p>
-        <p class="description">
-			<?php _e( 'This option only works with <strong>Public Feed</strong> enabled.', 'wpzoom-instagram-widget' ) ?>
+            <label for="<?php echo $this->get_field_id( 'show-counts-on-hover' ); ?>"><?php _e( ' Show <strong>overlay with Instagram icon</strong> on hover', 'wpzoom-instagram-widget' ); ?></label>
         </p>
 
         <p>

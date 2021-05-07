@@ -1,9 +1,9 @@
 === WPZOOM Social Feed Widget ===
-Contributors: WPZOOM, nvartolomei, ciorici, llemurya
+Contributors: WPZOOM, nvartolomei, ciorici
 Donate link: https://www.wpzoom.com/
 Tags: instagram, instagram feed, instagram gallery, instagram photos, instagram widget, instagram stories, widget, timeline, social network, latest images, feed, story, stories, insta
 Requires at least: 4.3
-Tested up to: 5.6
+Tested up to: 5.7
 Requires PHP: 5.6
 Stable tag: trunk
 License: GPLv2 or later
@@ -68,7 +68,8 @@ Make sure to connect your Instagram account with the plugin. You can do that in 
 == Changelog ==
 
 = 1.7.4 =
-* Fixing issues with thumbnails that was deleted by third-party plugins.
+* Added the "nofollow" parameter to all links from the widget.
+* Fixing issues with thumbnails that were deleted by third-party plugins.
 
 = 1.7.3 =
 * Multiple improvements and bug fixes
