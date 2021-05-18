@@ -3,9 +3,10 @@
  * Plugin Name: WPZOOM Instagram Widget
  * Plugin URI: https://www.wpzoom.com/plugins/instagram-widget/
  * Description: Simple and lightweight widget for WordPress to display your Instagram feed
+ * Version: 1.7.4
  * Author: WPZOOM
  * Author URI: https://www.wpzoom.com/
- * Version: 1.7.4
+ * Text Domain: wpzoom-instagram-widget
  * License: GPLv2 or later
  */
 
