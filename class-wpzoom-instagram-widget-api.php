@@ -16,13 +16,13 @@ class Wpzoom_Instagram_Widget_API {
 	 *
 	 * @var array
 	 */
-	public $headers = [];
+	public $headers = array();
 	/**
 	 * Errors collector.
 	 *
 	 * @var array|WP_Error
 	 */
-	public $errors = [];
+	public $errors = array();
 	/**
 	 * Instagram Access Token
 	 *
@@ -79,13 +79,16 @@ class Wpzoom_Instagram_Widget_API {
 	 */
 	public function get_items( $instance ) {
 
-		$sliced = wp_array_slice_assoc( $instance, array(
-			'image-limit',
-			'image-width',
-			'image-resolution',
-			'username',
-			'disable-video-thumbs'
-		) );
+		$sliced = wp_array_slice_assoc(
+			$instance,
+			array(
+				'image-limit',
+				'image-width',
+				'image-resolution',
+				'username',
+				'disable-video-thumbs',
+			)
+		);
 
 		$image_limit          = $sliced['image-limit'];
 		$image_width          = $sliced['image-width'];
@@ -110,14 +113,15 @@ class Wpzoom_Instagram_Widget_API {
 		$is_external_username = ! empty( $this->username ) || ! empty( $injected_username );
 		$external_username    = ! empty( $injected_username ) ? $injected_username : $this->username;
 
-
 		if ( ! empty( $this->access_token ) ) {
 
-			$request_url = add_query_arg( [
-				'fields'       => 'media_url,media_type,caption,username,permalink,thumbnail_url',
-				'access_token' => $this->access_token
-			],
-				'https://graph.instagram.com/me/media' );
+			$request_url = add_query_arg(
+				array(
+					'fields'       => 'media_url,media_type,caption,username,permalink,thumbnail_url',
+					'access_token' => $this->access_token,
+				),
+				'https://graph.instagram.com/me/media'
+			);
 
 			$response = wp_remote_get( $request_url, $this->headers );
 
@@ -137,7 +141,6 @@ class Wpzoom_Instagram_Widget_API {
 
 		if ( 'without-access-token' === $this->request_type && ! empty( $is_external_username ) ) {
 
-
 			$data = $this->get_items_without_token( $external_username );
 
 			if ( is_wp_error( $data ) ) {
@@ -145,7 +148,6 @@ class Wpzoom_Instagram_Widget_API {
 
 				return false;
 			}
-
 		}
 
 		if ( ! empty( $data->data ) ) {
@@ -194,11 +196,14 @@ class Wpzoom_Instagram_Widget_API {
 				'image-id'           => ! empty( $item->id ) ? esc_attr( $item->id ) : '',
 				'image-caption'      => ! empty( $item->caption->text ) ? esc_attr( $item->caption->text ) : '',
 				'likes_count'        => ! empty( $item->likes->count ) ? esc_attr( $item->likes->count ) : 0,
-				'comments_count'     => ! empty( $item->comments->count ) ? esc_attr( $item->comments->count ) : 0
+				'comments_count'     => ! empty( $item->comments->count ) ? esc_attr( $item->comments->count ) : 0,
 			);
 		}
 
-		$result = array( 'items' => $result, 'username' => $username );
+		$result = array(
+			'items'    => $result,
+			'username' => $username,
+		);
 
 		return $result;
 	}
@@ -213,7 +218,7 @@ class Wpzoom_Instagram_Widget_API {
 		$sizes = array(
 			'thumbnail'           => 150,
 			'low_resolution'      => 306,
-			'standard_resolution' => 640
+			'standard_resolution' => 640,
 		);
 
 		$diff = PHP_INT_MAX;
@@ -251,57 +256,57 @@ class Wpzoom_Instagram_Widget_API {
 	 * @return array
 	 */
 	public function get_errors() {
-		return [
-			'user-info-without-token'                                   => [
+		return array(
+			'user-info-without-token'                    => array(
 				'code'    => 'user-info-without-token',
-				'message' => __( 'Empty json user info from Public Feed.', 'wpzoom-instagram-widget' )
-			],
-			'response-data-without-token-from-json-invalid-response'    => [
+				'message' => __( 'Empty json user info from Public Feed.', 'wpzoom-instagram-widget' ),
+			),
+			'response-data-without-token-from-json-invalid-response' => array(
 				'code'    => 'response-data-without-token-from-json-invalid-response',
-				'message' => __( 'The request from the Public Feed failed. Invalid server response from Public JSON API url.', 'wpzoom-instagram-widget' )
-			],
-			'response-data-without-token-from-json-invalid-json-format' => [
+				'message' => __( 'The request from the Public Feed failed. Invalid server response from Public JSON API url.', 'wpzoom-instagram-widget' ),
+			),
+			'response-data-without-token-from-json-invalid-json-format' => array(
 				'code'    => 'response-data-without-token-from-json-invalid-json-format',
-				'message' => __( 'The request from the Public Feed failed. Invalid JSON format from Public JSON API url.', 'wpzoom-instagram-widget' )
-			],
-			'response-data-without-token-from-html-invalid-response'    => [
+				'message' => __( 'The request from the Public Feed failed. Invalid JSON format from Public JSON API url.', 'wpzoom-instagram-widget' ),
+			),
+			'response-data-without-token-from-html-invalid-response' => array(
 				'code'    => 'response-data-without-token-from-html-invalid-response',
-				'message' => __( 'The request from the Public Feed failed. Check username.', 'wpzoom-instagram-widget' )
-			],
-			'response-data-without-token-from-html-invalid-json-format' => [
+				'message' => __( 'The request from the Public Feed failed. Check username.', 'wpzoom-instagram-widget' ),
+			),
+			'response-data-without-token-from-html-invalid-json-format' => array(
 				'code'    => 'response-data-without-token-from-html-invalid-json-format',
-				'message' => __( 'The request from the Public Feed failed. Invalid JSON format from parsed html body.', 'wpzoom-instagram-widget' )
-			],
-			'items-without-token-invalid-response'                      => [
+				'message' => __( 'The request from the Public Feed failed. Invalid JSON format from parsed html body.', 'wpzoom-instagram-widget' ),
+			),
+			'items-without-token-invalid-response'       => array(
 				'code'    => 'items-without-token-invalid-response',
-				'message' => __( 'Get items from the Public Feed failed. Invalid response.', 'wpzoom-instagram-widget' )
-			],
-			'items-without-token-invalid-json-structure'                => [
+				'message' => __( 'Get items from the Public Feed failed. Invalid response.', 'wpzoom-instagram-widget' ),
+			),
+			'items-without-token-invalid-json-structure' => array(
 				'code'    => 'items-without-token-invalid-json-structure',
-				'message' => __( 'Get items from the Public Feed failed. Malformed data structure.', 'wpzoom-instagram-widget' )
-			],
-			'items-with-token-invalid-response'                         => [
+				'message' => __( 'Get items from the Public Feed failed. Malformed data structure.', 'wpzoom-instagram-widget' ),
+			),
+			'items-with-token-invalid-response'          => array(
 				'code'    => 'items-with-token-invalid-response',
-				'message' => __( 'Geting items from the Instagram API Feed failed. Invalid response.', 'wpzoom-instagram-widget' )
-			],
-			'items-with-token-invalid-data-structure'                   => [
+				'message' => __( 'Geting items from the Instagram API Feed failed. Invalid response.', 'wpzoom-instagram-widget' ),
+			),
+			'items-with-token-invalid-data-structure'    => array(
 				'code'    => 'items-with-token-invalid-data-structure',
-				'message' => __( 'Get items from the Instagram API Feed failed. Malformed data structure.', 'wpzoom-instagram-widget' )
-			],
-			'user-with-token-invalid-response'                          => [
+				'message' => __( 'Get items from the Instagram API Feed failed. Malformed data structure.', 'wpzoom-instagram-widget' ),
+			),
+			'user-with-token-invalid-response'           => array(
 				'code'    => 'user-with-token-invalid-response',
-				'message' => __( 'Get user data from the Instagram API Feed failed. Invalid response.', 'wpzoom-instagram-widget' )
-			],
-			'user-with-token-invalid-data-structure'                    => [
+				'message' => __( 'Get user data from the Instagram API Feed failed. Invalid response.', 'wpzoom-instagram-widget' ),
+			),
+			'user-with-token-invalid-data-structure'     => array(
 				'code'    => 'user-with-token-invalid-data-structure',
-				'message' => __( 'Get user data from the Instagram API Feed failed. Malformed data structure.', 'wpzoom-instagram-widget' )
-			],
+				'message' => __( 'Get user data from the Instagram API Feed failed. Malformed data structure.', 'wpzoom-instagram-widget' ),
+			),
 
-		];
+		);
 	}
 
 	function convert_items_to_old_structure( $data ) {
-		$converted       = new stdClass;
+		$converted       = new stdClass();
 		$converted->data = array();
 
 		foreach ( $data->data as $key => $item ) {
@@ -313,23 +318,23 @@ class Wpzoom_Instagram_Widget_API {
 					'id'              => null,
 					'fullname'        => null,
 					'profile_picture' => null,
-					'username'        => $item->username
+					'username'        => $item->username,
 				),
 				'images'       => (object) array(
 					'thumbnail'           => (object) array(
 						'url'    => $this->image_uploader->get_image( 'thumbnail', $item->media_url, $item->id ),
 						'width'  => 150,
-						'height' => 150
+						'height' => 150,
 					),
 					'low_resolution'      => (object) array(
 						'url'    => $this->image_uploader->get_image( 'low_resolution', $item->media_url, $item->id ),
 						'width'  => 320,
-						'height' => 320
+						'height' => 320,
 					),
 					'standard_resolution' => (object) array(
 						'url'    => $this->image_uploader->get_image( 'standard_resolution', $item->media_url, $item->id ),
 						'width'  => 640,
-						'height' => 640
+						'height' => 640,
 					),
 				),
 				'type'         => $item->media_type,
@@ -338,8 +343,8 @@ class Wpzoom_Instagram_Widget_API {
 				'created_time' => null,
 				'link'         => $item->permalink,
 				'caption'      => (object) array(
-					'text' => isset( $item->caption ) ? $item->caption : ''
-				)
+					'text' => isset( $item->caption ) ? $item->caption : '',
+				),
 			);
 
 		}
@@ -369,7 +374,7 @@ class Wpzoom_Instagram_Widget_API {
 			return new WP_Error( $error_data['code'], $error_data['message'] );
 		}
 
-		$converted       = new stdClass;
+		$converted       = new stdClass();
 		$converted->data = array();
 		foreach ( $edges as $edge ) {
 
@@ -380,23 +385,23 @@ class Wpzoom_Instagram_Widget_API {
 					'id'              => $node->owner->id,
 					'fullname'        => '',
 					'profile_picture' => '',
-					'username'        => $node->owner->username
+					'username'        => $node->owner->username,
 				),
 				'images'       => (object) array(
 					'thumbnail'           => (object) array(
 						'url'    => $node->thumbnail_resources[0]->src,
 						'width'  => $node->thumbnail_resources[0]->config_width,
-						'height' => $node->thumbnail_resources[0]->config_height
+						'height' => $node->thumbnail_resources[0]->config_height,
 					),
 					'low_resolution'      => (object) array(
 						'url'    => $node->thumbnail_resources[2]->src,
 						'width'  => $node->thumbnail_resources[2]->config_width,
-						'height' => $node->thumbnail_resources[2]->config_height
+						'height' => $node->thumbnail_resources[2]->config_height,
 					),
 					'standard_resolution' => (object) array(
 						'url'    => $node->thumbnail_resources[4]->src,
 						'width'  => $node->thumbnail_resources[4]->config_width,
-						'height' => $node->thumbnail_resources[4]->config_height
+						'height' => $node->thumbnail_resources[4]->config_height,
 					),
 				),
 				'type'         => $this->get_media_type_without_token( $node->__typename ),
@@ -405,8 +410,8 @@ class Wpzoom_Instagram_Widget_API {
 				'created_time' => $node->taken_at_timestamp,
 				'link'         => sprintf( 'https://www.instagram.com/p/%s/', $node->shortcode ),
 				'caption'      => (object) array(
-					'text' => isset( $node->edge_media_to_caption->edges[0]->node->text ) ? $node->edge_media_to_caption->edges[0]->node->text : ''
-				)
+					'text' => isset( $node->edge_media_to_caption->edges[0]->node->text ) ? $node->edge_media_to_caption->edges[0]->node->text : '',
+				),
 			);
 		}
 
@@ -496,14 +501,22 @@ class Wpzoom_Instagram_Widget_API {
 	}
 
 	function get_media_type_without_token( $media_type ) {
-		$media_types = [ 'GraphImage' => 'IMAGE', 'GraphSidecar' => 'CAROUSEL_ALBUM', 'GraphVideo' => 'VIDEO' ];
+		$media_types = array(
+			'GraphImage'   => 'IMAGE',
+			'GraphSidecar' => 'CAROUSEL_ALBUM',
+			'GraphVideo'   => 'VIDEO',
+		);
 
 		return array_key_exists( $media_type, $media_types ) ? $media_types[ $media_type ] : array_shift( $media_types );
 	}
 
 	function get_transient_lifetime() {
 
-		$values = array( 'minutes' => MINUTE_IN_SECONDS, 'hours' => HOUR_IN_SECONDS, 'days' => DAY_IN_SECONDS );
+		$values = array(
+			'minutes' => MINUTE_IN_SECONDS,
+			'hours'   => HOUR_IN_SECONDS,
+			'days'    => DAY_IN_SECONDS,
+		);
 		$keys   = array_keys( $values );
 		$type   = in_array( $this->transient_lifetime_type, $keys ) ? $values[ $this->transient_lifetime_type ] : $values['minutes'];
 
@@ -511,7 +524,6 @@ class Wpzoom_Instagram_Widget_API {
 	}
 
 	public function get_user_info( $injected_username = '' ) {
-
 
 		$transient = 'zoom_instagram_user_info';
 
@@ -532,11 +544,13 @@ class Wpzoom_Instagram_Widget_API {
 
 		if ( ! empty( $this->access_token ) ) {
 
-			$request_url = add_query_arg( [
-				'access_token' => $this->access_token,
-				'fields'       => 'account_type,id,media_count,username'
-			],
-				'https://graph.instagram.com/me' );
+			$request_url = add_query_arg(
+				array(
+					'access_token' => $this->access_token,
+					'fields'       => 'account_type,id,media_count,username',
+				),
+				'https://graph.instagram.com/me'
+			);
 
 			$response = wp_remote_get( $request_url, $this->headers );
 
@@ -563,7 +577,6 @@ class Wpzoom_Instagram_Widget_API {
 
 				return false;
 			}
-
 		}
 
 		if ( ! empty( $data->data ) ) {
@@ -583,7 +596,7 @@ class Wpzoom_Instagram_Widget_API {
 
 	function convert_user_info_to_old_structure( $user_info ) {
 
-		$converted = new stdClass;
+		$converted = new stdClass();
 
 		$user_info_from_settings = get_option( 'wpzoom-instagram-widget-settings', wpzoom_instagram_get_default_settings() );
 
@@ -614,7 +627,7 @@ class Wpzoom_Instagram_Widget_API {
 			'is_business'     => null,
 			'profile_picture' => $avatar,
 			'username'        => ! empty( $user_info->username ) ? $user_info->username : '',
-			'website'         => null
+			'website'         => null,
 		);
 
 		return $converted;
@@ -644,7 +657,7 @@ class Wpzoom_Instagram_Widget_API {
 			return new WP_Error( $error_data['code'], $error_data['message'] );
 		}
 
-		$converted = new stdClass;
+		$converted = new stdClass();
 
 		$converted->data = (object) array(
 			'bio'             => ! empty( $user_info->biography ) ? $user_info->biography : '',
@@ -658,7 +671,7 @@ class Wpzoom_Instagram_Widget_API {
 			'is_business'     => ! empty( $user_info->is_business_account ) ? $user_info->is_business_account : '',
 			'profile_picture' => ! empty( $user_info->profile_pic_url ) ? $user_info->profile_pic_url : '',
 			'username'        => ! empty( $user_info->username ) ? $user_info->username : '',
-			'website'         => ! empty( $user_info->external_url ) ? $user_info->external_url : ''
+			'website'         => ! empty( $user_info->external_url ) ? $user_info->external_url : '',
 		);
 
 		return $converted;
@@ -689,7 +702,6 @@ class Wpzoom_Instagram_Widget_API {
 			$condition = true;
 		}
 
-
 		if ( true === $condition ) {
 			set_transient( $transient, wp_json_encode( 'yes' ), DAY_IN_SECONDS );
 
@@ -706,16 +718,18 @@ class Wpzoom_Instagram_Widget_API {
 	 */
 	public static function is_access_token_valid( $access_token, $request_type = '' ) {
 
-
 		if ( empty( $access_token ) ) {
 			return false;
 		}
 
-		$request_url = add_query_arg( [
-			'fields'       => 'username',
-			'access_token' => $access_token
+		$request_url = add_query_arg(
+			array(
+				'fields'       => 'username',
+				'access_token' => $access_token,
 
-		], 'https://graph.instagram.com/me' );
+			),
+			'https://graph.instagram.com/me'
+		);
 
 		$response = wp_remote_get( $request_url );
 

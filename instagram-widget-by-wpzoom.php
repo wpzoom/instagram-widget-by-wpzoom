@@ -17,10 +17,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-require_once( plugin_dir_path( __FILE__ ) . 'class-wpzoom-instagram-image-uploader.php' );
-require_once( plugin_dir_path( __FILE__ ) . 'class-wpzoom-instagram-widget-api.php' );
-require_once( plugin_dir_path( __FILE__ ) . 'class-wpzoom-instagram-widget-settings.php' );
-require_once( plugin_dir_path( __FILE__ ) . 'class-wpzoom-instagram-widget.php' );
+require_once plugin_dir_path( __FILE__ ) . 'class-wpzoom-instagram-image-uploader.php';
+require_once plugin_dir_path( __FILE__ ) . 'class-wpzoom-instagram-widget-api.php';
+require_once plugin_dir_path( __FILE__ ) . 'class-wpzoom-instagram-widget-settings.php';
+require_once plugin_dir_path( __FILE__ ) . 'class-wpzoom-instagram-widget.php';
 
 add_action( 'widgets_init', 'zoom_instagram_widget_register' );
 function zoom_instagram_widget_register() {
@@ -41,9 +41,23 @@ function wpzoom_instagram_admin_notice() {
 	$user_id = $current_user->ID;
 	/* Check that the user hasn't already clicked to ignore the message */
 	if ( ! get_user_meta( $user_id, 'wpzoom_instagram_admin_notice' ) ) {
-		echo '<div class="error notice" style="position:relative"><p>';
-		printf( __( '<strong>Please configure Instagram Widget</strong><br /><br/> If you have just installed or updated this plugin, please go to the <a href="options-general.php?page=wpzoom-instagram-widget">Settings page</a> and <strong>connect</strong> it with your Instagram account.<br/> You can ignore this message if you have already configured it. <a style="text-decoration: none" class="notice-dismiss" href="%1$s"></a>' ), '?wpzoom_instagram_ignore_admin_notice=0' );
-		echo "</p></div>";
+		$hide_notices_url = html_entity_decode( // to convert &amp;s to normal &, otherwise produces invalid link.
+			add_query_arg(
+				array(
+					'wpzoom_instagram_ignore_admin_notice' => '0',
+				),
+				wpzoom_instagram_get_current_admin_url() ? wpzoom_instagram_get_current_admin_url() : admin_url( 'options-general.php?page=wpzoom-instagram-widget' )
+			)
+		);
+
+		$configure_message  = '<strong>' . __( 'Please configure Instagram Widget', 'wpzoom-instagram-widget' ) . '</strong><br/><br/>';
+		$configure_message .= sprintf( __( 'If you have just installed or updated this plugin, please go to the %1$s and %2$s it with your Instagram account.', 'wpzoom-instagram-widget' ), '<a href="options-general.php?page=wpzoom-instagram-widget">' . __( 'Settings page', 'wpzoom-instagram-widget' ) . '</a>', '<strong>' . __( 'connect', 'wpzoom-instagram-widget' ) . '</strong>' ) . '&nbsp;';
+		$configure_message .= __( 'You can ignore this message if you have already configured it.', 'wpzoom-instagram-widget' );
+		$configure_message .= '<a style="text-decoration: none" class="notice-dismiss" href="' . $hide_notices_url . '"></a>';
+
+		echo '<div class="notice-warning notice" style="position:relative"><p>';
+		echo wp_kses_post( $configure_message );
+		echo '</p></div>';
 	}
 }
 
@@ -60,7 +74,7 @@ function wpzoom_instagram_ignore_admin_notice() {
 
 
 function wpzoom_instagram_get_default_settings() {
-	return [
+	return array(
 		'access-token'             => '',
 		'basic-access-token'       => '',
 		'request-type'             => 'with-basic-access-token',
@@ -69,17 +83,40 @@ function wpzoom_instagram_get_default_settings() {
 		'transient-lifetime-type'  => 'days',
 		'is-forced-timeout'        => '',
 		'request-timeout-value'    => 15,
-		'user-info-avatar'=> '',
-		'user-info-fullname'=> '',
-		'user-info-biography'=> '',
-	];
+		'user-info-avatar'         => '',
+		'user-info-fullname'       => '',
+		'user-info-biography'      => '',
+	);
 }
 
-add_action( 'init', function () {
+add_action(
+	'init',
+	function () {
 
-	$option_name = 'wpzoom-instagram-transition-between-4_7-4_8-versions';
-	if ( empty( get_option( $option_name ) ) ) {
-		update_option( $option_name, true );
-		delete_transient( 'zoom_instagram_is_configured' );
+		$option_name = 'wpzoom-instagram-transition-between-4_7-4_8-versions';
+		if ( empty( get_option( $option_name ) ) ) {
+			update_option( $option_name, true );
+			delete_transient( 'zoom_instagram_is_configured' );
+		}
 	}
-} );
+);
+
+/**
+ * Get current admin page URL.
+ *
+ * Returns an empty string if it cannot generate a URL.
+ *
+ * @internal
+ * @since 1.7.5
+ * @return string
+ */
+function wpzoom_instagram_get_current_admin_url() {
+	$uri = isset( $_SERVER['REQUEST_URI'] ) ? esc_url_raw( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '';
+	$uri = preg_replace( '|^.*/wp-admin/|i', '', $uri );
+
+	if ( ! $uri ) {
+		return '';
+	}
+
+	return remove_query_arg( array( '_wpnonce', 'wpzoom_instagram_ignore_admin_notice' ), admin_url( $uri ) );
+}
