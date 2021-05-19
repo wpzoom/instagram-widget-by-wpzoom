@@ -33,7 +33,6 @@ class WPZOOM_Instagram_Image_Uploader {
 			add_action( 'init', self::$instance, 'custom_post_status' );
 			add_action( 'wp_ajax_' . self::$ajax_action_name, array( self::$instance, 'get_image_async' ) );
 			add_action( 'wp_ajax_nopriv_' . self::$ajax_action_name, array( self::$instance, 'get_image_async' ) );
-
 		}
 
 		return self::$instance;
@@ -49,7 +48,6 @@ class WPZOOM_Instagram_Image_Uploader {
 	 * @return bool
 	 */
 	static function get_image( $media_size, $media_url, $media_id ) {
-
 		$args  = array(
 			'post_type'      => 'attachment',
 			'posts_per_page' => 1,
@@ -70,7 +68,6 @@ class WPZOOM_Instagram_Image_Uploader {
 			$image_src = wp_get_attachment_image_src( $attachment_id, self::get_image_size_name( $media_size ) );
 
 			return ! empty( $image_src ) ? $image_src[0] : $media_url;
-
 		}
 
 		return false;
@@ -84,9 +81,7 @@ class WPZOOM_Instagram_Image_Uploader {
 	 * @return string
 	 */
 	public static function get_image_size_name( $size ) {
-
 		return self::$prefix_name . '-' . $size;
-
 	}
 
 	/**
@@ -104,7 +99,6 @@ class WPZOOM_Instagram_Image_Uploader {
 	 * @return float|int
 	 */
 	function get_transient_lifetime() {
-
 		$options = get_option( 'wpzoom-instagram-widget-settings', wpzoom_instagram_get_default_settings() );
 
 		$values = array(
@@ -122,12 +116,11 @@ class WPZOOM_Instagram_Image_Uploader {
 	 * Get image from ajax.
 	 */
 	function get_image_async() {
-
 		$sliced = wp_array_slice_assoc( $_POST, array( 'media-id', 'nonce', 'image-resolution', 'image-width', 'regenerate-thumbnails' ) );
 		$sliced = array_map( 'sanitize_text_field', $sliced );
 
 		if ( ! wp_verify_nonce( $sliced['nonce'], self::get_nonce_action( $sliced['media-id'] ) ) ) {
-			$error = new WP_Error( '001', __( 'Invalid nonce.', 'wpzoom-instagram-widget', 'instagram-widget-by-wpzoom' ), __( 'Invalid nonce provided for this action', 'wpzoom-instagram-widget', 'instagram-widget-by-wpzoom' ) );
+			$error = new WP_Error( '001', __( 'Invalid nonce.', 'instagram-widget-by-wpzoom' ), __( 'Invalid nonce provided for this action', 'instagram-widget-by-wpzoom' ) );
 
 			wp_send_json_error( $error, 500 );
 		}
@@ -135,7 +128,7 @@ class WPZOOM_Instagram_Image_Uploader {
 		$media_url = self::get_media_url_by_id( $sliced['media-id'] );
 
 		if ( empty( $media_url ) ) {
-			$error = new WP_Error( '002', __( 'Invalid media id.', 'wpzoom-instagram-widget', 'instagram-widget-by-wpzoom' ), __( 'Could not retrieve image url with provided media id', 'wpzoom-instagram-widget', 'instagram-widget-by-wpzoom' ) );
+			$error = new WP_Error( '002', __( 'Invalid media id.', 'instagram-widget-by-wpzoom' ), __( 'Could not retrieve image url with provided media id', 'instagram-widget-by-wpzoom' ) );
 
 			wp_send_json_error( $error, 500 );
 		}
@@ -157,14 +150,12 @@ class WPZOOM_Instagram_Image_Uploader {
 		if ( $query->have_posts() ) {
 			$post          = array_shift( $query->posts );
 			$attachment_id = $post->ID;
-
 		} else {
 			$attachment_id = self::upload_image( $media_url, $sliced['media-id'] );
 			self::$instance->set_images_to_transient( $attachment_id, $sliced['media-id'] );
 		}
 
 		if ( wp_validate_boolean( $sliced['regenerate-thumbnails'] ) ) {
-
 			$metadata = $this->regenerate_thumbnails( $attachment_id );
 
 			if ( ! is_wp_error( $metadata ) && ! empty( $metadata ) ) {
@@ -211,7 +202,6 @@ class WPZOOM_Instagram_Image_Uploader {
 	 * @return bool
 	 */
 	public static function get_media_url_by_id( $media_id ) {
-
 		$transient = self::$instance->get_api_transient();
 
 		if ( empty( $transient->data ) ) {
@@ -229,7 +219,6 @@ class WPZOOM_Instagram_Image_Uploader {
 	 * @return string|WP_Error
 	 */
 	static function upload_image( $media_url, $media_id ) {
-
 		require_once ABSPATH . 'wp-admin/includes/media.php';
 		require_once ABSPATH . 'wp-admin/includes/file.php';
 		require_once ABSPATH . 'wp-admin/includes/image.php';
@@ -245,7 +234,6 @@ class WPZOOM_Instagram_Image_Uploader {
 		update_post_meta( $attachment_id, self::$media_metakey_name, $media_id );
 
 		return $attachment_id;
-
 	}
 
 	/**
@@ -254,7 +242,6 @@ class WPZOOM_Instagram_Image_Uploader {
 	 * @return mixed
 	 */
 	public function insert_post_data( $post_data ) {
-
 		$post_data['post_status'] = self::$post_status_name;
 
 		return $post_data;
@@ -300,7 +287,6 @@ class WPZOOM_Instagram_Image_Uploader {
 	 * @return array
 	 */
 	function set_image_sizes( $sizes ) {
-
 		return array(
 			self::get_image_size_name( 'thumbnail' )      => array(
 				'width'  => 150,
@@ -315,7 +301,6 @@ class WPZOOM_Instagram_Image_Uploader {
 				'height' => 640,
 			),
 		);
-
 	}
 
 	/**
@@ -325,7 +310,6 @@ class WPZOOM_Instagram_Image_Uploader {
 	 * @param $media_id
 	 */
 	protected function set_images_to_transient( $attachment_id, $media_id ) {
-
 		$transient = self::$instance->get_api_transient();
 
 		if ( ! empty( $transient->data ) ) {
@@ -367,7 +351,6 @@ class WPZOOM_Instagram_Image_Uploader {
 	 * @return int|string
 	 */
 	protected function get_best_size( $desired_width, $image_resolution = 'default_algorithm' ) {
-
 		$size = 'thumbnail';
 
 		$sizes = array(

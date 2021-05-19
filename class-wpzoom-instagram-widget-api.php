@@ -49,7 +49,6 @@ class Wpzoom_Instagram_Widget_API {
 		$this->image_uploader = WPZOOM_Instagram_Image_Uploader::getInstance();
 
 		$this->errors = new WP_Error();
-
 	}
 
 	/**
@@ -78,7 +77,6 @@ class Wpzoom_Instagram_Widget_API {
 	 * @return array|bool Array of tweets or false if method fails
 	 */
 	public function get_items( $instance ) {
-
 		$sliced = wp_array_slice_assoc(
 			$instance,
 			array(
@@ -106,7 +104,6 @@ class Wpzoom_Instagram_Widget_API {
 		}
 
 		if ( false !== ( $data = json_decode( get_transient( $transient ) ) ) && is_object( $data ) && ! empty( $data->data ) ) {
-
 			return $this->processing_response_data( $data, $image_width, $image_resolution, $image_limit, $disable_video_thumbs );
 		}
 
@@ -114,7 +111,6 @@ class Wpzoom_Instagram_Widget_API {
 		$external_username    = ! empty( $injected_username ) ? $injected_username : $this->username;
 
 		if ( ! empty( $this->access_token ) ) {
-
 			$request_url = add_query_arg(
 				array(
 					'fields'       => 'media_url,media_type,caption,username,permalink,thumbnail_url',
@@ -140,7 +136,6 @@ class Wpzoom_Instagram_Widget_API {
 		}
 
 		if ( 'without-access-token' === $this->request_type && ! empty( $is_external_username ) ) {
-
 			$data = $this->get_items_without_token( $external_username );
 
 			if ( is_wp_error( $data ) ) {
@@ -165,12 +160,10 @@ class Wpzoom_Instagram_Widget_API {
 	}
 
 	public function processing_response_data( $data, $image_width, $image_resolution = 'default_algorithm', $image_limit, $disable_video_thumbs = false ) {
-
 		$result   = array();
 		$username = '';
 
 		foreach ( $data->data as $key => $item ) {
-
 			if ( empty( $username ) ) {
 				$username = $item->user->username;
 			}
@@ -182,7 +175,6 @@ class Wpzoom_Instagram_Widget_API {
 			if ( ! empty( $disable_video_thumbs ) && isset( $item->type ) && 'VIDEO' == $item->type ) {
 				$image_limit ++;
 				continue;
-
 			}
 
 			$best_size = $this->get_best_size( $image_width, $image_resolution );
@@ -259,47 +251,47 @@ class Wpzoom_Instagram_Widget_API {
 		return array(
 			'user-info-without-token'                    => array(
 				'code'    => 'user-info-without-token',
-				'message' => __( 'Empty json user info from Public Feed.', 'wpzoom-instagram-widget', 'instagram-widget-by-wpzoom' ),
+				'message' => __( 'Empty json user info from Public Feed.', 'instagram-widget-by-wpzoom' ),
 			),
 			'response-data-without-token-from-json-invalid-response' => array(
 				'code'    => 'response-data-without-token-from-json-invalid-response',
-				'message' => __( 'The request from the Public Feed failed. Invalid server response from Public JSON API url.', 'wpzoom-instagram-widget', 'instagram-widget-by-wpzoom' ),
+				'message' => __( 'The request from the Public Feed failed. Invalid server response from Public JSON API url.', 'instagram-widget-by-wpzoom' ),
 			),
 			'response-data-without-token-from-json-invalid-json-format' => array(
 				'code'    => 'response-data-without-token-from-json-invalid-json-format',
-				'message' => __( 'The request from the Public Feed failed. Invalid JSON format from Public JSON API url.', 'wpzoom-instagram-widget', 'instagram-widget-by-wpzoom' ),
+				'message' => __( 'The request from the Public Feed failed. Invalid JSON format from Public JSON API url.', 'instagram-widget-by-wpzoom' ),
 			),
 			'response-data-without-token-from-html-invalid-response' => array(
 				'code'    => 'response-data-without-token-from-html-invalid-response',
-				'message' => __( 'The request from the Public Feed failed. Check username.', 'wpzoom-instagram-widget', 'instagram-widget-by-wpzoom' ),
+				'message' => __( 'The request from the Public Feed failed. Check username.', 'instagram-widget-by-wpzoom' ),
 			),
 			'response-data-without-token-from-html-invalid-json-format' => array(
 				'code'    => 'response-data-without-token-from-html-invalid-json-format',
-				'message' => __( 'The request from the Public Feed failed. Invalid JSON format from parsed html body.', 'wpzoom-instagram-widget', 'instagram-widget-by-wpzoom' ),
+				'message' => __( 'The request from the Public Feed failed. Invalid JSON format from parsed html body.', 'instagram-widget-by-wpzoom' ),
 			),
 			'items-without-token-invalid-response'       => array(
 				'code'    => 'items-without-token-invalid-response',
-				'message' => __( 'Get items from the Public Feed failed. Invalid response.', 'wpzoom-instagram-widget', 'instagram-widget-by-wpzoom' ),
+				'message' => __( 'Get items from the Public Feed failed. Invalid response.', 'instagram-widget-by-wpzoom' ),
 			),
 			'items-without-token-invalid-json-structure' => array(
 				'code'    => 'items-without-token-invalid-json-structure',
-				'message' => __( 'Get items from the Public Feed failed. Malformed data structure.', 'wpzoom-instagram-widget', 'instagram-widget-by-wpzoom' ),
+				'message' => __( 'Get items from the Public Feed failed. Malformed data structure.', 'instagram-widget-by-wpzoom' ),
 			),
 			'items-with-token-invalid-response'          => array(
 				'code'    => 'items-with-token-invalid-response',
-				'message' => __( 'Geting items from the Instagram API Feed failed. Invalid response.', 'wpzoom-instagram-widget', 'instagram-widget-by-wpzoom' ),
+				'message' => __( 'Geting items from the Instagram API Feed failed. Invalid response.', 'instagram-widget-by-wpzoom' ),
 			),
 			'items-with-token-invalid-data-structure'    => array(
 				'code'    => 'items-with-token-invalid-data-structure',
-				'message' => __( 'Get items from the Instagram API Feed failed. Malformed data structure.', 'wpzoom-instagram-widget', 'instagram-widget-by-wpzoom' ),
+				'message' => __( 'Get items from the Instagram API Feed failed. Malformed data structure.', 'instagram-widget-by-wpzoom' ),
 			),
 			'user-with-token-invalid-response'           => array(
 				'code'    => 'user-with-token-invalid-response',
-				'message' => __( 'Get user data from the Instagram API Feed failed. Invalid response.', 'wpzoom-instagram-widget', 'instagram-widget-by-wpzoom' ),
+				'message' => __( 'Get user data from the Instagram API Feed failed. Invalid response.', 'instagram-widget-by-wpzoom' ),
 			),
 			'user-with-token-invalid-data-structure'     => array(
 				'code'    => 'user-with-token-invalid-data-structure',
-				'message' => __( 'Get user data from the Instagram API Feed failed. Malformed data structure.', 'wpzoom-instagram-widget', 'instagram-widget-by-wpzoom' ),
+				'message' => __( 'Get user data from the Instagram API Feed failed. Malformed data structure.', 'instagram-widget-by-wpzoom' ),
 			),
 
 		);
@@ -310,7 +302,6 @@ class Wpzoom_Instagram_Widget_API {
 		$converted->data = array();
 
 		foreach ( $data->data as $key => $item ) {
-
 			$converted->data[] = (object) array(
 				'id'           => $item->id,
 				'media_url'    => ( 'VIDEO' === $item->media_type ) ? $item->thumbnail_url : $item->media_url,
@@ -346,14 +337,12 @@ class Wpzoom_Instagram_Widget_API {
 					'text' => isset( $item->caption ) ? $item->caption : '',
 				),
 			);
-
 		}
 
 		return $converted;
 	}
 
 	function get_items_without_token( $user ) {
-
 		$result = $this->get_response_without_token( $user );
 
 		if ( is_wp_error( $result ) ) {
@@ -377,7 +366,6 @@ class Wpzoom_Instagram_Widget_API {
 		$converted       = new stdClass();
 		$converted->data = array();
 		foreach ( $edges as $edge ) {
-
 			$node = $edge->node;
 
 			$converted->data[] = (object) array(
@@ -419,21 +407,19 @@ class Wpzoom_Instagram_Widget_API {
 	}
 
 	function get_response_without_token( $user ) {
-
 		$user = trim( $user );
 		$url  = 'https://instagram.com/' . str_replace( '@', '', $user );
 
 		$request = wp_remote_get( $url, $this->headers );
 
 		if ( is_wp_error( $request ) || 200 != wp_remote_retrieve_response_code( $request ) ) {
-
 			$error_data = $this->get_error( 'response-data-without-token-from-html-invalid-response' );
 			$this->errors->add( $error_data['code'], $error_data['message'] );
 
 			$result = $this->get_response_without_token_from_json( $user );
 
 			if ( is_wp_error( $result ) ) {
-				return new WP_Error( 'invalid_response', __( 'Invalid response from Instagram', 'wpzoom-instagram-widget', 'instagram-widget-by-wpzoom' ) );
+				return new WP_Error( 'invalid_response', __( 'Invalid response from Instagram', 'instagram-widget-by-wpzoom' ) );
 			} else {
 				return $result;
 			}
@@ -460,14 +446,13 @@ class Wpzoom_Instagram_Widget_API {
 		$result = json_decode( $json );
 
 		if ( empty( $result ) ) {
-
 			$error_data = $this->get_error( 'response-data-without-token-from-html-invalid-json-format' );
 			$this->errors->add( $error_data['code'], $error_data['message'] );
 
 			$result = $this->get_response_without_token_from_json( $user );
 
 			if ( is_wp_error( $result ) ) {
-				return new WP_Error( 'empty-json', __( 'Empty json decoded data.', 'wpzoom-instagram-widget', 'instagram-widget-by-wpzoom' ) );
+				return new WP_Error( 'empty-json', __( 'Empty json decoded data.', 'instagram-widget-by-wpzoom' ) );
 			}
 		}
 
@@ -475,7 +460,6 @@ class Wpzoom_Instagram_Widget_API {
 	}
 
 	function get_response_without_token_from_json( $user ) {
-
 		$user = trim( $user );
 		$url  = 'https://instagram.com/' . str_replace( '@', '', $user ) . '/?__a=1';
 
@@ -511,7 +495,6 @@ class Wpzoom_Instagram_Widget_API {
 	}
 
 	function get_transient_lifetime() {
-
 		$values = array(
 			'minutes' => MINUTE_IN_SECONDS,
 			'hours'   => HOUR_IN_SECONDS,
@@ -524,7 +507,6 @@ class Wpzoom_Instagram_Widget_API {
 	}
 
 	public function get_user_info( $injected_username = '' ) {
-
 		$transient = 'zoom_instagram_user_info';
 
 		$injected_username = rtrim( $injected_username );
@@ -535,7 +517,6 @@ class Wpzoom_Instagram_Widget_API {
 		}
 
 		if ( false !== ( $data = json_decode( get_transient( $transient ) ) ) && is_object( $data ) && ! empty( $data->data ) ) {
-
 			return $data;
 		}
 
@@ -543,7 +524,6 @@ class Wpzoom_Instagram_Widget_API {
 		$external_username    = ! empty( $injected_username ) ? $injected_username : $this->username;
 
 		if ( ! empty( $this->access_token ) ) {
-
 			$request_url = add_query_arg(
 				array(
 					'access_token' => $this->access_token,
@@ -565,11 +545,9 @@ class Wpzoom_Instagram_Widget_API {
 
 			$data = json_decode( wp_remote_retrieve_body( $response ) );
 			$data = $this->convert_user_info_to_old_structure( $data );
-
 		}
 
 		if ( 'without-access-token' === $this->request_type && ! empty( $is_external_username ) ) {
-
 			$data = $this->get_user_info_without_token( $external_username );
 
 			if ( is_wp_error( $data ) ) {
@@ -591,11 +569,9 @@ class Wpzoom_Instagram_Widget_API {
 		}
 
 		return $data;
-
 	}
 
 	function convert_user_info_to_old_structure( $user_info ) {
-
 		$converted = new stdClass();
 
 		$user_info_from_settings = get_option( 'wpzoom-instagram-widget-settings', wpzoom_instagram_get_default_settings() );
@@ -631,12 +607,10 @@ class Wpzoom_Instagram_Widget_API {
 		);
 
 		return $converted;
-
 	}
 
 
 	function get_user_info_without_token( $user ) {
-
 		$response = $this->get_response_without_token( $user );
 
 		if ( is_wp_error( $response ) ) {
@@ -675,7 +649,6 @@ class Wpzoom_Instagram_Widget_API {
 		);
 
 		return $converted;
-
 	}
 
 	public function is_configured() {
@@ -697,7 +670,6 @@ class Wpzoom_Instagram_Widget_API {
 
 		if ( empty( $this->username ) ) {
 			$condition = $this->is_access_token_valid( $this->access_token, $this->request_type );
-
 		} else {
 			$condition = true;
 		}
@@ -717,7 +689,6 @@ class Wpzoom_Instagram_Widget_API {
 	 * Check if given access token is valid for Instagram Api.
 	 */
 	public static function is_access_token_valid( $access_token, $request_type = '' ) {
-
 		if ( empty( $access_token ) ) {
 			return false;
 		}

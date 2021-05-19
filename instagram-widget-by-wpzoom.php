@@ -6,7 +6,7 @@
  * Version: 1.7.6
  * Author: WPZOOM
  * Author URI: https://www.wpzoom.com/
- * Text Domain: wpzoom-instagram-widget
+ * Text Domain: instagram-widget-by-wpzoom
  * Domain Path: /languages
  * License: GPLv2 or later
  */
@@ -37,7 +37,6 @@ function zoom_instagram_widget_register() {
 add_action( 'admin_notices', 'wpzoom_instagram_admin_notice' );
 
 function wpzoom_instagram_admin_notice() {
-
 	if ( ! current_user_can( 'manage_options' ) ) {
 		return;
 	}
@@ -60,9 +59,9 @@ function wpzoom_instagram_admin_notice() {
 			)
 		);
 
-		$configure_message  = '<strong>' . __( 'Please configure Instagram Widget', 'wpzoom-instagram-widget', 'instagram-widget-by-wpzoom' ) . '</strong><br/><br/>';
-		$configure_message .= sprintf( __( 'If you have just installed or updated this plugin, please go to the %1$s and %2$s it with your Instagram account.', 'wpzoom-instagram-widget', 'instagram-widget-by-wpzoom' ), '<a href="options-general.php?page=wpzoom-instagram-widget">' . __( 'Settings page', 'wpzoom-instagram-widget', 'instagram-widget-by-wpzoom' ) . '</a>', '<strong>' . __( 'connect', 'wpzoom-instagram-widget', 'instagram-widget-by-wpzoom' ) . '</strong>' ) . '&nbsp;';
-		$configure_message .= __( 'You can ignore this message if you have already configured it.', 'wpzoom-instagram-widget', 'instagram-widget-by-wpzoom' );
+		$configure_message  = '<strong>' . __( 'Please configure Instagram Widget', 'instagram-widget-by-wpzoom' ) . '</strong><br/><br/>';
+		$configure_message .= sprintf( __( 'If you have just installed or updated this plugin, please go to the %1$s and %2$s it with your Instagram account.', 'instagram-widget-by-wpzoom' ), '<a href="options-general.php?page=wpzoom-instagram-widget">' . __( 'Settings page', 'instagram-widget-by-wpzoom' ) . '</a>', '<strong>' . __( 'connect', 'instagram-widget-by-wpzoom' ) . '</strong>' ) . '&nbsp;';
+		$configure_message .= __( 'You can ignore this message if you have already configured it.', 'instagram-widget-by-wpzoom' );
 		$configure_message .= '<a style="text-decoration: none" class="notice-dismiss" href="' . $hide_notices_url . '"></a>';
 
 		echo '<div class="notice-warning notice" style="position:relative"><p>';
@@ -102,7 +101,6 @@ function wpzoom_instagram_get_default_settings() {
 add_action(
 	'init',
 	function () {
-
 		$option_name = 'wpzoom-instagram-transition-between-4_7-4_8-versions';
 		if ( empty( get_option( $option_name ) ) ) {
 			update_option( $option_name, true );

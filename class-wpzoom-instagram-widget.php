@@ -20,16 +20,16 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 	public function __construct() {
 		parent::__construct(
 			'wpzoom_instagram_widget',
-			esc_html__( 'Instagram Widget by WPZOOM', 'wpzoom-instagram-widget', 'instagram-widget-by-wpzoom' ),
+			esc_html__( 'Instagram Widget by WPZOOM', 'instagram-widget-by-wpzoom' ),
 			array(
 				'classname'   => 'zoom-instagram-widget',
-				'description' => __( 'Displays a user\'s Instagram timeline.', 'wpzoom-instagram-widget', 'instagram-widget-by-wpzoom' ),
+				'description' => __( 'Displays a user\'s Instagram timeline.', 'instagram-widget-by-wpzoom' ),
 			)
 		);
 
 		$this->defaults = array(
-			'title'                         => esc_html__( 'Instagram', 'wpzoom-instagram-widget', 'instagram-widget-by-wpzoom' ),
-			'button_text'                   => esc_html__( 'View on Instagram', 'wpzoom-instagram-widget', 'instagram-widget-by-wpzoom' ),
+			'title'                         => esc_html__( 'Instagram', 'instagram-widget-by-wpzoom' ),
+			'button_text'                   => esc_html__( 'View on Instagram', 'instagram-widget-by-wpzoom' ),
 			'image-limit'                   => 9,
 			'show-view-on-instagram-button' => true,
 			'show-counts-on-hover'          => false,
@@ -56,7 +56,6 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 		add_action( 'siteorigin_panel_enqueue_admin_scripts', array( $this, 'styles' ) );
 		add_action( 'siteorigin_panel_enqueue_admin_scripts', array( $this, 'register_scripts' ) );
 		add_action( 'siteorigin_panel_enqueue_admin_scripts', array( $this, 'enqueue_scripts' ) );
-
 	}
 
 	/**
@@ -125,7 +124,6 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 	 * @param array $instance Saved values from database.
 	 */
 	public function widget( $args, $instance ) {
-
 		$this->enqueue_scripts();
 
 		$instance = wp_parse_args( (array) $instance, $this->defaults );
@@ -142,7 +140,6 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 		if ( ! is_array( $items ) ) {
 			$this->display_errors( $errors );
 		} else {
-
 			if ( ! empty( $instance['show-user-info'] ) ) {
 				$user_info = $this->api->get_user_info( $instance['username'] );
 
@@ -171,8 +168,8 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 		if ( current_user_can( 'edit_theme_options' ) ) {
 			?>
 			<p>
-				<?php _e( 'Instagram Widget misconfigured or your Access Token <strong>expired</strong>. Please check', 'wpzoom-instagram-widget', 'instagram-widget-by-wpzoom' ); ?>
-				  <strong><a href="<?php echo admin_url( 'options-general.php?page=wpzoom-instagram-widget' ); ?>" target="_blank"><?php _e( 'Instagram Settings Page', 'wpzoom-instagram-widget', 'instagram-widget-by-wpzoom' ); ?></a></strong> <?php _e( 'and make sure the plugin is properly configured', 'wpzoom-instagram-widget', 'instagram-widget-by-wpzoom' ); ?>
+				<?php _e( 'Instagram Widget misconfigured or your Access Token <strong>expired</strong>. Please check', 'instagram-widget-by-wpzoom' ); ?>
+				  <strong><a href="<?php echo admin_url( 'options-general.php?page=wpzoom-instagram-widget' ); ?>" target="_blank"><?php _e( 'Instagram Settings Page', 'instagram-widget-by-wpzoom' ); ?></a></strong> <?php _e( 'and make sure the plugin is properly configured', 'instagram-widget-by-wpzoom' ); ?>
 
 			</p>
 
@@ -205,19 +202,19 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 					<div class="zoom-instagram-widget-user-info-names-wrapper">
 						<?php if ( ! empty( $user_info->data->full_name ) ) : ?>
 							<div class="zoom-instagram-widget-user-info-fullname">
-								<?php esc_html_e( $user_info->data->full_name, 'wpzoom-instagram-widget', 'instagram-widget-by-wpzoom' ); ?>
+								<?php esc_html_e( $user_info->data->full_name, 'instagram-widget-by-wpzoom' ); ?>
 							</div>
 						<?php endif; ?>
 						<?php if ( ! empty( $user_info->data->username ) ) : ?>
 							<div class="zoom-instagram-widget-user-info-username">
-								<?php esc_html_e( '@' . $user_info->data->username, 'wpzoom-instagram-widget', 'instagram-widget-by-wpzoom' ); ?>
+								<?php esc_html_e( '@' . $user_info->data->username, 'instagram-widget-by-wpzoom' ); ?>
 							</div>
 						<?php endif; ?>
 					</div>
 					<div>
 						<a class="zoom-instagram-widget-user-info-follow-button" target="_blank" rel="noopener nofollow"
 						   href="<?php printf( 'https://instagram.com/%s?ref=badge', esc_attr( $user_info->data->username ) ); ?>">
-							<?php _e( 'Follow', 'wpzoom-instagram-widget', 'instagram-widget-by-wpzoom' ); ?>
+							<?php _e( 'Follow', 'instagram-widget-by-wpzoom' ); ?>
 						</a>
 					</div>
 				</div>
@@ -229,7 +226,7 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 								<?php echo $this->format_number( $user_info->data->counts->media ); ?>
 							</div>
 							<div class="zoom-instagram-widget-user-info-counts-subhead">
-								<?php _e( 'posts', 'wpzoom-instagram-widget', 'instagram-widget-by-wpzoom' ); ?>
+								<?php _e( 'posts', 'instagram-widget-by-wpzoom' ); ?>
 							</div>
 						</div>
 					<?php endif; ?>
@@ -240,7 +237,7 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 								<?php echo $this->format_number( $user_info->data->counts->followed_by ); ?>
 							</div>
 							<div class="zoom-instagram-widget-user-info-counts-subhead">
-								<?php _e( 'followers', 'wpzoom-instagram-widget', 'instagram-widget-by-wpzoom' ); ?>
+								<?php _e( 'followers', 'instagram-widget-by-wpzoom' ); ?>
 							</div>
 						</div>
 					<?php endif; ?>
@@ -251,7 +248,7 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 								<?php echo $this->format_number( $user_info->data->counts->follows ); ?>
 							</div>
 							<div class="zoom-instagram-widget-user-info-counts-subhead">
-								<?php _e( 'following', 'wpzoom-instagram-widget', 'instagram-widget-by-wpzoom' ); ?>
+								<?php _e( 'following', 'instagram-widget-by-wpzoom' ); ?>
 							</div>
 						</div>
 					<?php endif; ?>
@@ -261,13 +258,11 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 		</div>
 		<?php
 		if ( ! empty( $instance['show-user-bio'] ) ) {
-
 			if ( ! empty( $user_info->data->bio ) ) :
 				?>
 				<div class="zoom-instagram-widget-user-info-bio"><?php echo nl2br( $user_info->data->bio ); ?></div>
 				<?php
 			endif;
-
 		}
 		?>
 
@@ -275,7 +270,6 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 	}
 
 	public function format_number( $num ) {
-
 		if ( $num < 10000 ) {
 			return number_format( $num );
 		}
@@ -322,7 +316,6 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 				$comments      = $item['comments_count'];
 
 				if ( ! empty( $media_id ) && empty( $src ) ) {
-
 					$inline_attrs  = 'data-media-id="' . esc_attr( $media_id ) . '"';
 					$inline_attrs .= 'data-nonce="' . wp_create_nonce( WPZOOM_Instagram_Image_Uploader::get_nonce_action( $media_id ) ) . '"';
 
@@ -334,7 +327,6 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 					! empty( $src ) &&
 					! file_exists( $this->convert_url_to_path( $src ) )
 				) {
-
 					$inline_attrs  = 'data-media-id="' . esc_attr( $media_id ) . '"';
 					$inline_attrs .= 'data-nonce="' . wp_create_nonce( WPZOOM_Instagram_Image_Uploader::get_nonce_action( $media_id ) ) . '"';
 					$inline_attrs .= 'data-regenerate-thumbnails="1"';
@@ -480,7 +472,7 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 			<p style="color: #d54e21">
 				<?php
 				printf(
-					__( 'You need to configure <a href="%1$s">plugin settings</a> before using this widget.', 'wpzoom-instagram-widget', 'instagram-widget-by-wpzoom' ),
+					__( 'You need to configure <a href="%1$s">plugin settings</a> before using this widget.', 'instagram-widget-by-wpzoom' ),
 					menu_page_url( 'wpzoom-instagram-widget', false )
 				);
 				?>
@@ -489,7 +481,7 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 		<?php endif; ?>
 
 		<p>
-			<label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php esc_html_e( 'Title:', 'wpzoom-instagram-widget', 'instagram-widget-by-wpzoom' ); ?></label>
+			<label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php esc_html_e( 'Title:', 'instagram-widget-by-wpzoom' ); ?></label>
 			<input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>"
 				   name="<?php echo $this->get_field_name( 'title' ); ?>" type="text"
 				   value="<?php echo esc_attr( $instance['title'] ); ?>"/>
@@ -497,21 +489,21 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 
 
 		<p>
-			<label for="<?php echo $this->get_field_id( 'image-limit' ); ?>"><?php esc_html_e( 'Number of Images Shown:', 'wpzoom-instagram-widget', 'instagram-widget-by-wpzoom' ); ?></label>
+			<label for="<?php echo $this->get_field_id( 'image-limit' ); ?>"><?php esc_html_e( 'Number of Images Shown:', 'instagram-widget-by-wpzoom' ); ?></label>
 			<input class="widefat" id="<?php echo $this->get_field_id( 'image-limit' ); ?>"
 				   name="<?php echo $this->get_field_name( 'image-limit' ); ?>" type="number" min="1" max="30"
 				   value="<?php echo esc_attr( $instance['image-limit'] ); ?>"/>
 		</p>
 
 		<p>
-			<label for="<?php echo $this->get_field_id( 'images-per-row' ); ?>"><?php esc_html_e( 'Desired number of Images per row:', 'wpzoom-instagram-widget', 'instagram-widget-by-wpzoom' ); ?></label>
+			<label for="<?php echo $this->get_field_id( 'images-per-row' ); ?>"><?php esc_html_e( 'Desired number of Images per row:', 'instagram-widget-by-wpzoom' ); ?></label>
 			<input class="widefat" id="<?php echo $this->get_field_id( 'images-per-row' ); ?>"
 				   name="<?php echo $this->get_field_name( 'images-per-row' ); ?>" type="number" min="1" max="20"
 				   value="<?php echo esc_attr( $instance['images-per-row'] ); ?>"/>
 		</p>
 
 		<p>
-			<label for="<?php echo $this->get_field_id( 'image-width' ); ?>"><?php esc_html_e( 'Desired Image width in pixels:', 'wpzoom-instagram-widget', 'instagram-widget-by-wpzoom' ); ?>
+			<label for="<?php echo $this->get_field_id( 'image-width' ); ?>"><?php esc_html_e( 'Desired Image width in pixels:', 'instagram-widget-by-wpzoom' ); ?>
 				<small>(Just integer)</small>
 			</label>
 			<input class="widefat" id="<?php echo $this->get_field_id( 'image-width' ); ?>"
@@ -520,27 +512,27 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 		</p>
 
 		<p>
-			<label for="<?php echo $this->get_field_id( 'image-resolution' ); ?>"><?php esc_html_e( 'Force image resolution:', 'wpzoom-instagram-widget', 'instagram-widget-by-wpzoom' ); ?></label>
+			<label for="<?php echo $this->get_field_id( 'image-resolution' ); ?>"><?php esc_html_e( 'Force image resolution:', 'instagram-widget-by-wpzoom' ); ?></label>
 			<select class="widefat" id="<?php echo $this->get_field_id( 'image-resolution' ); ?>"
 					name="<?php echo $this->get_field_name( 'image-resolution' ); ?>">
 				<option value="default_algorithm" <?php selected( $instance['image-resolution'], 'default_algorithm' ); ?>>
-					<?php _e( 'By Default Algorithm', 'wpzoom-instagram-widget', 'instagram-widget-by-wpzoom' ); ?>
+					<?php _e( 'By Default Algorithm', 'instagram-widget-by-wpzoom' ); ?>
 				</option>
 				<option value="thumbnail" <?php selected( $instance['image-resolution'], 'thumbnail' ); ?>>
-					<?php _e( 'Thumbnail ( 150x150px )', 'wpzoom-instagram-widget', 'instagram-widget-by-wpzoom' ); ?>
+					<?php _e( 'Thumbnail ( 150x150px )', 'instagram-widget-by-wpzoom' ); ?>
 				</option>
 				<option value="low_resolution" <?php selected( $instance['image-resolution'], 'low_resolution' ); ?>>
-					<?php _e( 'Low Resolution ( 320x320px )', 'wpzoom-instagram-widget', 'instagram-widget-by-wpzoom' ); ?>
+					<?php _e( 'Low Resolution ( 320x320px )', 'instagram-widget-by-wpzoom' ); ?>
 
 				</option>
 				<option value="standard_resolution" <?php selected( $instance['image-resolution'], 'standard_resolution' ); ?>>
-					<?php _e( 'Standard Resolution ( 640x640px )', 'wpzoom-instagram-widget', 'instagram-widget-by-wpzoom' ); ?>
+					<?php _e( 'Standard Resolution ( 640x640px )', 'instagram-widget-by-wpzoom' ); ?>
 				</option>
 			</select>
 		</p>
 
 		<p>
-			<label for="<?php echo $this->get_field_id( 'image-spacing' ); ?>"><?php esc_html_e( 'Image spacing in pixels:', 'wpzoom-instagram-widget', 'instagram-widget-by-wpzoom' ); ?>
+			<label for="<?php echo $this->get_field_id( 'image-spacing' ); ?>"><?php esc_html_e( 'Image spacing in pixels:', 'instagram-widget-by-wpzoom' ); ?>
 				<small>(Just integer)</small>
 			</label>
 			<input class="widefat" id="<?php echo $this->get_field_id( 'image-spacing' ); ?>"
@@ -551,13 +543,13 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 		<p class="description">
 			<?php
 			echo wp_kses_post(
-				__( 'Fields above do not influence directly widget appearance. Final number of images per row and image width is calculated depending on browser resolution. This ensures your photos look beautiful on all devices.', 'wpzoom-instagram-widget', 'instagram-widget-by-wpzoom' )
+				__( 'Fields above do not influence directly widget appearance. Final number of images per row and image width is calculated depending on browser resolution. This ensures your photos look beautiful on all devices.', 'instagram-widget-by-wpzoom' )
 			);
 			?>
 		</p>
 
 		<p>
-			<label for="<?php echo $this->get_field_id( 'username' ); ?>"><strong><?php esc_html_e( 'Instagram @username:', 'wpzoom-instagram-widget', 'instagram-widget-by-wpzoom' ); ?></strong></label>
+			<label for="<?php echo $this->get_field_id( 'username' ); ?>"><strong><?php esc_html_e( 'Instagram @username:', 'instagram-widget-by-wpzoom' ); ?></strong></label>
 			<input class="widefat" id="<?php echo $this->get_field_id( 'username' ); ?>"
 				   name="<?php echo $this->get_field_name( 'username' ); ?>" type="text"
 				   value="<?php echo esc_attr( $instance['username'] ); ?>"/>
@@ -567,7 +559,7 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 
 			<?php
 			printf(
-				__( 'If you have already connected your Instagram account in the <a href="%1$s">plugin settings</a>, leave this field empty. You can use this option if you want to display the feed of a different Instagram account.', 'wpzoom-instagram-widget', 'instagram-widget-by-wpzoom' ),
+				__( 'If you have already connected your Instagram account in the <a href="%1$s">plugin settings</a>, leave this field empty. You can use this option if you want to display the feed of a different Instagram account.', 'instagram-widget-by-wpzoom' ),
 				menu_page_url( 'wpzoom-instagram-widget', false )
 			);
 			?>
@@ -578,50 +570,50 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 			<input class="checkbox" type="checkbox" <?php checked( $instance['show-user-info'] ); ?>
 				   id="<?php echo $this->get_field_id( 'show-user-info' ); ?>"
 				   name="<?php echo $this->get_field_name( 'show-user-info' ); ?>"/>
-			<label for="<?php echo $this->get_field_id( 'show-user-info' ); ?>"><?php _e( ' Display <strong>User Details</strong>', 'wpzoom-instagram-widget', 'instagram-widget-by-wpzoom' ); ?></label>
+			<label for="<?php echo $this->get_field_id( 'show-user-info' ); ?>"><?php _e( ' Display <strong>User Details</strong>', 'instagram-widget-by-wpzoom' ); ?></label>
 		</p>
 
 		<p>
 			<input class="checkbox" type="checkbox" <?php checked( $instance['show-user-bio'] ); ?>
 				   id="<?php echo $this->get_field_id( 'show-user-bio' ); ?>"
 				   name="<?php echo $this->get_field_name( 'show-user-bio' ); ?>"/>
-			<label for="<?php echo $this->get_field_id( 'show-user-bio' ); ?>"><?php _e( ' Display <strong>Bio in User Details</strong>', 'wpzoom-instagram-widget', 'instagram-widget-by-wpzoom' ); ?></label>
+			<label for="<?php echo $this->get_field_id( 'show-user-bio' ); ?>"><?php _e( ' Display <strong>Bio in User Details</strong>', 'instagram-widget-by-wpzoom' ); ?></label>
 		</p>
 
 		<p>
 			<input class="checkbox" type="checkbox" <?php checked( $instance['show-view-on-instagram-button'] ); ?>
 				   id="<?php echo $this->get_field_id( 'show-view-on-instagram-button' ); ?>"
 				   name="<?php echo $this->get_field_name( 'show-view-on-instagram-button' ); ?>"/>
-			<label for="<?php echo $this->get_field_id( 'show-view-on-instagram-button' ); ?>"><?php _e( ' Display <strong>View on Instagram</strong> button', 'wpzoom-instagram-widget', 'instagram-widget-by-wpzoom' ); ?></label>
+			<label for="<?php echo $this->get_field_id( 'show-view-on-instagram-button' ); ?>"><?php _e( ' Display <strong>View on Instagram</strong> button', 'instagram-widget-by-wpzoom' ); ?></label>
 		</p>
 
 		<p>
 			<input class="checkbox" type="checkbox" <?php checked( $instance['show-counts-on-hover'] ); ?>
 				   id="<?php echo $this->get_field_id( 'show-counts-on-hover' ); ?>"
 				   name="<?php echo $this->get_field_name( 'show-counts-on-hover' ); ?>"/>
-			<label for="<?php echo $this->get_field_id( 'show-counts-on-hover' ); ?>"><?php _e( ' Show <strong>overlay with Instagram icon</strong> on hover', 'wpzoom-instagram-widget', 'instagram-widget-by-wpzoom' ); ?></label>
+			<label for="<?php echo $this->get_field_id( 'show-counts-on-hover' ); ?>"><?php _e( ' Show <strong>overlay with Instagram icon</strong> on hover', 'instagram-widget-by-wpzoom' ); ?></label>
 		</p>
 
 		<p>
 			<input class="checkbox" type="checkbox" <?php checked( $instance['lazy-load-images'] ); ?>
 				   id="<?php echo $this->get_field_id( 'lazy-load-images' ); ?>"
 				   name="<?php echo $this->get_field_name( 'lazy-load-images' ); ?>"/>
-			<label for="<?php echo $this->get_field_id( 'lazy-load-images' ); ?>"><?php _e( 'Lazy Load <strong>images</strong>', 'wpzoom-instagram-widget', 'instagram-widget-by-wpzoom' ); ?></label>
+			<label for="<?php echo $this->get_field_id( 'lazy-load-images' ); ?>"><?php _e( 'Lazy Load <strong>images</strong>', 'instagram-widget-by-wpzoom' ); ?></label>
 		</p>
 		<p>
 			<input class="checkbox" type="checkbox" <?php checked( $instance['disable-video-thumbs'] ); ?>
 				   id="<?php echo $this->get_field_id( 'disable-video-thumbs' ); ?>"
 				   name="<?php echo $this->get_field_name( 'disable-video-thumbs' ); ?>"/>
-			<label for="<?php echo $this->get_field_id( 'disable-video-thumbs' ); ?>"><?php _e( 'Hide video <strong>thumbnails</strong>', 'wpzoom-instagram-widget', 'instagram-widget-by-wpzoom' ); ?></label>
+			<label for="<?php echo $this->get_field_id( 'disable-video-thumbs' ); ?>"><?php _e( 'Hide video <strong>thumbnails</strong>', 'instagram-widget-by-wpzoom' ); ?></label>
 		</p>
 		<p>
 			<input class="checkbox" type="checkbox" <?php checked( $instance['display-media-type-icons'] ); ?>
 				   id="<?php echo $this->get_field_id( 'display-media-type-icons' ); ?>"
 				   name="<?php echo $this->get_field_name( 'display-media-type-icons' ); ?>"/>
-			<label for="<?php echo $this->get_field_id( 'display-media-type-icons' ); ?>"><?php _e( 'Show <strong>media type icons</strong>', 'wpzoom-instagram-widget', 'instagram-widget-by-wpzoom' ); ?></label>
+			<label for="<?php echo $this->get_field_id( 'display-media-type-icons' ); ?>"><?php _e( 'Show <strong>media type icons</strong>', 'instagram-widget-by-wpzoom' ); ?></label>
 		</p>
 		<p>
-			<label for="<?php echo $this->get_field_id( 'button_text' ); ?>"><?php esc_html_e( 'Button Text:', 'wpzoom-instagram-widget', 'instagram-widget-by-wpzoom' ); ?></label>
+			<label for="<?php echo $this->get_field_id( 'button_text' ); ?>"><?php esc_html_e( 'Button Text:', 'instagram-widget-by-wpzoom' ); ?></label>
 			<input class="widefat" id="<?php echo $this->get_field_id( 'button_text' ); ?>"
 				   name="<?php echo $this->get_field_name( 'button_text' ); ?>" type="text"
 				   value="<?php echo esc_attr( $instance['button_text'] ); ?>"/>
