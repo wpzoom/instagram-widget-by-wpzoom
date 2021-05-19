@@ -3,7 +3,7 @@
  * Plugin Name: WPZOOM Instagram Widget
  * Plugin URI: https://www.wpzoom.com/plugins/instagram-widget/
  * Description: Simple and lightweight widget for WordPress to display your Instagram feed
- * Version: 1.7.4
+ * Version: 1.7.6
  * Author: WPZOOM
  * Author URI: https://www.wpzoom.com/
  * Text Domain: wpzoom-instagram-widget
@@ -19,7 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 if ( ! defined( 'WPZOOM_INSTAGRAM_VERSION' ) ) {
-	define( 'WPZOOM_INSTAGRAM_VERSION', '1.7.5' );
+	define( 'WPZOOM_INSTAGRAM_VERSION', '1.7.6' );
 }
 
 require_once plugin_dir_path( __FILE__ ) . 'class-wpzoom-instagram-image-uploader.php';
@@ -60,9 +60,9 @@ function wpzoom_instagram_admin_notice() {
 			)
 		);
 
-		$configure_message  = '<strong>' . __( 'Please configure Instagram Widget', 'wpzoom-instagram-widget' ) . '</strong><br/><br/>';
-		$configure_message .= sprintf( __( 'If you have just installed or updated this plugin, please go to the %1$s and %2$s it with your Instagram account.', 'wpzoom-instagram-widget' ), '<a href="options-general.php?page=wpzoom-instagram-widget">' . __( 'Settings page', 'wpzoom-instagram-widget' ) . '</a>', '<strong>' . __( 'connect', 'wpzoom-instagram-widget' ) . '</strong>' ) . '&nbsp;';
-		$configure_message .= __( 'You can ignore this message if you have already configured it.', 'wpzoom-instagram-widget' );
+		$configure_message  = '<strong>' . __( 'Please configure Instagram Widget', 'wpzoom-instagram-widget', 'instagram-widget-by-wpzoom' ) . '</strong><br/><br/>';
+		$configure_message .= sprintf( __( 'If you have just installed or updated this plugin, please go to the %1$s and %2$s it with your Instagram account.', 'wpzoom-instagram-widget', 'instagram-widget-by-wpzoom' ), '<a href="options-general.php?page=wpzoom-instagram-widget">' . __( 'Settings page', 'wpzoom-instagram-widget', 'instagram-widget-by-wpzoom' ) . '</a>', '<strong>' . __( 'connect', 'wpzoom-instagram-widget', 'instagram-widget-by-wpzoom' ) . '</strong>' ) . '&nbsp;';
+		$configure_message .= __( 'You can ignore this message if you have already configured it.', 'wpzoom-instagram-widget', 'instagram-widget-by-wpzoom' );
 		$configure_message .= '<a style="text-decoration: none" class="notice-dismiss" href="' . $hide_notices_url . '"></a>';
 
 		echo '<div class="notice-warning notice" style="position:relative"><p>';

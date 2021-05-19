@@ -50,7 +50,7 @@ module.exports = function ( grunt ) {
 
 		replace: {
 			plugin_main: {
-				src: [ 'style.css', 'readme.txt' ],
+				src: [ 'style.css', 'readme.txt', 'instagram-widget-by-wpzoom.php' ],
 				overwrite: true,
 				replacements: [
 					{

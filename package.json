@@ -1,11 +1,11 @@
 {
   "name": "instagram-widget-by-wpzoom",
-  "version": "1.7.5",
+  "version": "1.7.6",
   "description": "Simple and lightweight widget for WordPress to display your Instagram feed",
   "main": "index.js",
   "_project": {
     "name": "WPZOOM Instagram Widget",
-    "textdomain": "wpzoom-instagram-widget",
+    "textdomain": "instagram-widget-by-wpzoom",
     "slug": "instagram-widget-by-wpzoom",
     "package": "WPZOOM Instagram Widget",
     "author_site": "https://wpzoom.com/"

@@ -259,47 +259,47 @@ class Wpzoom_Instagram_Widget_API {
 		return array(
 			'user-info-without-token'                    => array(
 				'code'    => 'user-info-without-token',
-				'message' => __( 'Empty json user info from Public Feed.', 'wpzoom-instagram-widget' ),
+				'message' => __( 'Empty json user info from Public Feed.', 'wpzoom-instagram-widget', 'instagram-widget-by-wpzoom' ),
 			),
 			'response-data-without-token-from-json-invalid-response' => array(
 				'code'    => 'response-data-without-token-from-json-invalid-response',
-				'message' => __( 'The request from the Public Feed failed. Invalid server response from Public JSON API url.', 'wpzoom-instagram-widget' ),
+				'message' => __( 'The request from the Public Feed failed. Invalid server response from Public JSON API url.', 'wpzoom-instagram-widget', 'instagram-widget-by-wpzoom' ),
 			),
 			'response-data-without-token-from-json-invalid-json-format' => array(
 				'code'    => 'response-data-without-token-from-json-invalid-json-format',
-				'message' => __( 'The request from the Public Feed failed. Invalid JSON format from Public JSON API url.', 'wpzoom-instagram-widget' ),
+				'message' => __( 'The request from the Public Feed failed. Invalid JSON format from Public JSON API url.', 'wpzoom-instagram-widget', 'instagram-widget-by-wpzoom' ),
 			),
 			'response-data-without-token-from-html-invalid-response' => array(
 				'code'    => 'response-data-without-token-from-html-invalid-response',
-				'message' => __( 'The request from the Public Feed failed. Check username.', 'wpzoom-instagram-widget' ),
+				'message' => __( 'The request from the Public Feed failed. Check username.', 'wpzoom-instagram-widget', 'instagram-widget-by-wpzoom' ),
 			),
 			'response-data-without-token-from-html-invalid-json-format' => array(
 				'code'    => 'response-data-without-token-from-html-invalid-json-format',
-				'message' => __( 'The request from the Public Feed failed. Invalid JSON format from parsed html body.', 'wpzoom-instagram-widget' ),
+				'message' => __( 'The request from the Public Feed failed. Invalid JSON format from parsed html body.', 'wpzoom-instagram-widget', 'instagram-widget-by-wpzoom' ),
 			),
 			'items-without-token-invalid-response'       => array(
 				'code'    => 'items-without-token-invalid-response',
-				'message' => __( 'Get items from the Public Feed failed. Invalid response.', 'wpzoom-instagram-widget' ),
+				'message' => __( 'Get items from the Public Feed failed. Invalid response.', 'wpzoom-instagram-widget', 'instagram-widget-by-wpzoom' ),
 			),
 			'items-without-token-invalid-json-structure' => array(
 				'code'    => 'items-without-token-invalid-json-structure',
-				'message' => __( 'Get items from the Public Feed failed. Malformed data structure.', 'wpzoom-instagram-widget' ),
+				'message' => __( 'Get items from the Public Feed failed. Malformed data structure.', 'wpzoom-instagram-widget', 'instagram-widget-by-wpzoom' ),
 			),
 			'items-with-token-invalid-response'          => array(
 				'code'    => 'items-with-token-invalid-response',
-				'message' => __( 'Geting items from the Instagram API Feed failed. Invalid response.', 'wpzoom-instagram-widget' ),
+				'message' => __( 'Geting items from the Instagram API Feed failed. Invalid response.', 'wpzoom-instagram-widget', 'instagram-widget-by-wpzoom' ),
 			),
 			'items-with-token-invalid-data-structure'    => array(
 				'code'    => 'items-with-token-invalid-data-structure',
-				'message' => __( 'Get items from the Instagram API Feed failed. Malformed data structure.', 'wpzoom-instagram-widget' ),
+				'message' => __( 'Get items from the Instagram API Feed failed. Malformed data structure.', 'wpzoom-instagram-widget', 'instagram-widget-by-wpzoom' ),
 			),
 			'user-with-token-invalid-response'           => array(
 				'code'    => 'user-with-token-invalid-response',
-				'message' => __( 'Get user data from the Instagram API Feed failed. Invalid response.', 'wpzoom-instagram-widget' ),
+				'message' => __( 'Get user data from the Instagram API Feed failed. Invalid response.', 'wpzoom-instagram-widget', 'instagram-widget-by-wpzoom' ),
 			),
 			'user-with-token-invalid-data-structure'     => array(
 				'code'    => 'user-with-token-invalid-data-structure',
-				'message' => __( 'Get user data from the Instagram API Feed failed. Malformed data structure.', 'wpzoom-instagram-widget' ),
+				'message' => __( 'Get user data from the Instagram API Feed failed. Malformed data structure.', 'wpzoom-instagram-widget', 'instagram-widget-by-wpzoom' ),
 			),
 
 		);
@@ -433,7 +433,7 @@ class Wpzoom_Instagram_Widget_API {
 			$result = $this->get_response_without_token_from_json( $user );
 
 			if ( is_wp_error( $result ) ) {
-				return new WP_Error( 'invalid_response', __( 'Invalid response from Instagram', 'wpzoom-instagram-widget' ) );
+				return new WP_Error( 'invalid_response', __( 'Invalid response from Instagram', 'wpzoom-instagram-widget', 'instagram-widget-by-wpzoom' ) );
 			} else {
 				return $result;
 			}
@@ -467,7 +467,7 @@ class Wpzoom_Instagram_Widget_API {
 			$result = $this->get_response_without_token_from_json( $user );
 
 			if ( is_wp_error( $result ) ) {
-				return new WP_Error( 'empty-json', __( 'Empty json decoded data.', 'wpzoom-instagram-widget' ) );
+				return new WP_Error( 'empty-json', __( 'Empty json decoded data.', 'wpzoom-instagram-widget', 'instagram-widget-by-wpzoom' ) );
 			}
 		}
 

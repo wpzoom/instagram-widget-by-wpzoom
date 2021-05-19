@@ -67,6 +67,9 @@ Make sure to connect your Instagram account with the plugin. You can do that in 
 
 == Changelog ==
 
+= 1.7.6 =
+* Change textdomain to match with plugin slug
+
 = 1.7.5 =
 * Fixed strings text domain
 * Fixed dismiss url for admin notice

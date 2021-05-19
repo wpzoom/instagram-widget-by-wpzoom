@@ -127,7 +127,7 @@ class WPZOOM_Instagram_Image_Uploader {
 		$sliced = array_map( 'sanitize_text_field', $sliced );
 
 		if ( ! wp_verify_nonce( $sliced['nonce'], self::get_nonce_action( $sliced['media-id'] ) ) ) {
-			$error = new WP_Error( '001', __( 'Invalid nonce.', 'wpzoom-instagram-widget' ), __( 'Invalid nonce provided for this action', 'wpzoom-instagram-widget' ) );
+			$error = new WP_Error( '001', __( 'Invalid nonce.', 'wpzoom-instagram-widget', 'instagram-widget-by-wpzoom' ), __( 'Invalid nonce provided for this action', 'wpzoom-instagram-widget', 'instagram-widget-by-wpzoom' ) );
 
 			wp_send_json_error( $error, 500 );
 		}
@@ -135,7 +135,7 @@ class WPZOOM_Instagram_Image_Uploader {
 		$media_url = self::get_media_url_by_id( $sliced['media-id'] );
 
 		if ( empty( $media_url ) ) {
-			$error = new WP_Error( '002', __( 'Invalid media id.', 'wpzoom-instagram-widget' ), __( 'Could not retrieve image url with provided media id', 'wpzoom-instagram-widget' ) );
+			$error = new WP_Error( '002', __( 'Invalid media id.', 'wpzoom-instagram-widget', 'instagram-widget-by-wpzoom' ), __( 'Could not retrieve image url with provided media id', 'wpzoom-instagram-widget', 'instagram-widget-by-wpzoom' ) );
 
 			wp_send_json_error( $error, 500 );
 		}
