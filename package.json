@@ -1,0 +1,40 @@
+{
+  "name": "instagram-widget-by-wpzoom",
+  "version": "1.7.5",
+  "description": "Simple and lightweight widget for WordPress to display your Instagram feed",
+  "main": "index.js",
+  "_project": {
+    "name": "WPZOOM Instagram Widget",
+    "textdomain": "wpzoom-instagram-widget",
+    "slug": "instagram-widget-by-wpzoom",
+    "package": "WPZOOM Instagram Widget",
+    "author_site": "https://wpzoom.com/"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wpzoom/instagram-widget.git"
+  },
+  "keywords": [
+    "instagram",
+    "instagram feed",
+    "instagram photos",
+    "instagram widget",
+    "instagram stories",
+    "social network"
+  ],
+  "author": "WPZOOM",
+  "license": "GPL-2.0-or-later",
+  "bugs": {
+    "url": "https://github.com/wpzoom/instagram-widget/issues"
+  },
+  "homepage": "https://github.com/wpzoom/instagram-widget#readme",
+  "devDependencies": {
+    "grunt": "^1.4.0",
+    "grunt-bumpup": "^0.6.3",
+    "grunt-text-replace": "^0.4.0",
+    "grunt-wp-i18n": "^1.0.3"
+  }
+}

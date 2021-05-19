@@ -82,7 +82,7 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 			'zoom-instagram-widget',
 			plugin_dir_url( __FILE__ ) . 'css/instagram-widget.css',
 			array( 'dashicons' ),
-			filemtime( plugin_dir_path( __FILE__ ) . 'css/instagram-widget.css' )
+			WPZOOM_INSTAGRAM_VERSION
 		);
 	}
 
@@ -90,18 +90,20 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 	 * Register widget specific scripts.
 	 */
 	public function register_scripts() {
+		$file_mod_time = filemtime( plugin_dir_path( __FILE__ ) . 'js/jquery.lazy.min.js' );
+		
 		wp_register_script(
 			'zoom-instagram-widget-lazy-load',
 			plugin_dir_url( __FILE__ ) . 'js/jquery.lazy.min.js',
 			array( 'jquery' ),
-			filemtime( plugin_dir_path( __FILE__ ) . 'js/jquery.lazy.min.js' ),
+			strval($file_mod_time),
 			true
 		);
 		wp_register_script(
 			'zoom-instagram-widget',
 			plugin_dir_url( __FILE__ ) . 'js/instagram-widget.js',
 			array( 'jquery', 'underscore', 'wp-util' ),
-			filemtime( plugin_dir_path( __FILE__ ) . 'js/instagram-widget.js' ),
+			WPZOOM_INSTAGRAM_VERSION,
 			true
 		);
 	}
@@ -203,12 +205,12 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 					<div class="zoom-instagram-widget-user-info-names-wrapper">
 						<?php if ( ! empty( $user_info->data->full_name ) ) : ?>
 							<div class="zoom-instagram-widget-user-info-fullname">
-								<?php esc_html_e( $user_info->data->full_name ); ?>
+								<?php esc_html_e( $user_info->data->full_name, 'wpzoom-instagram-widget' ); ?>
 							</div>
 						<?php endif; ?>
 						<?php if ( ! empty( $user_info->data->username ) ) : ?>
 							<div class="zoom-instagram-widget-user-info-username">
-								<?php esc_html_e( '@' . $user_info->data->username ); ?>
+								<?php esc_html_e( '@' . $user_info->data->username, 'wpzoom-instagram-widget' ); ?>
 							</div>
 						<?php endif; ?>
 					</div>

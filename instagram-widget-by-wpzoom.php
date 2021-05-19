@@ -7,6 +7,7 @@
  * Author: WPZOOM
  * Author URI: https://www.wpzoom.com/
  * Text Domain: wpzoom-instagram-widget
+ * Domain Path: /languages
  * License: GPLv2 or later
  */
 
@@ -15,6 +16,10 @@
  */
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
+}
+
+if ( ! defined( 'WPZOOM_INSTAGRAM_VERSION' ) ) {
+	define( 'WPZOOM_INSTAGRAM_VERSION', '1.7.5' );
 }
 
 require_once plugin_dir_path( __FILE__ ) . 'class-wpzoom-instagram-image-uploader.php';
@@ -41,6 +46,11 @@ function wpzoom_instagram_admin_notice() {
 	$user_id = $current_user->ID;
 	/* Check that the user hasn't already clicked to ignore the message */
 	if ( ! get_user_meta( $user_id, 'wpzoom_instagram_admin_notice' ) ) {
+		/**
+		 * Fixed dismiss url
+		 * 
+		 * @since 1.7.5
+		 */
 		$hide_notices_url = html_entity_decode( // to convert &amp;s to normal &, otherwise produces invalid link.
 			add_query_arg(
 				array(
