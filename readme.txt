@@ -67,6 +67,11 @@ Make sure to connect your Instagram account with the plugin. You can do that in 
 
 == Changelog ==
 
+= 1.7.5 =
+* Fixed strings text domain
+* Fixed dismiss url for admin notice
+* Added Text Domain and Domain Path to plugin description
+
 = 1.7.4 =
 * Added the "nofollow" parameter to all links from the widget.
 * Fixing issues with thumbnails that were deleted by third-party plugins.
