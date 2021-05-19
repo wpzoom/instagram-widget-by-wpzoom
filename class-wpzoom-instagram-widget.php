@@ -91,12 +91,12 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 	 */
 	public function register_scripts() {
 		$file_mod_time = filemtime( plugin_dir_path( __FILE__ ) . 'js/jquery.lazy.min.js' );
-		
+
 		wp_register_script(
 			'zoom-instagram-widget-lazy-load',
 			plugin_dir_url( __FILE__ ) . 'js/jquery.lazy.min.js',
 			array( 'jquery' ),
-			strval($file_mod_time),
+			strval( $file_mod_time ),
 			true
 		);
 		wp_register_script(

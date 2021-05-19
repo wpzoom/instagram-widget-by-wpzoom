@@ -48,7 +48,7 @@ function wpzoom_instagram_admin_notice() {
 	if ( ! get_user_meta( $user_id, 'wpzoom_instagram_admin_notice' ) ) {
 		/**
 		 * Fixed dismiss url
-		 * 
+		 *
 		 * @since 1.7.5
 		 */
 		$hide_notices_url = html_entity_decode( // to convert &amp;s to normal &, otherwise produces invalid link.
