@@ -58,16 +58,17 @@ jQuery(function ($) {
             var imageLazyLoading = $list.data('image-lazy-loading');
 
             var containerWidth = $list.width();
+            var itemBorder = $list.find('li:first img').outerWidth(false) - $list.find('li:first img').innerWidth();
 
             var fitPerRow;
             var itemWidth;
 
             if (containerWidth / desiredItemWidth < minItemsPerRow) {
                 fitPerRow = minItemsPerRow;
-                itemWidth = Math.floor((containerWidth - 1 - (minItemsPerRow - 1) * itemSpacing) / minItemsPerRow);
+                itemWidth = Math.floor(((containerWidth - 1 - (minItemsPerRow - 1) * itemSpacing) / minItemsPerRow) - itemBorder);
             } else {
                 fitPerRow = Math.floor((containerWidth - 1) / desiredItemWidth);
-                itemWidth = Math.floor((containerWidth - 1 - (fitPerRow - 1) * itemSpacing) / fitPerRow);
+                itemWidth = Math.floor(((containerWidth - 1 - (fitPerRow - 1) * itemSpacing) / fitPerRow) - itemBorder);
             }
 
             $list.find('li').each(function (i) {
