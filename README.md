@@ -1,6 +1,6 @@
 # [Instagram Widget by WPZOOM](https://www.wpzoom.com/plugins/instagram-widget/) #
 
-![Plugin Version](https://img.shields.io/wordpress/plugin/v/instagram-widget-by-wpzoom.svg?maxAge=2592000) ![Total Downloads](https://img.shields.io/wordpress/plugin/dt/instagram-widget-by-wpzoom.svg?maxAge=2592000) ![Plugin Rating](https://img.shields.io/wordpress/plugin/r/instagram-widget-by-wpzoom.svg?maxAge=2592000) ![WordPress Compatibility](https://img.shields.io/wordpress/v/instagram-widget-by-wpzoom.svg?maxAge=2592000) [![Build Status](https://img.shields.io/travis/wpzoom/instagram-widget/master.svg?maxAge=2592000)](https://travis-ci.org/wpzoom/instagram-widget) [![License](https://img.shields.io/badge/license-GPL--2.0%2B-red.svg)](https://github.com/wpzoom/instagram-widget/blob/master/license.txt)
+![Plugin Version](https://img.shields.io/wordpress/plugin/v/instagram-widget-by-wpzoom.svg?maxAge=2592000) ![Total Downloads](https://img.shields.io/wordpress/plugin/dt/instagram-widget-by-wpzoom.svg?maxAge=2592000) ![Plugin Rating](https://img.shields.io/wordpress/plugin/r/instagram-widget-by-wpzoom.svg?maxAge=2592000) ![WordPress Compatibility](https://img.shields.io/wordpress/v/instagram-widget-by-wpzoom.svg?maxAge=2592000) [![Build Status](https://img.shields.io/travis/wpzoom/instagram-widget/master.svg?maxAge=2592000)](https://travis-ci.org/wpzoom/instagram-widget) [![License](https://img.shields.io/badge/license-GPL--2.0%2B-red.svg)](https://github.com/wpzoom/instagram-widget/blob/master/LICENSE)
 
 ### Welcome to our GitHub Repository
 
