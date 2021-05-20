@@ -137,4 +137,4 @@ function wpzoom_instagram_get_current_admin_url() {
 function wpzoom_instagram_load_plugin_textdomain() {
 	load_plugin_textdomain( 'instagram-widget-by-wpzoom', false, basename( dirname( __FILE__ ) ) . '/languages/' );
 }
-add_action( 'plugins_loaded', 'wpzoom_instagram_load_plugin_textdomain' );
+add_action( 'init', 'wpzoom_instagram_load_plugin_textdomain' );
