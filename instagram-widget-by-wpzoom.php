@@ -128,3 +128,13 @@ function wpzoom_instagram_get_current_admin_url() {
 
 	return remove_query_arg( array( '_wpnonce', 'wpzoom_instagram_ignore_admin_notice' ), admin_url( $uri ) );
 }
+
+/**
+ * Load textdomain
+ *
+ * @since x.x.x
+ */
+function wpzoom_instagram_load_plugin_textdomain() {
+	load_plugin_textdomain( 'instagram-widget-by-wpzoom', false, basename( dirname( __FILE__ ) ) . '/languages/' );
+}
+add_action( 'plugins_loaded', 'wpzoom_instagram_load_plugin_textdomain' );
