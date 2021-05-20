@@ -67,6 +67,10 @@ Make sure to connect your Instagram account with the plugin. You can do that in 
 
 == Changelog ==
 
+= 1.7.7 =
+* Load plugin text domain
+* Removed old .pot file from /languages
+
 = 1.7.6 =
 * Change textdomain to match with plugin slug
 

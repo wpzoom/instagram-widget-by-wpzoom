@@ -3,7 +3,7 @@
  * Plugin Name: WPZOOM Instagram Widget
  * Plugin URI: https://www.wpzoom.com/plugins/instagram-widget/
  * Description: Simple and lightweight widget for WordPress to display your Instagram feed
- * Version: 1.7.6
+ * Version: 1.7.7
  * Author: WPZOOM
  * Author URI: https://www.wpzoom.com/
  * Text Domain: instagram-widget-by-wpzoom
@@ -19,7 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 if ( ! defined( 'WPZOOM_INSTAGRAM_VERSION' ) ) {
-	define( 'WPZOOM_INSTAGRAM_VERSION', '1.7.6' );
+	define( 'WPZOOM_INSTAGRAM_VERSION', '1.7.7' );
 }
 
 require_once plugin_dir_path( __FILE__ ) . 'class-wpzoom-instagram-image-uploader.php';
@@ -132,7 +132,7 @@ function wpzoom_instagram_get_current_admin_url() {
 /**
  * Load textdomain
  *
- * @since x.x.x
+ * @since 1.7.7
  */
 function wpzoom_instagram_load_plugin_textdomain() {
 	load_plugin_textdomain( 'instagram-widget-by-wpzoom', false, basename( dirname( __FILE__ ) ) . '/languages/' );
