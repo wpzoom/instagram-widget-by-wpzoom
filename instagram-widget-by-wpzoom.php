@@ -138,3 +138,9 @@ function wpzoom_instagram_load_plugin_textdomain() {
 	load_plugin_textdomain( 'instagram-widget-by-wpzoom', false, basename( dirname( __FILE__ ) ) . '/languages/' );
 }
 add_action( 'init', 'wpzoom_instagram_load_plugin_textdomain' );
+
+register_deactivation_hook( __FILE__, 'wpzoom_instagram_plugin_deactivation' );
+
+function wpzoom_instagram_plugin_deactivation() {
+	wp_clear_scheduled_hook( 'wpzoom_instagram_widget_cron_hook' );
+}

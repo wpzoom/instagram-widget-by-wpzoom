@@ -51,6 +51,12 @@ class Wpzoom_Instagram_Widget_API {
 		$this->errors = new WP_Error();
 	}
 
+	public function init() {
+		add_action( 'init', array( $this, 'set_schedule' ) );
+		add_action( 'wpzoom_instagram_widget_cron_hook', array( $this, 'execute_cron' ) );
+		add_filter( 'cron_schedules', array( $this, 'add_cron_interval' ) );
+	}
+
 	/**
 	 * Returns the *Singleton* instance of this class.
 	 *
@@ -59,9 +65,51 @@ class Wpzoom_Instagram_Widget_API {
 	public static function getInstance() {
 		if ( null === self::$instance ) {
 			self::$instance = new self();
+			self::$instance->init();
 		}
 
 		return self::$instance;
+	}
+
+	public function add_cron_interval( $schedules ) {
+		$schedules['before_access_token_expires'] = array(
+			'interval' => 5183944,
+			'display'  => __( 'Before access token expires', 'instagram-widget-by-wpzoom' ),
+		);
+		return $schedules;
+	}
+
+	public function set_schedule() {
+		if ( ! wp_next_scheduled( 'wpzoom_instagram_widget_cron_hook' ) ) {
+			wp_schedule_event( time(), 'before_access_token_expires', 'wpzoom_instagram_widget_cron_hook' );
+		}
+	}
+
+	public function execute_cron() {
+		$stored_data = get_option( 'wpzoom-instagram-widget-settings', wpzoom_instagram_get_default_settings() );
+		$request_url = add_query_arg(
+			array(
+				'grant_type'   => 'ig_refresh_token',
+				'access_token' => $this->access_token,
+			),
+			'https://graph.instagram.com/refresh_access_token'
+		);
+
+		$response      = wp_remote_get( $request_url, $this->headers );
+		$response_code = wp_remote_retrieve_response_code( $response );
+
+		if ( 200 === $response_code ) {
+			$response_body = wp_remote_retrieve_body( $response );
+			$body          = json_decode( $response_body );
+
+			$stored_data['basic-access-token'] = $body->access_token;
+
+			update_option( 'wpzoom-instagram-widget-settings', $stored_data );
+		} else {
+			error_log( __( 'Something wrong! Response was not 200.', 'instagram-widget-by-wpzoom' ) );
+		}
+
+		return $stored_data;
 	}
 
 	public static function reset_cache() {
