@@ -163,9 +163,6 @@ class Wpzoom_Instagram_Widget_API {
 					$notice_message  = '<strong>' . __( 'Your Access Token for Instagram Widget has expired!', 'instagram-widget-by-wpzoom' ) . '</strong><br/>';
 					$notice_message .= sprintf( __( 'We cannot update access tokens automatically for Instagram private accounts. You need manually to generate a new access token, reauthorize here: %1$s.', 'instagram-widget-by-wpzoom' ), '<a href="' . esc_url( $settings_url ) . '">' . __( 'Instagram Widget Settings', 'instagram-widget-by-wpzoom' ) . '</a>' ) . '&nbsp;';
 					$notice_message .= '<a style="text-decoration: none" class="notice-dismiss" href="' . $hide_notices_url . '"></a>';
-				} elseif ( 10 === $data->error->code && self::is_access_token_valid( $this->access_token ) ) {
-					$expires_in     = '120'; // TODO: try to get expires_in value
-					$notice_message = sprintf( __( 'Your Instagram Access Token expires on %1$s! We cannot update access tokens automatically for Instagram private accounts. You need manually to generate a new one, reauthorize here: %2$s.', 'instagram-widget-by-wpzoom' ), $expires_in, '<a href="' . esc_url( $settings_url ) . '">' . __( 'Instagram Widget Settings', 'instagram-widget-by-wpzoom' ) . '</a>' ) . '&nbsp;';
 				}
 
 				$stored_data['admin-notice-message'] = $notice_message;
