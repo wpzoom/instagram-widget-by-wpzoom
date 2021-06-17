@@ -491,7 +491,7 @@ class Wpzoom_Instagram_Widget_Settings {
 		$result['user-info-fullname']       = sanitize_text_field( $input['user-info-fullname'] );
 		$result['user-info-biography']      = sanitize_text_field( $input['user-info-biography'] );
 
-		Wpzoom_Instagram_Widget_API::reset_cache();
+		Wpzoom_Instagram_Widget_API::reset_cache( $result );
 
 		return $result;
 	}

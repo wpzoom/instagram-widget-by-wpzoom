@@ -174,9 +174,14 @@ class Wpzoom_Instagram_Widget_API {
 		return false;
 	}
 
-	public static function reset_cache() {
+	public static function reset_cache( $sanitized_data ) {
 		delete_transient( 'zoom_instagram_is_configured' );
 		delete_transient( 'zoom_instagram_user_info' );
+
+		// Remove schedule hook `wpzoom_instagram_widget_cron_hook`.
+		if ( empty( $sanitized_data['basic-access-token'] ) ) {
+			wp_clear_scheduled_hook( 'wpzoom_instagram_widget_cron_hook' );
+		}
 	}
 
 	/**
