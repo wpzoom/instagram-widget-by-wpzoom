@@ -11,18 +11,21 @@ class Wpzoom_Instagram_Widget_API {
 	 * @var Wpzoom_Instagram_Widget_API The reference to *Singleton* instance of this class
 	 */
 	private static $instance;
+
 	/**
 	 * Request headers.
 	 *
 	 * @var array
 	 */
 	public $headers = array();
+
 	/**
 	 * Errors collector.
 	 *
 	 * @var array|WP_Error
 	 */
 	public $errors = array();
+
 	/**
 	 * Instagram Access Token
 	 *
@@ -30,8 +33,11 @@ class Wpzoom_Instagram_Widget_API {
 	 */
 	protected $access_token;
 
+	/**
+	 * Class constructor
+	 */
 	protected function __construct() {
-		$options = get_option( 'wpzoom-instagram-widget-settings', wpzoom_instagram_get_default_settings() );
+		$options = Wpzoom_Instagram_Widget_Settings::$settings;
 
 		$this->request_type = ! empty( $options['request-type'] ) ? $options['request-type'] : '';
 		$this->access_token = ! empty( $options['basic-access-token'] ) ? $options['basic-access-token'] : '';
@@ -51,6 +57,12 @@ class Wpzoom_Instagram_Widget_API {
 		$this->errors = new WP_Error();
 	}
 
+	public function init() {
+		add_action( 'init', array( $this, 'set_schedule' ) );
+		add_action( 'wpzoom_instagram_widget_cron_hook', array( $this, 'execute_cron' ) );
+		add_filter( 'cron_schedules', array( $this, 'add_cron_interval' ) );
+	}
+
 	/**
 	 * Returns the *Singleton* instance of this class.
 	 *
@@ -59,14 +71,119 @@ class Wpzoom_Instagram_Widget_API {
 	public static function getInstance() {
 		if ( null === self::$instance ) {
 			self::$instance = new self();
+			self::$instance->init();
 		}
 
 		return self::$instance;
 	}
 
-	public static function reset_cache() {
+	/**
+	 * Register custom cron intervals
+	 *
+	 * @since 1.8.0
+	 *
+	 * @param array $schedules Registered schedules array.
+	 * @return array
+	 */
+	public function add_cron_interval( $schedules ) {
+		if ( ! empty( $this->access_token ) ) {
+			$schedules['before_access_token_expires'] = array(
+				'interval' => 5097600, // 59 days.
+				'display'  => __( 'Before Access Token Expires', 'instagram-widget-by-wpzoom' ),
+			);
+		}
+		return $schedules;
+	}
+
+	/**
+	 * Register schedule event
+	 *
+	 * @return void
+	 */
+	public function set_schedule() {
+		if ( ! empty( $this->access_token ) && ! wp_next_scheduled( 'wpzoom_instagram_widget_cron_hook' ) ) {
+			wp_schedule_event( time(), 'before_access_token_expires', 'wpzoom_instagram_widget_cron_hook' );
+		}
+	}
+
+	/**
+	 * Execute cron event
+	 *
+	 * @return boolean
+	 */
+	public function execute_cron() {
+		global $current_user;
+
+		if ( ! empty( $this->access_token ) ) {
+			$stored_data = Wpzoom_Instagram_Widget_Settings::$settings;
+			$request_url = add_query_arg(
+				array(
+					'grant_type'   => 'ig_refresh_token',
+					'access_token' => $this->access_token,
+				),
+				'https://graph.instagram.com/refresh_access_token'
+			);
+
+			$response      = wp_safe_remote_get( $request_url, $this->headers );
+			$response_code = wp_remote_retrieve_response_code( $response );
+
+			if ( ! is_wp_error( $response ) ) {
+				$body = wp_remote_retrieve_body( $response );
+				$data = json_decode( $body );
+			}
+
+			if ( 200 === $response_code ) {
+				$date_format    = get_option( 'date_format' );
+				$time_format    = get_option( 'time_format' );
+				$notice_message = sprintf( __( 'Instagram Access Token was refreshed automatically on %1$s at %2$s', 'instagram-widget-by-wpzoom' ), date( $date_format ), date( $time_format ) );
+
+				$stored_data['basic-access-token']   = $data->access_token;
+				$stored_data['refresh-access-token'] = $notice_message;
+			} else {
+				if ( ! isset( $data->error ) ) {
+					error_log( __( 'Something wrong! Doesn\'t isset $data->error.', 'instagram-widget-by-wpzoom' ) );
+					return false;
+				} else {
+					error_log( $data->error->error_user_msg );
+				}
+
+				$notice_message   = '';
+				$user_id          = $current_user->ID;
+				$hide_notices_url = wpzoom_instagram_get_notice_dismiss_url();
+				$settings_url     = admin_url( 'options-general.php?page=wpzoom-instagram-widget' );
+
+				if ( 190 === $data->error->code ) {
+					// Error validating access token: Session has expired.
+					$notice_message  = $data->error->message;
+					$notice_message .= '<a style="text-decoration: none" class="notice-dismiss" href="' . $hide_notices_url . '"></a>';
+				} elseif ( 10 === $data->error->code && ! self::is_access_token_valid( $this->access_token ) ) {
+					// Application does not have permission for this action.
+					// User need to generate new Access Token manually.
+					$notice_message  = '<strong>' . __( 'Your Access Token for Instagram Widget has expired!', 'instagram-widget-by-wpzoom' ) . '</strong><br/>';
+					$notice_message .= sprintf( __( 'We cannot update access tokens automatically for Instagram private accounts. You need manually to generate a new access token, reauthorize here: %1$s.', 'instagram-widget-by-wpzoom' ), '<a href="' . esc_url( $settings_url ) . '">' . __( 'Instagram Widget Settings', 'instagram-widget-by-wpzoom' ) . '</a>' ) . '&nbsp;';
+					$notice_message .= '<a style="text-decoration: none" class="notice-dismiss" href="' . $hide_notices_url . '"></a>';
+				}
+
+				$stored_data['admin-notice-message'] = $notice_message;
+
+				// Update user meta to display admin notice.
+				update_user_meta( $user_id, 'wpzoom_instagram_admin_notice', false );
+			}
+
+			return update_option( Wpzoom_Instagram_Widget_Settings::$option_name, $stored_data );
+		}
+
+		return false;
+	}
+
+	public static function reset_cache( $sanitized_data ) {
 		delete_transient( 'zoom_instagram_is_configured' );
 		delete_transient( 'zoom_instagram_user_info' );
+
+		// Remove schedule hook `wpzoom_instagram_widget_cron_hook`.
+		if ( empty( $sanitized_data['basic-access-token'] ) ) {
+			wp_clear_scheduled_hook( 'wpzoom_instagram_widget_cron_hook' );
+		}
 	}
 
 	/**
@@ -119,7 +236,7 @@ class Wpzoom_Instagram_Widget_API {
 				'https://graph.instagram.com/me/media'
 			);
 
-			$response = wp_remote_get( $request_url, $this->headers );
+			$response = wp_safe_remote_get( $request_url, $this->headers );
 
 			if ( is_wp_error( $response ) || 200 != wp_remote_retrieve_response_code( $response ) ) {
 				set_transient( $transient, wp_json_encode( false ), MINUTE_IN_SECONDS );
@@ -410,7 +527,7 @@ class Wpzoom_Instagram_Widget_API {
 		$user = trim( $user );
 		$url  = 'https://instagram.com/' . str_replace( '@', '', $user );
 
-		$request = wp_remote_get( $url, $this->headers );
+		$request = wp_safe_remote_get( $url, $this->headers );
 
 		if ( is_wp_error( $request ) || 200 != wp_remote_retrieve_response_code( $request ) ) {
 			$error_data = $this->get_error( 'response-data-without-token-from-html-invalid-response' );
@@ -463,7 +580,7 @@ class Wpzoom_Instagram_Widget_API {
 		$user = trim( $user );
 		$url  = 'https://instagram.com/' . str_replace( '@', '', $user ) . '/?__a=1';
 
-		$request = wp_remote_get( $url, $this->headers );
+		$request = wp_safe_remote_get( $url, $this->headers );
 
 		if ( is_wp_error( $request ) || 200 != wp_remote_retrieve_response_code( $request ) ) {
 			$error_data = $this->get_error( 'response-data-without-token-from-json-invalid-response' );
@@ -532,7 +649,7 @@ class Wpzoom_Instagram_Widget_API {
 				'https://graph.instagram.com/me'
 			);
 
-			$response = wp_remote_get( $request_url, $this->headers );
+			$response = wp_safe_remote_get( $request_url, $this->headers );
 
 			if ( is_wp_error( $response ) || 200 != wp_remote_retrieve_response_code( $response ) ) {
 				set_transient( $transient, wp_json_encode( false ), MINUTE_IN_SECONDS );
@@ -574,7 +691,7 @@ class Wpzoom_Instagram_Widget_API {
 	function convert_user_info_to_old_structure( $user_info ) {
 		$converted = new stdClass();
 
-		$user_info_from_settings = get_option( 'wpzoom-instagram-widget-settings', wpzoom_instagram_get_default_settings() );
+		$user_info_from_settings = Wpzoom_Instagram_Widget_Settings::$settings;
 
 		$avatar = null;
 
@@ -702,7 +819,7 @@ class Wpzoom_Instagram_Widget_API {
 			'https://graph.instagram.com/me'
 		);
 
-		$response = wp_remote_get( $request_url );
+		$response = wp_safe_remote_get( $request_url );
 
 		if ( is_wp_error( $response ) ) {
 			return $response;
