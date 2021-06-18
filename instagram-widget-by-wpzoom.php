@@ -37,7 +37,7 @@ function zoom_instagram_widget_register() {
 add_action( 'admin_notices', 'wpzoom_instagram_admin_notice' );
 
 function wpzoom_instagram_admin_notice() {
-	global $current_user;
+	global $current_user, $pagenow;
 
 	if ( ! current_user_can( 'manage_options' ) ) {
 		return;
@@ -55,7 +55,7 @@ function wpzoom_instagram_admin_notice() {
 
 		$options['admin-notice-message'] = $notice_message;
 
-		update_option( 'wpzoom-instagram-widget-settings', $options );
+		update_option( Wpzoom_Instagram_Widget_Settings::$option_name, $options );
 	}
 
 	/* Check that the user hasn't already clicked to ignore the message */
@@ -65,6 +65,22 @@ function wpzoom_instagram_admin_notice() {
 			echo '<div class="notice-warning notice" style="position:relative"><p>';
 			echo wp_kses_post( $options['admin-notice-message'] );
 			echo '</p></div>';
+		}
+	}
+
+	if ( 'options-general.php' === $pagenow && ( isset( $_GET['page'] ) && 'wpzoom-instagram-widget' === $_GET['page'] ) ) {
+		if ( isset( $options['refresh-access-token'] ) && ! empty( $options['refresh-access-token'] ) ) {
+			// Inform user in settings page when Access Token was refreshed.
+			add_settings_error(
+				'wpzoom-instagram-refresh-access-token',
+				esc_attr( 'wpzoom-instagram-widget-refresh-access-token' ),
+				$options['refresh-access-token'],
+				'info'
+			);
+
+			$options['refresh-access-token'] = '';
+
+			update_option( Wpzoom_Instagram_Widget_Settings::$option_name, $options );
 		}
 	}
 }

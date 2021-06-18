@@ -133,12 +133,11 @@ class Wpzoom_Instagram_Widget_API {
 			}
 
 			if ( 200 === $response_code ) {
-				$stored_data['basic-access-token'] = $data->access_token;
-
 				$date_format    = get_option( 'date_format' );
 				$time_format    = get_option( 'time_format' );
 				$notice_message = sprintf( __( 'Instagram Access Token was refreshed automatically on %1$s at %2$s', 'instagram-widget-by-wpzoom' ), date( $date_format ), date( $time_format ) );
 
+				$stored_data['basic-access-token']   = $data->access_token;
 				$stored_data['refresh-access-token'] = $notice_message;
 			} else {
 				if ( ! isset( $data->error ) ) {
@@ -171,7 +170,7 @@ class Wpzoom_Instagram_Widget_API {
 				update_user_meta( $user_id, 'wpzoom_instagram_admin_notice', false );
 			}
 
-			return update_option( 'wpzoom-instagram-widget-settings', $stored_data );
+			return update_option( Wpzoom_Instagram_Widget_Settings::$option_name, $stored_data );
 		}
 
 		return false;

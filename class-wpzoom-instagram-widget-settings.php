@@ -15,6 +15,14 @@ class Wpzoom_Instagram_Widget_Settings {
 	 */
 	public static $settings = array();
 
+	/**
+	 * Settings option name
+	 *
+	 * @since 1.8.0
+	 * @var string
+	 */
+	public static $option_name = 'wpzoom-instagram-widget-settings';
+
 	public function __construct() {
 		self::$settings = get_option( 'wpzoom-instagram-widget-settings', wpzoom_instagram_get_default_settings() );
 
@@ -464,8 +472,7 @@ class Wpzoom_Instagram_Widget_Settings {
 	}
 
 	public function sanitize( $input ) {
-		$result   = array();
-		$settings = self::$settings;
+		$result = array();
 
 		$result['basic-access-token'] = sanitize_text_field( $input['basic-access-token'] );
 		$result['request-type']       = sanitize_text_field( $input['request-type'] );
@@ -490,16 +497,6 @@ class Wpzoom_Instagram_Widget_Settings {
 				}
 
 				$result['basic-access-token'] = '';
-			}
-
-			if ( isset( $settings['refresh-access-token'] ) && ! empty( $settings['refresh-access-token'] ) ) {
-				// Inform user in settings page when Access Token was refreshed.
-				add_settings_error(
-					'wpzoom-instagram-widget-access-token',
-					esc_attr( 'wpzoom-instagram-widget-refresh-access-token' ),
-					$settings['refresh-access-token'],
-					'info'
-				);
 			}
 		}
 
