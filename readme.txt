@@ -67,6 +67,11 @@ Make sure to connect your Instagram account with the plugin. You can do that in 
 
 == Changelog ==
 
+= 1.8.0 =
+* NEW: Automatically refresh Instagram access token before it expires
+* NOTE: There are limitations to refresh access token for Instagram private accounts! You will need to reauthorize manually after access token expires
+* Improved admin notices
+
 = 1.7.7 =
 * Load plugin text domain
 * Removed old .pot file from /languages
