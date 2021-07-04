@@ -473,7 +473,7 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 				<?php
 				printf(
 					__( 'You need to configure <a href="%1$s">plugin settings</a> before using this widget.', 'instagram-widget-by-wpzoom' ),
-					menu_page_url( 'wpzoom-instagram-widget', false )
+					admin_url( 'options-general.php?page=wpzoom-instagram-widget' )
 				);
 				?>
 			</p>
@@ -560,7 +560,7 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 			<?php
 			printf(
 				__( 'If you have already connected your Instagram account in the <a href="%1$s">plugin settings</a>, leave this field empty. You can use this option if you want to display the feed of a different Instagram account.', 'instagram-widget-by-wpzoom' ),
-				menu_page_url( 'wpzoom-instagram-widget', false )
+				admin_url( 'options-general.php?page=wpzoom-instagram-widget' )
 			);
 			?>
 
