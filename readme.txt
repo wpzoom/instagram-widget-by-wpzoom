@@ -67,6 +67,10 @@ Make sure to connect your Instagram account with the plugin. You can do that in 
 
 == Changelog ==
 
+= 1.8.2 =
+* Fixed compatibility with upcoming WordPress 5.8
+* Fixed a bug with Beaver Builder
+
 = 1.8.1 =
 * Fixed a minor bug for PHP 8.0
 
