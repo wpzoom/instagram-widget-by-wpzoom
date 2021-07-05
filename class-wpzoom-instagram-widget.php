@@ -45,8 +45,6 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 			'username'                      => '',
 		);
 
-		$this->api = Wpzoom_Instagram_Widget_API::getInstance();
-
 		add_action( 'wp_enqueue_scripts', array( $this, 'styles' ) );
 		add_action( 'wp_enqueue_scripts', array( $this, 'register_scripts' ) );
 
@@ -124,6 +122,9 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 	 * @param array $instance Saved values from database.
 	 */
 	public function widget( $args, $instance ) {
+
+		$this->api = Wpzoom_Instagram_Widget_API::getInstance();
+
 		$this->enqueue_scripts();
 
 		$instance = wp_parse_args( (array) $instance, $this->defaults );
@@ -464,6 +465,9 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 	 * @return string|void
 	 */
 	public function form( $instance ) {
+
+		$this->api = Wpzoom_Instagram_Widget_API::getInstance();
+
 		$instance = wp_parse_args( (array) $instance, $this->defaults );
 		?>
 
