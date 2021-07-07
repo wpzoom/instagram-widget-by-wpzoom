@@ -38,6 +38,7 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 			'lazy-load-images'              => false,
 			'disable-video-thumbs'          => false,
 			'display-media-type-icons'      => false,
+			'lightbox'                      => true,
 			'images-per-row'                => 3,
 			'image-width'                   => 120,
 			'image-spacing'                 => 10,
@@ -81,6 +82,13 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 			array( 'dashicons' ),
 			WPZOOM_INSTAGRAM_VERSION
 		);
+
+		wp_enqueue_style(
+			'magnific-popup',
+			plugin_dir_url( __FILE__ ) . 'assets/frontend/magnific-popup/magnific-popup.css',
+			array( 'dashicons' ),
+			WPZOOM_INSTAGRAM_VERSION
+		);
 	}
 
 	/**
@@ -97,6 +105,13 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 			true
 		);
 		wp_register_script(
+			'magnific-popup',
+			plugin_dir_url( __FILE__ ) . 'assets/frontend/magnific-popup/jquery.magnific-popup.min.js',
+			array( 'jquery', 'underscore', 'wp-util' ),
+			filemtime( plugin_dir_path( __FILE__ ) . 'assets/frontend/magnific-popup/jquery.magnific-popup.min.js' ),
+			true
+		);
+		wp_register_script(
 			'zoom-instagram-widget',
 			plugin_dir_url( __FILE__ ) . 'js/instagram-widget.js',
 			array( 'jquery', 'underscore', 'wp-util' ),
@@ -110,6 +125,7 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 	 */
 	public function enqueue_scripts() {
 		wp_enqueue_script( 'zoom-instagram-widget-lazy-load' );
+		wp_enqueue_script( 'magnific-popup' );
 		wp_enqueue_script( 'zoom-instagram-widget' );
 	}
 
@@ -289,13 +305,15 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 		$show_media_type_icons = wp_validate_boolean( $instance['display-media-type-icons'] );
 		$small_class           = ( ! empty( $instance['image-width'] ) && $instance['image-width'] <= 180 ) ? 'small' : '';
 		$svg_icons             = plugin_dir_url( __FILE__ ) . 'images/wpzoom-instagram-icons.svg';
+		$lightbox              = wp_validate_boolean( $instance['lightbox'] );
 		?>
 		<ul class="zoom-instagram-widget__items zoom-instagram-widget__items--no-js"
 			data-images-per-row="<?php echo esc_attr( $instance['images-per-row'] ); ?>"
 			data-image-width="<?php echo esc_attr( $instance['image-width'] ); ?>"
 			data-image-spacing="<?php echo esc_attr( $instance['image-spacing'] ); ?>"
 			data-image-resolution="<?php echo esc_attr( $instance['image-resolution'] ); ?>"
-			data-image-lazy-loading="<?php echo esc_attr( $instance['lazy-load-images'] ); ?>">
+			data-image-lazy-loading="<?php echo esc_attr( $instance['lazy-load-images'] ); ?>"
+			data-lightbox="<?php echo esc_attr( $lightbox ); ?>">
 
 			<?php foreach ( $items as $item ) : ?>
 				<?php
@@ -390,6 +408,55 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 							<?php endif; ?>
 						</a>
 					<?php endif; ?>
+
+					<?php if ( $lightbox ) : ?>
+						<div id="<?php echo $media_id ?>" class="mfp-hide lightbox-wrapper">
+							<div class="lightbox">
+								<div class="image-wrapper">
+									<img src="<?php echo esc_url( $src ); ?>"/>
+								</div>
+								<div class="details-wrapper">
+									<div class="header">
+										<?php /* <div class="avatar"><img
+													src="<?php echo wpzoom_instagram_widget_get_user_avatar( $user_info['avatar'] ) ?>"
+													alt="<?php echo esc_attr( $instance['username'] ) ?>"/>
+										</div> */ ?>
+										<div class="buttons">
+											<div class="username">
+												<a href="<?php printf( 'http://instagram.com/%s', esc_attr( $instance['username'] ) ); ?>">
+													<?php echo $instance['username'] ?>
+												</a>
+											</div>
+											<div>&bull;</div>
+											<div class="follow">
+												<a target="_blank" rel="noopener"
+												href="<?php printf( 'http://instagram.com/%s?ref=badge', esc_attr( $instance['username'] ) ); ?>">
+													<?php _e( 'Follow', 'wpzoom-instagram-widget' ) ?>
+												</a>
+											</div>
+										</div>
+
+									</div>
+									<?php if ( ! empty( $item['caption'] ) ): ?>
+										<div class="caption">
+											<?php echo $item['caption']; ?>
+										</div>
+									<?php endif; ?>
+
+									<?php if ( ! empty( $item['timestamp'] ) ): ?>
+										<div class="date">
+											<?php printf( __( '%s ago' ), human_time_diff( strtotime( $item['timestamp'] ) ) ); ?>
+										</div>
+									<?php endif; ?>
+									<div class="view-post">
+										<a href="<?php echo esc_url( $link ); ?>"><span class="dashicons dashicons-instagram"></span>View on Instagram</a>
+										<span class="delimiter">|</span>
+										<div class="pagination">1/10</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					<?php endif; ?>
 				</li>
 
 				<?php
@@ -451,6 +518,7 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 		$instance['lazy-load-images']              = ! empty( $new_instance['lazy-load-images'] );
 		$instance['disable-video-thumbs']          = ! empty( $new_instance['disable-video-thumbs'] );
 		$instance['display-media-type-icons']      = ! empty( $new_instance['display-media-type-icons'] );
+		$instance['lightbox']                      = ! empty( $new_instance['lightbox'] );
 
 		return $instance;
 	}
@@ -603,6 +671,12 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 				   id="<?php echo $this->get_field_id( 'lazy-load-images' ); ?>"
 				   name="<?php echo $this->get_field_name( 'lazy-load-images' ); ?>"/>
 			<label for="<?php echo $this->get_field_id( 'lazy-load-images' ); ?>"><?php _e( 'Lazy Load <strong>images</strong>', 'instagram-widget-by-wpzoom' ); ?></label>
+		</p>
+		<p>
+			<input class="checkbox" type="checkbox" <?php checked( $instance['lightbox'] ); ?>
+				   id="<?php echo $this->get_field_id( 'lightbox' ); ?>"
+				   name="<?php echo $this->get_field_name( 'lightbox' ); ?>"/>
+			<label for="<?php echo $this->get_field_id( 'lightbox' ); ?>"><?php _e( 'Open items in a <strong>lightbox</strong>', 'instagram-widget-by-wpzoom' ); ?></label>
 		</p>
 		<p>
 			<input class="checkbox" type="checkbox" <?php checked( $instance['disable-video-thumbs'] ); ?>
