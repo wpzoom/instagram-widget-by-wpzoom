@@ -280,7 +280,7 @@ class Wpzoom_Instagram_Widget_API {
 		$result   = array();
 		$username = '';
 
-		if( empty( $image_resolution ) ) {
+		if ( empty( $image_resolution ) ) {
 			$image_resolution = 'default_algorithm';
 		}
 
