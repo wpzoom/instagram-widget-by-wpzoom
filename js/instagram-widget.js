@@ -145,7 +145,7 @@ jQuery(function ($) {
 	requestTick();
 
 	$('.zoom-instagram-widget__items').zoomLoadAsyncImages();
-	$('.zoom-instagram-widget__items').zoomLightbox();
+	$('.zoom-instagram-widget__items[data-lightbox="1"]').zoomLightbox();
 
 	var siteOriginInit = function () {
 		var $widgets = $('.zoom-instagram-widget__items');

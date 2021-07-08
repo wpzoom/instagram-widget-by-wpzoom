@@ -399,6 +399,7 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 					<?php else : ?>
 						<a class="zoom-instagram-link" data-src="<?php echo $src; ?>"
 						   style="<?php echo $inline_style; ?>"
+						   data-mfp-src="#<?php echo $media_id ?>"
 						   href="<?php echo $link; ?>" target="_blank" rel="noopener nofollow" title="<?php echo $alt; ?>"
 						>
 							<?php if ( $show_media_type_icons && ! empty( $type ) ) : ?>
