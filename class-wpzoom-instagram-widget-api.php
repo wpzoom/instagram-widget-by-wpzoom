@@ -230,7 +230,7 @@ class Wpzoom_Instagram_Widget_API {
 		if ( ! empty( $this->access_token ) ) {
 			$request_url = add_query_arg(
 				array(
-					'fields'       => 'media_url,media_type,caption,username,permalink,thumbnail_url',
+					'fields'       => 'media_url,media_type,caption,username,permalink,thumbnail_url,timestamp',
 					'access_token' => $this->access_token,
 				),
 				'https://graph.instagram.com/me/media'
@@ -306,6 +306,7 @@ class Wpzoom_Instagram_Widget_API {
 				'image-url'          => $image_url,
 				'original-image-url' => $item->media_url,
 				'type'               => $item->type,
+				'timestamp'          => $item->timestamp,
 				'image-id'           => ! empty( $item->id ) ? esc_attr( $item->id ) : '',
 				'image-caption'      => ! empty( $item->caption->text ) ? esc_attr( $item->caption->text ) : '',
 				'likes_count'        => ! empty( $item->likes->count ) ? esc_attr( $item->likes->count ) : 0,
@@ -453,6 +454,7 @@ class Wpzoom_Instagram_Widget_API {
 				'likes'        => null,
 				'comments'     => null,
 				'created_time' => null,
+				'timestamp'    => $item->timestamp,
 				'link'         => $item->permalink,
 				'caption'      => (object) array(
 					'text' => isset( $item->caption ) ? $item->caption : '',
@@ -648,7 +650,7 @@ class Wpzoom_Instagram_Widget_API {
 			$request_url = add_query_arg(
 				array(
 					'access_token' => $this->access_token,
-					'fields'       => 'account_type,id,media_count,username',
+					'fields'       => 'account_type,id,media_count,username,profile_picture',
 				),
 				'https://graph.instagram.com/me'
 			);
@@ -697,7 +699,7 @@ class Wpzoom_Instagram_Widget_API {
 
 		$user_info_from_settings = Wpzoom_Instagram_Widget_Settings::$settings;
 
-		$avatar = null;
+		$avatar = property_exists( $user_info, 'profile_picture' ) ? $user_info->profile_picture : null;
 
 		if ( ! empty( $user_info_from_settings['user-info-avatar'] ) ) {
 			$img_src = wp_get_attachment_image_src( $user_info_from_settings['user-info-avatar'] );

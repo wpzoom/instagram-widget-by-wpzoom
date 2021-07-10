@@ -156,9 +156,9 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 		if ( ! is_array( $items ) ) {
 			$this->display_errors( $errors );
 		} else {
-			if ( ! empty( $instance['show-user-info'] ) ) {
-				$user_info = $this->api->get_user_info( $instance['username'] );
+			$user_info = $this->api->get_user_info( $instance['username'] );
 
+			if ( ! empty( $instance['show-user-info'] ) ) {
 				if (
 					is_object( $user_info ) &&
 					! empty( $user_info ) &&
@@ -168,7 +168,7 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 				}
 			}
 
-			$this->display_items( $items['items'], $instance );
+			$this->display_items( $items['items'], $instance, $user_info );
 			$this->display_instagram_button( $instance, $items['username'] );
 		}
 
@@ -298,13 +298,16 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 		return round( $num, 1 ) . $units[ $i ];
 	}
 
-	protected function display_items( $items, $instance ) {
+	protected function display_items( $items, $instance, $user_info ) {
 		$count                 = 0;
 		$show_overlay          = wp_validate_boolean( $instance['show-counts-on-hover'] );
 		$show_media_type_icons = wp_validate_boolean( $instance['display-media-type-icons'] );
 		$small_class           = ( ! empty( $instance['image-width'] ) && $instance['image-width'] <= 180 ) ? 'small' : '';
 		$svg_icons             = plugin_dir_url( __FILE__ ) . 'images/wpzoom-instagram-icons.svg';
 		$lightbox              = wp_validate_boolean( $instance['lightbox'] );
+		$user_nfo              = is_object( $user_info ) && ! empty( $user_info ) && ! empty( $user_info->data ) ? $user_info->data : false;
+		$username              = false !== $user_nfo ? $user_nfo->username : '';
+		$avatar                = false !== $user_nfo && ! empty( $user_nfo->profile_picture ) ? $user_nfo->profile_picture : plugin_dir_url( __FILE__ ) . 'assets/backend/img/user-avatar.jpg';
 		?>
 		<ul class="zoom-instagram-widget__items zoom-instagram-widget__items--no-js"
 			data-images-per-row="<?php echo esc_attr( $instance['images-per-row'] ); ?>"
@@ -417,29 +420,27 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 								</div>
 								<div class="details-wrapper">
 									<div class="header">
-										<?php /* <div class="avatar"><img
-													src="<?php echo wpzoom_instagram_widget_get_user_avatar( $user_info['avatar'] ) ?>"
-													alt="<?php echo esc_attr( $instance['username'] ) ?>"/>
-										</div> */ ?>
+										<div class="avatar">
+											<img src="<?php echo esc_url( $avatar ); ?>" />
+										</div>
 										<div class="buttons">
 											<div class="username">
-												<a href="<?php printf( 'http://instagram.com/%s', esc_attr( $instance['username'] ) ); ?>">
-													<?php echo $instance['username'] ?>
+												<a href="<?php printf( 'http://instagram.com/%s', esc_attr( $username ) ); ?>">
+													<?php echo esc_html( $username ); ?>
 												</a>
 											</div>
 											<div>&bull;</div>
 											<div class="follow">
 												<a target="_blank" rel="noopener"
-												href="<?php printf( 'http://instagram.com/%s?ref=badge', esc_attr( $instance['username'] ) ); ?>">
+												href="<?php printf( 'http://instagram.com/%s?ref=badge', esc_attr( $username ) ); ?>">
 													<?php _e( 'Follow', 'wpzoom-instagram-widget' ) ?>
 												</a>
 											</div>
 										</div>
-
 									</div>
-									<?php if ( ! empty( $item['caption'] ) ): ?>
+									<?php if ( ! empty( $item['image-caption'] ) ): ?>
 										<div class="caption">
-											<?php echo $item['caption']; ?>
+											<?php echo esc_html( $item['image-caption'] ); ?>
 										</div>
 									<?php endif; ?>
 
