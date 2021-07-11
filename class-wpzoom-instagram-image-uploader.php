@@ -20,8 +20,10 @@ class WPZOOM_Instagram_Image_Uploader {
 	/**
 	 * WPZOOM_Instagram_Image_Uploader constructor.
 	 */
-	private function __construct() {
-		// Private to disabled instantiation.
+	public function __construct() {
+		add_action( 'init', array( $this, 'custom_post_status' ) );
+		add_action( 'wp_ajax_' . self::$ajax_action_name, array( $this, 'get_image_async' ) );
+		add_action( 'wp_ajax_nopriv_' . self::$ajax_action_name, array( $this, 'get_image_async' ) );
 	}
 
 	/**
@@ -30,9 +32,6 @@ class WPZOOM_Instagram_Image_Uploader {
 	public static function getInstance() {
 		if ( null === self::$instance ) {
 			self::$instance = new self();
-			add_action( 'init', array( self::$instance, 'custom_post_status' ) );
-			add_action( 'wp_ajax_' . self::$ajax_action_name, array( self::$instance, 'get_image_async' ) );
-			add_action( 'wp_ajax_nopriv_' . self::$ajax_action_name, array( self::$instance, 'get_image_async' ) );
 		}
 
 		return self::$instance;
@@ -375,3 +374,5 @@ class WPZOOM_Instagram_Image_Uploader {
 		return $size;
 	}
 }
+
+WPZOOM_Instagram_Image_Uploader::getInstance();
