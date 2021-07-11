@@ -67,6 +67,9 @@ Make sure to connect your Instagram account with the plugin. You can do that in 
 
 == Changelog ==
 
+= 1.8.3 =
+* Fixed error 400 Bad Request
+
 = 1.8.2 =
 * Fixed compatibility with upcoming WordPress 5.8
 * Fixed a bug with Beaver Builder
