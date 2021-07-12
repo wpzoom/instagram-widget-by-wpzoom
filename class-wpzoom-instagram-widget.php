@@ -355,7 +355,7 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 					$overwrite_src = true;
 				}
 
-				if ( $overwrite_src ) {
+				if ( $overwrite_src || $lightbox ) {
 					$src = $item['original-image-url'];
 				}
 				?>
@@ -401,7 +401,7 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 					<?php else : ?>
 						<a class="zoom-instagram-link" data-src="<?php echo $src; ?>"
 						   style="<?php echo $inline_style; ?>"
-						   data-mfp-src="#<?php echo $media_id ?>"
+						   data-mfp-src="#<?php echo $media_id; ?>"
 						   href="<?php echo $link; ?>" target="_blank" rel="noopener nofollow" title="<?php echo $alt; ?>"
 						>
 							<?php if ( $show_media_type_icons && ! empty( $type ) ) : ?>
@@ -413,7 +413,7 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 					<?php endif; ?>
 
 					<?php if ( $lightbox ) : ?>
-						<div id="<?php echo $media_id ?>" class="mfp-hide lightbox-wrapper">
+						<div id="<?php echo $media_id; ?>" class="mfp-hide lightbox-wrapper">
 							<div class="lightbox">
 								<div class="image-wrapper">
 									<img src="<?php echo esc_url( $src ); ?>"/>
@@ -433,18 +433,18 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 											<div class="follow">
 												<a target="_blank" rel="noopener"
 												href="<?php printf( 'http://instagram.com/%s?ref=badge', esc_attr( $username ) ); ?>">
-													<?php _e( 'Follow', 'wpzoom-instagram-widget' ) ?>
+													<?php _e( 'Follow', 'wpzoom-instagram-widget' ); ?>
 												</a>
 											</div>
 										</div>
 									</div>
-									<?php if ( ! empty( $item['image-caption'] ) ): ?>
+									<?php if ( ! empty( $item['image-caption'] ) ) : ?>
 										<div class="caption">
 											<?php echo esc_html( $item['image-caption'] ); ?>
 										</div>
 									<?php endif; ?>
 
-									<?php if ( ! empty( $item['timestamp'] ) ): ?>
+									<?php if ( ! empty( $item['timestamp'] ) ) : ?>
 										<div class="date">
 											<?php printf( __( '%s ago' ), human_time_diff( strtotime( $item['timestamp'] ) ) ); ?>
 										</div>

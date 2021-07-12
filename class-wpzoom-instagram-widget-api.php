@@ -220,7 +220,8 @@ class Wpzoom_Instagram_Widget_API {
 			$transient         = $transient . '_' . $injected_username;
 		}
 
-		if ( false !== ( $data = json_decode( get_transient( $transient ) ) ) && is_object( $data ) && ! empty( $data->data ) ) {
+		$data = json_decode( get_transient( $transient ) );
+		if ( false !== $data && is_object( $data ) && ! empty( $data->data ) ) {
 			return $this->processing_response_data( $data, $image_width, $image_resolution, $image_limit, $disable_video_thumbs );
 		}
 
@@ -279,12 +280,25 @@ class Wpzoom_Instagram_Widget_API {
 	public function processing_response_data( $data, $image_width, $image_resolution, $image_limit, $disable_video_thumbs = false ) {
 		$result   = array();
 		$username = '';
+		$defaults = array(
+			'link'               => '',
+			'image-url'          => '',
+			'original-image-url' => '',
+			'type'               => '',
+			'timestamp'          => '',
+			'image-id'           => '',
+			'image-caption'      => '',
+			'likes_count'        => 0,
+			'comments_count'     => 0,
+		);
 
 		if ( empty( $image_resolution ) ) {
 			$image_resolution = 'default_algorithm';
 		}
 
 		foreach ( $data->data as $key => $item ) {
+			$item = (object) wp_parse_args( $item, $defaults );
+
 			if ( empty( $username ) ) {
 				$username = $item->user->username;
 			}
