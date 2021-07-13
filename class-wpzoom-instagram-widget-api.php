@@ -320,7 +320,7 @@ class Wpzoom_Instagram_Widget_API {
 				'image-url'          => $image_url,
 				'original-image-url' => $item->media_url,
 				'type'               => $item->type,
-				'timestamp'          => $item->timestamp,
+				'timestamp'          => property_exists( $item, 'timestamp' ) && ! empty( $item->timestamp ) ? $item->timestamp : '',
 				'image-id'           => ! empty( $item->id ) ? esc_attr( $item->id ) : '',
 				'image-caption'      => ! empty( $item->caption->text ) ? esc_attr( $item->caption->text ) : '',
 				'likes_count'        => ! empty( $item->likes->count ) ? esc_attr( $item->likes->count ) : 0,
