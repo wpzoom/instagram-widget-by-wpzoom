@@ -363,8 +363,7 @@ a.ig-b-v-24:hover {
 	color: #262626;
 	font-size: 14px;
 	padding: 16px;
-	font-width: 400;
-	line-height: 1;
+	font-weight: normal;
 }
 .wpzoom-lightbox.mfp-gallery {
 	z-index: 100000;

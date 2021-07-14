@@ -425,14 +425,14 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 										</div>
 										<div class="buttons">
 											<div class="username">
-												<a href="<?php printf( 'http://instagram.com/%s', esc_attr( $username ) ); ?>">
+												<a rel="noopener" target="_blank" href="<?php printf( 'https://instagram.com/%s', esc_attr( $username ) ); ?>">
 													<?php echo esc_html( $username ); ?>
 												</a>
 											</div>
 											<div>&bull;</div>
 											<div class="follow">
 												<a target="_blank" rel="noopener"
-												href="<?php printf( 'http://instagram.com/%s?ref=badge', esc_attr( $username ) ); ?>">
+												href="<?php printf( 'https://instagram.com/%s?ref=badge', esc_attr( $username ) ); ?>">
 													<?php _e( 'Follow', 'wpzoom-instagram-widget' ); ?>
 												</a>
 											</div>
@@ -450,7 +450,7 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 										</div>
 									<?php endif; ?>
 									<div class="view-post">
-										<a href="<?php echo esc_url( $link ); ?>"><span class="dashicons dashicons-instagram"></span>View on Instagram</a>
+										<a href="<?php echo esc_url( $link ); ?>" target="_blank" rel="noopener"><span class="dashicons dashicons-instagram"></span><?php _e( 'View on Instagram', 'wpzoom-instagram-widget' ); ?></a>
 										<span class="delimiter">|</span>
 										<div class="pagination">1/10</div>
 									</div>
