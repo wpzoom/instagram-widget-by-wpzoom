@@ -361,6 +361,7 @@ a.ig-b-v-24:hover {
 
 .lightbox-wrapper .lightbox .details-wrapper .caption {
 	color: #262626;
+    line-height: 1.5;
 	font-size: 14px;
 	padding: 16px;
 	font-weight: normal;
@@ -395,6 +396,7 @@ a.ig-b-v-24:hover {
 .lightbox-wrapper .lightbox .image-wrapper {
 	width: fit-content;
 	height: 600px;
+    background: #000;
 }
 
 .lightbox-wrapper .lightbox .details-wrapper {
