@@ -62,7 +62,7 @@ jQuery(function ($) {
 				callbacks: {
 					change: function () {
 						console.log('Content changed');
-						$(this.content).find('.details-wrapper .view-post .pagination').html((this.index+1) + "/" + this.items.length)
+						$(this.content).find('.details-wrapper .view-post .wpz-insta-pagination').html((this.index+1) + "/" + this.items.length)
 					}
 				},
 

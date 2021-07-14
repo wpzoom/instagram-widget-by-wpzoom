@@ -452,7 +452,7 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 									<div class="view-post">
 										<a href="<?php echo esc_url( $link ); ?>" target="_blank" rel="noopener"><span class="dashicons dashicons-instagram"></span><?php _e( 'View on Instagram', 'wpzoom-instagram-widget' ); ?></a>
 										<span class="delimiter">|</span>
-										<div class="pagination">1/10</div>
+										<div class="wpz-insta-pagination">1/10</div>
 									</div>
 								</div>
 							</div>
