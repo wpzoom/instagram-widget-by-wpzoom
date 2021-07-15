@@ -304,7 +304,7 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 		$show_media_type_icons = wp_validate_boolean( $instance['display-media-type-icons'] );
 		$small_class           = ( ! empty( $instance['image-width'] ) && $instance['image-width'] <= 180 ) ? 'small' : '';
 		$svg_icons             = plugin_dir_url( __FILE__ ) . 'images/wpzoom-instagram-icons.svg';
-		$lightbox              = wp_validate_boolean( $instance['lightbox'] );
+		$lightbox              = isset( $instance['lightbox'] ) ? wp_validate_boolean( $instance['lightbox'] ) : true;
 		$user_nfo              = is_object( $user_info ) && ! empty( $user_info ) && ! empty( $user_info->data ) ? $user_info->data : false;
 		$username              = false !== $user_nfo ? $user_nfo->username : '';
 		$avatar                = false !== $user_nfo && ! empty( $user_nfo->profile_picture ) ? $user_nfo->profile_picture : plugin_dir_url( __FILE__ ) . 'assets/backend/img/user-avatar.jpg';
@@ -413,8 +413,8 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 					<?php endif; ?>
 
 					<?php if ( $lightbox ) : ?>
-						<div id="<?php echo $media_id; ?>" class="mfp-hide lightbox-wrapper">
-							<div class="lightbox">
+						<div id="<?php echo $media_id; ?>" class="mfp-hide wpz-insta-lightbox-wrapper">
+							<div class="wpz-insta-lightbox">
 								<div class="image-wrapper">
 									<img src="<?php echo esc_url( $src ); ?>"/>
 								</div>
