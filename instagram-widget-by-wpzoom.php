@@ -23,8 +23,8 @@ if ( ! defined( 'WPZOOM_INSTAGRAM_VERSION' ) ) {
 }
 
 require_once plugin_dir_path( __FILE__ ) . 'class-wpzoom-instagram-image-uploader.php';
-require_once plugin_dir_path( __FILE__ ) . 'class-wpzoom-instagram-widget-api.php';
 require_once plugin_dir_path( __FILE__ ) . 'class-wpzoom-instagram-widget-settings.php';
+require_once plugin_dir_path( __FILE__ ) . 'class-wpzoom-instagram-widget-api.php';
 require_once plugin_dir_path( __FILE__ ) . 'class-wpzoom-instagram-widget.php';
 
 add_action( 'widgets_init', 'zoom_instagram_widget_register' );
@@ -43,7 +43,7 @@ function wpzoom_instagram_admin_notice() {
 		return;
 	}
 
-	$options = Wpzoom_Instagram_Widget_Settings::$settings;
+	$options = WPZOOM_Instagram_Widget_Settings::get_instance()->get_settings();
 
 	if ( ! isset( $options['basic-access-token'] ) || empty( $options['basic-access-token'] ) ) {
 		$hide_notices_url = wpzoom_instagram_get_notice_dismiss_url();
@@ -55,7 +55,7 @@ function wpzoom_instagram_admin_notice() {
 
 		$options['admin-notice-message'] = $notice_message;
 
-		update_option( Wpzoom_Instagram_Widget_Settings::$option_name, $options );
+		update_option( WPZOOM_Instagram_Widget_Settings::get_instance()->get_option_name(), $options );
 	}
 
 	/* Check that the user hasn't already clicked to ignore the message */
@@ -80,7 +80,7 @@ function wpzoom_instagram_admin_notice() {
 
 			$options['refresh-access-token'] = '';
 
-			update_option( Wpzoom_Instagram_Widget_Settings::$option_name, $options );
+			update_option( WPZOOM_Instagram_Widget_Settings::get_instance()->get_option_name(), $options );
 		}
 	}
 }

@@ -27,6 +27,13 @@ class Wpzoom_Instagram_Widget_API {
 	public $errors = array();
 
 	/**
+	 * Instagram Settings
+	 *
+	 * @var array
+	 */
+	public $settings;
+
+	/**
 	 * Instagram Access Token
 	 *
 	 * @var string
@@ -37,7 +44,7 @@ class Wpzoom_Instagram_Widget_API {
 	 * Class constructor
 	 */
 	protected function __construct() {
-		$options = Wpzoom_Instagram_Widget_Settings::$settings;
+		$options = WPZOOM_Instagram_Widget_Settings::get_instance()->get_settings();
 
 		$this->request_type = ! empty( $options['request-type'] ) ? $options['request-type'] : '';
 		$this->access_token = ! empty( $options['basic-access-token'] ) ? $options['basic-access-token'] : '';
@@ -115,7 +122,7 @@ class Wpzoom_Instagram_Widget_API {
 		global $current_user;
 
 		if ( ! empty( $this->access_token ) ) {
-			$stored_data = Wpzoom_Instagram_Widget_Settings::$settings;
+			$stored_data = WPZOOM_Instagram_Widget_Settings::get_instance()->get_settings();
 			$request_url = add_query_arg(
 				array(
 					'grant_type'   => 'ig_refresh_token',
@@ -170,7 +177,7 @@ class Wpzoom_Instagram_Widget_API {
 				update_user_meta( $user_id, 'wpzoom_instagram_admin_notice', false );
 			}
 
-			return update_option( Wpzoom_Instagram_Widget_Settings::$option_name, $stored_data );
+			return update_option( WPZOOM_Instagram_Widget_Settings::get_instance()->get_option_name(), $stored_data );
 		}
 
 		return false;
@@ -711,7 +718,7 @@ class Wpzoom_Instagram_Widget_API {
 	function convert_user_info_to_old_structure( $user_info ) {
 		$converted = new stdClass();
 
-		$user_info_from_settings = Wpzoom_Instagram_Widget_Settings::$settings;
+		$user_info_from_settings = WPZOOM_Instagram_Widget_Settings::get_instance()->get_settings();
 
 		$avatar = property_exists( $user_info, 'profile_picture' ) ? $user_info->profile_picture : null;
 
@@ -852,3 +859,5 @@ class Wpzoom_Instagram_Widget_API {
 		return true;
 	}
 }
+
+Wpzoom_Instagram_Widget_API::getInstance();

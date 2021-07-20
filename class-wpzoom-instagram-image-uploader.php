@@ -98,7 +98,7 @@ class WPZOOM_Instagram_Image_Uploader {
 	 * @return float|int
 	 */
 	function get_transient_lifetime() {
-		$options = Wpzoom_Instagram_Widget_Settings::$settings;
+		$options = WPZOOM_Instagram_Widget_Settings::get_instance()->get_settings();
 
 		$values = array(
 			'minutes' => MINUTE_IN_SECONDS,

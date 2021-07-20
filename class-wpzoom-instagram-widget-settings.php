@@ -6,7 +6,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-class Wpzoom_Instagram_Widget_Settings {
+class WPZOOM_Instagram_Widget_Settings {
+	/**
+	 * @var WPZOOM_Instagram_Widget_Settings The reference to *Singleton* instance of this class
+	 *
+	 * @since 1.8.4
+	 */
+	private static $instance;
+
 	/**
 	 * Stores settings options
 	 *
@@ -23,6 +30,22 @@ class Wpzoom_Instagram_Widget_Settings {
 	 */
 	public static $option_name = 'wpzoom-instagram-widget-settings';
 
+	/**
+	 * Returns the *Singleton* instance of this class.
+	 *
+	 * @return WPZOOM_Instagram_Widget_Settings The *Singleton* instance.
+	 */
+	public static function get_instance() {
+		if ( null === self::$instance ) {
+			self::$instance = new self();
+		}
+
+		return self::$instance;
+	}
+
+	/**
+	 * Construct.
+	 */
 	public function __construct() {
 		self::$settings = get_option( 'wpzoom-instagram-widget-settings', wpzoom_instagram_get_default_settings() );
 
@@ -34,7 +57,7 @@ class Wpzoom_Instagram_Widget_Settings {
 		add_action( 'admin_enqueue_scripts', array( $this, 'scripts' ), 9 );
 	}
 
-	function add_action_links( $links, $file ) {
+	public function add_action_links( $links, $file ) {
 		if ( $file != plugin_basename( dirname( __FILE__ ) . '/instagram-widget-by-wpzoom.php' ) ) {
 			return $links;
 		}
@@ -314,7 +337,6 @@ class Wpzoom_Instagram_Widget_Settings {
 		<?php
 	}
 
-
 	public function settings_field_username() {
 		$settings = self::$settings;
 		?>
@@ -513,6 +535,26 @@ class Wpzoom_Instagram_Widget_Settings {
 
 		return $result;
 	}
+
+	/**
+	 * Get settings
+	 *
+	 * @since 1.8.4
+	 * @return array
+	 */
+	public function get_settings() {
+		return self::$settings;
+	}
+
+	/**
+	 * Get settings option name
+	 *
+	 * @since 1.8.4
+	 * @return string
+	 */
+	public function get_option_name() {
+		return self::$option_name;
+	}
 }
 
-new Wpzoom_Instagram_Widget_Settings();
+WPZOOM_Instagram_Widget_Settings::get_instance();
