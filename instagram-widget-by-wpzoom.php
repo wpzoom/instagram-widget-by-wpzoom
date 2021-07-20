@@ -110,6 +110,8 @@ function wpzoom_instagram_get_notice_dismiss_url() {
 			wpzoom_instagram_get_current_admin_url() ? wpzoom_instagram_get_current_admin_url() : admin_url( 'options-general.php?page=wpzoom-instagram-widget' )
 		)
 	);
+
+	return $hide_notices_url;
 }
 
 function wpzoom_instagram_get_default_settings() {
