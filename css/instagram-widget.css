@@ -311,7 +311,11 @@ a.ig-b-v-24:hover {
 	flex-direction: row;
 	flex-wrap: wrap;
 	background-color: white;
-	max-width: 100%;
+}
+
+.wpz-insta-lightbox-wrapper {
+	display: flex;
+	justify-content: center;
 }
 
 .wpz-insta-lightbox-wrapper .wpz-insta-lightbox .details-wrapper {
@@ -399,15 +403,13 @@ a.ig-b-v-24:hover {
 .wpz-insta-lightbox-wrapper .wpz-insta-lightbox .image-wrapper img {
 	height: 100%;
 	object-fit: contain;
-	max-width: 100%;
 }
 
 .wpz-insta-lightbox-wrapper .wpz-insta-lightbox .image-wrapper {
 	flex-grow: 1;
 	text-align: center;
-	max-height: 600px;
+	height: 600px;
     background: #000;
-	overflow: hidden;
 }
 
 .wpz-insta-lightbox-wrapper .wpz-insta-lightbox .details-wrapper {
@@ -443,10 +445,4 @@ a.ig-b-v-24:hover {
 
 .wpz-insta-lightbox-wrapper .wpz-insta-lightbox .details-wrapper .view-post .delimiter {
 	padding: 0px 10px;
-}
-
-@media screen and (max-width: 680px) {
-	.wpz-insta-lightbox-wrapper .wpz-insta-lightbox .image-wrapper img {
-		height: auto;
-	}
 }
