@@ -322,53 +322,56 @@ a.ig-b-v-24:hover {
 	width: 335px;
 }
 
-.wpz-insta-lightbox-wrapper .wpz-insta-lightbox .details-wrapper .header {
+.wpz-insta-lightbox-wrapper .wpz-insta-lightbox .details-wrapper .wpz-insta-header {
 	display: flex;
 	align-items: center;
 	padding: 16px;
 	border-bottom: 1px solid #efefef;
 }
 
-.wpz-insta-lightbox-wrapper .wpz-insta-lightbox .details-wrapper .header .avatar img {
+.wpz-insta-lightbox-wrapper .wpz-insta-lightbox .details-wrapper .wpz-insta-header .wpz-insta-avatar img {
 	width: 42px;
 	height: 42px;
 	border-radius: 50%;
 }
 
-.wpz-insta-lightbox-wrapper .wpz-insta-lightbox .details-wrapper .header .username a,
-.wpz-insta-lightbox-wrapper .wpz-insta-lightbox .details-wrapper .header .follow a {
+.wpz-insta-lightbox-wrapper .wpz-insta-lightbox .details-wrapper .wpz-insta-header .wpz-insta-username a,
+.wpz-insta-lightbox-wrapper .wpz-insta-lightbox .details-wrapper .wpz-insta-header .wpz-insta-follow a {
 	color: #262626;
 	font-weight: 600;
 	text-decoration: none;
 	font-size: 14px;
 }
 
-.wpz-insta-lightbox-wrapper .wpz-insta-lightbox .details-wrapper .header .username a:hover {
+.wpz-insta-lightbox-wrapper .wpz-insta-lightbox .details-wrapper .wpz-insta-header .wpz-insta-username a:hover {
 	text-decoration: underline;
 }
 
-.wpz-insta-lightbox-wrapper .wpz-insta-lightbox .details-wrapper .header .follow a {
+.wpz-insta-lightbox-wrapper .wpz-insta-lightbox .details-wrapper .wpz-insta-header .wpz-insta-follow a {
 	color: #0095f6;
 }
 
-.wpz-insta-lightbox-wrapper .wpz-insta-lightbox .details-wrapper .header > div {
-	margin-right: 20px;
+.wpz-insta-lightbox-wrapper .wpz-insta-lightbox .details-wrapper .wpz-insta-header > div {
+	margin-right: 13px;
 }
 
-.wpz-insta-lightbox-wrapper .wpz-insta-lightbox .details-wrapper .header .buttons {
+.wpz-insta-lightbox-wrapper .wpz-insta-lightbox .details-wrapper .wpz-insta-header .wpz-insta-buttons {
 	display: flex;
 }
 
-.wpz-insta-lightbox-wrapper .wpz-insta-lightbox .details-wrapper .header .buttons > div {
+.wpz-insta-lightbox-wrapper .wpz-insta-lightbox .details-wrapper .wpz-insta-header .wpz-insta-buttons > div {
 	padding: 5px;
 }
 
-.wpz-insta-lightbox-wrapper .wpz-insta-lightbox .details-wrapper .caption {
+.wpz-insta-lightbox-wrapper .wpz-insta-lightbox .details-wrapper .wpz-insta-caption {
 	color: #262626;
     line-height: 1.5;
 	font-size: 14px;
 	padding: 16px;
 	font-weight: normal;
+    overflow-y: scroll;
+    max-height: 384px;
+    border-bottom: 1px solid #efefef;
 }
 
 .wpzoom-lightbox.mfp-gallery {
@@ -393,7 +396,7 @@ a.ig-b-v-24:hover {
 	text-decoration: none;
 }
 
-.wpz-insta-lightbox-wrapper .wpz-insta-lightbox .details-wrapper .date {
+.wpz-insta-lightbox-wrapper .wpz-insta-lightbox .details-wrapper .wpz-insta-date {
 	font-size: 12px;
 	padding: 16px;
 	color: #8e8e8e;
@@ -448,11 +451,13 @@ a.ig-b-v-24:hover {
 }
 
 
-@media screen and (max-width: 680px) {
+@media screen and (max-width: 860px) {
 
     .wpz-insta-lightbox-wrapper {
         display: block;
-        max-width: 100%;
+        max-width: 76%;
+        margin-left: auto;
+        margin-right: auto;
     }
 
     .wpz-insta-lightbox-wrapper .wpz-insta-lightbox .image-wrapper {
@@ -465,5 +470,10 @@ a.ig-b-v-24:hover {
         max-width: 100%;
         height: auto;
     }
-}
 
+    .wpz-insta-lightbox-wrapper .wpz-insta-lightbox .details-wrapper .wpz-insta-caption {
+        font-size: 12px;
+        max-height: 134px;
+    }
+
+}

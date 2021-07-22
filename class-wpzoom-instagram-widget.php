@@ -416,21 +416,19 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 						<div id="<?php echo $media_id; ?>" class="mfp-hide wpz-insta-lightbox-wrapper">
 							<div class="wpz-insta-lightbox">
 								<div class="image-wrapper">
-									<img src="<?php echo esc_url( $src ); ?>"/>
+									<img src="<?php echo esc_url( $src ); ?>" alt="<?php echo $alt; ?>"/>
 								</div>
 								<div class="details-wrapper">
-									<div class="header">
-										<div class="avatar">
-											<img src="<?php echo esc_url( $avatar ); ?>" />
+									<div class="wpz-insta-header">
+										<div class="wpz-insta-avatar">
+											<img src="<?php echo esc_url( $avatar ); ?>" alt="<?php echo esc_attr( $user_info->data->full_name ); ?>" width="42" height="42"/>
 										</div>
-										<div class="buttons">
-											<div class="username">
-												<a rel="noopener" target="_blank" href="<?php printf( 'https://instagram.com/%s', esc_attr( $username ) ); ?>">
-													<?php echo esc_html( $username ); ?>
-												</a>
+										<div class="wpz-insta-buttons">
+											<div class="wpz-insta-username">
+												<a rel="noopener" target="_blank" href="<?php printf( 'https://instagram.com/%s', esc_attr( $username ) ); ?>"><?php echo esc_html( $username ); ?></a>
 											</div>
 											<div>&bull;</div>
-											<div class="follow">
+											<div class="wpz-insta-follow">
 												<a target="_blank" rel="noopener"
 												href="<?php printf( 'https://instagram.com/%s?ref=badge', esc_attr( $username ) ); ?>">
 													<?php _e( 'Follow', 'wpzoom-instagram-widget' ); ?>
@@ -439,13 +437,13 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 										</div>
 									</div>
 									<?php if ( ! empty( $item['image-caption'] ) ) : ?>
-										<div class="caption">
+										<div class="wpz-insta-caption">
 											<?php echo esc_html( $item['image-caption'] ); ?>
 										</div>
 									<?php endif; ?>
 
 									<?php if ( ! empty( $item['timestamp'] ) ) : ?>
-										<div class="date">
+										<div class="wpz-insta-date">
 											<?php printf( __( '%s ago' ), human_time_diff( strtotime( $item['timestamp'] ) ) ); ?>
 										</div>
 									<?php endif; ?>

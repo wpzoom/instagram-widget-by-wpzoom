@@ -1,5 +1,5 @@
 === WPZOOM Social Feed Widget ===
-Contributors: WPZOOM, nvartolomei, ciorici
+Contributors: WPZOOM, nvartolomei, ciorici, vicolaspetru
 Donate link: https://www.wpzoom.com/
 Tags: instagram, instagram feed, instagram gallery, instagram photos, instagram widget, instagram stories, widget, timeline, social network, latest images, feed, story, stories, insta
 Requires at least: 4.3
@@ -9,11 +9,11 @@ Stable tag: trunk
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Formerly known as "Instagram Widget by WPZOOM". Fully customisable and responsive widget for WordPress to display your Instagram feed.
+Formerly known as "Instagram Widget by WPZOOM". Simple and lightweight widget for WordPress to display your Instagram feed.
 
 == Description ==
 
-Formerly known as *Instagram Widget by WPZOOM*, **WPZOOM Social Feed Widget** is a fully customisable and responsive widget for WordPress to display your **Instagram feed**.
+Formerly known as *Instagram Widget by WPZOOM*, **WPZOOM Social Feed Widget** is a simple and lightweight widget for WordPress to display your **Instagram feed**.
 
 
 **[View Demo](https://demo.wpzoom.com/instagram-widget/)**
@@ -22,12 +22,16 @@ Formerly known as *Instagram Widget by WPZOOM*, **WPZOOM Social Feed Widget** is
 > Did you find this plugin helpful? Please consider [leaving a 5-star review](https://wordpress.org/support/view/plugin-reviews/instagram-widget-by-wpzoom).
 
 
-**WPZOOM Social Feed Widget** gives you a WordPress Widget that you can place anywhere you want and be able to fully customize it's design using CSS.
+**WPZOOM Social Feed Widget** gives you a WordPress Widget that you can place anywhere you want to display your Instagram Feed. Easy setup and configuration!
 
 
-= What's New in version 1.4? =
+= Features =
 
-You can now display a public feed limited to 12 photos of any Instagram account you want. You are no longer limited to display just your own feed.
+* **Lightbox** 🆕
+* Add your custom avatar and bio
+* Supports Lazy Loading
+* Lighweight plugin
+* Works with the new WordPress 5.8 block-based widgets screen
 
 
 = Where I can view a Demo? =
@@ -66,6 +70,9 @@ Make sure to connect your Instagram account with the plugin. You can do that in 
 
 
 == Changelog ==
+
+= 1.9.0 =
+* Added a new Lightbox Feature
 
 = 1.8.3 =
 * Fixed error 400 Bad Request
