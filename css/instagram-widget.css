@@ -446,3 +446,24 @@ a.ig-b-v-24:hover {
 .wpz-insta-lightbox-wrapper .wpz-insta-lightbox .details-wrapper .view-post .delimiter {
 	padding: 0px 10px;
 }
+
+
+@media screen and (max-width: 680px) {
+
+    .wpz-insta-lightbox-wrapper {
+        display: block;
+        max-width: 100%;
+    }
+
+    .wpz-insta-lightbox-wrapper .wpz-insta-lightbox .image-wrapper {
+        height: auto;
+        max-height: 600px;
+        overflow: hidden;
+    }
+
+    .wpz-insta-lightbox-wrapper .wpz-insta-lightbox .image-wrapper img {
+        max-width: 100%;
+        height: auto;
+    }
+}
+
