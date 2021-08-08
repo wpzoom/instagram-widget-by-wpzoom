@@ -89,6 +89,13 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 			array( 'dashicons' ),
 			WPZOOM_INSTAGRAM_VERSION
 		);
+
+		wp_enqueue_style(
+			'swiper-css',
+			plugin_dir_url( __FILE__ ) . 'assets/frontend/swiper/swiper.css',
+			array(),
+			WPZOOM_INSTAGRAM_VERSION
+		);
 	}
 
 	/**
@@ -112,9 +119,16 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 			true
 		);
 		wp_register_script(
+			'swiper-js',
+			plugin_dir_url( __FILE__ ) . 'assets/frontend/swiper/swiper.js',
+			array(),
+			filemtime( plugin_dir_path( __FILE__ ) . 'assets/frontend/swiper/swiper.js' ),
+			true
+		);
+		wp_register_script(
 			'zoom-instagram-widget',
 			plugin_dir_url( __FILE__ ) . 'js/instagram-widget.js',
-			array( 'jquery', 'underscore', 'wp-util' ),
+			array( 'jquery', 'underscore', 'wp-util', 'magnific-popup', 'swiper-js' ),
 			WPZOOM_INSTAGRAM_VERSION,
 			true
 		);
@@ -126,6 +140,7 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 	public function enqueue_scripts() {
 		wp_enqueue_script( 'zoom-instagram-widget-lazy-load' );
 		wp_enqueue_script( 'magnific-popup' );
+		wp_enqueue_script( 'swiper-js' );
 		wp_enqueue_script( 'zoom-instagram-widget' );
 	}
 
@@ -334,6 +349,8 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 						'CAROUSEL_ALBUM',
 					)
 				) ? strtolower( $item['type'] ) : false;
+				$is_album      = 'carousel_album' == $type;
+				$is_video      = 'video' == $type;
 				$comments      = $item['comments_count'];
 
 				if ( ! empty( $media_id ) && empty( $src ) ) {
@@ -354,6 +371,8 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 
 					$overwrite_src = true;
 				}
+
+				$inline_attrs .= 'data-media-type="' . esc_attr( $type ?: 'image' ) . '"';
 
 				if ( $overwrite_src || $lightbox ) {
 					$src = $item['original-image-url'];
@@ -401,7 +420,7 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 					<?php else : ?>
 						<a class="zoom-instagram-link" data-src="<?php echo $src; ?>"
 						   style="<?php echo $inline_style; ?>"
-						   data-mfp-src="#<?php echo $media_id; ?>"
+						   data-mfp-src="<?php echo $media_id; ?>"
 						   href="<?php echo $link; ?>" target="_blank" rel="noopener nofollow" title="<?php echo $alt; ?>"
 						>
 							<?php if ( $show_media_type_icons && ! empty( $type ) ) : ?>
@@ -410,51 +429,6 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 								</svg>
 							<?php endif; ?>
 						</a>
-					<?php endif; ?>
-
-					<?php if ( $lightbox ) : ?>
-						<div id="<?php echo $media_id; ?>" class="mfp-hide wpz-insta-lightbox-wrapper">
-							<div class="wpz-insta-lightbox">
-								<div class="image-wrapper">
-									<img src="<?php echo esc_url( $src ); ?>" alt="<?php echo $alt; ?>"/>
-								</div>
-								<div class="details-wrapper">
-									<div class="wpz-insta-header">
-										<div class="wpz-insta-avatar">
-											<img src="<?php echo esc_url( $avatar ); ?>" alt="<?php echo esc_attr( $user_info->data->full_name ); ?>" width="42" height="42"/>
-										</div>
-										<div class="wpz-insta-buttons">
-											<div class="wpz-insta-username">
-												<a rel="noopener" target="_blank" href="<?php printf( 'https://instagram.com/%s', esc_attr( $username ) ); ?>"><?php echo esc_html( $username ); ?></a>
-											</div>
-											<div>&bull;</div>
-											<div class="wpz-insta-follow">
-												<a target="_blank" rel="noopener"
-												href="<?php printf( 'https://instagram.com/%s?ref=badge', esc_attr( $username ) ); ?>">
-													<?php _e( 'Follow', 'wpzoom-instagram-widget' ); ?>
-												</a>
-											</div>
-										</div>
-									</div>
-									<?php if ( ! empty( $item['image-caption'] ) ) : ?>
-										<div class="wpz-insta-caption">
-											<?php echo esc_html( $item['image-caption'] ); ?>
-										</div>
-									<?php endif; ?>
-
-									<?php if ( ! empty( $item['timestamp'] ) ) : ?>
-										<div class="wpz-insta-date">
-											<?php printf( __( '%s ago' ), human_time_diff( strtotime( $item['timestamp'] ) ) ); ?>
-										</div>
-									<?php endif; ?>
-									<div class="view-post">
-										<a href="<?php echo esc_url( $link ); ?>" target="_blank" rel="noopener"><span class="dashicons dashicons-instagram"></span><?php _e( 'View on Instagram', 'wpzoom-instagram-widget' ); ?></a>
-										<span class="delimiter">|</span>
-										<div class="wpz-insta-pagination">1/10</div>
-									</div>
-								</div>
-							</div>
-						</div>
 					<?php endif; ?>
 				</li>
 
@@ -467,6 +441,90 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 			<?php endforeach; ?>
 
 		</ul>
+
+		<?php if ( $lightbox ) : ?>
+			<div class="wpz-insta-lightbox-wrapper mfp-hide">
+				<div class="swiper-container">
+					<div class="swiper-wrapper">
+						<?php
+						$amount = count( $items );
+						$count = 0;
+						foreach ( $items as $item ) :
+							$count++;
+							$media_id = $item['image-id'];
+							$link     = $item['link'];
+							$src      = $item['original-image-url'];
+							$alt      = esc_attr( $item['image-caption'] );
+							$type     = in_array( $item['type'], array( 'VIDEO', 'CAROUSEL_ALBUM' ) ) ? strtolower( $item['type'] ) : false;
+							$is_album = 'carousel_album' == $type;
+							$is_video = 'video' == $type;
+							$children = $is_album && isset( $item['children'] ) && is_object( $item['children'] ) && isset( $item['children']->data ) ? $item['children']->data : false; ?>
+
+							<div data-uid="<?php echo $media_id; ?>" class="swiper-slide wpz-insta-lightbox-item">
+								<div class="wpz-insta-lightbox">
+									<div class="image-wrapper">
+										<?php if ( $is_album && false !== $children ) : ?>
+											<div class="swiper-container">
+												<div class="swiper-wrapper wpz-insta-album-images">
+													<?php foreach ( $children as $child ) : ?>
+														<div class="swiper-slide wpz-insta-album-image">
+															<img src="<?php echo esc_url( $child->media_url ); ?>" alt="<?php echo $alt; ?>"/>
+														</div>
+													<?php endforeach; ?>
+												</div>
+
+												<div class="swiper-pagination"></div>
+											</div>
+										<?php else : ?>
+											<img src="<?php echo esc_url( $src ); ?>" alt="<?php echo $alt; ?>"/>
+										<?php endif; ?>
+									</div>
+									<div class="details-wrapper">
+										<div class="wpz-insta-header">
+											<div class="wpz-insta-avatar">
+												<img src="<?php echo esc_url( $avatar ); ?>" alt="<?php echo esc_attr( $user_info->data->full_name ); ?>" width="42" height="42"/>
+											</div>
+											<div class="wpz-insta-buttons">
+												<div class="wpz-insta-username">
+													<a rel="noopener" target="_blank" href="<?php printf( 'https://instagram.com/%s', esc_attr( $username ) ); ?>"><?php echo esc_html( $username ); ?></a>
+												</div>
+												<div>&bull;</div>
+												<div class="wpz-insta-follow">
+													<a target="_blank" rel="noopener"
+													href="<?php printf( 'https://instagram.com/%s?ref=badge', esc_attr( $username ) ); ?>">
+														<?php _e( 'Follow', 'wpzoom-instagram-widget' ); ?>
+													</a>
+												</div>
+											</div>
+										</div>
+										<?php if ( ! empty( $item['image-caption'] ) ) : ?>
+											<div class="wpz-insta-caption">
+												<?php echo esc_html( $item['image-caption'] ); ?>
+											</div>
+										<?php endif; ?>
+
+										<?php if ( ! empty( $item['timestamp'] ) ) : ?>
+											<div class="wpz-insta-date">
+												<?php printf( __( '%s ago' ), human_time_diff( strtotime( $item['timestamp'] ) ) ); ?>
+											</div>
+										<?php endif; ?>
+
+										<div class="view-post">
+											<a href="<?php echo esc_url( $link ); ?>" target="_blank" rel="noopener"><span class="dashicons dashicons-instagram"></span><?php _e( 'View on Instagram', 'wpzoom-instagram-widget' ); ?></a>
+											<span class="delimiter">|</span>
+											<div class="wpz-insta-pagination"><?php printf( '%d/%d', $count, $amount ); ?></div>
+										</div>
+									</div>
+								</div>
+							</div>
+						<?php endforeach; ?>
+					</div>
+
+					<div class="swiper-button-prev"></div>
+					<div class="swiper-button-next"></div>
+				</div>
+			</div>
+		<?php endif; ?>
 
 		<div style="clear:both;"></div>
 		<?php

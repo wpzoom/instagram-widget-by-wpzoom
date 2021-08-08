@@ -238,7 +238,7 @@ class Wpzoom_Instagram_Widget_API {
 		if ( ! empty( $this->access_token ) ) {
 			$request_url = add_query_arg(
 				array(
-					'fields'       => 'media_url,media_type,caption,username,permalink,thumbnail_url,timestamp',
+					'fields'       => 'media_url,media_type,caption,username,permalink,thumbnail_url,timestamp,children{media_url,thumbnail_url}',
 					'access_token' => $this->access_token,
 				),
 				'https://graph.instagram.com/me/media'
@@ -293,6 +293,7 @@ class Wpzoom_Instagram_Widget_API {
 			'original-image-url' => '',
 			'type'               => '',
 			'timestamp'          => '',
+			'children'           => '',
 			'image-id'           => '',
 			'image-caption'      => '',
 			'likes_count'        => 0,
@@ -325,9 +326,10 @@ class Wpzoom_Instagram_Widget_API {
 			$result[] = array(
 				'link'               => $item->link,
 				'image-url'          => $image_url,
-				'original-image-url' => $item->media_url,
+				'original-image-url' => property_exists( $item, 'media_url' ) && ! empty( $item->media_url ) ? $item->media_url : '',
 				'type'               => $item->type,
 				'timestamp'          => property_exists( $item, 'timestamp' ) && ! empty( $item->timestamp ) ? $item->timestamp : '',
+				'children'           => property_exists( $item, 'children' ) && ! empty( $item->children ) ? $item->children : '',
 				'image-id'           => ! empty( $item->id ) ? esc_attr( $item->id ) : '',
 				'image-caption'      => ! empty( $item->caption->text ) ? esc_attr( $item->caption->text ) : '',
 				'likes_count'        => ! empty( $item->likes->count ) ? esc_attr( $item->likes->count ) : 0,
@@ -476,6 +478,7 @@ class Wpzoom_Instagram_Widget_API {
 				'comments'     => null,
 				'created_time' => null,
 				'timestamp'    => $item->timestamp,
+				'children'     => ( isset( $item->children ) ? $item->children : null ),
 				'link'         => $item->permalink,
 				'caption'      => (object) array(
 					'text' => isset( $item->caption ) ? $item->caption : '',

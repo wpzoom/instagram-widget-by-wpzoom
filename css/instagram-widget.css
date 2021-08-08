@@ -316,6 +316,7 @@ a.ig-b-v-24:hover {
 .wpz-insta-lightbox-wrapper {
 	display: flex;
 	justify-content: center;
+	pointer-events: none;
 }
 
 .wpz-insta-lightbox-wrapper .wpz-insta-lightbox .details-wrapper {
@@ -412,7 +413,45 @@ a.ig-b-v-24:hover {
 	flex-grow: 1;
 	text-align: center;
 	height: 600px;
+	width: 600px;
     background: #000;
+}
+
+.wpz-insta-lightbox-wrapper > .swiper-container {
+	pointer-events: none;
+	width: 70%;
+	height: 100%;
+}
+
+.wpz-insta-lightbox-wrapper > .swiper-container .swiper-container {
+	width: 100%;
+	height: 100%;
+}
+
+.wpz-insta-lightbox-wrapper > .swiper-container .swiper-container .swiper-slide {
+	height: 100%;
+}
+
+.wpz-insta-lightbox-wrapper > .swiper-container > .swiper-wrapper {
+	pointer-events: all;
+}
+
+.wpz-insta-lightbox-wrapper > .swiper-container > .swiper-button-prev,
+.wpz-insta-lightbox-wrapper > .swiper-container > .swiper-button-next {
+	position: fixed;
+	pointer-events: all;
+	color: #fff;
+	opacity: 0.75;
+}
+
+.wpz-insta-lightbox-wrapper > .swiper-container > .swiper-button-prev:hover,
+.wpz-insta-lightbox-wrapper > .swiper-container > .swiper-button-next:hover {
+	opacity: 1;
+}
+
+.wpz-insta-lightbox-wrapper > .swiper-container > .swiper-button-prev.swiper-button-disabled,
+.wpz-insta-lightbox-wrapper > .swiper-container > .swiper-button-next.swiper-button-disabled {
+	opacity: 0.25 !important;
 }
 
 .wpz-insta-lightbox-wrapper .wpz-insta-lightbox .details-wrapper {
