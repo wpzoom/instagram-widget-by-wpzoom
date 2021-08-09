@@ -413,6 +413,7 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 
 							<a class="zoom-instagram-link" data-src="<?php echo $src; ?>"
 							   style="<?php echo $inline_style; ?>"
+							   data-mfp-src="<?php echo $media_id; ?>"
 							   href="<?php echo $link; ?>" target="_blank" rel="noopener nofollow" title="<?php echo $alt; ?>"
 							>
 							</a>
@@ -474,6 +475,8 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 												</div>
 
 												<div class="swiper-pagination"></div>
+												<div class="swiper-button-prev"></div>
+												<div class="swiper-button-next"></div>
 											</div>
 										<?php else : ?>
 											<img src="<?php echo esc_url( $src ); ?>" alt="<?php echo $alt; ?>"/>

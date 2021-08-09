@@ -74,6 +74,10 @@ jQuery(function ($) {
 					type: 'bullets',
 					clickable: true,
 					hideOnClick: false
+				},
+				navigation: {
+					nextEl: $nested.find( '> .swiper-button-next' ).get(0),
+					prevEl: $nested.find( '> .swiper-button-prev' ).get(0)
 				}
 			} );
 

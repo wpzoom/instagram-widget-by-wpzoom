@@ -54,31 +54,37 @@ a.ig-b-v-24:hover {
 	border-color: #3897f0;
 	color: #ffffff !important;
 }
-.zoom-instagram-widget__item .hover-controls{
+.zoom-instagram-widget__item .hover-controls {
 	opacity: 0;
 	z-index: 9;
 	margin-top: -15px;
 	position: absolute;
-	top:40%;
+	top: 40%;
 	width: 100%;
 	text-align: center;
 	transition: opacity 0.25s ease-in-out;
 	-moz-transition: opacity 0.25s ease-in-out;
 	-webkit-transition: opacity 0.25s ease-in-out;
 }
-.zoom-instagram-widget__item .hover-controls ~ .zoom-instagram-icon-wrap{
-	bottom: 10%;
+
+.zoom-instagram-widget__items[data-lightbox="1"] .zoom-instagram-widget__item .zoom-instagram-icon-wrap {
+	pointer-events: none;
 }
 
-.zoom-instagram-widget__item .hover-layout.small .hover-controls ~ .zoom-instagram-icon-wrap{
+.zoom-instagram-widget__item .hover-controls ~ .zoom-instagram-icon-wrap {
+	bottom: 10%;
+	pointer-events: all;
+}
+
+.zoom-instagram-widget__item .hover-layout.small .hover-controls ~ .zoom-instagram-icon-wrap {
 	bottom: 6%;
 }
 
-.zoom-instagram-widget__item .hover-layout.small .zoom-instagram-icon-wrap{
+.zoom-instagram-widget__item .hover-layout.small .zoom-instagram-icon-wrap {
 	bottom: calc(50% - 15px);
 }
 
-.zoom-instagram-widget__item .zoom-instagram-icon-wrap{
+.zoom-instagram-widget__item .zoom-instagram-icon-wrap {
 	bottom: calc(50% - 15px);
 	height: 30px;
 	width: 100%;
@@ -86,33 +92,33 @@ a.ig-b-v-24:hover {
 	z-index: 9;
 	text-align: center;
 }
-.zoom-instagram-widget__item:hover .hover-controls{
+.zoom-instagram-widget__item:hover .hover-controls {
 	opacity: 1;
 }
-.zoom-instagram-widget__item .zoom-instagram-icon-wrap{
+.zoom-instagram-widget__item .zoom-instagram-icon-wrap {
 	opacity: 0;
 	transition: opacity 0.25s ease-in-out;
 	-moz-transition: opacity 0.25s ease-in-out;
 	-webkit-transition: opacity 0.25s ease-in-out;
 }
-.zoom-instagram-widget__item:hover .zoom-instagram-icon-wrap{
+.zoom-instagram-widget__item:hover .zoom-instagram-icon-wrap {
 	opacity: 1;
 }
-.zoom-instagram-widget__item .hover-controls .dashicons{
+.zoom-instagram-widget__item .hover-controls .dashicons {
 	font-size: 20px;
 	width: 20px;
 	height: 20px;
 	color: #FFFFFF;
 	vertical-align: middle;
 }
-.zoom-instagram-widget__item .hover-controls .counter{
+.zoom-instagram-widget__item .hover-controls .counter {
 	padding-left: 1px;
 	padding-right: 12px;
 	font-weight: 500;
 	color: #FFFFFF;
 	font-size: 14px;
 	opacity: .8;
-	font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif;
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
 }
 
 .zoom-instagram-widget__overlay {
@@ -121,12 +127,13 @@ a.ig-b-v-24:hover {
 
 .zoom-instagram-widget__overlay:after {
 	position: absolute;
-	content:"";
-	top:0;
-	left:0;
-	width:100%;
-	height:100%;
-	opacity:0;
+	content: "";
+	top: 0;
+	left: 0;
+	pointer-events: none;
+	width: 100%;
+	height: 100%;
+	opacity: 0;
 	transition: opacity 0.25s ease-in-out;
 	-moz-transition: opacity 0.25s ease-in-out;
 	-webkit-transition: opacity 0.25s ease-in-out;
@@ -432,6 +439,20 @@ a.ig-b-v-24:hover {
 	height: 100%;
 }
 
+.wpz-insta-lightbox-wrapper > .swiper-container .swiper-container .swiper-button-prev,
+.wpz-insta-lightbox-wrapper > .swiper-container .swiper-container .swiper-button-next {
+	--swiper-navigation-size: 34px;
+	color: #000;
+	background: #fff;
+	width: var(--swiper-navigation-size);
+	border-radius: 50%;
+}
+
+.wpz-insta-lightbox-wrapper > .swiper-container .swiper-container .swiper-button-prev::after,
+.wpz-insta-lightbox-wrapper > .swiper-container .swiper-container .swiper-button-next::after {
+	font-size: 16px;
+}
+
 .wpz-insta-lightbox-wrapper > .swiper-container > .swiper-wrapper {
 	pointer-events: all;
 }
@@ -440,17 +461,21 @@ a.ig-b-v-24:hover {
 .wpz-insta-lightbox-wrapper > .swiper-container > .swiper-button-next {
 	position: fixed;
 	pointer-events: all;
+}
+
+.wpz-insta-lightbox-wrapper > .swiper-container .swiper-button-prev,
+.wpz-insta-lightbox-wrapper > .swiper-container .swiper-button-next {
 	color: #fff;
 	opacity: 0.75;
 }
 
-.wpz-insta-lightbox-wrapper > .swiper-container > .swiper-button-prev:hover,
-.wpz-insta-lightbox-wrapper > .swiper-container > .swiper-button-next:hover {
+.wpz-insta-lightbox-wrapper > .swiper-container .swiper-button-prev:hover,
+.wpz-insta-lightbox-wrapper > .swiper-container .swiper-button-next:hover {
 	opacity: 1;
 }
 
-.wpz-insta-lightbox-wrapper > .swiper-container > .swiper-button-prev.swiper-button-disabled,
-.wpz-insta-lightbox-wrapper > .swiper-container > .swiper-button-next.swiper-button-disabled {
+.wpz-insta-lightbox-wrapper > .swiper-container .swiper-button-prev.swiper-button-disabled,
+.wpz-insta-lightbox-wrapper > .swiper-container .swiper-button-next.swiper-button-disabled {
 	opacity: 0.25 !important;
 }
 
