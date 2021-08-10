@@ -238,7 +238,7 @@ class Wpzoom_Instagram_Widget_API {
 		if ( ! empty( $this->access_token ) ) {
 			$request_url = add_query_arg(
 				array(
-					'fields'       => 'media_url,media_type,caption,username,permalink,thumbnail_url,timestamp,children{media_url,thumbnail_url}',
+					'fields'       => 'media_url,media_type,caption,username,permalink,thumbnail_url,timestamp,children{media_url,media_type,thumbnail_url}',
 					'access_token' => $this->access_token,
 				),
 				'https://graph.instagram.com/me/media'

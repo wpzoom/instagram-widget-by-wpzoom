@@ -467,9 +467,18 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 										<?php if ( $is_album && false !== $children ) : ?>
 											<div class="swiper-container">
 												<div class="swiper-wrapper wpz-insta-album-images">
-													<?php foreach ( $children as $child ) : ?>
-														<div class="swiper-slide wpz-insta-album-image">
-															<img src="<?php echo esc_url( $child->media_url ); ?>" alt="<?php echo $alt; ?>"/>
+													<?php foreach ( $children as $child ) :
+														$child_type = property_exists( $child, 'media_type' ) && in_array( $child->media_type, array( 'VIDEO', 'CAROUSEL_ALBUM' ) ) ? strtolower( $child->media_type ) : 'image';
+														$thumb = 'video' == $child_type && property_exists( $child, 'thumbnail_url' ) ? strtolower( $child->thumbnail_url ) : '';?>
+														<div class="swiper-slide wpz-insta-album-image" data-media-type="<?php echo esc_attr( $child_type ); ?>">
+															<?php if ( 'video' == $child_type ) : ?>
+																<video controls preload="metadata" poster="<?php echo esc_attr( $thumb ); ?>">
+																	<source src="<?php echo esc_url( $child->media_url ); ?>" type="video/mp4"/>
+																	<?php echo esc_html( $alt ); ?>
+																</video>
+															<?php else : ?>
+																<img src="<?php echo esc_url( $child->media_url ); ?>" alt="<?php echo $alt; ?>"/>
+															<?php endif; ?>
 														</div>
 													<?php endforeach; ?>
 												</div>

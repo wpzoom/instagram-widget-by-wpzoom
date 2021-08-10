@@ -439,6 +439,10 @@ a.ig-b-v-24:hover {
 	height: 100%;
 }
 
+.wpz-insta-lightbox-wrapper video {
+	height: 100%;
+}
+
 .wpz-insta-lightbox-wrapper > .swiper-container .swiper-container .swiper-button-prev,
 .wpz-insta-lightbox-wrapper > .swiper-container .swiper-container .swiper-button-next {
 	--swiper-navigation-size: 34px;

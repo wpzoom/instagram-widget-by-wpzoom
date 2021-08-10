@@ -61,24 +61,34 @@ jQuery(function ($) {
 				navigation: {
 					nextEl: $swipe_el.find( '> .swiper-button-next' ).get(0),
 					prevEl: $swipe_el.find( '> .swiper-button-prev' ).get(0)
+				},
+				keyboard: {
+					enabled: true,
+					onlyInViewport: false
 				}
 			} );
 
-			new Swiper( $nested.get(0), {
-				direction: 'horizontal',
-				loop: false,
-				spaceBetween: 20,
-				nested: true,
-				pagination: {
-					el: $nested.find( '> .swiper-pagination' ).get(0),
-					type: 'bullets',
-					clickable: true,
-					hideOnClick: false
-				},
-				navigation: {
-					nextEl: $nested.find( '> .swiper-button-next' ).get(0),
-					prevEl: $nested.find( '> .swiper-button-prev' ).get(0)
-				}
+			$nested.each( function() {
+				new Swiper( $( this ).get(0), {
+					direction: 'horizontal',
+					loop: false,
+					spaceBetween: 20,
+					nested: true,
+					pagination: {
+						el: $( this ).find( '> .swiper-pagination' ).get(0),
+						type: 'bullets',
+						clickable: true,
+						hideOnClick: false
+					},
+					navigation: {
+						nextEl: $( this ).find( '> .swiper-button-next' ).get(0),
+						prevEl: $( this ).find( '> .swiper-button-prev' ).get(0)
+					},
+					keyboard: {
+						enabled: true,
+						onlyInViewport: false
+					}
+				} );
 			} );
 
 			$( this ).find( '.zoom-instagram-link' ).magnificPopup( {
