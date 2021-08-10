@@ -470,6 +470,7 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 													<?php foreach ( $children as $child ) :
 														$child_type = property_exists( $child, 'media_type' ) && in_array( $child->media_type, array( 'VIDEO', 'CAROUSEL_ALBUM' ) ) ? strtolower( $child->media_type ) : 'image';
 														$thumb = 'video' == $child_type && property_exists( $child, 'thumbnail_url' ) ? strtolower( $child->thumbnail_url ) : '';?>
+
 														<div class="swiper-slide wpz-insta-album-image" data-media-type="<?php echo esc_attr( $child_type ); ?>">
 															<?php if ( 'video' == $child_type ) : ?>
 																<video controls preload="metadata" poster="<?php echo esc_attr( $thumb ); ?>">
