@@ -355,7 +355,7 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 					$overwrite_src = true;
 				}
 
-				if ( $overwrite_src || $lightbox ) {
+				if ( $overwrite_src ) {
 					$src = $item['original-image-url'];
 				}
 				?>
@@ -416,7 +416,7 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 						<div id="<?php echo $media_id; ?>" class="mfp-hide wpz-insta-lightbox-wrapper">
 							<div class="wpz-insta-lightbox">
 								<div class="image-wrapper">
-									<img src="<?php echo esc_url( $src ); ?>" alt="<?php echo $alt; ?>"/>
+									<img src="<?php echo esc_url( $item['original-image-url'] ); ?>" alt="<?php echo $alt; ?>"/>
 								</div>
 								<div class="details-wrapper">
 									<div class="wpz-insta-header">
