@@ -58,13 +58,14 @@ jQuery(function ($) {
 				loop: false,
 				spaceBetween: 20,
 				autoHeight: true,
+				watchOverflow: true,
 				navigation: {
 					nextEl: $swipe_el.find( '> .swiper-button-next' ).get(0),
 					prevEl: $swipe_el.find( '> .swiper-button-prev' ).get(0)
 				},
 				keyboard: {
 					enabled: true,
-					onlyInViewport: false
+					onlyInViewport: true
 				}
 			} );
 
@@ -74,6 +75,7 @@ jQuery(function ($) {
 					loop: false,
 					spaceBetween: 20,
 					nested: true,
+					watchOverflow: true,
 					pagination: {
 						el: $( this ).find( '> .swiper-pagination' ).get(0),
 						type: 'bullets',
@@ -86,7 +88,7 @@ jQuery(function ($) {
 					},
 					keyboard: {
 						enabled: true,
-						onlyInViewport: false
+						onlyInViewport: true
 					}
 				} );
 			} );

@@ -413,6 +413,7 @@ a.ig-b-v-24:hover {
 
 .wpz-insta-lightbox-wrapper .wpz-insta-lightbox .image-wrapper img {
 	height: 100%;
+	max-width: 100%;
 	object-fit: contain;
 }
 
