@@ -374,7 +374,7 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 
 				$inline_attrs .= 'data-media-type="' . esc_attr( $type ?: 'image' ) . '"';
 
-				if ( $overwrite_src || $lightbox ) {
+				if ( $overwrite_src ) {
 					$src = $item['original-image-url'];
 				}
 				?>
