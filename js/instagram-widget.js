@@ -50,7 +50,7 @@ jQuery(function ($) {
 
 	$.fn.zoomLightbox = function () {
 		return $( this ).each( function () {
-			const $swipe_el = $( this ).closest( '.widget' ).find( '> .wpz-insta-lightbox-wrapper > .swiper-container' );
+			const $swipe_el = $( this ).closest( '.widget' ).find( '.wpz-insta-lightbox-wrapper > .swiper-container' );
 
 			if ( $swipe_el.length > 0 ) {
 				const $nested   = $swipe_el.find( '.image-wrapper > .swiper-container' );
