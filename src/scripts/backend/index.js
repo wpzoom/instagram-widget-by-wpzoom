@@ -166,4 +166,7 @@ jQuery(function($) {
         $('.wpzoom-instagram-widget-request-timeout')[$(this).is(":checked") ? 'show' :'hide']();
     }).trigger('change');
 
+	$('#wpbody-content').innerHeight( $('#wpwrap').height() );
+	$(window).resize( function(){ $('#wpbody-content').innerHeight( $('#wpwrap').height() ); } );
+
 });

@@ -78,21 +78,21 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 	public function styles() {
 		wp_enqueue_style(
 			'zoom-instagram-widget',
-			plugin_dir_url( __FILE__ ) . 'css/instagram-widget.css',
+			plugin_dir_url( __FILE__ ) . 'dist/styles/frontend/index.css',
 			array( 'dashicons' ),
 			WPZOOM_INSTAGRAM_VERSION
 		);
 
 		wp_enqueue_style(
 			'magnific-popup',
-			plugin_dir_url( __FILE__ ) . 'assets/frontend/magnific-popup/magnific-popup.css',
+			plugin_dir_url( __FILE__ ) . 'dist/styles/library/magnific-popup.css',
 			array( 'dashicons' ),
 			WPZOOM_INSTAGRAM_VERSION
 		);
 
 		wp_enqueue_style(
 			'swiper-css',
-			plugin_dir_url( __FILE__ ) . 'assets/frontend/swiper/swiper.css',
+			plugin_dir_url( __FILE__ ) . 'dist/styles/library/swiper.css',
 			array(),
 			WPZOOM_INSTAGRAM_VERSION
 		);
@@ -102,32 +102,33 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 	 * Register widget specific scripts.
 	 */
 	public function register_scripts() {
-		$file_mod_time = filemtime( plugin_dir_path( __FILE__ ) . 'js/jquery.lazy.min.js' );
-
 		wp_register_script(
 			'zoom-instagram-widget-lazy-load',
-			plugin_dir_url( __FILE__ ) . 'js/jquery.lazy.min.js',
+			plugin_dir_url( __FILE__ ) . 'dist/scripts/library/lazy.js',
 			array( 'jquery' ),
-			strval( $file_mod_time ),
+			filemtime( plugin_dir_path( __FILE__ ) . 'dist/scripts/library/lazy.js' ),
 			true
 		);
+
 		wp_register_script(
 			'magnific-popup',
-			plugin_dir_url( __FILE__ ) . 'assets/frontend/magnific-popup/jquery.magnific-popup.min.js',
+			plugin_dir_url( __FILE__ ) . 'dist/scripts/library/magnific-popup.js',
 			array( 'jquery', 'underscore', 'wp-util' ),
-			filemtime( plugin_dir_path( __FILE__ ) . 'assets/frontend/magnific-popup/jquery.magnific-popup.min.js' ),
+			filemtime( plugin_dir_path( __FILE__ ) . 'dist/scripts/library/magnific-popup.js' ),
 			true
 		);
+
 		wp_register_script(
 			'swiper-js',
-			plugin_dir_url( __FILE__ ) . 'assets/frontend/swiper/swiper.js',
+			plugin_dir_url( __FILE__ ) . 'dist/scripts/library/swiper.js',
 			array(),
-			filemtime( plugin_dir_path( __FILE__ ) . 'assets/frontend/swiper/swiper.js' ),
+			filemtime( plugin_dir_path( __FILE__ ) . 'dist/scripts/library/swiper.js' ),
 			true
 		);
+
 		wp_register_script(
 			'zoom-instagram-widget',
-			plugin_dir_url( __FILE__ ) . 'js/instagram-widget.js',
+			plugin_dir_url( __FILE__ ) . 'dist/scripts/frontend/index.js',
 			array( 'jquery', 'underscore', 'wp-util', 'magnific-popup', 'swiper-js' ),
 			WPZOOM_INSTAGRAM_VERSION,
 			true
@@ -318,11 +319,11 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 		$show_overlay          = wp_validate_boolean( $instance['show-counts-on-hover'] );
 		$show_media_type_icons = wp_validate_boolean( $instance['display-media-type-icons'] );
 		$small_class           = ( ! empty( $instance['image-width'] ) && $instance['image-width'] <= 180 ) ? 'small' : '';
-		$svg_icons             = plugin_dir_url( __FILE__ ) . 'images/wpzoom-instagram-icons.svg';
+		$svg_icons             = plugin_dir_url( __FILE__ ) . 'dist/images/frontend/wpzoom-instagram-icons.svg';
 		$lightbox              = isset( $instance['lightbox'] ) ? wp_validate_boolean( $instance['lightbox'] ) : true;
 		$user_nfo              = is_object( $user_info ) && ! empty( $user_info ) && ! empty( $user_info->data ) ? $user_info->data : false;
 		$username              = false !== $user_nfo ? $user_nfo->username : '';
-		$avatar                = false !== $user_nfo && ! empty( $user_nfo->profile_picture ) ? $user_nfo->profile_picture : plugin_dir_url( __FILE__ ) . 'assets/backend/img/user-avatar.jpg';
+		$avatar                = false !== $user_nfo && ! empty( $user_nfo->profile_picture ) ? $user_nfo->profile_picture : plugin_dir_url( __FILE__ ) . 'dist/images/backend/user-avatar.jpg';
 		?>
 		<ul class="zoom-instagram-widget__items zoom-instagram-widget__items--no-js"
 			data-images-per-row="<?php echo esc_attr( $instance['images-per-row'] ); ?>"

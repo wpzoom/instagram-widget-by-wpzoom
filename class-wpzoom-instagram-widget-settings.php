@@ -52,9 +52,10 @@ class WPZOOM_Instagram_Widget_Settings {
 		add_action( 'init', array( $this, 'init' ) );
 
 		add_filter( 'views_edit-wpz-insta_feed', array( $this, 'views_filter' ) );
+		add_filter( 'views_edit-wpz-insta_user', array( $this, 'views_filter' ) );
 
-		//add_action( 'admin_menu', array( $this, 'add_admin_menu' ) );
-		add_action( 'admin_init', array( $this, 'settings_init' ) );
+		add_action( 'admin_menu', array( $this, 'add_admin_menu' ) );
+		//add_action( 'admin_init', array( $this, 'settings_init' ) );
 
 		add_filter( 'plugin_action_links', array( $this, 'add_action_links' ), 10, 2 );
 
@@ -116,16 +117,320 @@ class WPZOOM_Instagram_Widget_Settings {
 			)
 		);
 
+		register_post_meta(
+			'wpz-insta_feed',
+			'_wpz-insta_user-id',
+			array(
+				'single'       => true,
+				'type'         => 'integer',
+				'default'      => -1,
+				'show_in_rest' => true,
+			)
+		);
+
+		register_post_meta(
+			'wpz-insta_feed',
+			'_wpz-insta_layout',
+			array(
+				'single'       => true,
+				'type'         => 'integer',
+				'default'      => 0,
+				'show_in_rest' => true,
+			)
+		);
+
+		register_post_meta(
+			'wpz-insta_feed',
+			'_wpz-insta_item-num',
+			array(
+				'single'       => true,
+				'type'         => 'integer',
+				'default'      => 9,
+				'show_in_rest' => true,
+			)
+		);
+
+		register_post_meta(
+			'wpz-insta_feed',
+			'_wpz-insta_col-num',
+			array(
+				'single'       => true,
+				'type'         => 'integer',
+				'default'      => 3,
+				'show_in_rest' => true,
+			)
+		);
+
+		register_post_meta(
+			'wpz-insta_feed',
+			'_wpz-insta_spacing-between',
+			array(
+				'single'       => true,
+				'type'         => 'string',
+				'default'      => '10px',
+				'show_in_rest' => true,
+			)
+		);
+
+		register_post_meta(
+			'wpz-insta_feed',
+			'_wpz-insta_feed-width',
+			array(
+				'single'       => true,
+				'type'         => 'string',
+				'default'      => '',
+				'show_in_rest' => true,
+			)
+		);
+
+		register_post_meta(
+			'wpz-insta_feed',
+			'_wpz-insta_feed-height',
+			array(
+				'single'       => true,
+				'type'         => 'string',
+				'default'      => '',
+				'show_in_rest' => true,
+			)
+		);
+
+		register_post_meta(
+			'wpz-insta_feed',
+			'_wpz-insta_bg-color',
+			array(
+				'single'       => true,
+				'type'         => 'string',
+				'default'      => '',
+				'show_in_rest' => true,
+			)
+		);
+
+		register_post_meta(
+			'wpz-insta_feed',
+			'_wpz-insta_spacing-around',
+			array(
+				'single'       => true,
+				'type'         => 'string',
+				'default'      => '',
+				'show_in_rest' => true,
+			)
+		);
+
+		register_post_meta(
+			'wpz-insta_feed',
+			'_wpz-insta_font-size',
+			array(
+				'single'       => true,
+				'type'         => 'string',
+				'default'      => '',
+				'show_in_rest' => true,
+			)
+		);
+
+		register_post_meta(
+			'wpz-insta_feed',
+			'_wpz-insta_hover-likes',
+			array(
+				'single'       => true,
+				'type'         => 'boolean',
+				'default'      => true,
+				'show_in_rest' => true,
+			)
+		);
+
+		register_post_meta(
+			'wpz-insta_feed',
+			'_wpz-insta_hover-link',
+			array(
+				'single'       => true,
+				'type'         => 'boolean',
+				'default'      => true,
+				'show_in_rest' => true,
+			)
+		);
+
+		register_post_meta(
+			'wpz-insta_feed',
+			'_wpz-insta_hover-caption',
+			array(
+				'single'       => true,
+				'type'         => 'boolean',
+				'default'      => false,
+				'show_in_rest' => true,
+			)
+		);
+
+		register_post_meta(
+			'wpz-insta_feed',
+			'_wpz-insta_hover-username',
+			array(
+				'single'       => true,
+				'type'         => 'boolean',
+				'default'      => false,
+				'show_in_rest' => true,
+			)
+		);
+
+		register_post_meta(
+			'wpz-insta_feed',
+			'_wpz-insta_hover-date',
+			array(
+				'single'       => true,
+				'type'         => 'boolean',
+				'default'      => false,
+				'show_in_rest' => true,
+			)
+		);
+
+		register_post_meta(
+			'wpz-insta_feed',
+			'_wpz-insta_hover-text-color',
+			array(
+				'single'       => true,
+				'type'         => 'string',
+				'default'      => '',
+				'show_in_rest' => true,
+			)
+		);
+
+		register_post_meta(
+			'wpz-insta_feed',
+			'_wpz-insta_hover-bg-color',
+			array(
+				'single'       => true,
+				'type'         => 'string',
+				'default'      => '',
+				'show_in_rest' => true,
+			)
+		);
+
+		register_post_type(
+			'wpz-insta_user',
+			array(
+				'label'               => __( 'User', 'instagram-widget-by-wpzoom' ),
+				'description'         => __( 'Instagram User', 'instagram-widget-by-wpzoom' ),
+				'labels'              => array(
+					'name'                  => _x( 'Instagram User', 'Post Type General Name', 'instagram-widget-by-wpzoom' ),
+					'singular_name'         => _x( 'User', 'Post Type Singular Name', 'instagram-widget-by-wpzoom' ),
+					'menu_name'             => __( 'Instagram User', 'instagram-widget-by-wpzoom' ),
+					'name_admin_bar'        => __( 'User', 'instagram-widget-by-wpzoom' ),
+					'archives'              => __( 'User Archives', 'instagram-widget-by-wpzoom' ),
+					'attributes'            => __( 'User Attributes', 'instagram-widget-by-wpzoom' ),
+					'parent_item_colon'     => __( 'Parent User:', 'instagram-widget-by-wpzoom' ),
+					'all_items'             => __( 'Instagram User', 'instagram-widget-by-wpzoom' ),
+					'add_new_item'          => __( 'Add New User', 'instagram-widget-by-wpzoom' ),
+					'add_new'               => __( 'Add New User', 'instagram-widget-by-wpzoom' ),
+					'new_item'              => __( 'New User', 'instagram-widget-by-wpzoom' ),
+					'edit_item'             => __( 'Edit User', 'instagram-widget-by-wpzoom' ),
+					'update_item'           => __( 'Update User', 'instagram-widget-by-wpzoom' ),
+					'view_item'             => __( 'View User', 'instagram-widget-by-wpzoom' ),
+					'view_items'            => __( 'View Users', 'instagram-widget-by-wpzoom' ),
+					'search_items'          => __( 'Search User', 'instagram-widget-by-wpzoom' ),
+					'not_found'             => __( 'Not found', 'instagram-widget-by-wpzoom' ),
+					'not_found_in_trash'    => __( 'Not found in Trash', 'instagram-widget-by-wpzoom' ),
+					'featured_image'        => __( 'Featured Image', 'instagram-widget-by-wpzoom' ),
+					'set_featured_image'    => __( 'Set featured image', 'instagram-widget-by-wpzoom' ),
+					'remove_featured_image' => __( 'Remove featured image', 'instagram-widget-by-wpzoom' ),
+					'use_featured_image'    => __( 'Use as featured image', 'instagram-widget-by-wpzoom' ),
+					'insert_into_item'      => __( 'Insert into user', 'instagram-widget-by-wpzoom' ),
+					'uploaded_to_this_item' => __( 'Uploaded to this user', 'instagram-widget-by-wpzoom' ),
+					'items_list'            => __( 'Users list', 'instagram-widget-by-wpzoom' ),
+					'items_list_navigation' => __( 'Users list navigation', 'instagram-widget-by-wpzoom' ),
+					'filter_items_list'     => __( 'Filter users list', 'instagram-widget-by-wpzoom' ),
+				),
+				'supports'            => array(
+					'title',
+					'editor',
+					'thumbnail',
+					'custom-fields',
+				),
+				'hierarchical'        => false,
+				'public'              => false,
+				'show_ui'             => true,
+				'show_in_menu'        => false,
+				'show_in_admin_bar'   => false,
+				'show_in_nav_menus'   => false,
+				'can_export'          => false,
+				'has_archive'         => false,
+				'exclude_from_search' => true,
+				'publicly_queryable'  => true,
+				'capability_type'     => 'post',
+				'show_in_rest'        => true,
+			)
+		);
+
+		register_post_meta(
+			'wpz-insta_user',
+			'_wpz-insta_token',
+			array(
+				'single'       => true,
+				'type'         => 'string',
+				'default'      => '',
+				'show_in_rest' => true,
+			)
+		);
+
+		register_post_meta(
+			'wpz-insta_user',
+			'_wpz-insta_account-type',
+			array(
+				'single'       => true,
+				'type'         => 'string',
+				'default'      => 'personal',
+				'show_in_rest' => true,
+			)
+		);
+
+		add_filter( 'admin_body_class', array( $this, 'admin_body_class_filter' ) );
+		add_filter( 'parent_file', array( $this, 'parent_file_menu_filter' ) );
+		add_filter( 'submenu_file', array( $this, 'submenu_filter' ) );
 		add_filter( 'manage_wpz-insta_feed_posts_columns', array( $this, 'set_custom_edit_columns' ) );
+		add_filter( 'manage_edit-wpz-insta_feed_sortable_columns', array( $this, 'set_custom_edit_columns_sortable' ) );
 		add_action( 'manage_wpz-insta_feed_posts_custom_column' , array( $this, 'custom_column' ), 10, 2 );
+		add_action( 'pre_get_posts', array( $this, 'sort_column_query' ) );
 	}
 
-	
+	function admin_body_class_filter( $classes ) {
+		$screen_id = get_current_screen()->id;
+		$is_our_admin = 'edit-wpz-insta_feed' == $screen_id || 'edit-wpz-insta_user' == $screen_id || 'settings_page_wpz-insta-support' == $screen_id;
+
+		return $classes . ( $is_our_admin ? ' wpz-insta-admin' : '' );
+	}
+
+	function parent_file_menu_filter( $parent_file ) {
+		global $submenu_file;
+
+		if ( 'edit.php?post_type=wpz-insta_user' == $parent_file ) {
+			$parent_file = 'options-general.php';
+			$submenu_file = 'edit.php?post_type=wpz-insta_feed';
+		}
+
+		return $parent_file;
+	}
+
+	function submenu_filter( $submenu_file ) {
+		global $plugin_page;
+
+		if ( $plugin_page && 'wpz-insta-support' == $plugin_page ) {
+			$submenu_file = 'edit.php?post_type=wpz-insta_feed';
+		}
+
+		remove_submenu_page( 'options-general.php', 'wpz-insta-support' );
+
+		return $submenu_file;
+	}
+
 	function set_custom_edit_columns( $columns ) {
 		unset( $columns['date'] );
 
 		$columns['wpz-insta_account'] = __( 'Show posts from', 'instagram-widget-by-wpzoom' );
 		$columns['wpz-insta_actions'] = __( 'Actions', 'instagram-widget-by-wpzoom' );
+
+		return $columns;
+	}
+
+	function set_custom_edit_columns_sortable( $columns ) {
+		$columns['wpz-insta_account'] = 'wpz-insta_account';
 
 		return $columns;
 	}
@@ -157,7 +462,29 @@ class WPZOOM_Instagram_Widget_Settings {
 		}
 	}
 
+	function sort_column_query( $query ) {
+		$orderby = $query->get( 'orderby' );
+
+		if ( 'wpz-insta_account' == $orderby ) {
+			$meta_query = array(
+				'relation' => 'OR',
+				array(
+					'key' => '_wpz-insta_user-id',
+					'compare' => 'NOT EXISTS',
+				),
+				array(
+					'key' => '_wpz-insta_user-id',
+				),
+			);
+
+			$query->set( 'meta_query', $meta_query );
+			$query->set( 'orderby', 'meta_value' );
+		}
+	}
+
 	public function views_filter( $views ) {
+		$current_page = isset( $_GET['post_type'] ) ? $_GET['post_type'] : 'wpz-insta_feed';
+
 		?>
 		<header class="wpz-insta-wrap wpz-insta_settings-header">
 			<h1 class="wpz-insta_settings-main-title wp-heading">
@@ -171,25 +498,31 @@ class WPZOOM_Instagram_Widget_Settings {
 
 			<nav class="wpz-insta_settings-main-nav">
 				<ul>
-					<li class="active"><?php _e( 'Feeds', 'instagram-widget-by-wpzoom' ); ?></li>
-					<li><?php _e( 'Users', 'instagram-widget-by-wpzoom' ); ?></li>
-					<li><?php _e( 'Support', 'instagram-widget-by-wpzoom' ); ?></li>
+					<li <?php echo 'wpz-insta_feed' == $current_page ? 'class="active"' : ''; ?>><a href="<?php echo esc_url( admin_url( 'edit.php?post_type=wpz-insta_feed' ) ); ?>"><?php _e( 'Feeds', 'instagram-widget-by-wpzoom' ); ?></a></li>
+					<li class="disable" <?php /*echo 'wpz-insta_user' == $current_page ? 'class="active"' : '';*/ ?>><a href="<?php echo esc_url( admin_url( 'edit.php?post_type=wpz-insta_user' ) ); ?>"><?php _e( 'Users', 'instagram-widget-by-wpzoom' ); ?></a></li>
+					<li <?php echo 'support' == $current_page ? 'class="active"' : ''; ?>><a href="<?php echo esc_url( admin_url( 'options-general.php?page=wpz-insta-support' ) ); ?>"><?php _e( 'Support', 'instagram-widget-by-wpzoom' ); ?></a></li>
 				</ul>
 			</nav>
 		</header>
 
 		<div class="wpz-insta-wrap wpz-insta_settings-add-new">
-			<a href="<?php echo esc_url( admin_url( 'post-new.php?post_type=wpz-insta_feed' ) ); ?>" class="button-primary disabled"><?php _e( 'Add new feed', 'instagram-widget-by-wpzoom' ); ?></a>
+			<?php if ( 'wpz-insta_feed' == $current_page ) : ?>
+				<a href="<?php echo esc_url( admin_url( 'post-new.php?post_type=wpz-insta_feed' ) ); ?>" class="button-primary disabled"><?php _e( 'Add new feed', 'instagram-widget-by-wpzoom' ); ?></a>
+			<?php else : ?>
+				<a href="<?php echo esc_url( admin_url( 'post-new.php?post_type=wpz-insta_user' ) ); ?>" class="button-primary disabled"><?php _e( 'Add new user', 'instagram-widget-by-wpzoom' ); ?></a>
+			<?php endif; ?>
 		</div>
 
-		<footer class="wpz-insta-wrap wpz-insta_settings-footer">
-			<h3 class="wpz-insta_settings-footer-logo"><a href="https://wpzoom.com/" title="<?php _e( 'WPZOOM - WordPress themes with modern features and professional support', 'instagram-widget-by-wpzoom' ); ?>"><?php _e( 'WPZOOM', 'instagram-widget-by-wpzoom' ); ?></a></h3>
+		<footer class="wpz-insta_settings-footer">
+			<div class="wpz-insta_settings-footer-wrap">
+				<h3 class="wpz-insta_settings-footer-logo"><a href="https://wpzoom.com/" target="_blank" title="<?php _e( 'WPZOOM - WordPress themes with modern features and professional support', 'instagram-widget-by-wpzoom' ); ?>"><?php _e( 'WPZOOM', 'instagram-widget-by-wpzoom' ); ?></a></h3>
 
-			<ul class="wpz-insta_settings-footer-links">
-				<li class="wpz-insta_settings-footer-links-themes"><a href="https://wpzoom.com/themes/" title="<?php _e( 'Check out our themes', 'instagram-widget-by-wpzoom' ); ?>"><?php _e( 'Themes', 'instagram-widget-by-wpzoom' ); ?></a></li>
-				<li class="wpz-insta_settings-footer-links-blog"><a href="https://wpzoom.com/blog/" title="<?php _e( 'See the latest updates on our blog', 'instagram-widget-by-wpzoom' ); ?>"><?php _e( 'Blog', 'instagram-widget-by-wpzoom' ); ?></a></li>
-				<li class="wpz-insta_settings-footer-links-support"><a href="https://wpzoom.com/support/" title="<?php _e( 'Get support', 'instagram-widget-by-wpzoom' ); ?>"><?php _e( 'Support', 'instagram-widget-by-wpzoom' ); ?></a></li>
-			</ul>
+				<ul class="wpz-insta_settings-footer-links">
+					<li class="wpz-insta_settings-footer-links-themes"><a href="https://wpzoom.com/themes/" target="_blank" title="<?php _e( 'Check out our themes', 'instagram-widget-by-wpzoom' ); ?>"><?php _e( 'Themes', 'instagram-widget-by-wpzoom' ); ?></a></li>
+					<li class="wpz-insta_settings-footer-links-blog"><a href="https://wpzoom.com/blog/" target="_blank" title="<?php _e( 'See the latest updates on our blog', 'instagram-widget-by-wpzoom' ); ?>"><?php _e( 'Blog', 'instagram-widget-by-wpzoom' ); ?></a></li>
+					<li class="wpz-insta_settings-footer-links-support"><a href="https://wpzoom.com/support/" target="_blank" title="<?php _e( 'Get support', 'instagram-widget-by-wpzoom' ); ?>"><?php _e( 'Support', 'instagram-widget-by-wpzoom' ); ?></a></li>
+				</ul>
+			</div>
 		</footer>
 		<?php
 
@@ -213,12 +546,13 @@ class WPZOOM_Instagram_Widget_Settings {
 	}
 
 	public function add_admin_menu() {
-		add_options_page(
-			'Instagram Widget',
-			'Instagram Widget',
+		add_submenu_page(
+			'options-general.php',
+			'Instagram Widget Support',
+			'Instagram Widget Support',
 			'manage_options',
-			'wpzoom-instagram-widget',
-			array( $this, 'settings_page' )
+			'wpz-insta-support',
+			array( $this, 'support_page' )
 		);
 	}
 
@@ -576,60 +910,72 @@ class WPZOOM_Instagram_Widget_Settings {
 		<?php
 	}
 
-	public function settings_page() {
+	public function support_page() {
 		?>
-
 		<div class="wrap">
-
-			<h1><?php _e( 'Instagram Widget by WPZOOM', 'instagram-widget-by-wpzoom' ); ?></h1>
-
-			<div class="zoom-instagram-widget">
-
-				<h2><?php _e( 'Connect your Instagram account', 'instagram-widget-by-wpzoom' ); ?></h2>
-
-				<p><?php _e( 'To get started, select an option below. If you want to show <strong>your own feed</strong>, use the first option. If you want to show the feed of an Instagram account which you don\'t own, use the option <strong>Public Feed</strong>.', 'instagram-widget-by-wpzoom' ); ?></p>
-
-				<form action="options.php" method="post">
-
+			<header class="wpz-insta-wrap wpz-insta_settings-header">
+				<h1 class="wpz-insta_settings-main-title wp-heading">
 					<?php
-					settings_fields( 'wpzoom-instagram-widget-settings-group' );
-					do_settings_sections( 'wpzoom-instagram-widget-settings-group' );
-					submit_button();
+					printf(
+						__( 'Instagram Widget <small>by <a href="%s" target="_blank" title="WPZOOM - WordPress themes with modern features and professional support">WPZOOM</a></small>', 'instagram-widget-by-wpzoom' ),
+						esc_url( 'https://wpzoom.com' )
+					);
 					?>
+				</h1>
 
-				</form>
+				<nav class="wpz-insta_settings-main-nav">
+					<ul>
+						<li><a href="<?php echo esc_url( admin_url( 'edit.php?post_type=wpz-insta_feed' ) ); ?>"><?php _e( 'Feeds', 'instagram-widget-by-wpzoom' ); ?></a></li>
+						<li class="disable"><a href="<?php echo esc_url( admin_url( 'edit.php?post_type=wpz-insta_user' ) ); ?>"><?php _e( 'Users', 'instagram-widget-by-wpzoom' ); ?></a></li>
+						<li class="active"><a href="<?php echo esc_url( admin_url( 'options-general.php?page=wpz-insta-support' ) ); ?>"><?php _e( 'Support', 'instagram-widget-by-wpzoom' ); ?></a></li>
+					</ul>
+				</nav>
+			</header>
 
+			<div class="wpz-insta-wrap wpz-insta_settings-support">
+				<h2 class="section-title">
+					<svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+						<path fill-rule="evenodd" clip-rule="evenodd" d="M15.9216 2H2.98533C2.43803 2 1.99023 2.45 1.99023 3V17L5.97062 13H15.9216C16.4689 13 16.9167 12.55 16.9167 12V3C16.9167 2.45 16.4689 2 15.9216 2ZM14.9265 4V11H5.14473L3.98047 12.17V4H14.9265ZM18.9068 6H20.897C21.4443 6 21.8921 6.45 21.8921 7V22L17.9117 18H6.96568C6.41837 18 5.97058 17.55 5.97058 17V15H18.9068V6Z"/>
+					</svg>
+
+					<?php _e( 'Need assistance?', 'instagram-widget-by-wpzoom' ); ?>
+				</h2>
+
+				<p class="section-description"><?php _e( 'Need help setting up your widget or have a question? Get in touch with our Support Team.<br/> We’d love the opportunity to help you.', 'instagram-widget-by-wpzoom' ); ?></p>
+
+				<a href="<?php echo esc_url( 'https://wpzoom.com/support/tickets/' ); ?>" target="_blank" class="button-primary"><?php _e( 'Open Support Desk', 'instagram-widget-by-wpzoom' ); ?></a>
 			</div>
 
-			<div class="zoom-themes-link">
+			<footer class="wpz-insta_settings-footer">
+				<div class="wpz-insta_settings-footer-wrap">
+					<h3 class="wpz-insta_settings-footer-logo"><a href="https://wpzoom.com/" target="_blank" title="<?php _e( 'WPZOOM - WordPress themes with modern features and professional support', 'instagram-widget-by-wpzoom' ); ?>"><?php _e( 'WPZOOM', 'instagram-widget-by-wpzoom' ); ?></a></h3>
 
-				<h2><?php _e( 'Premium WordPress Themes by WPZOOM', 'instagram-widget-by-wpzoom' ); ?></h2>
-
-				<p><?php _e( 'Are you looking to give your website a new look?<br/> Check out our collection of <strong>35 expertly-crafted themes</strong> and find the perfect one for your needs!', 'instagram-widget-by-wpzoom' ); ?></p>
-
-				<p><a class="cta-button" target="_blank" href="https://www.wpzoom.com/themes/"><?php _e( 'Check out our Themes &rarr;', 'instagram-widget-by-wpzoom' ); ?></a></p>
-
-			</div>
-
+					<ul class="wpz-insta_settings-footer-links">
+						<li class="wpz-insta_settings-footer-links-themes"><a href="https://wpzoom.com/themes/" target="_blank" title="<?php _e( 'Check out our themes', 'instagram-widget-by-wpzoom' ); ?>"><?php _e( 'Themes', 'instagram-widget-by-wpzoom' ); ?></a></li>
+						<li class="wpz-insta_settings-footer-links-blog"><a href="https://wpzoom.com/blog/" target="_blank" title="<?php _e( 'See the latest updates on our blog', 'instagram-widget-by-wpzoom' ); ?>"><?php _e( 'Blog', 'instagram-widget-by-wpzoom' ); ?></a></li>
+						<li class="wpz-insta_settings-footer-links-support"><a href="https://wpzoom.com/support/" target="_blank" title="<?php _e( 'Get support', 'instagram-widget-by-wpzoom' ); ?>"><?php _e( 'Support', 'instagram-widget-by-wpzoom' ); ?></a></li>
+					</ul>
+				</div>
+			</footer>
 		</div>
-
 		<?php
 	}
 
 	public function scripts( $hook ) {
-		if ( $hook != 'edit.php' || 'edit-wpz-insta_feed' != get_current_screen()->id ) {
-			return;
+		$screen_id = get_current_screen()->id;
+
+		if ( ( 'edit.php' == $hook && ( 'edit-wpz-insta_feed' == $screen_id || 'edit-wpz-insta_user' == $screen_id ) ) || 'settings_page_wpz-insta-support' == $hook ) {
+			wp_enqueue_media();
+			wp_enqueue_style( 'zoom-instagram-widget-admin', plugin_dir_url( dirname( __FILE__ ) . '/instagram-widget-by-wpzoom.php' ) . 'dist/styles/backend/index.css', array(), '1.7.3' );
+			wp_enqueue_script( 'zoom-instagram-widget-admin', plugin_dir_url( dirname( __FILE__ ) . '/instagram-widget-by-wpzoom.php' ) . 'dist/scripts/backend/index.js', array( 'jquery' ), '1.7.3' );
+			wp_localize_script(
+				'zoom-instagram-widget-admin',
+				'zoom_instagram_widget_admin',
+				array(
+					'i18n_connect_confirm' => __( "Instagram Widget is already connected to Instagram.\r\n\r\nDo you want to connect again?", 'instagram-widget-by-wpzoom' ),
+				)
+			);
 		}
-		wp_enqueue_media();
-		wp_enqueue_style( 'zoom-instagram-widget-admin', plugin_dir_url( dirname( __FILE__ ) . '/instagram-widget-by-wpzoom.php' ) . 'css/admin-instagram-widget.css', array(), '1.7.3' );
-		wp_enqueue_script( 'zoom-instagram-widget-admin', plugin_dir_url( dirname( __FILE__ ) . '/instagram-widget-by-wpzoom.php' ) . 'js/admin-instagram-widget.js', array( 'jquery' ), '1.7.3' );
-		wp_localize_script(
-			'zoom-instagram-widget-admin',
-			'zoom_instagram_widget_admin',
-			array(
-				'i18n_connect_confirm' => __( "Instagram Widget is already connected to Instagram.\r\n\r\nDo you want to connect again?", 'instagram-widget-by-wpzoom' ),
-			)
-		);
 	}
 
 	public function sanitize( $input ) {
