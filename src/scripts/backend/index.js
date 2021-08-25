@@ -166,7 +166,25 @@ jQuery(function($) {
         $('.wpzoom-instagram-widget-request-timeout')[$(this).is(":checked") ? 'show' :'hide']();
     }).trigger('change');
 
-	$('#wpbody-content').innerHeight( $('#wpwrap').height() );
-	$(window).resize( function(){ $('#wpbody-content').innerHeight( $('#wpwrap').height() ); } );
+	$('#title').attr( 'size', $('#title').val().trim().length + 1 );
+	$('#title').on( 'input', function(){ $(this).attr( 'size', $(this).val().trim().length + 1 ); } );
+
+	if ( window.location.hash ) {
+		setTab( window.location.hash );
+	}
+	$( '.wpz-insta_feed-edit-nav a' ).on( 'click', function() { setTab( $( this ).attr( 'href' ) ) } );
+
+	function setTab( id ) {
+		if ( id ) {
+			const $target = $( '.wpz-insta_feed-edit-nav a[href="' + id + '"]' ),
+			      $tabs   = $target.closest( 'form' ).find( '.wpz-insta_tabs-content .wpz-insta_tabs-tab' );
+
+			$target.closest( '.wpz-insta_feed-edit-nav' ).find( 'li' ).removeClass( 'active' );
+			$target.closest( 'li' ).addClass( 'active' );
+
+			$tabs.removeClass( 'active' );
+			$tabs.filter( '[data-id="' + id + '"]' ).addClass( 'active' );
+		}
+	}
 
 });

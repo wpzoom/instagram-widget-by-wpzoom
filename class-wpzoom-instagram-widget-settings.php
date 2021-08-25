@@ -98,8 +98,6 @@ class WPZOOM_Instagram_Widget_Settings {
 					'filter_items_list'     => __( 'Filter feeds list', 'instagram-widget-by-wpzoom' ),
 				),
 				'supports'            => array(
-					'title',
-					'editor',
 					'custom-fields',
 				),
 				'hierarchical'        => false,
@@ -124,6 +122,17 @@ class WPZOOM_Instagram_Widget_Settings {
 				'single'       => true,
 				'type'         => 'integer',
 				'default'      => -1,
+				'show_in_rest' => true,
+			)
+		);
+
+		register_post_meta(
+			'wpz-insta_feed',
+			'_wpz-insta_feed-title',
+			array(
+				'single'       => true,
+				'type'         => 'string',
+				'default'      => __( 'Feed Title', 'instagram-widget-by-wpzoom' ),
 				'show_in_rest' => true,
 			)
 		);
@@ -339,8 +348,6 @@ class WPZOOM_Instagram_Widget_Settings {
 					'filter_items_list'     => __( 'Filter users list', 'instagram-widget-by-wpzoom' ),
 				),
 				'supports'            => array(
-					'title',
-					'editor',
 					'thumbnail',
 					'custom-fields',
 				),
@@ -386,13 +393,18 @@ class WPZOOM_Instagram_Widget_Settings {
 		add_filter( 'submenu_file', array( $this, 'submenu_filter' ) );
 		add_filter( 'manage_wpz-insta_feed_posts_columns', array( $this, 'set_custom_edit_columns' ) );
 		add_filter( 'manage_edit-wpz-insta_feed_sortable_columns', array( $this, 'set_custom_edit_columns_sortable' ) );
+		add_filter( 'screen_options_show_screen', array( $this, 'disable_screen_options' ), 10, 2 );
+		add_filter( 'hidden_meta_boxes', array( $this, 'hide_meta_boxes' ), 10, 3 );
 		add_action( 'manage_wpz-insta_feed_posts_custom_column' , array( $this, 'custom_column' ), 10, 2 );
 		add_action( 'pre_get_posts', array( $this, 'sort_column_query' ) );
+		add_action( 'edit_form_top', array( $this, 'edit_feed_header' ) );
+		add_action( 'edit_form_after_title', array( $this, 'edit_feed_content' ) );
+		add_action( 'in_admin_footer', array( $this, 'page_footer' ) );
 	}
 
 	function admin_body_class_filter( $classes ) {
 		$screen_id = get_current_screen()->id;
-		$is_our_admin = 'edit-wpz-insta_feed' == $screen_id || 'edit-wpz-insta_user' == $screen_id || 'settings_page_wpz-insta-support' == $screen_id;
+		$is_our_admin = 'wpz-insta_feed' == $screen_id || 'edit-wpz-insta_feed' == $screen_id || 'edit-wpz-insta_user' == $screen_id || 'settings_page_wpz-insta-support' == $screen_id;
 
 		return $classes . ( $is_our_admin ? ' wpz-insta-admin' : '' );
 	}
@@ -435,6 +447,20 @@ class WPZOOM_Instagram_Widget_Settings {
 		return $columns;
 	}
 
+	function disable_screen_options( $show, $screen ) {
+		return 'post' == $screen->base && 'wpz-insta_feed' == $screen->post_type ? false : $show;
+	}
+
+	function hide_meta_boxes( $hidden, $screen, $use_defaults ) {
+		if ( 'post' == $screen->base && 'wpz-insta_feed' == $screen->post_type ) {
+			$hidden[] = 'postcustom';
+			$hidden[] = 'submitdiv';
+			$hidden[] = 'slugdiv';
+		}
+
+		return $hidden;
+	}
+
 	function custom_column( $column, $post_id ) {
 		switch ( $column ) {
 			case 'wpz-insta_account' :
@@ -447,14 +473,14 @@ class WPZOOM_Instagram_Widget_Settings {
 				<nav class="wpz-insta_actions-menu">
 					<strong>&hellip;</strong>
 					<ul class="wpz-insta_hidden">
-						<li class="wpz-insta_actions-menu_edit-feed"><?php _e( 'Edit feed', 'instagram-widget-by-wpzoom' ); ?></li>
-						<li class="wpz-insta_actions-menu_duplicate-feed"><?php _e( 'Duplicate feed', 'instagram-widget-by-wpzoom' ); ?></li>
-						<li class="wpz-insta_actions-menu_copy-shortcode"><?php _e( 'Copy shortcode', 'instagram-widget-by-wpzoom' ); ?></li>
+						<?php if ( current_user_can( 'edit_post', $post_id ) ) { ?><li class="wpz-insta_actions-menu_edit-feed"><a href="<?php echo esc_url( get_edit_post_link( $post_id ) ); ?>"><?php _e( 'Edit feed', 'instagram-widget-by-wpzoom' ); ?></a></li><?php } ?>
+						<li class="wpz-insta_actions-menu_duplicate-feed"><a href="<?php echo esc_url( '' ); ?>"><?php _e( 'Duplicate feed', 'instagram-widget-by-wpzoom' ); ?></a></li>
+						<li class="wpz-insta_actions-menu_copy-shortcode"><a href="<?php echo esc_url( '' ); ?>"><?php _e( 'Copy shortcode', 'instagram-widget-by-wpzoom' ); ?></a></li>
 						<li class="wpz-insta_actions-menu_divider"></li>
-						<li class="wpz-insta_actions-menu_update-posts"><?php _e( 'Update posts', 'instagram-widget-by-wpzoom' ); ?></li>
-						<li class="wpz-insta_actions-menu_clear-cache"><?php _e( 'Clear cache', 'instagram-widget-by-wpzoom' ); ?></li>
+						<li class="wpz-insta_actions-menu_update-posts"><a href="<?php echo esc_url( '' ); ?>"><?php _e( 'Update posts', 'instagram-widget-by-wpzoom' ); ?></a></li>
+						<li class="wpz-insta_actions-menu_clear-cache"><a href="<?php echo esc_url( '' ); ?>"><?php _e( 'Clear cache', 'instagram-widget-by-wpzoom' ); ?></a></li>
 						<li class="wpz-insta_actions-menu_divider"></li>
-						<li class="wpz-insta_actions-menu_delete"><?php _e( 'Delete feed', 'instagram-widget-by-wpzoom' ); ?></li>
+						<?php if ( current_user_can( 'delete_post', $post_id ) ) { ?><li class="wpz-insta_actions-menu_delete"><a href="<?php echo esc_url( get_delete_post_link( $post_id, '', true ) ); ?>"><?php _e( 'Delete feed', 'instagram-widget-by-wpzoom' ); ?></a></li><?php } ?>
 					</ul>
 				</nav>
 				<?php
@@ -479,6 +505,107 @@ class WPZOOM_Instagram_Widget_Settings {
 
 			$query->set( 'meta_query', $meta_query );
 			$query->set( 'orderby', 'meta_value' );
+		}
+	}
+
+	function edit_feed_header( $post ) {
+		if ( 'wpz-insta_feed' == $post->post_type ) {
+			$feed_title = get_post_meta( $post->ID, '_wpz-insta_feed-title', true );
+
+			?>
+			<a href="<?php echo esc_url( admin_url( 'edit.php?post_type=wpz-insta_feed' ) ); ?>" class="wpz-insta_back-button">
+				<svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+					<path d="M19.9019 11H7.79167L13.3542 5.41L11.9412 4L3.98047 12L11.9412 20L13.3443 18.59L7.79167 13H19.9019V11Z" />
+				</svg>
+
+				<?php _e( 'Go to all feeds', 'instagram-widget-by-wpzoom' ); ?>
+			</a>
+
+			<header class="wpz-insta-wrap wpz-insta-wrap-sides wpz-insta_settings-header">
+				<div class="wpz-insta-wrap-left">
+					<h1 class="wpz-insta_settings-main-title wp-heading">
+						<input type="text" name="post_title" size="30" value="<?php echo esc_attr( $feed_title ? $feed_title : __( 'Feed Title', 'instagram-widget-by-wpzoom' ) ); ?>" id="title" spellcheck="true" autocomplete="off" />
+					</h1>
+
+					<nav class="wpz-insta_settings-main-nav wpz-insta_feed-edit-nav">
+						<ul>
+							<li class="active"><a href="<?php echo esc_url( '#config' ); ?>"><?php _e( 'Configure', 'instagram-widget-by-wpzoom' ); ?></a></li>
+							<li><a href="<?php echo esc_url( '#design' ); ?>"><?php _e( 'Design', 'instagram-widget-by-wpzoom' ); ?></a></li>
+							<li><a href="<?php echo esc_url( '#embed' ); ?>"><?php _e( 'Embed', 'instagram-widget-by-wpzoom' ); ?></a></li>
+						</ul>
+					</nav>
+				</div>
+
+				<div class="wpz-insta-wrap-right">
+					<a href="<?php echo esc_url( admin_url( 'edit.php?post_type=wpz-insta_feed' ) ); ?>" class="button button-secondary button-large"><?php _e( 'Cancel', 'instagram-widget-by-wpzoom' ); ?></a>
+					<input type="submit" name="save" id="publish" class="button button-primary button-large button-positive" value="<?php _e( 'Save', 'instagram-widget-by-wpzoom' ); ?>" />
+				</div>
+			</header>
+			<?php
+		}
+	}
+
+	function edit_feed_content( $post ) {
+		if ( 'wpz-insta_feed' == $post->post_type ) {
+			?>
+			<div class="wpz-insta_tabs-content">
+				<div class="wpz-insta_tabs-tab wpz-insta_tabs-config active" data-id="#config">
+					<div class="wpz-insta_sidebar">
+						<div class="wpz-insta_sidebar-left">
+							Configuration Sidebar
+						</div>
+
+						<div class="wpz-insta_sidebar-right">
+							Configuration Content
+						</div>
+					</div>
+				</div>
+
+				<div class="wpz-insta_tabs-tab wpz-insta_tabs-design" data-id="#design">
+					<div class="wpz-insta_sidebar">
+						<div class="wpz-insta_sidebar-left">
+							Design Sidebar
+						</div>
+
+						<div class="wpz-insta_sidebar-right">
+							Design Content
+						</div>
+					</div>
+				</div>
+
+				<div class="wpz-insta_tabs-tab wpz-insta_tabs-embed" data-id="#embed">
+					<div class="wpz-insta_sidebar">
+						<div class="wpz-insta_sidebar-left">
+							Embed Sidebar
+						</div>
+
+						<div class="wpz-insta_sidebar-right">
+							Embed Content
+						</div>
+					</div>
+				</div>
+			</div>
+			<?php
+		}
+	}
+
+	function page_footer() {
+		$current_screen = get_current_screen();
+
+		if ( 'wpz-insta_feed' == $current_screen->post_type || 'wpz-insta_user' == $current_screen->post_type || 'settings_page_wpz-insta-support' == $current_screen->id ) {
+			?>
+			<footer class="wpz-insta_settings-footer">
+				<div class="wpz-insta_settings-footer-wrap">
+					<h3 class="wpz-insta_settings-footer-logo"><a href="https://wpzoom.com/" target="_blank" title="<?php _e( 'WPZOOM - WordPress themes with modern features and professional support', 'instagram-widget-by-wpzoom' ); ?>"><?php _e( 'WPZOOM', 'instagram-widget-by-wpzoom' ); ?></a></h3>
+
+					<ul class="wpz-insta_settings-footer-links">
+						<li class="wpz-insta_settings-footer-links-themes"><a href="https://wpzoom.com/themes/" target="_blank" title="<?php _e( 'Check out our themes', 'instagram-widget-by-wpzoom' ); ?>"><?php _e( 'Themes', 'instagram-widget-by-wpzoom' ); ?></a></li>
+						<li class="wpz-insta_settings-footer-links-blog"><a href="https://wpzoom.com/blog/" target="_blank" title="<?php _e( 'See the latest updates on our blog', 'instagram-widget-by-wpzoom' ); ?>"><?php _e( 'Blog', 'instagram-widget-by-wpzoom' ); ?></a></li>
+						<li class="wpz-insta_settings-footer-links-support"><a href="https://wpzoom.com/support/" target="_blank" title="<?php _e( 'Get support', 'instagram-widget-by-wpzoom' ); ?>"><?php _e( 'Support', 'instagram-widget-by-wpzoom' ); ?></a></li>
+					</ul>
+				</div>
+			</footer>
+			<?php
 		}
 	}
 
@@ -512,18 +639,6 @@ class WPZOOM_Instagram_Widget_Settings {
 				<a href="<?php echo esc_url( admin_url( 'post-new.php?post_type=wpz-insta_user' ) ); ?>" class="button-primary disabled"><?php _e( 'Add new user', 'instagram-widget-by-wpzoom' ); ?></a>
 			<?php endif; ?>
 		</div>
-
-		<footer class="wpz-insta_settings-footer">
-			<div class="wpz-insta_settings-footer-wrap">
-				<h3 class="wpz-insta_settings-footer-logo"><a href="https://wpzoom.com/" target="_blank" title="<?php _e( 'WPZOOM - WordPress themes with modern features and professional support', 'instagram-widget-by-wpzoom' ); ?>"><?php _e( 'WPZOOM', 'instagram-widget-by-wpzoom' ); ?></a></h3>
-
-				<ul class="wpz-insta_settings-footer-links">
-					<li class="wpz-insta_settings-footer-links-themes"><a href="https://wpzoom.com/themes/" target="_blank" title="<?php _e( 'Check out our themes', 'instagram-widget-by-wpzoom' ); ?>"><?php _e( 'Themes', 'instagram-widget-by-wpzoom' ); ?></a></li>
-					<li class="wpz-insta_settings-footer-links-blog"><a href="https://wpzoom.com/blog/" target="_blank" title="<?php _e( 'See the latest updates on our blog', 'instagram-widget-by-wpzoom' ); ?>"><?php _e( 'Blog', 'instagram-widget-by-wpzoom' ); ?></a></li>
-					<li class="wpz-insta_settings-footer-links-support"><a href="https://wpzoom.com/support/" target="_blank" title="<?php _e( 'Get support', 'instagram-widget-by-wpzoom' ); ?>"><?php _e( 'Support', 'instagram-widget-by-wpzoom' ); ?></a></li>
-				</ul>
-			</div>
-		</footer>
 		<?php
 
 		return array();
@@ -945,18 +1060,6 @@ class WPZOOM_Instagram_Widget_Settings {
 
 				<a href="<?php echo esc_url( 'https://wpzoom.com/support/tickets/' ); ?>" target="_blank" class="button-primary"><?php _e( 'Open Support Desk', 'instagram-widget-by-wpzoom' ); ?></a>
 			</div>
-
-			<footer class="wpz-insta_settings-footer">
-				<div class="wpz-insta_settings-footer-wrap">
-					<h3 class="wpz-insta_settings-footer-logo"><a href="https://wpzoom.com/" target="_blank" title="<?php _e( 'WPZOOM - WordPress themes with modern features and professional support', 'instagram-widget-by-wpzoom' ); ?>"><?php _e( 'WPZOOM', 'instagram-widget-by-wpzoom' ); ?></a></h3>
-
-					<ul class="wpz-insta_settings-footer-links">
-						<li class="wpz-insta_settings-footer-links-themes"><a href="https://wpzoom.com/themes/" target="_blank" title="<?php _e( 'Check out our themes', 'instagram-widget-by-wpzoom' ); ?>"><?php _e( 'Themes', 'instagram-widget-by-wpzoom' ); ?></a></li>
-						<li class="wpz-insta_settings-footer-links-blog"><a href="https://wpzoom.com/blog/" target="_blank" title="<?php _e( 'See the latest updates on our blog', 'instagram-widget-by-wpzoom' ); ?>"><?php _e( 'Blog', 'instagram-widget-by-wpzoom' ); ?></a></li>
-						<li class="wpz-insta_settings-footer-links-support"><a href="https://wpzoom.com/support/" target="_blank" title="<?php _e( 'Get support', 'instagram-widget-by-wpzoom' ); ?>"><?php _e( 'Support', 'instagram-widget-by-wpzoom' ); ?></a></li>
-					</ul>
-				</div>
-			</footer>
 		</div>
 		<?php
 	}
@@ -964,7 +1067,9 @@ class WPZOOM_Instagram_Widget_Settings {
 	public function scripts( $hook ) {
 		$screen_id = get_current_screen()->id;
 
-		if ( ( 'edit.php' == $hook && ( 'edit-wpz-insta_feed' == $screen_id || 'edit-wpz-insta_user' == $screen_id ) ) || 'settings_page_wpz-insta-support' == $hook ) {
+		if ( ( 'edit.php' == $hook && ( 'edit-wpz-insta_feed' == $screen_id || 'edit-wpz-insta_user' == $screen_id ) ) ||
+		     ( 'post.php' == $hook && 'wpz-insta_feed' == $screen_id ) ||
+		     ( 'settings_page_wpz-insta-support' == $hook ) ) {
 			wp_enqueue_media();
 			wp_enqueue_style( 'zoom-instagram-widget-admin', plugin_dir_url( dirname( __FILE__ ) . '/instagram-widget-by-wpzoom.php' ) . 'dist/styles/backend/index.css', array(), '1.7.3' );
 			wp_enqueue_script( 'zoom-instagram-widget-admin', plugin_dir_url( dirname( __FILE__ ) . '/instagram-widget-by-wpzoom.php' ) . 'dist/scripts/backend/index.js', array( 'jquery' ), '1.7.3' );
