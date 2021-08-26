@@ -512,7 +512,7 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
                                         </div>
                                         <?php if ( ! empty( $item['image-caption'] ) ) : ?>
                                             <div class="wpz-insta-caption">
-                                                <?php echo esc_html( $item['image-caption'] ); ?>
+                                                <?php echo wp_kses_post( $item['image-caption'] ); ?>
                                             </div>
                                         <?php endif; ?>
 
