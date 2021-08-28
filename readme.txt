@@ -71,6 +71,9 @@ Make sure to connect your Instagram account with the plugin. You can do that in 
 
 == Changelog ==
 
+= 1.9.2 =
+* Minor bug fixes and improvements with the lightbox
+
 = 1.9.1 =
 * Added support for album posts in the lightbox (showing multiple photos per slide)
 * Added swipe support in the lightbox
