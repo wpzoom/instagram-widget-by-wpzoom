@@ -718,6 +718,28 @@ class Wpzoom_Instagram_Widget_API {
 		return $data;
 	}
 
+	public static function get_basic_user_info_from_token( $access_token ) {
+		$output = false;
+
+		if ( ! empty( $access_token ) ) {
+			$request_url = add_query_arg(
+				array(
+					'access_token' => $access_token,
+					'fields'       => 'account_type,username,profile_picture',
+				),
+				'https://graph.instagram.com/me'
+			);
+
+			$response = wp_safe_remote_get( $request_url );
+
+			if ( ! is_wp_error( $response ) && 200 == wp_remote_retrieve_response_code( $response ) ) {
+				$output = json_decode( wp_remote_retrieve_body( $response ) );
+			}
+		}
+
+		return $output;
+	}
+
 	function convert_user_info_to_old_structure( $user_info ) {
 		$converted = new stdClass();
 

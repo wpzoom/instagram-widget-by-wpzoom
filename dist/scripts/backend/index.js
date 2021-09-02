@@ -199,45 +199,60 @@ jQuery(function ($) {
     });
   });
   $('.wpzoom-instagram-widget-settings-request-type-wrapper').find('input[type=radio]:checked').change();
-  var parsedHash = new URLSearchParams(window.location.hash.substr(1) // skip the first char (#)
+  /*var parsedHash = new URLSearchParams(
+      window.location.hash.substr(1) // skip the first char (#)
   );
+  if ( !!parsedHash.get( 'access_token' ) ) {
+  let requestType = !!parsedHash.get( 'request_type' ) && parsedHash.get( 'request_type' ) === 'with-basic-access-token' ? 'with-basic-access-token' : 'with-access-token';
+  let token = parsedHash.get( 'access_token' );
+  $.post(
+  ajaxurl,
+  {
+  action: 'wpz-insta_connect-user',
+  nonce: zoom_instagram_widget_admin.nonce,
+  type: requestType,
+  token: token
+  }
+  ).done( function( data ) {
+  console.dir(data);
+  } );
+  }*/
 
-  if (!!parsedHash.get('access_token')) {
-    var requestType = !!parsedHash.get('request_type') && parsedHash.get('request_type') === 'with-basic-access-token' ? 'with-basic-access-token' : 'with-access-token';
-    var accessTokenInputName = requestType === 'with-basic-access-token' ? 'basic-access-token' : 'access-token';
-    var $input = $('#wpzoom-instagram-widget-settings_' + accessTokenInputName);
-    $input.val(parsedHash.get('access_token'));
-    $input.closest('.form-table').find('input[type=radio]').removeAttr('checked');
-    var $radio = $input.closest('.form-table').find('#wpzoom-instagram-widget-settings_' + requestType);
-    $radio.prop('checked', true);
-    $radio.trigger('change');
-    $input.parents('form').find('#submit').click();
+  if (window.opener && window.location.hash.length > 1 && window.location.hash.includes('access_token')) {
+    window.opener.handleReturnedToken(window.location.hash);
+    window.close();
   }
 
-  $('.zoom-instagram-widget .button-connect').on('click', function (event) {
-    if ($(this).find('.zoom-instagarm-widget-connected').length) {
-      var confirm = window.confirm(zoom_instagram_widget_admin.i18n_connect_confirm);
+  if ($('#title').length > 0) {
+    $('#title').attr('size', $('#title').val().trim().length + 1);
+    $('#title').on('input', function () {
+      $(this).attr('size', $(this).val().trim().length + 1);
+    });
+  }
 
-      if (!confirm) {
-        event.preventDefault();
-      }
+  if ($('.wpz-insta_feed-edit-nav').length > 0) {
+    if (window.location.hash) {
+      setTab(window.location.hash);
+    }
+
+    $('.wpz-insta_feed-edit-nav a').on('click', function () {
+      setTab($(this).attr('href'));
+    });
+  }
+
+  $('.wpz-insta-wrap .account-options .account-option-button:not(.disabled)').on('click', function (e) {
+    e.preventDefault();
+
+    if ($(this).is('#wpz-insta_connect-personal') || $(this).is('#wpz-insta_connect-business')) {
+      authenticateInstagram($(this).attr('href'));
     }
   });
-  $('#wpzoom-instagram-widget-settings_is-forced-timeout').on('change', function (e) {
-    e.preventDefault();
-    $('.wpzoom-instagram-widget-request-timeout')[$(this).is(":checked") ? 'show' : 'hide']();
-  }).trigger('change');
-  $('#title').attr('size', $('#title').val().trim().length + 1);
-  $('#title').on('input', function () {
-    $(this).attr('size', $(this).val().trim().length + 1);
+  $('#wpz-insta_account-token-input').on('input', function () {
+    $('#wpz-insta_account-token-button').toggleClass('disabled', $('#wpz-insta_account-token-input').val().trim().length <= 0);
   });
-
-  if (window.location.hash) {
-    setTab(window.location.hash);
-  }
-
-  $('.wpz-insta_feed-edit-nav a').on('click', function () {
-    setTab($(this).attr('href'));
+  $('#wpz-insta_modal-dialog').find('.wpz-insta_modal-dialog_ok-button, .wpz-insta_modal-dialog_close-button').on('click', function (e) {
+    e.preventDefault();
+    closeConnectDoneDialog($('#wpz-insta_modal-dialog').hasClass('success'));
   });
 
   function setTab(id) {
@@ -250,6 +265,66 @@ jQuery(function ($) {
       $tabs.filter('[data-id="' + id + '"]').addClass('active');
     }
   }
+
+  function authenticateInstagram(url, callback) {
+    let popupWidth = 700,
+        popupHeight = 500,
+        popupTop = (window.screen.height - popupHeight) / 2,
+        popupLeft = (window.screen.width - popupWidth) / 2;
+    window.open(url, '', 'width=' + popupWidth + ',height=' + popupHeight + ',left=' + popupLeft + ',top=' + popupTop);
+  }
+
+  function parseQuery(queryString) {
+    var query = {};
+    var pairs = (queryString[0] === '?' ? queryString.substr(1) : queryString).split('&');
+
+    for (var i = 0; i < pairs.length; i++) {
+      var pair = pairs[i].split('=');
+      query[decodeURIComponent(pair[0])] = decodeURIComponent(pair[1] || '');
+    }
+
+    return query;
+  }
+
+  function showConnectDoneDialog(success) {
+    let title = success ? zoom_instagram_widget_admin.i18n_connect_success_title : zoom_instagram_widget_admin.i18n_connect_fail_title,
+        content = success ? zoom_instagram_widget_admin.i18n_connect_success_content : zoom_instagram_widget_admin.i18n_connect_fail_content,
+        $dialog = $('#wpz-insta_modal-dialog');
+    $dialog.find('.wpz-insta_modal-dialog_header-title').html(title);
+    $dialog.find('.wpz-insta_modal-dialog_content').html(content);
+    $dialog.removeClass('open success fail').addClass('open ' + (success ? 'success' : 'fail'));
+  }
+
+  function closeConnectDoneDialog(success) {
+    $('#wpz-insta_modal-dialog').removeClass('open');
+
+    if (success) {
+      window.location.replace(zoom_instagram_widget_admin.feeds_url);
+    }
+  }
+
+  window.handleReturnedToken = function (raw) {
+    if (raw && raw.length > 1) {
+      if (raw[0] === '#') {
+        raw = raw.substring(1);
+      }
+
+      if (raw.length > 1) {
+        let parts = parseQuery(raw);
+
+        if ('access_token' in parts) {
+          let token = parts.access_token;
+          $.post(ajaxurl, {
+            action: 'wpz-insta_connect-user',
+            nonce: zoom_instagram_widget_admin.nonce,
+            token: token
+          }).done(function (data) {
+            showConnectDoneDialog(data.success);
+          });
+        }
+      }
+    }
+  };
 });
 
 /***/ })
