@@ -1214,7 +1214,7 @@ class WPZOOM_Instagram_Widget_Settings {
 					</div>
 
 					<div class="wpz-insta_modal-dialog_content">
-						<?php _e( 'Your account is now connected. You can now add a feed and customize it on the next screens', 'instagram-widget-by-wpzoom' ); ?>
+						<?php _e( 'Your account is now connected. You can now add a feed and customize it on the next screens.', 'instagram-widget-by-wpzoom' ); ?>
 					</div>
 
 					<div class="wpz-insta_modal-dialog_footer">
