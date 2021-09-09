@@ -566,6 +566,7 @@
   display: grid;
 }
 .wpz-insta-admin #wpbody-content > .wrap .wpz-insta_tabs-content .wpz-insta_tabs-tab {
+  display: grid;
   grid-column: 1;
   grid-row: 1;
   pointer-events: none;
@@ -575,6 +576,17 @@
 .wpz-insta-admin #wpbody-content > .wrap .wpz-insta_tabs-content .wpz-insta_tabs-tab.active {
   pointer-events: all;
   opacity: 1;
+}
+.wpz-insta-admin #wpbody-content > .wrap .wpz-insta_tabs-content .wpz-insta_tabs-tab.active > .active {
+  pointer-events: all;
+  opacity: 1;
+}
+.wpz-insta-admin #wpbody-content > .wrap .wpz-insta_tabs-content .wpz-insta_tabs-tab > * {
+  grid-column: 1;
+  grid-row: 1;
+  pointer-events: none;
+  opacity: 0;
+  transition: all 0.3s ease;
 }
 .wpz-insta-admin #wpbody-content > .wrap .wpz-insta_sidebar {
   display: flex;
@@ -594,6 +606,200 @@
 }
 .wpz-insta-admin #wpbody-content > .wrap .wpz-insta_sidebar .wpz-insta_sidebar-right {
   flex-grow: 1;
+}
+.wpz-insta-admin #wpbody-content > .wrap .wpz-insta_sidebar-section {
+  padding: 30px 0 0;
+  border-top: 1px solid #ddd;
+  margin: 30px 20px 20px;
+}
+.wpz-insta-admin #wpbody-content > .wrap .wpz-insta_sidebar-section:first-child {
+  padding-top: 0;
+  border-top: 0;
+  margin-top: 20px;
+}
+.wpz-insta-admin #wpbody-content > .wrap .wpz-insta_sidebar-section .wpz-insta_sidebar-section-title {
+  font-size: 14px;
+  font-weight: 600;
+  margin: 0 0 10px;
+}
+.wpz-insta-admin #wpbody-content > .wrap .wpz-insta_sidebar-section .wpz-insta_sidebar-section-description {
+  font-size: 14px;
+  font-weight: normal;
+  margin: 0 0 20px;
+}
+.wpz-insta-admin #wpbody-content > .wrap .wpz-insta_sidebar-section .wpz-insta_feed-user-select.is-set .wpz-insta_feed-user-select-info {
+  pointer-events: all !important;
+  opacity: 1 !important;
+}
+.wpz-insta-admin #wpbody-content > .wrap .wpz-insta_sidebar-section .wpz-insta_feed-user-select.is-set .wpz-insta_feed-user-select-button {
+  pointer-events: none !important;
+  opacity: 0 !important;
+}
+.wpz-insta-admin #wpbody-content > .wrap .wpz-insta_sidebar-section .wpz-insta_feed-user-select.is-set .wpz-insta_feed-user-select-edit-link {
+  display: inline-block !important;
+}
+.wpz-insta-admin #wpbody-content > .wrap .wpz-insta_sidebar-section .wpz-insta_feed-user-select .wpz-insta_feed-user-select-input {
+  display: grid;
+  background: #eee;
+  border: 1px solid #9ca2a7;
+  border-radius: 4px;
+}
+.wpz-insta-admin #wpbody-content > .wrap .wpz-insta_sidebar-section .wpz-insta_feed-user-select .wpz-insta_feed-user-select-input .wpz-insta_feed-user-select-info {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  pointer-events: none;
+  grid-column: 1;
+  grid-row: 1;
+  opacity: 0;
+  margin: 15px;
+  transition: all 0.3s ease;
+}
+.wpz-insta-admin #wpbody-content > .wrap .wpz-insta_sidebar-section .wpz-insta_feed-user-select .wpz-insta_feed-user-select-input .wpz-insta_feed-user-select-info .wpz-insta_feed-user-select-info-left .wpz-insta_feed-user-select-info-name {
+  font-size: 14px;
+  font-weight: 600;
+  padding: 0;
+  margin: 0;
+}
+.wpz-insta-admin #wpbody-content > .wrap .wpz-insta_sidebar-section .wpz-insta_feed-user-select .wpz-insta_feed-user-select-input .wpz-insta_feed-user-select-info .wpz-insta_feed-user-select-info-left .wpz-insta_feed-user-select-info-type {
+  font-size: 12px;
+  color: #81909c;
+  padding: 0;
+  margin: 0;
+}
+.wpz-insta-admin #wpbody-content > .wrap .wpz-insta_sidebar-section .wpz-insta_feed-user-select .wpz-insta_feed-user-select-input .wpz-insta_feed-user-select-info .wpz-insta_feed-user-remove-button {
+  font-size: 13px;
+  font-weight: 600;
+  color: #3496ff;
+  background: transparent;
+  border: 1px solid #3496ff;
+  box-shadow: none;
+}
+.wpz-insta-admin #wpbody-content > .wrap .wpz-insta_sidebar-section .wpz-insta_feed-user-select .wpz-insta_feed-user-select-input .wpz-insta_feed-user-select-info .wpz-insta_feed-user-remove-button:hover {
+  color: #ec2439;
+  border-color: #ec2439;
+}
+.wpz-insta-admin #wpbody-content > .wrap .wpz-insta_sidebar-section .wpz-insta_feed-user-select .wpz-insta_feed-user-select-input .wpz-insta_feed-user-select-button {
+  grid-column: 1;
+  grid-row: 1;
+  font-size: 14px;
+  font-weight: 600;
+  color: #242628;
+  background: transparent;
+  opacity: 1;
+  border: 0;
+  box-shadow: none;
+  transition: all 0.3s ease;
+}
+.wpz-insta-admin #wpbody-content > .wrap .wpz-insta_sidebar-section .wpz-insta_feed-user-select .wpz-insta_feed-user-select-input .wpz-insta_feed-user-select-button:hover {
+  color: #fff;
+  background: #3496ff;
+}
+.wpz-insta-admin #wpbody-content > .wrap .wpz-insta_sidebar-section .wpz-insta_feed-user-select .wpz-insta_feed-user-select-edit-link {
+  display: none;
+  margin: 20px 0 0;
+}
+.wpz-insta-admin #wpbody-content > .wrap .wpz-insta_sidebar-section.wpz-insta_sidebar-section-token {
+  pointer-events: none;
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  padding-top: 0;
+  margin-top: 0;
+  margin-bottom: 0;
+  transition: all 0.3s ease;
+}
+.wpz-insta-admin #wpbody-content > .wrap .wpz-insta_sidebar-section.wpz-insta_sidebar-section-token.active {
+  pointer-events: all;
+  max-height: 999em;
+  opacity: 1;
+  padding-top: 30px;
+  margin-top: 30px;
+  margin-bottom: 20px;
+  overflow: visible;
+}
+.wpz-insta-admin #wpbody-content > .wrap .wpz-insta_sidebar-section.wpz-insta_sidebar-section-token #wpz-insta_user-token {
+  display: block;
+  font-family: "Inter", Tahoma, Verdana, sans-serif;
+  font-size: 14px;
+  font-weight: normal;
+  text-overflow: ellipsis;
+  color: #242628;
+  background: #fff;
+  width: 100%;
+  padding: 4px 8px;
+  border: 1px solid #ddd;
+  border-radius: 2px;
+  box-shadow: none;
+}
+.wpz-insta-admin #wpbody-content > .wrap .wpz-insta_tabs-config-connect {
+  font-family: "Inter", Tahoma, Verdana, sans-serif;
+  color: #242628;
+  background: #fff;
+  padding: 25px 30px;
+  border: 1px solid #ddd;
+  border-radius: 3px;
+  box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+}
+.wpz-insta-admin #wpbody-content > .wrap .wpz-insta_tabs-config-connect .wpz-insta_tabs-config-connect-title {
+  font-size: 24px;
+  font-weight: 600;
+  padding: 0;
+  margin: 0 0 10px;
+}
+.wpz-insta-admin #wpbody-content > .wrap .wpz-insta_tabs-config-connect .wpz-insta_tabs-config-connect-description {
+  padding: 0;
+  margin: 0 0 20px;
+}
+.wpz-insta-admin #wpbody-content > .wrap .wpz-insta_tabs-config-connect .wpz-insta_tabs-config-connect-accounts {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 30px;
+  padding: 0;
+  margin: 0;
+}
+.wpz-insta-admin #wpbody-content > .wrap .wpz-insta_tabs-config-connect .wpz-insta_tabs-config-connect-accounts li {
+  cursor: pointer;
+  background: #eee;
+  padding: 15px;
+  border: 1px solid #9ca2a7;
+  border-radius: 4px;
+  margin: 0;
+  transition: all 0.3s ease;
+}
+.wpz-insta-admin #wpbody-content > .wrap .wpz-insta_tabs-config-connect .wpz-insta_tabs-config-connect-accounts li:hover {
+  color: #fff;
+  background: #3496ff;
+  border-color: #0063cd;
+}
+.wpz-insta-admin #wpbody-content > .wrap .wpz-insta_tabs-config-connect .wpz-insta_tabs-config-connect-accounts li:hover h3 {
+  color: #fff;
+}
+.wpz-insta-admin #wpbody-content > .wrap .wpz-insta_tabs-config-connect .wpz-insta_tabs-config-connect-accounts li:hover p {
+  color: rgba(255, 255, 255, 0.6);
+}
+.wpz-insta-admin #wpbody-content > .wrap .wpz-insta_tabs-config-connect .wpz-insta_tabs-config-connect-accounts li h3 {
+  font-size: 14px;
+  font-weight: 600;
+  padding: 0;
+  margin: 0 0 5px;
+  transition: all 0.3s ease;
+}
+.wpz-insta-admin #wpbody-content > .wrap .wpz-insta_tabs-config-connect .wpz-insta_tabs-config-connect-accounts li p {
+  font-size: 12px;
+  color: #81909c;
+  padding: 0;
+  margin: 0;
+  transition: all 0.3s ease;
+}
+.wpz-insta-admin #wpbody-content > .wrap .wpz-insta_tabs-config-connect hr {
+  margin: 30px 0;
+}
+.wpz-insta-admin #wpbody-content > .wrap .wpz-insta_tabs-config-connect .wpz-insta_tabs-config-connect-subtitle {
+  font-size: 14px;
+  font-weight: normal;
+  padding: 0;
+  margin: 0 0 20px;
 }
 .wpz-insta-admin #wpbody-content > .wrap .wpz-insta_settings-support {
   font-family: "Inter", Tahoma, Verdana, sans-serif;
@@ -868,5 +1074,4 @@
   color: #3496ff;
 }
 
-/*# sourceMappingURL=index.css.map*/
 /*# sourceMappingURL=index.css.map*/

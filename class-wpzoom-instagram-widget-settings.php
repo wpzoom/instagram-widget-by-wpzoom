@@ -39,6 +39,14 @@ class WPZOOM_Instagram_Widget_Settings {
 	public static $any_users = false;
 
 	/**
+	 * If there are any feeds
+	 *
+	 * @since 2.0.0
+	 * @var string
+	 */
+	public static $any_feeds = false;
+
+	/**
 	 * Returns the *Singleton* instance of this class.
 	 *
 	 * @return WPZOOM_Instagram_Widget_Settings The *Singleton* instance.
@@ -147,8 +155,8 @@ class WPZOOM_Instagram_Widget_Settings {
 			)
 		);
 
-		$count = wp_count_posts( 'wpz-insta_user' );
-		self::$any_users = property_exists( $count, 'publish' ) ? $count->publish > 0 : false;
+		$users_count = wp_count_posts( 'wpz-insta_user' );
+		self::$any_users = property_exists( $users_count, 'publish' ) ? intval( $users_count->publish ) > 0 : false;
 
 		register_post_type(
 			'wpz-insta_feed',
@@ -400,6 +408,9 @@ class WPZOOM_Instagram_Widget_Settings {
 			)
 		);
 
+		$feeds_count = wp_count_posts( 'wpz-insta_feed' );
+		self::$any_feeds = property_exists( $feeds_count, 'publish' ) ? intval( $feeds_count->publish ) > 0 : false;
+
 		add_filter( 'admin_body_class', array( $this, 'admin_body_class_filter' ) );
 		add_filter( 'parent_file', array( $this, 'parent_file_menu_filter' ) );
 		add_filter( 'submenu_file', array( $this, 'submenu_filter' ) );
@@ -415,11 +426,17 @@ class WPZOOM_Instagram_Widget_Settings {
 		add_action( 'wp_ajax_wpz-insta_connect-user', array( $this, 'ajax_connect_user' ) );
 	}
 
-	function admin_body_class_filter( $classes ) {
-		$screen_id = get_current_screen()->id;
-		$is_our_admin = 'wpz-insta_feed' == $screen_id || 'edit-wpz-insta_feed' == $screen_id || 'edit-wpz-insta_user' == $screen_id || 'settings_page_wpz-insta-support' == $screen_id || 'settings_page_wpz-insta-connect' == $screen_id;
+	static function is_wpzinsta_screen() {
+		$screen = get_current_screen();
 
-		return $classes . ( $is_our_admin ? ' wpz-insta-admin' : '' );
+		if ( $screen instanceof WP_Screen ) {
+			$screen_id = $screen->id;
+			return 'wpz-insta_feed' == $screen_id || 'edit-wpz-insta_feed' == $screen_id || 'edit-wpz-insta_user' == $screen_id || 'settings_page_wpz-insta-support' == $screen_id || 'settings_page_wpz-insta-connect' == $screen_id;
+		}
+	}
+
+	function admin_body_class_filter( $classes ) {
+		return $classes . ( self::is_wpzinsta_screen() ? ' wpz-insta-admin' : '' );
 	}
 
 	function parent_file_menu_filter( $parent_file ) {
@@ -524,6 +541,9 @@ class WPZOOM_Instagram_Widget_Settings {
 	function edit_feed_header( $post ) {
 		if ( 'wpz-insta_feed' == $post->post_type ) {
 			$feed_title = get_post_meta( $post->ID, '_wpz-insta_feed-title', true );
+			$user_id = intval( get_post_meta( $post->ID, '_wpz-insta_user-id', true ) );
+			$user = $user_id > 0 ? get_post( $user_id ) : null;
+			$disabled_class = $user instanceof WP_Post ? '' : 'class="disable"';
 
 			?>
 			<a href="<?php echo esc_url( admin_url( 'edit.php?post_type=wpz-insta_feed' ) ); ?>" class="wpz-insta_back-button">
@@ -543,8 +563,8 @@ class WPZOOM_Instagram_Widget_Settings {
 					<nav class="wpz-insta_settings-main-nav wpz-insta_feed-edit-nav">
 						<ul>
 							<li class="active"><a href="<?php echo esc_url( '#config' ); ?>"><?php _e( 'Configure', 'instagram-widget-by-wpzoom' ); ?></a></li>
-							<li><a href="<?php echo esc_url( '#design' ); ?>"><?php _e( 'Design', 'instagram-widget-by-wpzoom' ); ?></a></li>
-							<li><a href="<?php echo esc_url( '#embed' ); ?>"><?php _e( 'Embed', 'instagram-widget-by-wpzoom' ); ?></a></li>
+							<li <?php echo $disabled_class; ?>><a href="<?php echo esc_url( '#design' ); ?>"><?php _e( 'Design', 'instagram-widget-by-wpzoom' ); ?></a></li>
+							<li <?php echo $disabled_class; ?>><a href="<?php echo esc_url( '#embed' ); ?>"><?php _e( 'Embed', 'instagram-widget-by-wpzoom' ); ?></a></li>
 						</ul>
 					</nav>
 				</div>
@@ -560,22 +580,87 @@ class WPZOOM_Instagram_Widget_Settings {
 
 	function edit_feed_content( $post ) {
 		if ( 'wpz-insta_feed' == $post->post_type ) {
+			$none_label = __( 'None', 'instagram-widget-by-wpzoom' );
+			$user_id = intval( get_post_meta( $post->ID, '_wpz-insta_user-id', true ) );
+			$user = $user_id > 0 ? get_post( $user_id ) : null;
+			$user_edit_link = $user instanceof WP_Post ? get_edit_post_link( $user_id ) : false;
+			$user_display_name = $user instanceof WP_Post ? get_the_title( $user ) : $none_label;
+			$user_account_type = $user instanceof WP_Post ? ( get_post_meta( $user_id, '_wpz-insta_account-type', true ) ?: $none_label ) : $none_label;
+			$user_account_token = $user instanceof WP_Post ? ( get_post_meta( $user_id, '_wpz-insta_token', true ) ?: $none_label ) : $none_label;
+			$all_users = get_posts( array(
+				'numberposts' => -1,
+				'post_type'   => 'wpz-insta_user',
+			) );
+
 			?>
 			<div class="wpz-insta_tabs-content">
 				<div class="wpz-insta_tabs-tab wpz-insta_tabs-config active" data-id="#config">
-					<div class="wpz-insta_sidebar">
+					<div class="wpz-insta_sidebar active">
 						<div class="wpz-insta_sidebar-left">
-							Configuration Sidebar
+							<div class="wpz-insta_sidebar-section wpz-insta_sidebar-section-account">
+								<h4 class="wpz-insta_sidebar-section-title"><?php _e( 'Instagram Account', 'instagram-widget-by-wpzoom' ); ?></h4>
+								<p class="wpz-insta_sidebar-section-description"><?php _e( 'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.', 'instagram-widget-by-wpzoom' ); ?></p>
+
+								<div class="wpz-insta_feed-user-select<?php echo $user_id > 0 ? ' is-set' : ''; ?>">
+									<div class="wpz-insta_feed-user-select-input">
+										<input type="hidden" name="_wpz-insta_user-id" id="wpz-insta_user-id" value="<?php echo esc_attr( $user_id > 0 ? $user_id : '-1' ); ?>" />
+
+										<div class="wpz-insta_feed-user-select-info">
+											<div class="wpz-insta_feed-user-select-info-left">
+												<h5 class="wpz-insta_feed-user-select-info-name"><?php echo esc_html( $user_display_name ); ?></h5>
+												<p class="wpz-insta_feed-user-select-info-type"><?php echo esc_html( $user_account_type ); ?></p>
+											</div>
+											<div id="wpz-insta_feed-user-remove-btn" class="wpz-insta_feed-user-remove-button button button-secondary"><?php _e( 'Remove', 'instagram-widget-by-wpzoom' ); ?></div>
+										</div>
+
+										<div id="wpz-insta_feed-user-select-btn" class="wpz-insta_feed-user-select-button button button-primary"><?php _e( 'Select an Account', 'instagram-widget-by-wpzoom' ); ?></div>
+									</div>
+
+									<a href="<?php echo esc_url( $user_edit_link ); ?>" class="wpz-insta_feed-user-select-edit-link"><?php _e( 'Edit account details', 'instagram-widget-by-wpzoom' ); ?></a>
+								</div>
+							</div>
+
+							<div class="wpz-insta_sidebar-section wpz-insta_sidebar-section-token">
+								<h4 class="wpz-insta_sidebar-section-title"><?php _e( 'Access Token', 'instagram-widget-by-wpzoom' ); ?></h4>
+								<p class="wpz-insta_sidebar-section-description"><?php _e( 'The Instagram Access Token is a long string of characters unique to your account that grants other applications access to your Instagram feed.', 'instagram-widget-by-wpzoom' ); ?></p>
+
+								<input type="text" name="_wpz-insta_user-token" id="wpz-insta_user-token" value="<?php echo esc_attr( $user_account_token ); ?>" readonly />
+							</div>
 						</div>
 
 						<div class="wpz-insta_sidebar-right">
 							Configuration Content
 						</div>
 					</div>
+
+					<div id="wpz-insta_tabs-config-cnnct" class="wpz-insta_tabs-config-connect">
+						<h2 class="wpz-insta_tabs-config-connect-title"><?php _e( 'Select an Account', 'instagram-widget-by-wpzoom' ); ?></h2>
+						<p class="wpz-insta_tabs-config-connect-description"><?php _e( 'Show posts from this account:', 'instagram-widget-by-wpzoom' ); ?></p>
+
+						<ul class="wpz-insta_tabs-config-connect-accounts">
+							<?php foreach ( $all_users as $user ) :
+								$user_id = $user->ID;
+								$user_name = sprintf( '@%s', get_the_title( $user ) );
+								$user_type = ucwords( strtolower( esc_html( get_post_meta( $user_id, '_wpz-insta_account-type', true ) ?: $none_label ) ) );
+								$user_token = esc_html( get_post_meta( $user_id, '_wpz-insta_token', true ) ?: '-1' );
+
+								?>
+								<li data-user-id="<?php echo esc_attr( $user_id ); ?>" data-user-name="<?php echo esc_attr( $user_name ); ?>" data-user-type="<?php echo esc_attr( $user_type ); ?>" data-user-token="<?php echo esc_attr( $user_token ); ?>">
+									<h3><?php echo $user_name; ?></h3>
+									<p><?php echo $user_type; ?></p>
+								</li>
+							<?php endforeach; ?>
+						</ul>
+
+						<hr/>
+
+						<h3 class="wpz-insta_tabs-config-connect-subtitle"><?php _e( 'Or add another account&hellip;', 'instagram-widget-by-wpzoom' ); ?></h3>
+						<a href="<?php echo esc_url( admin_url( 'post-new.php?post_type=wpz-insta_user' ) ); ?>" class="wpz-insta_tabs-config-connect-add button button-primary disabled"><?php _e( 'Add New Account', 'instagram-widget-by-wpzoom' ); ?></a>
+					</div>
 				</div>
 
 				<div class="wpz-insta_tabs-tab wpz-insta_tabs-design" data-id="#design">
-					<div class="wpz-insta_sidebar">
+					<div class="wpz-insta_sidebar active">
 						<div class="wpz-insta_sidebar-left">
 							Design Sidebar
 						</div>
@@ -587,7 +672,7 @@ class WPZOOM_Instagram_Widget_Settings {
 				</div>
 
 				<div class="wpz-insta_tabs-tab wpz-insta_tabs-embed" data-id="#embed">
-					<div class="wpz-insta_sidebar">
+					<div class="wpz-insta_sidebar active">
 						<div class="wpz-insta_sidebar-left">
 							Embed Sidebar
 						</div>
@@ -754,7 +839,7 @@ class WPZOOM_Instagram_Widget_Settings {
 		}
 	}
 
-	public function settings_init() {
+	/*public function settings_init() {
 		register_setting(
 			'wpzoom-instagram-widget-settings-group',
 			'wpzoom-instagram-widget-settings',
@@ -808,9 +893,9 @@ class WPZOOM_Instagram_Widget_Settings {
 			array( 'class' => 'wpzoom-instagram-widget-with-token-group' )
 		);
 
-		/**
+		**
 		 * Instagram with basic api token.
-		 */
+		 *
 		add_settings_field(
 			'wpzoom-instagram-widget-basic-access-token-button',
 			__( '', 'instagram-widget-by-wpzoom' ),
@@ -1106,7 +1191,7 @@ class WPZOOM_Instagram_Widget_Settings {
 				  name="wpzoom-instagram-widget-settings[user-info-biography]"
 				  type="text"><?php echo esc_attr( $user_info_biography ); ?></textarea>
 		<?php
-	}
+	}*/
 
 	public function connect_page() {
 		$oauth_url  = add_query_arg(
@@ -1266,12 +1351,7 @@ class WPZOOM_Instagram_Widget_Settings {
 	}
 
 	public function scripts( $hook ) {
-		$screen_id = get_current_screen()->id;
-
-		if ( ( 'edit.php' == $hook && ( 'edit-wpz-insta_feed' == $screen_id || 'edit-wpz-insta_user' == $screen_id ) ) ||
-		     ( 'post.php' == $hook && 'wpz-insta_feed' == $screen_id ) ||
-		     ( 'settings_page_wpz-insta-support' == $hook ) ||
-			 ( 'settings_page_wpz-insta-connect' == $hook ) ) {
+		if ( self::is_wpzinsta_screen() ) {
 			wp_enqueue_media();
 			wp_enqueue_style( 'zoom-instagram-widget-admin', plugin_dir_url( dirname( __FILE__ ) . '/instagram-widget-by-wpzoom.php' ) . 'dist/styles/backend/index.css', array(), '1.7.3' );
 			wp_enqueue_script( 'zoom-instagram-widget-admin', plugin_dir_url( dirname( __FILE__ ) . '/instagram-widget-by-wpzoom.php' ) . 'dist/scripts/backend/index.js', array( 'jquery' ), '1.7.3' );
@@ -1285,7 +1365,8 @@ class WPZOOM_Instagram_Widget_Settings {
 					'i18n_connect_fail_title' => __( 'Your account could not be connected!', 'instagram-widget-by-wpzoom' ),
 					'i18n_connect_fail_content' => __( 'There was a problem connecting your account. Please try again!', 'instagram-widget-by-wpzoom' ),
 					'nonce' => wp_create_nonce( 'ajax-nonce' ),
-					'feeds_url' => admin_url( 'edit.php?post_type=wpz-insta_feed' )
+					'feeds_url' => admin_url( self::$any_feeds ? 'edit.php?post_type=wpz-insta_feed' : 'post-new.php?post_type=wpz-insta_feed' ),
+					'edit_user_url' => admin_url( 'post.php?action=edit&post=' ),
 				)
 			);
 		}

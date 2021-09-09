@@ -254,6 +254,36 @@ jQuery(function ($) {
     e.preventDefault();
     closeConnectDoneDialog($('#wpz-insta_modal-dialog').hasClass('success'));
   });
+  $('#wpz-insta_feed-user-select-btn').on('click', function (e) {
+    e.preventDefault();
+    $('#wpz-insta_tabs-config-cnnct').removeClass('active').addClass('active').prev('.wpz-insta_sidebar').removeClass('active');
+  });
+  $('#wpz-insta_feed-user-remove-btn').on('click', function (e) {
+    e.preventDefault();
+    let $btn = $('#wpz-insta_feed-user-select-btn'),
+        $select = $btn.closest('.wpz-insta_feed-user-select'),
+        $info = $select.find('.wpz-insta_feed-user-select-info');
+    $('#wpz-insta_user-id').val('-1');
+    $('#wpz-insta_user-token').val('-1').closest('.wpz-insta_sidebar-section-token').removeClass('active');
+    $select.removeClass('is-set');
+    $info.find('.wpz-insta_feed-user-select-info-name').html('None');
+    $info.find('.wpz-insta_feed-user-select-info-type').html('None');
+    $select.closest('.wrap').find('.wpz-insta_settings-header .wpz-insta_feed-edit-nav li:not(:first-child)').addClass('disable');
+  });
+  $('#wpz-insta_tabs-config-cnnct .wpz-insta_tabs-config-connect-accounts li').on('click', function (e) {
+    e.preventDefault();
+    let $btn = $('#wpz-insta_feed-user-select-btn'),
+        $select = $btn.closest('.wpz-insta_feed-user-select'),
+        $info = $select.find('.wpz-insta_feed-user-select-info');
+    $('#wpz-insta_user-id').val($(this).data('user-id'));
+    $('#wpz-insta_user-token').val($(this).data('user-token')).closest('.wpz-insta_sidebar-section-token').addClass('active');
+    $select.addClass('is-set');
+    $info.find('.wpz-insta_feed-user-select-info-name').html($(this).data('user-name'));
+    $info.find('.wpz-insta_feed-user-select-info-type').html($(this).data('user-type'));
+    $select.closest('.wrap').find('.wpz-insta_settings-header .wpz-insta_feed-edit-nav li').removeClass('disable');
+    $select.find('.wpz-insta_feed-user-select-edit-link').attr('href', zoom_instagram_widget_admin.edit_user_url + $(this).data('user-id'));
+    $('#wpz-insta_tabs-config-cnnct').removeClass('active').prev('.wpz-insta_sidebar').addClass('active');
+  });
 
   function setTab(id) {
     if (id) {

@@ -73,6 +73,34 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 	}
 
 	/**
+	 * Sanitizes and prepares caption content for display.
+	 * 
+	 * @param  string $caption The raw caption text to filter.
+	 * @return string          The filtered caption text.
+	 */
+	public static function filter_caption( $caption = '' ) {
+		if ( ! empty( $caption ) ) {
+			$filters = array(
+				'wp_kses_post',
+				'autoembed',
+				'wptexturize',
+				'wpautop',
+				'wp_filter_content_tags',
+				'capital_P_dangit',
+				'convert_chars',
+				'convert_smilies',
+				'force_balance_tags',
+			);
+
+			foreach ( $filters as $filter ) {
+				$caption = apply_filters( $filter, $caption );
+			}
+		}
+
+		return trim( $caption );
+	}
+
+	/**
 	 * Load widget specific styles.
 	 */
 	public function styles() {
@@ -513,7 +541,7 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 										</div>
 										<?php if ( ! empty( $item['image-caption'] ) ) : ?>
 											<div class="wpz-insta-caption">
-												<?php echo str_replace( ']]>', ']]&gt;', apply_filters( 'the_content', wp_kses_post( $item['image-caption'] ) ) ); ?>
+												<?php echo self::filter_caption( $item['image-caption'] ); ?>
 											</div>
 										<?php endif; ?>
 

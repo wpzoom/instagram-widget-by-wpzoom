@@ -163,6 +163,7 @@
 	$secondary-color: #70b5fe;
 	$light-color: #fff;
 	$light-grey-color: #ddd;
+	$lighter-grey-color: #eee;
 	$blue-grey-color: #81909c;
 	$darker-blue-grey-color: #9ca2a7;
 	$green-color: #22bb66;
@@ -686,6 +687,7 @@
 				display: grid;
 
 				.wpz-insta_tabs-tab {
+					display: grid;
 					grid-column: 1;
 					grid-row: 1;
 					pointer-events: none;
@@ -695,6 +697,19 @@
 					&.active {
 						pointer-events: all;
 						opacity: 1;
+
+						> .active {
+							pointer-events: all;
+							opacity: 1;
+						}
+					}
+
+					> * {
+						grid-column: 1;
+						grid-row: 1;
+						pointer-events: none;
+						opacity: 0;
+						transition: all 0.3s ease;
 					}
 				}
 			}
@@ -719,6 +734,237 @@
 
 				.wpz-insta_sidebar-right {
 					flex-grow: 1;
+				}
+			}
+
+			.wpz-insta_sidebar-section {
+				padding: 30px 0 0;
+				border-top: 1px solid $light-grey-color;
+				margin: 30px 20px 20px;
+
+				&:first-child {
+					padding-top: 0;
+					border-top: 0;
+					margin-top: 20px;
+				}
+
+				.wpz-insta_sidebar-section-title {
+					font-size: 14px;
+					font-weight: 600;
+					margin: 0 0 10px;
+				}
+
+				.wpz-insta_sidebar-section-description {
+					font-size: 14px;
+					font-weight: normal;
+					margin: 0 0 20px;
+				}
+
+				.wpz-insta_feed-user-select {
+					&.is-set {
+						.wpz-insta_feed-user-select-info {
+							pointer-events: all !important;
+							opacity: 1 !important;
+						}
+
+						.wpz-insta_feed-user-select-button {
+							pointer-events: none !important;
+							opacity: 0 !important;
+						}
+
+						.wpz-insta_feed-user-select-edit-link {
+							display: inline-block !important;
+						}
+					}
+
+					.wpz-insta_feed-user-select-input {
+						display: grid;
+						background: $lighter-grey-color;
+						border: 1px solid $darker-blue-grey-color;
+						border-radius: 4px;
+
+						.wpz-insta_feed-user-select-info {
+							display: flex;
+							align-items: center;
+							justify-content: space-between;
+							pointer-events: none;
+							grid-column: 1;
+							grid-row: 1;
+							opacity: 0;
+							margin: 15px;
+							transition: all 0.3s ease;
+
+							.wpz-insta_feed-user-select-info-left {
+								.wpz-insta_feed-user-select-info-name {
+									font-size: 14px;
+									font-weight: 600;
+									padding: 0;
+									margin: 0;
+								}
+
+								.wpz-insta_feed-user-select-info-type {
+									font-size: 12px;
+									color: $blue-grey-color;
+									padding: 0;
+									margin: 0;
+								}
+							}
+
+							.wpz-insta_feed-user-remove-button {
+								font-size: 13px;
+								font-weight: 600;
+								color: $primary-color;
+								background: transparent;
+								border: 1px solid $primary-color;
+								box-shadow: none;
+
+								&:hover {
+									color: $red-color;
+									border-color: $red-color;
+								}
+							}
+						}
+
+						.wpz-insta_feed-user-select-button {
+							grid-column: 1;
+							grid-row: 1;
+							font-size: 14px;
+							font-weight: 600;
+							color: $main-font-color;
+							background: transparent;
+							opacity: 1;
+							border: 0;
+							box-shadow: none;
+							transition: all 0.3s ease;
+
+							&:hover {
+								color: $light-color;
+								background: $primary-color;
+							}
+						}
+					}
+
+					.wpz-insta_feed-user-select-edit-link {
+						display: none;
+						margin: 20px 0 0;
+					}
+				}
+
+				&.wpz-insta_sidebar-section-token {
+					pointer-events: none;
+					max-height: 0;
+					opacity: 0;
+					overflow: hidden;
+					padding-top: 0;
+					margin-top: 0;
+					margin-bottom: 0;
+					transition: all 0.3s ease;
+
+					&.active {
+						pointer-events: all;
+						max-height: 999em;
+						opacity: 1;
+						padding-top: 30px;
+						margin-top: 30px;
+						margin-bottom: 20px;
+						overflow: visible;
+					}
+
+					#wpz-insta_user-token {
+						display: block;
+						font-family: $main-font-family;
+						font-size: 14px;
+						font-weight: normal;
+						text-overflow: ellipsis;
+						color: $main-font-color;
+						background: $light-color;
+						width: 100%;
+						padding: 4px 8px;
+						border: 1px solid $light-grey-color;
+						border-radius: 2px;
+						box-shadow: none;
+					}
+				}
+			}
+
+			.wpz-insta_tabs-config-connect {
+				font-family: $main-font-family;
+				color: $main-font-color;
+				background: $light-color;
+				padding: 25px 30px;
+				border: 1px solid $light-grey-color;
+				border-radius: 3px;
+				box-shadow: 1px 1px 2px rgba($dark-color, 0.1);
+
+				.wpz-insta_tabs-config-connect-title {
+					font-size: 24px;
+					font-weight: 600;
+					padding: 0;
+					margin: 0 0 10px;
+				}
+
+				.wpz-insta_tabs-config-connect-description {
+					padding: 0;
+					margin: 0 0 20px;
+				}
+
+				.wpz-insta_tabs-config-connect-accounts {
+					display: grid;
+					grid-template-columns: repeat(auto-fill, minmax(300px , 1fr));
+					gap: 30px;
+					padding: 0;
+					margin: 0;
+
+					li {
+						cursor: pointer;
+						background: $lighter-grey-color;
+						padding: 15px;
+						border: 1px solid $darker-blue-grey-color;
+						border-radius: 4px;
+						margin: 0;
+						transition: all 0.3s ease;
+
+						&:hover {
+							color: $light-color;
+							background: $primary-color;
+							border-color: darken($primary-color, 20%);
+
+							h3 {
+								color: $light-color;
+							}
+
+							p {
+								color: rgba($light-color, 0.6);
+							}
+						}
+
+						h3 {
+							font-size: 14px;
+							font-weight: 600;
+							padding: 0;
+							margin: 0 0 5px;
+							transition: all 0.3s ease;
+						}
+
+						p {
+							font-size: 12px;
+							color: $blue-grey-color;
+							padding: 0;
+							margin: 0;
+							transition: all 0.3s ease;
+						}
+					}
+				}
+
+				hr {
+					margin: 30px 0;
+				}
+
+				.wpz-insta_tabs-config-connect-subtitle {
+					font-size: 14px;
+					font-weight: normal;
+					padding: 0;
+					margin: 0 0 20px;
 				}
 			}
 
