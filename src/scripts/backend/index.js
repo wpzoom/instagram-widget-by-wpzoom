@@ -203,10 +203,11 @@ jQuery( function( $ ) {
 		    $select = $btn.closest( '.wpz-insta_feed-user-select' ),
 		    $info   = $select.find( '.wpz-insta_feed-user-select-info' );
 
-		$( '#wpz-insta_user-id' ).val( '-1' );
-		$( '#wpz-insta_user-token' )
-			.val( '-1' )
-			.closest( '.wpz-insta_sidebar-section-token' )
+		$( '#wpz-insta_user-id' ).val( '-1' ).triggerHandler( 'input' );
+		$( '#wpz-insta_user-token' ).val( '-1' ).triggerHandler( 'input' );
+
+		$( '#wpz-insta_user-token, #wpz-insta_check-new-posts-interval-number, #wpz-insta_enable-request-timeout' )
+			.closest( '.wpz-insta_sidebar-section' )
 				.removeClass( 'active' );
 
 		$select.removeClass( 'is-set' );
@@ -222,10 +223,11 @@ jQuery( function( $ ) {
 		    $select = $btn.closest( '.wpz-insta_feed-user-select' ),
 		    $info   = $select.find( '.wpz-insta_feed-user-select-info' );
 
-		$( '#wpz-insta_user-id' ).val( $( this ).data( 'user-id' ) );
-		$( '#wpz-insta_user-token' )
-			.val( $( this ).data( 'user-token' ) )
-			.closest( '.wpz-insta_sidebar-section-token' )
+		$( '#wpz-insta_user-id' ).val( $( this ).data( 'user-id' ) ).triggerHandler( 'input' );
+		$( '#wpz-insta_user-token' ).val( $( this ).data( 'user-token' ) ).triggerHandler( 'input' );
+		
+		$( '#wpz-insta_user-token, #wpz-insta_check-new-posts-interval-number, #wpz-insta_enable-request-timeout' )
+			.closest( '.wpz-insta_sidebar-section' )
 				.addClass( 'active' );
 
 		$select.addClass( 'is-set' );
@@ -238,6 +240,28 @@ jQuery( function( $ ) {
 			.removeClass( 'active' )
 			.prev( '.wpz-insta_sidebar' )
 				.addClass( 'active' );
+	} );
+
+	let formChangedValues = {};
+
+	$( 'form#post' ).find( 'input, textarea, select' ).each( function( index ) {
+		$( this ).data( 'uid', index );
+	} );
+
+	$( 'form#post' ).find( 'input, textarea, select' ).on( 'input change', function() {
+		let key = $( this ).data( 'uid' );
+
+		if ( $( this ).val() != $( this )[0].defaultValue ) {
+			if ( ! ( key in formChangedValues ) ) {
+				formChangedValues[key] = true;
+			}
+		} else {
+			if ( key in formChangedValues ) {
+				delete formChangedValues[key];
+			}
+		}
+
+		$( 'input#publish' ).toggleClass( 'disabled', $.isEmptyObject( formChangedValues ) );
 	} );
 
 	function setTab( id ) {

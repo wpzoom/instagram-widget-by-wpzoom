@@ -187,6 +187,21 @@
 				display: none;
 			}
 
+			input, textarea, select {
+				font-family: $main-font-family;
+				font-weight: normal;
+				color: $main-font-color;
+				border: 1px solid $darker-blue-grey-color;
+				border-radius: 2px;
+				box-shadow: none;
+				transition: all 0.3s ease;
+
+				&:hover, &:focus {
+					color: $main-font-color;
+					border-color: $primary-color;
+				}
+			}
+
 			input {
 				font-family: $mono-font-family;
 				color: $main-font-color;
@@ -255,7 +270,7 @@
 				&.button-large {
 					min-height: 48px;
 					padding: 0 40px;
-					margin: 0 0 16px;
+					margin: 0;
 				}
 
 				&.button-positive {
@@ -288,6 +303,19 @@
 				&:hover,
 				&:active {
 					background: $light-grey-color;
+				}
+			}
+
+			.wpz-insta_suffixed-number-input {
+				display: flex;
+				gap: 12px;
+
+				> * {
+					margin: 0;
+
+					&:first-child {
+						flex-grow: 1;
+					}
 				}
 			}
 
@@ -341,6 +369,23 @@
 				border-radius: 3px;
 				box-shadow: 1px 1px 2px rgba($dark-color, 0.1);
 				margin: 3em 0;
+
+				#major-publishing-actions {
+					background: transparent;
+					padding: 0 0 1em;
+					border: 0;
+
+					#publishing-action {
+						display: flex;
+						align-items: center;
+						gap: 20px;
+						float: none;
+
+						.spinner {
+							margin: 0;
+						}
+					}
+				}
 
 				&.wpz-insta-wrap-sides {
 					display: flex;
@@ -850,7 +895,9 @@
 					}
 				}
 
-				&.wpz-insta_sidebar-section-token {
+				&.wpz-insta_sidebar-section-token,
+				&.wpz-insta_sidebar-section-check-new,
+				&.wpz-insta_sidebar-section-request-timeout {
 					pointer-events: none;
 					max-height: 0;
 					opacity: 0;
@@ -869,7 +916,9 @@
 						margin-bottom: 20px;
 						overflow: visible;
 					}
+				}
 
+				&.wpz-insta_sidebar-section-token {
 					#wpz-insta_user-token {
 						display: block;
 						font-family: $main-font-family;
@@ -884,6 +933,10 @@
 						border-radius: 2px;
 						box-shadow: none;
 					}
+				}
+
+				&.wpz-insta_sidebar-section-request-timeout > label > strong {
+					font-size: 14px;
 				}
 			}
 

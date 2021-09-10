@@ -263,8 +263,9 @@ jQuery(function ($) {
     let $btn = $('#wpz-insta_feed-user-select-btn'),
         $select = $btn.closest('.wpz-insta_feed-user-select'),
         $info = $select.find('.wpz-insta_feed-user-select-info');
-    $('#wpz-insta_user-id').val('-1');
-    $('#wpz-insta_user-token').val('-1').closest('.wpz-insta_sidebar-section-token').removeClass('active');
+    $('#wpz-insta_user-id').val('-1').triggerHandler('input');
+    $('#wpz-insta_user-token').val('-1').triggerHandler('input');
+    $('#wpz-insta_user-token, #wpz-insta_check-new-posts-interval-number, #wpz-insta_enable-request-timeout').closest('.wpz-insta_sidebar-section').removeClass('active');
     $select.removeClass('is-set');
     $info.find('.wpz-insta_feed-user-select-info-name').html('None');
     $info.find('.wpz-insta_feed-user-select-info-type').html('None');
@@ -275,14 +276,34 @@ jQuery(function ($) {
     let $btn = $('#wpz-insta_feed-user-select-btn'),
         $select = $btn.closest('.wpz-insta_feed-user-select'),
         $info = $select.find('.wpz-insta_feed-user-select-info');
-    $('#wpz-insta_user-id').val($(this).data('user-id'));
-    $('#wpz-insta_user-token').val($(this).data('user-token')).closest('.wpz-insta_sidebar-section-token').addClass('active');
+    $('#wpz-insta_user-id').val($(this).data('user-id')).triggerHandler('input');
+    $('#wpz-insta_user-token').val($(this).data('user-token')).triggerHandler('input');
+    $('#wpz-insta_user-token, #wpz-insta_check-new-posts-interval-number, #wpz-insta_enable-request-timeout').closest('.wpz-insta_sidebar-section').addClass('active');
     $select.addClass('is-set');
     $info.find('.wpz-insta_feed-user-select-info-name').html($(this).data('user-name'));
     $info.find('.wpz-insta_feed-user-select-info-type').html($(this).data('user-type'));
     $select.closest('.wrap').find('.wpz-insta_settings-header .wpz-insta_feed-edit-nav li').removeClass('disable');
     $select.find('.wpz-insta_feed-user-select-edit-link').attr('href', zoom_instagram_widget_admin.edit_user_url + $(this).data('user-id'));
     $('#wpz-insta_tabs-config-cnnct').removeClass('active').prev('.wpz-insta_sidebar').addClass('active');
+  });
+  let formChangedValues = {};
+  $('form#post').find('input, textarea, select').each(function (index) {
+    $(this).data('uid', index);
+  });
+  $('form#post').find('input, textarea, select').on('input change', function () {
+    let key = $(this).data('uid');
+
+    if ($(this).val() != $(this)[0].defaultValue) {
+      if (!(key in formChangedValues)) {
+        formChangedValues[key] = true;
+      }
+    } else {
+      if (key in formChangedValues) {
+        delete formChangedValues[key];
+      }
+    }
+
+    $('input#publish').toggleClass('disabled', $.isEmptyObject(formChangedValues));
   });
 
   function setTab(id) {

@@ -155,6 +155,19 @@
 .wpz-insta-admin #wpbody-content > .wrap > .wpz-insta-wrap ~ #posts-filter > .wp-list-table > tfoot {
   display: none;
 }
+.wpz-insta-admin #wpbody-content > .wrap input, .wpz-insta-admin #wpbody-content > .wrap textarea, .wpz-insta-admin #wpbody-content > .wrap select {
+  font-family: "Inter", Tahoma, Verdana, sans-serif;
+  font-weight: normal;
+  color: #242628;
+  border: 1px solid #9ca2a7;
+  border-radius: 2px;
+  box-shadow: none;
+  transition: all 0.3s ease;
+}
+.wpz-insta-admin #wpbody-content > .wrap input:hover, .wpz-insta-admin #wpbody-content > .wrap input:focus, .wpz-insta-admin #wpbody-content > .wrap textarea:hover, .wpz-insta-admin #wpbody-content > .wrap textarea:focus, .wpz-insta-admin #wpbody-content > .wrap select:hover, .wpz-insta-admin #wpbody-content > .wrap select:focus {
+  color: #242628;
+  border-color: #3496ff;
+}
 .wpz-insta-admin #wpbody-content > .wrap input {
   font-family: "Roboto Mono", monospace;
   color: #242628;
@@ -217,7 +230,7 @@
 .wpz-insta-admin #wpbody-content > .wrap .button-secondary.button-large {
   min-height: 48px;
   padding: 0 40px;
-  margin: 0 0 16px;
+  margin: 0;
 }
 .wpz-insta-admin #wpbody-content > .wrap .button.button-positive,
 .wpz-insta-admin #wpbody-content > .wrap .button-primary.button-positive,
@@ -247,6 +260,16 @@
 }
 .wpz-insta-admin #wpbody-content > .wrap .button-secondary:hover, .wpz-insta-admin #wpbody-content > .wrap .button-secondary:active {
   background: #ddd;
+}
+.wpz-insta-admin #wpbody-content > .wrap .wpz-insta_suffixed-number-input {
+  display: flex;
+  gap: 12px;
+}
+.wpz-insta-admin #wpbody-content > .wrap .wpz-insta_suffixed-number-input > * {
+  margin: 0;
+}
+.wpz-insta-admin #wpbody-content > .wrap .wpz-insta_suffixed-number-input > *:first-child {
+  flex-grow: 1;
 }
 .wpz-insta-admin #wpbody-content > .wrap a {
   text-decoration: none;
@@ -290,6 +313,20 @@
   border-radius: 3px;
   box-shadow: -1px 1px 2px rgba(0, 0, 0, 0.1);
   margin: 3em 0;
+}
+.wpz-insta-admin #wpbody-content > .wrap .wpz-insta_settings-header #major-publishing-actions {
+  background: transparent;
+  padding: 0 0 1em;
+  border: 0;
+}
+.wpz-insta-admin #wpbody-content > .wrap .wpz-insta_settings-header #major-publishing-actions #publishing-action {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  float: none;
+}
+.wpz-insta-admin #wpbody-content > .wrap .wpz-insta_settings-header #major-publishing-actions #publishing-action .spinner {
+  margin: 0;
 }
 .wpz-insta-admin #wpbody-content > .wrap .wpz-insta_settings-header.wpz-insta-wrap-sides {
   display: flex;
@@ -699,7 +736,7 @@
   display: none;
   margin: 20px 0 0;
 }
-.wpz-insta-admin #wpbody-content > .wrap .wpz-insta_sidebar-section.wpz-insta_sidebar-section-token {
+.wpz-insta-admin #wpbody-content > .wrap .wpz-insta_sidebar-section.wpz-insta_sidebar-section-token, .wpz-insta-admin #wpbody-content > .wrap .wpz-insta_sidebar-section.wpz-insta_sidebar-section-check-new, .wpz-insta-admin #wpbody-content > .wrap .wpz-insta_sidebar-section.wpz-insta_sidebar-section-request-timeout {
   pointer-events: none;
   max-height: 0;
   opacity: 0;
@@ -709,7 +746,7 @@
   margin-bottom: 0;
   transition: all 0.3s ease;
 }
-.wpz-insta-admin #wpbody-content > .wrap .wpz-insta_sidebar-section.wpz-insta_sidebar-section-token.active {
+.wpz-insta-admin #wpbody-content > .wrap .wpz-insta_sidebar-section.wpz-insta_sidebar-section-token.active, .wpz-insta-admin #wpbody-content > .wrap .wpz-insta_sidebar-section.wpz-insta_sidebar-section-check-new.active, .wpz-insta-admin #wpbody-content > .wrap .wpz-insta_sidebar-section.wpz-insta_sidebar-section-request-timeout.active {
   pointer-events: all;
   max-height: 999em;
   opacity: 1;
@@ -731,6 +768,9 @@
   border: 1px solid #ddd;
   border-radius: 2px;
   box-shadow: none;
+}
+.wpz-insta-admin #wpbody-content > .wrap .wpz-insta_sidebar-section.wpz-insta_sidebar-section-request-timeout > label > strong {
+  font-size: 14px;
 }
 .wpz-insta-admin #wpbody-content > .wrap .wpz-insta_tabs-config-connect {
   font-family: "Inter", Tahoma, Verdana, sans-serif;
