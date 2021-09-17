@@ -240,6 +240,10 @@ jQuery(function ($) {
     });
   }
 
+  $('#wpz-insta_show-pro').on('change', function (e) {
+    e.preventDefault();
+    $(this).closest('.wpz-insta_sidebar').toggleClass('show-pro', this.checked);
+  });
   $('.wpz-insta-wrap .account-options .account-option-button:not(.disabled)').on('click', function (e) {
     e.preventDefault();
 
@@ -257,6 +261,7 @@ jQuery(function ($) {
   $('#wpz-insta_feed-user-select-btn').on('click', function (e) {
     e.preventDefault();
     $('#wpz-insta_tabs-config-cnnct').removeClass('active').addClass('active').prev('.wpz-insta_sidebar').removeClass('active');
+    $('#wpz-insta_tabs-config-cnnct').closest('.wpz-insta_tabs-content').find('> .wpz-insta_sidebar').addClass('hide');
   });
   $('#wpz-insta_feed-user-remove-btn').on('click', function (e) {
     e.preventDefault();
@@ -285,31 +290,62 @@ jQuery(function ($) {
     $select.closest('.wrap').find('.wpz-insta_settings-header .wpz-insta_feed-edit-nav li').removeClass('disable');
     $select.find('.wpz-insta_feed-user-select-edit-link').attr('href', zoom_instagram_widget_admin.edit_user_url + $(this).data('user-id'));
     $('#wpz-insta_tabs-config-cnnct').removeClass('active').prev('.wpz-insta_sidebar').addClass('active');
+    $('#wpz-insta_tabs-config-cnnct').closest('.wpz-insta_tabs-content').find('> .wpz-insta_sidebar').removeClass('hide');
   });
   let formChangedValues = {};
   $('form#post').find('input, textarea, select').each(function (index) {
     $(this).data('uid', index);
   });
-  $('form#post').find('input, textarea, select').on('input change', function () {
-    let key = $(this).data('uid');
+  $('form#post').on('input change', function (e) {
+    let $target = $(e.target);
 
-    if ($(this).val() != $(this)[0].defaultValue) {
-      if (!(key in formChangedValues)) {
-        formChangedValues[key] = true;
+    if (!$target.is('.preview-exclude')) {
+      let key = $target.data('uid');
+
+      if ($target.val() != $target[0].defaultValue) {
+        if (!(key in formChangedValues)) {
+          formChangedValues[key] = true;
+        }
+      } else {
+        if (key in formChangedValues) {
+          delete formChangedValues[key];
+        }
       }
-    } else {
-      if (key in formChangedValues) {
-        delete formChangedValues[key];
-      }
+
+      $('input#publish').toggleClass('disabled', $.isEmptyObject(formChangedValues));
+      window.wpzInstaReloadPreview();
     }
-
-    $('input#publish').toggleClass('disabled', $.isEmptyObject(formChangedValues));
   });
+  $('#wpz-insta_widget-preview-links .wpz-insta_widget-preview-header-link').on('click', function () {
+    if (!$(this).hasClass('active')) {
+      $(this).addClass('active').siblings('.wpz-insta_widget-preview-header-link').removeClass('active');
+      $(this).closest('.wpz-insta_widget-preview').find('.wpz-insta_widget-preview-view').removeClass('wpz-insta_widget-preview-size-desktop wpz-insta_widget-preview-size-tablet wpz-insta_widget-preview-size-mobile').addClass($(this).hasClass('wpz-insta_widget-preview-header-links-tablet') ? 'wpz-insta_widget-preview-size-tablet' : $(this).hasClass('wpz-insta_widget-preview-header-links-mobile') ? 'wpz-insta_widget-preview-size-mobile' : 'wpz-insta_widget-preview-size-desktop');
+    }
+  });
+  $('.wpz-insta_color-picker').wpColorPicker({
+    change: debounce((event, ui) => {
+      $(event.target).closest('form#post').triggerHandler('change');
+    }, 300)
+  });
+  $('#wpz-insta_shortcode').on('focus', function (e) {
+    e.preventDefault();
+    $(this).select();
+  });
+  var wpzInstaShortcodeCopyTimer;
+  $('#wpz-insta_shortcode-copy-btn').on('click', debounce(() => {
+    copyToClipboard($('#wpz-insta_shortcode').val()).then(function () {
+      $('#wpz-insta_shortcode-copy-btn').addClass('success');
+      clearTimeout(wpzInstaShortcodeCopyTimer);
+      setTimeout(() => {
+        $('#wpz-insta_shortcode-copy-btn').removeClass('success');
+      }, 3000);
+    });
+  }, 300));
 
   function setTab(id) {
     if (id) {
       const $target = $('.wpz-insta_feed-edit-nav a[href="' + id + '"]'),
-            $tabs = $target.closest('form').find('.wpz-insta_tabs-content .wpz-insta_tabs-tab');
+            $tabs = $target.closest('form').find('.wpz-insta_tabs-content .wpz-insta_sidebar-left-section');
       $target.closest('.wpz-insta_feed-edit-nav').find('li').removeClass('active');
       $target.closest('li').addClass('active');
       $tabs.removeClass('active');
@@ -354,6 +390,35 @@ jQuery(function ($) {
     }
   }
 
+  function debounce(func, timeout = 300) {
+    let timer;
+    return (...args) => {
+      clearTimeout(timer);
+      timer = setTimeout(() => {
+        func.apply(this, args);
+      }, timeout);
+    };
+  }
+
+  function copyToClipboard(textToCopy) {
+    if (navigator.clipboard && window.isSecureContext) {
+      return navigator.clipboard.writeText(textToCopy);
+    } else {
+      let textArea = document.createElement('textarea');
+      textArea.value = textToCopy;
+      textArea.style.position = 'fixed';
+      textArea.style.left = '-999999px';
+      textArea.style.top = '-999999px';
+      document.body.appendChild(textArea);
+      textArea.focus();
+      textArea.select();
+      return new Promise((res, rej) => {
+        document.execCommand('copy') ? res() : rej();
+        textArea.remove();
+      });
+    }
+  }
+
   window.handleReturnedToken = function (raw) {
     if (raw && raw.length > 1) {
       if (raw[0] === '#') {
@@ -375,6 +440,10 @@ jQuery(function ($) {
         }
       }
     }
+  };
+
+  window.wpzInstaReloadPreview = function () {
+    $('#wpz-insta_widget-preview-view iframe').attr('src', $('#wpz-insta_widget-preview-view iframe').attr('src'));
   };
 });
 

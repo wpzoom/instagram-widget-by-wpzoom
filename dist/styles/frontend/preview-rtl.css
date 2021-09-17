@@ -1,0 +1,22 @@
+html {
+  background: transparent !important;
+  padding: 0 !important;
+  border: 0 !important;
+  margin: 0 !important;
+}
+html body {
+  background: transparent !important;
+  padding: 0 !important;
+  border: 0 !important;
+  margin: 0 !important;
+}
+html body > * {
+  display: none !important;
+}
+html body > .zoom-instagram-widget {
+  display: block !important;
+  background: transparent !important;
+  padding: 0 !important;
+  border: 0 !important;
+  margin: 0 !important;
+}

@@ -85,6 +85,18 @@ class Wpzoom_Instagram_Widget_API {
 	}
 
 	/**
+	 * Manually set the access token.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param string $token The access token to set.
+	 * @return void
+	 */
+	public function set_access_token( $token ) {
+		$this->access_token = $token;
+	}
+
+	/**
 	 * Register custom cron intervals
 	 *
 	 * @since 1.8.0
