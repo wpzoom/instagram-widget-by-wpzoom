@@ -20,7 +20,7 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 	public function __construct() {
 		parent::__construct(
 			'wpzoom_instagram_widget',
-			esc_html__( 'Instagram Widget by WPZOOM', 'instagram-widget-by-wpzoom' ),
+			esc_html__( 'Instagram Widget by WPZOOM (Legacy)', 'instagram-widget-by-wpzoom' ),
 			array(
 				'classname'   => 'zoom-instagram-widget',
 				'description' => __( 'Displays a user\'s Instagram timeline.', 'instagram-widget-by-wpzoom' ),
@@ -122,7 +122,7 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 			'swiper-css',
 			plugin_dir_url( __FILE__ ) . 'dist/styles/library/swiper.css',
 			array(),
-			WPZOOM_INSTAGRAM_VERSION
+			'7.0.0-alpha.21'
 		);
 	}
 
@@ -150,7 +150,7 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 			'swiper-js',
 			plugin_dir_url( __FILE__ ) . 'dist/scripts/library/swiper.js',
 			array(),
-			filemtime( plugin_dir_path( __FILE__ ) . 'dist/scripts/library/swiper.js' ),
+			'7.0.0-alpha.21',
 			true
 		);
 

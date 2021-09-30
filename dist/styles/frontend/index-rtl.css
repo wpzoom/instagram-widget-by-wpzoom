@@ -22,13 +22,24 @@
 }
 
 /* Prevent extra space conflict from theme */
-.widget.zoom-instagram-widget ul li.zoom-instagram-widget__item {
+.widget.zoom-instagram-widget ul li.zoom-instagram-widget__item,
+.widget.zoom-new-instagram-widget ul li.zoom-instagram-widget__item {
   padding: 0;
 }
 
 .zoom-instagram-widget__items--no-js.zoom-instagram-widget__items .zoom-instagram-widget__item {
   margin-left: 10px;
   margin-bottom: 10px;
+}
+
+.widget.zoom-new-instagram-widget .zoom-instagram-widget__items {
+  display: grid;
+}
+.widget.zoom-new-instagram-widget .zoom-instagram-widget__items::before, .widget.zoom-new-instagram-widget .zoom-instagram-widget__items::after {
+  display: none;
+}
+.widget.zoom-new-instagram-widget .zoom-instagram-widget__items .zoom-instagram-widget__item .zoom-instagram-link {
+  padding-bottom: 75%;
 }
 
 /* View on Instagram button */

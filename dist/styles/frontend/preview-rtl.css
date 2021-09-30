@@ -13,9 +13,8 @@ html body {
 html body > * {
   display: none !important;
 }
-html body > .zoom-instagram-widget {
+html body > .zoom-new-instagram-widget {
   display: block !important;
-  background: transparent !important;
   padding: 0 !important;
   border: 0 !important;
   margin: 0 !important;

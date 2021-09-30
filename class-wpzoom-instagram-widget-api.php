@@ -232,6 +232,10 @@ class Wpzoom_Instagram_Widget_API {
 
 		$transient = 'zoom_instagram_is_configured';
 
+		if ( ! empty( $this->access_token ) ) {
+			$transient = $transient . '_' . $this->access_token;
+		}
+
 		$injected_username = trim( $injected_username );
 
 		if ( ! empty( $injected_username ) && 'without-access-token' === $this->request_type ) {

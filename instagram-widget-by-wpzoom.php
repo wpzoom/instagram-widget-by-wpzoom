@@ -3,7 +3,7 @@
  * Plugin Name: WPZOOM Instagram Widget
  * Plugin URI: https://www.wpzoom.com/plugins/instagram-widget/
  * Description: Simple and lightweight widget for WordPress to display your Instagram feed. Now with a Lightbox!
- * Version: 1.9.0
+ * Version: 2.0.0
  * Author: WPZOOM
  * Author URI: https://www.wpzoom.com/
  * Text Domain: instagram-widget-by-wpzoom
@@ -19,16 +19,19 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 if ( ! defined( 'WPZOOM_INSTAGRAM_VERSION' ) ) {
-	define( 'WPZOOM_INSTAGRAM_VERSION', '1.9.0' );
+	define( 'WPZOOM_INSTAGRAM_VERSION', '2.0.0' );
 }
 
 require_once plugin_dir_path( __FILE__ ) . 'class-wpzoom-instagram-image-uploader.php';
 require_once plugin_dir_path( __FILE__ ) . 'class-wpzoom-instagram-widget-settings.php';
 require_once plugin_dir_path( __FILE__ ) . 'class-wpzoom-instagram-widget-api.php';
+require_once plugin_dir_path( __FILE__ ) . 'class-wpzoom-instagram-widget-display.php';
+require_once plugin_dir_path( __FILE__ ) . 'class-wpzoom-new-instagram-widget.php';
 require_once plugin_dir_path( __FILE__ ) . 'class-wpzoom-instagram-widget.php';
 
 add_action( 'widgets_init', 'zoom_instagram_widget_register' );
 function zoom_instagram_widget_register() {
+	register_widget( 'Wpzoom_New_Instagram_Widget' );
 	register_widget( 'Wpzoom_Instagram_Widget' );
 }
 
@@ -138,6 +141,8 @@ add_action(
 			update_option( $option_name, true );
 			delete_transient( 'zoom_instagram_is_configured' );
 		}
+
+		Wpzoom_Instagram_Widget_Display::getInstance()->init();
 	}
 );
 

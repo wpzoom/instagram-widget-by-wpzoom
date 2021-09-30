@@ -293,10 +293,10 @@ jQuery(function ($) {
     $('#wpz-insta_tabs-config-cnnct').closest('.wpz-insta_tabs-content').find('> .wpz-insta_sidebar').removeClass('hide');
   });
   let formChangedValues = {};
-  $('form#post').find('input, textarea, select').each(function (index) {
+  $('form#post .wpz-insta_tabs-content > .wpz-insta_sidebar > .wpz-insta_sidebar-left').find('input, textarea, select').not('.preview-exclude').each(function (index) {
     $(this).data('uid', index);
   });
-  $('form#post').on('input change', function (e) {
+  $('form#post .wpz-insta_tabs-content > .wpz-insta_sidebar > .wpz-insta_sidebar-left').on('input change', debounce(e => {
     let $target = $(e.target);
 
     if (!$target.is('.preview-exclude')) {
@@ -315,6 +315,9 @@ jQuery(function ($) {
       $('input#publish').toggleClass('disabled', $.isEmptyObject(formChangedValues));
       window.wpzInstaReloadPreview();
     }
+  }, 300));
+  $(function () {
+    window.wpzInstaReloadPreview();
   });
   $('#wpz-insta_widget-preview-links .wpz-insta_widget-preview-header-link').on('click', function () {
     if (!$(this).hasClass('active')) {
@@ -323,9 +326,9 @@ jQuery(function ($) {
     }
   });
   $('.wpz-insta_color-picker').wpColorPicker({
-    change: debounce((event, ui) => {
-      $(event.target).closest('form#post').triggerHandler('change');
-    }, 300)
+    change: function (event, ui) {
+      $(event.target).closest('form#post').find('.wpz-insta_tabs-content > .wpz-insta_sidebar > .wpz-insta_sidebar-left').triggerHandler('change');
+    }
   });
   $('#wpz-insta_shortcode').on('focus', function (e) {
     e.preventDefault();
@@ -443,7 +446,14 @@ jQuery(function ($) {
   };
 
   window.wpzInstaReloadPreview = function () {
-    $('#wpz-insta_widget-preview-view iframe').attr('src', $('#wpz-insta_widget-preview-view iframe').attr('src'));
+    let url = zoom_instagram_widget_admin.preview_url,
+        params = $.param($('form#post .wpz-insta_tabs-content > .wpz-insta_sidebar > .wpz-insta_sidebar-left').find('input, textarea, select').not('.preview-exclude').serializeArray());
+
+    if (params) {
+      url += '&' + params;
+    }
+
+    $('#wpz-insta_widget-preview-view iframe').attr('src', url);
   };
 });
 

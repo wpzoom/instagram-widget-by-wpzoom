@@ -254,30 +254,40 @@ jQuery( function( $ ) {
 
 	let formChangedValues = {};
 
-	$( 'form#post' ).find( 'input, textarea, select' ).each( function( index ) {
+	$( 'form#post .wpz-insta_tabs-content > .wpz-insta_sidebar > .wpz-insta_sidebar-left' ).find( 'input, textarea, select' ).not( '.preview-exclude' ).each( function( index ) {
 		$( this ).data( 'uid', index );
 	} );
 
-	$( 'form#post' ).on( 'input change', function( e ) {
-		let $target = $( e.target );
+	$( 'form#post .wpz-insta_tabs-content > .wpz-insta_sidebar > .wpz-insta_sidebar-left' ).on(
+		'input change',
+		debounce(
+			( e ) => {
+				let $target = $( e.target );
 
-		if ( ! $target.is( '.preview-exclude' ) ) {
-			let key = $target.data( 'uid' );
+				if ( ! $target.is( '.preview-exclude' ) ) {
+					let key = $target.data( 'uid' );
 
-			if ( $target.val() != $target[0].defaultValue ) {
-				if ( ! ( key in formChangedValues ) ) {
-					formChangedValues[key] = true;
+					if ( $target.val() != $target[0].defaultValue ) {
+						if ( ! ( key in formChangedValues ) ) {
+							formChangedValues[key] = true;
+						}
+					} else {
+						if ( key in formChangedValues ) {
+							delete formChangedValues[key];
+						}
+					}
+
+					$( 'input#publish' ).toggleClass( 'disabled', $.isEmptyObject( formChangedValues ) );
+
+					window.wpzInstaReloadPreview();
 				}
-			} else {
-				if ( key in formChangedValues ) {
-					delete formChangedValues[key];
-				}
-			}
+			},
+			300
+		)
+	);
 
-			$( 'input#publish' ).toggleClass( 'disabled', $.isEmptyObject( formChangedValues ) );
-
-			window.wpzInstaReloadPreview();
-		}
+	$( function() {
+		window.wpzInstaReloadPreview();
 	} );
 
 	$( '#wpz-insta_widget-preview-links .wpz-insta_widget-preview-header-link' ).on( 'click', function() {
@@ -297,7 +307,9 @@ jQuery( function( $ ) {
 	} );
 
 	$( '.wpz-insta_color-picker' ).wpColorPicker( {
-		change: debounce( ( event, ui ) => { $( event.target ).closest( 'form#post' ).triggerHandler( 'change' ); }, 300 )
+		change: function( event, ui ) {
+			$( event.target ).closest( 'form#post' ).find( '.wpz-insta_tabs-content > .wpz-insta_sidebar > .wpz-insta_sidebar-left' ).triggerHandler( 'change' );
+		}
 	} );
 
 	$( '#wpz-insta_shortcode' ).on( 'focus', function( e ) {
@@ -436,7 +448,14 @@ jQuery( function( $ ) {
 	};
 
 	window.wpzInstaReloadPreview = function() {
-		$( '#wpz-insta_widget-preview-view iframe' ).attr( 'src', $( '#wpz-insta_widget-preview-view iframe' ).attr( 'src' ) );
+		let url = zoom_instagram_widget_admin.preview_url,
+		    params = $.param( $( 'form#post .wpz-insta_tabs-content > .wpz-insta_sidebar > .wpz-insta_sidebar-left' ).find( 'input, textarea, select' ).not( '.preview-exclude' ).serializeArray() );
+
+		if ( params ) {
+			url += '&' + params;
+		}
+
+		$( '#wpz-insta_widget-preview-view iframe' ).attr( 'src', url );
 	};
 
 } );
