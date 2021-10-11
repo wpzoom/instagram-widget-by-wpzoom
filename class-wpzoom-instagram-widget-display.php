@@ -75,6 +75,10 @@ class Wpzoom_Instagram_Widget_Display {
 					'spacing-around-suffix'           => intval( get_post_meta( $feed_id, '_wpz-insta_spacing-around-suffix', true ) ?: 0 ),
 					'font-size'                       => intval( get_post_meta( $feed_id, '_wpz-insta_font-size', true ) ?: -1 ),
 					'font-size-suffix'                => intval( get_post_meta( $feed_id, '_wpz-insta_font-size-suffix', true ) ?: 0 ),
+					'lightbox'                        => boolval( get_post_meta( $feed_id, '_wpz-insta_lightbox', true ) ?: true ),
+					'show-overlay'                    => boolval( get_post_meta( $feed_id, '_wpz-insta_show-overlay', true ) ?: true ),
+					'show-media-type-icons'           => boolval( get_post_meta( $feed_id, '_wpz-insta_show-media-type-icons', true ) ?: true ),
+					'image-size'                      => intval( get_post_meta( $feed_id, '_wpz-insta_image-size', true ) ?: -1 ),
 					'hover-likes'                     => boolval( get_post_meta( $feed_id, '_wpz-insta_hover-likes', true ) ?: true ),
 					'hover-link'                      => boolval( get_post_meta( $feed_id, '_wpz-insta_hover-link', true ) ?: true ),
 					'hover-caption'                   => boolval( get_post_meta( $feed_id, '_wpz-insta_hover-caption', true ) ?: false ),
@@ -108,7 +112,7 @@ class Wpzoom_Instagram_Widget_Display {
 	private function feed_content( array $args ) {
 		$this->api = Wpzoom_Instagram_Widget_API::getInstance();
 		$output = '';
-		$user_id = intval( $args['user-id'] );
+		$user_id = isset( $args['user-id'] ) ? intval( $args['user-id'] ) : -1;
 
 		if ( $user_id > 0 ) {
 			$user = get_post( $user_id );
@@ -120,20 +124,25 @@ class Wpzoom_Instagram_Widget_Display {
 				$user_account_token = get_post_meta( $user_id, '_wpz-insta_token', true ) ?: '-1';
 
 				if ( '-1' !== $user_account_token ) {
-					$new_posts_interval_number = intval( $args['check-new-posts-interval-number'] );
-					$new_posts_interval_suffix = intval( $args['check-new-posts-interval-suffix'] );
-					$enable_request_timeout = boolval( $args['enable-request-timeout'] );
+					$attrs = '';
+					$new_posts_interval_number = isset( $args['check-new-posts-interval-number'] ) ? intval( $args['check-new-posts-interval-number'] ) : 1;
+					$new_posts_interval_suffix = isset( $args['check-new-posts-interval-suffix'] ) ? intval( $args['check-new-posts-interval-suffix'] ) : 1;
+					$enable_request_timeout = isset( $args['enable-request-timeout'] ) ? boolval( $args['enable-request-timeout'] ) : false;
 					$count = 0;
-					$amount = $args['item-num'];
-					$lightbox = true;
-					$show_overlay = true;
-					$show_media_type_icons = true;
-					$image_width = 600;
+					$amount = isset( $args['item-num'] ) ? intval( $args['item-num'] ) : 9;
+					$lightbox = isset( $args['lightbox'] ) ? boolval( $args['lightbox'] ) : true;
+					$show_overlay = isset( $args['show-overlay'] ) ? boolval( $args['show-overlay'] ) : true;
+					$show_media_type_icons = isset( $args['show-media-type-icons'] ) ? boolval( $args['show-media-type-icons'] ) : true;
+					$image_width = isset( $args['image-size'] ) && intval( $args['image-size'] ) > -1 ? intval( $args['image-size'] ) : 600;
 					$small_class = $image_width <= 180 ? 'small' : '';
 					$svg_icons = plugin_dir_url( __FILE__ ) . 'dist/images/frontend/wpzoom-instagram-icons.svg';
 
+					if ( $lightbox ) {
+						$attrs .= ' data-lightbox="1"';
+					}
+
 					//$this->api->set_access_token( $user_account_token );
-					$this->api->set_access_token( 'IGQVJYLXVaWHZA3YU9GcmdUZAEx2d3lGMTExMVRPV3l0R0V3Y1BUM2pMWDBYRUdQVWtVN21lM0J0YkN6Y0JBejhaSmR1OFlPV2tXeEE2eUFsaFJQWVdmWWVIX1BJdFM5LUxuZAXdHTi1R' );
+$this->api->set_access_token( 'IGQVJYLXVaWHZA3YU9GcmdUZAEx2d3lGMTExMVRPV3l0R0V3Y1BUM2pMWDBYRUdQVWtVN21lM0J0YkN6Y0JBejhaSmR1OFlPV2tXeEE2eUFsaFJQWVdmWWVIX1BJdFM5LUxuZAXdHTi1R' );
 
 					$items  = $this->api->get_items( array( 'image-limit' => $amount, 'image-width' => $image_width ) );
 					$errors = $this->api->errors->get_error_messages();
@@ -141,7 +150,7 @@ class Wpzoom_Instagram_Widget_Display {
 					if ( ! is_array( $items ) ) {
 						return $this->get_errors( $errors );
 					} else {
-						$output .= '<ul class="zoom-instagram-widget__items zoom-instagram-widget__items--no-js">';
+						$output .= '<ul class="zoom-instagram-widget__items zoom-instagram-widget__items--no-js"' . $attrs . '>';
 
 						foreach ( $items['items'] as $item ) {
 							$inline_attrs  = '';

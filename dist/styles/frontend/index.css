@@ -34,6 +34,7 @@
 
 .widget.zoom-new-instagram-widget .zoom-instagram-widget__items {
   display: grid;
+  grid-template-columns: repeat(3, 1fr);
 }
 .widget.zoom-new-instagram-widget .zoom-instagram-widget__items::before, .widget.zoom-new-instagram-widget .zoom-instagram-widget__items::after {
   display: none;

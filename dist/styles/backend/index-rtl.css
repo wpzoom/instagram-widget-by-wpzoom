@@ -1135,7 +1135,7 @@
 }
 .wpz-insta-admin #wpbody-content > .wrap .wpz-insta_widget-preview .wpz-insta_widget-preview-view .wpz-insta_widget-preview-view-inner iframe {
   display: block;
-  height: 800px;
+  height: 1000px;
   max-height: 2000px;
   width: 100%;
 }

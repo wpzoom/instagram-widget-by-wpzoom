@@ -71,7 +71,7 @@ class WPZOOM_Instagram_Widget_Settings {
 		add_filter( 'views_edit-wpz-insta_user', array( $this, 'views_filter' ) );
 
 		add_action( 'admin_menu', array( $this, 'add_admin_menu' ) );
-		//add_action( 'admin_init', array( $this, 'settings_init' ) );
+		add_action( 'admin_init', array( $this, 'settings_init' ) );
 
 		add_filter( 'plugin_action_links', array( $this, 'add_action_links' ), 10, 2 );
 
@@ -421,6 +421,50 @@ class WPZOOM_Instagram_Widget_Settings {
 
 		register_post_meta(
 			'wpz-insta_feed',
+			'_wpz-insta_lightbox',
+			array(
+				'single'       => true,
+				'type'         => 'boolean',
+				'default'      => true,
+				'show_in_rest' => true,
+			)
+		);
+
+		register_post_meta(
+			'wpz-insta_feed',
+			'_wpz-insta_show-overlay',
+			array(
+				'single'       => true,
+				'type'         => 'boolean',
+				'default'      => true,
+				'show_in_rest' => true,
+			)
+		);
+
+		register_post_meta(
+			'wpz-insta_feed',
+			'_wpz-insta_show-media-type-icons',
+			array(
+				'single'       => true,
+				'type'         => 'boolean',
+				'default'      => true,
+				'show_in_rest' => true,
+			)
+		);
+
+		register_post_meta(
+			'wpz-insta_feed',
+			'_wpz-insta_image-size',
+			array(
+				'single'       => true,
+				'type'         => 'integer',
+				'default'      => 600,
+				'show_in_rest' => true,
+			)
+		);
+
+		register_post_meta(
+			'wpz-insta_feed',
 			'_wpz-insta_hover-likes',
 			array(
 				'single'       => true,
@@ -517,8 +561,25 @@ class WPZOOM_Instagram_Widget_Settings {
 		add_action( 'save_post_wpz-insta_feed', array( $this, 'save_feed' ), 15, 3 );
 
 		if ( current_user_can( 'manage_options' ) && isset( $_GET['wpz-insta-widget-preview'] ) ) {
+			remove_action( 'admin_enqueue_scripts', 'wp_auth_check_load' );
+			remove_filter( 'heartbeat_send', 'wp_auth_check' );
+			remove_filter( 'heartbeat_nopriv_send', 'wp_auth_check' );
 			add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_preview_scripts' ), 999 );
-			add_action( 'wp_body_open', function() { $this->preview_frame(); } );
+
+			ob_start();
+
+			add_action( 'shutdown', function() {
+				$final = '';
+				$levels = ob_get_level();
+
+				for ( $i = 0; $i < $levels; $i++ ) {
+					$final .= ob_get_clean();
+				}
+
+				echo apply_filters( 'final_output', $final );
+			}, 0 );
+
+			add_filter( 'final_output', array( $this, 'replace_preview_content' ) );
 		}
 	}
 
@@ -725,6 +786,10 @@ class WPZOOM_Instagram_Widget_Settings {
 			$feed_spacing_around_suffix = intval( get_post_meta( $post->ID, '_wpz-insta_spacing-around-suffix', true ) ?: 0 );
 			$feed_font_size = intval( get_post_meta( $post->ID, '_wpz-insta_font-size', true ) ?: -1 );
 			$feed_font_size_suffix = intval( get_post_meta( $post->ID, '_wpz-insta_font-size-suffix', true ) ?: 0 );
+			$lightbox = boolval( get_post_meta( $post->ID, '_wpz-insta_lightbox', true ) ?: true );
+			$show_overlay = boolval( get_post_meta( $post->ID, '_wpz-insta_show-overlay', true ) ?: true );
+			$show_media_type_icons = boolval( get_post_meta( $post->ID, '_wpz-insta_show-media-type-icons', true ) ?: true );
+			$image_size = intval( get_post_meta( $post->ID, '_wpz-insta_image-size', true ) ?: 600 );
 			$feed_hover_likes = boolval( get_post_meta( $post->ID, '_wpz-insta_hover-likes', true ) ?: true );
 			$feed_hover_link = boolval( get_post_meta( $post->ID, '_wpz-insta_hover-link', true ) ?: true );
 			$feed_hover_caption = boolval( get_post_meta( $post->ID, '_wpz-insta_hover-caption', true ) ?: false );
@@ -940,6 +1005,31 @@ class WPZOOM_Instagram_Widget_Settings {
 									<label class="wpz-insta_table-row">
 										<strong class="wpz-insta_table-cell"><?php _e( 'Background color', 'instagram-widget-by-wpzoom' ); ?></strong>
 										<div class="wpz-insta_table-cell"><input type="text" name="_wpz-insta_bg-color" value="<?php echo esc_attr( $feed_bg_color ); ?>" size="8" class="wpz-insta_color-picker" /></div>
+									</label>
+
+									<label class="wpz-insta_table-row">
+										<input type="hidden" name="_wpz-insta_lightbox" value="0" />
+										<input type="checkbox" name="_wpz-insta_lightbox" value="1"<?php echo $lightbox ? ' checked' : ''; ?> />
+										<strong><?php _e( 'Show lightbox on click', 'instagram-widget-by-wpzoom' ); ?></strong>
+									</label>
+
+									<label class="wpz-insta_table-row">
+										<input type="hidden" name="_wpz-insta_show-overlay" value="0" />
+										<input type="checkbox" name="_wpz-insta_show-overlay" value="1"<?php echo $show_overlay ? ' checked' : ''; ?> />
+										<strong><?php _e( 'Show overlay on hover', 'instagram-widget-by-wpzoom' ); ?></strong>
+									</label>
+
+									<label class="wpz-insta_table-row">
+										<input type="hidden" name="_wpz-insta_show-media-type-icons" value="0" />
+										<input type="checkbox" name="_wpz-insta_show-media-type-icons" value="1"<?php echo $show_media_type_icons ? ' checked' : ''; ?> />
+										<strong><?php _e( 'Show media type icons', 'instagram-widget-by-wpzoom' ); ?></strong>
+									</label>
+
+									<label class="wpz-insta_table-row">
+										<strong class="wpz-insta_table-cell"><?php _e( 'Image size', 'instagram-widget-by-wpzoom' ); ?></strong>
+										<div class="wpz-insta_table-cell">
+											<input type="number" name="_wpz-insta_image-size" value="<?php echo esc_attr( $image_size > -1 ? $image_size : 600 ); ?>" size="3" min="1" max="1000" step="1" class="widefat" />
+										</div>
 									</label>
 
 									<label class="wpz-insta_table-row">
@@ -1161,6 +1251,10 @@ class WPZOOM_Instagram_Widget_Settings {
 					'spacing-around-suffix'           => isset( $_GET['_wpz-insta_spacing-around-suffix'] ) ? intval( $_GET['_wpz-insta_spacing-around-suffix'] ) : 0,
 					'font-size'                       => isset( $_GET['_wpz-insta_font-size'] ) ? intval( $_GET['_wpz-insta_font-size'] ) : -1,
 					'font-size-suffix'                => isset( $_GET['_wpz-insta_font-size-suffix'] ) ? intval( $_GET['_wpz-insta_font-size-suffix'] ) : 0,
+					'lightbox'                        => isset( $_GET['_wpz-insta_lightbox'] ) ? boolval( $_GET['_wpz-insta_lightbox'] ) : true,
+					'show-overlay'                    => isset( $_GET['_wpz-insta_show-overlay'] ) ? boolval( $_GET['_wpz-insta_show-overlay'] ) : true,
+					'show-media-type-icons'           => isset( $_GET['_wpz-insta_show-media-type-icons'] ) ? boolval( $_GET['_wpz-insta_show-media-type-icons'] ) : true,
+					'image-size'                      => isset( $_GET['_wpz-insta_image-size'] ) ? intval( $_GET['_wpz-insta_image-size'] ) : 600,
 					'hover-likes'                     => isset( $_GET['_wpz-insta_hover-likes'] ) ? boolval( $_GET['_wpz-insta_hover-likes'] ) : true,
 					'hover-link'                      => isset( $_GET['_wpz-insta_hover-link'] ) ? boolval( $_GET['_wpz-insta_hover-link'] ) : true,
 					'hover-caption'                   => isset( $_GET['_wpz-insta_hover-caption'] ) ? boolval( $_GET['_wpz-insta_hover-caption'] ) : false,
@@ -1171,6 +1265,21 @@ class WPZOOM_Instagram_Widget_Settings {
 				)
 			)
 		);
+	}
+
+	public function get_preview_frame() {
+		ob_start();
+		$this->preview_frame();
+		return ob_get_clean();
+	}
+
+	function replace_preview_content( $output ) {
+		if ( preg_match( '/^(.*?)<body([^>]*)>(?:.*?)\s*((?:(?:(?:<script[^>]*>(?:.*?)<\/script>)|(?:<link[^>]*>))\s*)*)\s*<\/body>(.*)$/is', $output, $matches ) ) {
+			$widget_output = WPZOOM_Instagram_Widget_Settings::get_instance()->get_preview_frame();
+			$output = $matches[1] . '<body ' . $matches[2] . '>' . $widget_output . $matches[3] . '</body>' . $matches[4];
+		}
+
+		return $output;
 	}
 
 	function page_footer() {
@@ -1367,7 +1476,7 @@ class WPZOOM_Instagram_Widget_Settings {
 		}
 	}
 
-	/*public function settings_init() {
+	public function settings_init() {
 		register_setting(
 			'wpzoom-instagram-widget-settings-group',
 			'wpzoom-instagram-widget-settings',
@@ -1421,9 +1530,9 @@ class WPZOOM_Instagram_Widget_Settings {
 			array( 'class' => 'wpzoom-instagram-widget-with-token-group' )
 		);
 
-		**
+		/**
 		 * Instagram with basic api token.
-		 *
+		 */
 		add_settings_field(
 			'wpzoom-instagram-widget-basic-access-token-button',
 			__( '', 'instagram-widget-by-wpzoom' ),
@@ -1719,7 +1828,7 @@ class WPZOOM_Instagram_Widget_Settings {
 				  name="wpzoom-instagram-widget-settings[user-info-biography]"
 				  type="text"><?php echo esc_attr( $user_info_biography ); ?></textarea>
 		<?php
-	}*/
+	}
 
 	public function connect_page() {
 		$oauth_url  = add_query_arg(

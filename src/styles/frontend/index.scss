@@ -24,6 +24,7 @@
 
 .widget.zoom-new-instagram-widget .zoom-instagram-widget__items {
 	display: grid;
+	grid-template-columns: repeat(3, 1fr);
 
 	&::before,
 	&::after {
