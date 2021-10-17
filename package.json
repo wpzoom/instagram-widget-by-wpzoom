@@ -54,6 +54,7 @@
 		"webpack-fix-style-only-entries": "^0.6.1"
 	},
 	"dependencies": {
-		"@types/jquery": "^3.5.6"
+		"@types/jquery": "^3.5.6",
+		"@wordpress/icons": "^6.0.0"
 	}
 }

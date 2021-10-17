@@ -111,7 +111,7 @@ jQuery(function ($) {
         };
       });
 
-      var getAsyncImages = function (images) {
+      var getAsyncImages = function getAsyncImages(images) {
         var isLastImage = images.length == 0;
 
         if (isLastImage) {
@@ -140,10 +140,10 @@ jQuery(function ($) {
 
   $.fn.zoomLightbox = function () {
     return $(this).each(function () {
-      const $swipe_el = $(this).closest('.widget').find('.wpz-insta-lightbox-wrapper > .swiper-container');
+      var $swipe_el = $(this).closest('.widget').find('.wpz-insta-lightbox-wrapper > .swiper-container');
 
       if ($swipe_el.length > 0) {
-        const $nested = $swipe_el.find('.image-wrapper > .swiper-container');
+        var $nested = $swipe_el.find('.image-wrapper > .swiper-container');
         new Swiper($swipe_el.get(0), {
           direction: 'horizontal',
           loop: false,
@@ -191,7 +191,7 @@ jQuery(function ($) {
           mainClass: 'wpzoom-lightbox',
           midClick: true,
           callbacks: {
-            open: function () {
+            open: function open() {
               this.content.find('> .swiper-container').get(0).swiper.slideTo(this.content.find('> .swiper-container > .swiper-wrapper > .swiper-slide[data-uid="' + $(this._lastFocusedEl).data('mfp-src') + '"]').index());
             }
           }
@@ -271,7 +271,7 @@ jQuery(function ($) {
   $('.zoom-instagram-widget__items').zoomLoadAsyncImages();
   $('.zoom-instagram-widget__items[data-lightbox="1"]').zoomLightbox();
 
-  var siteOriginInit = function () {
+  var siteOriginInit = function siteOriginInit() {
     var $widgets = $('.zoom-instagram-widget__items');
 
     if ($widgets.length) {

@@ -44,19 +44,19 @@ class Wpzoom_Instagram_Widget_Display {
 	}
 
 	/**
-	 * Outputs the markup for the feed with the given ID.
+	 * Returns the markup for the feed with the given ID.
 	 *
-	 * @param  int  $feed_id The ID of the feed to output.
-	 * @return void
+	 * @param  int    $feed_id The ID of the feed to return the markup for.
+	 * @return string          The markup for the given feed.
 	 */
-	public function output_feed( int $feed_id ) {
+	public function get_feed_output( int $feed_id ) {
 		if ( $feed_id > -1 ) {
 			$feed = get_post( $feed_id, OBJECT, 'display' );
 
 			if ( null !== $feed && $feed instanceof WP_Post ) {
 				$user_id = intval( get_post_meta( $feed_id, '_wpz-insta_user-id', true ) );
 
-				echo $this->feed_content( array(
+				return $this->feed_content( array(
 					'user-id'                         => $user_id,
 					'check-new-posts-interval-number' => intval( get_post_meta( $feed_id, '_wpz-insta_check-new-posts-interval-number', true ) ?: 1 ),
 					'check-new-posts-interval-suffix' => intval( get_post_meta( $feed_id, '_wpz-insta_check-new-posts-interval-suffix', true ) ?: 1 ),
@@ -90,7 +90,20 @@ class Wpzoom_Instagram_Widget_Display {
 			}
 		}
 
-		esc_html_e( 'There was a problem displaying the selected feed. Please check the configuration.', 'instagram-widget-by-wpzoom' );
+		return sprintf(
+			'<p class="error" style="color:red"><strong>%s</strong></p>',
+			esc_html__( 'There was a problem displaying the selected feed. Please check the configuration...', 'instagram-widget-by-wpzoom' )
+		);
+	}
+
+	/**
+	 * Outputs the markup for the feed with the given ID.
+	 *
+	 * @param  int  $feed_id The ID of the feed to output.
+	 * @return void
+	 */
+	public function output_feed( int $feed_id ) {
+		echo $this->get_feed_output( $feed_id );
 	}
 
 	/**

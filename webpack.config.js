@@ -41,8 +41,10 @@ module.exports = {
 	entry: {
 		'scripts/frontend/index': path.resolve( process.cwd(), 'src/scripts/frontend/index.js' ),
 		'scripts/backend/index': path.resolve( process.cwd(), 'src/scripts/backend/index.js' ),
+		'scripts/backend/block': path.resolve( process.cwd(), 'src/scripts/backend/block.js' ),
 		'styles/frontend/index': path.resolve( process.cwd(), 'src/styles/frontend/index.scss' ),
 		'styles/frontend/preview': path.resolve( process.cwd(), 'src/styles/frontend/preview.scss' ),
+		'styles/frontend/block': path.resolve( process.cwd(), 'src/styles/frontend/block.scss' ),
 		'styles/backend/index': path.resolve( process.cwd(), 'src/styles/backend/index.scss' )
 	},
 
