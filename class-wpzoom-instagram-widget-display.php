@@ -154,8 +154,7 @@ class Wpzoom_Instagram_Widget_Display {
 						$attrs .= ' data-lightbox="1"';
 					}
 
-					//$this->api->set_access_token( $user_account_token );
-$this->api->set_access_token( 'IGQVJYLXVaWHZA3YU9GcmdUZAEx2d3lGMTExMVRPV3l0R0V3Y1BUM2pMWDBYRUdQVWtVN21lM0J0YkN6Y0JBejhaSmR1OFlPV2tXeEE2eUFsaFJQWVdmWWVIX1BJdFM5LUxuZAXdHTi1R' );
+					$this->api->set_access_token( $user_account_token );
 
 					$items  = $this->api->get_items( array( 'image-limit' => $amount, 'image-width' => $image_width ) );
 					$errors = $this->api->errors->get_error_messages();

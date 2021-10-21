@@ -52,7 +52,7 @@ class Wpzoom_Instagram_Block {
 		$style_asset_file = include( plugin_dir_path( __FILE__ ) . 'dist/styles/frontend/block.asset.php' );
 
 		wp_register_script(
-			'wpz-insta_block-script',
+			'wpz-insta_block-backend-script',
 			plugins_url( 'dist/scripts/backend/block.js', __FILE__ ),
 			$script_asset_file['dependencies'],
 			$script_asset_file['version']
@@ -67,9 +67,16 @@ class Wpzoom_Instagram_Block {
 		);
 
 		wp_register_script(
-			'wpz-insta_block-script',
+			'swiper-js',
+			plugins_url( 'dist/scripts/library/swiper.js', __FILE__ ),
+			array(),
+			'7.0.0-alpha.21'
+		);
+
+		wp_register_script(
+			'wpz-insta_block-frontend-script',
 			plugins_url( 'dist/scripts/frontend/block.js', __FILE__ ),
-			array( 'magnific-popup' ),
+			array( 'jquery', 'underscore', 'magnific-popup', 'swiper-js' ),
 			$script_asset_file['version']
 		);
 
@@ -80,25 +87,36 @@ class Wpzoom_Instagram_Block {
 			WPZOOM_INSTAGRAM_VERSION
 		);
 
+		wp_enqueue_style(
+			'swiper-css',
+			plugins_url( 'dist/styles/library/swiper.css', __FILE__ ),
+			array(),
+			'7.0.0-alpha.21'
+		);
+
 		wp_register_style(
-			'wpz-insta_block-style',
+			'wpz-insta_block-frontend-style',
 			plugins_url( 'dist/styles/frontend/block.css', __FILE__ ),
-			array( 'magnific-popup' ),
+			array( 'magnific-popup', 'swiper-css' ),
 			$style_asset_file['version']
 		);
 
-		register_block_type( 'wpzoom/instagram-block', array(
-			'api_version' => 2,
-			'editor_script' => 'wpz-insta_block-script',
-			'style' => 'wpz-insta_block-style',
-			'render_callback' => array( $this, 'render' ),
-			'attributes' => array(
-				'feed' => array(
-					'type' => 'integer',
-					'default' => -1,
+		register_block_type(
+			'wpzoom/instagram-block',
+			array(
+				'api_version'     => 2,
+				'editor_script'   => 'wpz-insta_block-backend-script',
+				'script'          => 'wpz-insta_block-frontend-script',
+				'style'           => 'wpz-insta_block-frontend-style',
+				'render_callback' => array( $this, 'render' ),
+				'attributes'      => array(
+					'feed' => array(
+						'type'    => 'integer',
+						'default' => -1,
+					),
 				),
-			),
-		) );
+			)
+		);
 	}
 
 	/**

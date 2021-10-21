@@ -6,12 +6,28 @@ import { useBlockProps, InspectorControls } from '@wordpress/block-editor';
 import { useSelect } from '@wordpress/data';
 import { PanelBody, SelectControl, Spinner, Placeholder } from '@wordpress/components';
 import { store as coreStore } from '@wordpress/core-data';
-import { widget } from '@wordpress/icons';
- 
+
+const {fetch: origFetch} = window;
+window.fetch = async (...args) => {
+	const requestUrl = args.length > 0 ? args[0] : '';
+	const response = await origFetch(...args);
+
+	if ( requestUrl.includes( 'wpzoom/instagram-block' ) ) {
+		response
+			.clone()
+			.json()
+			.then( body => window.setTimeout( () => window.wpzInstaFrontendInit(), 300 ) )
+			.catch( err => console.error( err ) )
+		;
+	}
+
+	return response;
+};
+
 registerBlockType( 'wpzoom/instagram-block', {
 	apiVersion: 2,
 	title: 'Instagram',
-	icon: 'megaphone',
+	icon: 'instagram',
 	category: 'widgets',
 	attributes: {
 		feed: {
@@ -60,7 +76,7 @@ registerBlockType( 'wpzoom/instagram-block', {
 		if ( ! hasFeeds ) {
 			return (
 				<div { ...blockProps }>
-					<Placeholder icon={ widget } label={ __( 'Instagram Feed' ) }>
+					<Placeholder icon="instagram" label={ __( 'Instagram Feed' ) }>
 						{ ! Array.isArray( feedsList ) ? (
 							<Spinner />
 						) : (
