@@ -150,10 +150,11 @@
 .wpz-insta-admin #wpbody-content > .wrap > h1.wp-heading-inline,
 .wpz-insta-admin #wpbody-content > .wrap > .page-title-action,
 .wpz-insta-admin #wpbody-content > .wrap > .wp-header-end,
+.wpz-insta-admin #wpbody-content > .wrap > .notice,
 .wpz-insta-admin #wpbody-content > .wrap > .wpz-insta-wrap ~ #posts-filter > .search-box,
 .wpz-insta-admin #wpbody-content > .wrap > .wpz-insta-wrap ~ #posts-filter > .tablenav,
 .wpz-insta-admin #wpbody-content > .wrap > .wpz-insta-wrap ~ #posts-filter > .wp-list-table > tfoot {
-  display: none;
+  display: none !important;
 }
 .wpz-insta-admin #wpbody-content > .wrap input, .wpz-insta-admin #wpbody-content > .wrap textarea, .wpz-insta-admin #wpbody-content > .wrap select {
   font-family: "Inter", Tahoma, Verdana, sans-serif;

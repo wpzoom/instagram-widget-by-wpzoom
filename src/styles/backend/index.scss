@@ -183,10 +183,11 @@
 			> h1.wp-heading-inline,
 			> .page-title-action,
 			> .wp-header-end,
+			> .notice,
 			> .wpz-insta-wrap ~ #posts-filter > .search-box,
 			> .wpz-insta-wrap ~ #posts-filter > .tablenav,
 			> .wpz-insta-wrap ~ #posts-filter > .wp-list-table > tfoot {
-				display: none;
+				display: none !important;
 			}
 
 			input, textarea, select {

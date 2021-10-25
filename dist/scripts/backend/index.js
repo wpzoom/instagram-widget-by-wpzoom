@@ -224,9 +224,9 @@ jQuery(function ($) {
   }
 
   if ($('#title').length > 0) {
-    $('#title').attr('size', $('#title').val().trim().length + 1);
+    $('#title').attr('size', $('#title').val().trim().length + 3);
     $('#title').on('input', function () {
-      $(this).attr('size', $(this).val().trim().length + 1);
+      $(this).attr('size', $(this).val().trim().length + 3);
     });
   }
 
@@ -293,10 +293,10 @@ jQuery(function ($) {
     $('#wpz-insta_tabs-config-cnnct').closest('.wpz-insta_tabs-content').find('> .wpz-insta_sidebar').removeClass('hide');
   });
   var formChangedValues = {};
-  $('form#post .wpz-insta_tabs-content > .wpz-insta_sidebar > .wpz-insta_sidebar-left').find('input, textarea, select').not('.preview-exclude').each(function (index) {
+  $('form#post #title, form#post .wpz-insta_tabs-content > .wpz-insta_sidebar > .wpz-insta_sidebar-left').find('input, textarea, select').not('.preview-exclude').each(function (index) {
     $(this).data('uid', index);
   });
-  $('form#post .wpz-insta_tabs-content > .wpz-insta_sidebar > .wpz-insta_sidebar-left').on('input change', debounce(function (e) {
+  $('form#post #title, form#post .wpz-insta_tabs-content > .wpz-insta_sidebar > .wpz-insta_sidebar-left').on('input change', debounce(function (e) {
     var $target = $(e.target);
 
     if (!$target.is('.preview-exclude')) {

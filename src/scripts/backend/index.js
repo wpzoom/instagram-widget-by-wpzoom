@@ -157,8 +157,8 @@ jQuery( function( $ ) {
 	}
 
 	if ( $('#title').length > 0 ) {
-		$('#title').attr( 'size', $('#title').val().trim().length + 1 );
-		$('#title').on( 'input', function(){ $(this).attr( 'size', $(this).val().trim().length + 1 ); } );
+		$('#title').attr( 'size', $('#title').val().trim().length + 3 );
+		$('#title').on( 'input', function(){ $(this).attr( 'size', $(this).val().trim().length + 3 ); } );
 	}
 
 	if ( $( '.wpz-insta_feed-edit-nav' ).length > 0 ) {
@@ -254,11 +254,11 @@ jQuery( function( $ ) {
 
 	let formChangedValues = {};
 
-	$( 'form#post .wpz-insta_tabs-content > .wpz-insta_sidebar > .wpz-insta_sidebar-left' ).find( 'input, textarea, select' ).not( '.preview-exclude' ).each( function( index ) {
+	$( 'form#post #title, form#post .wpz-insta_tabs-content > .wpz-insta_sidebar > .wpz-insta_sidebar-left' ).find( 'input, textarea, select' ).not( '.preview-exclude' ).each( function( index ) {
 		$( this ).data( 'uid', index );
 	} );
 
-	$( 'form#post .wpz-insta_tabs-content > .wpz-insta_sidebar > .wpz-insta_sidebar-left' ).on(
+	$( 'form#post #title, form#post .wpz-insta_tabs-content > .wpz-insta_sidebar > .wpz-insta_sidebar-left' ).on(
 		'input change',
 		debounce(
 			( e ) => {
