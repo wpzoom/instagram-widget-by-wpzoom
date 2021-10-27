@@ -335,7 +335,7 @@ class Wpzoom_Instagram_Widget_Display {
 			}
 		}
 
-		return esc_html__( 'There was a problem displaying the selected feed. Please check the configuration.', 'instagram-widget-by-wpzoom' );
+		return sprintf( '<p style="margin-top:0.5em">%s</p>', esc_html__( 'Please select an account in the pane to the left to display a feed for...', 'instagram-widget-by-wpzoom' ) );
 	}
 
 	/**

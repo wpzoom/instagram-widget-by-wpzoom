@@ -174,11 +174,15 @@ jQuery( function( $ ) {
 		$( this ).closest( '.wpz-insta_sidebar' ).toggleClass( 'show-pro', this.checked );
 	} );
 
-	$( '.wpz-insta-wrap .account-options .account-option-button:not(.disabled)' ).on( 'click', function( e ) {
+	$( '.wpz-insta-wrap .account-options .account-option-button' ).on( 'click', function( e ) {
 		e.preventDefault();
 
-		if ( $( this ).is( '#wpz-insta_connect-personal' ) || $( this ).is( '#wpz-insta_connect-business' ) ) {
-			authenticateInstagram( $( this ).attr( 'href' ) );
+		if ( ! $( this ).is( '.disabled' ) ) {
+			if ( $( this ).is( '#wpz-insta_connect-personal' ) || $( this ).is( '#wpz-insta_connect-business' ) ) {
+				authenticateInstagram( $( this ).attr( 'href' ) );
+			} else if ( $( this ).is( '#wpz-insta_account-token-button' ) ) {
+				window.handleReturnedToken( 'access_token=' + $( '#wpz-insta_account-token-input' ).val().trim() );
+			}
 		}
 	} );
 
@@ -211,8 +215,8 @@ jQuery( function( $ ) {
 		    $select = $btn.closest( '.wpz-insta_feed-user-select' ),
 		    $info   = $select.find( '.wpz-insta_feed-user-select-info' );
 
-		$( '#wpz-insta_user-id' ).val( '-1' ).triggerHandler( 'input' );
-		$( '#wpz-insta_user-token' ).val( '-1' ).triggerHandler( 'input' );
+		$( '#wpz-insta_user-id' ).val( '-1' ).trigger( 'change' );
+		$( '#wpz-insta_user-token' ).val( '-1' ).trigger( 'change' );
 
 		$( '#wpz-insta_user-token, #wpz-insta_check-new-posts-interval-number, #wpz-insta_enable-request-timeout' )
 			.closest( '.wpz-insta_sidebar-section' )
@@ -231,8 +235,8 @@ jQuery( function( $ ) {
 		    $select = $btn.closest( '.wpz-insta_feed-user-select' ),
 		    $info   = $select.find( '.wpz-insta_feed-user-select-info' );
 
-		$( '#wpz-insta_user-id' ).val( $( this ).data( 'user-id' ) ).triggerHandler( 'input' );
-		$( '#wpz-insta_user-token' ).val( $( this ).data( 'user-token' ) ).triggerHandler( 'input' );
+		$( '#wpz-insta_user-id' ).val( $( this ).data( 'user-id' ) ).trigger( 'change' );
+		$( '#wpz-insta_user-token' ).val( $( this ).data( 'user-token' ) ).trigger( 'change' );
 		
 		$( '#wpz-insta_user-token, #wpz-insta_check-new-posts-interval-number, #wpz-insta_enable-request-timeout' )
 			.closest( '.wpz-insta_sidebar-section' )
@@ -449,7 +453,7 @@ jQuery( function( $ ) {
 
 	window.wpzInstaReloadPreview = function() {
 		let url = zoom_instagram_widget_admin.preview_url,
-		    params = $.param( $( 'form#post .wpz-insta_tabs-content > .wpz-insta_sidebar > .wpz-insta_sidebar-left' ).find( 'input, textarea, select' ).not( '.preview-exclude' ).serializeArray() );
+		    params = $.param( $( 'form#post #title, form#post .wpz-insta_tabs-content > .wpz-insta_sidebar > .wpz-insta_sidebar-left' ).find( 'input, textarea, select' ).not( '.preview-exclude' ).serializeArray() );
 
 		if ( params ) {
 			url += '&' + params;

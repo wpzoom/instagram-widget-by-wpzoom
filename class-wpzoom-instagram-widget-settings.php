@@ -133,6 +133,8 @@ class WPZOOM_Instagram_Widget_Settings {
 			)
 		);
 
+		remove_post_type_support( 'wpz-insta_user', 'revisions' );
+
 		register_post_meta(
 			'wpz-insta_user',
 			'_wpz-insta_token',
@@ -209,6 +211,8 @@ class WPZOOM_Instagram_Widget_Settings {
 				'show_in_rest'        => true,
 			)
 		);
+
+		remove_post_type_support( 'wpz-insta_feed', 'revisions' );
 
 		register_post_meta(
 			'wpz-insta_feed',
@@ -304,7 +308,7 @@ class WPZOOM_Instagram_Widget_Settings {
 			array(
 				'single'       => true,
 				'type'         => 'integer',
-				'default'      => 0,
+				'default'      => 10,
 				'show_in_rest' => true,
 			)
 		);
@@ -348,7 +352,7 @@ class WPZOOM_Instagram_Widget_Settings {
 			array(
 				'single'       => true,
 				'type'         => 'integer',
-				'default'      => -1,
+				'default'      => 100,
 				'show_in_rest' => true,
 			)
 		);
@@ -359,7 +363,7 @@ class WPZOOM_Instagram_Widget_Settings {
 			array(
 				'single'       => true,
 				'type'         => 'integer',
-				'default'      => 0,
+				'default'      => 2,
 				'show_in_rest' => true,
 			)
 		);
@@ -381,7 +385,7 @@ class WPZOOM_Instagram_Widget_Settings {
 			array(
 				'single'       => true,
 				'type'         => 'integer',
-				'default'      => 0,
+				'default'      => 10,
 				'show_in_rest' => true,
 			)
 		);
@@ -403,7 +407,7 @@ class WPZOOM_Instagram_Widget_Settings {
 			array(
 				'single'       => true,
 				'type'         => 'integer',
-				'default'      => -1,
+				'default'      => 16,
 				'show_in_rest' => true,
 			)
 		);
@@ -775,16 +779,16 @@ class WPZOOM_Instagram_Widget_Settings {
 			$feed_layout = intval( get_post_meta( $post->ID, '_wpz-insta_layout', true ) ?: 0 );
 			$feed_items_num = intval( get_post_meta( $post->ID, '_wpz-insta_item-num', true ) ?: 9 );
 			$feed_cols_num = intval( get_post_meta( $post->ID, '_wpz-insta_col-num', true ) ?: 3 );
-			$feed_spacing_between = intval( get_post_meta( $post->ID, '_wpz-insta_spacing-between', true ) ?: -1 );
+			$feed_spacing_between = intval( get_post_meta( $post->ID, '_wpz-insta_spacing-between', true ) ?: 10 );
 			$feed_spacing_between_suffix = intval( get_post_meta( $post->ID, '_wpz-insta_spacing-between-suffix', true ) ?: 0 );
 			$feed_width = intval( get_post_meta( $post->ID, '_wpz-insta_feed-width', true ) ?: 100 );
 			$feed_width_suffix = intval( get_post_meta( $post->ID, '_wpz-insta_feed-width-suffix', true ) ?: 2 );
-			$feed_height = intval( get_post_meta( $post->ID, '_wpz-insta_feed-height', true ) ?: -1 );
-			$feed_height_suffix = intval( get_post_meta( $post->ID, '_wpz-insta_feed-height-suffix', true ) ?: 0 );
+			$feed_height = intval( get_post_meta( $post->ID, '_wpz-insta_feed-height', true ) ?: 100 );
+			$feed_height_suffix = intval( get_post_meta( $post->ID, '_wpz-insta_feed-height-suffix', true ) ?: 2 );
 			$feed_bg_color = $this->validate_color( get_post_meta( $post->ID, '_wpz-insta_bg-color', true ) ?: '' );
-			$feed_spacing_around = intval( get_post_meta( $post->ID, '_wpz-insta_spacing-around', true ) ?: -1 );
+			$feed_spacing_around = intval( get_post_meta( $post->ID, '_wpz-insta_spacing-around', true ) ?: 10 );
 			$feed_spacing_around_suffix = intval( get_post_meta( $post->ID, '_wpz-insta_spacing-around-suffix', true ) ?: 0 );
-			$feed_font_size = intval( get_post_meta( $post->ID, '_wpz-insta_font-size', true ) ?: -1 );
+			$feed_font_size = intval( get_post_meta( $post->ID, '_wpz-insta_font-size', true ) ?: 16 );
 			$feed_font_size_suffix = intval( get_post_meta( $post->ID, '_wpz-insta_font-size-suffix', true ) ?: 0 );
 			$lightbox = boolval( get_post_meta( $post->ID, '_wpz-insta_lightbox', true ) ?: true );
 			$show_overlay = boolval( get_post_meta( $post->ID, '_wpz-insta_show-overlay', true ) ?: true );
@@ -852,10 +856,10 @@ class WPZOOM_Instagram_Widget_Settings {
 									<input type="number" name="_wpz-insta_check-new-posts-interval-number" id="wpz-insta_check-new-posts-interval-number" value="<?php echo esc_attr( $new_posts_interval_number ); ?>" min="1" max="100" step="1" />
 
 									<select name="_wpz-insta_check-new-posts-interval-suffix" id="wpz-insta_check-new-posts-interval-suffix">
-										<option value="0"<?php echo 0 === $new_posts_interval_suffix ? ' selected' : ''; ?>><?php _e( 'Hours', 'instagram-widget-by-wpzoom' ); ?></option>
-										<option value="1"<?php echo 1 === $new_posts_interval_suffix ? ' selected' : ''; ?>><?php _e( 'Days', 'instagram-widget-by-wpzoom' ); ?></option>
-										<option value="2"<?php echo 2 === $new_posts_interval_suffix ? ' selected' : ''; ?>><?php _e( 'Weeks', 'instagram-widget-by-wpzoom' ); ?></option>
-										<option value="3"<?php echo 3 === $new_posts_interval_suffix ? ' selected' : ''; ?>><?php _e( 'Months', 'instagram-widget-by-wpzoom' ); ?></option>
+										<option value="0"<?php selected( $new_posts_interval_suffix, 0 ); ?>><?php _e( 'Hours', 'instagram-widget-by-wpzoom' ); ?></option>
+										<option value="1"<?php selected( $new_posts_interval_suffix, 1 ); ?>><?php _e( 'Days', 'instagram-widget-by-wpzoom' ); ?></option>
+										<option value="2"<?php selected( $new_posts_interval_suffix, 2 ); ?>><?php _e( 'Weeks', 'instagram-widget-by-wpzoom' ); ?></option>
+										<option value="3"<?php selected( $new_posts_interval_suffix, 3 ); ?>><?php _e( 'Months', 'instagram-widget-by-wpzoom' ); ?></option>
 									</select>
 								</div>
 							</div>
@@ -958,9 +962,9 @@ class WPZOOM_Instagram_Widget_Settings {
 												<input type="number" name="_wpz-insta_spacing-between" value="<?php echo esc_attr( $feed_spacing_between ); ?>" size="3" min="1" max="100" step="1" />
 
 												<select name="_wpz-insta_spacing-between-suffix">
-													<option value="0"<?php echo 0 === $feed_spacing_between_suffix ? ' selected' : ''; ?>><?php _e( 'px', 'instagram-widget-by-wpzoom' ); ?></option>
-													<option value="1"<?php echo 1 === $feed_spacing_between_suffix ? ' selected' : ''; ?>><?php _e( 'em', 'instagram-widget-by-wpzoom' ); ?></option>
-													<option value="2"<?php echo 2 === $feed_spacing_between_suffix ? ' selected' : ''; ?>><?php _e( '%', 'instagram-widget-by-wpzoom' ); ?></option>
+													<option value="0"<?php selected( $feed_spacing_between_suffix, 0 ); ?>><?php _e( 'px', 'instagram-widget-by-wpzoom' ); ?></option>
+													<option value="1"<?php selected( $feed_spacing_between_suffix, 1 ); ?>><?php _e( 'em', 'instagram-widget-by-wpzoom' ); ?></option>
+													<option value="2"<?php selected( $feed_spacing_between_suffix, 2 ); ?>><?php _e( '%', 'instagram-widget-by-wpzoom' ); ?></option>
 												</select>
 											</div>
 										</div>
@@ -979,9 +983,9 @@ class WPZOOM_Instagram_Widget_Settings {
 												<input type="number" name="_wpz-insta_feed-width" value="<?php echo esc_attr( $feed_width ); ?>" size="3" min="1" max="100" step="1" />
 
 												<select name="_wpz-insta_feed-width-suffix">
-													<option value="0"<?php echo 0 === $feed_width_suffix ? ' selected' : ''; ?>><?php _e( 'px', 'instagram-widget-by-wpzoom' ); ?></option>
-													<option value="1"<?php echo 1 === $feed_width_suffix ? ' selected' : ''; ?>><?php _e( 'em', 'instagram-widget-by-wpzoom' ); ?></option>
-													<option value="2"<?php echo 2 === $feed_width_suffix ? ' selected' : ''; ?>><?php _e( '%', 'instagram-widget-by-wpzoom' ); ?></option>
+													<option value="0"<?php selected( $feed_width_suffix, 0 ); ?>><?php _e( 'px', 'instagram-widget-by-wpzoom' ); ?></option>
+													<option value="1"<?php selected( $feed_width_suffix, 1 ); ?>><?php _e( 'em', 'instagram-widget-by-wpzoom' ); ?></option>
+													<option value="2"<?php selected( $feed_width_suffix, 2 ); ?>><?php _e( '%', 'instagram-widget-by-wpzoom' ); ?></option>
 												</select>
 											</div>
 										</div>
@@ -991,12 +995,12 @@ class WPZOOM_Instagram_Widget_Settings {
 										<strong class="wpz-insta_table-cell"><?php _e( 'Height', 'instagram-widget-by-wpzoom' ); ?></strong>
 										<div class="wpz-insta_table-cell">
 											<div class="wpz-insta_suffixed-number-input">
-												<input type="number" name="_wpz-insta_feed-height" value="<?php echo esc_attr( $feed_height > -1 ? $feed_height : '' ); ?>" size="3" min="1" max="100" step="1" />
+												<input type="number" name="_wpz-insta_feed-height" value="<?php echo esc_attr( $feed_height ); ?>" size="3" min="1" max="100" step="1" />
 
 												<select name="_wpz-insta_feed-height-suffix">
-													<option value="0"<?php echo 0 === $feed_height_suffix ? ' selected' : ''; ?>><?php _e( 'px', 'instagram-widget-by-wpzoom' ); ?></option>
-													<option value="1"<?php echo 1 === $feed_height_suffix ? ' selected' : ''; ?>><?php _e( 'em', 'instagram-widget-by-wpzoom' ); ?></option>
-													<option value="2"<?php echo 2 === $feed_height_suffix ? ' selected' : ''; ?>><?php _e( '%', 'instagram-widget-by-wpzoom' ); ?></option>
+													<option value="0"<?php selected( $feed_height_suffix, 0 ); ?>><?php _e( 'px', 'instagram-widget-by-wpzoom' ); ?></option>
+													<option value="1"<?php selected( $feed_height_suffix, 1 ); ?>><?php _e( 'em', 'instagram-widget-by-wpzoom' ); ?></option>
+													<option value="2"<?php selected( $feed_height_suffix, 2 ); ?>><?php _e( '%', 'instagram-widget-by-wpzoom' ); ?></option>
 												</select>
 											</div>
 										</div>
@@ -1028,7 +1032,7 @@ class WPZOOM_Instagram_Widget_Settings {
 									<label class="wpz-insta_table-row">
 										<strong class="wpz-insta_table-cell"><?php _e( 'Image size', 'instagram-widget-by-wpzoom' ); ?></strong>
 										<div class="wpz-insta_table-cell">
-											<input type="number" name="_wpz-insta_image-size" value="<?php echo esc_attr( $image_size > -1 ? $image_size : 600 ); ?>" size="3" min="1" max="1000" step="1" class="widefat" />
+											<input type="number" name="_wpz-insta_image-size" value="<?php echo esc_attr( $image_size ); ?>" size="3" min="1" max="1000" step="1" class="widefat" />
 										</div>
 									</label>
 
@@ -1036,12 +1040,12 @@ class WPZOOM_Instagram_Widget_Settings {
 										<strong class="wpz-insta_table-cell"><?php _e( 'Outside padding', 'instagram-widget-by-wpzoom' ); ?></strong>
 										<div class="wpz-insta_table-cell">
 											<div class="wpz-insta_suffixed-number-input">
-												<input type="number" name="_wpz-insta_spacing-around" value="<?php echo esc_attr( $feed_spacing_around > -1 ? $feed_spacing_around : '' ); ?>" size="3" min="1" max="100" step="1" />
+												<input type="number" name="_wpz-insta_spacing-around" value="<?php echo esc_attr( $feed_spacing_around ); ?>" size="3" min="1" max="100" step="1" />
 
 												<select name="_wpz-insta_spacing-around-suffix">
-													<option value="0"<?php echo 0 === $feed_spacing_around_suffix ? ' selected' : ''; ?>><?php _e( 'px', 'instagram-widget-by-wpzoom' ); ?></option>
-													<option value="1"<?php echo 1 === $feed_spacing_around_suffix ? ' selected' : ''; ?>><?php _e( 'em', 'instagram-widget-by-wpzoom' ); ?></option>
-													<option value="2"<?php echo 2 === $feed_spacing_around_suffix ? ' selected' : ''; ?>><?php _e( '%', 'instagram-widget-by-wpzoom' ); ?></option>
+													<option value="0"<?php selected( $feed_spacing_around_suffix, 0 ); ?>><?php _e( 'px', 'instagram-widget-by-wpzoom' ); ?></option>
+													<option value="1"<?php selected( $feed_spacing_around_suffix, 1 ); ?>><?php _e( 'em', 'instagram-widget-by-wpzoom' ); ?></option>
+													<option value="2"<?php selected( $feed_spacing_around_suffix, 2 ); ?>><?php _e( '%', 'instagram-widget-by-wpzoom' ); ?></option>
 												</select>
 											</div>
 										</div>
@@ -1051,12 +1055,12 @@ class WPZOOM_Instagram_Widget_Settings {
 										<strong class="wpz-insta_table-cell"><?php _e( 'Text size', 'instagram-widget-by-wpzoom' ); ?></strong>
 										<div class="wpz-insta_table-cell">
 											<div class="wpz-insta_suffixed-number-input">
-												<input type="number" name="_wpz-insta_font-size" value="<?php echo esc_attr( $feed_font_size > -1 ? $feed_font_size : '' ); ?>" size="3" min="1" max="100" step="1" />
+												<input type="number" name="_wpz-insta_font-size" value="<?php echo esc_attr( $feed_font_size ); ?>" size="3" min="1" max="100" step="1" />
 
 												<select name="_wpz-insta_font-size-suffix">
-													<option value="0"<?php echo 0 === $feed_font_size_suffix ? ' selected' : ''; ?>><?php _e( 'px', 'instagram-widget-by-wpzoom' ); ?></option>
-													<option value="1"<?php echo 1 === $feed_font_size_suffix ? ' selected' : ''; ?>><?php _e( 'em', 'instagram-widget-by-wpzoom' ); ?></option>
-													<option value="2"<?php echo 2 === $feed_font_size_suffix ? ' selected' : ''; ?>><?php _e( 'pt', 'instagram-widget-by-wpzoom' ); ?></option>
+													<option value="0"<?php selected( $feed_font_size_suffix, 0 ); ?>><?php _e( 'px', 'instagram-widget-by-wpzoom' ); ?></option>
+													<option value="1"<?php selected( $feed_font_size_suffix, 1 ); ?>><?php _e( 'em', 'instagram-widget-by-wpzoom' ); ?></option>
+													<option value="2"<?php selected( $feed_font_size_suffix, 2 ); ?>><?php _e( 'pt', 'instagram-widget-by-wpzoom' ); ?></option>
 												</select>
 											</div>
 										</div>

@@ -147,10 +147,14 @@
 .wpz-insta-admin #wpbody-content {
   padding-bottom: 165px;
 }
+.wpz-insta-admin #wpbody-content > .notice {
+  display: none !important;
+}
 .wpz-insta-admin #wpbody-content > .wrap > h1.wp-heading-inline,
 .wpz-insta-admin #wpbody-content > .wrap > .page-title-action,
 .wpz-insta-admin #wpbody-content > .wrap > .wp-header-end,
 .wpz-insta-admin #wpbody-content > .wrap > .notice,
+.wpz-insta-admin #wpbody-content > .wrap > .wpz-insta_settings-header > .notice,
 .wpz-insta-admin #wpbody-content > .wrap > .wpz-insta-wrap ~ #posts-filter > .search-box,
 .wpz-insta-admin #wpbody-content > .wrap > .wpz-insta-wrap ~ #posts-filter > .tablenav,
 .wpz-insta-admin #wpbody-content > .wrap > .wpz-insta-wrap ~ #posts-filter > .wp-list-table > tfoot {
@@ -222,6 +226,9 @@
 }
 .wpz-insta-admin #wpbody-content > .wrap .disable {
   opacity: 0.5;
+}
+.wpz-insta-admin #wpbody-content > .wrap .button.disabled {
+  pointer-events: none !important;
 }
 .wpz-insta-admin #wpbody-content > .wrap .button:not(.wp-color-result),
 .wpz-insta-admin #wpbody-content > .wrap .button-primary,

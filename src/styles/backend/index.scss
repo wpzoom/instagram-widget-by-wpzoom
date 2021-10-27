@@ -179,11 +179,16 @@
 	#wpbody-content {
 		padding-bottom: 165px;
 
+		> .notice {
+			display: none !important;
+		}
+
 		> .wrap {
 			> h1.wp-heading-inline,
 			> .page-title-action,
 			> .wp-header-end,
 			> .notice,
+			> .wpz-insta_settings-header > .notice,
 			> .wpz-insta-wrap ~ #posts-filter > .search-box,
 			> .wpz-insta-wrap ~ #posts-filter > .tablenav,
 			> .wpz-insta-wrap ~ #posts-filter > .wp-list-table > tfoot {
@@ -268,6 +273,10 @@
 
 			.disable {
 				opacity: 0.5;
+			}
+
+			.button.disabled {
+				pointer-events: none !important;
 			}
 
 			.button:not(.wp-color-result),
