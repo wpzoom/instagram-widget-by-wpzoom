@@ -125,7 +125,7 @@ class Wpzoom_New_Instagram_Widget extends WP_Widget {
 
 		<p>
 			<label for="<?php echo $this->get_field_id( 'feed' ); ?>"><?php esc_html_e( 'Feed to Display:', 'instagram-widget-by-wpzoom' ); ?></label>
-			<?php if ( ! is_wp_error( $all_feeds ) && ! empty( $all_feeds ) && true !== $all_feeds['no_found_rows'] ) : ?>
+			<?php if ( ! is_wp_error( $all_feeds ) && ! empty( $all_feeds ) && ( ! array_key_exists( 'no_found_rows', $all_feeds ) || ( array_key_exists( 'no_found_rows', $all_feeds ) && true !== $all_feeds['no_found_rows'] ) ) ) : ?>
 				<select name="<?php echo $this->get_field_name( 'feed' ); ?>" id="<?php echo $this->get_field_id( 'feed' ); ?>" class="widefat">
 					<option value="-1" <?php selected( $current_feed, -1 ); ?> disabled hidden><?php esc_html_e( '-- Select a Feed --', 'instagram-widget-by-wpzoom' ); ?></option>
 					<?php foreach ( $all_feeds as $feed ) : ?>
