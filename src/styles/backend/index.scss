@@ -214,6 +214,14 @@
 				font-family: $mono-font-family;
 				color: $main-font-color;
 
+				&.wpz-insta_input {
+					font-family: $main-font-family;
+				}
+
+				&.wpz-insta_input-nobg {
+					background: transparent;
+				}
+
 				&[type='checkbox'] {
 					display: inline-flex;
 					align-items: center;
@@ -339,6 +347,32 @@
 				}
 			}
 
+			.button-link {
+				color: $primary-color;
+				transition: all 0.2s ease;
+
+				&.wpz-insta_button-link {
+					font-weight: normal;
+					line-height: 1;
+					min-height: 0;
+					padding: 0;
+					margin: 1.5em 0 0;
+
+					&:hover,
+					&:active,
+					&:focus {
+						color: $secondary-color;
+						background: transparent;
+					}
+				}
+
+				&:hover,
+				&:active,
+				&:focus {
+					color: $secondary-color;
+				}
+			}
+
 			.wpz-insta_suffixed-number-input {
 				display: flex;
 				gap: 12px;
@@ -350,6 +384,13 @@
 						flex-grow: 1;
 					}
 				}
+			}
+
+			.wpz-insta_profile-photo {
+				display: block;
+				height: 100px;
+				width: 100px;
+				border-radius: 50%;
 			}
 
 			a {
@@ -451,6 +492,67 @@
 					.iris-picker {
 						display: block !important;
 					}
+				}
+			}
+
+			.wpz-insta_two-columns {
+				display: flex;
+				align-items: center;
+				list-style: none;
+				padding: 0;
+				margin: 1.5em 0 0;
+
+				&.wpz-insta_two-columns-left-small {
+					align-items: flex-start;
+					gap: 30px;
+					margin-top: 0;
+
+					> * {
+						text-align: left !important;
+
+						&:first-child {
+							flex-grow: 0;
+							width: auto;
+						}
+					}
+				}
+
+				> * {
+					flex-grow: 1;
+					list-style: none;
+					width: 100%;
+					padding: 0;
+					margin: 0;
+
+					&:first-child {
+						text-align: left;
+					}
+
+					&:last-child {
+						text-align: right;
+					}
+				}
+			}
+
+			.wpz-insta_notice {
+				display: flex;
+				align-items: center;
+				font-size: 12px;
+				padding: 0;
+				margin: 1.5em 0 0 !important;
+
+				&::before {
+					content: '';
+					display: block;
+					background-image: url("data:image/svg+xml,%3Csvg width='14' height='14' viewBox='0 0 14 14' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M6.3 3.5H7.7V4.9H6.3V3.5ZM6.3 6.3H7.7V10.5H6.3V6.3ZM7 0C3.136 0 0 3.136 0 7C0 10.864 3.136 14 7 14C10.864 14 14 10.864 14 7C14 3.136 10.864 0 7 0ZM7 12.6C3.913 12.6 1.4 10.087 1.4 7C1.4 3.913 3.913 1.4 7 1.4C10.087 1.4 12.6 3.913 12.6 7C12.6 10.087 10.087 12.6 7 12.6Z'/%3E%3C/svg%3E");
+					height: 14px;
+					width: 14px;
+					margin: 0 0.8em 0 0;
+				}
+
+				p {
+					padding: 0;
+					margin: 0;
 				}
 			}
 
@@ -633,10 +735,18 @@
 						th,
 						td {
 							border-bottom: 1px solid $dark-color;
+
+							&.column-wpz-insta_account-photo,
+							&.column-wpz-insta_account-bio,
+							&.column-wpz-insta_account-token {
+								display: none;
+							}
 						}
 
 						th {
 							font-weight: 600;
+							padding-left: 0;
+							padding-right: 0;
 
 							&.column-wpz-insta_actions {
 								text-align: right;
@@ -644,7 +754,7 @@
 
 							a {
 								color: $dark-color;
-								padding: 14px;
+								padding: 14px 0;
 								transition: all 0.2s ease;
 
 								&:hover,
@@ -657,14 +767,34 @@
 
 					tbody {
 						tr {
+							display: table-row !important;
+							position: relative;
 							background: transparent;
+						}
+
+						tr:first-child,
+						tr.inline-edit-row {
+							th,
+							td {
+								border-top: none;
+							}
+						}
+
+						tr.inline-edit-row td {
+							padding-top: 0;
 						}
 
 						th,
 						td {
 							vertical-align: middle;
-							padding: 20px 14px;
-							border-bottom: 1px solid $light-grey-color;
+							padding: 20px 0;
+							border-top: 1px solid $light-grey-color;
+
+							&.column-wpz-insta_account-photo,
+							&.column-wpz-insta_account-bio,
+							&.column-wpz-insta_account-token {
+								display: none;
+							}
 						}
 
 						th.check-column {
@@ -688,6 +818,62 @@
 
 							.row-actions {
 								display: none;
+							}
+
+							.wpz-insta_quick-edit {
+								overflow: hidden;
+								animation-name: slidedown;
+								animation-duration: 1s;
+
+								.wpz-insta_quick-edit-columns {
+									display: flex;
+									list-style: none;
+									padding: 0;
+									margin: 0;
+
+									> li {
+										flex-grow: 1;
+										list-style: none;
+										padding: 0;
+										margin: 0;
+
+										> strong:first-child,
+										> label > strong:first-child {
+											display: inline-block;
+											margin: 0 0 10px;
+										}
+									}
+								}
+							}
+
+							.inline-edit-save {
+								position: absolute;
+								top: -10px;
+								right: 0;
+								padding: 0;
+								transform: translateY(-100%);
+
+								.button {
+									float: none;
+
+									&.cancel {
+										color: $primary-color;
+										background: transparent;
+										box-shadow: inset 0 0 0 1px $primary-color;
+										margin: 0 1em 0 0;
+
+										&:hover,
+										&:active,
+										&:focus {
+											color: $dark-color;
+											box-shadow: inset 0 0 0 1px $dark-color;
+										}
+									}
+								}
+
+								.spinner {
+									float: left;
+								}
 							}
 						}
 
@@ -774,11 +960,13 @@
 									margin: 0;
 									transition: all 0.2s ease;
 
-									&:first-child a {
+									&:first-child a,
+									&:first-child button {
 										padding-top: 10px;
 									}
 
-									&:last-child a {
+									&:last-child a,
+									&:last-child button {
 										padding-bottom: 10px;
 									}
 
@@ -796,12 +984,15 @@
 										}
 									}
 
-									a {
+									a,
+									button {
 										display: block;
 										white-space: nowrap;
 										color: $main-font-color;
+										width: 100%;
 										padding: 7px 20px;
 										margin: 0;
+										box-sizing: border-box;
 										transition: all 0.2s ease;
 
 										&:hover {
@@ -810,6 +1001,11 @@
 									}
 								}
 							}
+						}
+
+						.inline-edit-col-left,
+						.inline-edit-col-right {
+							display: none;
 						}
 					}
 				}
@@ -1808,5 +2004,15 @@
 				}
 			}
 		}
+	}
+}
+
+@keyframes slidedown {
+	from {
+		max-height: 0;
+	}
+
+	to {
+		max-height: 100em;
 	}
 }

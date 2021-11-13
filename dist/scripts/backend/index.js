@@ -223,6 +223,8 @@ jQuery(function ($) {
     window.close();
   }
 
+  $('#screen-meta #wpz-insta_account-photo-hide, #screen-meta #wpz-insta_account-bio-hide, #screen-meta #wpz-insta_account-token-hide, #screen-meta #wpz-insta_actions-hide').closest('label').remove();
+
   if ($('#title').length > 0) {
     $('#title').attr('size', $('#title').val().trim().length + 3);
     $('#title').on('input', function () {

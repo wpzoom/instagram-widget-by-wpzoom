@@ -97,8 +97,8 @@ class Wpzoom_New_Instagram_Widget extends WP_Widget {
 	 * @return array Updated safe values to be saved.
 	 */
 	public function update( $new_instance, $old_instance ) {
-		$instance['title'] = sanitize_text_field( $new_instance['title'] );
-		$instance['feed']  = intval( $new_instance['feed'] );
+		$instance['title'] = array_key_exists( 'title', $new_instance ) ? sanitize_text_field( $new_instance['title'] ) : __( 'Instagram Feed', 'instagram-widget-by-wpzoom' );
+		$instance['feed']  = array_key_exists( 'feed', $new_instance ) ? intval( $new_instance['feed'] ) : -1;
 
 		return $instance;
 	}
