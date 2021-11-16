@@ -998,7 +998,7 @@ class WPZOOM_Instagram_Widget_Settings {
 						<div class="wpz-insta_sidebar-left-section active" data-id="#config">
 							<div class="wpz-insta_sidebar-section wpz-insta_sidebar-section-account">
 								<h4 class="wpz-insta_sidebar-section-title"><?php _e( 'Instagram Account', 'instagram-widget-by-wpzoom' ); ?></h4>
-								<p class="wpz-insta_sidebar-section-description"><?php _e( 'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.', 'instagram-widget-by-wpzoom' ); ?></p>
+								<p class="wpz-insta_sidebar-section-description"><?php _e( 'Select an account', 'instagram-widget-by-wpzoom' ); ?></p>
 
 								<div class="wpz-insta_feed-user-select<?php echo $user_id > 0 ? ' is-set' : ''; ?>">
 									<div class="wpz-insta_feed-user-select-input">
