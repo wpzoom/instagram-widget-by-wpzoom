@@ -1,5 +1,5 @@
 === WPZOOM Social Feed Widget ===
-Contributors: WPZOOM, nvartolomei, ciorici, vicolaspetru
+Contributors: WPZOOM, nvartolomei, ciorici
 Donate link: https://www.wpzoom.com/
 Tags: instagram, instagram feed, instagram gallery, instagram photos, instagram widget, instagram stories, widget, timeline, social network, latest images, feed, story, stories, insta
 Requires at least: 4.3
@@ -70,6 +70,9 @@ Make sure to connect your Instagram account with the plugin. You can do that in 
 
 
 == Changelog ==
+
+= 1.9.3 =
+* Bug fix with the lightbox in Safari
 
 = 1.9.2 =
 * Minor bug fixes and improvements with the lightbox
