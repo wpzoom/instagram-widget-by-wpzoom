@@ -482,7 +482,7 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
                             $count++;
                             $media_id = $item['image-id'];
                             $link     = $item['link'];
-                            $src      = $item['original-image-url'];
+                            $src      = $item['local-image-url'];
                             $alt      = esc_attr( $item['image-caption'] );
                             $type     = in_array( $item['type'], array( 'VIDEO', 'CAROUSEL_ALBUM' ) ) ? strtolower( $item['type'] ) : false;
                             $is_album = 'carousel_album' == $type;

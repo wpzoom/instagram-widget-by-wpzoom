@@ -323,9 +323,15 @@ class Wpzoom_Instagram_Widget_API {
 			$best_size = $this->get_best_size( $image_width, $image_resolution );
 			$image_url = $item->images->{$best_size}->url;
 
+			$regexPattern = '/-\d+[Xx]\d+\./';
+			$subst = '.';
+
+			$local_image_url = preg_replace( $regexPattern, $subst, $image_url, 1 );
+
 			$result[] = array(
 				'link'               => $item->link,
 				'image-url'          => $image_url,
+				'local-image-url'    => $local_image_url,
 				'original-image-url' => property_exists( $item, 'media_url' ) && ! empty( $item->media_url ) ? $item->media_url : '',
 				'type'               => $item->type,
 				'timestamp'          => property_exists( $item, 'timestamp' ) && ! empty( $item->timestamp ) ? $item->timestamp : '',
