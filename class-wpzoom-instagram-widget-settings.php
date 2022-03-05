@@ -728,12 +728,13 @@ class WPZOOM_Instagram_Widget_Settings {
 					break;
 
 				case 'wpz-insta_account-token' :
+					$raw_token = get_post_meta( get_the_ID(), '_wpz-insta_token', true );
 					$token_expire = 'Saturday, June 12th, 2021'; // TODO: Fix this
 
 					?><li>
 						<label>
 							<strong><?php _e( 'Access Token', 'instagram-widget-by-wpzoom' ); ?></strong><br/>
-							<input type="text" name="_wpz-insta_token" id="wpz-insta_token" class="widefat wpz-insta_input wpz-insta_input-nobg" readonly value="<?php echo esc_attr( get_post_meta( get_the_ID(), '_wpz-insta_token', true ) ?: '-1' ); ?>" />
+							<input type="text" name="_wpz-insta_token" id="wpz-insta_token" class="widefat wpz-insta_input wpz-insta_input-nobg" readonly value="<?php echo esc_attr( false !== $raw_token && ! empty( $raw_token ) ? $raw_token : '-1' ); ?>" />
 						</label>
 
 						<ul class="wpz-insta_two-columns">
@@ -949,7 +950,8 @@ class WPZOOM_Instagram_Widget_Settings {
 			$user_edit_link = $user instanceof WP_Post ? get_edit_post_link( $user_id ) : false;
 			$user_display_name = $user instanceof WP_Post ? sprintf( '@%s', get_the_title( $user ) ) : $none_label;
 			$user_account_type = $user instanceof WP_Post ? ucwords( strtolower( get_post_meta( $user_id, '_wpz-insta_account-type', true ) ?: $none_label ) ) : $none_label;
-			$user_account_token = $user instanceof WP_Post ? ( get_post_meta( $user_id, '_wpz-insta_token', true ) ?: '-1' ) : '-1';
+			$raw_token = get_post_meta( $user_id, '_wpz-insta_token', true );
+			$user_account_token = $user instanceof WP_Post ? ( false !== $raw_token && ! empty( $raw_token ) ? $raw_token : '-1' ) : '-1';
 			$new_posts_interval_number = intval( get_post_meta( $post->ID, '_wpz-insta_check-new-posts-interval-number', true ) ?: 1 );
 			$new_posts_interval_suffix = intval( get_post_meta( $post->ID, '_wpz-insta_check-new-posts-interval-suffix', true ) ?: 1 );
 			$enable_request_timeout = boolval( get_post_meta( $post->ID, '_wpz-insta_enable-request-timeout', true ) ?: false );
@@ -1385,7 +1387,8 @@ class WPZOOM_Instagram_Widget_Settings {
 							$user_id = $user->ID;
 							$user_name = sprintf( '@%s', get_the_title( $user ) );
 							$user_type = ucwords( strtolower( esc_html( get_post_meta( $user_id, '_wpz-insta_account-type', true ) ?: $none_label ) ) );
-							$user_token = esc_html( get_post_meta( $user_id, '_wpz-insta_token', true ) ?: '-1' );
+							$raw_token = get_post_meta( $user_id, '_wpz-insta_token', true );
+							$user_token = sanitize_text_field( false !== $raw_token && ! empty( $raw_token ) ? $raw_token : '-1' );
 
 							?>
 							<li data-user-id="<?php echo esc_attr( $user_id ); ?>" data-user-name="<?php echo esc_attr( $user_name ); ?>" data-user-type="<?php echo esc_attr( $user_type ); ?>" data-user-token="<?php echo esc_attr( $user_token ); ?>">
@@ -1552,13 +1555,12 @@ class WPZOOM_Instagram_Widget_Settings {
 						'post_title'  => $user,
 						'post_type'   => 'wpz-insta_user',
 						'post_status' => 'publish',
-						'meta_input'  => array(
-							'_wpz-insta_token'        => $token,
-							'_wpz-insta_account-type' => sanitize_text_field( $info->account_type ),
-						),
 					), true );
 
 					if ( ! is_wp_error( $insert_post ) ) {
+						update_post_meta( $insert_post, '_wpz-insta_token', $token );
+						update_post_meta( $insert_post, '_wpz-insta_account-type', sanitize_text_field( $info->account_type ) );
+
 						if ( property_exists( $info, 'profile_picture' ) && ! empty( $info->profile_picture ) ) {
 							$this->generate_featured_image( $info->profile_picture, $insert_post, $user );
 						}
