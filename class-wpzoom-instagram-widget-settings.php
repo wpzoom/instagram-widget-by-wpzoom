@@ -557,7 +557,7 @@ class WPZOOM_Instagram_Widget_Settings {
 		add_filter( 'manage_edit-wpz-insta_user_sortable_columns', array( $this, 'set_custom_edit_columns_sortable_user' ) );
 		add_filter( 'screen_options_show_screen', array( $this, 'disable_screen_options' ), 10, 2 );
 		add_filter( 'hidden_meta_boxes', array( $this, 'hide_meta_boxes' ), 10, 3 );
-		//add_filter( 'wp_insert_post_data', array( $this, 'insert_feed' ) );
+		add_filter( 'wp_insert_post_data', array( $this, 'insert_feed' ) );
 		add_filter( 'view_mode_post_types', array( $this, 'view_mode_post_types' ) );
 		add_action( 'manage_wpz-insta_feed_posts_custom_column' , array( $this, 'custom_column_feed' ), 10, 2 );
 		add_action( 'manage_wpz-insta_user_posts_custom_column' , array( $this, 'custom_column_user' ), 10, 2 );
@@ -899,7 +899,7 @@ class WPZOOM_Instagram_Widget_Settings {
 
 	function edit_feed_header( $post ) {
 		if ( 'wpz-insta_feed' == $post->post_type ) {
-			$feed_title = get_post_meta( $post->ID, '_wpz-insta_feed-title', true );
+			$feed_title = get_the_title( $post );
 			$user_id = intval( get_post_meta( $post->ID, '_wpz-insta_user-id', true ) );
 			$user = $user_id > 0 ? get_post( $user_id ) : null;
 			$disabled_class = $user instanceof WP_Post ? '' : 'class="disable"';
@@ -916,7 +916,7 @@ class WPZOOM_Instagram_Widget_Settings {
 			<header class="wpz-insta-wrap wpz-insta-wrap-sides wpz-insta_settings-header">
 				<div class="wpz-insta-wrap-left">
 					<h1 class="wpz-insta_settings-main-title wp-heading">
-						<input type="text" name="post_title" size="30" value="<?php echo esc_attr( $feed_title ? $feed_title : __( 'Feed Title', 'instagram-widget-by-wpzoom' ) ); ?>" id="title" spellcheck="true" autocomplete="off" />
+						<input type="text" name="post_title" size="30" value="<?php echo esc_attr( ! empty( $feed_title ) ? $feed_title : __( 'Feed Title', 'instagram-widget-by-wpzoom' ) ); ?>" id="title" spellcheck="true" autocomplete="off" />
 					</h1>
 
 					<nav class="wpz-insta_settings-main-nav wpz-insta_feed-edit-nav">
@@ -1574,13 +1574,13 @@ class WPZOOM_Instagram_Widget_Settings {
 		wp_send_json_error( null, 500 );
 	}
 
-	/*function insert_feed( $post ) {
-		if ( 'wpz-insta_feed' == $post['post_type'] ) {
+	function insert_feed( array $post ) {
+		if ( 'wpz-insta_feed' == $post['post_type'] && 'draft' == $post['post_status'] ) {
 			$post['post_status'] = 'publish';
 		}
 
 		return $post;
-	}*/
+	}
 
 	public function save_feed( int $post_ID, WP_Post $post, bool $update ) {
 		if ( ! wp_is_post_revision( $post ) && ! wp_is_post_autosave( $post ) && 'auto-draft' != get_post_status( $post ) && isset( $_POST ) && ! empty( $_POST ) ) {
