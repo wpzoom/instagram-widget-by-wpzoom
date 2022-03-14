@@ -183,6 +183,10 @@
 			display: none !important;
 		}
 
+		.urgent {
+			color: $red-color;
+		}
+
 		> .wrap {
 			> h1.wp-heading-inline,
 			> .page-title-action,
@@ -191,7 +195,8 @@
 			> .wpz-insta_settings-header > .notice,
 			> .wpz-insta-wrap ~ #posts-filter > .search-box,
 			> .wpz-insta-wrap ~ #posts-filter > .tablenav,
-			> .wpz-insta-wrap ~ #posts-filter > .wp-list-table > tfoot {
+			> .wpz-insta-wrap ~ #posts-filter > .wp-list-table > tfoot,
+			#titlediv {
 				display: none !important;
 			}
 
@@ -806,7 +811,7 @@
 								margin: 0;
 							}
 
-							a {
+							a:not(.button) {
 								color: $primary-color;
 								transition: all 0.2s ease;
 
@@ -1831,117 +1836,6 @@
 					}
 				}
 			}
-
-			#wpz-insta_modal-dialog {
-				display: flex;
-				align-items: center;
-				justify-content: center;
-				position: fixed;
-				top: 0;
-				left: 0;
-				right: 0;
-				bottom: 0;
-				z-index: 999999999999;
-				background: rgba(0, 0, 0, 0.4);
-				backdrop-filter: blur(5px);
-				transition: all 0.3s ease;
-
-				&:not(.open) {
-					pointer-events: none;
-					opacity: 0;
-				}
-
-				&.success {
-					.wpz-insta_modal-dialog_wrap .wpz-insta_modal-dialog_header .wpz-insta_modal-dialog_header-title::before {
-						background-color: $green-color;
-						background-image: url( "data:image/svg+xml,%3Csvg width='24' height='24' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M8.75204 15.8749L4.60249 11.7049L3.18945 13.1149L8.75204 18.7049L20.6932 6.70492L19.2901 5.29492L8.75204 15.8749Z' fill='white'/%3E%3C/svg%3E" );
-					}
-				}
-
-				&.fail {
-					.wpz-insta_modal-dialog_wrap .wpz-insta_modal-dialog_header .wpz-insta_modal-dialog_header-title::before {
-						background-color: $red-color;
-						background-image: url( "data:image/svg+xml,%3Csvg width='24' height='24' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M18.9069 6.41L17.5038 5L11.9412 10.59L6.37867 5L4.97559 6.41L10.5381 12L4.97559 17.59L6.37867 19L11.9412 13.41L17.5038 19L18.9069 17.59L13.3443 12L18.9069 6.41Z' fill='white'/%3E%3C/svg%3E" );
-					}
-				}
-
-				.wpz-insta_modal-dialog_wrap {
-					font-family: $main-font-family;
-					font-size: 14px;
-					line-height: 20px;
-					color: $main-font-color;
-					background: $light-color;
-					min-width: 850px;
-					padding: 30px;
-					border-radius: 3px;
-					box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
-
-					.wpz-insta_modal-dialog_header {
-						display: flex;
-						align-items: center;
-						justify-content: space-between;
-						padding: 0 0 20px;
-						border-bottom: 1px solid $light-grey-color;
-						margin: 0 0 30px;
-
-						.wpz-insta_modal-dialog_header-title {
-							display: flex;
-							align-items: center;
-							font-size: 20px;
-							font-weight: 600;
-							padding: 0;
-							margin: 0;
-
-							&::before {
-								content: '';
-								display: block;
-								background-color: $blue-grey-color;
-								background-repeat: no-repeat;
-								background-position: center;
-								height: 28px;
-								width: 28px;
-								border-radius: 50%;
-								margin: 0 15px 0 0;
-							}
-						}
-
-						.wpz-insta_modal-dialog_header-button {
-							cursor: pointer;
-							text-indent: -999em;
-							background-color: $darker-blue-grey-color;
-							mask: url( "data:image/svg+xml,%3Csvg width='24' height='24' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M18.9069 6.41L17.5038 5L11.9412 10.59L6.37867 5L4.97559 6.41L10.5381 12L4.97559 17.59L6.37867 19L11.9412 13.41L17.5038 19L18.9069 17.59L13.3443 12L18.9069 6.41Z'/%3E%3C/svg%3E" ) center no-repeat;
-							height: 24px;
-							width: 24px;
-							padding: 0;
-							margin: 0;
-							overflow: hidden;
-							transition: all 0.3s ease;
-
-							&:hover {
-								background-color: $primary-color;
-							}
-						}
-					}
-
-					.wpz-insta_modal-dialog_content {
-						overflow: auto;
-					}
-
-					.wpz-insta_modal-dialog_footer {
-						display: flex;
-						align-items: center;
-						justify-content: end;
-						padding: 20px 0 0;
-						border-top: 1px solid $light-grey-color;
-						margin: 30px 0 0;
-
-						.wpz-insta_modal-dialog_footer-button {
-							padding-left: 30px;
-							padding-right: 30px;
-						}
-					}
-				}
-			}
 		}
 	}
 
@@ -2000,6 +1894,126 @@
 					&:hover,
 					&:active {
 						color: $primary-color;
+					}
+				}
+			}
+		}
+	}
+
+	#wpz-insta_modal-dialog {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		position: fixed;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		z-index: 999999999999;
+		background: rgba(0, 0, 0, 0.4);
+		backdrop-filter: blur(5px);
+		transition: all 0.3s ease;
+
+		&:not(.open) {
+			pointer-events: none;
+			opacity: 0;
+		}
+
+		&.success {
+			.wpz-insta_modal-dialog_wrap .wpz-insta_modal-dialog_header .wpz-insta_modal-dialog_header-title::before {
+				background-color: $green-color;
+				background-image: url( "data:image/svg+xml,%3Csvg width='24' height='24' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M8.75204 15.8749L4.60249 11.7049L3.18945 13.1149L8.75204 18.7049L20.6932 6.70492L19.2901 5.29492L8.75204 15.8749Z' fill='white'/%3E%3C/svg%3E" );
+			}
+		}
+
+		&.fail {
+			.wpz-insta_modal-dialog_wrap .wpz-insta_modal-dialog_header .wpz-insta_modal-dialog_header-title::before {
+				background-color: $red-color;
+				background-image: url( "data:image/svg+xml,%3Csvg width='24' height='24' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M18.9069 6.41L17.5038 5L11.9412 10.59L6.37867 5L4.97559 6.41L10.5381 12L4.97559 17.59L6.37867 19L11.9412 13.41L17.5038 19L18.9069 17.59L13.3443 12L18.9069 6.41Z' fill='white'/%3E%3C/svg%3E" );
+			}
+		}
+
+		.wpz-insta_modal-dialog_wrap {
+			font-family: $main-font-family;
+			font-size: 14px;
+			line-height: 20px;
+			color: $main-font-color;
+			background: $light-color;
+			min-width: 850px;
+			padding: 30px;
+			border-radius: 3px;
+			box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
+
+			.wpz-insta_modal-dialog_header {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				padding: 0 0 20px;
+				border-bottom: 1px solid $light-grey-color;
+				margin: 0 0 30px;
+
+				.wpz-insta_modal-dialog_header-title {
+					display: flex;
+					align-items: center;
+					font-size: 20px;
+					font-weight: 600;
+					padding: 0;
+					margin: 0;
+
+					&::before {
+						content: '';
+						display: block;
+						background-color: $blue-grey-color;
+						background-repeat: no-repeat;
+						background-position: center;
+						height: 28px;
+						width: 28px;
+						border-radius: 50%;
+						margin: 0 15px 0 0;
+					}
+				}
+
+				.wpz-insta_modal-dialog_header-button {
+					cursor: pointer;
+					text-indent: -999em;
+					background-color: $darker-blue-grey-color;
+					mask: url( "data:image/svg+xml,%3Csvg width='24' height='24' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M18.9069 6.41L17.5038 5L11.9412 10.59L6.37867 5L4.97559 6.41L10.5381 12L4.97559 17.59L6.37867 19L11.9412 13.41L17.5038 19L18.9069 17.59L13.3443 12L18.9069 6.41Z'/%3E%3C/svg%3E" ) center no-repeat;
+					height: 24px;
+					width: 24px;
+					padding: 0;
+					margin: 0;
+					overflow: hidden;
+					transition: all 0.3s ease;
+
+					&:hover {
+						background-color: $primary-color;
+					}
+				}
+			}
+
+			.wpz-insta_modal-dialog_content {
+				overflow: auto;
+			}
+
+			.wpz-insta_modal-dialog_footer {
+				display: flex;
+				align-items: center;
+				justify-content: end;
+				padding: 20px 0 0;
+				border-top: 1px solid $light-grey-color;
+				margin: 30px 0 0;
+
+				.wpz-insta_modal-dialog_footer-button {
+					color: $light-color;
+					background: $primary-color;
+					padding-left: 30px;
+					padding-right: 30px;
+					transition: all 0.3s ease;
+	
+					&:hover,
+					&:active {
+						color: $light-color;
+						background: $secondary-color;
 					}
 				}
 			}

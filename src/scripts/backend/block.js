@@ -65,7 +65,7 @@ registerBlockType( 'wpzoom/instagram-block', {
 						: feeds.map( ( feed ) => {
 							return {
 								value: feed.id,
-								label: 'meta' in feed && '_wpz-insta_feed-title' in feed.meta ? feed.meta['_wpz-insta_feed-title'] : __( '(No title)', 'instagram-widget-by-wpzoom' ),
+								label: 'title' in feed && 'rendered' in feed.title ? feed.title.rendered : __( '(No title)', 'instagram-widget-by-wpzoom' ),
 							};
 						} ),
 				}
@@ -105,7 +105,7 @@ registerBlockType( 'wpzoom/instagram-block', {
 									...feedsList
 								] }
 								onChange={ ( newFeed ) => {
-									setAttributes( { feed: newFeed } );
+									setAttributes( { feed: Number( newFeed ) } );
 								} }
 							/>
 						</PanelBody>
