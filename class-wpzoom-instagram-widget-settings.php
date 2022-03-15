@@ -1166,14 +1166,14 @@ class WPZOOM_Instagram_Widget_Settings {
 
 									<label class="wpz-insta_table-row">
 										<strong class="wpz-insta_table-cell"><?php _e( 'Number of columns', 'instagram-widget-by-wpzoom' ); ?></strong>
-										<div class="wpz-insta_table-cell"><input type="number" name="_wpz-insta_col-num" value="<?php echo esc_attr( $feed_cols_num ); ?>" size="3" min="1" max="100" step="1" /></div>
+										<div class="wpz-insta_table-cell"><input type="number" name="_wpz-insta_col-num" value="<?php echo esc_attr( $feed_cols_num ); ?>" size="3" min="0" max="100" step="1" /></div>
 									</label>
 
 									<label class="wpz-insta_table-row">
 										<strong class="wpz-insta_table-cell"><?php _e( 'Padding around images', 'instagram-widget-by-wpzoom' ); ?></strong>
 										<div class="wpz-insta_table-cell">
 											<div class="wpz-insta_suffixed-number-input">
-												<input type="number" name="_wpz-insta_spacing-between" value="<?php echo esc_attr( $feed_spacing_between ); ?>" size="3" min="1" max="100" step="1" />
+												<input type="number" name="_wpz-insta_spacing-between" value="<?php echo esc_attr( $feed_spacing_between ); ?>" size="3" min="0" max="100" step="1" />
 
 												<select name="_wpz-insta_spacing-between-suffix">
 													<option value="0"<?php selected( $feed_spacing_between_suffix, 0 ); ?>><?php _e( 'px', 'instagram-widget-by-wpzoom' ); ?></option>
