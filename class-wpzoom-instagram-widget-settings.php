@@ -1535,7 +1535,7 @@ class WPZOOM_Instagram_Widget_Settings {
 					</div>
 
 					<div class="wpz-insta_modal-dialog_footer">
-						<span class="wpz-insta_modal-dialog_footer-button wpz-insta_modal-dialog_ok-button button button-primary"><?php _e( 'Ok', 'instagram-widget-by-wpzoom' ); ?></span>
+						<span class="wpz-insta_modal-dialog_footer-button wpz-insta_modal-dialog_ok-button button button-primary"><?php _e( 'OK', 'instagram-widget-by-wpzoom' ); ?></span>
 					</div>
 				</div>
 			</div>
