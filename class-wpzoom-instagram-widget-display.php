@@ -419,7 +419,7 @@ class Wpzoom_Instagram_Widget_Display {
 		}
 
 		if ( 3 !== $col_num || $spacing_between > -1 || $feed_width > -1 || $feed_height > -1 ) {
-			$output .= ".zoom-new-instagram-widget .zoom-instagram-widget__items {\n";
+			$output .= ".zoom-new-instagram-widget .zoom-instagram-widget__items, .widget_block .zoom-instagram-widget__items {\n";
 
 			if ( 3 !== $col_num ) {
 				$output .= "\tgrid-template-columns: repeat(" . $col_num . ", 1fr);\n";

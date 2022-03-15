@@ -15,6 +15,7 @@
 }
 
 /* Prevent extra space conflict from theme */
+.widget_block .zoom-instagram-widget__items ul li.zoom-instagram-widget__item,
 .widget.zoom-instagram-widget ul li.zoom-instagram-widget__item,
 .widget.zoom-new-instagram-widget ul li.zoom-instagram-widget__item {
 	padding: 0;
@@ -22,9 +23,13 @@
 
 .zoom-instagram-widget__items--no-js.zoom-instagram-widget__items .zoom-instagram-widget__item { margin-right: 10px; margin-bottom: 10px; }
 
+
+.widget_block .zoom-instagram-widget__items,
 .widget.zoom-new-instagram-widget .zoom-instagram-widget__items {
 	display: grid;
 	grid-template-columns: repeat(3, 1fr);
+    padding: 0;
+    margin: 0;
 
 	&::before,
 	&::after {
@@ -33,7 +38,7 @@
 
 	.zoom-instagram-widget__item {
 		.zoom-instagram-link {
-			padding-bottom: 75%;
+			padding-bottom: 100%;
 		}
 	}
 }
