@@ -39,8 +39,7 @@ class Wpzoom_Instagram_Widget_Display {
 	 * @return void
 	 */
 	public function init() {
-		add_action( 'wp_ajax_wpz-insta_feed-styles', array( $this, 'dynamic_styles' ) );
-		add_action( 'wp_ajax_nopriv_wpz-insta_feed-styles', array( $this, 'dynamic_styles' ) );
+		add_shortcode( 'instagram', array( $this, 'get_shortcode_output' ) );
 	}
 
 	/**
@@ -97,13 +96,40 @@ class Wpzoom_Instagram_Widget_Display {
 	}
 
 	/**
+	 * Returns the markup for the feed shortcode.
+	 *
+	 * @param  array  $atts    The attributes on the shortcode.
+	 * @param  string $content The content (if any) in the shortcode.
+	 * @param  string $tag     The shortcode tag.
+	 * @return string
+	 */
+	public function get_shortcode_output( array $atts, string $content, string $tag ) {
+		if ( ! empty( $atts ) && is_array( $atts ) && array_key_exists( 'feed', $atts ) ) {
+			$feed_id = intval( $atts['feed'] );
+
+			if ( $feed_id > -1 ) {
+				return $this->get_feed_output( $feed_id );
+			}
+		}
+
+		return sprintf(
+			'<p class="error" style="color:red"><strong>%s</strong></p>',
+			esc_html__( 'There was a problem displaying the selected feed. Please check the configuration...', 'instagram-widget-by-wpzoom' )
+		);
+	}
+
+	/**
 	 * Outputs the markup for the feed with the given ID.
 	 *
 	 * @param  int  $feed_id The ID of the feed to output.
 	 * @return void
 	 */
 	public function output_feed( int $feed_id ) {
-		echo $this->get_feed_output( $feed_id );
+		printf(
+			"<style type=\"text/css\">%s</style>\n%s",
+			$this->output_styles( $feed_id, false ),
+			$this->get_feed_output( $feed_id )
+		);
 	}
 
 	/**
@@ -113,7 +139,11 @@ class Wpzoom_Instagram_Widget_Display {
 	 * @return void
 	 */
 	public function output_preview( array $args ) {
-		echo $this->feed_content( $args );
+		printf(
+			"<style type=\"text/css\">%s</style>\n%s",
+			$this->output_preview_styles( $args, false ),
+			$this->feed_content( $args )
+		);
 	}
 
 	/**
@@ -380,8 +410,8 @@ class Wpzoom_Instagram_Widget_Display {
 	public function style_content( array $args ) {
 		$output                 = '';
 		$layout                 = isset( $args['layout'] ) ? intval( $args['layout'] ) : 0;
-		$col_num                = isset( $args['col-num'] ) ? ( intval( $args['col-num'] ) ?: 3 ) : 3;
-		$spacing_between        = isset( $args['spacing-between'] ) ? ( intval( $args['spacing-between'] ) ?: -1 ) : -1;
+		$col_num                = isset( $args['col-num'] ) && intval( $args['col-num'] ) !== 3 ? intval( $args['col-num'] ) : 3;
+		$spacing_between        = isset( $args['spacing-between'] ) && intval( $args['spacing-between'] ) > -1 ? intval( $args['spacing-between'] ) : -1;
 		$spacing_between_suffix = $this->get_suffix( isset( $args['spacing-between-suffix'] ) ? intval( $args['spacing-between-suffix'] ) : 0 );
 		$feed_width             = isset( $args['feed-width'] ) ? ( intval( $args['feed-width'] ) ?: 100 ) : 100;
 		$feed_width_suffix      = $this->get_suffix( isset( $args['feed-width-suffix'] ) ? intval( $args['feed-width-suffix'] ) : 2 );
@@ -401,7 +431,7 @@ class Wpzoom_Instagram_Widget_Display {
 		$hover_bg_color         = isset( $args['hover-bg-color'] ) ? $this->validate_color( $args['hover-bg-color'] ) : '';
 
 		if ( $font_size > -1 || ! empty( $bg_color ) || $spacing_around > -1 ) {
-			$output .= ".zoom-new-instagram-widget {\n";
+			$output .= ".zoom-new-instagram-widget, .widget.zoom-new-instagram-widget {\n";
 
 			if ( $font_size > -1 ) {
 				$output .= "\tfont-size: " . $font_size . $font_size_suffix . ";\n";
@@ -419,7 +449,7 @@ class Wpzoom_Instagram_Widget_Display {
 		}
 
 		if ( 3 !== $col_num || $spacing_between > -1 || $feed_width > -1 || $feed_height > -1 ) {
-			$output .= ".zoom-new-instagram-widget .zoom-instagram-widget__items, .widget_block .zoom-instagram-widget__items {\n";
+			$output .= ".zoom-new-instagram-widget .zoom-instagram-widget__items, .widget.zoom-new-instagram-widget .zoom-instagram-widget__items {\n";
 
 			if ( 3 !== $col_num ) {
 				$output .= "\tgrid-template-columns: repeat(" . $col_num . ", 1fr);\n";
@@ -447,14 +477,17 @@ class Wpzoom_Instagram_Widget_Display {
 	 * Outputs the CSS styles for the feed with the given ID.
 	 *
 	 * @param  int  $feed_id The ID of the feed to output the styles for.
+	 * @param  bool $echo    Whether to output the styles (default) or return them.
 	 * @return void
 	 */
-	public function output_styles( int $feed_id ) {
+	public function output_styles( int $feed_id, bool $echo = true ) {
+		$output = '';
+
 		if ( $feed_id > -1 ) {
 			$feed = get_post( $feed_id, OBJECT, 'display' );
 
 			if ( null !== $feed && $feed instanceof WP_Post ) {
-				echo $this->style_content( array(
+				$output = $this->style_content( array(
 					'layout'                 => intval( get_post_meta( $feed_id, '_wpz-insta_layout', true ) ?: 0 ),
 					'item-num'               => intval( get_post_meta( $feed_id, '_wpz-insta_item-num', true ) ?: 9 ),
 					'col-num'                => intval( get_post_meta( $feed_id, '_wpz-insta_col-num', true ) ?: 3 ),
@@ -479,57 +512,29 @@ class Wpzoom_Instagram_Widget_Display {
 				) );
 			}
 		}
+
+		if ( $echo ) {
+			echo $output;
+		} else {
+			return $output;
+		}
 	}
 
 	/**
 	 * Outputs the CSS styles for the preview of a feed configured with the given arguments.
 	 *
 	 * @param  array $args The arguments to define how to output the feed preview CSS.
+	 * @param  bool  $echo Whether to output the preview (default) or return it.
 	 * @return void
 	 */
-	public function output_preview_styles( array $args ) {
-		echo $this->style_content( $args );
-	}
+	public function output_preview_styles( array $args, bool $echo = true ) {
+		$output = $this->style_content( $args );
 
-	/**
-	 * Outputs dynamic CSS for a feed based on certain $_GET variables.
-	 *
-	 * @return void
-	 */
-	public function dynamic_styles() {
-		header( 'Content-type: text/css; charset: UTF-8' );
-
-		if ( isset( $_GET['feed'] ) ) {
-			$this->output_styles( intval( $_GET['feed'] ) );
-		} elseif ( current_user_can( 'manage_options' ) && isset( $_GET['wpz-insta-widget-preview'] ) ) {
-			$this->output_preview_styles(
-				array(
-					'layout'                 => isset( $_GET['layout'] ) ? intval( $_GET['layout'] ) : 0,
-					'item-num'               => isset( $_GET['item-num'] ) ? ( intval( $_GET['item-num'] ) ?: 9 ) : 9,
-					'col-num'                => isset( $_GET['col-num'] ) ? ( intval( $_GET['col-num'] ) ?: 3 ) : 3,
-					'spacing-between'        => isset( $_GET['spacing-between'] ) ? ( intval( $_GET['spacing-between'] ) ?: -1 ) : -1,
-					'spacing-between-suffix' => isset( $_GET['spacing-between-suffix'] ) ? intval( $_GET['spacing-between-suffix'] ) : 0,
-					'feed-width'             => isset( $_GET['feed-width'] ) ? ( intval( $_GET['feed-width'] ) ?: 100 ) : 100,
-					'feed-width-suffix'      => isset( $_GET['feed-width-suffix'] ) ? intval( $_GET['feed-width-suffix'] ) : 2,
-					'feed-height'            => isset( $_GET['feed-height'] ) ? ( intval( $_GET['feed-height'] ) ?: -1 ) : -1,
-					'feed-height-suffix'     => isset( $_GET['feed-height-suffix'] ) ? intval( $_GET['feed-height-suffix'] ) : 0,
-					'bg-color'               => isset( $_GET['bg-color'] ) ? $this->validate_color( $_GET['bg-color'] ) : '',
-					'spacing-around'         => isset( $_GET['spacing-around'] ) ? ( intval( $_GET['spacing-around'] ) ?: -1 ) : -1,
-					'spacing-around-suffix'  => isset( $_GET['spacing-around-suffix'] ) ? intval( $_GET['spacing-around-suffix'] ) : 0,
-					'font-size'              => isset( $_GET['font-size'] ) ? ( intval( $_GET['font-size'] ) ?: -1 ) : -1,
-					'font-size-suffix'       => isset( $_GET['font-size-suffix'] ) ? intval( $_GET['font-size-suffix'] ) : 0,
-					'hover-likes'            => isset( $_GET['hover-likes'] ) ? boolval( $_GET['hover-likes'] ) : true,
-					'hover-link'             => isset( $_GET['hover-link'] ) ? boolval( $_GET['hover-link'] ) : true,
-					'hover-caption'          => isset( $_GET['hover-caption'] ) ? boolval( $_GET['hover-caption'] ) : false,
-					'hover-username'         => isset( $_GET['hover-username'] ) ? boolval( $_GET['hover-username'] ) : false,
-					'hover-date'             => isset( $_GET['hover-date'] ) ? boolval( $_GET['hover-date'] ) : false,
-					'hover-text-color'       => isset( $_GET['hover-text-color'] ) ? $this->validate_color( $_GET['hover-text-color'] ) : '',
-					'hover-bg-color'         => isset( $_GET['hover-bg-color'] ) ? $this->validate_color( $_GET['hover-bg-color'] ) : '',
-				)
-			);
+		if ( $echo ) {
+			echo $output;
+		} else {
+			return $output;
 		}
-
-		exit;
 	}
 
 	/**

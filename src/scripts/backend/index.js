@@ -133,8 +133,6 @@ jQuery( function( $ ) {
             $formTable.find('.wpzoom-instagram-widget-' + inactive + '-group').hide();
 
         });
-
-
     });
 
     $('.wpzoom-instagram-widget-settings-request-type-wrapper').find('input[type=radio]:checked').change();
@@ -351,6 +349,24 @@ jQuery( function( $ ) {
 		)
 	);
 
+	$('.wpz-insta_actions-menu_copy-shortcode').on(
+		'click',
+		function ( e ) {
+			e.preventDefault();
+
+			let id = $(this).closest( 'tr' ).attr( 'id' ).replace( 'post-', '' );
+
+			copyToClipboard( '[instagram feed="' + id + '"]' )
+				.then( () => {
+					showDialog(
+						zoom_instagram_widget_admin.i18n_shortcode_success_title,
+						zoom_instagram_widget_admin.i18n_shortcode_success_content,
+						'success update'
+					);
+				} );
+		}
+	);
+
 	function setTab( id ) {
 		if ( id ) {
 			const $target = $( '.wpz-insta_feed-edit-nav a[href="' + id + '"]' ),
@@ -386,21 +402,39 @@ jQuery( function( $ ) {
 	}
 
 	function showConnectDoneDialog( success, update = false ) {
-		let title = success ? ( update ? zoom_instagram_widget_admin.i18n_reconnect_success_title : zoom_instagram_widget_admin.i18n_connect_success_title ) : zoom_instagram_widget_admin.i18n_connect_fail_title,
-		    content = success ? ( update ? zoom_instagram_widget_admin.i18n_reconnect_success_content : zoom_instagram_widget_admin.i18n_connect_success_content ) : zoom_instagram_widget_admin.i18n_connect_fail_content,
-		    $dialog = $( '#wpz-insta_modal-dialog' );
+		showDialog(
+			( success
+				? ( update
+					? zoom_instagram_widget_admin.i18n_reconnect_success_title
+					: zoom_instagram_widget_admin.i18n_connect_success_title )
+				: zoom_instagram_widget_admin.i18n_connect_fail_title
+			),
+			( success
+				? ( update
+					? zoom_instagram_widget_admin.i18n_reconnect_success_content
+					: zoom_instagram_widget_admin.i18n_connect_success_content )
+				: zoom_instagram_widget_admin.i18n_connect_fail_content ),
+			( ( success ? 'success' : 'fail' ) + ( update ? ' update' : '' ) )
+		);
+	}
 
-		$dialog.find( '.wpz-insta_modal-dialog_header-title' ).html( title );
-		$dialog.find( '.wpz-insta_modal-dialog_content' ).html( content );
-		$dialog.removeClass( 'open success fail update' ).addClass( 'open ' + ( success ? 'success' : 'fail' ) + ( update ? ' update' : '' ) );
+	function showDialog( title = '[DIALOG TITLE]', content = '[DIALOG CONTENT]', wrapperClass = 'success' ) {
+		let $dialog = $( '#wpz-insta_modal-dialog' );
+		$dialog.find( '.wpz-insta_modal-dialog_header-title' ).html( '' + title );
+		$dialog.find( '.wpz-insta_modal-dialog_content' ).html( '' + content );
+		$dialog.removeClass().addClass( 'open ' + wrapperClass );
 	}
 
 	function closeConnectDoneDialog( success, update = false ) {
-		$( '#wpz-insta_modal-dialog' ).removeClass( 'open' );
+		closeDialog();
 
 		if ( success && ! update ) {
 			window.location.replace( zoom_instagram_widget_admin.feeds_url );
 		}
+	}
+
+	function closeDialog() {
+		$( '#wpz-insta_modal-dialog' ).removeClass( 'open' );
 	}
 
 	function debounce( func, timeout = 300 ) {

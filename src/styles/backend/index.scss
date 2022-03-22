@@ -200,6 +200,10 @@
 				display: none !important;
 			}
 
+			.wpz-insta-notices .notice {
+				display: block !important;
+			}
+
 			input, textarea, select {
 				font-family: $main-font-family;
 				font-weight: normal;
@@ -842,10 +846,25 @@
 										padding: 0;
 										margin: 0;
 
-										> strong:first-child,
-										> label > strong:first-child {
-											display: inline-block;
+										div {
+											display: block;
 											margin: 0 0 10px;
+
+											&:last-child {
+												margin-bottom: 0;
+											}
+										}
+
+										strong:first-child,
+										label > strong:first-child {
+											display: inline-block;
+											margin: 0 0 5px;
+										}
+
+										input:not(.widefat),
+										textarea {
+											font-family: $main-font-family;
+											width: 60%;
 										}
 									}
 								}
@@ -1395,7 +1414,9 @@
 				}
 
 				.wpz-insta_feed-layout-etc,
-				.wpz-insta_feed-general {
+				.wpz-insta_feed-general,
+				.wpz-insta_feed-profile-general,
+				.wpz-insta_feed-load-more-general {
 					font-size: 14px;
 				}
 
@@ -1409,6 +1430,15 @@
 						display: flex;
 						align-items: center;
 						width: 100%;
+
+						&.wpz-insta_table-row-full {
+							flex-direction: column;
+							align-items: stretch;
+
+							.wpz-insta_table-cell {
+								width: 100%;
+							}
+						}
 
 						.wpz-insta_table-cell {
 							display: block;
@@ -1440,6 +1470,7 @@
 						flex-direction: column;
 						gap: 20px;
 						pointer-events: none;
+						user-select: none;
 						padding: 0 0 10px;
 						border-bottom: 2px solid $orange-color;
 
@@ -1507,6 +1538,21 @@
 
 				&.wpz-insta_sidebar-section-request-timeout > label > strong {
 					font-size: 14px;
+				}
+
+				&.wpz-insta_sidebar-section-load-more.wpz-insta_pro-only {
+					pointer-events: none;
+					user-select: none;
+					padding-top: 0;
+					padding-bottom: 20px;
+					border-top: none;
+					border-bottom: 2px solid $orange-color;
+					margin-top: 0;
+
+					.wpz-insta_sidebar-section-title,
+					.wpz-insta_table > label {
+						opacity: 0.5;
+					}
 				}
 			}
 

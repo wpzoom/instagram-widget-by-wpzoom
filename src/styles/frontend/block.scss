@@ -1,5 +1,7 @@
 .wp-block-wpzoom-instagram-block {
 	.zoom-instagram-widget__items {
+		display: grid;
+		grid-template-columns: repeat(3, 1fr);
 		list-style: none !important;
 
 		&::before,
@@ -31,7 +33,7 @@
 		}
 
 		.zoom-instagram-widget__item .zoom-instagram-link {
-			padding-bottom: 100%;
+			padding-bottom: 75%;
 		}
 	}
 
