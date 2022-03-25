@@ -4,8 +4,20 @@ import { __ } from '@wordpress/i18n';
 import ServerSideRender from '@wordpress/server-side-render';
 import { useBlockProps, InspectorControls } from '@wordpress/block-editor';
 import { useSelect } from '@wordpress/data';
-import { PanelBody, SelectControl, Spinner, Placeholder } from '@wordpress/components';
 import { store as coreStore } from '@wordpress/core-data';
+import {
+	__experimentalHeading as Heading,
+	Flex,
+	FlexItem,
+	Icon,
+	PanelBody,
+	SelectControl,
+	Spinner,
+	Placeholder,
+	Card,
+	CardHeader,
+	CardBody
+} from '@wordpress/components';
 
 const {fetch: origFetch} = window;
 window.fetch = async (...args) => {
@@ -97,7 +109,7 @@ registerBlockType( 'wpzoom/instagram-block', {
 								value={ feed }
 								options={ [
 									{
-										label: __( '-- Select a Feed --', 'instagram-widget-by-wpzoom' ),
+										label: __( '\u2014 Select a Feed \u2014', 'instagram-widget-by-wpzoom' ),
 										value: -1,
 										disabled: true,
 										hidden: true,
@@ -111,13 +123,46 @@ registerBlockType( 'wpzoom/instagram-block', {
 						</PanelBody>
 					</InspectorControls>
 				}
-				<ServerSideRender
-					block="wpzoom/instagram-block"
-					attributes={ props.attributes }
-					EmptyResponsePlaceholder={ () => (
-						<span>{ __( 'Instagram: No feed to show.', 'instagram-widget-by-wpzoom' ) }</span>
-					) }
-				/>
+				{
+					feed > 0 ?
+						(
+							<ServerSideRender
+								block="wpzoom/instagram-block"
+								attributes={ props.attributes }
+								EmptyResponsePlaceholder={ () => (
+									<span>{ __( 'Instagram: No feed to show.', 'instagram-widget-by-wpzoom' ) }</span>
+								) }
+							/>
+						)
+					:
+						(
+							<Card size="large">
+								<CardHeader>
+									<Flex align="center" justify="start" gap={ 2 } wrap={ true }>
+										<Icon icon="instagram" />
+										<Heading level="5">{ __( 'Instagram Feed', 'instagram-widget-by-wpzoom' ) }</Heading>
+									</Flex>
+								</CardHeader>
+								<CardBody>
+									<SelectControl
+										value={ feed }
+										options={ [
+											{
+												label: __( '\u2014 Select a Feed to Display \u2014', 'instagram-widget-by-wpzoom' ),
+												value: -1,
+												disabled: true,
+												hidden: true,
+											},
+											...feedsList
+										] }
+										onChange={ ( newFeed ) => {
+											setAttributes( { feed: Number( newFeed ) } );
+										} }
+									/>
+								</CardBody>
+							</Card>
+						)
+				}
 			</div>
 		);
 	},

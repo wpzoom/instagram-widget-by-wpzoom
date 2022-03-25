@@ -122,14 +122,21 @@ class Wpzoom_Instagram_Widget_Display {
 	 * Outputs the markup for the feed with the given ID.
 	 *
 	 * @param  int  $feed_id The ID of the feed to output.
+	 * @param  bool $echo    Whether to output the feed or return it.
 	 * @return void
 	 */
-	public function output_feed( int $feed_id ) {
-		printf(
+	public function output_feed( int $feed_id, bool $echo = true ) {
+		$output = sprintf(
 			"<style type=\"text/css\">%s</style>\n%s",
 			$this->output_styles( $feed_id, false ),
 			$this->get_feed_output( $feed_id )
 		);
+
+		if ( $echo ) {
+			echo $output;
+		} else {
+			return $output;
+		}
 	}
 
 	/**
@@ -140,6 +147,20 @@ class Wpzoom_Instagram_Widget_Display {
 	 */
 	public function output_preview( array $args ) {
 		printf(
+			"<style type=\"text/css\">%s</style>\n%s",
+			$this->output_preview_styles( $args, false ),
+			$this->feed_content( $args )
+		);
+	}
+
+	/**
+	 * Returns the markup for the preview of a feed configured with the given arguments.
+	 *
+	 * @param  array $args The arguments to define how to return the feed preview.
+	 * @return void
+	 */
+	public function get_preview( array $args ) {
+		return sprintf(
 			"<style type=\"text/css\">%s</style>\n%s",
 			$this->output_preview_styles( $args, false ),
 			$this->feed_content( $args )
@@ -162,7 +183,10 @@ class Wpzoom_Instagram_Widget_Display {
 
 			if ( $user instanceof WP_Post ) {
 				$user_name = get_the_title( $user );
-				$user_display_name = sprintf( '@%s', $user_name );
+				$user_name_display = sprintf( '@%s', $user_name );
+				$user_link = 'https://www.instagram.com/' . $user_name;
+				$user_display_name = get_post_meta( $user_id, '_wpz-insta_user_name', true );
+				$user_bio = get_post_meta( $user_id, '_wpz-insta_user-bio', true );
 				$user_image = get_the_post_thumbnail_url( $user ) ?: plugin_dir_url( __FILE__ ) . 'dist/images/backend/user-avatar.jpg';
 				$user_account_token = get_post_meta( $user_id, '_wpz-insta_token', true ) ?: '-1';
 
@@ -189,9 +213,39 @@ class Wpzoom_Instagram_Widget_Display {
 					$items  = $this->api->get_items( array( 'image-limit' => $amount, 'image-width' => $image_width ) );
 					$errors = $this->api->errors->get_error_messages();
 
+					$output .= '<div class="zoom-instagram">';
+
 					if ( ! is_array( $items ) ) {
 						return $this->get_errors( $errors );
 					} else {
+						$output .= '<header class="zoom-instagram-widget__header">';
+
+						if ( ! empty( $user_image ) ) {
+							$output .= '<div class="zoom-instagram-widget__header-column-left">';
+							$output .= '<img src="' . esc_url( $user_image ) . '" alt="' . esc_attr( $user_name_display ) . '" width="70" height="70"/>';
+							$output .= '</div>';
+						}
+
+						if ( ! empty( $user_display_name ) || ! empty( $user_name ) || ! empty( $user_bio ) ) {
+							$output .= '<div class="zoom-instagram-widget__header-column-right">';
+
+							if ( ! empty( $user_display_name ) ) {
+								$output .= '<h5 class="zoom-instagram-widget__header-name">' . esc_html( $user_display_name ) . '</h5>';
+							}
+
+							if ( ! empty( $user_name ) ) {
+								$output .= '<p class="zoom-instagram-widget__header-user"><a href="' . esc_url( $user_link ) . '" target="_blank" rel="nofollow">' . esc_html( $user_name_display ) . '</a></p>';
+							}
+
+							if ( ! empty( $user_bio ) ) {
+								$output .= '<div class="zoom-instagram-widget__header-bio">' . esc_html( $user_bio ) . '</div>';
+							}
+
+							$output .= '</div>';
+						}
+
+						$output .= '</header>';
+
 						$output .= '<ul class="zoom-instagram-widget__items zoom-instagram-widget__items--no-js"' . $attrs . '>';
 
 						foreach ( $items['items'] as $item ) {
@@ -284,7 +338,7 @@ class Wpzoom_Instagram_Widget_Display {
 							$amount = count( $items );
 							$count = 0;
 
-							foreach ( $items as $item ) {
+							foreach ( $items['items'] as $item ) {
 								$count++;
 								$link     = isset( $item['link'] ) ? $item['link'] : '';
 								$src      = isset( $item['original-image-url'] ) ? $item['original-image-url'] : '';
@@ -325,11 +379,11 @@ class Wpzoom_Instagram_Widget_Display {
 								<div class="details-wrapper">
 								<div class="wpz-insta-header">
 									<div class="wpz-insta-avatar">
-										<img src="' . esc_url( $user_image ) . '" alt="' . esc_attr( $user_display_name ) . '" width="42" height="42"/>
+										<img src="' . esc_url( $user_image ) . '" alt="' . esc_attr( $user_name_display ) . '" width="42" height="42"/>
 									</div>
 									<div class="wpz-insta-buttons">
 										<div class="wpz-insta-username">
-											<a rel="noopener" target="_blank" href="' . sprintf( 'https://instagram.com/%s', esc_attr( $user_name ) ) . '">' . esc_html( $user_display_name ) . '</a>
+											<a rel="noopener" target="_blank" href="' . sprintf( 'https://instagram.com/%s', esc_attr( $user_name ) ) . '">' . esc_html( $user_name_display ) . '</a>
 										</div>
 										<div>&bull;</div>
 										<div class="wpz-insta-follow">
@@ -359,6 +413,8 @@ class Wpzoom_Instagram_Widget_Display {
 							$output .= '</div><div class="swiper-button-prev"></div><div class="swiper-button-next"></div></div></div>';
 						}
 					}
+
+					$output .= '</div>';
 
 					return $output;
 				}
@@ -431,7 +487,7 @@ class Wpzoom_Instagram_Widget_Display {
 		$hover_bg_color         = isset( $args['hover-bg-color'] ) ? $this->validate_color( $args['hover-bg-color'] ) : '';
 
 		if ( $font_size > -1 || ! empty( $bg_color ) || $spacing_around > -1 ) {
-			$output .= ".zoom-new-instagram-widget, .widget.zoom-new-instagram-widget {\n";
+			$output .= ".zoom-instagram {\n";
 
 			if ( $font_size > -1 ) {
 				$output .= "\tfont-size: " . $font_size . $font_size_suffix . ";\n";
@@ -449,7 +505,7 @@ class Wpzoom_Instagram_Widget_Display {
 		}
 
 		if ( 3 !== $col_num || $spacing_between > -1 || $feed_width > -1 || $feed_height > -1 ) {
-			$output .= ".zoom-new-instagram-widget .zoom-instagram-widget__items, .widget.zoom-new-instagram-widget .zoom-instagram-widget__items {\n";
+			$output .= ".zoom-instagram .zoom-instagram-widget__items {\n";
 
 			if ( 3 !== $col_num ) {
 				$output .= "\tgrid-template-columns: repeat(" . $col_num . ", 1fr);\n";

@@ -1374,40 +1374,7 @@ class WPZOOM_Instagram_Widget_Settings {
 
 	function preview_frame() {
 		$display = Wpzoom_Instagram_Widget_Display::getInstance();
-
-		echo '<div class="zoom-new-instagram-widget">';
-
-		/*$display->output_preview(
-			array(
-				'user-id'                         => isset( $_GET['_wpz-insta_user-id'] ) ? intval( $_GET['_wpz-insta_user-id'] ) : -1,
-				'layout'                          => isset( $_GET['_wpz-insta_layout'] ) ? intval( $_GET['_wpz-insta_layout'] ) : 0,
-				'item-num'                        => isset( $_GET['_wpz-insta_item-num'] ) ? intval( $_GET['_wpz-insta_item-num'] ) : 9,
-				'col-num'                         => isset( $_GET['_wpz-insta_col-num'] ) ? intval( $_GET['_wpz-insta_col-num'] ) : 3,
-				'spacing-between'                 => isset( $_GET['_wpz-insta_spacing-between'] ) ? intval( $_GET['_wpz-insta_spacing-between'] ) : -1,
-				'spacing-between-suffix'          => isset( $_GET['_wpz-insta_spacing-between-suffix'] ) ? intval( $_GET['_wpz-insta_spacing-between-suffix'] ) : 0,
-				'feed-width'                      => isset( $_GET['_wpz-insta_feed-width'] ) ? intval( $_GET['_wpz-insta_feed-width'] ) : 100,
-				'feed-width-suffix'               => isset( $_GET['_wpz-insta_feed-width-suffix'] ) ? intval( $_GET['_wpz-insta_feed-width-suffix'] ) : 2,
-				'feed-height'                     => isset( $_GET['_wpz-insta_feed-height'] ) ? intval( $_GET['_wpz-insta_feed-height'] ) : -1,
-				'feed-height-suffix'              => isset( $_GET['_wpz-insta_feed-height-suffix'] ) ? intval( $_GET['_wpz-insta_feed-height-suffix'] ) : 0,
-				'bg-color'                        => isset( $_GET['_wpz-insta_bg-color'] ) ? $this->validate_color( $_GET['_wpz-insta_bg-color'] ) : '',
-				'spacing-around'                  => isset( $_GET['_wpz-insta_spacing-around'] ) ? intval( $_GET['_wpz-insta_spacing-around'] ) : -1,
-				'spacing-around-suffix'           => isset( $_GET['_wpz-insta_spacing-around-suffix'] ) ? intval( $_GET['_wpz-insta_spacing-around-suffix'] ) : 0,
-				'font-size'                       => isset( $_GET['_wpz-insta_font-size'] ) ? intval( $_GET['_wpz-insta_font-size'] ) : -1,
-				'font-size-suffix'                => isset( $_GET['_wpz-insta_font-size-suffix'] ) ? intval( $_GET['_wpz-insta_font-size-suffix'] ) : 0,
-				'lightbox'                        => isset( $_GET['_wpz-insta_lightbox'] ) ? boolval( $_GET['_wpz-insta_lightbox'] ) : true,
-				'show-overlay'                    => isset( $_GET['_wpz-insta_show-overlay'] ) ? boolval( $_GET['_wpz-insta_show-overlay'] ) : true,
-				'show-media-type-icons'           => isset( $_GET['_wpz-insta_show-media-type-icons'] ) ? boolval( $_GET['_wpz-insta_show-media-type-icons'] ) : true,
-				'image-size'                      => isset( $_GET['_wpz-insta_image-size'] ) ? intval( $_GET['_wpz-insta_image-size'] ) : 600,
-				'hover-likes'                     => isset( $_GET['_wpz-insta_hover-likes'] ) ? boolval( $_GET['_wpz-insta_hover-likes'] ) : true,
-				'hover-link'                      => isset( $_GET['_wpz-insta_hover-link'] ) ? boolval( $_GET['_wpz-insta_hover-link'] ) : true,
-				'hover-caption'                   => isset( $_GET['_wpz-insta_hover-caption'] ) ? boolval( $_GET['_wpz-insta_hover-caption'] ) : false,
-				'hover-username'                  => isset( $_GET['_wpz-insta_hover-username'] ) ? boolval( $_GET['_wpz-insta_hover-username'] ) : false,
-				'hover-date'                      => isset( $_GET['_wpz-insta_hover-date'] ) ? boolval( $_GET['_wpz-insta_hover-date'] ) : false,
-				'hover-text-color'                => isset( $_GET['_wpz-insta_hover-text-color'] ) ? $this->validate_color( $_GET['_wpz-insta_hover-text-color'] ) : '',
-				'hover-bg-color'                  => isset( $_GET['_wpz-insta_hover-bg-color'] ) ? $this->validate_color( $_GET['_wpz-insta_hover-bg-color'] ) : '',
-			)
-		);*/
-
+		$preview_args = array();
 		$meta_keys = get_registered_meta_keys( 'post', 'wpz-insta_feed' );
 
 		if ( ! empty( $meta_keys ) ) {
@@ -1415,13 +1382,14 @@ class WPZOOM_Instagram_Widget_Settings {
 
 			foreach ( $meta_keys as $key => $args ) {
 				if ( isset( $_GET[ $key ] ) ) {
-
+					$type = $args['type'];
+					$raw_value = $_GET[ $key ];
+					$preview_args[ str_ireplace( '_wpz-insta_', '', $key ) ] = ( 'boolean' == $type ? boolval( $raw_value ) : ( 'integer' == $type ? intval( $raw_value ) : esc_html( '' . $raw_value ) ) );
 				}
-				var_dump(array('key'=>$key,'is_in_get'=>isset($_GET[$key])));
 			}
 		}
 
-		echo '</div>';
+		printf( '<div class="zoom-new-instagram-widget">%s</div>', $display->get_preview( $preview_args ) );
 	}
 
 	public function get_preview_frame() {
