@@ -50,7 +50,7 @@ jQuery(function ($) {
 
 	$.fn.zoomLightbox = function () {
 		return $( this ).each( function () {
-			const $swipe_el = $( this ).closest( '.widget' ).find( '.wpz-insta-lightbox-wrapper > .swiper-container' );
+			const $swipe_el = $( this ).closest( '.zoom-instagram-widget' ).find( '.wpz-insta-lightbox-wrapper > .swiper-container' );
 
 			if ( $swipe_el.length > 0 ) {
 				const $nested   = $swipe_el.find( '.image-wrapper > .swiper-container' );
@@ -98,7 +98,7 @@ jQuery(function ($) {
 				$( this ).find( '.zoom-instagram-link' ).magnificPopup( {
 					items: {
 						type: 'inline',
-						src: $( this ).closest( '.widget' ).find( '.wpz-insta-lightbox-wrapper' )
+						src: $( this ).closest( '.zoom-instagram-widget' ).find( '.wpz-insta-lightbox-wrapper' )
 					},
 					closeBtnInside: false,
 					mainClass: 'wpzoom-lightbox',
@@ -107,7 +107,7 @@ jQuery(function ($) {
 						open: function () {
 							var magnificPopup = $.magnificPopup.instance,
 							currentElement = magnificPopup.st.el;
-			  				//console.log ( currentElement.data( 'mfp-src' ) );
+			  				//console.log( currentElement );
 							this.content.find( '> .swiper-container' ).get(0).swiper.slideTo(
 								this.content.find( '> .swiper-container > .swiper-wrapper > .swiper-slide[data-uid="' + currentElement.data( 'mfp-src' ) + '"]' ).index()
 							);
