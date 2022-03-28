@@ -50,7 +50,7 @@ jQuery(function ($) {
 
 	$.fn.zoomLightbox = function () {
 		return $( this ).each( function () {
-			const $swipe_el = $( this ).closest( '.widget' ).find( '.wpz-insta-lightbox-wrapper > .swiper-container' );
+			const $swipe_el = $( this ).closest( '.zoom-instagram-widget' ).find( '.wpz-insta-lightbox-wrapper > .swiper-container' );
 
 			if ( $swipe_el.length > 0 ) {
 				const $nested   = $swipe_el.find( '.image-wrapper > .swiper-container' );
@@ -98,13 +98,19 @@ jQuery(function ($) {
 				$( this ).find( '.zoom-instagram-link' ).magnificPopup( {
 					items: {
 						type: 'inline',
-						src: $( this ).closest( '.widget' ).find( '.wpz-insta-lightbox-wrapper' )
+						src: $( this ).closest( '.zoom-instagram-widget' ).find( '.wpz-insta-lightbox-wrapper' )
 					},
 					closeBtnInside: false,
 					mainClass: 'wpzoom-lightbox',
 					midClick: true,
 					callbacks: {
 						open: function () {
+<<<<<<< HEAD:src/scripts/frontend/index.js
+=======
+							var magnificPopup = $.magnificPopup.instance,
+							currentElement = magnificPopup.st.el;
+			  				//console.log( currentElement );
+>>>>>>> a6e63fb... Update instagram-widget.js:js/instagram-widget.js
 							this.content.find( '> .swiper-container' ).get(0).swiper.slideTo(
 								this.content.find( '> .swiper-container > .swiper-wrapper > .swiper-slide[data-uid="' + $( this._lastFocusedEl ).data( 'mfp-src' ) + '"]' ).index()
 							);
