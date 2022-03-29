@@ -2,9 +2,9 @@
 Contributors: WPZOOM, nvartolomei, ciorici
 Donate link: https://www.wpzoom.com/
 Tags: instagram, instagram feed, instagram gallery, instagram photos, instagram widget, instagram stories, widget, timeline, social network, latest images, feed, story, stories, insta
-Requires at least: 4.3
-Tested up to: 5.8
-Requires PHP: 5.6
+Requires at least: 5.5
+Tested up to: 5.9
+Requires PHP: 7.2
 Stable tag: trunk
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -70,6 +70,9 @@ Make sure to connect your Instagram account with the plugin. You can do that in 
 
 
 == Changelog ==
+
+= 1.9.5 =
+* Fixed a bug with the lightbox not working in specific themes, including Divi
 
 = 1.9.4 =
 * Minor improvements
