@@ -105,8 +105,11 @@ jQuery(function ($) {
 					midClick: true,
 					callbacks: {
 						open: function () {
+							var magnificPopup = $.magnificPopup.instance,
+							currentElement = magnificPopup.st.el;
+			  				//console.log( currentElement );
 							this.content.find( '> .swiper-container' ).get(0).swiper.slideTo(
-								this.content.find( '> .swiper-container > .swiper-wrapper > .swiper-slide[data-uid="' + $( this._lastFocusedEl ).data( 'mfp-src' ) + '"]' ).index()
+								this.content.find( '> .swiper-container > .swiper-wrapper > .swiper-slide[data-uid="' + currentElement.data( 'mfp-src' ) + '"]' ).index()
 							);
 						}
 					}

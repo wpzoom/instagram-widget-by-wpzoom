@@ -32,12 +32,12 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 			'button_text'                   => esc_html__( 'View on Instagram', 'instagram-widget-by-wpzoom' ),
 			'image-limit'                   => 9,
 			'show-view-on-instagram-button' => true,
-			'show-counts-on-hover'          => false,
+			'show-counts-on-hover'          => true,
 			'show-user-info'                => false,
 			'show-user-bio'                 => false,
-			'lazy-load-images'              => false,
+			'lazy-load-images'              => true,
 			'disable-video-thumbs'          => false,
-			'display-media-type-icons'      => false,
+			'display-media-type-icons'      => true,
 			'lightbox'                      => true,
 			'images-per-row'                => 3,
 			'image-width'                   => 120,
@@ -483,7 +483,7 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 							$count++;
 							$media_id = $item['image-id'];
 							$link     = $item['link'];
-							$src      = $item['original-image-url'];
+							$src      = $item['local-image-url'];
 							$alt      = esc_attr( $item['image-caption'] );
 							$type     = in_array( $item['type'], array( 'VIDEO', 'CAROUSEL_ALBUM' ) ) ? strtolower( $item['type'] ) : false;
 							$is_album = 'carousel_album' == $type;
