@@ -29,7 +29,7 @@
 		}
 
 		.zoom-instagram-widget__header-user {
-			font-size: 10px;
+			font-size: 11px;
 			font-weight: 600;
 			line-height: normal;
 			opacity: 0.5;
@@ -40,10 +40,22 @@
 		}
 
 		.zoom-instagram-widget__header-bio {
-			font-size: 10px;
+			font-size: 11px;
 			font-weight: normal;
 			line-height: 1.6;
 			margin: 5px 0 0;
+		}
+	}
+
+	.zoom-instagram-widget__footer {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 15px;
+		margin: 25px 0 0;
+
+		> * {
+			display: block;
 		}
 	}
 

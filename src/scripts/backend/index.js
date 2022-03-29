@@ -261,10 +261,16 @@ jQuery( function( $ ) {
 		$( '#wpz-insta_tabs-config-cnnct' ).closest( '.wpz-insta_tabs-content' ).find( '> .wpz-insta_sidebar').removeClass( 'hide' );
 	} );
 
+	let formFields = {};
+	let formInitialValues = {};
 	let formChangedValues = {};
 
-	$( 'form#post #title, form#post .wpz-insta_tabs-content > .wpz-insta_sidebar > .wpz-insta_sidebar-left' ).find( 'input, textarea, select' ).not( '.preview-exclude' ).each( function( index ) {
-		$( this ).data( 'uid', index );
+	$( 'form#post #title, form#post .wpz-insta_tabs-content > .wpz-insta_sidebar > .wpz-insta_sidebar-left' ).find( 'input, textarea, select' ).filter( "[name][name!='']" ).not( '.preview-exclude' ).each( function( index ) {
+		formFields[ $.trim( $(this).attr('name') ) ] = $(this);
+	} );
+
+	$.each( formFields, function( i, val ) {
+		formInitialValues[i] = val.is(':checkbox,:radio') ? ( val.is(':checked') ? '1' : '0' ) : $.trim( '' + val.val() );
 	} );
 
 	$( 'form#post #title, form#post .wpz-insta_tabs-content > .wpz-insta_sidebar > .wpz-insta_sidebar-left' ).on(
@@ -274,9 +280,10 @@ jQuery( function( $ ) {
 				let $target = $( e.target );
 
 				if ( ! $target.is( '.preview-exclude' ) ) {
-					let key = $target.data( 'uid' );
+					let key = $target.attr('name');
+					let currentValue = $target.is(':checkbox,:radio') ? ( $target.is(':checked') ? '1' : '0' ) : $.trim( '' + $target.val() );
 
-					if ( $target.val() != $target[0].defaultValue ) {
+					if ( key in formInitialValues && currentValue != formInitialValues[key] ) {
 						if ( ! ( key in formChangedValues ) ) {
 							formChangedValues[key] = true;
 						}

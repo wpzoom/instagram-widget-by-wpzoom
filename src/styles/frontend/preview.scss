@@ -26,5 +26,43 @@ html {
 				border: none;
 			}
 		}
+		
+		.zoom-instagram {
+			.button {
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				gap: 10px;
+				font-family: 'Inter', Tahoma, Verdana, sans-serif;
+				font-size: 13px;
+				font-weight: 600;
+				text-decoration: none;
+				line-height: 35px;
+				color: #fff;
+				background: #3496ff;
+				min-height: 35px;
+				padding: 0 12px;
+				border: 0;
+				border-radius: 2px;
+				transition: all 0.2s ease;
+
+				&:hover,
+				&:active {
+					text-decoration: none;
+					color: #fff;
+					background: #70b5fe;
+				}
+
+				&.disabled {
+					pointer-events: none;
+					opacity: 0.5;
+				}
+
+				> .button-icon {
+					height: 18px;
+					width: 18px;
+				}
+			}
+		}
 	}
 }
