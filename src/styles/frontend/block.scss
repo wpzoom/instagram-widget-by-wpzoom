@@ -1,9 +1,5 @@
 .wp-block-wpzoom-instagram-block,
 .zoom-instagram {
-	background: rgba(0, 0, 0, 0.05);
-	padding: 30px;
-	border: 1px solid rgba(0, 0, 0, 0.05);
-	border-radius: 3px;
 
 	.zoom-instagram {
 		background: none;
@@ -59,30 +55,34 @@
 		}
 	}
 
-	.zoom-instagram-widget__items {
-		display: grid;
-		grid-template-columns: repeat(3, 1fr);
-		gap: 10px;
-		list-style: none !important;
-		padding: 0;
+    /* styling just for the block */
+    .zoom-instagram {
 
-		&::before,
-		&::after {
-			content: "";
-			clear: both;
-			display: table;
-		}
-	}
+        .zoom-instagram-widget__items {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            list-style: none !important;
+            padding: 0;
+            margin: 0;
 
+    		&::before,
+    		&::after {
+    			content: "";
+    			clear: both;
+    			display: table;
+    		}
+    	}
+
+    }
 	.zoom-instagram-widget__item {
 		position: relative;
 		margin: 0;
 		margin-top: 0 !important;
+        list-style-type: none;
 	}
 
 	.zoom-instagram-widget__items {
-		display: grid;
-		grid-template-columns: repeat(3, 1fr);
 
 		&::before,
 		&::after {
@@ -90,7 +90,7 @@
 		}
 
 		.zoom-instagram-widget__item .zoom-instagram-link {
-			padding-bottom: 75%;
+			padding-bottom: 100%;
 		}
 	}
 

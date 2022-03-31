@@ -1,7 +1,23 @@
 /* Widget Grid */
-.zoom-instagram-widget__follow-me { margin-top: 15px; text-align: center; }
+.zoom-instagram-widget__follow-me {
+    margin-top: 15px;
+    text-align: center;
+}
 
-.zoom-instagram-widget__items { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; list-style: none !important; padding: 0; }
+
+/* styling just for the block */
+.zoom-instagram {
+
+    .zoom-instagram-widget__items {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+        list-style: none !important;
+        padding: 0;
+        margin: 0;
+    }
+
+}
 
 .zoom-instagram-widget__item {
 	float: left;
@@ -10,15 +26,19 @@
 }
 
 /* Prevent extra space conflict from theme */
+.widget_block .zoom-instagram-widget__items ul li.zoom-instagram-widget__item,
 .widget.zoom-instagram-widget ul li.zoom-instagram-widget__item,
 .widget.zoom-new-instagram-widget ul li.zoom-instagram-widget__item {
 	padding: 0;
 }
 
+.widget_block .zoom-instagram-widget__items,
 .widget.zoom-new-instagram-widget .zoom-instagram-widget__items {
 	display: grid;
 	grid-template-columns: repeat(3, 1fr);
 	gap: 10px;
+    padding: 0;
+    margin: 0;
 
 	&::before,
 	&::after {
@@ -27,7 +47,7 @@
 
 	.zoom-instagram-widget__item {
 		.zoom-instagram-link {
-			padding-bottom: 75%;
+			padding-bottom: 100%;
 		}
 	}
 }
@@ -309,7 +329,7 @@ a.ig-b-v-24:hover {
 	background-size: cover !important;
 	background-position: center center !important;
 	background-repeat: no-repeat !important;
-	padding-bottom: 75%;
+	padding-bottom: 100%;
 }
 
 .zoom-instagram-widget__items .svg-icon {
