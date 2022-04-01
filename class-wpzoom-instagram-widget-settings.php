@@ -958,7 +958,7 @@ class WPZOOM_Instagram_Widget_Settings {
 										<div id="wpz-insta_feed-user-select-btn" class="wpz-insta_feed-user-select-button button button-primary"><?php _e( 'Select an Account', 'instagram-widget-by-wpzoom' ); ?></div>
 									</div>
 
-									<a href="<?php echo esc_url( $user_edit_link ); ?>" class="wpz-insta_feed-user-select-edit-link"><?php _e( 'Edit account details', 'instagram-widget-by-wpzoom' ); ?></a>
+									<a href="<?php echo esc_url( $user_edit_link ); ?>" target="_blank" class="wpz-insta_feed-user-select-edit-link"><?php _e( 'Edit account details', 'instagram-widget-by-wpzoom' ); ?></a>
 								</div>
 							</div>
 
