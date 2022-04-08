@@ -44,6 +44,8 @@ class Wpzoom_Instagram_Widget_Display {
 	 * @return void
 	 */
 	public function init() {
+		add_image_size( 'wpzoom-instagram-profile-photo-size', 128, 128, false );
+
 		add_shortcode( 'instagram', array( $this, 'get_shortcode_output' ) );
 	}
 
@@ -65,6 +67,7 @@ class Wpzoom_Instagram_Widget_Display {
 					$feed_settings[ $setting_name ] = WPZOOM_Instagram_Widget_Settings::get_feed_setting_value( $feed_id, $setting_name );
 				}
 
+				$feed_settings['feed-id'] = $feed_id;
 				$feed_settings['user-id'] = $user_id;
 
 				return $this->feed_content( $feed_settings );
@@ -138,8 +141,8 @@ class Wpzoom_Instagram_Widget_Display {
 	/**
 	 * Returns the markup for the preview of a feed configured with the given arguments.
 	 *
-	 * @param  array $args The arguments to define how to return the feed preview.
-	 * @return void
+	 * @param  array  $args The arguments to define how to return the feed preview.
+	 * @return string
 	 */
 	public function get_preview( array $args ) {
 		return sprintf(
@@ -173,7 +176,7 @@ class Wpzoom_Instagram_Widget_Display {
 				$show_user_bio = isset( $args['show-account-bio'] ) && boolval( $args['show-account-bio'] );
 				$user_bio = get_the_content( null, false, $user );
 				$show_user_image = isset( $args['show-account-image'] ) && boolval( $args['show-account-image'] );
-				$user_image = get_the_post_thumbnail_url( $user ) ?: plugin_dir_url( __FILE__ ) . 'dist/images/backend/user-avatar.jpg';
+				$user_image = get_the_post_thumbnail_url( $user, 'wpzoom-instagram-profile-photo-size' ) ?: plugin_dir_url( __FILE__ ) . 'dist/images/backend/user-avatar.jpg';
 				$user_account_token = get_post_meta( $user_id, '_wpz-insta_token', true ) ?: '-1';
 
 				if ( '-1' !== $user_account_token ) {
@@ -187,8 +190,8 @@ class Wpzoom_Instagram_Widget_Display {
 					$show_overlay = isset( $args['show-overlay'] ) ? boolval( $args['show-overlay'] ) : true;
 					$show_media_type_icons = isset( $args['show-media-type-icons'] ) ? boolval( $args['show-media-type-icons'] ) : true;
 					$show_view_on_insta_button = isset( $args['show-view-button' ] ) ? boolval( $args['show-view-button' ] ) : true;
-					$image_width = isset( $args['image-size'] ) && intval( $args['image-size'] ) > -1 ? intval( $args['image-size'] ) : 600;
-					$small_class = $image_width <= 180 ? 'small' : '';
+					$image_size = isset( $args['image-size'] ) && in_array( $args['image-size'], array( 'thumbnail', 'low_resolution', 'standard_resolution' ) ) ? $args['image-size'] : 'default_algorithm';
+					$small_class = $image_size <= 180 ? 'small' : '';
 					$svg_icons = plugin_dir_url( __FILE__ ) . 'dist/images/frontend/wpzoom-instagram-icons.svg';
 
 					if ( $lightbox ) {
@@ -197,10 +200,10 @@ class Wpzoom_Instagram_Widget_Display {
 
 					$this->api->set_access_token( $user_account_token );
 
-					$items  = $this->api->get_items( array( 'image-limit' => $amount, 'image-width' => $image_width ) );
+					$items  = $this->api->get_items( array( 'image-limit' => $amount, 'image-resolution' => $image_size, 'image-width' => 320 ) );
 					$errors = $this->api->errors->get_error_messages();
 
-					$output .= '<div class="zoom-instagram">';
+					$output .= '<div class="zoom-instagram' . ( isset( $args['feed-id'] ) ? sprintf( ' feed-%d', intval( $args['feed-id'] ) ) : '' ) . '">';
 
 					if ( ! is_array( $items ) ) {
 						return $this->get_errors( $errors );
@@ -429,7 +432,11 @@ class Wpzoom_Instagram_Widget_Display {
 			}
 		}
 
-		return sprintf( '<p style="margin-top:0.5em">%s</p>', esc_html__( 'Please select an account in the pane to the left to display a feed for...', 'instagram-widget-by-wpzoom' ) );
+		return sprintf(
+			'<div class="zoom-instagram"><p class="select-a-feed">%s%s</p></div>',
+			'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path d="M20 10.8H6.7l4.1-4.5-1.1-1.1-5.8 6.3 5.8 5.8 1.1-1.1-4-3.9H20z" fill="currentColor" stroke="currentColor" stroke-width="1.5"/></svg>',
+			__( 'Please select an account in the panel to the left&hellip;', 'instagram-widget-by-wpzoom' )
+		);
 	}
 
 	/**
@@ -473,14 +480,17 @@ class Wpzoom_Instagram_Widget_Display {
 	 */
 	public function style_content( array $args ) {
 		$output                 = '';
+		$feed_id                = isset( $args['feed-id'] ) ? ".feed-" . $args['feed-id'] : "";
 		$layout                 = isset( $args['layout'] ) ? intval( $args['layout'] ) : 0;
 		$col_num                = isset( $args['col-num'] ) && intval( $args['col-num'] ) !== 3 ? intval( $args['col-num'] ) : 3;
 		$spacing_between        = isset( $args['spacing-between'] ) && intval( $args['spacing-between'] ) > -1 ? intval( $args['spacing-between'] ) : -1;
 		$spacing_between_suffix = $this->get_suffix( isset( $args['spacing-between-suffix'] ) ? intval( $args['spacing-between-suffix'] ) : 0 );
 		$feed_width             = isset( $args['feed-width'] ) ? ( intval( $args['feed-width'] ) ?: 100 ) : 100;
 		$feed_width_suffix      = $this->get_suffix( isset( $args['feed-width-suffix'] ) ? intval( $args['feed-width-suffix'] ) : 2 );
+		$feed_width_full        = $feed_width == 100 && $feed_width_suffix == '%';
 		$feed_height            = isset( $args['feed-height'] ) ? ( intval( $args['feed-height'] ) ?: -1 ) : -1;
 		$feed_height_suffix     = $this->get_suffix( isset( $args['feed-height-suffix'] ) ? intval( $args['feed-height-suffix'] ) : 0 );
+		$feed_height_full       = $feed_height == 100 && $feed_height_suffix == '%';
 		$bg_color               = isset( $args['bg-color'] ) ? $this->validate_color( $args['bg-color'] ) : '';
 		$spacing_around         = isset( $args['spacing-around'] ) ? ( intval( $args['spacing-around'] ) ?: -1 ) : -1;
 		$spacing_around_suffix  = $this->get_suffix( isset( $args['spacing-around-suffix'] ) ? intval( $args['spacing-around-suffix'] ) : 0 );
@@ -494,8 +504,8 @@ class Wpzoom_Instagram_Widget_Display {
 		$hover_text_color       = isset( $args['hover-text-color'] ) ? $this->validate_color( $args['hover-text-color'] ) : '';
 		$hover_bg_color         = isset( $args['hover-bg-color'] ) ? $this->validate_color( $args['hover-bg-color'] ) : '';
 
-		if ( $font_size > -1 || ! empty( $bg_color ) || $spacing_around > -1 ) {
-			$output .= ".zoom-instagram {\n";
+		if ( $font_size > -1 || ! empty( $bg_color ) || $feed_width > -1 || $feed_height > -1 || $spacing_around > -1 ) {
+			$output .= ".zoom-instagram" . $feed_id . " {\n";
 
 			if ( $font_size > -1 ) {
 				$output .= "\tfont-size: " . $font_size . $font_size_suffix . ";\n";
@@ -505,6 +515,14 @@ class Wpzoom_Instagram_Widget_Display {
 				$output .= "\tbackground-color: " . $bg_color . ";\n";
 			}
 
+			if ( $feed_width > -1 && ! $feed_width_full ) {
+				$output .= "\twidth: " . $feed_width . $feed_width_suffix . ";\n";
+			}
+
+			if ( $feed_height > -1 && ! $feed_height_full ) {
+				$output .= "\theight: " . $feed_height . $feed_height_suffix . ";\n";
+			}
+
 			if ( $spacing_around > -1 ) {
 				$output .= "\tpadding: " . $spacing_around . $spacing_around_suffix . ";\n";
 			}
@@ -512,8 +530,8 @@ class Wpzoom_Instagram_Widget_Display {
 			$output .= "}\n\n";
 		}
 
-		if ( 3 !== $col_num || $spacing_between > -1 || $feed_width > -1 || $feed_height > -1 ) {
-			$output .= ".zoom-instagram .zoom-instagram-widget__items {\n";
+		if ( 3 !== $col_num || $spacing_between > -1 ) {
+			$output .= ".zoom-instagram" . $feed_id . " .zoom-instagram-widget__items {\n";
 
 			if ( 3 !== $col_num ) {
 				$output .= "\tgrid-template-columns: repeat(" . $col_num . ", 1fr);\n";
@@ -521,14 +539,6 @@ class Wpzoom_Instagram_Widget_Display {
 
 			if ( $spacing_between > -1 ) {
 				$output .= "\tgap: " . $spacing_between . $spacing_between_suffix . ";\n";
-			}
-
-			if ( $feed_width > -1 ) {
-				$output .= "\twidth: " . $feed_width . $feed_width_suffix . ";\n";
-			}
-
-			if ( $feed_height > -1 ) {
-				$output .= "\theight: " . $feed_height . $feed_height_suffix . ";\n";
 			}
 
 			$output .= "}\n";
@@ -552,6 +562,7 @@ class Wpzoom_Instagram_Widget_Display {
 
 			if ( null !== $feed && $feed instanceof WP_Post ) {
 				$output = $this->style_content( array(
+					'feed-id'                => $feed_id,
 					'layout'                 => intval( get_post_meta( $feed_id, '_wpz-insta_layout', true ) ?: 0 ),
 					'item-num'               => intval( get_post_meta( $feed_id, '_wpz-insta_item-num', true ) ?: 9 ),
 					'col-num'                => intval( get_post_meta( $feed_id, '_wpz-insta_col-num', true ) ?: 3 ),

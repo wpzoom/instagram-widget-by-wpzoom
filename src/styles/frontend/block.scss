@@ -14,14 +14,24 @@
 
 		.zoom-instagram-widget__header-column-left {
 			img {
+				height: 70px;
+				object-fit: cover;
 				border-radius: 50%;
 			}
+		}
+
+		.zoom-instagram-widget__header-column-right {
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
 		}
 
 		.zoom-instagram-widget__header-name {
 			font-size: 14px;
 			font-weight: 600;
-			line-height: normal;
+			line-height: 1.5;
+			padding: 0;
+			margin: 0;
 		}
 
 		.zoom-instagram-widget__header-user {
@@ -29,6 +39,8 @@
 			font-weight: 600;
 			line-height: normal;
 			opacity: 0.5;
+			padding: 0;
+			margin: 0;
 
 			a {
 				text-decoration: none;
@@ -39,12 +51,14 @@
 			font-size: 11px;
 			font-weight: normal;
 			line-height: 1.6;
-			margin: 5px 0 0;
+			padding: 0;
+			margin: 6px 0 0;
 		}
 	}
 
 	.zoom-instagram-widget__footer {
 		display: flex;
+		flex-direction: row;
 		align-items: center;
 		justify-content: center;
 		gap: 15px;
@@ -52,6 +66,37 @@
 
 		> * {
 			display: block;
+		}
+
+		.wpz-insta-view-on-insta-button {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			gap: 6px;
+			font-size: 14px;
+			font-weight: normal;
+			text-decoration: none;
+			letter-spacing: normal;
+			line-height: 1;
+			color: #fff;
+			background-color: #30618a;
+			padding: 8px 12px;
+			border: none;
+			border-radius: 3px;
+			margin: 0;
+			transition: all 0.3s linear;
+
+			&:hover,
+			&:active {
+				text-decoration: none;
+				background-color: #4387bf;
+			}
+
+			.button-icon {
+				height: 18px;
+				width: 18px;
+				transition: all 0.3s linear;
+			}
 		}
 	}
 

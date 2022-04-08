@@ -176,6 +176,20 @@
 	$main-font-color: #242628;
 	$mono-font-family: 'Roboto Mono', monospace;
 
+	&.post-php {
+		#wpbody-content {
+			padding-bottom: 85px;
+
+			> .wrap #poststuff #post-body #post-body-content .wpz-insta_tabs-content .wpz-insta_sidebar {
+				.wpz-insta_sidebar-left .wpz-insta_sidebar-left-section,
+				.wpz-insta_widget-preview .wpz-insta_widget-preview-view {
+					height: calc(100vh - 470px);
+					min-height: 200px;
+				}
+			}
+		}
+	}
+
 	#wpbody-content {
 		padding-bottom: 165px;
 
@@ -185,6 +199,18 @@
 
 		.urgent {
 			color: $red-color;
+		}
+
+		.pro-only {
+			position: absolute;
+			top: 0;
+			right: 0;
+			line-height: 1.5;
+			color: $light-color;
+			background: $orange-color;
+			padding: 0 4px;
+			border-radius: 2px;
+			transform: translate(50%, -50%);
 		}
 
 		> .wrap {
@@ -290,6 +316,30 @@
 
 			.disable {
 				opacity: 0.5;
+			}
+
+			.help {
+				display: inline-block;
+				cursor: help;
+				font-size: 0;
+				vertical-align: text-bottom;
+				height: 16px;
+				width: 16px;
+				opacity: 0.3;
+				transition: all 0.2s ease;
+
+				&::before {
+					content: '';
+					display: block;
+					background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='16' height='16'%3E%3Cpath fill='%23000' fill-rule='evenodd' clip-rule='evenodd' d='M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm-1 16v-2h2v2h-2zm2-3v-1.141A3.991 3.991 0 0016 10a4 4 0 00-8 0h2c0-1.103.897-2 2-2s2 .897 2 2-.897 2-2 2a1 1 0 00-1 1v2h2z'%3E%3C/path%3E%3C/svg%3E");
+					height: 100%;
+					width: 100%;
+					transition: all 0.2s ease;
+				}
+
+				&:hover {
+					opacity: 1;
+				}
 			}
 
 			.button.disabled {
@@ -413,6 +463,16 @@
 					text-decoration: none;
 					color: $secondary-color;
 				}
+
+				&.linked {
+					border-bottom: 1px solid rgba($primary-color, 0.3);
+
+					&:hover,
+					&:active,
+					&:focus {
+						border-bottom-color: rgba($secondary-color, 0.3);
+					}
+				}
 			}
 
 			.wpz-insta_back-button {
@@ -441,6 +501,11 @@
 					margin: 0 6px 0 0;
 					transition: all 0.2s ease;
 				}
+			}
+
+			.wpz-insta_settings-add-new a,
+			#wpz-insta_tabs-config-cnnct .wpz-insta_tabs-config-connect-add {
+				position: relative;
 			}
 
 			.wp-picker-container {
@@ -492,7 +557,7 @@
 
 				.wp-picker-holder {
 					display: block;
-					position: absolute;
+					position: fixed;
 					top: 100%;
 					left: 0;
 					z-index: 999;
@@ -1108,7 +1173,7 @@
 				.wpz-insta_sidebar-left {
 					display: grid;
 					grid-template-rows: auto 1fr;
-					flex-basis: 20%;
+					flex-basis: 28%;
 
 					.wpz-insta_sidebar-left-section-head {
 						display: flex;
@@ -1126,6 +1191,8 @@
 						grid-row: 2;
 						align-self: start;
 						transition: all 0.3s ease;
+						overflow-x: hidden;
+						overflow-y: auto;
 
 						&:not(.active) {
 							pointer-events: none;
@@ -1260,9 +1327,15 @@
 				.wpz-insta_feed-user-select {
 					&.is-set {
 						.wpz-insta_feed-user-select-input {
-							.wpz-insta_feed-user-select-button {
-								pointer-events: none;
-								opacity: 0;
+							.wpz-insta_feed-user-select-button-wrap {
+								.wpz-insta_feed-user-select-button-highlight {
+									display: none;
+								}
+
+								.wpz-insta_feed-user-select-button {
+									pointer-events: none;
+									opacity: 0;
+								}
 							}
 						}
 
@@ -1326,21 +1399,51 @@
 							}
 						}
 
-						.wpz-insta_feed-user-select-button {
+						.wpz-insta_feed-user-select-button-wrap {
+							position: relative;
+							display: flex;
+							align-items: stretch;
+							justify-content: stretch;
 							grid-column: 1;
 							grid-row: 1;
-							font-size: 14px;
-							font-weight: 600;
-							color: $main-font-color;
-							background: transparent;
-							opacity: 1;
-							border: 0;
-							box-shadow: none;
-							transition: all 0.3s ease;
+							pointer-events: none;
 
-							&:hover {
-								color: $light-color;
-								background: $primary-color;
+							.wpz-insta_feed-user-select-button-highlight {
+								display: block;
+								position: absolute;
+								top: -2px;
+								left: -2px;
+								right: -2px;
+								bottom: -2px;
+								z-index: 1;
+								pointer-events: none;
+								border: 0;
+								border-radius: 6px;
+								box-shadow: inset 0 0 1px 1px $primary-color, 0 0 1px 1px $primary-color;
+								transition: all 0.3s ease;
+								animation: highlighting 0.8s infinite;
+							}
+
+							.wpz-insta_feed-user-select-button {
+								display: flex;
+								flex-grow: 1;
+								position: relative;
+								z-index: 2;
+								pointer-events: all;
+								font-size: 14px;
+								font-weight: 600;
+								color: $main-font-color;
+								background: $lighter-grey-color;
+								opacity: 1;
+								border: 0;
+								border-radius: 4px;
+								box-shadow: none;
+								transition: all 0.3s ease;
+
+								&:hover {
+									color: $light-color;
+									background: $primary-color;
+								}
 							}
 						}
 					}
@@ -1471,8 +1574,7 @@
 						gap: 20px;
 						pointer-events: none;
 						user-select: none;
-						padding: 0 0 10px;
-						border-bottom: 2px solid $orange-color;
+						padding: 0;
 
 						legend {
 							display: flex;
@@ -1580,6 +1682,20 @@
 						display: flex;
 						padding: 0;
 						margin: 0;
+						transition: all 0.3s ease;
+
+						&.disabled {
+							pointer-events: none;
+							opacity: 0.3;
+
+							.wpz-insta_widget-preview-header-link.active {
+								background: $light-grey-color;
+
+								svg {
+									fill: $blue-grey-color;
+								}
+							}
+						}
 
 						.wpz-insta_widget-preview-header-link {
 							display: flex;
@@ -1619,14 +1735,16 @@
 
 				.wpz-insta_widget-preview-view {
 					display: flex;
-					align-items: center;
+					align-items: start;
 					justify-content: center;
-					padding: 30px;
+					padding: 0;
 					margin: 0;
+					overflow-x: hidden;
+					overflow-y: auto;
 					transition: all 0.3s ease;
 
 					&.wpz-insta_widget-preview-size-desktop .wpz-insta_widget-preview-view-inner {
-						max-width: 100%;
+						max-width: 1000px;
 					}
 
 					&.wpz-insta_widget-preview-size-tablet .wpz-insta_widget-preview-view-inner {
@@ -1639,18 +1757,14 @@
 
 					.wpz-insta_widget-preview-view-inner {
 						flex-grow: 1;
-						background: $very-light-grey-color;
-						padding: 25px;
-						border: 1px solid $light-grey-color;
-						border-radius: 3px;
-						box-sizing: content-box;
+						padding: 0;
 						transition: all 0.3s ease;
 
 						iframe {
 							display: block;
-							height: 1000px;
-							max-height: 2000px;
+							height: 400px;
 							width: 100%;
+							overflow: hidden;
 						}
 					}
 				}
@@ -1979,6 +2093,20 @@
 			}
 		}
 
+		&.confirm {
+			.wpz-insta_modal-dialog_wrap .wpz-insta_modal-dialog_header .wpz-insta_modal-dialog_header-title::before {
+				content: '?';
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				font-size: 24px;
+				font-weight: 700;
+				color: $light-color;
+				background-color: $main-font-color;
+				background-image: none;
+			}
+		}
+
 		.wpz-insta_modal-dialog_wrap {
 			font-family: $main-font-family;
 			font-size: 14px;
@@ -2039,12 +2167,17 @@
 
 			.wpz-insta_modal-dialog_content {
 				overflow: auto;
+
+				.severe {
+					color: $red-color;
+				}
 			}
 
 			.wpz-insta_modal-dialog_footer {
 				display: flex;
 				align-items: center;
 				justify-content: end;
+				gap: 10px;
 				padding: 20px 0 0;
 				border-top: 1px solid $light-grey-color;
 				margin: 30px 0 0;
@@ -2061,6 +2194,18 @@
 						color: $light-color;
 						background: $secondary-color;
 					}
+
+					&.button-secondary {
+						color: $primary-color;
+						background: transparent;
+						border-color: $primary-color;
+
+						&:hover,
+						&:active {
+							color: $light-color;
+							background-color: $secondary-color;
+						}
+					}
 				}
 			}
 		}
@@ -2074,5 +2219,17 @@
 
 	to {
 		max-height: 100em;
+	}
+}
+
+@keyframes highlighting {
+	0% {
+		transform: scale(1);
+	}
+	50% {
+		transform: scale(1.03, 1.2);
+	}
+	100% {
+		transform: scale(1);
 	}
 }
