@@ -1597,7 +1597,7 @@ class WPZOOM_Instagram_Widget_Settings {
 			<nav class="wpz-insta_settings-main-nav">
 				<ul>
 					<li <?php echo 'wpz-insta_feed' == $current_page ? 'class="active"' : ''; ?>><a href="<?php echo esc_url( admin_url( 'edit.php?post_type=wpz-insta_feed' ) ); ?>"><?php _e( 'Feeds', 'instagram-widget-by-wpzoom' ); ?></a></li>
-					<li <?php echo 'wpz-insta_user' == $current_page ? 'class="active"' : ''; ?>><a href="<?php echo esc_url( admin_url( 'edit.php?post_type=wpz-insta_user' ) ); ?>"><?php _e( 'Users', 'instagram-widget-by-wpzoom' ); ?></a></li>
+					<li <?php echo 'wpz-insta_user' == $current_page ? 'class="active"' : ''; ?>><a href="<?php echo esc_url( admin_url( 'edit.php?post_type=wpz-insta_user' ) ); ?>"><?php _e( 'Accounts', 'instagram-widget-by-wpzoom' ); ?></a></li>
 					<li <?php echo 'support' == $current_page ? 'class="active"' : ''; ?>><a href="<?php echo esc_url( admin_url( 'options-general.php?page=wpz-insta-support' ) ); ?>"><?php _e( 'Support', 'instagram-widget-by-wpzoom' ); ?></a></li>
 				</ul>
 			</nav>
@@ -1621,7 +1621,7 @@ class WPZOOM_Instagram_Widget_Settings {
 			<?php if ( 'wpz-insta_feed' == $current_page ) : ?>
 				<a href="<?php echo esc_url( admin_url( 'post-new.php?post_type=wpz-insta_feed' ) ); ?>" class="button-primary"><?php _e( 'Add new feed', 'instagram-widget-by-wpzoom' ); ?></a>
 			<?php else : ?>
-				<a href="<?php echo esc_url( admin_url( 'post-new.php?post_type=wpz-insta_user' ) ); ?>" class="button-primary<?php echo self::$any_users ? ' disabled' : ''; ?>"><?php _e( 'Add new user', 'instagram-widget-by-wpzoom' ); ?> <small class="pro-only"><?php _e( 'PRO', 'instagram-widget-by-wpzoom' ); ?></small></a>
+				<a href="<?php echo esc_url( admin_url( 'options-general.php?page=wpz-insta-connect' ) ); ?>" class="button-primary<?php echo self::$any_users ? ' disabled' : ''; ?>"><?php _e( 'Connect a new Instagram account', 'instagram-widget-by-wpzoom' ); ?> <?php if ( self::$any_users ) { ?><small class="pro-only"><?php _e( 'PRO', 'instagram-widget-by-wpzoom' ); ?></small><?php } ?></a>
 			<?php endif; ?>
 		</div>
 		<?php
@@ -2328,7 +2328,7 @@ class WPZOOM_Instagram_Widget_Settings {
 				<nav class="wpz-insta_settings-main-nav">
 					<ul>
 						<li><a href="<?php echo esc_url( admin_url( 'edit.php?post_type=wpz-insta_feed' ) ); ?>"><?php _e( 'Feeds', 'instagram-widget-by-wpzoom' ); ?></a></li>
-						<li><a href="<?php echo esc_url( admin_url( 'edit.php?post_type=wpz-insta_user' ) ); ?>"><?php _e( 'Users', 'instagram-widget-by-wpzoom' ); ?></a></li>
+						<li><a href="<?php echo esc_url( admin_url( 'edit.php?post_type=wpz-insta_user' ) ); ?>"><?php _e( 'Accounts', 'instagram-widget-by-wpzoom' ); ?></a></li>
 						<li class="active"><a href="<?php echo esc_url( admin_url( 'options-general.php?page=wpz-insta-support' ) ); ?>"><?php _e( 'Support', 'instagram-widget-by-wpzoom' ); ?></a></li>
 					</ul>
 				</nav>
