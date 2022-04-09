@@ -44,16 +44,15 @@ class WPZOOM_Instagram_Widget_Settings {
 		'show-account-bio'                => array( 'type' => 'boolean', 'default' => true ),
 		'show-view-button'                => array( 'type' => 'boolean', 'default' => true ),
 		'view-button-text'                => array( 'type' => 'string',  'default' => 'View on Instagram' ),
-		'feed-width'                      => array( 'type' => 'number',  'default' => 100 ),
-		'feed-width-suffix'               => array( 'type' => 'integer', 'default' => 2 ),
-		'feed-height'                     => array( 'type' => 'number',  'default' => 100 ),
-		'feed-height-suffix'              => array( 'type' => 'integer', 'default' => 2 ),
+		'view-button-bg-color'            => array( 'type' => 'string',  'default' => '' ),
 		'bg-color'                        => array( 'type' => 'string',  'default' => '' ),
 		'spacing-around'                  => array( 'type' => 'number',  'default' => 10 ),
 		'spacing-around-suffix'           => array( 'type' => 'integer', 'default' => 0 ),
 		'font-size'                       => array( 'type' => 'number',  'default' => 16 ),
 		'font-size-suffix'                => array( 'type' => 'integer', 'default' => 0 ),
 		'image-size'                      => array( 'type' => 'string',  'default' => 'default_algorithm' ),
+		'image-width'                     => array( 'type' => 'number',  'default' => 100 ),
+		'image-width-suffix'              => array( 'type' => 'integer', 'default' => 2 ),
 		'show-overlay'                    => array( 'type' => 'boolean', 'default' => true ),
 		'lazy-load'                       => array( 'type' => 'boolean', 'default' => true ),
 		'lightbox'                        => array( 'type' => 'boolean', 'default' => true ),
@@ -944,10 +943,7 @@ class WPZOOM_Instagram_Widget_Settings {
 			$show_account_bio = (bool) self::get_feed_setting_value( $post->ID, 'show-account-bio' );
 			$show_view_instagram_button = (bool) self::get_feed_setting_value( $post->ID, 'show-view-button' );
 			$view_instagram_button_text = (string) self::get_feed_setting_value( $post->ID, 'view-button-text' );
-			$feed_width = (float) self::get_feed_setting_value( $post->ID, 'feed-width' );
-			$feed_width_suffix = (int) self::get_feed_setting_value( $post->ID, 'feed-width-suffix' );
-			$feed_height = (float) self::get_feed_setting_value( $post->ID, 'feed-height' );
-			$feed_height_suffix = (int) self::get_feed_setting_value( $post->ID, 'feed-height-suffix' );
+			$view_instagram_button_bg_color = (string) $this->validate_color( self::get_feed_setting_value( $post->ID, 'view-button-bg-color' ) );
 			$feed_bg_color = (string) $this->validate_color( self::get_feed_setting_value( $post->ID, 'bg-color' ) );
 			$feed_spacing_around = (float) self::get_feed_setting_value( $post->ID, 'spacing-around' );
 			$feed_spacing_around_suffix = (int) self::get_feed_setting_value( $post->ID, 'spacing-around-suffix' );
@@ -959,6 +955,8 @@ class WPZOOM_Instagram_Widget_Settings {
 			$lazy_load = (bool) self::get_feed_setting_value( $post->ID, 'lazy-load' );
 			$show_media_type_icons = (bool) self::get_feed_setting_value( $post->ID, 'show-media-type-icons' );
 			$image_size = (string) self::get_feed_setting_value( $post->ID, 'image-size' );
+			$image_width = (float) self::get_feed_setting_value( $post->ID, 'image-width' );
+			$image_width_suffix = (int) self::get_feed_setting_value( $post->ID, 'image-width-suffix' );
 			$feed_hover_media_type_icons = (bool) self::get_feed_setting_value( $post->ID, 'hover-media-type-icons' );
 			$feed_hover_link = (bool) self::get_feed_setting_value( $post->ID, 'hover-link' );
 			$feed_hover_autoplay = (bool) self::get_feed_setting_value( $post->ID, 'hover-autoplay' );
@@ -1197,6 +1195,13 @@ class WPZOOM_Instagram_Widget_Settings {
 										<strong class="wpz-insta_table-cell"><?php esc_html_e( 'Button text', 'instagram-widget-by-wpzoom' ); ?></strong>
 										<div class="wpz-insta_table-cell"><input type="text" name="_wpz-insta_view-button-text" value="<?php echo esc_attr( $view_instagram_button_text ); ?>" class="widefat" /></div>
 									</label>
+
+									<label class="wpz-insta_table-row">
+										<strong class="wpz-insta_table-cell"><?php esc_html_e( 'Button color', 'instagram-widget-by-wpzoom' ); ?></strong>
+										<div class="wpz-insta_table-cell">
+											<input type="text" name="_wpz-insta_view-button-bg-color" value="<?php echo esc_attr( $view_instagram_button_bg_color ); ?>" size="8" class="wpz-insta_color-picker" />
+										</div>
+									</label>
 								</div>
 							</div>
 
@@ -1204,36 +1209,6 @@ class WPZOOM_Instagram_Widget_Settings {
 								<h4 class="wpz-insta_sidebar-section-title"><?php esc_html_e( 'Feed', 'instagram-widget-by-wpzoom' ); ?></h4>
 
 								<div class="wpz-insta_feed-general wpz-insta_table">
-									<label class="wpz-insta_table-row">
-										<strong class="wpz-insta_table-cell"><?php esc_html_e( 'Width', 'instagram-widget-by-wpzoom' ); ?></strong>
-										<div class="wpz-insta_table-cell">
-											<div class="wpz-insta_suffixed-number-input">
-												<input type="number" name="_wpz-insta_feed-width" value="<?php echo esc_attr( $feed_width ); ?>" size="3" min="1" max="5000" step="1" />
-
-												<select name="_wpz-insta_feed-width-suffix">
-													<option value="0"<?php selected( $feed_width_suffix, 0 ); ?>><?php esc_html_e( 'px', 'instagram-widget-by-wpzoom' ); ?></option>
-													<option value="1"<?php selected( $feed_width_suffix, 1 ); ?>><?php esc_html_e( 'em', 'instagram-widget-by-wpzoom' ); ?></option>
-													<option value="2"<?php selected( $feed_width_suffix, 2 ); ?>><?php esc_html_e( '%', 'instagram-widget-by-wpzoom' ); ?></option>
-												</select>
-											</div>
-										</div>
-									</label>
-
-									<label class="wpz-insta_table-row">
-										<strong class="wpz-insta_table-cell"><?php esc_html_e( 'Height', 'instagram-widget-by-wpzoom' ); ?></strong>
-										<div class="wpz-insta_table-cell">
-											<div class="wpz-insta_suffixed-number-input">
-												<input type="number" name="_wpz-insta_feed-height" value="<?php echo esc_attr( $feed_height ); ?>" size="3" min="1" max="5000" step="1" />
-
-												<select name="_wpz-insta_feed-height-suffix">
-													<option value="0"<?php selected( $feed_height_suffix, 0 ); ?>><?php esc_html_e( 'px', 'instagram-widget-by-wpzoom' ); ?></option>
-													<option value="1"<?php selected( $feed_height_suffix, 1 ); ?>><?php esc_html_e( 'em', 'instagram-widget-by-wpzoom' ); ?></option>
-													<option value="2"<?php selected( $feed_height_suffix, 2 ); ?>><?php esc_html_e( '%', 'instagram-widget-by-wpzoom' ); ?></option>
-												</select>
-											</div>
-										</div>
-									</label>
-
 									<label class="wpz-insta_table-row">
 										<strong class="wpz-insta_table-cell"><?php esc_html_e( 'Background color', 'instagram-widget-by-wpzoom' ); ?></strong>
 										<div class="wpz-insta_table-cell">
@@ -1288,6 +1263,21 @@ class WPZOOM_Instagram_Widget_Settings {
 													<?php esc_html_e( 'Standard Resolution (640x640)', 'instagram-widget-by-wpzoom' ); ?>
 												</option>
 											</select>
+										</div>
+									</label>
+
+									<label class="wpz-insta_table-row">
+										<strong class="wpz-insta_table-cell"><?php esc_html_e( 'Image Width', 'instagram-widget-by-wpzoom' ); ?></strong>
+										<div class="wpz-insta_table-cell">
+											<div class="wpz-insta_suffixed-number-input">
+												<input type="number" name="_wpz-insta_image-width" value="<?php echo esc_attr( $image_width ); ?>" size="3" min="1" max="5000" step="1" />
+
+												<select name="_wpz-insta_image-width-suffix">
+													<option value="0"<?php selected( $image_width_suffix, 0 ); ?>><?php esc_html_e( 'px', 'instagram-widget-by-wpzoom' ); ?></option>
+													<option value="1"<?php selected( $image_width_suffix, 1 ); ?>><?php esc_html_e( 'em', 'instagram-widget-by-wpzoom' ); ?></option>
+													<option value="2"<?php selected( $image_width_suffix, 2 ); ?>><?php esc_html_e( '%', 'instagram-widget-by-wpzoom' ); ?></option>
+												</select>
+											</div>
 										</div>
 									</label>
 
