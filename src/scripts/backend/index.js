@@ -276,7 +276,7 @@ jQuery( function( $ ) {
 	let formChangedValues = {};
 	let formSubmitted = false;
 
-	$( 'form#post #title, form#post .wpz-insta_tabs-content > .wpz-insta_sidebar > .wpz-insta_sidebar-left' ).find( 'input, textarea, select' ).filter( "[name][name!='']" ).not( '.preview-exclude' ).each( function( index ) {
+	$( 'form#post .wpz-insta_tabs-content > .wpz-insta_sidebar > .wpz-insta_sidebar-left' ).find( 'input, textarea, select' ).add( 'form#post #title' ).filter( "[name][name!='']" ).not( '.preview-exclude' ).each( function( index ) {
 		formFields[ $.trim( $(this).attr('name') ) ] = $(this);
 	} );
 
@@ -290,11 +290,11 @@ jQuery( function( $ ) {
 		'input change',
 		debounce(
 			( e ) => {
-				let $target = $( e.target );
+				const $target = $( e.target );
 
 				if ( ! $target.is( '.preview-exclude' ) ) {
-					let key = $target.attr('name');
-					let currentValue = $target.is(':checkbox,:radio') ? ( $target.is(':checked') ? '1' : '0' ) : $.trim( '' + $target.val() );
+					const key          = $target.attr('name'),
+					      currentValue = $target.is(':checkbox,:radio') ? ( $target.is(':checked') ? '1' : '0' ) : $.trim( '' + $target.val() );
 
 					if ( key in formInitialValues && currentValue != formInitialValues[key] ) {
 						if ( ! ( key in formChangedValues ) ) {

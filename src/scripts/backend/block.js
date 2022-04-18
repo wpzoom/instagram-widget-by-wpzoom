@@ -40,7 +40,7 @@ registerBlockType( 'wpzoom/instagram-block', {
 	apiVersion: 2,
 	title: 'Instagram',
 	icon: 'instagram',
-	category: 'widgets',
+	category: 'wpzoom-blocks',
 	attributes: {
 		feed: {
 			type: 'integer',

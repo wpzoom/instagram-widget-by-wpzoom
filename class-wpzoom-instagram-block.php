@@ -42,6 +42,7 @@ class Wpzoom_Instagram_Block {
 		$this->display = Wpzoom_Instagram_Widget_Display::getInstance();
 
 		add_action( 'init', array( $this, 'init' ) );
+		add_filter( 'block_categories_all', array( $this, 'block_categories' ), 10, 2 );
 	}
 
 	/**
@@ -105,6 +106,7 @@ class Wpzoom_Instagram_Block {
 			'wpzoom/instagram-block',
 			array(
 				'api_version'     => 2,
+				'category'        => 'wpzoom-blocks',
 				'editor_script'   => 'wpz-insta_block-backend-script',
 				'script'          => 'wpz-insta_block-frontend-script',
 				'style'           => 'wpz-insta_block-frontend-style',
@@ -117,6 +119,25 @@ class Wpzoom_Instagram_Block {
 				),
 			)
 		);
+	}
+
+	/**
+	 * Add the WPZOOM block category if needed.
+	 */
+	public function block_categories( $categories ) {
+		if ( empty( $categories ) || ( ! empty( $categories ) && is_array( $categories ) && ! in_array( 'wpzoom-blocks', wp_list_pluck( $categories, 'slug' ) ) ) ) {
+			$categories = array_merge(
+				$categories,
+				array(
+					array(
+						'slug'  => 'wpzoom-blocks',
+						'title' => __( 'WPZOOM - Blocks', 'instagram-widget-by-wpzoom' ),
+					),
+				)
+			);
+		}
+
+		return $categories;
 	}
 
 	/**
