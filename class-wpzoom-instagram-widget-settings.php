@@ -48,7 +48,7 @@ class WPZOOM_Instagram_Widget_Settings {
 		'bg-color'                        => array( 'type' => 'string',  'default' => '' ),
 		'spacing-around'                  => array( 'type' => 'number',  'default' => 10 ),
 		'spacing-around-suffix'           => array( 'type' => 'integer', 'default' => 0 ),
-		'font-size'                       => array( 'type' => 'number',  'default' => 16 ),
+		'font-size'                       => array( 'type' => 'number',  'default' => 14 ),
 		'font-size-suffix'                => array( 'type' => 'integer', 'default' => 0 ),
 		'image-size'                      => array( 'type' => 'string',  'default' => 'default_algorithm' ),
 		'image-width'                     => array( 'type' => 'number',  'default' => 100 ),
@@ -174,7 +174,7 @@ class WPZOOM_Instagram_Widget_Settings {
 				),
 				'supports'            => array(
 					'title',
-					'thumbnail',
+					'thumbnaiicon-wrapl',
 					'custom-fields',
 				),
 				'hierarchical'        => false,
@@ -317,6 +317,7 @@ class WPZOOM_Instagram_Widget_Settings {
 		add_action( 'save_post_wpz-insta_user', array( $this, 'save_user' ), 15, 3 );
 		add_action( 'quick_edit_custom_box', array( $this, 'user_quick_edit_box' ), 10, 3 );
 		add_action( 'post_action_wpz-insta_duplicate-feed', array( $this, 'post_action_duplicate_feed' ) );
+		add_action( 'post_edit_form_tag', array( $this, 'post_edit_form_tag' ) );
 
 		if ( current_user_can( 'manage_options' ) && isset( $_GET['wpz-insta-widget-preview'] ) ) {
 			remove_action( 'admin_enqueue_scripts', 'wp_auth_check_load' );
@@ -398,6 +399,12 @@ class WPZOOM_Instagram_Widget_Settings {
 		return $classes . ( self::is_wpzinsta_screen() ? ' wpz-insta-admin' : '' );
 	}
 
+	function post_edit_form_tag( $post ) {
+		if ( 'wpz-insta_feed' == $post->post_type ) {
+			echo ' autocomplete="off"';
+		}
+	}
+
 	function parent_file_menu_filter( $parent_file ) {
 		if ( 'edit.php?post_type=wpz-insta_user' == $parent_file ) {
 			$parent_file = 'edit.php?post_type=wpz-insta_feed';
@@ -424,7 +431,7 @@ class WPZOOM_Instagram_Widget_Settings {
 		$columns['wpz-insta_account-bio'] = __( 'Bio', 'instagram-widget-by-wpzoom' );
 		$columns['wpz-insta_account-token'] = __( 'Access Token', 'instagram-widget-by-wpzoom' );
 		$columns['wpz-insta_account-feeds'] = __( 'Feeds', 'instagram-widget-by-wpzoom' );
-		$columns['wpz-insta_account-id'] = __( 'ID', 'instagram-widget-by-wpzoom' );
+		//$columns['wpz-insta_account-id'] = __( 'ID', 'instagram-widget-by-wpzoom' );
 		$columns['wpz-insta_actions'] = __( 'Actions', 'instagram-widget-by-wpzoom' );
 
 		return $columns;
@@ -439,7 +446,7 @@ class WPZOOM_Instagram_Widget_Settings {
 	function set_custom_edit_columns_sortable_user( $columns ) {
 		$columns['wpz-insta_account-username'] = 'wpz-insta_account-username';
 		$columns['wpz-insta_account-type'] = 'wpz-insta_account-type';
-		$columns['wpz-insta_account-id'] = 'wpz-insta_account-id';
+		//$columns['wpz-insta_account-id'] = 'wpz-insta_account-id';
 
 		return $columns;
 	}
@@ -724,7 +731,7 @@ class WPZOOM_Instagram_Widget_Settings {
 
 				break;
 
-			case 'wpz-insta_account-id' :
+			/*case 'wpz-insta_account-id' :
 				$user_posts = wp_count_posts( 'wpz-insta_user' );
 				$user_amount = property_exists( $user_posts, 'publish' ) ? intval( $user_posts->publish ) : 0;
 				$latest_user = get_posts( array( 'numberposts' => 1, 'orderby' => 'ID', 'post_status' => 'publish', 'post_type' => 'wpz-insta_user' ) );
@@ -733,7 +740,7 @@ class WPZOOM_Instagram_Widget_Settings {
 
 				printf( '%03d', $scaled_id );
 
-				break;
+				break;*/
 
 			case 'wpz-insta_actions' :
 				?>
@@ -815,10 +822,10 @@ class WPZOOM_Instagram_Widget_Settings {
 
 				break;
 
-			case 'wpz-insta_account-id' :
+			/*case 'wpz-insta_account-id' :
 				$query->set( 'orderby', 'id' );
 
-				break;
+				break;*/
 		}
 	}
 
@@ -861,7 +868,7 @@ class WPZOOM_Instagram_Widget_Settings {
 					<div id="major-publishing-actions">
 						<div id="publishing-action">
 							<span class="spinner"></span>
-							<a href="<?php echo esc_url( admin_url( 'edit.php?post_type=wpz-insta_feed' ) ); ?>" class="button button-secondary button-large"><?php _e( 'Cancel', 'instagram-widget-by-wpzoom' ); ?></a>
+							<a id="wpz-insta-edit-cancel" href="<?php echo esc_url( admin_url( 'edit.php?post_type=wpz-insta_feed' ) ); ?>" class="button button-secondary button-large"><?php _e( 'Cancel', 'instagram-widget-by-wpzoom' ); ?></a>
 							<input type="submit" name="save" id="publish" class="button button-primary button-large button-positive disabled" value="<?php _e( 'Save', 'instagram-widget-by-wpzoom' ); ?>" />
 						</div>
 					</div>

@@ -7,6 +7,7 @@
 
 /* styling just for the block */
 .zoom-instagram {
+	font-size: 14px;
 	overflow: hidden;
 
 	.zoom-instagram-widget__header {
@@ -29,7 +30,7 @@
 		}
 
 		.zoom-instagram-widget__header-name {
-			font-size: 14px;
+			font-size: 1em;
 			font-weight: 600;
 			line-height: 1.5;
 			padding: 0;
@@ -37,7 +38,7 @@
 		}
 
 		.zoom-instagram-widget__header-user {
-			font-size: 11px;
+			font-size: 0.786em;
 			font-weight: 600;
 			line-height: normal;
 			opacity: 0.5;
@@ -50,7 +51,7 @@
 		}
 
 		.zoom-instagram-widget__header-bio {
-			font-size: 11px;
+			font-size: 0.786em;
 			font-weight: normal;
 			line-height: 1.6;
 			padding: 0;
@@ -258,18 +259,18 @@ a.ig-b-v-24:hover {
 	background-size: 100%;
 }
 
-.zoom-instagram-widget__item .hover-layout.small .hover-controls .dashicons{
+.zoom-instagram-widget__item .hover-layout.small .hover-controls .dashicons {
 	font-size: 15px;
 	width: 15px;
 	height: 15px;
 }
 
-.zoom-instagram-widget__item .hover-layout.small .zoom-instagram-icon-wrap .zoom-svg-instagram-stroke{
+.zoom-instagram-widget__item .hover-layout.small .zoom-instagram-icon-wrap .zoom-svg-instagram-stroke {
 	width: 18px;
 	height: 18px;
 }
 
-.zoom-instagram-widget__item .hover-layout.small .hover-controls .counter{
+.zoom-instagram-widget__item .hover-layout.small .hover-controls .counter {
 	padding-left: 1px;
 	padding-right: 4px;
 	font-size: 11px;
@@ -301,11 +302,9 @@ a.ig-b-v-24:hover {
 }
 
 .zoom-instagram-widget-user-info .zoom-instagram-widget-user-info-about-data {
-
 	display: flex;
 	justify-content: space-between;
 	margin-bottom: 10px;
-
 }
 
 .zoom-instagram-widget-user-info .zoom-instagram-widget-user-info-stats{
@@ -344,33 +343,33 @@ a.ig-b-v-24:hover {
 	text-decoration: none;
 }
 
-.zoom-instagram-widget-user-info .zoom-instagram-widget-user-info-counts{
+.zoom-instagram-widget-user-info .zoom-instagram-widget-user-info-counts {
 	font-weight: 600;
 }
 
-.zoom-instagram-widget-user-info .zoom-instagram-widget-user-info-counts-subhead{
+.zoom-instagram-widget-user-info .zoom-instagram-widget-user-info-counts-subhead {
 	/*color: #999;*/
 	opacity: .7;
 	font-size: 14px;
 }
 
-.zoom-instagram-widget-user-info-grey-color{
+.zoom-instagram-widget-user-info-grey-color {
 	/*color: #b0b0b0;*/
 }
-.zoom-instagram-widget-user-info-middle-cell{
+.zoom-instagram-widget-user-info-middle-cell {
 	padding: 0px 20px;
 }
 
-.zoom-instagram-widget-user-info .zoom-instagram-widget-user-info-fullname{
+.zoom-instagram-widget-user-info .zoom-instagram-widget-user-info-fullname {
 	font-weight: 600;
 	font-size: 16px;
 }
 
-.zoom-instagram-widget-user-info .zoom-instagram-widget-user-info-names-wrapper{
+.zoom-instagram-widget-user-info .zoom-instagram-widget-user-info-names-wrapper {
 	padding-right: 20px;
 	word-break: break-word;
 }
-.zoom-instagram-widget-user-info .zoom-instagram-widget-user-info-username{
+.zoom-instagram-widget-user-info .zoom-instagram-widget-user-info-username {
 	font-size: 14px;
 	font-weight: 600;
 	word-break: break-all;
@@ -383,7 +382,7 @@ a.ig-b-v-24:hover {
 	margin: 0 0 15px;
 }
 
-.zoom-instagram-widget-user-info .zoom-instagram-widget-user-info-fullname{
+.zoom-instagram-widget-user-info .zoom-instagram-widget-user-info-fullname {
 	/*color: #262626;*/
 }
 
@@ -395,7 +394,7 @@ a.ig-b-v-24:hover {
 	padding-bottom: 100%;
 }
 
-.zoom-instagram-widget__items .svg-icon {
+.zoom-instagram-widget__items .zoom-instagram-widget__item .svg-icon {
 	position: absolute;
 	width: 32px;
 	padding: 8px;
@@ -404,6 +403,17 @@ a.ig-b-v-24:hover {
 	top: 0;
 	right: 0;
 	z-index: 1;
+	transition: opacity 0.25s ease-in-out;
+	-moz-transition: opacity 0.25s ease-in-out;
+	-webkit-transition: opacity 0.25s ease-in-out;
+}
+
+.zoom-instagram-widget__items .zoom-instagram-widget__item.media-icons-hover .svg-icon {
+	opacity: 0;
+}
+
+.zoom-instagram-widget__items .zoom-instagram-widget__item.media-icons-hover:hover .svg-icon {
+	opacity: 1;
 }
 
 /** Lightbox **/
@@ -517,12 +527,13 @@ a.ig-b-v-24:hover {
 	text-align: center;
 	height: 600px;
 	width: 600px;
+	max-width: 600px;
     background: #000;
 }
 
 .wpz-insta-lightbox-wrapper > .swiper-container {
 	pointer-events: none;
-	width: 70%;
+	width: 50%;
 	height: 100%;
 }
 

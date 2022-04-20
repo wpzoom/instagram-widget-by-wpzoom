@@ -189,6 +189,7 @@ class Wpzoom_Instagram_Widget_Display {
 					$lightbox = isset( $args['lightbox'] ) ? boolval( $args['lightbox'] ) : true;
 					$show_overlay = isset( $args['show-overlay'] ) ? boolval( $args['show-overlay'] ) : true;
 					$show_media_type_icons = isset( $args['show-media-type-icons'] ) ? boolval( $args['show-media-type-icons'] ) : true;
+					$show_media_type_icons_on_hover = isset( $args['hover-media-type-icons'] ) ? boolval( $args['hover-media-type-icons'] ) : true;
 					$show_view_on_insta_button = isset( $args['show-view-button' ] ) ? boolval( $args['show-view-button' ] ) : true;
 					$image_size = isset( $args['image-size'] ) && in_array( $args['image-size'], array( 'thumbnail', 'low_resolution', 'standard_resolution' ) ) ? $args['image-size'] : 'default_algorithm';
 					$small_class = $image_size <= 180 ? 'small' : '';
@@ -277,7 +278,7 @@ class Wpzoom_Instagram_Widget_Display {
 								$src = $item['original-image-url'];
 							}
 
-							$output .= '<li class="zoom-instagram-widget__item" ' . $inline_attrs . '>';
+							$output .= '<li class="zoom-instagram-widget__item' . ( $show_media_type_icons_on_hover ? ' media-icons-hover' : '' ) . '" ' . $inline_attrs . '>';
 
 							$inline_style = '';
 							if ( empty( $instance['lazy-load-images'] ) ) {
@@ -287,7 +288,7 @@ class Wpzoom_Instagram_Widget_Display {
 							if ( $show_overlay ) {
 								$output .= '<div class="hover-layout zoom-instagram-widget__overlay zoom-instagram-widget__black ' . $small_class . '">';
 
-								if ( $show_media_type_icons && ! empty( $type ) ) {
+								if ( ( $show_media_type_icons || $show_media_type_icons_on_hover ) && ! empty( $type ) ) {
 									$output .= '<svg class="svg-icon" shape-rendering="geometricPrecision"><use xlink:href="' . esc_url( $svg_icons ) . '#' . $type . '"></use></svg>';
 								}
 
@@ -306,7 +307,7 @@ class Wpzoom_Instagram_Widget_Display {
 							} else {
 								$output .= '<a class="zoom-instagram-link" data-src="' . $src . '" style="' . $inline_style . '" data-mfp-src="' . $media_id . '" href="' . $link . '" target="_blank" rel="noopener nofollow" title="' . $alt . '">';
 
-								if ( $show_media_type_icons && ! empty( $type ) ) {
+								if ( ( $show_media_type_icons || $show_media_type_icons_on_hover ) && ! empty( $type ) ) {
 									$output .= '<svg class="svg-icon" shape-rendering="geometricPrecision"><use xlink:href="' . esc_url( $svg_icons ) . '#' . $type . '"></use></svg>';
 								}
 
