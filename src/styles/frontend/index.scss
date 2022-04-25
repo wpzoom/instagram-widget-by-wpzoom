@@ -61,9 +61,10 @@
 
 	.zoom-instagram-widget__footer {
 		display: flex;
-		flex-direction: row;
-		align-items: center;
 		justify-content: center;
+        align-items: center;
+        flex-direction: row;
+        flex-wrap: wrap;
 		gap: 15px;
 		margin: 25px 0 0;
 

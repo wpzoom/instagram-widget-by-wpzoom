@@ -220,7 +220,7 @@ class WPZOOM_Instagram_Widget_Settings {
 				'labels'              => array(
 					'name'                  => _x( 'Instagram Widget', 'Post Type General Name', 'instagram-widget-by-wpzoom' ),
 					'singular_name'         => _x( 'Feed', 'Post Type Singular Name', 'instagram-widget-by-wpzoom' ),
-					'menu_name'             => __( 'Instagram', 'instagram-widget-by-wpzoom' ),
+					'menu_name'             => __( 'Instagram Widget', 'instagram-widget-by-wpzoom' ),
 					'name_admin_bar'        => __( 'Feed', 'instagram-widget-by-wpzoom' ),
 					'archives'              => __( 'Feed Archives', 'instagram-widget-by-wpzoom' ),
 					'attributes'            => __( 'Feed Attributes', 'instagram-widget-by-wpzoom' ),

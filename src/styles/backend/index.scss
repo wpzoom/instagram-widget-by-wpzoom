@@ -148,15 +148,10 @@
 
 
 
-
-
-
-
-
 /* New styles... */
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@600&display=swap');
+// @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
+// @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@600&display=swap');
 
 .wpz-insta-admin {
 	$primary-color: #3496ff;
@@ -172,9 +167,11 @@
 	$red-color: #ec2439;
 	$orange-color: #f57c00;
 	$dark-color: #000;
-	$main-font-family: 'Inter', Tahoma, Verdana, sans-serif;
+    $main-font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif;
+    // $main-font-family: 'Inter', Tahoma, Verdana, sans-serif;
 	$main-font-color: #242628;
-	$mono-font-family: 'Roboto Mono', monospace;
+	// $mono-font-family: 'Roboto Mono', monospace;
+    $mono-font-family: monospace;
 
 	&.post-php {
 		#wpbody-content {
@@ -1468,6 +1465,8 @@
 						padding: 10px;
 						border-radius: 4px;
 						box-shadow: 0 0 0 2px $orange-color;
+                        max-width: 76%;
+                        box-sizing: border-box;
 
 						legend {
 							font-size: 13px;
@@ -1488,6 +1487,7 @@
 
 					> .wpz-insta_feed-layout-option {
 						margin-bottom: 10px !important;
+                        max-width: 21%;
 					}
 
 					.wpz-insta_feed-layout-option {
@@ -1507,6 +1507,8 @@
 							display: block;
 							color: $blue-grey-color;
 							fill: $blue-grey-color;
+                            max-width: 100%;
+                            height: auto;
 						}
 
 						input:checked ~ svg {
@@ -1744,7 +1746,7 @@
 					transition: all 0.3s ease;
 
 					&.wpz-insta_widget-preview-size-desktop .wpz-insta_widget-preview-view-inner {
-						max-width: 1000px;
+						max-width: 500px;
 					}
 
 					&.wpz-insta_widget-preview-size-tablet .wpz-insta_widget-preview-view-inner {
