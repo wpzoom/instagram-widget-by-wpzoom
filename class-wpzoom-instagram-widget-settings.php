@@ -1150,6 +1150,8 @@ class WPZOOM_Instagram_Widget_Settings {
 							<div class="wpz-insta_sidebar-section wpz-insta_sidebar-section-profile">
 								<h4 class="wpz-insta_sidebar-section-title"><?php esc_html_e( 'Profile', 'instagram-widget-by-wpzoom' ); ?></h4>
 
+                                <p class="wpz-insta_sidebar-section-description"><?php esc_html_e( 'Details like Name, Bio or Avatar need to be added manually on the', 'instagram-widget-by-wpzoom' ); ?> <a href="<?php echo esc_url( $user_edit_link ); ?>" target="_blank" class="wpz-insta_feed-user-select-edit-link"><?php esc_html_e( 'account details page', 'instagram-widget-by-wpzoom' ); ?></a>.</p>
+
 								<div class="wpz-insta_feed-profile-general wpz-insta_table">
 									<label class="wpz-insta_table-row">
 										<input type="hidden" name="_wpz-insta_show-account-name" value="0" />
@@ -1157,9 +1159,7 @@ class WPZOOM_Instagram_Widget_Settings {
 										<span>
 											<?php esc_html_e( 'Display account name', 'instagram-widget-by-wpzoom' ); ?>
 
-											<small class="help" aria-hidden="true" title="<?php esc_html_e( 'You must set a display name for the user for this option to have any effect.', 'instagram-widget-by-wpzoom' ); ?>">
-												<?php esc_html_e( 'Info', 'instagram-widget-by-wpzoom' ); ?>
-											</small>
+											<small class="help" aria-hidden="true" data-tooltip="<?php esc_html_e( 'You must set a display name for the user for this option to have any effect.', 'instagram-widget-by-wpzoom' ); ?>"><svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='16' height='16'><path fill='#000' fill-rule='evenodd' clip-rule='evenodd' d='M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm-1 16v-2h2v2h-2zm2-3v-1.141A3.991 3.991 0 0016 10a4 4 0 00-8 0h2c0-1.103.897-2 2-2s2 .897 2 2-.897 2-2 2a1 1 0 00-1 1v2h2z'></path></svg></small>
 										</span>
 									</label>
 
@@ -1175,9 +1175,7 @@ class WPZOOM_Instagram_Widget_Settings {
 										<span>
 											<?php esc_html_e( 'Display account image', 'instagram-widget-by-wpzoom' ); ?>
 
-											<small class="help" aria-hidden="true" title="<?php esc_html_e( 'You must set a profile picture for the user for this option to have any effect.', 'instagram-widget-by-wpzoom' ); ?>">
-												<?php esc_html_e( 'Info', 'instagram-widget-by-wpzoom' ); ?>
-											</small>
+											<small class="help" aria-hidden="true" data-tooltip="<?php esc_html_e( 'You must set a profile picture for the user for this option to have any effect.', 'instagram-widget-by-wpzoom' ); ?>"><svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='16' height='16'><path fill='#000' fill-rule='evenodd' clip-rule='evenodd' d='M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm-1 16v-2h2v2h-2zm2-3v-1.141A3.991 3.991 0 0016 10a4 4 0 00-8 0h2c0-1.103.897-2 2-2s2 .897 2 2-.897 2-2 2a1 1 0 00-1 1v2h2z'></path></svg></small>
 										</span>
 									</label>
 
@@ -1187,9 +1185,7 @@ class WPZOOM_Instagram_Widget_Settings {
 										<span>
 											<?php esc_html_e( 'Display bio in user details', 'instagram-widget-by-wpzoom' ); ?>
 
-											<small class="help" aria-hidden="true" title="<?php esc_html_e( 'You must set a profile bio for the user for this option to have any effect.', 'instagram-widget-by-wpzoom' ); ?>">
-												<?php esc_html_e( 'Info', 'instagram-widget-by-wpzoom' ); ?>
-											</small>
+											<small class="help" aria-hidden="true" data-tooltip="<?php esc_html_e( 'You must set a profile bio for the user for this option to have any effect.', 'instagram-widget-by-wpzoom' ); ?>"><svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='16' height='16'><path fill='#000' fill-rule='evenodd' clip-rule='evenodd' d='M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm-1 16v-2h2v2h-2zm2-3v-1.141A3.991 3.991 0 0016 10a4 4 0 00-8 0h2c0-1.103.897-2 2-2s2 .897 2 2-.897 2-2 2a1 1 0 00-1 1v2h2z'></path></svg></small>
 										</span>
 									</label>
 

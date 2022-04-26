@@ -175,17 +175,22 @@
 
 	&.post-php {
 		#wpbody-content {
-			padding-bottom: 85px;
+			padding-bottom: 0;
 
 			> .wrap #poststuff #post-body #post-body-content .wpz-insta_tabs-content .wpz-insta_sidebar {
 				.wpz-insta_sidebar-left .wpz-insta_sidebar-left-section,
 				.wpz-insta_widget-preview .wpz-insta_widget-preview-view {
-					height: calc(100vh - 470px);
+					// height: calc(100vh - 500px);
+                    max-height: 60vh;
 					min-height: 200px;
 				}
 			}
 		}
 	}
+
+    #wpfooter {
+        position: relative;
+    }
 
 	#wpbody-content {
 		padding-bottom: 165px;
@@ -243,7 +248,7 @@
 			}
 
 			input {
-				font-family: $mono-font-family;
+				// font-family: $mono-font-family;
 				color: $main-font-color;
 
 				&.wpz-insta_input {
@@ -318,25 +323,25 @@
 			.help {
 				display: inline-block;
 				cursor: help;
-				font-size: 0;
+				font-size: 20px;
 				vertical-align: text-bottom;
 				height: 16px;
 				width: 16px;
-				opacity: 0.3;
 				transition: all 0.2s ease;
+                position: relative;
 
-				&::before {
-					content: '';
-					display: block;
-					background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='16' height='16'%3E%3Cpath fill='%23000' fill-rule='evenodd' clip-rule='evenodd' d='M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm-1 16v-2h2v2h-2zm2-3v-1.141A3.991 3.991 0 0016 10a4 4 0 00-8 0h2c0-1.103.897-2 2-2s2 .897 2 2-.897 2-2 2a1 1 0 00-1 1v2h2z'%3E%3C/path%3E%3C/svg%3E");
-					height: 100%;
-					width: 100%;
-					transition: all 0.2s ease;
-				}
+				// &::before {
+				// 	content: '';
+				// 	display: block;
+				// 	background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='16' height='16'%3E%3Cpath fill='%23000' fill-rule='evenodd' clip-rule='evenodd' d='M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm-1 16v-2h2v2h-2zm2-3v-1.141A3.991 3.991 0 0016 10a4 4 0 00-8 0h2c0-1.103.897-2 2-2s2 .897 2 2-.897 2-2 2a1 1 0 00-1 1v2h2z'%3E%3C/path%3E%3C/svg%3E");
+				// 	height: 100%;
+				// 	width: 100%;
+				// 	transition: all 0.2s ease;
+				// }
 
-				&:hover {
-					opacity: 1;
-				}
+				// &:hover {
+				// 	opacity: 1;
+				// }
 			}
 
 			.button.disabled {
@@ -699,7 +704,7 @@
 						background-repeat: no-repeat;
 						background-position: center right;
 						min-width: 100px;
-						max-width: 70%;
+						max-width: 82%;
 						padding: 0 24px 0 0;
 						border: 0;
 						outline: none;
@@ -1126,7 +1131,7 @@
 					grid-column: 1;
 					grid-row: 1;
 					align-self: start;
-					transition: all 0.3s ease;
+					// transition: all 0.3s ease;
 
 					&:not(.active) {
 						pointer-events: none;
@@ -1224,7 +1229,7 @@
 				.wpz-insta_sidebar-section-title {
 					font-size: 18px;
 					font-weight: 600;
-					margin: 0 0 10px;
+					margin: 0 0 15px;
 
 					&.smaller-title {
 						font-size: 14px;
@@ -1457,7 +1462,7 @@
 					gap: 10px;
 					max-height: 999em;
 					margin: 0 0 20px;
-					transition: all 0.3s ease;
+					// transition: all 0.3s ease;
 
 					.wpz-insta_feed-layout-pro {
 						display: flex;
@@ -2011,7 +2016,7 @@
 		border: 1px solid $light-grey-color;
 		border-radius: 3px;
 		box-shadow: 1px 1px 2px rgba($dark-color, 0.1);
-		margin: 3em 0 1em;
+		margin: 20px 0;
 
 		.wpz-insta_settings-footer-logo {
 			padding: 0;
@@ -2234,4 +2239,68 @@
 	100% {
 		transform: scale(1);
 	}
+}
+
+
+/**
+ * Tooltip Styles
+ */
+
+/* Add this attribute to the element that needs a tooltip */
+[data-tooltip] {
+  position: relative;
+  z-index: 2;
+  cursor: pointer;
+}
+
+/* Hide the tooltip content by default */
+[data-tooltip]:before,
+[data-tooltip]:after {
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Position tooltip above the element */
+[data-tooltip]:before {
+  position: absolute;
+  bottom: 150%;
+  left: 50%;
+  margin-bottom: 5px;
+  margin-left: -100px;
+  padding: 7px;
+  width: 200px;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+  background-color: #000;
+  background-color: hsla(0, 0%, 20%, 0.9);
+  color: #fff;
+  content: attr(data-tooltip);
+  text-align: center;
+  font-size: 14px;
+  line-height: 1.2;
+}
+
+/* Triangle hack to make tooltip look like a speech bubble */
+[data-tooltip]:after {
+  position: absolute;
+  bottom: 150%;
+  left: 50%;
+  margin-left: -5px;
+  width: 0;
+  border-top: 5px solid #000;
+  border-top: 5px solid hsla(0, 0%, 20%, 0.9);
+  border-right: 5px solid transparent;
+  border-left: 5px solid transparent;
+  content: " ";
+  font-size: 0;
+  line-height: 0;
+}
+
+/* Show tooltip content on hover */
+[data-tooltip]:hover:before,
+[data-tooltip]:hover:after {
+  visibility: visible;
+  opacity: 1;
 }

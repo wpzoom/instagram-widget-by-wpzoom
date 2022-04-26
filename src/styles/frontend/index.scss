@@ -18,7 +18,8 @@
 		.zoom-instagram-widget__header-column-left {
 			img {
 				height: 70px;
-				object-fit: cover;
+                width: 70px;
+				// object-fit: cover;
 				border-radius: 50%;
 			}
 		}
@@ -38,7 +39,6 @@
 		}
 
 		.zoom-instagram-widget__header-user {
-			font-size: 0.786em;
 			font-weight: 600;
 			line-height: normal;
 			opacity: 0.5;
@@ -51,7 +51,7 @@
 		}
 
 		.zoom-instagram-widget__header-bio {
-			font-size: 0.786em;
+			font-size: 13px;
 			font-weight: normal;
 			line-height: 1.6;
 			padding: 0;
