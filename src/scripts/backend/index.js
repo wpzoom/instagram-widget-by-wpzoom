@@ -118,7 +118,7 @@ jQuery( function( $ ) {
 
 	$('#the-list').on('click', '#wpz-insta_reconnect', function (e) {
 		e.preventDefault();
-		authenticateInstagram( $(this).attr('href') );
+		window.wpzInstaAuthenticateInstagram( $(this).attr('href') );
 	});
 
     $('.wpzoom-instagram-widget-settings-request-type-wrapper').find('input[type=radio]').on('change', function (e) {
@@ -157,7 +157,7 @@ jQuery( function( $ ) {
 	);
 
 	if ( window.opener && window.location.hash.length > 1 && window.location.hash.includes( 'access_token' ) ) {
-		window.opener.handleReturnedToken( window.location );
+		window.opener.wpzInstaHandleReturnedToken( window.location );
 		window.close();
 	}
 
@@ -188,9 +188,9 @@ jQuery( function( $ ) {
 
 		if ( ! $( this ).is( '.disabled' ) ) {
 			if ( $( this ).is( '#wpz-insta_connect-personal' ) || $( this ).is( '#wpz-insta_connect-business' ) ) {
-				authenticateInstagram( $( this ).attr( 'href' ) );
+				window.wpzInstaAuthenticateInstagram( $( this ).attr( 'href' ) );
 			} else if ( $( this ).is( '#wpz-insta_account-token-button' ) ) {
-				window.handleReturnedToken( 'access_token=' + $( '#wpz-insta_account-token-input' ).val().trim() );
+				window.wpzInstaHandleReturnedToken( 'access_token=' + $( '#wpz-insta_account-token-input' ).val().trim() );
 			}
 		}
 	} );
@@ -204,7 +204,7 @@ jQuery( function( $ ) {
 
 		let $dialog = $('#wpz-insta_modal-dialog');
 
-		closeConnectDoneDialog( $dialog.hasClass('success'), $dialog.hasClass('update') );
+		window.wpzInstaCloseConnectDoneDialog( $dialog.hasClass('success'), $dialog.hasClass('update') );
 	} );
 
 	$( '#wpz-insta_feed-user-select-btn' ).on( 'click', function( e ) {
@@ -383,7 +383,7 @@ jQuery( function( $ ) {
 		'click',
 		debounce(
 			() => {
-				copyToClipboard( $( '#wpz-insta_shortcode' ).val() )
+				window.wpzInstaCopyToClipboard( $( '#wpz-insta_shortcode' ).val() )
 					.then( function() {
 						$( '#wpz-insta_shortcode-copy-btn' ).addClass( 'success' );
 
@@ -407,9 +407,9 @@ jQuery( function( $ ) {
 
 			let id = $(this).closest( 'tr' ).attr( 'id' ).replace( 'post-', '' );
 
-			copyToClipboard( '[instagram feed="' + id + '"]' )
+			window.wpzInstaCopyToClipboard( '[instagram feed="' + id + '"]' )
 				.then( () => {
-					showDialog(
+					window.wpzInstaShowDialog(
 						zoom_instagram_widget_admin.i18n_shortcode_success_title,
 						zoom_instagram_widget_admin.i18n_shortcode_success_content,
 						'success update'
@@ -426,7 +426,7 @@ jQuery( function( $ ) {
 			let isFeed = $(this).hasClass('wpz-insta_actions-menu_delete-feed'),
 			    href = $(this).find('a').attr('href');
 
-			showConfirmDialog(
+			window.wpzInstaShowConfirmDialog(
 				zoom_instagram_widget_admin[ 'i18n_delete_' + ( isFeed ? 'feed' : 'user' ) + '_confirm_title' ],
 				zoom_instagram_widget_admin[ 'i18n_delete_' + ( isFeed ? 'feed' : 'user' ) + '_confirm_content' ],
 				zoom_instagram_widget_admin[ 'i18n_delete_confirm_button_ok' ],
@@ -436,7 +436,7 @@ jQuery( function( $ ) {
 					window.location = href;
 				}
 
-				closeDialog();
+				window.wpzInstaCloseDialog();
 			} );
 		}
 	)
@@ -454,16 +454,16 @@ jQuery( function( $ ) {
 		}
 	}
 
-	function authenticateInstagram( url, callback ) {
+	window.wpzInstaAuthenticateInstagram = function ( url, callback ) {
 		let popupWidth = 700,
 		    popupHeight = 500,
 		    popupTop = ( window.screen.height - popupHeight ) / 2,
 		    popupLeft = ( window.screen.width - popupWidth ) / 2;
 
 		window.open( url, '', 'width=' + popupWidth + ',height=' + popupHeight + ',left=' + popupLeft + ',top=' + popupTop );
-	}
+	};
 
-	function parseQuery( queryString ) {
+	window.wpzInstaParseQuery = function ( queryString ) {
 		var query = {};
 		var pairs = ( queryString[0] === '?' || queryString[0] === '#' ? queryString.substr(1) : queryString ).split( '&' );
 
@@ -473,10 +473,10 @@ jQuery( function( $ ) {
 		}
 
 		return query;
-	}
+	};
 
-	function showConnectDoneDialog( success, update = false ) {
-		showDialog(
+	window.wpzInstaShowConnectDoneDialog = function ( success, update = false ) {
+		window.wpzInstaShowDialog(
 			( success
 				? ( update
 					? zoom_instagram_widget_admin.i18n_reconnect_success_title
@@ -490,9 +490,9 @@ jQuery( function( $ ) {
 				: zoom_instagram_widget_admin.i18n_connect_fail_content ),
 			( ( success ? 'success' : 'fail' ) + ( update ? ' update' : '' ) )
 		);
-	}
+	};
 
-	function showDialog( title = '[DIALOG TITLE]', content = '[DIALOG CONTENT]', wrapperClass = 'success' ) {
+	window.wpzInstaShowDialog = function ( title = '[DIALOG TITLE]', content = '[DIALOG CONTENT]', wrapperClass = 'success' ) {
 		let $dialog = $( '#wpz-insta_modal-dialog' ),
 		    $title = $dialog.find( '.wpz-insta_modal-dialog_header-title' ),
 		    $content = $dialog.find( '.wpz-insta_modal-dialog_content' ),
@@ -503,9 +503,9 @@ jQuery( function( $ ) {
 		$content.html( '' + content );
 		$buttonCancel.addClass( 'hidden' );
 		$dialog.removeClass().addClass( 'open ' + wrapperClass );
-	}
+	};
 
-	function showConfirmDialog( title = '[DIALOG TITLE]', content = '[DIALOG CONTENT]', okButtonLabel = '[OK]', cancelButtonLabel = '[CANCEL]' ) {
+	window.wpzInstaShowConfirmDialog = function ( title = '[DIALOG TITLE]', content = '[DIALOG CONTENT]', okButtonLabel = '[OK]', cancelButtonLabel = '[CANCEL]' ) {
 		return new Promise( function ( resolve, reject ) {
 			let $dialog = $( '#wpz-insta_modal-dialog' ),
 			    $title = $dialog.find( '.wpz-insta_modal-dialog_header-title' ),
@@ -521,19 +521,19 @@ jQuery( function( $ ) {
 			$buttonCancel.on( 'click', () => resolve( false ) );
 			$dialog.removeClass().addClass( 'open confirm' );
 		} );
-	}
+	};
 
-	function closeConnectDoneDialog( success, update = false ) {
-		closeDialog();
+	window.wpzInstaCloseConnectDoneDialog = function ( success, update = false ) {
+		window.wpzInstaCloseDialog();
 
 		if ( success && ! update ) {
 			window.location.replace( zoom_instagram_widget_admin.feeds_url );
 		}
-	}
+	};
 
-	function closeDialog() {
+	window.wpzInstaCloseDialog = function () {
 		$( '#wpz-insta_modal-dialog' ).removeClass( 'open' );
-	}
+	};
 
 	function debounce( func, timeout = 300 ) {
 		let timer;
@@ -544,7 +544,7 @@ jQuery( function( $ ) {
 		};
 	}
 
-	function copyToClipboard( textToCopy ) {
+	window.wpzInstaCopyToClipboard = function ( textToCopy ) {
 		if ( navigator.clipboard && window.isSecureContext ) {
 			return navigator.clipboard.writeText( textToCopy );
 		} else {
@@ -561,7 +561,7 @@ jQuery( function( $ ) {
 				textArea.remove();
 			} );
 		}
-	}
+	};
 
 	if ( 'inlineEditPost' in window ) {
 		let origInlineEditPost = window.inlineEditPost.edit;
@@ -592,15 +592,15 @@ jQuery( function( $ ) {
 		};
 	}
 
-	window.handleReturnedToken = function (url) {
+	window.wpzInstaHandleReturnedToken = function ( url ) {
 		if ( url ) {
-			let parsedHash = 'hash' in url && '' != ('' + url.hash).trim() ? parseQuery( '' + url.hash ) : {};
+			let parsedHash = 'hash' in url && '' != ('' + url.hash).trim() ? window.wpzInstaParseQuery( '' + url.hash ) : {};
 
 			if ( ! $.isEmptyObject( parsedHash ) ) {
 				let token = 'access_token' in parsedHash ? ('' + parsedHash.access_token).trim() : '-1';
 
 				if ( '' != token && '-1' != token ) {
-					let parsedQuery = 'search' in url && '' != ('' + url.search).trim() ? parseQuery( '' + url.search ) : {};
+					let parsedQuery = 'search' in url && '' != ('' + url.search).trim() ? window.wpzInstaParseQuery( '' + url.search ) : {};
 					let post = ! $.isEmptyObject( parsedQuery ) && 'post' in parsedQuery ? parseInt( parsedQuery.post ) : 0;
 
 					$.post(
@@ -629,7 +629,7 @@ jQuery( function( $ ) {
 								)
 							);
 
-							showConnectDoneDialog(
+							window.wpzInstaShowConnectDoneDialog(
 								response.success,
 								( 'data' in response && 'update' in response.data && response.data.update )
 							);
