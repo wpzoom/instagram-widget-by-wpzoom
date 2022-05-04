@@ -2375,8 +2375,8 @@ class WPZOOM_Instagram_Widget_Settings {
 		if ( self::is_wpzinsta_screen() ) {
 			$text = preg_replace( '/\.\s*\<\/span\>$/is', '', trim( $text ) );
 			$text .= apply_filters( 'wpz-insta_admin-footer-thanks', sprintf(
-				__( ', and using <a href="%s" target="_blank">WPZOOM Instagram</a>.</span>', 'instagram-widget-by-wpzoom' ),
-				esc_url( 'https://wpzoom.com/plugins/instagram-widget/' )
+				__( ', and using the <a href="%s" target="_blank">Instagram Widget by WPZOOM</a>.</span>', 'instagram-widget-by-wpzoom' ),
+				esc_url( 'https://www.wpzoom.com/plugins/instagram-widget/' )
 			) );
 		}
 
