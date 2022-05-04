@@ -36,7 +36,7 @@ function zoom_instagram_widget_register() {
 
 /* Display a notice that can be dismissed */
 
-add_action( 'admin_notices', 'wpzoom_instagram_admin_notice' );
+// add_action( 'admin_notices', 'wpzoom_instagram_admin_notice' );
 
 function wpzoom_instagram_admin_notice() {
 	global $current_user, $pagenow;
@@ -87,7 +87,7 @@ function wpzoom_instagram_admin_notice() {
 	}
 }
 
-add_action( 'admin_init', 'wpzoom_instagram_ignore_admin_notice' );
+// add_action( 'admin_init', 'wpzoom_instagram_ignore_admin_notice' );
 
 function wpzoom_instagram_ignore_admin_notice() {
 	global $current_user;

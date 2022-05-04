@@ -1682,8 +1682,8 @@ class WPZOOM_Instagram_Widget_Settings {
 
 		$settings_link = sprintf(
 			'<a href="%1$s">%2$s</a>',
-			menu_page_url( 'wpzoom-instagram-widget', false ),
-			esc_html__( 'Settings', 'instagram-widget-by-wpzoom' )
+			admin_url( 'edit.php?post_type=wpz-insta_feed' ),
+			esc_html__( 'Manage Feeds', 'instagram-widget-by-wpzoom' )
 		);
 
 		array_unshift( $links, $settings_link );
