@@ -462,7 +462,7 @@
 	pointer-events: all;
 	display: flex;
 	flex-direction: row;
-	flex-wrap: wrap;
+	/*flex-wrap: wrap;*/
 	background-color: white;
 }
 
@@ -673,6 +673,14 @@
 			.delimiter {
 				padding: 0px 10px;
 			}
+		}
+	}
+}
+
+@media screen and (max-width: 1200px) {
+	.wpz-insta-lightbox-wrapper {
+		.wpz-insta-lightbox {
+			flex-wrap: wrap;
 		}
 	}
 }

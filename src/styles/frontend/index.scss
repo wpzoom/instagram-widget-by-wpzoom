@@ -422,7 +422,7 @@ a.ig-b-v-24:hover {
 	pointer-events: all;
 	display: flex;
 	flex-direction: row;
-	flex-wrap: wrap;
+	/*flex-wrap: wrap;*/
 	background-color: white;
 }
 
@@ -626,6 +626,14 @@ a.ig-b-v-24:hover {
 	padding: 0px 10px;
 }
 
+
+@media screen and (max-width: 1200px) {
+	.wpz-insta-lightbox-wrapper {
+		.wpz-insta-lightbox {
+			flex-wrap: wrap;
+		}
+	}
+}
 
 @media screen and (max-width: 860px) {
 

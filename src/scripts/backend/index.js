@@ -353,6 +353,20 @@ jQuery( function( $ ) {
 		}
 	} );
 
+	$( '.wpzinsta-pointer' ).each( function () {
+		$(this).parent().addBack().one( 'click', function ( e ) {
+			e.stopPropagation();
+
+			let $target = $(this);
+
+			if ( $(this).is( 'li' ) ) {
+				$target = $(this).find( '.wpzinsta-pointer' );
+			}
+
+			$target.remove();
+		} );
+	} );
+
 	$( '#post-body-content .wpz-insta_sidebar .wpz-insta_sidebar-left .wpz-insta_sidebar-left-section' ).on( 'scroll', function () {
 		$(this).find( '.wp-picker-holder' ).each( function () {
 			let $parent = $(this).closest('.wp-picker-container');

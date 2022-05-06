@@ -291,6 +291,7 @@ class WPZOOM_Instagram_Widget_Settings {
 		add_action( 'all_admin_notices', array( $this, 'all_admin_notices' ), 100 );
 		add_filter( 'admin_body_class', array( $this, 'admin_body_class_filter' ) );
 		add_filter( 'parent_file', array( $this, 'parent_file_menu_filter' ) );
+		add_filter( 'submenu_file', array( $this, 'submenu_file_filter' ), 10, 2 );
 		add_filter( 'manage_wpz-insta_feed_posts_columns', array( $this, 'set_custom_edit_columns_feed' ) );
 		add_filter( 'manage_wpz-insta_user_posts_columns', array( $this, 'set_custom_edit_columns_user' ) );
 		add_filter( 'manage_edit-wpz-insta_feed_sortable_columns', array( $this, 'set_custom_edit_columns_sortable_feed' ) );
@@ -315,9 +316,46 @@ class WPZOOM_Instagram_Widget_Settings {
 		add_action( 'wp_ajax_inline-save', array( $this, 'ajax_inline_save' ), 1 );
 		add_action( 'save_post_wpz-insta_feed', array( $this, 'save_feed' ), 15, 3 );
 		add_action( 'save_post_wpz-insta_user', array( $this, 'save_user' ), 15, 3 );
+		add_action( 'wp_after_insert_post', array( $this, 'after_insert_post' ), 10, 4 );
 		add_action( 'quick_edit_custom_box', array( $this, 'user_quick_edit_box' ), 10, 3 );
 		add_action( 'post_action_wpz-insta_duplicate-feed', array( $this, 'post_action_duplicate_feed' ) );
 		add_action( 'post_edit_form_tag', array( $this, 'post_edit_form_tag' ) );
+
+		add_action( 'in_admin_header', function() {
+			wp_enqueue_script( 'jquery' );
+			wp_enqueue_style( 'wp-pointer' );
+			wp_enqueue_script( 'wp-pointer' );
+
+			if ( ! get_user_meta( get_current_user_id(), 'wpzinsta-settings-pointer-dismissed', true ) ) :
+				?>
+				<script>
+				jQuery( function( $ ) {
+					$( '#menu-posts-wpz-insta_feed' ).first().pointer( {
+						content: '<?php _e( '<h3>WPZOOM Instagram Widget</h3><h4>Widget Settings</h4><p>You can find the <strong>WPZOOM Instagram Widget</strong> settings here&hellip;</p>', 'instagram-widget-by-wpzoom' ); ?>',
+						position: { edge: 'left', align: 'left' },
+						pointerClass: 'wp-pointer arrow-top',
+						pointerWidth: 420,
+						close: function() {
+							$.post(
+								ajaxurl,
+								{
+									pointer: 'wpzinsta-settings-pointer',
+									action: 'dismiss-wp-pointer',
+								}
+							);
+						},
+					} ).pointer('open');
+				} );
+				</script>
+				<?php
+			endif;
+		} );
+
+		add_action( 'admin_init', function() {
+			if ( isset( $_POST['action'] ) && 'dismiss-wp-pointer' == $_POST['action'] ) {
+				update_user_meta( get_current_user_id(), 'wpzinsta-settings-pointer-dismissed', $_POST['pointer'], true );
+			}
+		} );
 
 		if ( current_user_can( 'manage_options' ) && isset( $_GET['wpz-insta-widget-preview'] ) ) {
 			remove_action( 'admin_enqueue_scripts', 'wp_auth_check_load' );
@@ -417,6 +455,14 @@ class WPZOOM_Instagram_Widget_Settings {
 		}
 
 		return $parent_file;
+	}
+
+	function submenu_file_filter( $submenu_file, $parent_file ) {
+		if ( 'post-new.php?post_type=wpz-insta_feed' == $submenu_file ) {
+			$submenu_file = 'edit.php?post_type=wpz-insta_feed';
+		}
+
+		return $submenu_file;
 	}
 
 	function set_custom_edit_columns_feed( $columns ) {
@@ -845,6 +891,7 @@ class WPZOOM_Instagram_Widget_Settings {
 			$user_id = intval( get_post_meta( $post->ID, '_wpz-insta_user-id', true ) );
 			$user = $user_id > 0 ? get_post( $user_id ) : null;
 			$disabled_class = $user instanceof WP_Post ? '' : 'class="disable"';
+			$embed_pointer = get_user_meta( get_current_user_id(), 'wpzinsta-pointer-feed-embed', true ) ? '<span class="wpzinsta-pointer"><i></i>' . esc_html__( 'Go here if you want to embed this feed', 'instagram-widget-by-wpzoom' ) . '</span>' : '';
 
 			?>
 			<a href="<?php echo esc_url( admin_url( 'edit.php?post_type=wpz-insta_feed' ) ); ?>" class="wpz-insta_back-button">
@@ -865,7 +912,7 @@ class WPZOOM_Instagram_Widget_Settings {
 						<ul>
 							<li class="active"><a href="<?php echo esc_url( '#config' ); ?>"><?php _e( 'Configure', 'instagram-widget-by-wpzoom' ); ?></a></li>
 							<li <?php echo $disabled_class; ?>><a href="<?php echo esc_url( '#design' ); ?>"><?php _e( 'Design', 'instagram-widget-by-wpzoom' ); ?></a></li>
-							<li <?php echo $disabled_class; ?>><a href="<?php echo esc_url( '#embed' ); ?>"><?php _e( 'Embed', 'instagram-widget-by-wpzoom' ); ?></a></li>
+							<li <?php echo $disabled_class; ?>><a href="<?php echo esc_url( '#embed' ); ?>"><?php _e( 'Embed', 'instagram-widget-by-wpzoom' ); ?></a><?php echo $embed_pointer; ?></li>
 						</ul>
 					</nav>
 				</div>
@@ -895,6 +942,10 @@ class WPZOOM_Instagram_Widget_Settings {
 				?>
 			</div>
 			<?php
+
+			if ( metadata_exists( 'user', get_current_user_id(), 'wpzinsta-pointer-feed-embed' ) ) {
+				update_user_meta( get_current_user_id(), 'wpzinsta-pointer-feed-embed', '0' );
+			}
 		}
 	}
 
@@ -989,12 +1040,14 @@ class WPZOOM_Instagram_Widget_Settings {
 			<div class="wpz-insta_tabs-content">
 				<div class="wpz-insta_sidebar active show-pro">
 					<div class="wpz-insta_sidebar-left">
-						<div class="wpz-insta_sidebar-left-section-head">
-							<label>
-								<input type="checkbox" name="_wpz-insta_show-pro" id="wpz-insta_show-pro" value="1" checked class="preview-exclude" />
-								<strong><?php esc_html_e( 'Show PRO options', 'instagram-widget-by-wpzoom' ); ?></strong>
-							</label>
-						</div>
+						<?php if ( apply_filters( 'wpz-insta_admin-pro-options-toggle', true ) ) : ?>
+							<div class="wpz-insta_sidebar-left-section-head">
+								<label>
+									<input type="checkbox" name="_wpz-insta_show-pro" id="wpz-insta_show-pro" value="1" checked class="preview-exclude" />
+									<strong><?php esc_html_e( 'Show PRO options', 'instagram-widget-by-wpzoom' ); ?></strong>
+								</label>
+							</div>
+						<?php endif; ?>
 
 						<div class="wpz-insta_sidebar-left-section active" data-id="#config">
 							<div class="wpz-insta_sidebar-section wpz-insta_sidebar-section-account">
@@ -1489,7 +1542,14 @@ class WPZOOM_Instagram_Widget_Settings {
 					<hr/>
 
 					<h3 class="wpz-insta_tabs-config-connect-subtitle"><?php _e( 'Or add another account&hellip;', 'instagram-widget-by-wpzoom' ); ?></h3>
-					<a href="<?php echo esc_url( admin_url( 'post-new.php?post_type=wpz-insta_user' ) ); ?>" class="wpz-insta_tabs-config-connect-add button button-primary disabled"><?php _e( 'Add New Account', 'instagram-widget-by-wpzoom' ); ?> <small class="pro-only"><?php _e( 'PRO', 'instagram-widget-by-wpzoom' ); ?></small></a>
+					<?php
+					$new_user_link = admin_url( 'post-new.php?post_type=wpz-insta_user' );
+					echo apply_filters(
+						'wpz-insta_select-user-add-button',
+						'<a href="' . esc_url( $new_user_link ) . '" class="wpz-insta_tabs-config-connect-add button button-primary disabled">' . __( 'Add New Account', 'instagram-widget-by-wpzoom' ) . ' <small class="pro-only">' . __( 'PRO', 'instagram-widget-by-wpzoom' ) . '</small></a>',
+						$new_user_link
+					);
+					?>
 				</div>
 			</div>
 			<?php
@@ -1808,6 +1868,7 @@ class WPZOOM_Instagram_Widget_Settings {
 	}
 
 	public function save_user( int $post_ID, WP_Post $post, bool $update ) {
+//var_dump(array('$post_ID'=>$post_ID,'$post'=>$post,'$update'=>$update,'$_POST'=>$_POST,'wp_is_post_revision()'=>wp_is_post_revision($post),'wp_is_post_autosave()'=>wp_is_post_autosave($post),'get_post_status'=>get_post_status($post),'get_registered_meta_keys()'=>get_registered_meta_keys('post','wpz-insta_user')));die;
 		if ( ! wp_is_post_revision( $post ) && ! wp_is_post_autosave( $post ) && 'auto-draft' != get_post_status( $post ) && isset( $_POST ) && ! empty( $_POST ) ) {
 			$meta_keys = get_registered_meta_keys( 'post', 'wpz-insta_user' );
 
@@ -1838,6 +1899,17 @@ class WPZOOM_Instagram_Widget_Settings {
 					}
 				}
 			}
+
+			if ( isset( $_POST['_thumbnail_id'] ) ) {
+				set_post_thumbnail( $post_ID, absint( $_POST['_thumbnail_id'] ) );
+			}
+		}
+	}
+
+	public function after_insert_post( $post_id, $post, $update, $post_before ) {
+		if ( 'wpz-insta_feed' == $post->post_type && 'publish' == $post->post_status && null != $post_before && 'auto-draft' == $post_before->post_status &&
+		     ! metadata_exists( 'user', get_current_user_id(), 'wpzinsta-pointer-feed-embed' ) ) {
+			add_user_meta( get_current_user_id(), 'wpzinsta-pointer-feed-embed', true );
 		}
 	}
 
