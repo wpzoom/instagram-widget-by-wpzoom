@@ -331,7 +331,7 @@ class WPZOOM_Instagram_Widget_Settings {
 				<script>
 				jQuery( function( $ ) {
 					$( '#menu-posts-wpz-insta_feed' ).first().pointer( {
-						content: '<?php _e( '<h3>WPZOOM Instagram Widget</h3><h4>Widget Settings</h4><p>You can find the <strong>WPZOOM Instagram Widget</strong> settings here&hellip;</p>', 'instagram-widget-by-wpzoom' ); ?>',
+						content: '<?php _e( '<h3>📸 Instagram Widget by WPZOOM 2.0</h3><h4>Multiple Instagram Feeds, Gutenberg Block & more!</h4><p>🤳 Big update! You can now create <strong>multiple feeds</strong> and embed them anywhere you want on your website. You can customize your feed with new design options and embed it using our new <strong>Gutenberg block</strong> or shortcode.</p>', 'instagram-widget-by-wpzoom' ); ?>',
 						position: { edge: 'left', align: 'left' },
 						pointerClass: 'wp-pointer arrow-top',
 						pointerWidth: 420,
