@@ -1303,6 +1303,12 @@
 					grid-template-rows: auto 1fr;
 					flex-basis: 28%;
 
+					&.is-pro {
+						.wpz-insta_sidebar-left-section {
+							max-height: 70vh !important;
+						}
+					}
+
 					.wpz-insta_sidebar-left-section-head {
 						display: flex;
 						align-items: center;
@@ -1629,6 +1635,19 @@
 						box-shadow: none;
 						outline: none;
 						margin: 0;
+						transition: all 0.3s ease;
+
+						&.disabled {
+							pointer-events: none;
+							opacity: 0.4;
+						}
+
+						&:hover {
+							svg {
+								color: $darker-blue-grey-color;
+								fill: $darker-blue-grey-color;
+							}
+						}
 
 						input {
 							display: none;
@@ -1640,6 +1659,7 @@
 							fill: $blue-grey-color;
                             max-width: 100%;
                             height: auto;
+							transition: all 0.3s ease;
 						}
 
 						input:checked ~ svg {

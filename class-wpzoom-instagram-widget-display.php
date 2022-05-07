@@ -23,7 +23,7 @@ class Wpzoom_Instagram_Widget_Display {
 	/**
 	 * Is this the pro version?
 	 */
-	private const IS_PRO = false;
+	private $is_pro = false;
 
 	/**
 	 * Returns the *Singleton* instance of this class.
@@ -45,6 +45,8 @@ class Wpzoom_Instagram_Widget_Display {
 	 */
 	public function init() {
 		add_image_size( 'wpzoom-instagram-profile-photo-size', 128, 128, false );
+
+		$this->is_pro = apply_filters( 'wpz-insta_is-pro', false );
 
 		add_shortcode( 'instagram', array( $this, 'get_shortcode_output' ) );
 	}
@@ -323,7 +325,7 @@ class Wpzoom_Instagram_Widget_Display {
 
 						$output .= '</ul>';
 
-						if ( $show_view_on_insta_button || ( $preview || ( self::IS_PRO && isset( $args['show-load-more'] ) && boolval( $args['show-load-more'] ) ) ) ) {
+						if ( $show_view_on_insta_button || ( $preview || ( $this->is_pro && isset( $args['show-load-more'] ) && boolval( $args['show-load-more'] ) ) ) ) {
 							$output .= '<footer class="zoom-instagram-widget__footer">';
 
 							if ( $show_view_on_insta_button ) {
@@ -334,10 +336,10 @@ class Wpzoom_Instagram_Widget_Display {
 								$output .= '</a>';
 							}
 
-							if ( $preview || ( self::IS_PRO && isset( $args['show-load-more'] ) && boolval( $args['show-load-more'] ) ) ) {
+							if ( $preview || ( $this->is_pro && isset( $args['show-load-more'] ) && boolval( $args['show-load-more'] ) ) ) {
 								$load_more_label = isset( $args['load-more-text'] ) ? trim( $args['load-more-text'] ) : __( 'Load More', 'instagram-widget-by-wpzoom' );
-								$output .= '<a href="" target="_blank" class="button button-primary wpz-insta-load-more-button' . ( !self::IS_PRO ? ' disabled' : '' ) . '">';
-								$output .= esc_html( $load_more_label . ( !self::IS_PRO ? __( ' [PRO only]', 'instagram-widget-by-wpzoom' ) : '' ) );
+								$output .= '<a href="" target="_blank" class="button button-primary wpz-insta-load-more-button' . ( ! $this->is_pro ? ' disabled' : '' ) . '">';
+								$output .= esc_html( $load_more_label . ( ! $this->is_pro ? __( ' [PRO only]', 'instagram-widget-by-wpzoom' ) : '' ) );
 								$output .= '</a>';
 							}
 
