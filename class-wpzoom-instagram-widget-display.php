@@ -189,13 +189,9 @@ class Wpzoom_Instagram_Widget_Display {
 					$count = 0;
 					$amount = isset( $args['item-num'] ) ? intval( $args['item-num'] ) : 9;
 					$lightbox = isset( $args['lightbox'] ) ? boolval( $args['lightbox'] ) : true;
-					$show_overlay = isset( $args['show-overlay'] ) ? boolval( $args['show-overlay'] ) : true;
-					$show_media_type_icons = isset( $args['show-media-type-icons'] ) ? boolval( $args['show-media-type-icons'] ) : true;
-					$show_media_type_icons_on_hover = isset( $args['hover-media-type-icons'] ) ? boolval( $args['hover-media-type-icons'] ) : true;
 					$show_view_on_insta_button = isset( $args['show-view-button' ] ) ? boolval( $args['show-view-button' ] ) : true;
+					$show_load_more_button = ( ! $this->is_pro && $preview ) || ( $this->is_pro && isset( $args['show-load-more'] ) && boolval( $args['show-load-more'] ) );
 					$image_size = isset( $args['image-size'] ) && in_array( $args['image-size'], array( 'thumbnail', 'low_resolution', 'standard_resolution' ) ) ? $args['image-size'] : 'default_algorithm';
-					$small_class = $image_size <= 180 ? 'small' : '';
-					$svg_icons = plugin_dir_url( __FILE__ ) . 'dist/images/frontend/wpzoom-instagram-icons.svg';
 
 					if ( $lightbox ) {
 						$attrs .= ' data-lightbox="1"';
@@ -203,7 +199,7 @@ class Wpzoom_Instagram_Widget_Display {
 
 					$this->api->set_access_token( $user_account_token );
 
-					$items  = $this->api->get_items( array( 'image-limit' => $amount, 'image-resolution' => $image_size, 'image-width' => 320 ) );
+					$items  = $this->api->get_items( array( 'image-limit' => $amount, 'image-resolution' => $image_size, 'image-width' => 320, 'include-pagination' => true ) );
 					$errors = $this->api->errors->get_error_messages();
 
 					$output .= '<div class="zoom-instagram' . ( isset( $args['feed-id'] ) ? sprintf( ' feed-%d', intval( $args['feed-id'] ) ) : '' ) . '">';
@@ -243,89 +239,11 @@ class Wpzoom_Instagram_Widget_Display {
 
 						$output .= '<ul class="zoom-instagram-widget__items zoom-instagram-widget__items--no-js"' . $attrs . '>';
 
-						foreach ( $items['items'] as $item ) {
-							$inline_attrs  = '';
-							$overwrite_src = false;
-							$link          = isset( $item['link'] ) ? $item['link'] : '';
-							$src           = isset( $item['image-url'] ) ? $item['image-url'] : '';
-							$media_id      = isset( $item['image-id'] ) ? $item['image-id'] : '';
-							$alt           = isset( $item['image-caption'] ) ? esc_attr( $item['image-caption'] ) : '';
-							$likes         = isset( $item['likes_count'] ) ? intval( $item['likes_count'] ) : 0;
-							$typ           = isset( $item['type'] ) ? strtolower( $item['type'] ) : 'image';
-							$type          = in_array( $typ, array( 'video', 'carousel_album' ) ) ? $typ : false;
-							$is_album      = 'carousel_album' == $type;
-							$is_video      = 'video' == $type;
-							$comments      = isset( $item['comments_count'] ) ? intval( $item['comments_count'] ) : 0;
-
-							if ( ! empty( $media_id ) && empty( $src ) ) {
-								$inline_attrs  = 'data-media-id="' . esc_attr( $media_id ) . '"';
-								$inline_attrs .= 'data-nonce="' . wp_create_nonce( WPZOOM_Instagram_Image_Uploader::get_nonce_action( $media_id ) ) . '"';
-								$overwrite_src = true;
-							}
-
-							if (
-								! empty( $media_id ) &&
-								! empty( $src ) &&
-								! file_exists( $this->convert_url_to_path( $src ) )
-							) {
-								$inline_attrs  = 'data-media-id="' . esc_attr( $media_id ) . '"';
-								$inline_attrs .= 'data-nonce="' . wp_create_nonce( WPZOOM_Instagram_Image_Uploader::get_nonce_action( $media_id ) ) . '"';
-								$inline_attrs .= 'data-regenerate-thumbnails="1"';
-								$overwrite_src = true;
-							}
-
-							$inline_attrs .= 'data-media-type="' . esc_attr( $type ?: 'image' ) . '"';
-
-							if ( $overwrite_src ) {
-								$src = $item['original-image-url'];
-							}
-
-							$output .= '<li class="zoom-instagram-widget__item' . ( $show_media_type_icons_on_hover ? ' media-icons-hover' : '' ) . '" ' . $inline_attrs . '>';
-
-							$inline_style = '';
-							if ( empty( $instance['lazy-load-images'] ) ) {
-								$inline_style .= "background-image: url('" . $src . "');";
-							}
-
-							if ( $show_overlay ) {
-								$output .= '<div class="hover-layout zoom-instagram-widget__overlay zoom-instagram-widget__black ' . $small_class . '">';
-
-								if ( ( $show_media_type_icons || $show_media_type_icons_on_hover ) && ! empty( $type ) ) {
-									$output .= '<svg class="svg-icon" shape-rendering="geometricPrecision"><use xlink:href="' . esc_url( $svg_icons ) . '#' . $type . '"></use></svg>';
-								}
-
-								if ( ! empty( $likes ) && ! empty( $comments ) ) {
-									$output .= '<div class="hover-controls">
-										<span class="dashicons dashicons-heart"></span>
-										<span class="counter">' . $this->format_number( $likes ) . '</span>
-										<span class="dashicons dashicons-format-chat"></span>
-										<span class="counter">' . $this->format_number( $comments ) . '</span>
-									</div>';
-								}
-
-								$output .= '<div class="zoom-instagram-icon-wrap"><a class="zoom-svg-instagram-stroke" href="' . $link . '" rel="noopener nofollow" target="_blank" title="' . $alt . '"></a></div>
-								<a class="zoom-instagram-link" data-src="' . $src . '" style="' . $inline_style . '" data-mfp-src="' . $media_id . '" href="' . $link . '" target="_blank" rel="noopener nofollow" title="' . $alt . '"></a>
-								</div>';
-							} else {
-								$output .= '<a class="zoom-instagram-link" data-src="' . $src . '" style="' . $inline_style . '" data-mfp-src="' . $media_id . '" href="' . $link . '" target="_blank" rel="noopener nofollow" title="' . $alt . '">';
-
-								if ( ( $show_media_type_icons || $show_media_type_icons_on_hover ) && ! empty( $type ) ) {
-									$output .= '<svg class="svg-icon" shape-rendering="geometricPrecision"><use xlink:href="' . esc_url( $svg_icons ) . '#' . $type . '"></use></svg>';
-								}
-
-								$output .= '</a>';
-							}
-
-							$output .= '</li>';
-
-							if ( ++ $count === $amount ) {
-								break;
-							}
-						}
+						$output .= self::items_html( $items['items'], $args );
 
 						$output .= '</ul>';
 
-						if ( $show_view_on_insta_button || ( $preview || ( $this->is_pro && isset( $args['show-load-more'] ) && boolval( $args['show-load-more'] ) ) ) ) {
+						if ( $show_view_on_insta_button || $show_load_more_button ) {
 							$output .= '<footer class="zoom-instagram-widget__footer">';
 
 							if ( $show_view_on_insta_button ) {
@@ -336,11 +254,15 @@ class Wpzoom_Instagram_Widget_Display {
 								$output .= '</a>';
 							}
 
-							if ( $preview || ( $this->is_pro && isset( $args['show-load-more'] ) && boolval( $args['show-load-more'] ) ) ) {
-								$load_more_label = isset( $args['load-more-text'] ) ? trim( $args['load-more-text'] ) : __( 'Load More', 'instagram-widget-by-wpzoom' );
-								$output .= '<a href="" target="_blank" class="button button-primary wpz-insta-load-more-button' . ( ! $this->is_pro ? ' disabled' : '' ) . '">';
-								$output .= esc_html( $load_more_label . ( ! $this->is_pro ? __( ' [PRO only]', 'instagram-widget-by-wpzoom' ) : '' ) );
-								$output .= '</a>';
+							if ( $show_load_more_button ) {
+								$output .= '<form method="POST" autocomplete="off" class="wpzinsta-pro-load-more"' . ( ! $this->is_pro ? ' disabled' : '' ) . '>';
+								$output .= wp_nonce_field( 'wpzinsta-pro-load-more', '_wpnonce', true, false );
+								$output .= '<input type="hidden" name="feed_id" value="' . esc_attr( isset( $args['feed-id'] ) ? intval( $args['feed-id'] ) : -1 ) . '" />';
+								$output .= '<input type="hidden" name="item_amount" value="' . esc_attr( $amount ) . '" />';
+								$output .= '<input type="hidden" name="image_size" value="' . esc_attr( $image_size ) . '" />';
+								$output .= '<input type="hidden" name="next" value="' . ( ! empty( $items ) && array_key_exists( 'paging', $items ) && is_object( $items['paging'] ) && property_exists( $items['paging'], 'next' ) ? esc_url( $items['paging']->next ) : '' ) . '" />';
+								$output .= '<input type="submit" value="' . esc_attr( ( isset( $args['load-more-text'] ) ? trim( $args['load-more-text'] ) : __( 'Load More', 'instagram-widget-by-wpzoom' ) ) . ( ! $this->is_pro ? __( ' [PRO only]', 'instagram-widget-by-wpzoom' ) : '' ) ) . '" />';
+								$output .= '</form>';
 							}
 
 							$output .= '</footer>';
@@ -440,6 +362,110 @@ class Wpzoom_Instagram_Widget_Display {
 			'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path d="M20 10.8H6.7l4.1-4.5-1.1-1.1-5.8 6.3 5.8 5.8 1.1-1.1-4-3.9H20z" fill="currentColor" stroke="currentColor" stroke-width="1.5"/></svg>',
 			__( 'Please select an account in the panel to the left&hellip;', 'instagram-widget-by-wpzoom' )
 		);
+	}
+
+	/**
+	 * Returns the markup for the given feed items, configured with the given arguments.
+	 *
+	 * @param  array  $items The items to generate the markup for.
+	 * @param  array  $args  The arguments to define how to return the feed items.
+	 * @return string        The markup for the given feed items, empty string otherwise.
+	 */
+	public static function items_html( $items, $args ) {
+		$output = '';
+
+		if ( ! empty( $items ) && is_array( $items ) ) {
+			$count = 0;
+			$amount = isset( $args['item-num'] ) ? intval( $args['item-num'] ) : 9;
+			$show_overlay = isset( $args['show-overlay'] ) ? boolval( $args['show-overlay'] ) : true;
+			$show_media_type_icons = isset( $args['show-media-type-icons'] ) ? boolval( $args['show-media-type-icons'] ) : true;
+			$show_media_type_icons_on_hover = isset( $args['hover-media-type-icons'] ) ? boolval( $args['hover-media-type-icons'] ) : true;
+			$image_size = isset( $args['image-size'] ) && in_array( $args['image-size'], array( 'thumbnail', 'low_resolution', 'standard_resolution' ) ) ? $args['image-size'] : 'default_algorithm';
+			$small_class = $image_size <= 180 ? 'small' : '';
+			$svg_icons = plugin_dir_url( __FILE__ ) . 'dist/images/frontend/wpzoom-instagram-icons.svg';
+
+			foreach ( $items as $item ) {
+				$inline_attrs  = '';
+				$overwrite_src = false;
+				$link          = isset( $item['link'] ) ? $item['link'] : '';
+				$src           = isset( $item['image-url'] ) ? $item['image-url'] : '';
+				$media_id      = isset( $item['image-id'] ) ? $item['image-id'] : '';
+				$alt           = isset( $item['image-caption'] ) ? esc_attr( $item['image-caption'] ) : '';
+				$likes         = isset( $item['likes_count'] ) ? intval( $item['likes_count'] ) : 0;
+				$typ           = isset( $item['type'] ) ? strtolower( $item['type'] ) : 'image';
+				$type          = in_array( $typ, array( 'video', 'carousel_album' ) ) ? $typ : false;
+				$is_album      = 'carousel_album' == $type;
+				$is_video      = 'video' == $type;
+				$comments      = isset( $item['comments_count'] ) ? intval( $item['comments_count'] ) : 0;
+
+				if ( ! empty( $media_id ) && empty( $src ) ) {
+					$inline_attrs  = 'data-media-id="' . esc_attr( $media_id ) . '"';
+					$inline_attrs .= 'data-nonce="' . wp_create_nonce( WPZOOM_Instagram_Image_Uploader::get_nonce_action( $media_id ) ) . '"';
+					$overwrite_src = true;
+				}
+
+				if (
+					! empty( $media_id ) &&
+					! empty( $src ) &&
+					! file_exists( self::convert_url_to_path( $src ) )
+				) {
+					$inline_attrs  = 'data-media-id="' . esc_attr( $media_id ) . '"';
+					$inline_attrs .= 'data-nonce="' . wp_create_nonce( WPZOOM_Instagram_Image_Uploader::get_nonce_action( $media_id ) ) . '"';
+					$inline_attrs .= 'data-regenerate-thumbnails="1"';
+					$overwrite_src = true;
+				}
+
+				$inline_attrs .= 'data-media-type="' . esc_attr( $type ?: 'image' ) . '"';
+
+				if ( $overwrite_src ) {
+					$src = $item['original-image-url'];
+				}
+
+				$output .= '<li class="zoom-instagram-widget__item' . ( $show_media_type_icons_on_hover ? ' media-icons-hover' : '' ) . '" ' . $inline_attrs . '>';
+
+				$inline_style = '';
+				if ( empty( $instance['lazy-load-images'] ) ) {
+					$inline_style .= "background-image: url('" . $src . "');";
+				}
+
+				if ( $show_overlay ) {
+					$output .= '<div class="hover-layout zoom-instagram-widget__overlay zoom-instagram-widget__black ' . $small_class . '">';
+
+					if ( ( $show_media_type_icons || $show_media_type_icons_on_hover ) && ! empty( $type ) ) {
+						$output .= '<svg class="svg-icon" shape-rendering="geometricPrecision"><use xlink:href="' . esc_url( $svg_icons ) . '#' . $type . '"></use></svg>';
+					}
+
+					if ( ! empty( $likes ) && ! empty( $comments ) ) {
+						$output .= '<div class="hover-controls">
+							<span class="dashicons dashicons-heart"></span>
+							<span class="counter">' . self::format_number( $likes ) . '</span>
+							<span class="dashicons dashicons-format-chat"></span>
+							<span class="counter">' . self::format_number( $comments ) . '</span>
+						</div>';
+					}
+
+					$output .= '<div class="zoom-instagram-icon-wrap"><a class="zoom-svg-instagram-stroke" href="' . $link . '" rel="noopener nofollow" target="_blank" title="' . $alt . '"></a></div>
+					<a class="zoom-instagram-link" data-src="' . $src . '" style="' . $inline_style . '" data-mfp-src="' . $media_id . '" href="' . $link . '" target="_blank" rel="noopener nofollow" title="' . $alt . '"></a>
+					</div>';
+				} else {
+					$output .= '<a class="zoom-instagram-link" data-src="' . $src . '" style="' . $inline_style . '" data-mfp-src="' . $media_id . '" href="' . $link . '" target="_blank" rel="noopener nofollow" title="' . $alt . '">';
+
+					if ( ( $show_media_type_icons || $show_media_type_icons_on_hover ) && ! empty( $type ) ) {
+						$output .= '<svg class="svg-icon" shape-rendering="geometricPrecision"><use xlink:href="' . esc_url( $svg_icons ) . '#' . $type . '"></use></svg>';
+					}
+
+					$output .= '</a>';
+				}
+
+				$output .= '</li>';
+
+				if ( ++ $count === $amount ) {
+					break;
+				}
+			}
+		}
+
+		return $output;
 	}
 
 	/**
@@ -637,7 +663,7 @@ class Wpzoom_Instagram_Widget_Display {
 	 * @param  int    $num The number to format.
 	 * @return string      The formatted number in a string.
 	 */
-	public function format_number( int $num ) {
+	public static function format_number( int $num ) {
 		if ( $num < 10000 ) {
 			return number_format( $num );
 		}
@@ -656,7 +682,7 @@ class Wpzoom_Instagram_Widget_Display {
 	 * @param  string          $url
 	 * @return string|string[]
 	 */
-	function convert_url_to_path( string $url ) {
+	public static function convert_url_to_path( string $url ) {
 		return str_replace(
 			wp_get_upload_dir()['baseurl'],
 			wp_get_upload_dir()['basedir'],

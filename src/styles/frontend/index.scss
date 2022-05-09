@@ -10,6 +10,11 @@
 	font-size: 14px;
 	overflow: hidden;
 
+	form[disabled] {
+		pointer-events: none;
+		opacity: 0.5;
+	}
+
 	.zoom-instagram-widget__header {
 		display: flex;
 		gap: 20px;
@@ -88,6 +93,14 @@
 	float: left;
 	position: relative;
 	margin-top: 0 !important;
+	transition: all 0.3s ease-in-out;
+
+	&.new {
+		opacity: 0;
+		transform: scale(0);
+		transform-origin: center;
+		animation: show 500ms linear forwards;
+	}
 }
 
 /* Prevent extra space conflict from theme */
@@ -626,6 +639,13 @@ a.ig-b-v-24:hover {
 	padding: 0px 10px;
 }
 
+
+@keyframes show {
+	100% {
+		transform: none;
+		opacity: 1;
+	}
+}
 
 @media screen and (max-width: 1200px) {
 	.wpz-insta-lightbox-wrapper {

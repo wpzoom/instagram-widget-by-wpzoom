@@ -221,6 +221,7 @@ class Wpzoom_Instagram_Widget_API {
 				'image-resolution',
 				'username',
 				'disable-video-thumbs',
+				'include-pagination',
 			)
 		);
 
@@ -229,6 +230,7 @@ class Wpzoom_Instagram_Widget_API {
 		$image_resolution     = ! empty( $sliced['image-resolution'] ) ? $sliced['image-resolution'] : 'default_algorithm';
 		$injected_username    = ! empty( $sliced['username'] ) ? $sliced['username'] : '';
 		$disable_video_thumbs = ! empty( $sliced['disable-video-thumbs'] );
+		$include_pagination   = ! empty( $sliced['include-pagination'] );
 
 		$transient = 'zoom_instagram_is_configured';
 
@@ -245,7 +247,7 @@ class Wpzoom_Instagram_Widget_API {
 
 		$data = json_decode( get_transient( $transient ) );
 		if ( false !== $data && is_object( $data ) && ! empty( $data->data ) ) {
-			return $this->processing_response_data( $data, $image_width, $image_resolution, $image_limit, $disable_video_thumbs );
+			return self::processing_response_data( $data, $image_width, $image_resolution, $image_limit, $disable_video_thumbs, $include_pagination );
 		}
 
 		$is_external_username = ! empty( $this->username ) || ! empty( $injected_username );
@@ -256,6 +258,7 @@ class Wpzoom_Instagram_Widget_API {
 				array(
 					'fields'       => 'media_url,media_type,caption,username,permalink,thumbnail_url,timestamp,children{media_url,media_type,thumbnail_url}',
 					'access_token' => $this->access_token,
+					'limit'        => $image_limit,
 				),
 				'https://graph.instagram.com/me/media'
 			);
@@ -271,9 +274,13 @@ class Wpzoom_Instagram_Widget_API {
 				return false;
 			}
 
-			$data = json_decode( wp_remote_retrieve_body( $response ) );
+			$raw_data = json_decode( wp_remote_retrieve_body( $response ) );
 
-			$data = $this->convert_items_to_old_structure( $data );
+			$data = self::convert_items_to_old_structure( $raw_data );
+
+			if ( $include_pagination && property_exists( $raw_data, 'paging' ) ) {
+				$data->paging = $raw_data->paging;
+			}
 		}
 
 		if ( 'without-access-token' === $this->request_type && ! empty( $is_external_username ) ) {
@@ -297,10 +304,10 @@ class Wpzoom_Instagram_Widget_API {
 			return false;
 		}
 
-		return $this->processing_response_data( $data, $image_width, $image_resolution, $image_limit, $disable_video_thumbs );
+		return self::processing_response_data( $data, $image_width, $image_resolution, $image_limit, $disable_video_thumbs, $include_pagination );
 	}
 
-	public function processing_response_data( $data, $image_width, $image_resolution, $image_limit, $disable_video_thumbs = false ) {
+	public static function processing_response_data( $data, $image_width, $image_resolution, $image_limit, $disable_video_thumbs = false, $include_pagination = false ) {
 		$result   = array();
 		$username = '';
 		$defaults = array(
@@ -336,7 +343,7 @@ class Wpzoom_Instagram_Widget_API {
 				continue;
 			}
 
-			$best_size = $this->get_best_size( $image_width, $image_resolution );
+			$best_size = self::get_best_size( $image_width, $image_resolution );
 			$image_url = $item->images->{$best_size}->url;
 
 			$regexPattern = '/-\d+[Xx]\d+\./';
@@ -364,6 +371,10 @@ class Wpzoom_Instagram_Widget_API {
 			'username' => $username,
 		);
 
+		if ( $include_pagination && property_exists( $data, 'paging' ) ) {
+			$result['paging'] = $data->paging;
+		}
+
 		return $result;
 	}
 
@@ -372,7 +383,7 @@ class Wpzoom_Instagram_Widget_API {
 	 *
 	 * @return string Image size for Instagram API
 	 */
-	protected function get_best_size( $desired_width, $image_resolution = 'default_algorithm' ) {
+	public static function get_best_size( $desired_width, $image_resolution = 'default_algorithm' ) {
 		$size  = 'thumbnail';
 		$sizes = array(
 			'thumbnail'           => 150,
@@ -464,9 +475,10 @@ class Wpzoom_Instagram_Widget_API {
 		);
 	}
 
-	function convert_items_to_old_structure( $data ) {
+	public static function convert_items_to_old_structure( $data ) {
 		$converted       = new stdClass();
 		$converted->data = array();
+		$image_uploader = WPZOOM_Instagram_Image_Uploader::getInstance();
 
 		foreach ( $data->data as $key => $item ) {
 			$converted->data[] = (object) array(
@@ -480,17 +492,17 @@ class Wpzoom_Instagram_Widget_API {
 				),
 				'images'       => (object) array(
 					'thumbnail'           => (object) array(
-						'url'    => $this->image_uploader->get_image( 'thumbnail', $item->media_url, $item->id ),
+						'url'    => $image_uploader->get_image( 'thumbnail', $item->media_url, $item->id ),
 						'width'  => 150,
 						'height' => 150,
 					),
 					'low_resolution'      => (object) array(
-						'url'    => $this->image_uploader->get_image( 'low_resolution', $item->media_url, $item->id ),
+						'url'    => $image_uploader->get_image( 'low_resolution', $item->media_url, $item->id ),
 						'width'  => 320,
 						'height' => 320,
 					),
 					'standard_resolution' => (object) array(
-						'url'    => $this->image_uploader->get_image( 'standard_resolution', $item->media_url, $item->id ),
+						'url'    => $image_uploader->get_image( 'standard_resolution', $item->media_url, $item->id ),
 						'width'  => 640,
 						'height' => 640,
 					),

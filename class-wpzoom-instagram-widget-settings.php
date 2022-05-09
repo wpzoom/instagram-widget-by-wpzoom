@@ -1395,19 +1395,19 @@ class WPZOOM_Instagram_Widget_Settings {
 
 											<label class="wpz-insta_table-row">
 												<input type="hidden" name="_wpz-insta_hover-autoplay" value="0" />
-												<input type="checkbox" name="_wpz-insta_hover-autoplay" value="1"<?php checked( $feed_hover_autoplay ); ?> disabled />
+												<input type="checkbox" name="_wpz-insta_hover-autoplay" value="1"<?php checked( $feed_hover_autoplay ); disabled( $pro_toggle ); ?> />
 												<span><?php esc_html_e( 'Auto-play on hover (videos and albums posts only)', 'instagram-widget-by-wpzoom' ); ?></span>
 											</label>
 
 											<label class="wpz-insta_table-row">
 												<input type="hidden" name="_wpz-insta_hover-tags-feed" value="0" />
-												<input type="checkbox" name="_wpz-insta_hover-tags-feed" value="1"<?php checked( $feed_hover_tags_feed ); ?> disabled />
+												<input type="checkbox" name="_wpz-insta_hover-tags-feed" value="1"<?php checked( $feed_hover_tags_feed ); disabled( $pro_toggle ); ?> />
 												<span><?php esc_html_e( 'Display a feed from tags', 'instagram-widget-by-wpzoom' ); ?></span>
 											</label>
 
 											<label class="wpz-insta_table-row">
 												<input type="hidden" name="_wpz-insta_hover-date" value="0" />
-												<input type="checkbox" name="_wpz-insta_hover-date" value="1"<?php checked( $feed_hover_date ); ?> disabled />
+												<input type="checkbox" name="_wpz-insta_hover-date" value="1"<?php checked( $feed_hover_date ); disabled( $pro_toggle ); ?> />
 												<span><?php esc_html_e( 'Date', 'instagram-widget-by-wpzoom' ); ?></span>
 											</label>
 
@@ -1423,18 +1423,18 @@ class WPZOOM_Instagram_Widget_Settings {
 								<div class="wpz-insta_feed-load-more-general wpz-insta_table">
 									<label class="wpz-insta_table-row">
 										<input type="hidden" name="_wpz-insta_show-load-more" value="0" />
-										<input type="checkbox" name="_wpz-insta_show-load-more" value="1"<?php checked( $show_load_more ); ?> disabled />
+										<input type="checkbox" name="_wpz-insta_show-load-more" value="1"<?php checked( $show_load_more ); disabled( $pro_toggle ); ?> />
 										<span><?php _e( 'Display <strong>Load more</strong> button', 'instagram-widget-by-wpzoom' ); ?></span>
 									</label>
 
 									<label class="wpz-insta_table-row wpz-insta_table-row-full">
 										<strong class="wpz-insta_table-cell"><?php esc_html_e( 'Button text', 'instagram-widget-by-wpzoom' ); ?></strong>
-										<div class="wpz-insta_table-cell"><input type="text" name="_wpz-insta_load-more-text" value="<?php echo esc_attr( $load_more_text ); ?>" class="widefat" disabled /></div>
+										<div class="wpz-insta_table-cell"><input type="text" name="_wpz-insta_load-more-text" value="<?php echo esc_attr( $load_more_text ); ?>" class="widefat"<?php disabled( $pro_toggle ); ?> /></div>
 									</label>
 
 									<label class="wpz-insta_table-row">
 										<strong class="wpz-insta_table-cell"><?php esc_html_e( 'Load more button color', 'instagram-widget-by-wpzoom' ); ?></strong>
-										<div class="wpz-insta_table-cell"><input type="text" name="_wpz-insta_load-more-color" value="<?php echo esc_attr( $load_more_color ); ?>" size="8" class="wpz-insta_color-picker" disabled /></div>
+										<div class="wpz-insta_table-cell"><input type="text" name="_wpz-insta_load-more-color" value="<?php echo esc_attr( $load_more_color ); ?>" size="8" class="wpz-insta_color-picker"<?php disabled( $pro_toggle ); ?> /></div>
 									</label>
 								</div>
 							</div>
