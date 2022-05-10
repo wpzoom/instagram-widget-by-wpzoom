@@ -238,9 +238,7 @@ class Wpzoom_Instagram_Widget_Display {
 						}
 
 						$output .= '<ul class="zoom-instagram-widget__items zoom-instagram-widget__items--no-js"' . $attrs . '>';
-
 						$output .= self::items_html( $items['items'], $args );
-
 						$output .= '</ul>';
 
 						if ( $show_view_on_insta_button || $show_load_more_button ) {
@@ -261,7 +259,7 @@ class Wpzoom_Instagram_Widget_Display {
 								$output .= '<input type="hidden" name="item_amount" value="' . esc_attr( $amount ) . '" />';
 								$output .= '<input type="hidden" name="image_size" value="' . esc_attr( $image_size ) . '" />';
 								$output .= '<input type="hidden" name="next" value="' . ( ! empty( $items ) && array_key_exists( 'paging', $items ) && is_object( $items['paging'] ) && property_exists( $items['paging'], 'next' ) ? esc_url( $items['paging']->next ) : '' ) . '" />';
-								$output .= '<input type="submit" value="' . esc_attr( ( isset( $args['load-more-text'] ) ? trim( $args['load-more-text'] ) : __( 'Load More', 'instagram-widget-by-wpzoom' ) ) . ( ! $this->is_pro ? __( ' [PRO only]', 'instagram-widget-by-wpzoom' ) : '' ) ) . '" />';
+								$output .= '<button type="submit">' . esc_html( ( isset( $args['load-more-text'] ) ? trim( $args['load-more-text'] ) : __( 'Load More', 'instagram-widget-by-wpzoom' ) ) . ( ! $this->is_pro ? __( ' [PRO only]', 'instagram-widget-by-wpzoom' ) : '' ) ) . '</button>';
 								$output .= '</form>';
 							}
 
@@ -270,82 +268,7 @@ class Wpzoom_Instagram_Widget_Display {
 
 						if ( $lightbox ) {
 							$output .= '<div class="wpz-insta-lightbox-wrapper mfp-hide"><div class="swiper-container"><div class="swiper-wrapper">';
-
-							$amount = count( $items );
-							$count = 0;
-
-							foreach ( $items['items'] as $item ) {
-								$count++;
-								$link     = isset( $item['link'] ) ? $item['link'] : '';
-								$src      = isset( $item['original-image-url'] ) ? $item['original-image-url'] : '';
-								$media_id = isset( $item['image-id'] ) ? $item['image-id'] : '';
-								$alt      = isset( $item['image-caption'] ) ? esc_attr( $item['image-caption'] ) : '';
-								$typ      = isset( $item['type'] ) ? strtolower( $item['type'] ) : 'image';
-								$type     = in_array( $typ, array( 'video', 'carousel_album' ) ) ? $typ : false;
-								$is_album = 'carousel_album' == $type;
-								$is_video = 'video' == $type;
-								$children = $is_album && isset( $item['children'] ) && is_object( $item['children'] ) && isset( $item['children']->data ) ? $item['children']->data : false;
-
-								$output .= '<div data-uid="' . $media_id . '" class="swiper-slide wpz-insta-lightbox-item"><div class="wpz-insta-lightbox"><div class="image-wrapper">';
-
-								if ( $is_album && false !== $children ) {
-									$output .= '<div class="swiper-container"><div class="swiper-wrapper wpz-insta-album-images">';
-
-									foreach ( $children as $child ) {
-										$child_type = property_exists( $child, 'media_type' ) && in_array( $child->media_type, array( 'VIDEO', 'CAROUSEL_ALBUM' ) ) ? strtolower( $child->media_type ) : 'image';
-										$thumb = 'video' == $child_type && property_exists( $child, 'thumbnail_url' ) ? strtolower( $child->thumbnail_url ) : '';
-
-										$output .= '<div class="swiper-slide wpz-insta-album-image" data-media-type="' . esc_attr( $child_type ) . '">';
-
-										if ( 'video' == $child_type ) {
-											$output .= '<video controls preload="metadata" poster="' . esc_attr( $thumb ) . '"><source src="' . esc_url( $child->media_url ) . '" type="video/mp4"/>' . esc_html( $alt ) . '</video>';
-										} else {
-											$output .= '<img src="' . esc_url( $child->media_url ) . '" alt="' . esc_attr( $alt ) . '"/>';
-										}
-
-										$output .= '</div>';
-									}
-
-									$output .= '</div><div class="swiper-pagination"></div><div class="swiper-button-prev"></div><div class="swiper-button-next"></div></div>';
-								} else {
-									$output .= '<img src="' . esc_url( $src ) . '" alt="' . esc_attr( $alt ) . '"/>';
-								}
-
-								$output .= '</div>
-								<div class="details-wrapper">
-								<div class="wpz-insta-header">
-									<div class="wpz-insta-avatar">
-										<img src="' . esc_url( $user_image ) . '" alt="' . esc_attr( $user_name_display ) . '" width="42" height="42"/>
-									</div>
-									<div class="wpz-insta-buttons">
-										<div class="wpz-insta-username">
-											<a rel="noopener" target="_blank" href="' . sprintf( 'https://instagram.com/%s', esc_attr( $user_name ) ) . '">' . esc_html( $user_name_display ) . '</a>
-										</div>
-										<div>&bull;</div>
-										<div class="wpz-insta-follow">
-											<a target="_blank" rel="noopener"
-											href="' . sprintf( 'https://instagram.com/%s?ref=badge', esc_attr( $user_name ) ) . '">
-												' . __( 'Follow', 'wpzoom-instagram-widget' ) . '
-											</a>
-										</div>
-									</div>
-								</div>';
-
-								if ( ! empty( $item['image-caption'] ) ) {
-									$output .= '<div class="wpz-insta-caption">' . self::filter_caption( $item['image-caption'] ) . '</div>';
-								}
-
-								if ( ! empty( $item['timestamp'] ) ) {
-									$output .= '<div class="wpz-insta-date">' . sprintf( __( '%s ago' ), human_time_diff( strtotime( $item['timestamp'] ) ) ) . '</div>';
-								}
-
-								$output .= '<div class="view-post">
-								<a href="' . esc_url( $link ) . '" target="_blank" rel="noopener"><span class="dashicons dashicons-instagram"></span>' . __( 'View on Instagram', 'wpzoom-instagram-widget' ) . '</a>
-								<span class="delimiter">|</span>
-								<div class="wpz-insta-pagination">' . sprintf( '%d/%d', $count, $amount ) . '</div>
-								</div></div></div></div>';
-							}
-
+							$output .= self::lightbox_items_html( $items['items'], $user_id );
 							$output .= '</div><div class="swiper-button-prev"></div><div class="swiper-button-next"></div></div></div>';
 						}
 					}
@@ -461,6 +384,103 @@ class Wpzoom_Instagram_Widget_Display {
 
 				if ( ++ $count === $amount ) {
 					break;
+				}
+			}
+		}
+
+		return $output;
+	}
+
+	/**
+	 * Returns the lightbox markup for the given feed items.
+	 *
+	 * @param  array  $items    The items to generate the markup for.
+	 * @param  int    $user_id  The ID of the user to disaply in the user info area.
+	 * @return string           The lightbox markup for the given feed items, empty string otherwise.
+	 */
+	public static function lightbox_items_html( $items, $user_id ) {
+		$output = '';
+
+		if ( ! empty( $items ) && is_array( $items ) ) {
+			$user = get_post( $user_id );
+
+			if ( $user instanceof WP_Post ) {
+				$amount = count( $items );
+				$count = 0;
+				$user_name = get_the_title( $user );
+				$user_name_display = sprintf( '@%s', $user_name );
+				$user_image = get_the_post_thumbnail_url( $user, 'wpzoom-instagram-profile-photo-size' ) ?: plugin_dir_url( __FILE__ ) . 'dist/images/backend/user-avatar.jpg';
+
+				foreach ( $items as $item ) {
+					$count++;
+					$link     = isset( $item['link'] ) ? $item['link'] : '';
+					$src      = isset( $item['original-image-url'] ) ? $item['original-image-url'] : '';
+					$media_id = isset( $item['image-id'] ) ? $item['image-id'] : '';
+					$alt      = isset( $item['image-caption'] ) ? esc_attr( $item['image-caption'] ) : '';
+					$typ      = isset( $item['type'] ) ? strtolower( $item['type'] ) : 'image';
+					$type     = in_array( $typ, array( 'video', 'carousel_album' ) ) ? $typ : false;
+					$is_album = 'carousel_album' == $type;
+					$is_video = 'video' == $type;
+					$children = $is_album && isset( $item['children'] ) && is_object( $item['children'] ) && isset( $item['children']->data ) ? $item['children']->data : false;
+
+					$output .= '<div data-uid="' . $media_id . '" class="swiper-slide wpz-insta-lightbox-item"><div class="wpz-insta-lightbox"><div class="image-wrapper">';
+
+					if ( $is_album && false !== $children ) {
+						$output .= '<div class="swiper-container"><div class="swiper-wrapper wpz-insta-album-images">';
+
+						foreach ( $children as $child ) {
+							$child_type = property_exists( $child, 'media_type' ) && in_array( $child->media_type, array( 'VIDEO', 'CAROUSEL_ALBUM' ) ) ? strtolower( $child->media_type ) : 'image';
+							$thumb = 'video' == $child_type && property_exists( $child, 'thumbnail_url' ) ? strtolower( $child->thumbnail_url ) : '';
+
+							$output .= '<div class="swiper-slide wpz-insta-album-image" data-media-type="' . esc_attr( $child_type ) . '">';
+
+							if ( 'video' == $child_type ) {
+								$output .= '<video controls preload="metadata" poster="' . esc_attr( $thumb ) . '"><source src="' . esc_url( $child->media_url ) . '" type="video/mp4"/>' . esc_html( $alt ) . '</video>';
+							} else {
+								$output .= '<img src="' . esc_url( $child->media_url ) . '" alt="' . esc_attr( $alt ) . '"/>';
+							}
+
+							$output .= '</div>';
+						}
+
+						$output .= '</div><div class="swiper-pagination"></div><div class="swiper-button-prev"></div><div class="swiper-button-next"></div></div>';
+					} else {
+						$output .= '<img src="' . esc_url( $src ) . '" alt="' . esc_attr( $alt ) . '"/>';
+					}
+
+					$output .= '</div>
+					<div class="details-wrapper">
+					<div class="wpz-insta-header">
+						<div class="wpz-insta-avatar">
+							<img src="' . esc_url( $user_image ) . '" alt="' . esc_attr( $user_name_display ) . '" width="42" height="42"/>
+						</div>
+						<div class="wpz-insta-buttons">
+							<div class="wpz-insta-username">
+								<a rel="noopener" target="_blank" href="' . sprintf( 'https://instagram.com/%s', esc_attr( $user_name ) ) . '">' . esc_html( $user_name_display ) . '</a>
+							</div>
+							<div>&bull;</div>
+							<div class="wpz-insta-follow">
+								<a target="_blank" rel="noopener"
+								href="' . sprintf( 'https://instagram.com/%s?ref=badge', esc_attr( $user_name ) ) . '">
+									' . __( 'Follow', 'wpzoom-instagram-widget' ) . '
+								</a>
+							</div>
+						</div>
+					</div>';
+
+					if ( ! empty( $item['image-caption'] ) ) {
+						$output .= '<div class="wpz-insta-caption">' . self::filter_caption( $item['image-caption'] ) . '</div>';
+					}
+
+					if ( ! empty( $item['timestamp'] ) ) {
+						$output .= '<div class="wpz-insta-date">' . sprintf( __( '%s ago' ), human_time_diff( strtotime( $item['timestamp'] ) ) ) . '</div>';
+					}
+
+					$output .= '<div class="view-post">
+					<a href="' . esc_url( $link ) . '" target="_blank" rel="noopener"><span class="dashicons dashicons-instagram"></span>' . __( 'View on Instagram', 'wpzoom-instagram-widget' ) . '</a>
+					<span class="delimiter">|</span>
+					<div class="wpz-insta-pagination">' . sprintf( '%d/%d', $count, $amount ) . '</div>
+					</div></div></div></div>';
 				}
 			}
 		}

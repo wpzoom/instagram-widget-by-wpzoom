@@ -63,6 +63,7 @@
 							}
 						}
 					} );
+					$( this ).find( '.zoom-instagram-link' ).addClass( 'magnific-active' );
 				}
 			} );
 		};

@@ -12,7 +12,10 @@
 
 	form[disabled] {
 		pointer-events: none;
-		opacity: 0.5;
+
+		&:not(.loading) {
+			opacity: 0.5;
+		}
 	}
 
 	.zoom-instagram-widget__header {
