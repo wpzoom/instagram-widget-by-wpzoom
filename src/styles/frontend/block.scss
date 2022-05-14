@@ -144,12 +144,15 @@
     .zoom-instagram {
 
         .zoom-instagram-widget__items {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
             list-style: none !important;
             padding: 0;
             margin: 0;
+
+			&.layout-grid {
+				display: grid;
+				grid-template-columns: repeat(3, 1fr);
+				gap: 10px;
+			}
 
     		&::before,
     		&::after {
@@ -301,7 +304,11 @@
 	}
 
 	.zoom-instagram-widget__overlay {
-		position: relative;
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
 
 		&:after {
 			position: absolute;

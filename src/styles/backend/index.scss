@@ -1276,6 +1276,10 @@
 					&:not(.active) {
 						pointer-events: none;
 						opacity: 0;
+
+						* {
+							pointer-events: none !important;
+						}
 					}
 				}
 			}
