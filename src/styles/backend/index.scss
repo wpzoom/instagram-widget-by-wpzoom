@@ -1355,6 +1355,32 @@
 
 				.wpz-insta_sidebar-right {
 					flex-grow: 1;
+					position: relative;
+
+					&.is-loading {
+						transition: all 0.3s ease;
+
+						&.hide-loading {
+							&::before {
+								opacity: 0;
+							}
+						}
+
+						&::before {
+							content: '';
+							position: absolute;
+							top: 300px;
+							left: 50%;
+							z-index: 1;
+							background-image: url("data:image/svg+xml,%3Csvg version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' viewBox='0 0 50 50' xml:space='preserve'%3E%3Cpath fill='%233496ff' d='M43.935,25.145c0-10.318-8.364-18.683-18.683-18.683c-10.318,0-18.683,8.365-18.683,18.683h4.068c0-8.071,6.543-14.615,14.615-14.615c8.072,0,14.615,6.543,14.615,14.615H43.935z'%3E%3CanimateTransform attributeType='xml' attributeName='transform' type='rotate' from='0 25 25' to='360 25 25' dur='0.6s' repeatCount='indefinite'/%3E%3C/path%3E%3C/svg%3E");
+							background-size: contain;
+							height: 64px;
+							width: 64px;
+							opacity: 1;
+							transform: translateX(-50%);
+							transition: all 0.3s ease;
+						}
+					}
 				}
 			}
 
@@ -1830,6 +1856,8 @@
 			}
 
 			.wpz-insta_widget-preview {
+				position: relative;
+				z-index: 2;
 				padding: 0;
 				margin: 0;
 
@@ -1935,7 +1963,16 @@
 							display: block;
 							height: 400px;
 							width: 100%;
+							visibility: visible;
+							opacity: 1;
 							overflow: hidden;
+							transition: all 0.3s ease;
+
+							&.wpz-insta_preview-hidden {
+								pointer-events: none;
+								visibility: hidden;
+								opacity: 0;
+							}
 						}
 					}
 				}

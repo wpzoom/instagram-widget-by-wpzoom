@@ -583,13 +583,23 @@ class Wpzoom_Instagram_Widget_Display {
 			$output .= ".zoom-instagram" . $feed_id . " .zoom-instagram-widget__items {\n";
 
 			if ( 3 !== $col_num ) {
-				$output .= "\tgrid-template-columns: repeat(" . $col_num . ", 1fr);\ncolumn-count: " . $col_num . ";\n";
+				if ( 1 === $layout ) {
+					$output .= "\twidth: " . ( 100 / $col_num ) . "%;\n";
+				} else {
+					$output .= "\tgrid-template-columns: repeat(" . $col_num . ", 1fr);\ncolumn-count: " . $col_num . ";\n";
+				}
 			}
 
-			if ( $spacing_between > -1 ) {
+			if ( $spacing_between > -1 && 1 !== $layout ) {
 				$output .= "\tgap: " . $spacing_between . $spacing_between_suffix . ";\n";
 			}
 
+			$output .= "}\n";
+		}
+
+		if ( $spacing_between > -1 && 1 === $layout ) {
+			$output .= ".zoom-instagram" . $feed_id . " .zoom-instagram-widget__items .zoom-instagram-widget__item {\n";
+			$output .= "\tpadding: " . ( $spacing_between / 2 ) . $spacing_between_suffix . ";\n";
 			$output .= "}\n";
 		}
 

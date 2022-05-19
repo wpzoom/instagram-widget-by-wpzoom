@@ -190,7 +190,7 @@ jQuery( function( $ ) {
 			if ( $( this ).is( '#wpz-insta_connect-personal' ) || $( this ).is( '#wpz-insta_connect-business' ) ) {
 				window.wpzInstaAuthenticateInstagram( $( this ).attr( 'href' ) );
 			} else if ( $( this ).is( '#wpz-insta_account-token-button' ) ) {
-				window.wpzInstaHandleReturnedToken( 'access_token=' + $( '#wpz-insta_account-token-input' ).val().trim() );
+				window.wpzInstaHandleReturnedToken( $( '#wpz-insta_account-token-input' ).val().trim().replace( /[^a-z0-9-_.]+/gi, '' ), true );
 			}
 		}
 	} );
@@ -341,7 +341,9 @@ jQuery( function( $ ) {
 	} );
 
 	$( '#wpz-insta_widget-preview-view iframe' ).on( 'load', function() {
-		$(this).height( parseInt( $(this).contents().find('body').prop('scrollHeight') ) + 20 );
+		/*$(this).height( parseInt( $(this).contents().find('body').prop('scrollHeight') ) + 20 );*/
+		$(this).removeClass( 'wpz-insta_preview-hidden' );
+		$(this).closest( '.wpz-insta_sidebar-right' ).addClass( 'hide-loading' );
 	} );
 
 	$( '.wpz-insta_color-picker' ).wpColorPicker( {
@@ -606,27 +608,27 @@ jQuery( function( $ ) {
 		};
 	}
 
-	window.wpzInstaHandleReturnedToken = function ( url ) {
+	window.wpzInstaHandleReturnedToken = function ( url, rawToken = false ) {
 		if ( url ) {
-			let parsedHash = 'hash' in url && '' != ('' + url.hash).trim() ? window.wpzInstaParseQuery( '' + url.hash ) : {};
+			const parsedHash = ! rawToken && 'hash' in url && '' != ('' + url.hash).trim() ? window.wpzInstaParseQuery( '' + url.hash ) : {};
 
-			if ( ! $.isEmptyObject( parsedHash ) ) {
-				let token = 'access_token' in parsedHash ? ('' + parsedHash.access_token).trim() : '-1';
+			if ( ( ! rawToken && ! $.isEmptyObject( parsedHash ) ) || ( rawToken && '' != ('' + url).trim() ) ) {
+				const token = rawToken ? ('' + url).trim() : ( 'access_token' in parsedHash ? ('' + parsedHash.access_token).trim() : '-1' );
 
 				if ( '' != token && '-1' != token ) {
-					let parsedQuery = 'search' in url && '' != ('' + url.search).trim() ? window.wpzInstaParseQuery( '' + url.search ) : {};
-					let post = ! $.isEmptyObject( parsedQuery ) && 'post' in parsedQuery ? parseInt( parsedQuery.post ) : 0;
+					const args = {
+						action: 'wpz-insta_connect-user',
+						nonce: zoom_instagram_widget_admin.nonce,
+						token: token,
+					};
 
-					$.post(
-						ajaxurl,
-						{
-							action: 'wpz-insta_connect-user',
-							nonce: zoom_instagram_widget_admin.nonce,
-							token: token,
-							post_id: post,
-						}
-					).done(
-						function (response) {
+					if ( ! rawToken ) {
+						const parsedQuery = 'search' in url && '' != ('' + url.search).trim() ? window.wpzInstaParseQuery( '' + url.search ) : {};
+						args.post_id = ! $.isEmptyObject( parsedQuery ) && 'post' in parsedQuery ? parseInt( parsedQuery.post ) : 0;
+					}
+
+					$.post( ajaxurl, args )
+						.done( function ( response ) {
 							$('#the-list #wpz-insta_token').val(token);
 
 							let date = new Date();
@@ -647,14 +649,16 @@ jQuery( function( $ ) {
 								response.success,
 								( 'data' in response && 'update' in response.data && response.data.update )
 							);
-						}
-					);
+						} )
+						.fail( function () {
+							window.wpzInstaShowConnectDoneDialog( false );
+						} );
 				}
 			}
 		}
 	};
 
-	window.wpzInstaReloadPreview = function() {
+	window.wpzInstaReloadPreview = function () {
 		let url = zoom_instagram_widget_admin.preview_url,
 		    params = $.param( $( 'form#post #title, form#post .wpz-insta_tabs-content > .wpz-insta_sidebar > .wpz-insta_sidebar-left' ).find( 'input, textarea, select' ).not( '.preview-exclude' ).serializeArray() );
 
@@ -662,7 +666,13 @@ jQuery( function( $ ) {
 			url += '&' + params;
 		}
 
-		$( '#wpz-insta_widget-preview-view iframe' ).attr( 'src', url );
+		$( '#wpz-insta_widget-preview-view' ).closest( '.wpz-insta_sidebar-right' ).removeClass( 'hide-loading' );
+		$( '#wpz-insta_widget-preview-view iframe' ).addClass( 'wpz-insta_preview-hidden' ).attr( 'src', url );
 	};
 
+	window.wpzInstaUpdatePreviewHeight = function () {
+		const $frame = $( '#wpz-insta_widget-preview-view iframe' );
+
+		$frame.height( parseInt( $frame.contents().find( 'body' ).prop( 'scrollHeight' ) ) );
+	};
 } );

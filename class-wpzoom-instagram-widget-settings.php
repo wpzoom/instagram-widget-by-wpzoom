@@ -1482,7 +1482,7 @@ class WPZOOM_Instagram_Widget_Settings {
 						</div>
 					</div>
 
-					<div class="wpz-insta_sidebar-right">
+					<div class="wpz-insta_sidebar-right is-loading">
 						<div class="wpz-insta_widget-preview">
 							<div class="wpz-insta_widget-preview-header">
 								<h3 class="wpz-insta_widget-preview-header-title"><?php esc_html_e( 'Preview', 'instagram-widget-by-wpzoom' ); ?></h3>
@@ -1513,7 +1513,7 @@ class WPZOOM_Instagram_Widget_Settings {
 
 							<div class="wpz-insta_widget-preview-view wpz-insta_widget-preview-size-desktop">
 								<div id="wpz-insta_widget-preview-view" class="wpz-insta_widget-preview-view-inner">
-									<iframe src="<?php echo esc_url( site_url( '?wpz-insta-widget-preview=true' ) ); ?>" scrolling="no"></iframe>
+									<iframe src="" scrolling="no" class="wpz-insta_preview-hidden"></iframe>
 								</div>
 							</div>
 						</div>
@@ -1563,6 +1563,14 @@ class WPZOOM_Instagram_Widget_Settings {
 			plugin_dir_url( dirname( __FILE__ ) . '/instagram-widget-by-wpzoom.php' ) . 'dist/styles/frontend/preview.css',
 			array(),
 			'2.0.0'
+		);
+
+		wp_enqueue_script(
+			'zoom-instagram-widget-preview',
+			plugin_dir_url( dirname( __FILE__ ) . '/instagram-widget-by-wpzoom.php' ) . 'dist/scripts/frontend/preview.js',
+			array( 'jquery' ),
+			'2.0.0',
+			true
 		);
 	}
 
@@ -2310,7 +2318,7 @@ class WPZOOM_Instagram_Widget_Settings {
 	}
 
 	public function connect_page() {
-		$oauth_url  = add_query_arg(
+		$oauth_url = add_query_arg(
 			array(
 				'client_id'     => '1242932982579434',
 				'redirect_uri'  => 'https://wpzoom.com/instagram-auth/',

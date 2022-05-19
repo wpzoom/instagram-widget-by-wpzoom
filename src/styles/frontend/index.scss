@@ -90,11 +90,14 @@
         margin: 0;
 
 		&.layout-masonry {
-			display: block;
-			column-count: 3;
+			display: flex;
+			flex-wrap: wrap;
+			gap: 0;
 
 			.zoom-instagram-widget__item {
-				margin-bottom: 10px;
+				flex: 0 0 auto;
+				width: 33.3333%;
+				padding: 5px;
 
 				img {
 					object-fit: unset;
@@ -109,7 +112,6 @@
 
 .zoom-instagram-widget__item {
 	position: relative;
-	margin-top: 0 !important;
 	transition: all 0.3s ease-in-out;
 
 	&.new {
@@ -142,11 +144,14 @@
     margin: 0;
 
 	&.layout-masonry {
-		display: block;
-		column-count: 3;
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0;
 
 		.zoom-instagram-widget__item {
-			margin-bottom: 10px;
+			flex: 0 0 auto;
+			width: 33.3333%;
+			padding: 5px;
 
 			img {
 				object-fit: unset;
