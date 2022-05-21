@@ -98,11 +98,26 @@
 				flex: 0 0 auto;
 				width: 33.3333%;
 				padding: 5px;
+				box-sizing: border-box;
+
+				.osb_griditem-inner {
+					position: relative;
+				}
 
 				img {
+					vertical-align: top;
 					object-fit: unset;
 					object-position: center;
 					height: auto;
+				}
+
+				.zoom-instagram-link {
+					position: absolute;
+					top: 0;
+					left: 0;
+					right: 0;
+					bottom: 0;
+					padding: 0;
 				}
 			}
 		}
@@ -152,11 +167,26 @@
 			flex: 0 0 auto;
 			width: 33.3333%;
 			padding: 5px;
+			box-sizing: border-box;
+
+			.osb_griditem-inner {
+				position: relative;
+			}
 
 			img {
+				vertical-align: top;
 				object-fit: unset;
 				object-position: center;
 				height: auto;
+			}
+
+			.zoom-instagram-link {
+				position: absolute;
+				top: 0;
+				left: 0;
+				right: 0;
+				bottom: 0;
+				padding: 0;
 			}
 		}
 	}

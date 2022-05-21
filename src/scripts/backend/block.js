@@ -1,10 +1,10 @@
 import { isUndefined, pickBy } from 'lodash';
 import { registerBlockType } from '@wordpress/blocks';
 import { __ } from '@wordpress/i18n';
-import ServerSideRender from '@wordpress/server-side-render';
 import { useBlockProps, InspectorControls } from '@wordpress/block-editor';
 import { useSelect } from '@wordpress/data';
 import { store as coreStore } from '@wordpress/core-data';
+import CustomServerSideRender from './custom-server-side-render';
 import {
 	__experimentalHeading as Heading,
 	Flex,
@@ -63,12 +63,7 @@ registerBlockType( 'wpzoom/instagram-block', {
 				const feeds = getEntityRecords(
 					'postType',
 					'wpz-insta_feed',
-					pickBy(
-						{
-							per_page: -1,
-						},
-						( value ) => ! isUndefined( value )
-					)
+					pickBy( { per_page: -1 }, ( value ) => ! isUndefined( value ) )
 				);
 
 				return {
@@ -126,7 +121,7 @@ registerBlockType( 'wpzoom/instagram-block', {
 				{
 					feed > 0 ?
 						(
-							<ServerSideRender
+							<CustomServerSideRender
 								block="wpzoom/instagram-block"
 								attributes={ props.attributes }
 								EmptyResponsePlaceholder={ () => (
