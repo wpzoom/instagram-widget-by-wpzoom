@@ -38,7 +38,7 @@ window.fetch = async (...args) => {
 
 registerBlockType( 'wpzoom/instagram-block', {
 	apiVersion: 2,
-	title: 'Instagram',
+	title: 'Instagram Feed by WPZOOM',
 	icon: 'instagram',
 	category: 'wpzoom-blocks',
 	attributes: {
@@ -83,7 +83,7 @@ registerBlockType( 'wpzoom/instagram-block', {
 		if ( ! hasFeeds ) {
 			return (
 				<div { ...blockProps }>
-					<Placeholder icon="instagram" label={ __( 'Instagram Feed' ) }>
+					<Placeholder icon="instagram" label={ __( 'Instagram Feed by WPZOOM' ) }>
 						{ ! Array.isArray( feedsList ) ? (
 							<Spinner />
 						) : (
@@ -135,7 +135,7 @@ registerBlockType( 'wpzoom/instagram-block', {
 								<CardHeader>
 									<Flex align="center" justify="start" gap={ 2 } wrap={ true }>
 										<Icon icon="instagram" />
-										<Heading level="5">{ __( 'Instagram Feed', 'instagram-widget-by-wpzoom' ) }</Heading>
+										<Heading level="5">{ __( 'Instagram Feed by WPZOOM', 'instagram-widget-by-wpzoom' ) }</Heading>
 									</Flex>
 								</CardHeader>
 								<CardBody>

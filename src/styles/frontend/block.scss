@@ -1,3 +1,9 @@
+img {
+    height: auto;
+    max-width: 100%;
+}
+
+
 .wp-block-wpzoom-instagram-block,
 .zoom-instagram {
 
@@ -21,9 +27,12 @@
 		margin: 0 0 25px;
 
 		.zoom-instagram-widget__header-column-left {
+            min-width: 70px;
+
 			img {
-				height: 70px;
+
                 width: 70px;
+                // height: auto;
 				// object-fit: cover;
 				border-radius: 50%;
 			}
@@ -90,7 +99,7 @@
 			cursor: pointer;
 			font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
 			font-size: 14px;
-			font-weight: normal;
+			font-weight: 500;
 			text-decoration: none;
 			text-transform: none;
 			letter-spacing: normal;
@@ -106,7 +115,8 @@
 			&:hover,
 			&:active {
 				text-decoration: none;
-				background-color: #70b5fe;
+				// background-color: #70b5fe;
+                opacity: .8;
 			}
 
 			.button-icon {
@@ -157,6 +167,17 @@
 				display: grid;
 				grid-template-columns: repeat(3, 1fr);
 				gap: 10px;
+
+                .zoom-instagram-widget__item {
+
+                    img {
+                        object-fit: cover;
+                        width: 100%;
+                        height: 100%;
+                    }
+
+                }
+
 			}
 
 			&.layout-masonry {
@@ -192,9 +213,9 @@
 
     		&::before,
     		&::after {
-    			content: "";
-    			clear: both;
-    			display: table;
+    			// content: "";
+    			// clear: both;
+    			// display: table;
     		}
     	}
 

@@ -44,7 +44,7 @@ class Wpzoom_Instagram_Widget_Display {
 	 * @return void
 	 */
 	public function init() {
-		add_image_size( 'wpzoom-instagram-profile-photo-size', 128, 128, false );
+		// add_image_size( 'wpzoom-instagram-profile-photo-size', 128, 128, true );
 
 		$this->is_pro = apply_filters( 'wpz-insta_is-pro', false );
 
@@ -76,10 +76,14 @@ class Wpzoom_Instagram_Widget_Display {
 			}
 		}
 
+        if ( current_user_can( 'edit_theme_options' ) ) {
+
 		return sprintf(
 			'<p class="error" style="color:red"><strong>%s</strong></p>',
 			esc_html__( 'There was a problem displaying the selected feed. Please check the configuration...', 'instagram-widget-by-wpzoom' )
 		);
+
+    }
 	}
 
 	/**
@@ -178,7 +182,7 @@ class Wpzoom_Instagram_Widget_Display {
 				$show_user_bio = isset( $args['show-account-bio'] ) && boolval( $args['show-account-bio'] );
 				$user_bio = get_the_content( null, false, $user );
 				$show_user_image = isset( $args['show-account-image'] ) && boolval( $args['show-account-image'] );
-				$user_image = get_the_post_thumbnail_url( $user, 'wpzoom-instagram-profile-photo-size' ) ?: plugin_dir_url( __FILE__ ) . 'dist/images/backend/user-avatar.jpg';
+				$user_image = get_the_post_thumbnail_url( $user, 'thumbnail' ) ?: plugin_dir_url( __FILE__ ) . 'dist/images/backend/user-avatar.jpg';
 				$user_account_token = get_post_meta( $user_id, '_wpz-insta_token', true ) ?: '-1';
 
 				if ( '-1' !== $user_account_token ) {
@@ -214,7 +218,7 @@ class Wpzoom_Instagram_Widget_Display {
 
 							if ( $show_user_image && ! empty( $user_image ) ) {
 								$output .= '<div class="zoom-instagram-widget__header-column-left">';
-								$output .= '<img src="' . esc_url( $user_image ) . '" alt="' . esc_attr( $user_name_display ) . '" width="70" height="70"/>';
+								$output .= '<img src="' . esc_url( $user_image ) . '" alt="' . esc_attr( $user_name_display ) . '" width="70"/>';
 								$output .= '</div>';
 							}
 
@@ -420,7 +424,7 @@ class Wpzoom_Instagram_Widget_Display {
 				$count = 0;
 				$user_name = get_the_title( $user );
 				$user_name_display = sprintf( '@%s', $user_name );
-				$user_image = get_the_post_thumbnail_url( $user, 'wpzoom-instagram-profile-photo-size' ) ?: plugin_dir_url( __FILE__ ) . 'dist/images/backend/user-avatar.jpg';
+				$user_image = get_the_post_thumbnail_url( $user, 'thumbnail' ) ?: plugin_dir_url( __FILE__ ) . 'dist/images/backend/user-avatar.jpg';
 
 				foreach ( $items as $item ) {
 					$count++;
