@@ -124,9 +124,25 @@
 
 }
 
+
+.zoom-instagram.layout-grid {
+
+    .osb_griditem {
+        opacity: 1;
+        transform: scale(0);
+        transform-origin: center;
+        animation: show .4ms linear forwards;
+        visibility: visible;
+        height: auto;
+    }
+
+}
+
+
+
 .zoom-instagram-widget__item {
 	position: relative;
-	transition: all 0.3s ease-in-out;
+	transition: all 0.1s ease-in-out;
 
 	&.new {
 		opacity: 0;
