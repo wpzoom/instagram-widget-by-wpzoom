@@ -63,7 +63,7 @@ class WPZOOM_Instagram_Widget_Settings {
 		'hover-autoplay'                  => array( 'type' => 'boolean', 'default' => false ),
 		'hover-tags-feed'                 => array( 'type' => 'boolean', 'default' => false ),
 		'hover-date'                      => array( 'type' => 'boolean', 'default' => false ),
-		'show-load-more'                  => array( 'type' => 'boolean', 'default' => false ),
+		'show-load-more'                  => array( 'type' => 'boolean', 'default' => true ),
 		'load-more-text'                  => array( 'type' => 'string',  'default' => 'Load More' ),
 		'load-more-color'                 => array( 'type' => 'string',  'default' => '' ),
 	);

@@ -180,37 +180,6 @@ img {
 
 			}
 
-			&.layout-masonry {
-				display: flex;
-				flex-wrap: wrap;
-				gap: 0;
-
-				.zoom-instagram-widget__item {
-					width: 33.3333%;
-					padding: 5px;
-					box-sizing: border-box;
-
-					.osb_griditem-inner {
-						position: relative;
-					}
-
-					img {
-						max-width: 100%;
-						height: auto;
-						vertical-align: top;
-					}
-
-					.zoom-instagram-link {
-						position: absolute;
-						top: 0;
-						left: 0;
-						right: 0;
-						bottom: 0;
-						padding: 0;
-					}
-				}
-			}
-
     		&::before,
     		&::after {
     			// content: "";

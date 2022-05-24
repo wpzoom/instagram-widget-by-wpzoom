@@ -78,10 +78,10 @@ class Wpzoom_Instagram_Widget_Display {
 
         if ( current_user_can( 'edit_theme_options' ) ) {
 
-		return sprintf(
+		return is_admin() ? sprintf(
 			'<p class="error" style="color:red"><strong>%s</strong></p>',
 			esc_html__( 'There was a problem displaying the selected feed. Please check the configuration...', 'instagram-widget-by-wpzoom' )
-		);
+		) : '';
 
     }
 	}
@@ -103,10 +103,10 @@ class Wpzoom_Instagram_Widget_Display {
 			}
 		}
 
-		return sprintf(
+		return is_admin() ? sprintf(
 			'<p class="error" style="color:red"><strong>%s</strong></p>',
 			esc_html__( 'There was a problem displaying the selected feed. Please check the configuration...', 'instagram-widget-by-wpzoom' )
-		);
+		) : '';
 	}
 
 	/**
@@ -198,6 +198,7 @@ class Wpzoom_Instagram_Widget_Display {
 					$show_view_on_insta_button = isset( $args['show-view-button' ] ) ? boolval( $args['show-view-button' ] ) : true;
 					$show_load_more_button = ( ! $this->is_pro && $preview ) || ( $this->is_pro && isset( $args['show-load-more'] ) && boolval( $args['show-load-more'] ) );
 					$image_size = isset( $args['image-size'] ) && in_array( $args['image-size'], array( 'thumbnail', 'low_resolution', 'standard_resolution' ) ) ? $args['image-size'] : 'default_algorithm';
+					$image_width = isset( $args['image-width'] ) ? intval( $args['image-width'] ) : 320;
 
 					if ( $lightbox ) {
 						$attrs .= ' data-lightbox="1"';
@@ -205,7 +206,7 @@ class Wpzoom_Instagram_Widget_Display {
 
 					$this->api->set_access_token( $user_account_token );
 
-					$items  = $this->api->get_items( array( 'image-limit' => $amount, 'image-resolution' => $image_size, 'image-width' => 320, 'include-pagination' => true ) );
+					$items  = $this->api->get_items( array( 'image-limit' => $amount, 'image-resolution' => $image_size, 'image-width' => $image_width, 'include-pagination' => true ) );
 					$errors = $this->api->errors->get_error_messages();
 
 					$output .= '<div class="zoom-instagram' . ( isset( $args['feed-id'] ) ? sprintf( ' feed-%d', intval( $args['feed-id'] ) ) : '' ) . sprintf( ' layout-%s', $layout ) . '">';
@@ -342,7 +343,7 @@ class Wpzoom_Instagram_Widget_Display {
 					$inline_attrs  = 'data-media-id="' . esc_attr( $media_id ) . '"';
 					$inline_attrs .= 'data-nonce="' . wp_create_nonce( WPZOOM_Instagram_Image_Uploader::get_nonce_action( $media_id ) ) . '"';
 					$inline_attrs .= 'data-regenerate-thumbnails="1"';
-					$overwrite_src = true;
+					//$overwrite_src = true;
 				}
 
 				$inline_attrs .= 'data-media-type="' . esc_attr( $type ?: 'image' ) . '"';
@@ -354,11 +355,14 @@ class Wpzoom_Instagram_Widget_Display {
 				$width = 100;
 				$height = 100;
 				if ( ! empty( $src ) ) {
-					$image_size = wp_getimagesize( $src );
+					$local = self::attachment_url_to_path( $src );
+					$image_size = wp_getimagesize( false !== $local ? $local : $src );
 
 					if ( false !== $image_size ) {
 						$width = $image_size[0];
 						$height = $image_size[1];
+
+						$inline_attrs .= 'style="--w:' . intval( $width ) . ';--h:' . intval( $height ) . '"';
 					}
 				}
 
@@ -588,22 +592,16 @@ class Wpzoom_Instagram_Widget_Display {
 
 			if ( 3 !== $col_num ) {
 				if ( 1 === $layout ) {
-					$output .= "\twidth: " . ( 100 / $col_num ) . "%;\n";
+					$output .= "\t--columns-amount: " . $col_num . ";\n";
 				} else {
 					$output .= "\tgrid-template-columns: repeat(" . $col_num . ", 1fr);\ncolumn-count: " . $col_num . ";\n";
 				}
 			}
 
-			if ( $spacing_between > -1 && 1 !== $layout ) {
+			if ( $spacing_between > -1 ) {
 				$output .= "\tgap: " . $spacing_between . $spacing_between_suffix . ";\n";
 			}
 
-			$output .= "}\n";
-		}
-
-		if ( $spacing_between > -1 && 1 === $layout ) {
-			$output .= ".zoom-instagram" . $feed_id . " .zoom-instagram-widget__items .zoom-instagram-widget__item {\n";
-			$output .= "\tpadding: " . ( $spacing_between / 2 ) . $spacing_between_suffix . ";\n";
 			$output .= "}\n";
 		}
 
@@ -733,6 +731,28 @@ class Wpzoom_Instagram_Widget_Display {
 			wp_get_upload_dir()['basedir'],
 			$url
 		);
+	}
+
+	/**
+	 * Convert attachment $url to file path.
+	 *
+	 * @param  string       $url
+	 * @return string|false
+	 */
+	public static function attachment_url_to_path( string $url ) {
+		$parsed_url = parse_url( $url );
+
+		if ( empty( $parsed_url['path'] ) ) {
+			return false;
+		}
+
+		$file = ABSPATH . ltrim( $parsed_url['path'], '/' );
+
+		if ( file_exists( $file ) ) {
+			return $file;
+		}
+
+		return false;
 	}
 
 	/**
