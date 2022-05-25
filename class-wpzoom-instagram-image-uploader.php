@@ -356,7 +356,7 @@ class WPZOOM_Instagram_Image_Uploader {
 	 *
 	 * @return int|string
 	 */
-	protected function get_best_size( $desired_width, $image_resolution = 'default_algorithm' ) {
+	protected function get_best_size( $desired_width, $image_resolution = 'low_resolution' ) {
 		$size = 'thumbnail';
 
 		$sizes = array(

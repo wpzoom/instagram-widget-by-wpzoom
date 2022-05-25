@@ -50,7 +50,7 @@ class WPZOOM_Instagram_Widget_Settings {
 		'spacing-around-suffix'           => array( 'type' => 'integer', 'default' => 0 ),
 		'font-size'                       => array( 'type' => 'number',  'default' => 14 ),
 		'font-size-suffix'                => array( 'type' => 'integer', 'default' => 0 ),
-		'image-size'                      => array( 'type' => 'string',  'default' => 'default_algorithm' ),
+		'image-size'                      => array( 'type' => 'string',  'default' => 'low_resolution' ),
 		'image-width'                     => array( 'type' => 'number',  'default' => 100 ),
 		'image-width-suffix'              => array( 'type' => 'integer', 'default' => 2 ),
 		'show-overlay'                    => array( 'type' => 'boolean', 'default' => true ),
