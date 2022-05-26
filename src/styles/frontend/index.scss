@@ -87,6 +87,14 @@
         list-style: none !important;
         padding: 0;
         margin: 0;
+
+		&.layout-grid {
+			.zoom-instagram-widget__item {
+				img {
+					aspect-ratio: 1/1;
+				}
+			}
+		}
     }
 
 }
@@ -106,13 +114,13 @@
 
 	.zoom-instagram-widget__item-inner-wrap {
 		position: relative;
+		height: 100%;
 	}
 
 	img {
 		object-fit: cover;
 		object-position: center;
 		height: 100%;
-        aspect-ratio: 1 / 1;
 	}
 }
 
@@ -136,9 +144,18 @@
 		display: none;
 	}
 
+	&.layout-grid {
+		.zoom-instagram-widget__item {
+			img {
+				aspect-ratio: 1/1;
+			}
+		}
+	}
+
 	.zoom-instagram-widget__item {
 		.zoom-instagram-widget__item-inner-wrap {
 			position: relative;
+			height: 100%;
 		}
 
 		img {

@@ -192,7 +192,6 @@ class Wpzoom_Instagram_Widget_Display {
 					$new_posts_interval_number = isset( $args['check-new-posts-interval-number'] ) ? intval( $args['check-new-posts-interval-number'] ) : 1;
 					$new_posts_interval_suffix = isset( $args['check-new-posts-interval-suffix'] ) ? intval( $args['check-new-posts-interval-suffix'] ) : 1;
 					$enable_request_timeout = isset( $args['enable-request-timeout'] ) ? boolval( $args['enable-request-timeout'] ) : false;
-					$count = 0;
 					$amount = isset( $args['item-num'] ) ? intval( $args['item-num'] ) : 9;
 					$lightbox = isset( $args['lightbox'] ) ? boolval( $args['lightbox'] ) : true;
 					$show_view_on_insta_button = isset( $args['show-view-button' ] ) ? boolval( $args['show-view-button' ] ) : true;
@@ -206,7 +205,7 @@ class Wpzoom_Instagram_Widget_Display {
 
 					$this->api->set_access_token( $user_account_token );
 
-					$items  = $this->api->get_items( array( 'image-limit' => $amount, 'image-resolution' => $image_size, 'image-width' => $image_width, 'include-pagination' => true ) );
+					$items  = $this->api->get_items( array( 'image-limit' => $amount + 1, 'image-resolution' => $image_size, 'image-width' => $image_width, 'include-pagination' => true ) );
 					$errors = $this->api->errors->get_error_messages();
 
 					$output .= '<div class="zoom-instagram' . ( isset( $args['feed-id'] ) ? sprintf( ' feed-%d', intval( $args['feed-id'] ) ) : '' ) . sprintf( ' layout-%s', $layout ) . '">';
@@ -311,6 +310,7 @@ class Wpzoom_Instagram_Widget_Display {
 			$show_overlay = isset( $args['show-overlay'] ) ? boolval( $args['show-overlay'] ) : true;
 			$show_media_type_icons = isset( $args['show-media-type-icons'] ) ? boolval( $args['show-media-type-icons'] ) : true;
 			$show_media_type_icons_on_hover = isset( $args['hover-media-type-icons'] ) ? boolval( $args['hover-media-type-icons'] ) : true;
+			$hide_video_thumbs = isset( $args['hide-video-thumbs'] ) ? boolval( $args['hide-video-thumbs'] ) : true;
 			$image_size = isset( $args['image-size'] ) && in_array( $args['image-size'], array( 'thumbnail', 'low_resolution', 'standard_resolution' ) ) ? $args['image-size'] : 'low_resolution';
 			$small_class = $image_size <= 180 ? 'small' : '';
 			$svg_icons = plugin_dir_url( __FILE__ ) . 'dist/images/frontend/wpzoom-instagram-icons.svg';
@@ -328,6 +328,10 @@ class Wpzoom_Instagram_Widget_Display {
 				$is_album      = 'carousel_album' == $type;
 				$is_video      = 'video' == $type;
 				$comments      = isset( $item['comments_count'] ) ? intval( $item['comments_count'] ) : 0;
+
+				if ( $is_video && $hide_video_thumbs ) {
+					continue;
+				}
 
 				if ( ! empty( $media_id ) && empty( $src ) ) {
 					$inline_attrs  = 'data-media-id="' . esc_attr( $media_id ) . '"';
