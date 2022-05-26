@@ -356,17 +356,15 @@ class Wpzoom_Instagram_Widget_Display {
 				$height = 100;
 				if ( ! empty( $src ) ) {
 					$local = self::attachment_url_to_path( $src );
-					$image_size = wp_getimagesize( false !== $local ? $local : $src );
+					$image_size = @wp_getimagesize( false !== $local ? $local : $src );
 
 					if ( false !== $image_size ) {
 						$width = $image_size[0];
 						$height = $image_size[1];
-
-						$inline_attrs .= 'style="--w:' . intval( $width ) . ';--h:' . intval( $height ) . '"';
 					}
 				}
 
-				$output .= '<li class="zoom-instagram-widget__item' . ( $show_media_type_icons_on_hover ? ' media-icons-hover' : '' ) . '" ' . $inline_attrs . '>';
+				$output .= '<li class="zoom-instagram-widget__item' . ( $show_media_type_icons_on_hover ? ' media-icons-hover' : '' ) . '" ' . $inline_attrs . '><div class="zoom-instagram-widget__item-inner-wrap">';
 
 				$output .= sprintf( '<img src="%1$s" width="%3$d" height="%2$d" />', esc_url( $src ), esc_attr( $width ), esc_attr( $height ) );
 
@@ -399,7 +397,7 @@ class Wpzoom_Instagram_Widget_Display {
 					$output .= '</a>';
 				}
 
-				$output .= '</li>';
+				$output .= '</div></li>';
 
 				if ( ++ $count === $amount ) {
 					break;
@@ -591,11 +589,7 @@ class Wpzoom_Instagram_Widget_Display {
 			$output .= ".zoom-instagram" . $feed_id . " .zoom-instagram-widget__items {\n";
 
 			if ( 3 !== $col_num ) {
-				if ( 1 === $layout ) {
-					$output .= "\t--columns-amount: " . $col_num . ";\n";
-				} else {
-					$output .= "\tgrid-template-columns: repeat(" . $col_num . ", 1fr);\ncolumn-count: " . $col_num . ";\n";
-				}
+				$output .= "\tgrid-template-columns: repeat(" . $col_num . ", 1fr);\n";
 			}
 
 			if ( $spacing_between > -1 ) {

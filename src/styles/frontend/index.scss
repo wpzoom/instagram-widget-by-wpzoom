@@ -104,6 +104,10 @@
 		animation: show 500ms linear forwards;
 	}
 
+	.zoom-instagram-widget__item-inner-wrap {
+		position: relative;
+	}
+
 	img {
 		object-fit: cover;
 		object-position: center;
@@ -133,6 +137,10 @@
 	}
 
 	.zoom-instagram-widget__item {
+		.zoom-instagram-widget__item-inner-wrap {
+			position: relative;
+		}
+
 		img {
 			object-fit: cover;
 			object-position: center;

@@ -199,7 +199,10 @@ img {
 			transform: scale(0);
 			transform-origin: center;
 			animation: show 500ms linear forwards;
-			overflow: hidden;
+		}
+
+		.zoom-instagram-widget__item-inner-wrap {
+			position: relative;
 		}
 	}
 
@@ -267,6 +270,10 @@ img {
 	}
 
 	.zoom-instagram-widget__item {
+		.zoom-instagram-widget__item-inner-wrap {
+			position: relative;
+		}
+
 		.hover-controls ~ .zoom-instagram-icon-wrap {
 			bottom: 10%;
 			pointer-events: all;
@@ -512,6 +519,10 @@ img {
 	}
 
 	.zoom-instagram-widget__items {
+		.zoom-instagram-widget__item-inner-wrap {
+			position: relative;
+		}
+
 		.zoom-instagram-widget__item .zoom-instagram-link {
 			display: block;
 			background-size: cover !important;
