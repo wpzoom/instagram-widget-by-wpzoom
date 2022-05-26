@@ -91,6 +91,7 @@
 		&.layout-grid {
 			.zoom-instagram-widget__item {
 				img {
+					width: 100%;
 					aspect-ratio: 1/1;
 				}
 			}
@@ -115,6 +116,7 @@
 	.zoom-instagram-widget__item-inner-wrap {
 		position: relative;
 		height: 100%;
+		overflow: hidden;
 	}
 
 	img {
@@ -147,6 +149,7 @@
 	&.layout-grid {
 		.zoom-instagram-widget__item {
 			img {
+				width: 100%;
 				aspect-ratio: 1/1;
 			}
 		}
@@ -156,6 +159,7 @@
 		.zoom-instagram-widget__item-inner-wrap {
 			position: relative;
 			height: 100%;
+			overflow: hidden;
 		}
 
 		img {

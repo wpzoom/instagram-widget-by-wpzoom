@@ -77,13 +77,11 @@ class Wpzoom_Instagram_Widget_Display {
 		}
 
         if ( current_user_can( 'edit_theme_options' ) ) {
-
-		return is_admin() ? sprintf(
-			'<p class="error" style="color:red"><strong>%s</strong></p>',
-			esc_html__( 'There was a problem displaying the selected feed. Please check the configuration...', 'instagram-widget-by-wpzoom' )
-		) : '';
-
-    }
+			return is_admin() ? sprintf(
+				'<p class="error" style="color:red"><strong>%s</strong></p>',
+				esc_html__( 'There was a problem displaying the selected feed. Please check the configuration...', 'instagram-widget-by-wpzoom' )
+			) : '';
+    	}
 	}
 
 	/**
@@ -188,7 +186,7 @@ class Wpzoom_Instagram_Widget_Display {
 				if ( '-1' !== $user_account_token ) {
 					$attrs = '';
 					$layout_names = array( 0 => 'grid', 1 => 'masonry', 2 => 'highlight', 3 => 'carousel' );
-					$layout = isset( $args['layout'] ) && isset( $layout_names[ intval( $args['layout'] ) ] ) ? $layout_names[ intval( $args['layout'] ) ] : 'grid';
+					$layout = $this->is_pro && isset( $args['layout'] ) && isset( $layout_names[ intval( $args['layout'] ) ] ) ? $layout_names[ intval( $args['layout'] ) ] : 'grid';
 					$new_posts_interval_number = isset( $args['check-new-posts-interval-number'] ) ? intval( $args['check-new-posts-interval-number'] ) : 1;
 					$new_posts_interval_suffix = isset( $args['check-new-posts-interval-suffix'] ) ? intval( $args['check-new-posts-interval-suffix'] ) : 1;
 					$enable_request_timeout = isset( $args['enable-request-timeout'] ) ? boolval( $args['enable-request-timeout'] ) : false;
@@ -198,6 +196,7 @@ class Wpzoom_Instagram_Widget_Display {
 					$show_load_more_button = ( ! $this->is_pro && $preview ) || ( $this->is_pro && isset( $args['show-load-more'] ) && boolval( $args['show-load-more'] ) );
 					$image_size = isset( $args['image-size'] ) && in_array( $args['image-size'], array( 'thumbnail', 'low_resolution', 'standard_resolution' ) ) ? $args['image-size'] : 'low_resolution';
 					$image_width = isset( $args['image-width'] ) ? intval( $args['image-width'] ) : 320;
+					$hide_video_thumbs = isset( $args['hide-video-thumbs'] ) ? boolval( $args['hide-video-thumbs'] ) : true;
 
 					if ( $lightbox ) {
 						$attrs .= ' data-lightbox="1"';
@@ -205,7 +204,7 @@ class Wpzoom_Instagram_Widget_Display {
 
 					$this->api->set_access_token( $user_account_token );
 
-					$items  = $this->api->get_items( array( 'image-limit' => $amount + 1, 'image-resolution' => $image_size, 'image-width' => $image_width, 'include-pagination' => true ) );
+					$items  = $this->api->get_items( array( 'image-limit' => $amount, 'image-resolution' => $image_size, 'image-width' => $image_width, 'include-pagination' => true, 'bypass-transient' => $preview ) );
 					$errors = $this->api->errors->get_error_messages();
 
 					$output .= '<div class="zoom-instagram' . ( isset( $args['feed-id'] ) ? sprintf( ' feed-%d', intval( $args['feed-id'] ) ) : '' ) . sprintf( ' layout-%s', $layout ) . '">';
@@ -329,9 +328,9 @@ class Wpzoom_Instagram_Widget_Display {
 				$is_video      = 'video' == $type;
 				$comments      = isset( $item['comments_count'] ) ? intval( $item['comments_count'] ) : 0;
 
-				if ( $is_video && $hide_video_thumbs ) {
+				/*if ( $is_video && $hide_video_thumbs ) {
 					continue;
-				}
+				}*/
 
 				if ( ! empty( $media_id ) && empty( $src ) ) {
 					$inline_attrs  = 'data-media-id="' . esc_attr( $media_id ) . '"';
@@ -557,6 +556,8 @@ class Wpzoom_Instagram_Widget_Display {
 		$spacing_between_suffix = $this->get_suffix( isset( $args['spacing-between-suffix'] ) ? intval( $args['spacing-between-suffix'] ) : 0 );
 		$button_bg              = isset( $args['view-button-bg-color'] ) ? $this->validate_color( $args['view-button-bg-color'] ) : '';
 		$bg_color               = isset( $args['bg-color'] ) ? $this->validate_color( $args['bg-color'] ) : '';
+		$border_radius          = isset( $args['border-radius'] ) ? ( intval( $args['border-radius'] ) ?: -1 ) : -1;
+		$border_radius_suffix   = $this->get_suffix( isset( $args['border-radius-suffix'] ) ? intval( $args['border-radius-suffix'] ) : 0 );
 		$spacing_around         = isset( $args['spacing-around'] ) ? ( intval( $args['spacing-around'] ) ?: -1 ) : -1;
 		$spacing_around_suffix  = $this->get_suffix( isset( $args['spacing-around-suffix'] ) ? intval( $args['spacing-around-suffix'] ) : 0 );
 		$font_size              = isset( $args['font-size'] ) ? ( intval( $args['font-size'] ) ?: -1 ) : -1;
@@ -575,15 +576,15 @@ class Wpzoom_Instagram_Widget_Display {
 			$output .= ".zoom-instagram" . $feed_id . " {\n";
 
 			if ( $font_size > -1 ) {
-				$output .= "\tfont-size: " . $font_size . $font_size_suffix . ";\n";
+				$output .= "\tfont-size: " . $font_size . $font_size_suffix . " !important;\n";
 			}
 
 			if ( ! empty( $bg_color ) ) {
-				$output .= "\tbackground-color: " . $bg_color . ";\n";
+				$output .= "\tbackground-color: " . $bg_color . " !important;\n";
 			}
 
 			if ( $spacing_around > -1 ) {
-				$output .= "\tpadding: " . $spacing_around . $spacing_around_suffix . ";\n";
+				$output .= "\tpadding: " . $spacing_around . $spacing_around_suffix . " !important;\n";
 			}
 
 			$output .= "}\n\n";
@@ -593,19 +594,19 @@ class Wpzoom_Instagram_Widget_Display {
 			$output .= ".zoom-instagram" . $feed_id . " .zoom-instagram-widget__items {\n";
 
 			if ( 3 !== $col_num ) {
-				$output .= "\tgrid-template-columns: repeat(" . $col_num . ", 1fr);\n";
+				$output .= "\tgrid-template-columns: repeat(" . $col_num . ", 1fr) !important;\n";
 			}
 
 			if ( $spacing_between > -1 ) {
-				$output .= "\tgap: " . $spacing_between . $spacing_between_suffix . ";\n";
+				$output .= "\tgap: " . $spacing_between . $spacing_between_suffix . " !important;\n";
 			}
 
-			$output .= "}\n";
+			$output .= "}\n\n";
 		}
 
-		/*if ( $image_width > -1 ) {
-			$output .= ".zoom-instagram" . $feed_id . " .zoom-instagram-widget__item {\n\twidth: " . $image_width . $image_width_suffix . ";\n}";
-		}*/
+		if ( $border_radius > -1 ) {
+			$output .= ".zoom-instagram" . $feed_id . " .zoom-instagram-widget__item .zoom-instagram-widget__item-inner-wrap {\n\tborder-radius: " . $border_radius . $border_radius_suffix . " !important;\n}\n\n";
+		}
 
 		if ( '' != $button_bg ) {
 			$output .= ".zoom-instagram" . $feed_id . " .wpz-insta-view-on-insta-button {\n\tbackground-color: " . $button_bg . " !important;\n}";
@@ -628,29 +629,9 @@ class Wpzoom_Instagram_Widget_Display {
 			$feed = get_post( $feed_id, OBJECT, 'display' );
 
 			if ( null !== $feed && $feed instanceof WP_Post ) {
-				$output = $this->style_content( array(
-					'feed-id'                => $feed_id,
-					'layout'                 => intval( get_post_meta( $feed_id, '_wpz-insta_layout', true ) ?: 0 ),
-					'item-num'               => intval( get_post_meta( $feed_id, '_wpz-insta_item-num', true ) ?: 9 ),
-					'col-num'                => intval( get_post_meta( $feed_id, '_wpz-insta_col-num', true ) ?: 3 ),
-					'spacing-between'        => intval( get_post_meta( $feed_id, '_wpz-insta_spacing-between', true ) ?: -1 ),
-					'spacing-between-suffix' => intval( get_post_meta( $feed_id, '_wpz-insta_spacing-between-suffix', true ) ?: 0 ),
-					'view-button-bg-color'   => $this->validate_color( get_post_meta( $feed_id, '_wpz-insta_view-button-bg-color', true ) ?: '' ),
-					'bg-color'               => $this->validate_color( get_post_meta( $feed_id, '_wpz-insta_bg-color', true ) ?: '' ),
-					'spacing-around'         => intval( get_post_meta( $feed_id, '_wpz-insta_spacing-around', true ) ?: -1 ),
-					'spacing-around-suffix'  => intval( get_post_meta( $feed_id, '_wpz-insta_spacing-around-suffix', true ) ?: 0 ),
-					'font-size'              => intval( get_post_meta( $feed_id, '_wpz-insta_font-size', true ) ?: -1 ),
-					'font-size-suffix'       => intval( get_post_meta( $feed_id, '_wpz-insta_font-size-suffix', true ) ?: 0 ),
-					'image-width'            => intval( get_post_meta( $feed_id, '_wpz-insta_image-width', true ) ?: 100 ),
-					'image-width-suffix'     => intval( get_post_meta( $feed_id, '_wpz-insta_image-width-suffix', true ) ?: 2 ),
-					'hover-likes'            => boolval( get_post_meta( $feed_id, '_wpz-insta_hover-likes', true ) ?: true ),
-					'hover-link'             => boolval( get_post_meta( $feed_id, '_wpz-insta_hover-link', true ) ?: true ),
-					'hover-caption'          => boolval( get_post_meta( $feed_id, '_wpz-insta_hover-caption', true ) ?: false ),
-					'hover-username'         => boolval( get_post_meta( $feed_id, '_wpz-insta_hover-username', true ) ?: false ),
-					'hover-date'             => boolval( get_post_meta( $feed_id, '_wpz-insta_hover-date', true ) ?: false ),
-					'hover-text-color'       => $this->validate_color( get_post_meta( $feed_id, '_wpz-insta_hover-text-color', true ) ?: '' ),
-					'hover-bg-color'         => $this->validate_color( get_post_meta( $feed_id, '_wpz-insta_hover-bg-color', true ) ?: '' ),
-				) );
+				$args = WPZOOM_Instagram_Widget_Settings::get_all_feed_settings_values( $feed_id );
+				$args['feed-id'] = $feed_id;
+				$output = $this->style_content( $args );
 			}
 		}
 

@@ -46,6 +46,8 @@ class WPZOOM_Instagram_Widget_Settings {
 		'view-button-text'                => array( 'type' => 'string',  'default' => 'View on Instagram' ),
 		'view-button-bg-color'            => array( 'type' => 'string',  'default' => '' ),
 		'bg-color'                        => array( 'type' => 'string',  'default' => '' ),
+		'border-radius'                   => array( 'type' => 'number',  'default' => 0 ),
+		'border-radius-suffix'            => array( 'type' => 'integer', 'default' => 0 ),
 		'spacing-around'                  => array( 'type' => 'number',  'default' => 10 ),
 		'spacing-around-suffix'           => array( 'type' => 'integer', 'default' => 0 ),
 		'font-size'                       => array( 'type' => 'number',  'default' => 14 ),
@@ -949,43 +951,80 @@ class WPZOOM_Instagram_Widget_Settings {
 		}
 	}
 
+	public static function sanitize_feed_setting_value( string $setting_name, $value ) {
+		$out = '';
+
+		if ( ! empty( $setting_name ) && isset( self::$feed_settings[ $setting_name ] ) ) {
+			$setting_args = self::$feed_settings[ $setting_name ];
+			$setting_type = isset( $setting_args['type'] ) ? $setting_args['type'] : 'string';
+
+			switch ( $setting_type ) {
+				case 'number':
+					$out = floatval( $value );
+					break;
+
+				case 'integer':
+					$out = intval( $value );
+					break;
+
+				case 'boolean':
+					$out = boolval( $value );
+					break;
+
+				default:
+					$out = esc_html( trim( '' . $value ) );
+					break;
+			}
+		}
+
+		return $out;
+	}
+
 	public static function get_feed_setting_value( int $feed_id, string $setting_name ) {
 		$value = null;
 
 		if ( $feed_id > 0 && ! empty( $setting_name ) && isset( self::$feed_settings[ $setting_name ] ) ) {
 			$setting_args = self::$feed_settings[ $setting_name ];
-			$setting_type = isset( $setting_args['type'] ) ? $setting_args['type'] : 'string';
 			$setting_default = isset( $setting_args['default'] ) ? $setting_args['default'] : '';
 
 			$meta_key = sprintf( _x( '_wpz-insta_%s', 'Feed setting ID', 'instagram-widget-by-wpzoom' ), $setting_name );
 			$meta_key_exists = metadata_exists( 'post', $feed_id, $meta_key );
 
 			$raw = $meta_key_exists ? get_post_meta( $feed_id, $meta_key, true ) : $setting_default;
-
-			switch ( $setting_type ) {
-				case 'number':
-					$value = floatval( $raw );
-					break;
-
-				case 'integer':
-					$value = intval( $raw );
-					break;
-
-				case 'boolean':
-					$value = '1' == $raw;
-					break;
-
-				default:
-					$value = esc_html( trim( '' . $raw ) );
-					break;
-			}
+			$value = self::sanitize_feed_setting_value( $setting_name, $raw );
 		}
 
 		return $value;
 	}
 
+	public static function get_all_feed_settings_values( int $feed_id ) {
+		$values = array();
+
+		if ( $feed_id > 0 && ! empty( self::$feed_settings ) ) {
+			foreach( self::$feed_settings as $setting_name => $setting_args ) {
+				$values[ $setting_name ] = self::get_feed_setting_value( $feed_id, $setting_name );
+			}
+		}
+
+		return $values;
+	}
+
+	public static function get_clean_feed_settings_from_query() {
+		$values = array();
+
+		if ( ! empty( self::$feed_settings ) ) {
+			foreach( self::$feed_settings as $setting_name => $setting_args ) {
+				$prefixed_setting = '_wpz-insta_' . $setting_name;
+				$values[ $setting_name ] = isset( $_GET[ $prefixed_setting ] ) ? self::sanitize_feed_setting_value( $setting_name, $_GET[ $prefixed_setting ] ) : $setting_args['default'];
+			}
+		}
+
+		return $values;
+	}
+
 	function edit_feed_content( $post ) {
 		if ( 'wpz-insta_feed' == $post->post_type ) {
+			$pro_toggle = apply_filters( 'wpz-insta_admin-pro-options-toggle', true );
 			$none_label = __( 'None', 'instagram-widget-by-wpzoom' );
 			$user_id = (int) self::get_feed_setting_value( $post->ID, 'user-id' );
 			$user = $user_id > 0 ? get_post( $user_id ) : null;
@@ -997,7 +1036,7 @@ class WPZOOM_Instagram_Widget_Settings {
 			$new_posts_interval_number = (int) self::get_feed_setting_value( $post->ID, 'check-new-posts-interval-number' );
 			$new_posts_interval_suffix = (int) self::get_feed_setting_value( $post->ID, 'check-new-posts-interval-suffix' );
 			$enable_request_timeout = (bool) self::get_feed_setting_value( $post->ID, 'enable-request-timeout' );
-			$feed_layout = (int) self::get_feed_setting_value( $post->ID, 'layout' );
+			$feed_layout = ! $pro_toggle ? (int) self::get_feed_setting_value( $post->ID, 'layout' ) : 0;
 			$feed_items_num = (int) self::get_feed_setting_value( $post->ID, 'item-num' );
 			$feed_cols_num = (int) self::get_feed_setting_value( $post->ID, 'col-num' );
 			$feed_spacing_between = (float) self::get_feed_setting_value( $post->ID, 'spacing-between' );
@@ -1010,6 +1049,8 @@ class WPZOOM_Instagram_Widget_Settings {
 			$view_instagram_button_text = (string) self::get_feed_setting_value( $post->ID, 'view-button-text' );
 			$view_instagram_button_bg_color = (string) $this->validate_color( self::get_feed_setting_value( $post->ID, 'view-button-bg-color' ) );
 			$feed_bg_color = (string) $this->validate_color( self::get_feed_setting_value( $post->ID, 'bg-color' ) );
+			$feed_items_radius = (float) self::get_feed_setting_value( $post->ID, 'border-radius' );
+			$feed_items_radius_suffix = (int) self::get_feed_setting_value( $post->ID, 'border-radius-suffix' );
 			$feed_spacing_around = (float) self::get_feed_setting_value( $post->ID, 'spacing-around' );
 			$feed_spacing_around_suffix = (int) self::get_feed_setting_value( $post->ID, 'spacing-around-suffix' );
 			$feed_font_size = (float) self::get_feed_setting_value( $post->ID, 'font-size' );
@@ -1035,7 +1076,6 @@ class WPZOOM_Instagram_Widget_Settings {
 				'numberposts' => -1,
 				'post_type'   => 'wpz-insta_user',
 			) );
-			$pro_toggle = apply_filters( 'wpz-insta_admin-pro-options-toggle', true );
 
 			?>
 			<div class="wpz-insta_tabs-content">
@@ -1133,7 +1173,7 @@ class WPZOOM_Instagram_Widget_Settings {
 
 									<?php echo $pro_toggle ? '<fieldset class="wpz-insta_feed-layout-pro"><legend>' . esc_html__( 'PRO', 'instagram-widget-by-wpzoom' ) . '</legend>' : ''; ?>
 
-									<label class="wpz-insta_feed-layout-option wpz-insta_feed-layout-2">
+									<label class="wpz-insta_feed-layout-option wpz-insta_feed-layout-2<?php echo $pro_toggle ? ' disabled' : ''; ?>">
 										<input type="radio" name="_wpz-insta_layout" value="1"<?php checked( $feed_layout, 1 ); ?> />
 
 										<svg width="92" height="110" viewBox="0 0 92 110" xmlns="http://www.w3.org/2000/svg">
@@ -1280,6 +1320,25 @@ class WPZOOM_Instagram_Widget_Settings {
 										</div>
 									</label>
 
+									<?php echo $pro_toggle ? '<fieldset class="wpz-insta_feed-only-pro wpz-insta_pro-only wpz-insta_pro-only-with-bottom"><legend><strong>' . esc_html__( 'PRO', 'instagram-widget-by-wpzoom' ) . '</strong></legend>' : ''; ?>
+
+									<label class="wpz-insta_table-row">
+										<strong class="wpz-insta_table-cell"><?php esc_html_e( 'Rounded corners', 'instagram-widget-by-wpzoom' ); ?></strong>
+										<div class="wpz-insta_table-cell">
+											<div class="wpz-insta_suffixed-number-input">
+												<input type="number" name="_wpz-insta_border-radius" value="<?php echo esc_attr( $feed_items_radius ); ?>" size="3" min="0" max="5000" step="1" />
+
+												<select name="_wpz-insta_border-radius-suffix">
+													<option value="0"<?php selected( $feed_items_radius_suffix, 0 ); ?>><?php esc_html_e( 'px', 'instagram-widget-by-wpzoom' ); ?></option>
+													<option value="1"<?php selected( $feed_items_radius_suffix, 1 ); ?>><?php esc_html_e( 'em', 'instagram-widget-by-wpzoom' ); ?></option>
+													<option value="2"<?php selected( $feed_items_radius_suffix, 2 ); ?>><?php esc_html_e( '%', 'instagram-widget-by-wpzoom' ); ?></option>
+												</select>
+											</div>
+										</div>
+									</label>
+
+									<?php echo $pro_toggle ? '</fieldset>' : ''; ?>
+
 									<label class="wpz-insta_table-row">
 										<strong class="wpz-insta_table-cell"><?php esc_html_e( 'Outside padding', 'instagram-widget-by-wpzoom' ); ?></strong>
 										<div class="wpz-insta_table-cell">
@@ -1391,7 +1450,7 @@ class WPZOOM_Instagram_Widget_Settings {
 												<span><?php esc_html_e( 'Instagram link', 'instagram-widget-by-wpzoom' ); ?></span>
 											</label>
 
-											<?php echo $pro_toggle ? '<fieldset class="wpz-insta_feed-hover-pro wpz-insta_pro-only"><legend><strong>' . esc_html__( 'PRO', 'instagram-widget-by-wpzoom' ) . '</strong></legend>' : ''; ?>
+											<?php echo $pro_toggle ? '<fieldset class="wpz-insta_feed-only-pro wpz-insta_pro-only"><legend><strong>' . esc_html__( 'PRO', 'instagram-widget-by-wpzoom' ) . '</strong></legend>' : ''; ?>
 
 											<label class="wpz-insta_table-row">
 												<input type="hidden" name="_wpz-insta_hover-autoplay" value="0" />
@@ -1576,21 +1635,7 @@ class WPZOOM_Instagram_Widget_Settings {
 
 	function preview_frame() {
 		$display = Wpzoom_Instagram_Widget_Display::getInstance();
-		$preview_args = array();
-		$meta_keys = get_registered_meta_keys( 'post', 'wpz-insta_feed' );
-
-		if ( ! empty( $meta_keys ) ) {
-			$meta_keys = array_filter( $meta_keys, function( $key ) { return strpos( $key, 'wpz-insta_' ) !== false; }, ARRAY_FILTER_USE_KEY );
-
-			foreach ( $meta_keys as $key => $args ) {
-				if ( isset( $_GET[ $key ] ) ) {
-					$type = $args['type'];
-					$raw_value = $_GET[ $key ];
-					$preview_args[ str_ireplace( '_wpz-insta_', '', $key ) ] = ( 'boolean' == $type ? boolval( $raw_value ) : ( 'integer' == $type ? intval( $raw_value ) : esc_html( '' . $raw_value ) ) );
-				}
-			}
-		}
-
+		$preview_args = self::get_clean_feed_settings_from_query();
 		$preview_args['feed-id'] = get_the_ID();
 
 		printf( '<div class="zoom-new-instagram-widget">%s</div>', $display->get_preview( $preview_args ) );
