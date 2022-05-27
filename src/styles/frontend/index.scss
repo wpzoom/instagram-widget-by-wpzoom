@@ -104,6 +104,23 @@
 }
 
 
+.layout-legacy.zoom-instagram-widget__items {
+
+    list-style: none !important;
+
+    .zoom-instagram-widget__item {
+        float: left;
+        position: relative;
+        margin-top: 0 !important;
+        padding: 0;
+    }
+
+    .zoom-instagram-widget__overlay {
+        position: relative;
+    }
+
+}
+
 
 .zoom-instagram-widget__item {
 	position: relative;

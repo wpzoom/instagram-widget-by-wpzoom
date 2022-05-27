@@ -353,7 +353,7 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 		$username              = false !== $user_nfo ? $user_nfo->username : '';
 		$avatar                = false !== $user_nfo && ! empty( $user_nfo->profile_picture ) ? $user_nfo->profile_picture : plugin_dir_url( __FILE__ ) . 'dist/images/backend/user-avatar.jpg';
 		?>
-		<ul class="zoom-instagram-widget__items zoom-instagram-widget__items--no-js"
+		<ul class="zoom-instagram-widget__items layout-legacy zoom-instagram-widget__items--no-js"
 			data-images-per-row="<?php echo esc_attr( $instance['images-per-row'] ); ?>"
 			data-image-width="<?php echo esc_attr( $instance['image-width'] ); ?>"
 			data-image-spacing="<?php echo esc_attr( $instance['image-spacing'] ); ?>"
