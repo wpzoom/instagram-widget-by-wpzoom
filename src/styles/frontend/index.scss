@@ -9,6 +9,7 @@
 .zoom-instagram {
 	font-size: 14px;
 	overflow: hidden;
+    display: block; /* fix for Neve theme's display: flex; */
 
 	form[disabled] {
 		pointer-events: none;
@@ -43,7 +44,8 @@
 			font-weight: 600;
 			line-height: 1.5;
 			padding: 0;
-			margin: 0;
+			margin: 0 0 5px;
+            letter-spacing: 0;
 		}
 
 		.zoom-instagram-widget__header-user {
@@ -51,6 +53,7 @@
 			line-height: normal;
 			padding: 0;
 			margin: 0;
+            opacity: .8;
 
 			a {
 				text-decoration: none;
@@ -485,6 +488,7 @@ a.ig-b-v-24:hover {
 	flex-direction: row;
 	/*flex-wrap: wrap;*/
 	background-color: white;
+    border-radius: 4px;
 }
 
 .wpz-insta-lightbox-wrapper {
@@ -591,6 +595,7 @@ a.ig-b-v-24:hover {
 	width: 600px;
 	max-width: 600px;
     background: #000;
+    border-radius: 4px 0 0 4px;
 }
 
 .wpz-insta-lightbox-wrapper > .swiper-container {
@@ -701,6 +706,11 @@ a.ig-b-v-24:hover {
 			flex-wrap: wrap;
 		}
 	}
+
+    .wpz-insta-lightbox-wrapper .wpz-insta-lightbox .image-wrapper {
+        border-radius: 4px 4px 0 0;
+    }
+
 }
 
 @media screen and (max-width: 860px) {

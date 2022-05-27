@@ -48,7 +48,7 @@ class WPZOOM_Instagram_Widget_Settings {
 		'bg-color'                        => array( 'type' => 'string',  'default' => '' ),
 		'border-radius'                   => array( 'type' => 'number',  'default' => 0 ),
 		'border-radius-suffix'            => array( 'type' => 'integer', 'default' => 0 ),
-		'spacing-around'                  => array( 'type' => 'number',  'default' => 10 ),
+		'spacing-around'                  => array( 'type' => 'number',  'default' => 1 ),
 		'spacing-around-suffix'           => array( 'type' => 'integer', 'default' => 0 ),
 		'font-size'                       => array( 'type' => 'number',  'default' => 14 ),
 		'font-size-suffix'                => array( 'type' => 'integer', 'default' => 0 ),
@@ -62,9 +62,9 @@ class WPZOOM_Instagram_Widget_Settings {
 		'show-media-type-icons'           => array( 'type' => 'boolean', 'default' => true ),
 		'hover-media-type-icons'          => array( 'type' => 'boolean', 'default' => true ),
 		'hover-link'                      => array( 'type' => 'boolean', 'default' => true ),
-		'hover-autoplay'                  => array( 'type' => 'boolean', 'default' => false ),
-		'hover-tags-feed'                 => array( 'type' => 'boolean', 'default' => false ),
-		'hover-date'                      => array( 'type' => 'boolean', 'default' => false ),
+		// 'hover-autoplay'                  => array( 'type' => 'boolean', 'default' => false ),
+		// 'hover-tags-feed'                 => array( 'type' => 'boolean', 'default' => false ),
+		// 'hover-date'                      => array( 'type' => 'boolean', 'default' => false ),
 		'show-load-more'                  => array( 'type' => 'boolean', 'default' => true ),
 		'load-more-text'                  => array( 'type' => 'string',  'default' => 'Load More' ),
 		'load-more-color'                 => array( 'type' => 'string',  'default' => '' ),
@@ -1065,7 +1065,7 @@ class WPZOOM_Instagram_Widget_Settings {
 			$image_width_suffix = (int) self::get_feed_setting_value( $post->ID, 'image-width-suffix' );
 			$feed_hover_media_type_icons = (bool) self::get_feed_setting_value( $post->ID, 'hover-media-type-icons' );
 			$feed_hover_link = (bool) self::get_feed_setting_value( $post->ID, 'hover-link' );
-			$feed_hover_autoplay = (bool) self::get_feed_setting_value( $post->ID, 'hover-autoplay' );
+			// $feed_hover_autoplay = (bool) self::get_feed_setting_value( $post->ID, 'hover-autoplay' );
 			$feed_hover_tags_feed = (bool) self::get_feed_setting_value( $post->ID, 'hover-tags-feed' );
 			$feed_hover_date = (bool) self::get_feed_setting_value( $post->ID, 'hover-date' );
 			$show_load_more = (bool) self::get_feed_setting_value( $post->ID, 'show-load-more' );
@@ -1326,7 +1326,7 @@ class WPZOOM_Instagram_Widget_Settings {
 										<strong class="wpz-insta_table-cell"><?php esc_html_e( 'Rounded corners', 'instagram-widget-by-wpzoom' ); ?></strong>
 										<div class="wpz-insta_table-cell">
 											<div class="wpz-insta_suffixed-number-input">
-												<input type="number" name="_wpz-insta_border-radius" value="<?php echo esc_attr( $feed_items_radius ); ?>" size="3" min="0" max="5000" step="1" />
+												<input type="number" name="_wpz-insta_border-radius" value="<?php echo esc_attr( $feed_items_radius ); ?>" size="3" min="0" max="200" step="1" />
 
 												<select name="_wpz-insta_border-radius-suffix">
 													<option value="0"<?php selected( $feed_items_radius_suffix, 0 ); ?>><?php esc_html_e( 'px', 'instagram-widget-by-wpzoom' ); ?></option>
@@ -1343,7 +1343,7 @@ class WPZOOM_Instagram_Widget_Settings {
 										<strong class="wpz-insta_table-cell"><?php esc_html_e( 'Outside padding', 'instagram-widget-by-wpzoom' ); ?></strong>
 										<div class="wpz-insta_table-cell">
 											<div class="wpz-insta_suffixed-number-input">
-												<input type="number" name="_wpz-insta_spacing-around" value="<?php echo esc_attr( $feed_spacing_around ); ?>" size="3" min="1" max="5000" step="1" />
+												<input type="number" name="_wpz-insta_spacing-around" value="<?php echo esc_attr( $feed_spacing_around ); ?>" size="3" min="0" max="100" step="1" />
 
 												<select name="_wpz-insta_spacing-around-suffix">
 													<option value="0"<?php selected( $feed_spacing_around_suffix, 0 ); ?>><?php esc_html_e( 'px', 'instagram-widget-by-wpzoom' ); ?></option>
@@ -1393,7 +1393,7 @@ class WPZOOM_Instagram_Widget_Settings {
 										<strong class="wpz-insta_table-cell"><?php esc_html_e( 'Image Width', 'instagram-widget-by-wpzoom' ); ?></strong>
 										<div class="wpz-insta_table-cell">
 											<div class="wpz-insta_suffixed-number-input">
-												<input type="number" name="_wpz-insta_image-width" value="<?php echo esc_attr( $image_width ); ?>" size="3" min="1" max="5000" step="1" />
+												<input type="number" name="_wpz-insta_image-width" value="<?php echo esc_attr( $image_width ); ?>" size="3" min="1" max="1000" step="1" />
 
 												<select name="_wpz-insta_image-width-suffix">
 													<option value="0"<?php selected( $image_width_suffix, 0 ); ?>><?php esc_html_e( 'px', 'instagram-widget-by-wpzoom' ); ?></option>
@@ -1452,6 +1452,8 @@ class WPZOOM_Instagram_Widget_Settings {
 
 											<?php echo $pro_toggle ? '<fieldset class="wpz-insta_feed-only-pro wpz-insta_pro-only"><legend><strong>' . esc_html__( 'PRO', 'instagram-widget-by-wpzoom' ) . '</strong></legend>' : ''; ?>
 
+                                            <?php /* Coming Soon
+
 											<label class="wpz-insta_table-row">
 												<input type="hidden" name="_wpz-insta_hover-autoplay" value="0" />
 												<input type="checkbox" name="_wpz-insta_hover-autoplay" value="1"<?php checked( $feed_hover_autoplay ); disabled( $pro_toggle ); ?> />
@@ -1469,6 +1471,8 @@ class WPZOOM_Instagram_Widget_Settings {
 												<input type="checkbox" name="_wpz-insta_hover-date" value="1"<?php checked( $feed_hover_date ); disabled( $pro_toggle ); ?> />
 												<span><?php esc_html_e( 'Date', 'instagram-widget-by-wpzoom' ); ?></span>
 											</label>
+
+                                            */ ?>
 
 											<?php echo $pro_toggle ? '</fieldset>' : ''; ?>
 										</div>

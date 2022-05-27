@@ -251,7 +251,7 @@ class Wpzoom_Instagram_Widget_Display {
 
 							if ( $show_view_on_insta_button ) {
 								$view_on_insta_label = isset( $args['view-button-text'] ) ? trim( $args['view-button-text'] ) : __( 'View on Instagram', 'instagram-widget-by-wpzoom' );
-								$output .= '<a href="' . esc_url( $user_link ) . '" target="_blank" class="button button-primary wpz-insta-view-on-insta-button">';
+								$output .= '<a href="' . esc_url( $user_link ) . '" target="_blank" rel="noopener nofollow" class="wpz-button wpz-button-primary wpz-insta-view-on-insta-button">';
 								$output .= '<span class="button-icon zoom-svg-instagram-stroke"></span> ';
 								$output .= esc_html( $view_on_insta_label );
 								$output .= '</a>';
@@ -307,6 +307,7 @@ class Wpzoom_Instagram_Widget_Display {
 			$amount = isset( $args['item-num'] ) ? intval( $args['item-num'] ) : 9;
 			$col_num = isset( $args['col-num'] ) && intval( $args['col-num'] ) !== 3 ? intval( $args['col-num'] ) : 3;
 			$show_overlay = isset( $args['show-overlay'] ) ? boolval( $args['show-overlay'] ) : true;
+            $show_insta_icon = isset( $args['hover-link'] ) ? boolval( $args['hover-link'] ) : true;
 			$show_media_type_icons = isset( $args['show-media-type-icons'] ) ? boolval( $args['show-media-type-icons'] ) : true;
 			$show_media_type_icons_on_hover = isset( $args['hover-media-type-icons'] ) ? boolval( $args['hover-media-type-icons'] ) : true;
 			$hide_video_thumbs = isset( $args['hide-video-thumbs'] ) ? boolval( $args['hide-video-thumbs'] ) : true;
@@ -387,9 +388,11 @@ class Wpzoom_Instagram_Widget_Display {
 						</div>';
 					}
 
-					$output .= '<div class="zoom-instagram-icon-wrap"><a class="zoom-svg-instagram-stroke" href="' . $link . '" rel="noopener nofollow" target="_blank" title="' . $alt . '"></a></div>
-					<a class="zoom-instagram-link" data-src="' . $src . '" data-mfp-src="' . $media_id . '" href="' . $link . '" target="_blank" rel="noopener nofollow" title="' . $alt . '"></a>
-					</div>';
+                    if (! empty ( $show_insta_icon ) ) {
+    					$output .= '<div class="zoom-instagram-icon-wrap"><a class="zoom-svg-instagram-stroke" href="' . $link . '" rel="noopener nofollow" target="_blank" title="' . $alt . '"></a></div>
+    					<a class="zoom-instagram-link" data-src="' . $src . '" data-mfp-src="' . $media_id . '" href="' . $link . '" target="_blank" rel="noopener nofollow" title="' . $alt . '"></a>
+    					</div>';
+                    }
 				} else {
 					$output .= '<a class="zoom-instagram-link" data-src="' . $src . '" data-mfp-src="' . $media_id . '" href="' . $link . '" target="_blank" rel="noopener nofollow" title="' . $alt . '">';
 
@@ -555,6 +558,7 @@ class Wpzoom_Instagram_Widget_Display {
 		$spacing_between        = isset( $args['spacing-between'] ) && intval( $args['spacing-between'] ) > -1 ? intval( $args['spacing-between'] ) : -1;
 		$spacing_between_suffix = $this->get_suffix( isset( $args['spacing-between-suffix'] ) ? intval( $args['spacing-between-suffix'] ) : 0 );
 		$button_bg              = isset( $args['view-button-bg-color'] ) ? $this->validate_color( $args['view-button-bg-color'] ) : '';
+        $loadmore_bg            = isset( $args['load-more-color'] ) ? $this->validate_color( $args['load-more-color'] ) : '';
 		$bg_color               = isset( $args['bg-color'] ) ? $this->validate_color( $args['bg-color'] ) : '';
 		$border_radius          = isset( $args['border-radius'] ) ? ( intval( $args['border-radius'] ) ?: -1 ) : -1;
 		$border_radius_suffix   = $this->get_suffix( isset( $args['border-radius-suffix'] ) ? intval( $args['border-radius-suffix'] ) : 0 );
@@ -611,6 +615,10 @@ class Wpzoom_Instagram_Widget_Display {
 		if ( '' != $button_bg ) {
 			$output .= ".zoom-instagram" . $feed_id . " .wpz-insta-view-on-insta-button {\n\tbackground-color: " . $button_bg . " !important;\n}";
 		}
+
+        if ( '' != $loadmore_bg ) {
+            $output .= ".zoom-instagram" . $feed_id . " .wpzinsta-pro-load-more button[type=submit] {\n\tbackground-color: " . $loadmore_bg . " !important;\n}";
+        }
 
 		return $output;
 	}
