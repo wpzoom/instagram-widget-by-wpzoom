@@ -3,7 +3,7 @@ Contributors: WPZOOM, nvartolomei, ciorici
 Donate link: https://www.wpzoom.com/
 Tags: instagram, instagram feed, instagram gallery, instagram photos, instagram widget, instagram stories, widget, timeline, social network, latest images, feed, story, stories, insta
 Requires at least: 5.5
-Tested up to: 5.9
+Tested up to: 6.0
 Requires PHP: 7.2
 Stable tag: trunk
 License: GPLv2 or later
