@@ -51,7 +51,7 @@ function wpzoom_instagram_admin_notice() {
 		$hide_notices_url = wpzoom_instagram_get_notice_dismiss_url();
 
 		$notice_message  = '<strong>' . __( 'Please configure Instagram Widget', 'instagram-widget-by-wpzoom' ) . '</strong><br/>';
-		$notice_message .= sprintf( __( 'If you have just installed or updated this plugin, please go to the %1$s and %2$s it with your Instagram account.', 'instagram-widget-by-wpzoom' ), '<a href="options-general.php?page=wpzoom-instagram-widget">' . __( 'Settings page', 'instagram-widget-by-wpzoom' ) . '</a>', '<strong>' . __( 'connect', 'instagram-widget-by-wpzoom' ) . '</strong>' ) . '&nbsp;';
+		$notice_message .= sprintf( __( 'If you have just installed or updated this plugin, please go to the %1$s and %2$s it with your Instagram account.', 'instagram-widget-by-wpzoom' ), '<a href="edit.php?post_type=wpz-insta_user">' . __( 'Settings page', 'instagram-widget-by-wpzoom' ) . '</a>', '<strong>' . __( 'connect', 'instagram-widget-by-wpzoom' ) . '</strong>' ) . '&nbsp;';
 		$notice_message .= __( 'You have to generate Instagram Access Token to allow widget to display your media.', 'instagram-widget-by-wpzoom' );
 		$notice_message .= '<a style="text-decoration: none" class="notice-dismiss" href="' . $hide_notices_url . '"></a>';
 
@@ -109,7 +109,7 @@ function wpzoom_instagram_get_notice_dismiss_url() {
 			array(
 				'wpzoom_instagram_ignore_admin_notice' => '0',
 			),
-			wpzoom_instagram_get_current_admin_url() ? wpzoom_instagram_get_current_admin_url() : admin_url( 'options-general.php?page=wpzoom-instagram-widget' )
+			wpzoom_instagram_get_current_admin_url() ? wpzoom_instagram_get_current_admin_url() : admin_url( 'edit.php?post_type=wpz-insta_user' )
 		)
 	);
 

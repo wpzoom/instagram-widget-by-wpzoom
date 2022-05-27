@@ -169,7 +169,7 @@ class Wpzoom_Instagram_Widget_API {
 				$notice_message   = '';
 				$user_id          = $current_user->ID;
 				$hide_notices_url = wpzoom_instagram_get_notice_dismiss_url();
-				$settings_url     = admin_url( 'options-general.php?page=wpzoom-instagram-widget' );
+				$settings_url     = admin_url( 'edit.php?post_type=wpz-insta_user' );
 
 				if ( 190 === $data->error->code ) {
 					// Error validating access token: Session has expired.

@@ -229,7 +229,7 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 			?>
 			<p>
 				<?php _e( 'Instagram Widget misconfigured or your Access Token <strong>expired</strong>. Please check', 'instagram-widget-by-wpzoom' ); ?>
-				  <strong><a href="<?php echo admin_url( 'options-general.php?page=wpzoom-instagram-widget' ); ?>" target="_blank"><?php _e( 'Instagram Settings Page', 'instagram-widget-by-wpzoom' ); ?></a></strong> <?php _e( 'and make sure the plugin is properly configured', 'instagram-widget-by-wpzoom' ); ?>
+				  <strong><a href="<?php echo admin_url( 'edit.php?post_type=wpz-insta_user' ); ?>" target="_blank"><?php _e( 'Instagram Settings Page', 'instagram-widget-by-wpzoom' ); ?></a></strong> <?php _e( 'and re-connect your account.', 'instagram-widget-by-wpzoom' ); ?>
 
 			</p>
 
@@ -643,7 +643,7 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 				<?php
 				printf(
 					__( 'You need to configure <a href="%1$s">plugin settings</a> before using this widget.', 'instagram-widget-by-wpzoom' ),
-					admin_url( 'options-general.php?page=wpzoom-instagram-widget' )
+					admin_url( 'edit.php?post_type=wpz-insta_user' )
 				);
 				?>
 			</p>
@@ -730,7 +730,7 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 			<?php
 			printf(
 				__( 'If you have already connected your Instagram account in the <a href="%1$s">plugin settings</a>, leave this field empty. You can use this option if you want to display the feed of a different Instagram account.', 'instagram-widget-by-wpzoom' ),
-				admin_url( 'options-general.php?page=wpzoom-instagram-widget' )
+				admin_url( 'edit.php?post_type=wpz-insta_user' )
 			);
 			?>
 

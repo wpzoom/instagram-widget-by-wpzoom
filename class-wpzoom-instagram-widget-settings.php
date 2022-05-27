@@ -2149,7 +2149,7 @@ class WPZOOM_Instagram_Widget_Settings {
 				'redirect_uri'  => 'https://wpzoom.com/instagram-auth/',
 				'scope'         => 'user_profile,user_media',
 				'response_type' => 'code',
-				'state'         => base64_encode( urlencode( admin_url( 'options-general.php?page=wpzoom-instagram-widget' ) ) ),
+				'state'         => base64_encode( urlencode( admin_url( 'edit.php?post_type=wpz-insta_user' ) ) ),
 			),
 			'https://api.instagram.com/oauth/authorize'
 		);

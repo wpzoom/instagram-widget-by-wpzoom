@@ -523,9 +523,9 @@ class Wpzoom_Instagram_Widget_Display {
 			$output .= sprintf(
 				'<p>%s <strong><a href="%s" target="_blank">%s</a></strong> %s</p>',
 				__( 'Instagram Widget misconfigured or your Access Token <strong>expired</strong>. Please check', 'instagram-widget-by-wpzoom' ),
-				admin_url( 'options-general.php?page=wpzoom-instagram-widget' ),
+				admin_url( 'edit.php?post_type=wpz-insta_user' ),
 				__( 'Instagram Settings Page', 'instagram-widget-by-wpzoom' ),
-				__( 'and make sure the plugin is properly configured', 'instagram-widget-by-wpzoom' )
+				__( 'and re-connect your account.', 'instagram-widget-by-wpzoom' )
 			);
 
 			if ( ! empty( $errors ) ) {
