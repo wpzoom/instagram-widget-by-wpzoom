@@ -499,6 +499,12 @@ a.ig-b-v-24:hover {
 }
 
 /** Lightbox **/
+
+.wpzoom-lightbox .mfp-inline-holder .mfp-content {
+    max-width: none;
+}
+
+
 .wpz-insta-lightbox {
 	pointer-events: all;
 	display: flex;
