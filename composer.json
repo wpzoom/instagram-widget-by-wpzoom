@@ -18,5 +18,13 @@
     "scripts": {
       "phpcbf": "@php ./vendor/bin/phpcbf",
       "phpcs": "@php ./vendor/bin/phpcs"
-  }
+  },
+    "config": {
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true
+        }
+    },
+    "require": {
+        "imangazaliev/didom": "^2.0"
+    }
 }

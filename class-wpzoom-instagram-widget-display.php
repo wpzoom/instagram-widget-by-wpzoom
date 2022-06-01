@@ -97,7 +97,11 @@ class Wpzoom_Instagram_Widget_Display {
 			$feed_id = intval( $atts['feed'] );
 
 			if ( $feed_id > -1 ) {
-				return $this->get_feed_output( $feed_id );
+				return sprintf(
+					"<style type=\"text/css\">%s</style>\n%s",
+					$this->output_styles( $feed_id, false ),
+					$this->get_feed_output( $feed_id )
+				);
 			}
 		}
 
@@ -185,7 +189,7 @@ class Wpzoom_Instagram_Widget_Display {
 
 				if ( '-1' !== $user_account_token ) {
 					$attrs = '';
-					$layout_names = array( 0 => 'grid', 1 => 'masonry', 2 => 'highlight', 3 => 'carousel' );
+					$layout_names = array( 0 => 'grid', 1 => 'fullwidth', 2 => 'masonry', 3 => 'highlight' );
 					$layout = $this->is_pro && isset( $args['layout'] ) && isset( $layout_names[ intval( $args['layout'] ) ] ) ? $layout_names[ intval( $args['layout'] ) ] : 'grid';
 					$new_posts_interval_number = isset( $args['check-new-posts-interval-number'] ) ? intval( $args['check-new-posts-interval-number'] ) : 1;
 					$new_posts_interval_suffix = isset( $args['check-new-posts-interval-suffix'] ) ? intval( $args['check-new-posts-interval-suffix'] ) : 1;
@@ -242,11 +246,11 @@ class Wpzoom_Instagram_Widget_Display {
 							$output .= '</header>';
 						}
 
-						$output .= '<ul class="zoom-instagram-widget__items zoom-instagram-widget__items--no-js' . sprintf( ' layout-%s', $layout ) . '"' . $attrs . '>';
+						$output .= '<div class="zoom-instagram-widget__items-wrapper"><ul class="zoom-instagram-widget__items zoom-instagram-widget__items--no-js' . sprintf( ' layout-%s', $layout ) . '"' . $attrs . '>';
 						$output .= self::items_html( $items['items'], $args );
-						$output .= '</ul>';
+						$output .= '</ul></div>';
 
-						if ( $show_view_on_insta_button || $show_load_more_button ) {
+						if ( $show_view_on_insta_button || ( $show_load_more_button && 'fullwidth' !== $layout ) ) {
 							$output .= '<footer class="zoom-instagram-widget__footer">';
 
 							if ( $show_view_on_insta_button ) {
@@ -257,7 +261,7 @@ class Wpzoom_Instagram_Widget_Display {
 								$output .= '</a>';
 							}
 
-							if ( $show_load_more_button ) {
+							if ( $show_load_more_button && 'fullwidth' !== $layout ) {
 								$output .= '<form method="POST" autocomplete="off" class="wpzinsta-pro-load-more"' . ( ! $this->is_pro ? ' disabled' : '' ) . '>';
 								$output .= wp_nonce_field( 'wpzinsta-pro-load-more', '_wpnonce', true, false );
 								$output .= '<input type="hidden" name="feed_id" value="' . esc_attr( isset( $args['feed-id'] ) ? intval( $args['feed-id'] ) : -1 ) . '" />';
@@ -576,7 +580,7 @@ class Wpzoom_Instagram_Widget_Display {
 		$hover_text_color       = isset( $args['hover-text-color'] ) ? $this->validate_color( $args['hover-text-color'] ) : '';
 		$hover_bg_color         = isset( $args['hover-bg-color'] ) ? $this->validate_color( $args['hover-bg-color'] ) : '';
 
-		if ( $font_size > -1 || ! empty( $bg_color ) || $image_width > -1 || $spacing_around > -1 ) {
+		if ( $font_size > -1 || ! empty( $bg_color ) || $spacing_around > -1 ) {
 			$output .= ".zoom-instagram" . $feed_id . " {\n";
 
 			if ( $font_size > -1 ) {
@@ -605,6 +609,12 @@ class Wpzoom_Instagram_Widget_Display {
 				$output .= "\tgap: " . $spacing_between . $spacing_between_suffix . " !important;\n";
 			}
 
+			$output .= "}\n\n";
+		}
+
+		if ( $image_width > -1 && 1 === $layout ) {
+			$output .= ".zoom-instagram" . $feed_id . " .zoom-instagram-widget__items img {\n";
+			$output .= "\twidth: " . $image_width . $image_width_suffix . " !important;";
 			$output .= "}\n\n";
 		}
 

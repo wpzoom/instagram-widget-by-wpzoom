@@ -157,6 +157,9 @@ img {
 
     /* styling just for the block */
     .zoom-instagram {
+		.zoom-instagram-widget__items-wrapper {
+			overflow: hidden;
+		}
 
         .zoom-instagram-widget__items {
             list-style: none !important;
@@ -179,6 +182,11 @@ img {
 
                 }
 
+			}
+
+			&.layout-fullwidth {
+				display: flex;
+				width: 5000px;
 			}
 
     		&::before,

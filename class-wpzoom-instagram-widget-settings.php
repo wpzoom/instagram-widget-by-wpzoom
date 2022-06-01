@@ -31,7 +31,7 @@ class WPZOOM_Instagram_Widget_Settings {
 	public static $feed_settings = array(
 		'user-id'                         => array( 'type' => 'integer', 'default' => -1 ),
 		'check-new-posts-interval-number' => array( 'type' => 'integer', 'default' => 1 ),
-		'check-new-posts-interval-suffix' => array( 'type' => 'integer', 'default' => 1 ),
+		'check-new-posts-interval-suffix' => array( 'type' => 'integer', 'default' => 2 ),
 		'enable-request-timeout'          => array( 'type' => 'boolean', 'default' => false ),
 		'layout'                          => array( 'type' => 'integer', 'default' => 0 ),
 		'item-num'                        => array( 'type' => 'integer', 'default' => 9 ),
@@ -1131,10 +1131,11 @@ class WPZOOM_Instagram_Widget_Settings {
 									<input type="number" name="_wpz-insta_check-new-posts-interval-number" id="wpz-insta_check-new-posts-interval-number" value="<?php echo esc_attr( $new_posts_interval_number ); ?>" min="1" max="100" step="1" />
 
 									<select name="_wpz-insta_check-new-posts-interval-suffix" id="wpz-insta_check-new-posts-interval-suffix">
-										<option value="0"<?php selected( $new_posts_interval_suffix, 0 ); ?>><?php esc_html_e( 'Hours', 'instagram-widget-by-wpzoom' ); ?></option>
-										<option value="1"<?php selected( $new_posts_interval_suffix, 1 ); ?>><?php esc_html_e( 'Days', 'instagram-widget-by-wpzoom' ); ?></option>
-										<option value="2"<?php selected( $new_posts_interval_suffix, 2 ); ?>><?php esc_html_e( 'Weeks', 'instagram-widget-by-wpzoom' ); ?></option>
-										<option value="3"<?php selected( $new_posts_interval_suffix, 3 ); ?>><?php esc_html_e( 'Months', 'instagram-widget-by-wpzoom' ); ?></option>
+										<option value="0"<?php selected( $new_posts_interval_suffix, 0 ); ?>><?php esc_html_e( 'Minutes', 'instagram-widget-by-wpzoom' ); ?></option>
+										<option value="0"<?php selected( $new_posts_interval_suffix, 1 ); ?>><?php esc_html_e( 'Hours', 'instagram-widget-by-wpzoom' ); ?></option>
+										<option value="1"<?php selected( $new_posts_interval_suffix, 2 ); ?>><?php esc_html_e( 'Days', 'instagram-widget-by-wpzoom' ); ?></option>
+										<option value="2"<?php selected( $new_posts_interval_suffix, 3 ); ?>><?php esc_html_e( 'Weeks', 'instagram-widget-by-wpzoom' ); ?></option>
+										<option value="3"<?php selected( $new_posts_interval_suffix, 4 ); ?>><?php esc_html_e( 'Months', 'instagram-widget-by-wpzoom' ); ?></option>
 									</select>
 								</div>
 							</div>
@@ -1171,10 +1172,23 @@ class WPZOOM_Instagram_Widget_Settings {
 										</svg>
 									</label>
 
+									<label class="wpz-insta_feed-layout-option wpz-insta_feed-layout-2">
+										<input type="radio" name="_wpz-insta_layout" value="1"<?php checked( $feed_layout, 1 ); ?> />
+
+										<svg width="92" height="110" viewBox="0 0 92 110" fill="none" xmlns="http://www.w3.org/2000/svg">
+											<rect x="0.5" y="0.5" width="91" height="109" rx="3.5" fill-opacity="0.2" stroke="currentColor"/>
+											<rect x="2" y="51" width="22" height="22" />
+											<rect x="25" y="51" width="22" height="22" />
+											<rect x="48" y="51" width="22" height="22" />
+											<rect x="71" y="51" width="19" height="22" />
+											<path d="M7.03604 18V8.54545H13.0929V9.98118H8.74876V12.5479H12.6774V13.9837H8.74876V18H7.03604ZM20.6131 8.54545H22.3258V14.7223C22.3258 15.3994 22.1658 15.9949 21.8457 16.5089C21.5287 17.0228 21.0824 17.4245 20.5069 17.7138C19.9314 18 19.2589 18.1431 18.4895 18.1431C17.717 18.1431 17.043 18 16.4675 17.7138C15.892 17.4245 15.4457 17.0228 15.1287 16.5089C14.8117 15.9949 14.6532 15.3994 14.6532 14.7223V8.54545H16.3659V14.5792C16.3659 14.9731 16.4521 15.324 16.6245 15.6317C16.7999 15.9395 17.0461 16.1811 17.3631 16.3565C17.6801 16.5289 18.0556 16.6151 18.4895 16.6151C18.9235 16.6151 19.2989 16.5289 19.6159 16.3565C19.936 16.1811 20.1822 15.9395 20.3546 15.6317C20.5269 15.324 20.6131 14.9731 20.6131 14.5792V8.54545ZM24.1874 18V8.54545H25.9001V16.5643H30.0642V18H24.1874ZM31.5507 18V8.54545H33.2634V16.5643H37.4275V18H31.5507ZM42.4779 12.5849V13.9606H38.2215V12.5849H42.4779ZM45.9056 18L43.2373 8.54545H45.0793L46.7828 15.4933H46.8705L48.6894 8.54545H50.3651L52.1887 15.4979H52.2718L53.9752 8.54545H55.8172L53.1489 18H51.4593L49.5665 11.3661H49.4926L47.5953 18H45.9056ZM58.7175 8.54545V18H57.0048V8.54545H58.7175ZM63.776 18H60.5722V8.54545H63.8406C64.7793 8.54545 65.5857 8.73473 66.2597 9.11328C66.9368 9.48875 67.4569 10.0289 67.82 10.7337C68.1832 11.4384 68.3648 12.2817 68.3648 13.2635C68.3648 14.2483 68.1817 15.0947 67.8154 15.8026C67.4523 16.5104 66.9275 17.0536 66.2412 17.4322C65.558 17.8107 64.7362 18 63.776 18ZM62.2849 16.5181H63.6929C64.3515 16.5181 64.9009 16.3981 65.341 16.158C65.7811 15.9149 66.1119 15.5533 66.3335 15.0732C66.5551 14.59 66.6659 13.9867 66.6659 13.2635C66.6659 12.5402 66.5551 11.9401 66.3335 11.4631C66.1119 10.983 65.7842 10.6244 65.3502 10.3874C64.9194 10.1474 64.3838 10.0273 63.7437 10.0273H62.2849V16.5181ZM69.1577 9.98118V8.54545H76.701V9.98118H73.7788V18H72.0799V9.98118H69.1577ZM78.1552 18V8.54545H79.8679V12.5479H84.2489V8.54545H85.9663V18H84.2489V13.9837H79.8679V18H78.1552Z" />
+										</svg>
+									</label>
+
 									<?php echo $pro_toggle ? '<fieldset class="wpz-insta_feed-layout-pro"><legend>' . esc_html__( 'PRO', 'instagram-widget-by-wpzoom' ) . '</legend>' : ''; ?>
 
-									<label class="wpz-insta_feed-layout-option wpz-insta_feed-layout-2<?php echo $pro_toggle ? ' disabled' : ''; ?>">
-										<input type="radio" name="_wpz-insta_layout" value="1"<?php checked( $feed_layout, 1 ); ?> />
+									<label class="wpz-insta_feed-layout-option wpz-insta_feed-layout-3<?php echo $pro_toggle ? ' disabled' : ''; ?>">
+										<input type="radio" name="_wpz-insta_layout" value="2"<?php checked( $feed_layout, 2 ); ?> />
 
 										<svg width="92" height="110" viewBox="0 0 92 110" xmlns="http://www.w3.org/2000/svg">
 											<rect x="0.5" y="0.5" width="91" height="109" rx="3.5" fill-opacity="0.2" stroke="currentColor" />
@@ -1189,8 +1203,8 @@ class WPZOOM_Instagram_Widget_Settings {
 										</svg>
 									</label>
 
-									<label class="wpz-insta_feed-layout-option wpz-insta_feed-layout-3 disabled">
-										<input type="radio" name="_wpz-insta_layout" value="2"<?php checked( $feed_layout, 2 ); ?> />
+									<label class="wpz-insta_feed-layout-option wpz-insta_feed-layout-4 disabled">
+										<input type="radio" name="_wpz-insta_layout" value="3"<?php checked( $feed_layout, 3 ); ?> />
 
 										<svg width="92" height="110" viewBox="0 0 92 110" xmlns="http://www.w3.org/2000/svg">
 											<rect x="0.5" y="0.5" width="91" height="109" rx="3.5" fill-opacity="0.2" stroke="currentColor" />
@@ -1204,18 +1218,6 @@ class WPZOOM_Instagram_Widget_Settings {
 										</svg>
 									</label>
 
-									<label class="wpz-insta_feed-layout-option wpz-insta_feed-layout-4 disabled">
-										<input type="radio" name="_wpz-insta_layout" value="3"<?php checked( $feed_layout, 3 ); ?> />
-
-										<svg width="92" height="110" viewBox="0 0 92 110" xmlns="http://www.w3.org/2000/svg">
-											<rect x="0.5" y="0.5" width="91" height="109" rx="3.5" fill-opacity="0.2" stroke="currentColor" />
-											<rect x="21" y="38" width="50" height="50" rx="2" />
-											<path d="M79.3333 67.5846L83.4999 63.0013L79.3333 58.418" stroke-width="1.5" />
-											<path d="M12.6667 58.4154L8.50008 62.9987L12.6667 67.582" stroke-width="1.5" />
-											<path d="M20.1688 11.7354C19.8779 9.63494 18.2622 8.41619 16.1663 8.41619C13.6965 8.41619 11.836 10.2166 11.836 13.2727C11.836 16.3242 13.6734 18.1293 16.1663 18.1293C18.4145 18.1293 19.9056 16.6751 20.1688 14.87L18.4422 14.8608C18.2252 15.9688 17.3204 16.592 16.1894 16.592C14.6567 16.592 13.558 15.4425 13.558 13.2727C13.558 11.1399 14.6475 9.95348 16.194 9.95348C17.3435 9.95348 18.2437 10.6044 18.4422 11.7354H20.1688ZM22.8371 18L23.6173 15.6687H27.172L27.9568 18H29.7849L26.4518 8.54545H24.3374L21.009 18H22.8371ZM24.0789 14.293L25.3577 10.4844H25.4316L26.7103 14.293H24.0789ZM31.0302 18H32.7429V14.5376H34.4879L36.3438 18H38.255L36.2099 14.2514C37.3224 13.8036 37.9087 12.8526 37.9087 11.5692C37.9087 9.7642 36.7454 8.54545 34.5756 8.54545H31.0302V18ZM32.7429 13.1158V9.97656H34.3125C35.5913 9.97656 36.1637 10.5629 36.1637 11.5692C36.1637 12.5756 35.5913 13.1158 34.3217 13.1158H32.7429ZM47.9334 13.2727C47.9334 10.2166 46.0684 8.41619 43.5893 8.41619C41.1056 8.41619 39.2452 10.2166 39.2452 13.2727C39.2452 16.3242 41.1056 18.1293 43.5893 18.1293C46.0684 18.1293 47.9334 16.3288 47.9334 13.2727ZM46.2115 13.2727C46.2115 15.424 45.1312 16.592 43.5893 16.592C42.052 16.592 40.9672 15.424 40.9672 13.2727C40.9672 11.1214 42.052 9.95348 43.5893 9.95348C45.1312 9.95348 46.2115 11.1214 46.2115 13.2727ZM55.5125 8.54545V14.5792C55.5125 15.7656 54.6862 16.6151 53.3889 16.6151C52.0871 16.6151 51.2654 15.7656 51.2654 14.5792V8.54545H49.5526V14.7223C49.5526 16.7536 51.0761 18.1431 53.3889 18.1431C55.6926 18.1431 57.2252 16.7536 57.2252 14.7223V8.54545H55.5125ZM64.225 11.1445H65.873C65.8407 9.54723 64.4789 8.41619 62.4661 8.41619C60.481 8.41619 58.9899 9.53338 58.9945 11.2045C58.9945 12.5618 59.9593 13.342 61.5151 13.7436L62.5907 14.0206C63.611 14.2791 64.285 14.5977 64.2896 15.3317C64.285 16.1396 63.5186 16.6797 62.4015 16.6797C61.3304 16.6797 60.4995 16.1996 60.4302 15.207H58.7452C58.8145 17.0859 60.2132 18.1431 62.4153 18.1431C64.682 18.1431 65.9977 17.0121 66.0023 15.3455C65.9977 13.7067 64.6451 12.9588 63.2232 12.6218L62.3368 12.4002C61.5613 12.2156 60.7211 11.8878 60.7303 11.0984C60.7349 10.3874 61.372 9.86577 62.443 9.86577C63.4632 9.86577 64.1373 10.3413 64.225 11.1445ZM67.5292 18H73.7153V16.5643H69.2419V13.9837H73.3598V12.5479H69.2419V9.98118H73.6784V8.54545H67.5292V18ZM75.4257 18H81.3025V16.5643H77.1384V8.54545H75.4257V18Z" />
-										</svg>
-									</label>
-
 									<?php echo $pro_toggle ? '</fieldset>' : ''; ?>
 								</div>
 
@@ -1225,7 +1227,7 @@ class WPZOOM_Instagram_Widget_Settings {
 										<div class="wpz-insta_table-cell"><input type="number" name="_wpz-insta_item-num" value="<?php echo esc_attr( $feed_items_num ); ?>" size="3" min="1" max="100" step="1" /></div>
 									</label>
 
-									<label class="wpz-insta_table-row">
+									<label class="wpz-insta_table-row<?php echo 1 === $feed_layout ? ' hidden' : ''; ?>">
 										<strong class="wpz-insta_table-cell"><?php esc_html_e( 'Number of columns', 'instagram-widget-by-wpzoom' ); ?></strong>
 										<div class="wpz-insta_table-cell"><input type="number" name="_wpz-insta_col-num" value="<?php echo esc_attr( $feed_cols_num ); ?>" size="3" min="0" max="100" step="1" /></div>
 									</label>
@@ -1480,7 +1482,7 @@ class WPZOOM_Instagram_Widget_Settings {
 								</div>
 							</div>
 
-							<div class="wpz-insta_sidebar-section wpz-insta_sidebar-section-load-more<?php echo $pro_toggle ? ' wpz-insta_pro-only' : ''; ?>">
+							<div class="wpz-insta_sidebar-section wpz-insta_sidebar-section-load-more<?php echo ( $pro_toggle ? ' wpz-insta_pro-only' : '' ) . ( 1 === $feed_layout ? ' hidden' : '' ); ?>">
 								<h4 class="wpz-insta_sidebar-section-title smaller-title"><?php esc_html_e( 'Load More Posts', 'instagram-widget-by-wpzoom' ); ?></h4>
 
 								<div class="wpz-insta_feed-load-more-general wpz-insta_table">
@@ -1652,9 +1654,22 @@ class WPZOOM_Instagram_Widget_Settings {
 	}
 
 	function replace_preview_content( $output ) {
-		if ( preg_match( '/^(.*?)<body([^>]*)>(?:.*?)\s*((?:(?:(?:<script[^>]*>(?:.*?)<\/script>)|(?:<link[^>]*>))\s*)*)\s*<\/body>(.*)$/is', $output, $matches ) ) {
-			$widget_output = WPZOOM_Instagram_Widget_Settings::get_instance()->get_preview_frame();
-			$output = $matches[1] . '<body ' . $matches[2] . '>' . $widget_output . $matches[3] . '</body>' . $matches[4];
+		try {
+			require_once( plugin_dir_path( __FILE__ ) . '/vendor/autoload.php' );
+
+			$document = new DiDom\Document( $output );
+			$body_content = $document->find( 'body > *:not(script):not(link)' );
+			$widget_document = new DiDom\Document( WPZOOM_Instagram_Widget_Settings::get_instance()->get_preview_frame() );
+			$widget_content = $widget_document->find( '.zoom-new-instagram-widget' )[0];
+
+			foreach ( $body_content as $element ) {
+				$element->remove();
+			}
+
+			$document->find( 'body' )[0]->prependChild( $widget_content );
+			$output = $document->html();
+		} catch ( Exception $e ) {
+			$output = __( 'Error rendering preview!', 'instagram-widget-by-wpzoom' );
 		}
 
 		return $output;
@@ -2611,7 +2626,7 @@ class WPZOOM_Instagram_Widget_Settings {
 	 * @return array
 	 */
 	public function get_settings() {
-		return self::$settings;
+		return self::$feed_settings;
 	}
 
 	/**
