@@ -123,68 +123,74 @@ class Wpzoom_Instagram_Widget_API {
 	 * @return boolean
 	 */
 	public function execute_cron() {
-		global $current_user;
+		$all_users = get_posts( array(
+			'numberposts' => -1,
+			'post_type'   => 'wpz-insta_user',
+		) );
 
-		if ( ! empty( $this->access_token ) ) {
-			$stored_data = WPZOOM_Instagram_Widget_Settings::get_instance()->get_settings();
-			$request_url = add_query_arg(
-				array(
-					'grant_type'   => 'ig_refresh_token',
-					'access_token' => $this->access_token,
-				),
-				'https://graph.instagram.com/refresh_access_token'
-			);
+		if ( ! empty( $all_users ) && is_array( $all_users ) ) {
+			foreach ( $all_users as $user ) {
+				if ( $user instanceof WP_Post ) {
+					$user_name    = get_the_title( $user );
+					$user_display = sprintf( '@%s', $user_name );
+					$token        = get_post_meta( $user->ID, '_wpz-insta_token', true );
 
-			$response      = wp_safe_remote_get( $request_url, $this->headers );
-			$response_code = wp_remote_retrieve_response_code( $response );
+					if ( false !== $token && ! empty( $token ) ) {
+						$request_url = add_query_arg(
+							array(
+								'grant_type'   => 'ig_refresh_token',
+								'access_token' => $token,
+							),
+							'https://graph.instagram.com/refresh_access_token'
+						);
 
-			if ( ! is_wp_error( $response ) ) {
-				$body = wp_remote_retrieve_body( $response );
-				$data = json_decode( $body );
-			}
+						$response      = wp_safe_remote_get( $request_url, $this->headers );
+						$response_code = wp_remote_retrieve_response_code( $response );
 
-			if ( 200 === $response_code ) {
-				$date_format    = get_option( 'date_format' );
-				$time_format    = get_option( 'time_format' );
-				$notice_message = sprintf( __( 'Instagram Access Token was refreshed automatically on %1$s at %2$s', 'instagram-widget-by-wpzoom' ), date( $date_format ), date( $time_format ) );
+						if ( ! is_wp_error( $response ) ) {
+							$body = wp_remote_retrieve_body( $response );
+							$data = json_decode( $body );
+						}
 
-				$stored_data['basic-access-token']   = $data->access_token;
-				$stored_data['refresh-access-token'] = $notice_message;
-			} else {
-				if ( ! isset( $data->error ) ) {
-					error_log( __( 'Something wrong! Doesn\'t isset $data->error.', 'instagram-widget-by-wpzoom' ) );
-					return false;
-				} else {
-					error_log( $data->error->error_user_msg );
+						if ( 200 === $response_code ) {
+							$date_format    = get_option( 'date_format' );
+							$time_format    = get_option( 'time_format' );
+							$notice_status  = 'success';
+							$notice_message = sprintf( __( '<strong>WPZOOM Instagram Widget:</strong> The Instagram Access Token was refreshed automatically on %1$s at %2$s for the account <em>%3$s</em>.', 'instagram-widget-by-wpzoom' ), date( $date_format ), date( $time_format ), esc_html( $user_display ) );
+
+							update_post_meta( $user->ID, '_wpz-insta_token', $data->access_token );
+							update_post_meta( $user->ID, '_wpz-insta_token_expire', strtotime( '+60 days' ) );
+						} else {
+							if ( ! isset( $data->error ) ) {
+								error_log( __( 'Something wrong! Doesn\'t isset $data->error.', 'instagram-widget-by-wpzoom' ) );
+								return false;
+							} else {
+								error_log( $data->error->error_user_msg );
+							}
+
+							$notice_status  = 'error';
+							$notice_message = '';
+							$settings_url   = admin_url( 'edit.php?post_type=wpz-insta_user' );
+
+							if ( 190 === $data->error->code ) {
+								// Error validating access token: Session has expired.
+								$notice_message = __( '<strong>WPZOOM Instagram Widget:</strong> ', 'instagram-widget-by-wpzoom' ) . $data->error->message;
+							} elseif ( 10 === $data->error->code && ! self::is_access_token_valid( $token ) ) {
+								// Application does not have permission for this action.
+								// User need to generate new Access Token manually.
+								$notice_message  = sprintf( __( '<strong>WPZOOM Instagram Widget:</strong> The Access Token for the account <em>%1$s</em> has expired!<br/>', 'instagram-widget-by-wpzoom' ), $user_display );
+								$notice_message .= sprintf( __( 'We cannot update access tokens automatically for Instagram private accounts. You need to manually generate a new access token, reauthorize here: %1$s', 'instagram-widget-by-wpzoom' ), '<a href="' . esc_url( $settings_url ) . '">' . __( 'Instagram Widget Settings', 'instagram-widget-by-wpzoom' ) . '</a>' );
+							}
+						}
+
+						update_option(
+							'_wpz-insta_cron-result',
+							array( $user->ID => array( 'status'  => $notice_status, 'message' => $notice_message ) ) + (array) get_option( '_wpz-insta_cron-result', array() )
+						);
+					}
 				}
-
-				$notice_message   = '';
-				$user_id          = $current_user->ID;
-				$hide_notices_url = wpzoom_instagram_get_notice_dismiss_url();
-				$settings_url     = admin_url( 'edit.php?post_type=wpz-insta_user' );
-
-				if ( 190 === $data->error->code ) {
-					// Error validating access token: Session has expired.
-					$notice_message  = $data->error->message;
-					$notice_message .= '<a style="text-decoration: none" class="notice-dismiss" href="' . $hide_notices_url . '"></a>';
-				} elseif ( 10 === $data->error->code && ! self::is_access_token_valid( $this->access_token ) ) {
-					// Application does not have permission for this action.
-					// User need to generate new Access Token manually.
-					$notice_message  = '<strong>' . __( 'Your Access Token for Instagram Widget has expired!', 'instagram-widget-by-wpzoom' ) . '</strong><br/>';
-					$notice_message .= sprintf( __( 'We cannot update access tokens automatically for Instagram private accounts. You need manually to generate a new access token, reauthorize here: %1$s.', 'instagram-widget-by-wpzoom' ), '<a href="' . esc_url( $settings_url ) . '">' . __( 'Instagram Widget Settings', 'instagram-widget-by-wpzoom' ) . '</a>' ) . '&nbsp;';
-					$notice_message .= '<a style="text-decoration: none" class="notice-dismiss" href="' . $hide_notices_url . '"></a>';
-				}
-
-				$stored_data['admin-notice-message'] = $notice_message;
-
-				// Update user meta to display admin notice.
-				update_user_meta( $user_id, 'wpzoom_instagram_admin_notice', false );
 			}
-
-			return update_option( WPZOOM_Instagram_Widget_Settings::get_instance()->get_option_name(), $stored_data );
 		}
-
-		return false;
 	}
 
 	public static function reset_cache( $sanitized_data ) {

@@ -316,6 +316,7 @@ class WPZOOM_Instagram_Widget_Settings {
 		add_action( 'in_admin_footer', array( $this, 'page_footer' ) );
 		add_action( 'wp_ajax_wpz-insta_connect-user', array( $this, 'ajax_connect_user' ) );
 		add_action( 'wp_ajax_inline-save', array( $this, 'ajax_inline_save' ), 1 );
+		add_action( 'wp_ajax_wpz-insta_dismiss-cron-notice', array( $this, 'ajax_dismiss_cron_notice' ) );
 		add_action( 'save_post_wpz-insta_feed', array( $this, 'save_feed' ), 15, 3 );
 		add_action( 'save_post_wpz-insta_user', array( $this, 'save_user' ), 15, 3 );
 		add_action( 'wp_after_insert_post', array( $this, 'after_insert_post' ), 10, 4 );
@@ -428,6 +429,21 @@ class WPZOOM_Instagram_Widget_Settings {
 				( $success ? __( 'Feed duplicated.', 'instagram-widget-by-wpzoom' ) : __( 'There was an error duplicating the selected feed.', 'instagram-widget-by-wpzoom' ) )
 			);
 		}
+
+		$cron_notices = (array) get_option( '_wpz-insta_cron-result', array() );
+		if ( ! empty( $cron_notices ) ) {
+			foreach ( $cron_notices as $user_id => $cron_notice ) {
+				if ( ! empty( $cron_notice ) && is_array( $cron_notice ) ) {
+					printf(
+						'<div class="notice notice-%1$s inline is-dismissible wpz-insta-cron-notice" data-user-id="%2$s" data-nonce="%3$s"><p>%4$s</p></div>',
+						( $cron_notice['status'] ? 'success' : 'error' ),
+						esc_attr( $user_id ),
+						wp_create_nonce( 'dismiss-cron-notice' ),
+						wp_kses_post( $cron_notice['message'] )
+					);
+				}
+			}
+		}
 	}
 
 	function all_admin_notices() {
@@ -438,6 +454,22 @@ class WPZOOM_Instagram_Widget_Settings {
 			$this->connect_page();
 			require_once ABSPATH . 'wp-admin/admin-footer.php';
 			exit;
+		}
+	}
+
+	function ajax_dismiss_cron_notice() {
+		if ( isset( $_POST['nonce'] ) && wp_verify_nonce( $_POST['nonce'], 'dismiss-cron-notice' ) && isset( $_POST['user_id'] ) && ! empty( $_POST['user_id'] ) ) {
+			$user_id = intval( $_POST['user_id'] );
+			$cron_notices = (array) get_option( '_wpz-insta_cron-result', array() );
+
+			if ( ! empty( $cron_notices ) && key_exists( $user_id, $cron_notices ) ) {
+				unset( $cron_notices[ $user_id ] );
+				update_option( '_wpz-insta_cron-result', $cron_notices );
+
+				wp_send_json_success( null, 200 );
+			}
+
+			wp_send_json_error( null, 500 );
 		}
 	}
 
@@ -1941,7 +1973,6 @@ class WPZOOM_Instagram_Widget_Settings {
 	}
 
 	public function save_user( int $post_ID, WP_Post $post, bool $update ) {
-//var_dump(array('$post_ID'=>$post_ID,'$post'=>$post,'$update'=>$update,'$_POST'=>$_POST,'wp_is_post_revision()'=>wp_is_post_revision($post),'wp_is_post_autosave()'=>wp_is_post_autosave($post),'get_post_status'=>get_post_status($post),'get_registered_meta_keys()'=>get_registered_meta_keys('post','wpz-insta_user')));die;
 		if ( ! wp_is_post_revision( $post ) && ! wp_is_post_autosave( $post ) && 'auto-draft' != get_post_status( $post ) && isset( $_POST ) && ! empty( $_POST ) ) {
 			$meta_keys = get_registered_meta_keys( 'post', 'wpz-insta_user' );
 
