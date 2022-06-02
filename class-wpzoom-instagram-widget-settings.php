@@ -1655,7 +1655,7 @@ class WPZOOM_Instagram_Widget_Settings {
 
 	function replace_preview_content( $output ) {
 		try {
-			require_once( plugin_dir_path( __FILE__ ) . '/vendor/autoload.php' );
+			require_once( plugin_dir_path( __FILE__ ) . 'vendor/autoload.php' );
 
 			$document = new DiDom\Document( $output );
 			$body_content = $document->find( 'body > *:not(script):not(link)' );
