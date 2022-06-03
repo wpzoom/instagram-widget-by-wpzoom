@@ -1068,7 +1068,8 @@ class WPZOOM_Instagram_Widget_Settings {
 			$new_posts_interval_number = (int) self::get_feed_setting_value( $post->ID, 'check-new-posts-interval-number' );
 			$new_posts_interval_suffix = (int) self::get_feed_setting_value( $post->ID, 'check-new-posts-interval-suffix' );
 			$enable_request_timeout = (bool) self::get_feed_setting_value( $post->ID, 'enable-request-timeout' );
-			$feed_layout = ! $pro_toggle ? (int) self::get_feed_setting_value( $post->ID, 'layout' ) : 0;
+			$raw_feed_layout = (int) self::get_feed_setting_value( $post->ID, 'layout' );
+			$feed_layout = ! $pro_toggle ? $raw_feed_layout : ( $raw_feed_layout > 1 ? 0 : $raw_feed_layout );
 			$feed_items_num = (int) self::get_feed_setting_value( $post->ID, 'item-num' );
 			$feed_cols_num = (int) self::get_feed_setting_value( $post->ID, 'col-num' );
 			$feed_spacing_between = (float) self::get_feed_setting_value( $post->ID, 'spacing-between' );
@@ -1209,10 +1210,10 @@ class WPZOOM_Instagram_Widget_Settings {
 
 										<svg width="92" height="110" viewBox="0 0 92 110" fill="none" xmlns="http://www.w3.org/2000/svg">
 											<rect x="0.5" y="0.5" width="91" height="109" rx="3.5" fill-opacity="0.2" stroke="currentColor"/>
-											<rect x="2" y="51" width="22" height="22" />
-											<rect x="25" y="51" width="22" height="22" />
-											<rect x="48" y="51" width="22" height="22" />
-											<rect x="71" y="51" width="19" height="22" />
+											<rect x="3" y="53" width="20" height="22" rx="2" />
+											<rect x="25" y="53" width="20" height="22" rx="2" />
+											<rect x="47" y="53" width="20" height="22" rx="2" />
+											<rect x="69" y="53" width="20" height="22" rx="2" />
 											<path d="M7.03604 18V8.54545H13.0929V9.98118H8.74876V12.5479H12.6774V13.9837H8.74876V18H7.03604ZM20.6131 8.54545H22.3258V14.7223C22.3258 15.3994 22.1658 15.9949 21.8457 16.5089C21.5287 17.0228 21.0824 17.4245 20.5069 17.7138C19.9314 18 19.2589 18.1431 18.4895 18.1431C17.717 18.1431 17.043 18 16.4675 17.7138C15.892 17.4245 15.4457 17.0228 15.1287 16.5089C14.8117 15.9949 14.6532 15.3994 14.6532 14.7223V8.54545H16.3659V14.5792C16.3659 14.9731 16.4521 15.324 16.6245 15.6317C16.7999 15.9395 17.0461 16.1811 17.3631 16.3565C17.6801 16.5289 18.0556 16.6151 18.4895 16.6151C18.9235 16.6151 19.2989 16.5289 19.6159 16.3565C19.936 16.1811 20.1822 15.9395 20.3546 15.6317C20.5269 15.324 20.6131 14.9731 20.6131 14.5792V8.54545ZM24.1874 18V8.54545H25.9001V16.5643H30.0642V18H24.1874ZM31.5507 18V8.54545H33.2634V16.5643H37.4275V18H31.5507ZM42.4779 12.5849V13.9606H38.2215V12.5849H42.4779ZM45.9056 18L43.2373 8.54545H45.0793L46.7828 15.4933H46.8705L48.6894 8.54545H50.3651L52.1887 15.4979H52.2718L53.9752 8.54545H55.8172L53.1489 18H51.4593L49.5665 11.3661H49.4926L47.5953 18H45.9056ZM58.7175 8.54545V18H57.0048V8.54545H58.7175ZM63.776 18H60.5722V8.54545H63.8406C64.7793 8.54545 65.5857 8.73473 66.2597 9.11328C66.9368 9.48875 67.4569 10.0289 67.82 10.7337C68.1832 11.4384 68.3648 12.2817 68.3648 13.2635C68.3648 14.2483 68.1817 15.0947 67.8154 15.8026C67.4523 16.5104 66.9275 17.0536 66.2412 17.4322C65.558 17.8107 64.7362 18 63.776 18ZM62.2849 16.5181H63.6929C64.3515 16.5181 64.9009 16.3981 65.341 16.158C65.7811 15.9149 66.1119 15.5533 66.3335 15.0732C66.5551 14.59 66.6659 13.9867 66.6659 13.2635C66.6659 12.5402 66.5551 11.9401 66.3335 11.4631C66.1119 10.983 65.7842 10.6244 65.3502 10.3874C64.9194 10.1474 64.3838 10.0273 63.7437 10.0273H62.2849V16.5181ZM69.1577 9.98118V8.54545H76.701V9.98118H73.7788V18H72.0799V9.98118H69.1577ZM78.1552 18V8.54545H79.8679V12.5479H84.2489V8.54545H85.9663V18H84.2489V13.9837H79.8679V18H78.1552Z" />
 										</svg>
 									</label>
@@ -1224,7 +1225,7 @@ class WPZOOM_Instagram_Widget_Settings {
 
 										<svg width="92" height="110" viewBox="0 0 92 110" xmlns="http://www.w3.org/2000/svg">
 											<rect x="0.5" y="0.5" width="91" height="109" rx="3.5" fill-opacity="0.2" stroke="currentColor" />
-											<rect x="9" y="27" width="22" height="46" rx="2" />
+											<rect x="9" y="27" width="22" height="48" rx="2" />
 											<rect x="9" y="79" width="22" height="22" rx="2" />
 											<rect x="35" y="27" width="22" height="22" rx="2" />
 											<rect x="35" y="53" width="22" height="22" rx="2" />
@@ -1240,7 +1241,7 @@ class WPZOOM_Instagram_Widget_Settings {
 
 										<svg width="92" height="110" viewBox="0 0 92 110" xmlns="http://www.w3.org/2000/svg">
 											<rect x="0.5" y="0.5" width="91" height="109" rx="3.5" fill-opacity="0.2" stroke="currentColor" />
-											<rect x="9" y="27" width="48" height="46" rx="2" />
+											<rect x="9" y="27" width="48" height="48" rx="2" />
 											<rect x="9" y="79" width="22" height="22" rx="2" />
 											<rect x="35" y="79" width="22" height="22" rx="2" />
 											<rect x="61" y="27" width="22" height="22" rx="2" />
@@ -1484,7 +1485,7 @@ class WPZOOM_Instagram_Widget_Settings {
 												<span><?php esc_html_e( 'Instagram link', 'instagram-widget-by-wpzoom' ); ?></span>
 											</label>
 
-											<?php echo $pro_toggle ? '<fieldset class="wpz-insta_feed-only-pro wpz-insta_pro-only"><legend><strong>' . esc_html__( 'PRO', 'instagram-widget-by-wpzoom' ) . '</strong></legend>' : ''; ?>
+											<?php echo $pro_toggle ? '<fieldset class="wpz-insta_feed-only-pro wpz-insta_pro-only' . ( 1 === $feed_layout ? ' hidden' : '' ) . '"><legend><strong>' . esc_html__( 'PRO', 'instagram-widget-by-wpzoom' ) . '</strong></legend>' : ''; ?>
 
                                             <?php /* Coming Soon
 

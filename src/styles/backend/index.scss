@@ -1784,6 +1784,10 @@
 						border-bottom: 2px solid $orange-color;
 					}
 
+					&.hidden {
+						display: none;
+					}
+
 					legend {
 						display: flex;
 						width: 100%;

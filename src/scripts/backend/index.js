@@ -200,8 +200,13 @@ jQuery( function( $ ) {
 	} );
 
 	$( '.wpz-insta_sidebar-section-layout input[name="_wpz-insta_layout"]' ).on( 'change', function() {
-		$( this ).closest( '.wpz-insta_sidebar-section-layout' ).find( 'input[name="_wpz-insta_col-num"]' ).closest( '.wpz-insta_table-row' )
-			.toggleClass( 'hidden', $( this ).val() == '1' );
+		const $colNumOption    = $( this ).closest( '.wpz-insta_sidebar-section-layout' ).find( 'input[name="_wpz-insta_col-num"]' ).closest( '.wpz-insta_table-row' ),
+		      $parentLeftSect  = $( this ).closest( '.wpz-insta_sidebar-left-section' ),
+		      $proFieldset     = $parentLeftSect.find( '.wpz-insta_sidebar-section-feed .wpz-insta_show-on-hover fieldset.wpz-insta_feed-only-pro.wpz-insta_pro-only' ),
+		      $loadMoreOptions = $parentLeftSect.find( '.wpz-insta_sidebar-section-load-more' ),
+		      $toggleItems     = $colNumOption.add( $proFieldset ).add( $loadMoreOptions );
+
+		$toggleItems.toggleClass( 'hidden', $( this ).val() == '1' );
 	} );
 
 	$( '#wpz-insta_modal-dialog' ).find( '.wpz-insta_modal-dialog_ok-button, .wpz-insta_modal-dialog_close-button' ).on( 'click', function( e ) {

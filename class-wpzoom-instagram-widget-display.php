@@ -190,7 +190,9 @@ class Wpzoom_Instagram_Widget_Display {
 				if ( '-1' !== $user_account_token ) {
 					$attrs = '';
 					$layout_names = array( 0 => 'grid', 1 => 'fullwidth', 2 => 'masonry', 3 => 'highlight' );
-					$layout = $this->is_pro && isset( $args['layout'] ) && isset( $layout_names[ intval( $args['layout'] ) ] ) ? $layout_names[ intval( $args['layout'] ) ] : 'grid';
+					$raw_layout = isset( $args['layout'] ) ? intval( $args['layout'] ) : 0;
+					$layout_int = $this->is_pro ? $raw_layout : ( $raw_layout > 1 ? 0 : $raw_layout );
+					$layout = isset( $layout_names[ $layout_int ] ) ? $layout_names[ $layout_int ] : 'grid';
 					$new_posts_interval_number = isset( $args['check-new-posts-interval-number'] ) ? intval( $args['check-new-posts-interval-number'] ) : 1;
 					$new_posts_interval_suffix = isset( $args['check-new-posts-interval-suffix'] ) ? intval( $args['check-new-posts-interval-suffix'] ) : 1;
 					$enable_request_timeout = isset( $args['enable-request-timeout'] ) ? boolval( $args['enable-request-timeout'] ) : false;
@@ -557,7 +559,8 @@ class Wpzoom_Instagram_Widget_Display {
 	public function style_content( array $args ) {
 		$output                 = '';
 		$feed_id                = isset( $args['feed-id'] ) ? ".feed-" . $args['feed-id'] : "";
-		$layout                 = isset( $args['layout'] ) ? intval( $args['layout'] ) : 0;
+		$raw_layout             = isset( $args['layout'] ) ? intval( $args['layout'] ) : 0;
+		$layout                 = $this->is_pro ? $raw_layout : ( $raw_layout > 1 ? 0 : $raw_layout );
 		$col_num                = isset( $args['col-num'] ) && intval( $args['col-num'] ) !== 3 ? intval( $args['col-num'] ) : 3;
 		$spacing_between        = isset( $args['spacing-between'] ) && intval( $args['spacing-between'] ) > -1 ? intval( $args['spacing-between'] ) : -1;
 		$spacing_between_suffix = $this->get_suffix( isset( $args['spacing-between-suffix'] ) ? intval( $args['spacing-between-suffix'] ) : 0 );
