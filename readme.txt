@@ -71,7 +71,7 @@ Make sure to connect your Instagram account with the plugin. You can do that in 
 
 == Changelog ==
 
-= 2.0.0 =
+= 2.0.0-beta =
 * Major re-design.
 
 = 1.9.5 =
