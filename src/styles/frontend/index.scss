@@ -107,6 +107,12 @@
 		&.layout-fullwidth {
 			display: flex;
 			width: 5000px;
+
+            .zoom-instagram-widget__item {
+                img {
+                    aspect-ratio: 1;
+                }
+            }
 		}
     }
 
@@ -192,6 +198,12 @@
 	&.layout-fullwidth {
 		display: flex;
 		width: 5000px;
+
+        .zoom-instagram-widget__item {
+            img {
+                aspect-ratio: 1;
+            }
+        }
 	}
 
 	.zoom-instagram-widget__item {

@@ -187,6 +187,13 @@ img {
 			&.layout-fullwidth {
 				display: flex;
 				width: 5000px;
+
+                .zoom-instagram-widget__item {
+                    img {
+                        aspect-ratio: 1;
+                        object-fit: cover;
+                    }
+                }
 			}
 
     		&::before,
@@ -819,4 +826,16 @@ img {
 			}
 		}
 	}
+}
+
+
+.wp-admin {
+
+    .wp-block-wpzoom-instagram-block .zoom-instagram-widget__overlay, .zoom-instagram .zoom-instagram-widget__overlay {
+        cursor: pointer;
+    }
+
+    .wp-block-wpzoom-instagram-block .zoom-instagram-widget__items .zoom-instagram-widget__item .zoom-instagram-link, .zoom-instagram .zoom-instagram-widget__items .zoom-instagram-widget__item .zoom-instagram-link {
+        pointer-events: none;
+    }
 }
