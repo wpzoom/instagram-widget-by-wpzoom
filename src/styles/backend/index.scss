@@ -1968,6 +1968,12 @@
 						max-width: 380px;
 					}
 
+					&.layout-fullwidth {
+						&.wpz-insta_widget-preview-size-desktop .wpz-insta_widget-preview-view-inner {
+							max-width: 100%;
+						}
+					}
+
 					.wpz-insta_widget-preview-view-inner {
 						flex-grow: 1;
 						padding: 0;

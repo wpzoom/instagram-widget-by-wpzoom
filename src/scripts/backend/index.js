@@ -207,6 +207,8 @@ jQuery( function( $ ) {
 		      $toggleItems     = $colNumOption.add( $proFieldset ).add( $loadMoreOptions );
 
 		$toggleItems.toggleClass( 'hidden', $( this ).val() == '1' );
+		
+		$( '.wpz-insta-admin .wpz-insta_widget-preview .wpz-insta_widget-preview-view' ).toggleClass( 'layout-fullwidth', $( this ).val() == '1' );
 	} );
 
 	$( '#wpz-insta_modal-dialog' ).find( '.wpz-insta_modal-dialog_ok-button, .wpz-insta_modal-dialog_close-button' ).on( 'click', function( e ) {
