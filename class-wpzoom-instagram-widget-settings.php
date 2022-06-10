@@ -2539,7 +2539,7 @@ class WPZOOM_Instagram_Widget_Settings {
 					<div class="account-option account-option_token">
 						<h4 class="account-option-title"><?php _e( 'Connect without a login', 'instagram-widget-by-wpzoom' ); ?></h4>
 
-						<input type="text" id="wpz-insta_account-token-input" name="wpz-insta_account-token-input" value="" class="account-option-token-input" placeholder="<?php _e( 'Facebook/Instagram access token', 'instagram-widget-by-wpzoom' ); ?>" />
+						<input type="text" id="wpz-insta_account-token-input" name="wpz-insta_account-token-input" value="<?php echo isset( $settings['basic-access-token'] ) && ! empty( $settings['basic-access-token'] ) ? esc_attr( $settings['basic-access-token'] ) : ''; ?>" class="account-option-token-input" placeholder="<?php _e( 'Facebook/Instagram access token', 'instagram-widget-by-wpzoom' ); ?>" />
 
 						<button id="wpz-insta_account-token-button" class="account-option-button disabled">
 							<svg width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
