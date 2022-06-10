@@ -1229,7 +1229,7 @@ class WPZOOM_Instagram_Widget_Settings {
 									<input type="hidden" name="_wpz-insta_enable-request-timeout" value="0" />
 									<input type="checkbox" name="_wpz-insta_enable-request-timeout" id="wpz-insta_enable-request-timeout" value="1"<?php checked( $enable_request_timeout ); ?> />
 									<strong><?php esc_html_e( 'Enable request timeout', 'instagram-widget-by-wpzoom' ); ?></strong>
-									<p class="description"><?php esc_html_e( 'The time within which a response must be returned will be set to 15 seconds to prevent your server from being blocked by Instagram API.', 'instagram-widget-by-wpzoom' ); ?></p>
+									<p class="description"><?php esc_html_e( 'The time within which a response must be returned will be set to 15 seconds to prevent your request from being blocked by the Instagram API.', 'instagram-widget-by-wpzoom' ); ?></p>
 								</label>
 							</div>
 						</div>
