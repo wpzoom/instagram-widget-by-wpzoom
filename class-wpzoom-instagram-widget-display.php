@@ -573,8 +573,8 @@ class Wpzoom_Instagram_Widget_Display {
 		$spacing_around_suffix  = $this->get_suffix( isset( $args['spacing-around-suffix'] ) ? intval( $args['spacing-around-suffix'] ) : 0 );
 		$font_size              = isset( $args['font-size'] ) ? ( intval( $args['font-size'] ) ?: -1 ) : -1;
 		$font_size_suffix       = $this->get_suffix( isset( $args['font-size-suffix'] ) ? intval( $args['font-size-suffix'] ) : 0 );
-		$image_width            = isset( $args['image-width'] ) ? ( intval( $args['image-width'] ) ?: 100 ) : 100;
-		$image_width_suffix     = $this->get_suffix( isset( $args['image-width-suffix'] ) ? intval( $args['image-width-suffix'] ) : 2 );
+		$image_width            = isset( $args['image-width'] ) ? ( intval( $args['image-width'] ) ?: 240 ) : 240;
+		$image_width_suffix     = $this->get_suffix( isset( $args['image-width-suffix'] ) ? intval( $args['image-width-suffix'] ) : 0 );
 		$hover_likes            = isset( $args['hover-likes'] ) ? boolval( $args['hover-likes'] ) : true;
 		$hover_link             = isset( $args['hover-link'] ) ? boolval( $args['hover-link'] ) : true;
 		$hover_caption          = isset( $args['hover-caption'] ) ? boolval( $args['hover-caption'] ) : false;
