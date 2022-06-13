@@ -1216,10 +1216,10 @@ class WPZOOM_Instagram_Widget_Settings {
 
 									<select name="_wpz-insta_check-new-posts-interval-suffix" id="wpz-insta_check-new-posts-interval-suffix">
 										<option value="0"<?php selected( $new_posts_interval_suffix, 0 ); ?>><?php esc_html_e( 'Minutes', 'instagram-widget-by-wpzoom' ); ?></option>
-										<option value="0"<?php selected( $new_posts_interval_suffix, 1 ); ?>><?php esc_html_e( 'Hours', 'instagram-widget-by-wpzoom' ); ?></option>
-										<option value="1"<?php selected( $new_posts_interval_suffix, 2 ); ?>><?php esc_html_e( 'Days', 'instagram-widget-by-wpzoom' ); ?></option>
-										<option value="2"<?php selected( $new_posts_interval_suffix, 3 ); ?>><?php esc_html_e( 'Weeks', 'instagram-widget-by-wpzoom' ); ?></option>
-										<option value="3"<?php selected( $new_posts_interval_suffix, 4 ); ?>><?php esc_html_e( 'Months', 'instagram-widget-by-wpzoom' ); ?></option>
+										<option value="1"<?php selected( $new_posts_interval_suffix, 1 ); ?>><?php esc_html_e( 'Hours', 'instagram-widget-by-wpzoom' ); ?></option>
+										<option value="2"<?php selected( $new_posts_interval_suffix, 2 ); ?>><?php esc_html_e( 'Days', 'instagram-widget-by-wpzoom' ); ?></option>
+										<option value="3"<?php selected( $new_posts_interval_suffix, 3 ); ?>><?php esc_html_e( 'Weeks', 'instagram-widget-by-wpzoom' ); ?></option>
+										<option value="4"<?php selected( $new_posts_interval_suffix, 4 ); ?>><?php esc_html_e( 'Months', 'instagram-widget-by-wpzoom' ); ?></option>
 									</select>
 								</div>
 							</div>
