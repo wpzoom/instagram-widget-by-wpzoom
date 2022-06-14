@@ -2022,6 +2022,14 @@ class WPZOOM_Instagram_Widget_Settings {
 			if ( metadata_exists( 'post', $post_ID, '_wpz-insta_feed_is_duplicate' ) ) {
 				delete_post_meta( $post_ID, '_wpz-insta_feed_is_duplicate' );
 			}
+
+			$user_id = (int) self::get_feed_setting_value( $post_ID, 'user-id' );
+			$raw_token = get_post_meta( $user_id, '_wpz-insta_token', true );
+			$user_account_token = false !== $raw_token && ! empty( $raw_token ) ? $raw_token : '-1';
+			if ( '-1' !== $user_account_token ) {
+				delete_transient( 'zoom_instagram_is_configured_' . $user_account_token );
+			}
+
 		}
 	}
 
