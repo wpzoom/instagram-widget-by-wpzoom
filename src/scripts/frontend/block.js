@@ -56,9 +56,13 @@
 					midClick: true,
 					callbacks: {
 						open: function () {
-							this.content.find( '> .swiper-container' ).get(0).swiper.slideTo(
-								this.content.find( '> .swiper-container > .swiper-wrapper > .swiper-slide[data-uid="' + $( this._lastFocusedEl ).data( 'mfp-src' ) + '"]' ).index()
-							);
+							const $thisSwiper = this.content.find( '> .swiper-container' ).get(0).swiper;
+
+							if ( typeof $thisSwiper === 'function' ) {
+								$thisSwiper.slideTo(
+									this.content.find( '> .swiper-container > .swiper-wrapper > .swiper-slide[data-uid="' + $( this._lastFocusedEl ).data( 'mfp-src' ) + '"]' ).index()
+								);
+							}
 						}
 					}
 				} );
