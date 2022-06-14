@@ -697,7 +697,7 @@ class WPZOOM_Instagram_Widget_Settings {
 					</li>
 					</ul>
 
-					<div class="wpz-insta_notice"><p><?php _e( 'Due to restrictions set by Instagram, Instagram Widget cannot import the profile photo and bio text for Personal accounts. <a href="#" target="_blank" class="linked">Click here to learn more</a>.', 'instagram-widget-by-wpzoom' ); ?></p></div></div><?php
+					<div class="wpz-insta_notice"><p><?php _e( 'Due to restrictions set by Instagram, Instagram Widget cannot import the profile photo and bio text for Personal accounts.', 'instagram-widget-by-wpzoom' ); ?></p></div></div><?php
 
 					break;
 			}
@@ -1611,9 +1611,9 @@ class WPZOOM_Instagram_Widget_Settings {
 								<div class="wpz-insta_sidebar-section-description">
 									<p><?php esc_html_e( 'To embed this feed in the WordPress block editor:', 'instagram-widget-by-wpzoom' ); ?></p>
 									<ol>
-										<li><?php _e( 'Search for the <strong>Instagram Widget</strong> block.', 'instagram-widget-by-wpzoom' ); ?></li>
+										<li><?php _e( 'Search for the <strong>Instagram Feed by WPZOOM</strong> block.', 'instagram-widget-by-wpzoom' ); ?></li>
 										<li><?php esc_html_e( 'Add it to your post or page.', 'instagram-widget-by-wpzoom' ); ?></li>
-										<li><?php _e( 'Since this is your only feed, <strong>Instagram Widget</strong> will automatically show this feed.', 'instagram-widget-by-wpzoom' ); ?></li>
+										<li><?php _e( 'In the block settings, select to display the feed with this name.', 'instagram-widget-by-wpzoom' ); ?></li>
 									</ol>
 								</div>
 							</div>
@@ -1624,8 +1624,8 @@ class WPZOOM_Instagram_Widget_Settings {
 									<p><?php _e( 'To embed this feed as a WordPress widget:', 'instagram-widget-by-wpzoom' ); ?></p>
 									<ol>
 										<li><?php printf( __( 'Go to the <a href="%s">Appearance &raquo; Widgets</a> page or the <a href="%s">Widgets</a> section of the Customizer.', 'instagram-widget-by-wpzoom' ), esc_attr( admin_url( 'widgets.php' ) ), esc_attr( admin_url( 'customize.php?autofocus[panel]=widgets' ) ) ); ?></li>
-										<li><?php _e( 'Then, add a <strong>Instagram Widget</strong>.', 'instagram-widget-by-wpzoom' ); ?></li>
-										<li><?php _e( 'In the widget&rsquo;s settings, choose the WPZ Insta feed as the feed to be shown.', 'instagram-widget-by-wpzoom' ); ?></li>
+										<li><?php _e( 'Then, add a <strong>Text Widget</strong>.', 'instagram-widget-by-wpzoom' ); ?></li>
+										<li><?php _e( 'Copy the <strong>Shortcode</strong> above and insert it in the Text widget.', 'instagram-widget-by-wpzoom' ); ?></li>
 									</ol>
 								</div>
 							</div>
@@ -2520,7 +2520,7 @@ class WPZOOM_Instagram_Widget_Settings {
 
 			<div class="wpz-insta-wrap wpz-insta_settings-connect">
 				<h3 class="section-title"><?php _e( 'Let&rsquo;s connect your Instagram account', 'instagram-widget-by-wpzoom' ); ?></h3>
-				<p class="section-description"><?php _e( 'Are you connecting a Personal or Business Instagram Profile?  Unsure which button applies to you?  <a href="#" target="_blank" class="linked">Learn the difference.</a>', 'instagram-widget-by-wpzoom' ); ?></p>
+				<p class="section-description"><?php _e( 'Are you connecting a Personal or Business Instagram Profile?', 'instagram-widget-by-wpzoom' ); ?></p>
 
 				<div class="account-options">
 					<div class="account-option account-option_personal">
@@ -2538,7 +2538,7 @@ class WPZOOM_Instagram_Widget_Settings {
 								<path d="M13.2356 3.72907C13.2356 4.25896 12.806 4.68861 12.2759 4.68861C11.7461 4.68861 11.3164 4.25896 11.3164 3.72907C11.3164 3.19906 11.7461 2.76953 12.2759 2.76953C12.806 2.76953 13.2356 3.19906 13.2356 3.72907Z" fill="#fff" />
 							</svg>
 
-							<?php _e( 'Connect your personal account', 'instagram-widget-by-wpzoom' ); ?>
+							<?php _e( 'Connect your Instagram account', 'instagram-widget-by-wpzoom' ); ?>
 						</a>
 					</div>
 
@@ -2548,8 +2548,8 @@ class WPZOOM_Instagram_Widget_Settings {
 						<ul class="account-option-checklist">
 							<li><?php _e( 'Connects through your Facebook page', 'instagram-widget-by-wpzoom' ); ?></li>
 							<li><?php _e( 'Show posts from your account', 'instagram-widget-by-wpzoom' ); ?></li>
-							<li><?php _e( 'Show posts where you are tagged', 'instagram-widget-by-wpzoom' ); ?></li>
-							<li><?php _e( 'Show posts with a specific hashtag', 'instagram-widget-by-wpzoom' ); ?></li>
+							<li><?php _e( 'Show posts where you are tagged <small><em>Coming Soon</em></small>', 'instagram-widget-by-wpzoom' ); ?></li>
+							<li><?php _e( 'Show posts with a specific hashtag <small><em>Coming Soon</em></small>', 'instagram-widget-by-wpzoom' ); ?></li>
 						</ul>
 
 						<a href="<?php echo esc_url( $oauth_url ); ?>" id="wpz-insta_connect-business" class="button button-primary account-option-button">
@@ -2559,7 +2559,7 @@ class WPZOOM_Instagram_Widget_Settings {
 								<path d="M13.2356 3.72907C13.2356 4.25896 12.806 4.68861 12.2759 4.68861C11.7461 4.68861 11.3164 4.25896 11.3164 3.72907C11.3164 3.19906 11.7461 2.76953 12.2759 2.76953C12.806 2.76953 13.2356 3.19906 13.2356 3.72907Z" fill="#fff" />
 							</svg>
 
-							<?php _e( 'Connect your business account', 'instagram-widget-by-wpzoom' ); ?>
+							<?php _e( 'Connect your Instagram account', 'instagram-widget-by-wpzoom' ); ?>
 						</a>
 					</div>
 
@@ -2585,7 +2585,7 @@ class WPZOOM_Instagram_Widget_Settings {
 						<path d="M6.3 3.5H7.7V4.9H6.3V3.5ZM6.3 6.3H7.7V10.5H6.3V6.3ZM7 0C3.136 0 0 3.136 0 7C0 10.864 3.136 14 7 14C10.864 14 14 10.864 14 7C14 3.136 10.864 0 7 0ZM7 12.6C3.913 12.6 1.4 10.087 1.4 7C1.4 3.913 3.913 1.4 7 1.4C10.087 1.4 12.6 3.913 12.6 7C12.6 10.087 10.087 12.6 7 12.6Z" />
 					</svg>
 
-					<?php _e( 'If needed, you can convert a Personal account into a Business account by following the directions.&emsp;<a href="#" target="_blank" class="linked">Learn more about Business accounts</a>', 'instagram-widget-by-wpzoom' ); ?>
+					<?php _e( 'Instagram Graph API for Business & Creator accounts will be soon available! This API integration will allow you to show posts with a specific tag or posts you\'re tagged in.', 'instagram-widget-by-wpzoom' ); ?>
 				</p>
 			</div>
 		</div>
