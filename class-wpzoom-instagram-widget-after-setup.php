@@ -47,25 +47,21 @@ class Wpzoom_Instagram_Widget_After_Setup {
 
 		if( is_array( $getOldSettings ) && !empty( $getOldSettings ) ) {
 			
-			$token = isset( $getOldSettings['basic-access-token'] ) ? $getOldSettings['basic-access-token'] : '';
+			$token      = isset( $getOldSettings['basic-access-token'] )  ? $getOldSettings['basic-access-token'] : '';
+			$user_name  = isset( $getOldSettings['user-info-fullname'] )  ? $getOldSettings['user-info-fullname'] : '';
+			$user_bio   = isset( $getOldSettings['user-info-biography'] ) ? $getOldSettings['user-info-biography'] : '';
+			$user_image = isset( $getOldSettings['user-info-avatar'] )    ? $getOldSettings['user-info-avatar'] : '';
 
 			if ( ! empty( $token ) ) {
 				$info = Wpzoom_Instagram_Widget_API::get_basic_user_info_from_token( $token );
 
 				if ( false !== $info && is_object( $info ) && property_exists( $info, 'username' ) && property_exists( $info, 'account_type' ) ) {
-					if ( isset( $_POST['post_id'] ) && intval( $_POST['post_id'] ) > 0 ) {
-						$post_id = intval( $_POST['post_id'] );
-
-						if ( false !== get_post_status( $post_id ) ) {
-							update_post_meta( $post_id, '_wpz-insta_token', $token );
-							update_post_meta( $post_id, '_wpz-insta_token_expire', strtotime( '+60 days' ) );
-						}
-					} else {
 						$user = wp_strip_all_tags( $info->username );
 						$insert_post = wp_insert_post( array(
-							'post_title'  => $user,
-							'post_type'   => 'wpz-insta_user',
-							'post_status' => 'publish',
+							'post_title'   => $user,
+							'post_type'    => 'wpz-insta_user',
+							'post_status'  => 'publish',
+							'post_content' => $user_bio
 						), true );
 
 						if ( ! is_wp_error( $insert_post ) ) {
@@ -73,14 +69,16 @@ class Wpzoom_Instagram_Widget_After_Setup {
 							update_post_meta( $insert_post, '_wpz-insta_token_expire', strtotime( '+60 days' ) );
 							update_post_meta( $insert_post, '_wpz-insta_account-type', sanitize_text_field( $info->account_type ) );
 
+							update_post_meta( $insert_post, '_wpz-insta_user_name', sanitize_text_field( $user_name ) );
+							update_post_meta( $insert_post, '_thumbnail_id', $user_image );
+
 							if ( property_exists( $info, 'profile_picture' ) && ! empty( $info->profile_picture ) ) {
 								WPZOOM_Instagram_Widget_Settings()->generate_featured_image( $info->profile_picture, $insert_post, $user );
 							}
 						}
-					}
+
 				}
 			}
-
 		}
 
 		add_option( 'wpzoom_run_only_once_01', true );
