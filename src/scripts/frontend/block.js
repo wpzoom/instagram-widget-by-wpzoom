@@ -56,11 +56,15 @@
 					midClick: true,
 					callbacks: {
 						open: function () {
-							const $thisSwiper = this.content.find( '> .swiper-container' ).get(0).swiper;
+							const magnificPopup = $.magnificPopup.instance,
+							currentElement = magnificPopup.st.el,
+							$thisSwiper = this.content.find( '> .swiper-container' ).get(0).swiper;
 
-							if ( typeof $thisSwiper === 'function' ) {
+							//console.log( typeof $thisSwiper );
+
+							if ( typeof $thisSwiper === 'object' ) {
 								$thisSwiper.slideTo(
-									this.content.find( '> .swiper-container > .swiper-wrapper > .swiper-slide[data-uid="' + $( this._lastFocusedEl ).data( 'mfp-src' ) + '"]' ).index()
+									this.content.find( '> .swiper-container > .swiper-wrapper > .swiper-slide[data-uid="' + currentElement.data( 'mfp-src' ) + '"]' ).index()
 								);
 							}
 						}

@@ -109,8 +109,8 @@
 								const magnificPopup = $.magnificPopup.instance,
 								      currentElement = magnificPopup.st.el,
 								      $thisSwiper = this.content.find( '> .swiper-container' ).get(0).swiper;
-
-								if ( typeof $thisSwiper === 'function' ) {
+									  //console.log( currentElement );
+								if ( typeof $thisSwiper === 'object' ) {
 									$thisSwiper.slideTo(
 										this.content.find( '> .swiper-container > .swiper-wrapper > .swiper-slide[data-uid="' + currentElement.data( 'mfp-src' ) + '"]' ).index()
 									);
