@@ -140,6 +140,7 @@ registerBlockType( 'wpzoom/instagram-block', {
 								</CardHeader>
 								<CardBody>
 									<SelectControl
+										className='wpzoom-instagram-widget-select-feed'
 										value={ feed }
 										options={ [
 											{
