@@ -48,7 +48,24 @@ class Wpzoom_Instagram_Widget_Display {
 
 		$this->is_pro = apply_filters( 'wpz-insta_is-pro', false );
 
+		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
+
 		add_shortcode( 'instagram', array( $this, 'get_shortcode_output' ) );
+	}
+
+	/**
+	 * Enqueue some needed scripts on the frontend.
+	 *
+	 * @return void
+	 */
+	public function enqueue_scripts() {
+		wp_enqueue_script(
+			'zoom-instagram-widget-lazy-load',
+			plugin_dir_url( __FILE__ ) . 'dist/scripts/library/lazy.js',
+			array( 'jquery' ),
+			filemtime( plugin_dir_path( __FILE__ ) . 'dist/scripts/library/lazy.js' ),
+			true
+		);
 	}
 
 	/**
