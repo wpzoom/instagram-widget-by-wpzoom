@@ -483,7 +483,7 @@ class Wpzoom_Instagram_Widget_Display {
 							if ( 'video' == $child_type ) {
 								$output .= '<video controls preload="metadata" poster="' . esc_attr( $thumb ) . '"><source src="' . esc_url( $child->media_url ) . '" type="video/mp4"/>' . esc_html( $alt ) . '</video>';
 							} else {
-								$output .= '<img src="' . esc_url( $child->media_url ) . '" alt="' . esc_attr( $alt ) . '"/>';
+								$output .= '<img class="wpzoom-swiper-image" src="' . esc_url( $child->media_url ) . '" alt="' . esc_attr( $alt ) . '"/>';
 							}
 
 							$output .= '</div>';
@@ -491,7 +491,7 @@ class Wpzoom_Instagram_Widget_Display {
 
 						$output .= '</div><div class="swiper-pagination"></div><div class="swiper-button-prev"></div><div class="swiper-button-next"></div></div>';
 					} else {
-						$output .= '<img src="' . esc_url( $src ) . '" alt="' . esc_attr( $alt ) . '"/>';
+						$output .= '<img class="wpzoom-swiper-image" src="' . esc_url( $src ) . '" alt="' . esc_attr( $alt ) . '"/>';
 					}
 
 					$output .= '</div>
