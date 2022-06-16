@@ -643,6 +643,8 @@ a.ig-b-v-24:hover {
 	height: 100%;
 	max-width: 100%;
 	object-fit: contain;
+    min-height: 700px;
+    min-width: 700px;
 }
 
 .wpz-insta-lightbox-wrapper .wpz-insta-lightbox .image-wrapper {
@@ -783,6 +785,11 @@ a.ig-b-v-24:hover {
         width: 86%;
     }
 
+    .wpz-insta-lightbox-wrapper .wpz-insta-lightbox .image-wrapper img {
+        min-height: 500px;
+        min-width: 500px;
+    }
+
 }
 
 @media screen and (max-width: 860px) {
@@ -813,6 +820,8 @@ a.ig-b-v-24:hover {
         font-size: 12px;
     }
 
+
+
 }
 
 
@@ -820,6 +829,11 @@ a.ig-b-v-24:hover {
 
     .wpz-insta-lightbox {
         flex-direction: column;
+    }
+
+    .wpz-insta-lightbox-wrapper .wpz-insta-lightbox .image-wrapper img {
+        min-height: 400px;
+        min-width: 400px;
     }
 
     .wpz-insta-lightbox-wrapper .wpz-insta-lightbox .image-wrapper {
@@ -846,6 +860,10 @@ a.ig-b-v-24:hover {
 
 @media screen and (max-width: 600px) {
 
+    .wpz-insta-lightbox-wrapper .wpz-insta-lightbox .image-wrapper img {
+        min-height: 280px;
+        min-width: 280px;
+    }
 
     .wpz-insta-lightbox-wrapper > .swiper-container {
         width: 76%;
