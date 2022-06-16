@@ -3,94 +3,19 @@
  * Exit if accessed directly.
  */
 if ( ! defined( 'ABSPATH' ) ) {
-    exit;
+	exit;
 }
 
 class Wpzoom_Instagram_Widget extends WP_Widget {
-    /**
-     * @var Wpzoom_Instagram_Widget_API
-     */
-    protected $api;
-
-    /**
-     * @var array Default widget settings.
-     */
-    protected $defaults;
-
-    public function __construct() {
-        parent::__construct(
-            'wpzoom_instagram_widget',
-            esc_html__( 'Instagram Widget by WPZOOM', 'instagram-widget-by-wpzoom' ),
-            array(
-                'classname'   => 'zoom-instagram-widget',
-                'description' => __( 'Displays a user\'s Instagram timeline.', 'instagram-widget-by-wpzoom' ),
-            )
-        );
-
-        $this->defaults = array(
-            'title'                         => esc_html__( 'Instagram', 'instagram-widget-by-wpzoom' ),
-            'button_text'                   => esc_html__( 'View on Instagram', 'instagram-widget-by-wpzoom' ),
-            'image-limit'                   => 9,
-            'show-view-on-instagram-button' => true,
-            'show-counts-on-hover'          => true,
-            'show-user-info'                => false,
-            'show-user-bio'                 => false,
-            'lazy-load-images'              => true,
-            'disable-video-thumbs'          => false,
-            'display-media-type-icons'      => true,
-            'lightbox'                      => true,
-            'images-per-row'                => 3,
-            'image-width'                   => 120,
-            'image-spacing'                 => 10,
-            'image-resolution'              => 'default_algorithm',
-            'username'                      => '',
-        );
-
-        add_action( 'wp_enqueue_scripts', array( $this, 'styles' ) );
-        add_action( 'wp_enqueue_scripts', array( $this, 'register_scripts' ) );
-
-        /**
-         * Enqueue styles and scripts for SiteOrigin Page Builder.
-         */
-        add_action( 'siteorigin_panel_enqueue_admin_scripts', array( $this, 'styles' ) );
-        add_action( 'siteorigin_panel_enqueue_admin_scripts', array( $this, 'register_scripts' ) );
-        add_action( 'siteorigin_panel_enqueue_admin_scripts', array( $this, 'enqueue_scripts' ) );
-    }
-
-    /**
-     * Convert $url to file path.
-     *
-     * @param $url
-     *
-     * @return string|string[]
-     */
-    function convert_url_to_path( $url ) {
-        return str_replace(
-            wp_get_upload_dir()['baseurl'],
-            wp_get_upload_dir()['basedir'],
-            $url
-        );
-    }
+	/**
+	 * @var Wpzoom_Instagram_Widget_API
+	 */
+	protected $api;
 
 	/**
-	 * Sanitizes and prepares caption content for display.
-	 * 
-	 * @param  string $caption The raw caption text to filter.
-	 * @return string          The filtered caption text.
+	 * @var array Default widget settings.
 	 */
-	public static function filter_caption( $caption = '' ) {
-		if ( ! empty( $caption ) ) {
-			$filters = array(
-				'wp_kses_post',
-				'autoembed',
-				'wptexturize',
-				'wpautop',
-				'wp_filter_content_tags',
-				'capital_P_dangit',
-				'convert_chars',
-				'convert_smilies',
-				'force_balance_tags',
-			);
+	protected $defaults;
 
 	public function __construct() {
 		parent::__construct(
@@ -286,9 +211,12 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 					$this->display_user_info( $instance, $user_info );
 				}
 			}
+
+			$this->display_items( $items['items'], $instance, $user_info );
+			$this->display_instagram_button( $instance, $items['username'] );
 		}
 
-		return trim( $caption );
+		echo $args['after_widget'];
 	}
 
 	/**
