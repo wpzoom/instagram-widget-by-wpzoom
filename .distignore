@@ -40,5 +40,4 @@ tests
 webpack.config.js
 .wordpress-org
 wp-cli.local.yml
-vendor
 yarn.lock
