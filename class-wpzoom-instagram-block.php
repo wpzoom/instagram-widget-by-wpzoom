@@ -131,7 +131,7 @@ class Wpzoom_Instagram_Block {
 				array(
 					array(
 						'slug'  => 'wpzoom-blocks',
-						'title' => __( 'WPZOOM - Blocks', 'instagram-widget-by-wpzoom' ),
+						'title' => esc_html__( 'WPZOOM - Blocks', 'instagram-widget-by-wpzoom' ),
 					),
 				)
 			);
@@ -149,7 +149,7 @@ class Wpzoom_Instagram_Block {
 		if ( $feed_id > -1 ) {
 			return $this->display->output_feed( $feed_id, false );
 		} else {
-			return __( '<p class="error"><strong>Please select a feed to display...</strong></p>', 'instagram-widget-by-wpzoom' );
+			return wp_kses_post( __( '<p class="error"><strong>Please select a feed to display...</strong></p>', 'instagram-widget-by-wpzoom' ) );
 		}
 	}
 }
