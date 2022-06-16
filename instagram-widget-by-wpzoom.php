@@ -1,9 +1,9 @@
 <?php
 /**
- * Plugin Name: WPZOOM Instagram Widget
+ * Plugin Name: WPZOOM Instagram Widget & Block
  * Plugin URI: https://www.wpzoom.com/plugins/instagram-widget/
- * Description: Simple and lightweight widget for WordPress to display your Instagram feed. Now with a Lightbox!
- * Version: 1.9.5
+ * Description: Instagram Widget is a customizable and responsive plugin, made to help you gain even more followers by showcasing your Instagram feed on your WordPress website.
+ * Version: 2.0.0
  * Author: WPZOOM
  * Author URI: https://www.wpzoom.com/
  * Text Domain: instagram-widget-by-wpzoom
@@ -19,13 +19,16 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 if ( ! defined( 'WPZOOM_INSTAGRAM_VERSION' ) ) {
-	define( 'WPZOOM_INSTAGRAM_VERSION', '1.9.5' );
+	define( 'WPZOOM_INSTAGRAM_VERSION', '2.0.0' );
 }
 
 require_once plugin_dir_path( __FILE__ ) . 'class-wpzoom-instagram-image-uploader.php';
 require_once plugin_dir_path( __FILE__ ) . 'class-wpzoom-instagram-widget-settings.php';
 require_once plugin_dir_path( __FILE__ ) . 'class-wpzoom-instagram-widget-api.php';
+require_once plugin_dir_path( __FILE__ ) . 'class-wpzoom-instagram-widget-display.php';
 require_once plugin_dir_path( __FILE__ ) . 'class-wpzoom-instagram-widget.php';
+require_once plugin_dir_path( __FILE__ ) . 'class-wpzoom-instagram-block.php';
+require_once plugin_dir_path( __FILE__ ) . 'class-wpzoom-instagram-widget-after-setup.php';
 
 add_action( 'widgets_init', 'zoom_instagram_widget_register' );
 function zoom_instagram_widget_register() {
@@ -34,7 +37,7 @@ function zoom_instagram_widget_register() {
 
 /* Display a notice that can be dismissed */
 
-add_action( 'admin_notices', 'wpzoom_instagram_admin_notice' );
+// add_action( 'admin_notices', 'wpzoom_instagram_admin_notice' );
 
 function wpzoom_instagram_admin_notice() {
 	global $current_user, $pagenow;
@@ -49,7 +52,7 @@ function wpzoom_instagram_admin_notice() {
 		$hide_notices_url = wpzoom_instagram_get_notice_dismiss_url();
 
 		$notice_message  = '<strong>' . __( 'Please configure Instagram Widget', 'instagram-widget-by-wpzoom' ) . '</strong><br/>';
-		$notice_message .= sprintf( __( 'If you have just installed or updated this plugin, please go to the %1$s and %2$s it with your Instagram account.', 'instagram-widget-by-wpzoom' ), '<a href="options-general.php?page=wpzoom-instagram-widget">' . __( 'Settings page', 'instagram-widget-by-wpzoom' ) . '</a>', '<strong>' . __( 'connect', 'instagram-widget-by-wpzoom' ) . '</strong>' ) . '&nbsp;';
+		$notice_message .= sprintf( __( 'If you have just installed or updated this plugin, please go to the %1$s and %2$s it with your Instagram account.', 'instagram-widget-by-wpzoom' ), '<a href="edit.php?post_type=wpz-insta_user">' . __( 'Settings page', 'instagram-widget-by-wpzoom' ) . '</a>', '<strong>' . __( 'connect', 'instagram-widget-by-wpzoom' ) . '</strong>' ) . '&nbsp;';
 		$notice_message .= __( 'You have to generate Instagram Access Token to allow widget to display your media.', 'instagram-widget-by-wpzoom' );
 		$notice_message .= '<a style="text-decoration: none" class="notice-dismiss" href="' . $hide_notices_url . '"></a>';
 
@@ -85,7 +88,7 @@ function wpzoom_instagram_admin_notice() {
 	}
 }
 
-add_action( 'admin_init', 'wpzoom_instagram_ignore_admin_notice' );
+// add_action( 'admin_init', 'wpzoom_instagram_ignore_admin_notice' );
 
 function wpzoom_instagram_ignore_admin_notice() {
 	global $current_user;
@@ -107,7 +110,7 @@ function wpzoom_instagram_get_notice_dismiss_url() {
 			array(
 				'wpzoom_instagram_ignore_admin_notice' => '0',
 			),
-			wpzoom_instagram_get_current_admin_url() ? wpzoom_instagram_get_current_admin_url() : admin_url( 'options-general.php?page=wpzoom-instagram-widget' )
+			wpzoom_instagram_get_current_admin_url() ? wpzoom_instagram_get_current_admin_url() : admin_url( 'edit.php?post_type=wpz-insta_user' )
 		)
 	);
 
@@ -138,6 +141,8 @@ add_action(
 			update_option( $option_name, true );
 			delete_transient( 'zoom_instagram_is_configured' );
 		}
+
+		Wpzoom_Instagram_Widget_Display::getInstance()->init();
 	}
 );
 
