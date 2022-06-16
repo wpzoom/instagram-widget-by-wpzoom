@@ -637,18 +637,18 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 		$instance = wp_parse_args( (array) $instance, $this->defaults );
 		?>
 
-		<?php if ( empty( $instance['username'] ) && ! $this->api->is_configured() ) : ?>
+        <p style="color: #d54e21">
+            <?php
+            printf(
+                __( 'This widget will be discontinued in future updates, and we highly recommend adding your <a href="%1$s" target="_blank">Instagram Feeds</a> using the new <a href="%1$s" target="_blank">Gutenberg block</a> or <a href="%3$s" target="_blank">shortcode</a>.', 'instagram-widget-by-wpzoom' ),
+                admin_url( 'edit.php?post_type=wpz-insta_user' ),
+                esc_url( 'https://www.wpzoom.com/documentation/instagram-widget/how-to-insert-the-widget-in-the-block-editor/' ),
+                esc_url( 'https://www.wpzoom.com/documentation/instagram-widget/instagram-widget-how-to-embed-the-instagram-shortcode-in-elementor/' )
+            );
+            ?>
 
-			<p style="color: #d54e21">
-				<?php
-				printf(
-					__( 'You need to configure <a href="%1$s">plugin settings</a> before using this widget.', 'instagram-widget-by-wpzoom' ),
-					admin_url( 'edit.php?post_type=wpz-insta_user' )
-				);
-				?>
-			</p>
 
-		<?php endif; ?>
+        </p>
 
 		<p>
 			<label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php esc_html_e( 'Title:', 'instagram-widget-by-wpzoom' ); ?></label>
