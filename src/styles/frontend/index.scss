@@ -543,6 +543,7 @@ a.ig-b-v-24:hover {
 	/*flex-wrap: wrap;*/
 	background-color: white;
     border-radius: 4px;
+    height: 100%;
 }
 
 .wpz-insta-lightbox-wrapper {
@@ -552,7 +553,7 @@ a.ig-b-v-24:hover {
 }
 
 .wpz-insta-lightbox-wrapper .wpz-insta-lightbox .details-wrapper {
-	width: 335px;
+	width: 30%;
 }
 
 .wpz-insta-lightbox-wrapper .wpz-insta-lightbox .details-wrapper .wpz-insta-header {
@@ -560,6 +561,7 @@ a.ig-b-v-24:hover {
 	align-items: center;
 	padding: 16px;
 	border-bottom: 1px solid #efefef;
+    flex-wrap: wrap;
 }
 
 .wpz-insta-lightbox-wrapper .wpz-insta-lightbox .details-wrapper .wpz-insta-header .wpz-insta-avatar img {
@@ -586,6 +588,7 @@ a.ig-b-v-24:hover {
 
 .wpz-insta-lightbox-wrapper .wpz-insta-lightbox .details-wrapper .wpz-insta-header > div {
 	margin-right: 13px;
+    min-width: 42px;
 }
 
 .wpz-insta-lightbox-wrapper .wpz-insta-lightbox .details-wrapper .wpz-insta-header .wpz-insta-buttons {
@@ -645,17 +648,18 @@ a.ig-b-v-24:hover {
 .wpz-insta-lightbox-wrapper .wpz-insta-lightbox .image-wrapper {
 	flex-grow: 1;
 	text-align: center;
-	height: 600px;
-	width: 600px;
-	max-width: 600px;
+	height: auto;
+	width: 100%;
+	max-width: 70%;
+    max-height: 100%;
     background: #000;
     border-radius: 4px 0 0 4px;
 }
 
 .wpz-insta-lightbox-wrapper > .swiper-container {
 	pointer-events: none;
-	width: 50%;
-	height: 100%;
+	width: 1000px;
+	height: 80vh;
 }
 
 .wpz-insta-lightbox-wrapper > .swiper-container .swiper-container {
@@ -664,11 +668,22 @@ a.ig-b-v-24:hover {
 }
 
 .wpz-insta-lightbox-wrapper > .swiper-container .swiper-container .swiper-slide {
-	height: 100%;
+	// height: 100%;
+    max-height: 100%;
 }
+
+
+.wpz-insta-lightbox-wrapper > .swiper-container-autoheight, .swiper-container-autoheight .swiper-slide {
+    height: 100%;
+    max-height: 80vh;
+
+}
+
+
 
 .wpz-insta-lightbox-wrapper video {
 	height: 100%;
+    max-width: 100%;
 }
 
 .wpz-insta-lightbox-wrapper > .swiper-container .swiper-container .swiper-button-prev,
@@ -687,6 +702,7 @@ a.ig-b-v-24:hover {
 
 .wpz-insta-lightbox-wrapper > .swiper-container > .swiper-wrapper {
 	pointer-events: all;
+    // max-height: 80vh;
 }
 
 .wpz-insta-lightbox-wrapper > .swiper-container > .swiper-button-prev,
@@ -726,6 +742,8 @@ a.ig-b-v-24:hover {
 	line-height: 20px;
 	display: flex;
 	border-top: 1px solid #efefef;
+    flex-wrap: wrap;
+    justify-content: flex-start;
 }
 
 .wpz-insta-lightbox-wrapper .wpz-insta-lightbox .details-wrapper .view-post a {
@@ -761,35 +779,83 @@ a.ig-b-v-24:hover {
 		}
 	}
 
-    .wpz-insta-lightbox-wrapper .wpz-insta-lightbox .image-wrapper {
-        border-radius: 4px 4px 0 0;
+    .wpz-insta-lightbox-wrapper > .swiper-container {
+        width: 86%;
     }
 
 }
 
 @media screen and (max-width: 860px) {
 
-    .wpz-insta-lightbox-wrapper {
-        display: block;
-        max-width: 76%;
-        margin-left: auto;
-        margin-right: auto;
-    }
+    // .wpz-insta-lightbox-wrapper>.swiper-container {
+    //     width: 70%;
+    // }
 
-    .wpz-insta-lightbox-wrapper .wpz-insta-lightbox .image-wrapper {
-        height: auto;
-        max-height: 600px;
-        overflow: hidden;
-    }
+    // .wpz-insta-lightbox-wrapper {
+    //     display: block;
+    //     max-width: 76%;
+    //     margin-left: auto;
+    //     margin-right: auto;
+    // }
 
-    .wpz-insta-lightbox-wrapper .wpz-insta-lightbox .image-wrapper img {
-        max-width: 100%;
-        height: auto;
-    }
+    // .wpz-insta-lightbox-wrapper .wpz-insta-lightbox .image-wrapper {
+    //     height: auto;
+    //     max-height: 100%;
+    //     overflow: hidden;
+    // }
+
+    // .wpz-insta-lightbox-wrapper .wpz-insta-lightbox .image-wrapper img {
+    //     max-width: 100%;
+    //     height: auto;
+    // }
 
     .wpz-insta-lightbox-wrapper .wpz-insta-lightbox .details-wrapper .wpz-insta-caption {
         font-size: 12px;
+    }
+
+}
+
+
+@media screen and (max-width: 768px) {
+
+    .wpz-insta-lightbox {
+        flex-direction: column;
+    }
+
+    .wpz-insta-lightbox-wrapper .wpz-insta-lightbox .image-wrapper {
+        border-radius: 4px 4px 0 0;
+        max-width: 100%;
+        height: 65%;
+    }
+
+
+    .wpz-insta-lightbox-wrapper .wpz-insta-lightbox .details-wrapper .wpz-insta-caption {
         max-height: 134px;
     }
 
+
+    .wpz-insta-lightbox-wrapper .wpz-insta-lightbox .details-wrapper {
+        width: 100%;
+        height: 35%;
+    }
+
+
+}
+
+
+
+@media screen and (max-width: 600px) {
+
+
+    .wpz-insta-lightbox-wrapper > .swiper-container {
+        width: 76%;
+    }
+
+    .wpz-insta-lightbox-wrapper .wpz-insta-lightbox .image-wrapper {
+        height: 55%;
+    }
+
+    .wpz-insta-lightbox-wrapper .wpz-insta-lightbox .details-wrapper {
+        height: 45%;
+    }
 }

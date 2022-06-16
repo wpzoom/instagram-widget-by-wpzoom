@@ -584,7 +584,7 @@ img {
 	pointer-events: none;
 
 	.wpz-insta-lightbox .details-wrapper {
-		width: 335px;
+		// width: 335px;
 
 		.wpz-insta-header {
 			display: flex;
@@ -705,6 +705,7 @@ img {
 
 	video {
 		height: 100%;
+        max-width: 100%;
 	}
 
 	> .swiper-container {
@@ -806,22 +807,22 @@ img {
 
 @media screen and (max-width: 860px) {
 	.wpz-insta-lightbox-wrapper {
-		display: block;
-		max-width: 76%;
-		margin-left: auto;
-		margin-right: auto;
+		// display: block;
+		// max-width: 76%;
+		// margin-left: auto;
+		// margin-right: auto;
 
 		.wpz-insta-lightbox {
-			.image-wrapper {
-				height: auto;
-				max-height: 600px;
-				overflow: hidden;
+			// .image-wrapper {
+			// 	height: auto;
+			// 	max-height: 600px;
+			// 	overflow: hidden;
 
-				img {
-					max-width: 100%;
-					height: auto;
-				}
-			}
+			// 	img {
+			// 		max-width: 100%;
+			// 		height: auto;
+			// 	}
+			// }
 
 			.details-wrapper .wpz-insta-caption {
 				font-size: 12px;
@@ -841,4 +842,24 @@ img {
     .wp-block-wpzoom-instagram-block .zoom-instagram-widget__items .zoom-instagram-widget__item .zoom-instagram-link, .zoom-instagram .zoom-instagram-widget__items .zoom-instagram-widget__item .zoom-instagram-link {
         pointer-events: none;
     }
+}
+
+
+
+@media screen and (max-width: 768px) {
+
+    .wpz-insta-lightbox {
+        flex-direction: column;
+    }
+
+    .wpz-insta-lightbox-wrapper .wpz-insta-lightbox .image-wrapper {
+        border-radius: 4px 4px 0 0;
+        max-width: 100%;
+    }
+
+    .wpz-insta-lightbox-wrapper .wpz-insta-lightbox .details-wrapper {
+        width: 100%;
+    }
+
+
 }
