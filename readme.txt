@@ -13,7 +13,12 @@ Formerly known as "Instagram Widget by WPZOOM". Simple and lightweight widget fo
 
 == Description ==
 
-Formerly known as *Instagram Widget by WPZOOM*, **WPZOOM Social Feed Widget** is a simple and lightweight widget for WordPress to display your **Instagram feed**.
+⭐️ **[Instagram Widget & Block PRO](https://www.wpzoom.com/plugins/instagram-widget/?utm_source=wporg&utm_medium=website&utm_campaign=free_description)** *NOW AVAILABLE!* ⭐️
+
+
+**Showcase your Instagram Feeds on your WordPress site in seconds!**
+
+Formerly known as *Instagram Widget by WPZOOM*, **WPZOOM Social Feed Widget** is a customizable and responsive plugin, made to help you gain even more followers by showcasing your Instagram feed on your WordPress website.
 
 
 **[View Demo](https://demo.wpzoom.com/instagram-widget/)**
@@ -25,13 +30,26 @@ Formerly known as *Instagram Widget by WPZOOM*, **WPZOOM Social Feed Widget** is
 **WPZOOM Social Feed Widget** gives you a WordPress Widget that you can place anywhere you want to display your Instagram Feed. Easy setup and configuration!
 
 
-= Features =
+= 📌 FEATURES =
 
-* **Lightbox** 🆕
+* **Create Multiple Feeds** 🆕
+* **Gutenberg Block** 🆕
+* **Embed using Shortcode in Elementor and other page builders** 🆕
+* **Multiple Layouts** 🆕
+* **Lightbox**
 * Add your custom avatar and bio
 * Supports Lazy Loading
-* Lighweight plugin
 * Works with the new WordPress 5.8 block-based widgets screen
+
+= ⭐️ PRO FEATURES ⭐️ =
+* **Connect Multiple Instagram Accounts - 🆕**
+* **Masonry Layout - 🆕**
+* **Load More button - 🆕**
+* **Customize Colors - 🆕**
+* Premium Support
+* and many new features coming soon!
+
+⭐️ **[Get the PRO version!](https://www.wpzoom.com/plugins/instagram-widget/?utm_source=wporg&utm_medium=website&utm_campaign=free_description)** ⭐️
 
 
 = Where I can view a Demo? =
@@ -57,7 +75,7 @@ Once connected, go to the **Widgets** page and add the widget **Instagram Widget
 
 = I just installed plugin and widget shows nothing =
 
-Make sure to connect your Instagram account with the plugin. You can do that in the **Settings > Instagram Widget** page from the Dashboard.
+Make sure to connect your Instagram account with the plugin. You can do that in the **Instagram Widget > Users** page from the Dashboard.
 
 
 == Screenshots ==
@@ -70,6 +88,9 @@ Make sure to connect your Instagram account with the plugin. You can do that in 
 
 
 == Changelog ==
+
+= 2.0.0 =
+* Major re-design.
 
 = 1.9.5 =
 * Fixed a bug with the lightbox not working in specific themes, including Divi
@@ -240,5 +261,5 @@ Make sure to connect your Instagram account with the plugin. You can do that in 
 
 == Upgrade Notice ==
 
-= 1.6.0 =
+= 2.0.0 =
 ⚠️ IMPORTANT: On June 29, Instagram will stop supporting its old API which will disrupt feeds created using the old API. If your Instagram account is connected in the plugin settings, you will need to reconnect it again using the new API.

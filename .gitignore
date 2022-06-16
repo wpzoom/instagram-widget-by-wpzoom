@@ -9,5 +9,3 @@ node_modules/
 *.zip
 *.map
 .sass-cache
-
-/vendor/

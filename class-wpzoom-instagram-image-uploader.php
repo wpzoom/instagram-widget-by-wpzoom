@@ -67,6 +67,13 @@ class WPZOOM_Instagram_Image_Uploader {
 			$image_src = wp_get_attachment_image_src( $attachment_id, self::get_image_size_name( $media_size ) );
 
 			return ! empty( $image_src ) ? $image_src[0] : $media_url;
+		} else {
+			$attachment_id = self::upload_image( $media_url, $media_id );
+			self::$instance->set_images_to_transient( $attachment_id, $media_id );
+
+			$image_src = wp_get_attachment_image_src( $attachment_id, self::get_image_size_name( $media_size ) );
+
+			return ! empty( $image_src ) ? $image_src[0] : $media_url;
 		}
 
 		return false;
@@ -98,17 +105,20 @@ class WPZOOM_Instagram_Image_Uploader {
 	 * @return float|int
 	 */
 	function get_transient_lifetime() {
-		$options = WPZOOM_Instagram_Widget_Settings::get_instance()->get_settings();
+		$interval = (int) WPZOOM_Instagram_Widget_Settings::get_feed_setting_value( get_the_ID(), 'check-new-posts-interval-number' );
+		$interval_suffix = (int) WPZOOM_Instagram_Widget_Settings::get_feed_setting_value( get_the_ID(), 'check-new-posts-interval-suffix' );
 
 		$values = array(
-			'minutes' => MINUTE_IN_SECONDS,
-			'hours'   => HOUR_IN_SECONDS,
-			'days'    => DAY_IN_SECONDS,
+			MINUTE_IN_SECONDS,
+			HOUR_IN_SECONDS,
+			DAY_IN_SECONDS,
+			WEEK_IN_SECONDS,
+			MONTH_IN_SECONDS,
 		);
 		$keys   = array_keys( $values );
-		$type   = in_array( $options['transient-lifetime-type'], $keys ) ? $values[ $options['transient-lifetime-type'] ] : $values['minutes'];
+		$type   = in_array( $interval_suffix, $keys ) ? $values[ $interval_suffix ] : $values[2];
 
-		return $type * $options['transient-lifetime-value'];
+		return $type * $interval;
 	}
 
 	/**
@@ -349,7 +359,7 @@ class WPZOOM_Instagram_Image_Uploader {
 	 *
 	 * @return int|string
 	 */
-	protected function get_best_size( $desired_width, $image_resolution = 'default_algorithm' ) {
+	protected function get_best_size( $desired_width, $image_resolution = 'low_resolution' ) {
 		$size = 'thumbnail';
 
 		$sizes = array(
