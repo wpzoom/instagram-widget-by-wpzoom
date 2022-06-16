@@ -1,4 +1,4 @@
-=== WPZOOM Social Feed Widget ===
+=== WPZOOM Social Feed Widget & Block ===
 Contributors: WPZOOM, nvartolomei, ciorici
 Donate link: https://www.wpzoom.com/
 Tags: instagram, instagram feed, instagram gallery, instagram photos, instagram widget, instagram stories, widget, timeline, social network, latest images, feed, story, stories, insta
@@ -73,24 +73,32 @@ Once connected, go to the **Widgets** page and add the widget **Instagram Widget
 
 == Frequently Asked Questions ==
 
-= I just installed plugin and widget shows nothing =
+= How do I create a new Instagram feed? =
 
-Make sure to connect your Instagram account with the plugin. You can do that in the **Instagram Widget > Users** page from the Dashboard.
+Go to the **Instagram Widget** section in the WordPress Dashboard and connect your Instagram account. After that, create a new Feed and embed it in your posts or pages using the available Block or shortcode.
 
 
 == Screenshots ==
 
-1. Examples of how the widget can be used
-2. More examples
-3. Perfect for Sidebar or Footer column
-4. Customized button using CSS
-5. Settings
+1. Creating a new feed
+2. Manage feeds
+3. Instagram Block for Gutenberg
+4. Customize
+5. Embed the shortcode in Elementor
 
 
 == Changelog ==
 
 = 2.0.0 =
-* Major re-design.
+* We've made our plugin better and more user-friendly!
+* New: Gutenberg block
+* New: Create multiple feeds with different configurations
+* New: Embed your Instagram feeds using a shortcode anywhere you want
+* New: Customize the colors
+* New: Full-width layout
+* New: Connect multiple Instagram accounts [PRO only]
+* New: Masonry Layout [PRO only]
+* New: Load More button [PRO only]
 
 = 1.9.5 =
 * Fixed a bug with the lightbox not working in specific themes, including Divi
@@ -262,4 +270,4 @@ Make sure to connect your Instagram account with the plugin. You can do that in 
 == Upgrade Notice ==
 
 = 2.0.0 =
-⚠️ IMPORTANT: On June 29, Instagram will stop supporting its old API which will disrupt feeds created using the old API. If your Instagram account is connected in the plugin settings, you will need to reconnect it again using the new API.
+⚠️ IMPORTANT: Version 2.0 includes major changes in the plugin. Existing Instagram widgets will not be affected, but we highly recommend creating a new feed in the new section "Instagram Widget" and embedding it using the new Gutenberg block or shortcode.
