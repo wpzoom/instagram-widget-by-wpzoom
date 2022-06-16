@@ -2606,9 +2606,10 @@ class WPZOOM_Instagram_Widget_Settings {
 					<?php _e( 'Need assistance?', 'instagram-widget-by-wpzoom' ); ?>
 				</h2>
 
-				<p class="section-description"><?php _e( 'Need help setting up your widget or have a question? Get in touch with our Support Team.<br/> We’d love the opportunity to help you.', 'instagram-widget-by-wpzoom' ); ?></p>
+				<p class="section-description"><?php _e( 'Need help setting up your Instagram feeds or have a question? Get in touch with our Support Team.<br/> We’d love the opportunity to help you.', 'instagram-widget-by-wpzoom' ); ?></p>
 
-				<a href="<?php echo esc_url( 'https://wpzoom.com/support/tickets/' ); ?>" target="_blank" class="button-primary"><?php _e( 'Open Support Desk', 'instagram-widget-by-wpzoom' ); ?></a>
+				<a href="<?php echo esc_url( 'https://www.wpzoom.com/documentation/instagram-widget/' ); ?>" target="_blank" class="button-primary"><?php _e( 'Documentation', 'instagram-widget-by-wpzoom' ); ?></a>
+                <a href="<?php echo esc_url( 'https://wpzoom.com/support/tickets/' ); ?>" target="_blank" class="button-primary"><?php _e( 'Open Support Desk', 'instagram-widget-by-wpzoom' ); ?></a>
 			</div>
 		</div>
 		<?php
