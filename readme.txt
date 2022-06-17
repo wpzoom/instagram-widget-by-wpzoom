@@ -77,6 +77,13 @@ Once connected, go to the **Widgets** page and add the widget **Instagram Widget
 
 Go to the **Instagram Widget** section in the WordPress Dashboard and connect your Instagram account. After that, create a new Feed and embed it in your posts or pages using the available Block or shortcode.
 
+= Is there a Documentation available? =
+
+Yes, you can find the documentation for this plugin with more instructions on our website.
+
+[Go to Documentation](https://www.wpzoom.com/documentation/instagram-widget/)
+
+
 
 == Screenshots ==
 
