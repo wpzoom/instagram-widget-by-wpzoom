@@ -1014,20 +1014,6 @@ class WPZOOM_Instagram_Widget_Settings {
 					</div>
 				</div>
 			</header>
-
-			<div class="wpz-insta-notices">
-				<?php
-				if ( is_network_admin() ) {
-					do_action( 'network_admin_notices' );
-				} elseif ( is_user_admin() ) {
-					do_action( 'user_admin_notices' );
-				} else {
-					do_action( 'admin_notices' );
-				}
-
-				do_action( 'all_admin_notices' );
-				?>
-			</div>
 			<?php
 
 			if ( metadata_exists( 'user', get_current_user_id(), 'wpzinsta-pointer-feed-embed' ) ) {
@@ -1813,20 +1799,6 @@ class WPZOOM_Instagram_Widget_Settings {
 				</ul>
 			</nav>
 		</header>
-
-		<div class="wpz-insta-notices">
-			<?php
-			if ( is_network_admin() ) {
-				do_action( 'network_admin_notices' );
-			} elseif ( is_user_admin() ) {
-				do_action( 'user_admin_notices' );
-			} else {
-				do_action( 'admin_notices' );
-			}
-
-			do_action( 'all_admin_notices' );
-			?>
-		</div>
 		<?php
 	}
 
