@@ -96,6 +96,9 @@ Yes, you can find the documentation for this plugin with more instructions on ou
 
 == Changelog ==
 
+= 2.0.1 =
+* Minor bug fixes
+
 = 2.0.0 =
 * We've made our plugin better and more user-friendly!
 * New: Gutenberg block
