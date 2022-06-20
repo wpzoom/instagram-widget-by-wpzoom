@@ -270,7 +270,7 @@ class Wpzoom_Instagram_Widget_Display {
 						$output .= '</ul></div>';
 
 						if ( $show_view_on_insta_button || ( $show_load_more_button && 'fullwidth' !== $layout ) ) {
-							$output .= '<footer class="zoom-instagram-widget__footer">';
+							$output .= '<div class="zoom-instagram-widget__footer">';
 
 							if ( $show_view_on_insta_button ) {
 								$view_on_insta_label = isset( $args['view-button-text'] ) ? trim( $args['view-button-text'] ) : __( 'View on Instagram', 'instagram-widget-by-wpzoom' );
@@ -291,7 +291,7 @@ class Wpzoom_Instagram_Widget_Display {
 								$output .= '</form>';
 							}
 
-							$output .= '</footer>';
+							$output .= '</div>';
 						}
 
 						if ( $lightbox ) {
