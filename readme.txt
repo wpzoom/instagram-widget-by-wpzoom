@@ -96,6 +96,9 @@ Yes, you can find the documentation for this plugin with more instructions on ou
 
 == Changelog ==
 
+= 2.0.2 =
+* Fixing some issues with the legacy widget
+
 = 2.0.1 =
 * Minor bug fixes
 
