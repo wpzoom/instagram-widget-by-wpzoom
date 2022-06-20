@@ -182,6 +182,7 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 	 * @param array $instance Saved values from database.
 	 */
 	public function widget( $args, $instance ) {
+
 		$this->api = Wpzoom_Instagram_Widget_API::getInstance();
 
 		$this->enqueue_scripts();
@@ -193,6 +194,21 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 		if ( $instance['title'] ) {
 			echo $args['before_title'] . apply_filters( 'widget_title', $instance['title'] ) . $args['after_title'];
 		}
+
+		$get_user = get_posts(
+			array(
+				'numberposts' => 1,
+				'orderby'     => 'date',
+        		'order'       => 'ASC',
+				'post_type'   => 'wpz-insta_user'
+			)
+		);
+
+		$user_id            = isset( $get_user[0]->ID ) ? intval( $get_user[0]->ID ) : -1;
+		$user_account_token = get_post_meta( $user_id, '_wpz-insta_token', true ) ?: '-1';
+
+		//Set token from first created user
+		$this->api->set_access_token( $user_account_token );
 
 		$items  = $this->api->get_items( $instance );
 		$errors = $this->api->errors->get_error_messages();
