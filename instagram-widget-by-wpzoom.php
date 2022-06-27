@@ -28,6 +28,8 @@ require_once plugin_dir_path( __FILE__ ) . 'class-wpzoom-instagram-widget-api.ph
 require_once plugin_dir_path( __FILE__ ) . 'class-wpzoom-instagram-widget-display.php';
 require_once plugin_dir_path( __FILE__ ) . 'class-wpzoom-instagram-widget.php';
 require_once plugin_dir_path( __FILE__ ) . 'class-wpzoom-instagram-block.php';
+require_once plugin_dir_path( __FILE__ ) . 'class-wpzoom-instagram-assets.php';
+
 require_once plugin_dir_path( __FILE__ ) . 'class-wpzoom-instagram-widget-after-setup.php';
 
 add_action( 'widgets_init', 'zoom_instagram_widget_register' );
