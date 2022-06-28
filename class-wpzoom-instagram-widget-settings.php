@@ -363,7 +363,7 @@ class WPZOOM_Instagram_Widget_Settings {
 			}
 		} );
 
-		if ( current_user_can( 'manage_options' ) && isset( $_GET['wpz-insta-widget-preview'] ) ) {
+		if ( current_user_can( 'edit_posts' ) && isset( $_GET['wpz-insta-widget-preview'] ) ) {
 			remove_action( 'admin_enqueue_scripts', 'wp_auth_check_load' );
 			remove_filter( 'heartbeat_send', 'wp_auth_check' );
 			remove_filter( 'heartbeat_nopriv_send', 'wp_auth_check' );
