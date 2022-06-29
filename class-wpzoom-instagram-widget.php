@@ -572,7 +572,7 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
         <p style="color: #d54e21">
             <?php
             printf(
-                __( 'This widget will be discontinued in future updates, and we highly recommend adding your <a href="%1$s" target="_blank">Instagram Feeds</a> using the new <a href="%1$s" target="_blank">Gutenberg block</a> or <a href="%3$s" target="_blank">shortcode</a>.', 'instagram-widget-by-wpzoom' ),
+                __( 'We highly recommend adding your <a href="%1$s" target="_blank">Instagram Feeds</a> using the new <a href="%2$s" target="_blank">Gutenberg block</a> or <a href="%3$s" target="_blank">shortcode</a>.', 'instagram-widget-by-wpzoom' ),
                 admin_url( 'edit.php?post_type=wpz-insta_user' ),
                 esc_url( 'https://www.wpzoom.com/documentation/instagram-widget/how-to-insert-the-widget-in-the-block-editor/' ),
                 esc_url( 'https://www.wpzoom.com/documentation/instagram-widget/instagram-widget-how-to-embed-the-instagram-shortcode-in-elementor/' )
