@@ -161,6 +161,14 @@ if ( ! class_exists( 'WPZOOM_Instagram_Widget_Assets ' ) ) {
 			$has_shortcode      = ( is_a( $post, 'WP_Post' ) && has_shortcode( $post->post_content, 'instagram' ) );
 
 			if( $should_enqueue || $has_reusable_block || $is_active_widget || $has_shortcode || isset( $_GET['wpz-insta-widget-preview'] ) ) {
+
+                wp_enqueue_style(
+                    'swiper-css',
+                    plugin_dir_url( __FILE__ ) . 'dist/styles/library/swiper.css',
+                    array(),
+                    '7.0.0-alpha.21'
+                );
+
 				wp_enqueue_style(
 					'zoom-instagram-widget',
 					plugin_dir_url( __FILE__ ) . 'dist/styles/frontend/index.css',
@@ -175,12 +183,6 @@ if ( ! class_exists( 'WPZOOM_Instagram_Widget_Assets ' ) ) {
 					WPZOOM_INSTAGRAM_VERSION
 				);
 
-				wp_enqueue_style(
-					'swiper-css',
-					plugin_dir_url( __FILE__ ) . 'dist/styles/library/swiper.css',
-					array(),
-					'7.0.0-alpha.21'
-				);
 			}
 		}
 
