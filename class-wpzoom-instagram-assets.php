@@ -172,7 +172,7 @@ if ( ! class_exists( 'WPZOOM_Instagram_Widget_Assets ' ) ) {
 				wp_enqueue_style(
 					'zoom-instagram-widget',
 					plugin_dir_url( __FILE__ ) . 'dist/styles/frontend/index.css',
-					array( 'dashicons' ),
+					array( 'dashicons', 'wpz-insta_block-frontend-style' ),
 					WPZOOM_INSTAGRAM_VERSION
 				);
 
