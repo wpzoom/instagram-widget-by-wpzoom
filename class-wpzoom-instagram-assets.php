@@ -66,6 +66,7 @@ if ( ! class_exists( 'WPZOOM_Instagram_Widget_Assets ' ) ) {
 			add_action( 'enqueue_block_assets', array( $this, 'widget_styles' ), 5 );
 			
 			add_action( 'enqueue_block_editor_assets', array( $this, 'register_block_assets' ) );
+			add_action( 'enqueue_block_editor_assets', array( $this, 'widget_styles' ) );
 
 			add_action( 'wp_enqueue_scripts', array( $this, 'widget_styles' ) );
 			add_action( 'wp_enqueue_scripts', array( $this, 'register_widget_scripts' ) );
@@ -89,11 +90,12 @@ if ( ! class_exists( 'WPZOOM_Instagram_Widget_Assets ' ) ) {
 			$has_reusable_block = self::has_reusable_block( 'wpzoom/instagram-block' );
 			$is_active_widget   = is_active_widget( false, false, 'wpzoom_instagram_widget', true );
 			$has_shortcode      = ( is_a( $post, 'WP_Post' ) && has_shortcode( $post->post_content, 'instagram' ) );
+			$has_widget_block   = self::is_active_block_widget( 'wpzoom/instagram-block' ); 
 
 			$script_asset_file = include( plugin_dir_path( __FILE__ ) . 'dist/scripts/backend/block.asset.php' );
 			$style_asset_file = include( plugin_dir_path( __FILE__ ) . 'dist/styles/frontend/block.asset.php' );
 
-			if( $should_enqueue || $has_reusable_block || $is_active_widget || $has_shortcode || isset( $_GET['wpz-insta-widget-preview'] ) ) {
+			if( is_admin() || $should_enqueue || $has_reusable_block || $is_active_widget || $has_shortcode || $has_widget_block || isset( $_GET['wpz-insta-widget-preview'] ) ) {
 				wp_register_script(
 					'magnific-popup',
 					plugins_url( 'dist/scripts/library/magnific-popup.js', __FILE__ ),
@@ -159,8 +161,9 @@ if ( ! class_exists( 'WPZOOM_Instagram_Widget_Assets ' ) ) {
 			$has_reusable_block = self::has_reusable_block( 'wpzoom/instagram-block' );
 			$is_active_widget   = is_active_widget( false, false, 'wpzoom_instagram_widget', true );
 			$has_shortcode      = ( is_a( $post, 'WP_Post' ) && has_shortcode( $post->post_content, 'instagram' ) );
+			$has_widget_block   = self::is_active_block_widget( 'wpzoom/instagram-block' ); 
 
-			if( $should_enqueue || $has_reusable_block || $is_active_widget || $has_shortcode || isset( $_GET['wpz-insta-widget-preview'] ) ) {
+			if( is_admin() || $should_enqueue || $has_reusable_block || $is_active_widget || $has_shortcode || $has_widget_block || isset( $_GET['wpz-insta-widget-preview'] ) ) {
 
                 wp_enqueue_style(
                     'swiper-css',
@@ -234,8 +237,9 @@ if ( ! class_exists( 'WPZOOM_Instagram_Widget_Assets ' ) ) {
 			$has_reusable_block = self::has_reusable_block( 'wpzoom/instagram-block' );
 			$is_active_widget   = is_active_widget( false, false, 'wpzoom_instagram_widget', true );
 			$has_shortcode      = ( is_a( $post, 'WP_Post' ) && has_shortcode( $post->post_content, 'instagram' ) );
+			$has_widget_block   = self::is_active_block_widget( 'wpzoom/instagram-block' ); 
 
-			if( $should_enqueue || $has_reusable_block || $is_active_widget || $has_shortcode || isset( $_GET['wpz-insta-widget-preview'] ) ) {
+			if( is_admin() || $should_enqueue || $has_reusable_block || $is_active_widget || $has_shortcode || $has_widget_block || isset( $_GET['wpz-insta-widget-preview'] ) ) {
 				wp_enqueue_script( 'zoom-instagram-widget-lazy-load' );
 				wp_enqueue_script( 'magnific-popup' );
 				wp_enqueue_script( 'swiper-js' );
@@ -243,6 +247,22 @@ if ( ! class_exists( 'WPZOOM_Instagram_Widget_Assets ' ) ) {
 			}
 
 		}
+
+		public static function is_active_block_widget( $blockname ) {
+
+			$widget_blocks = get_option( 'widget_block' );
+
+			foreach( (array) $widget_blocks as $widget_block ) {
+				if ( ! empty( $widget_block['content'] ) 
+						&& has_block( $blockname, $widget_block['content'] ) 
+				) {
+					return true;
+				}
+			}
+			
+			return false;
+
+	}
 
 
 		/**
