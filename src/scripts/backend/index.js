@@ -201,14 +201,17 @@ jQuery( function( $ ) {
 
 	$( '.wpz-insta_sidebar-section-layout input[name="_wpz-insta_layout"]' ).on( 'change', function() {
 		const $colNumOption    = $( this ).closest( '.wpz-insta_sidebar-section-layout' ).find( 'input[name="_wpz-insta_col-num"]' ).closest( '.wpz-insta_table-row' ),
+		      $featNthOption   = $( this ).closest( '.wpz-insta_sidebar-section-layout' ).find( 'input[name="_wpz-insta_featured-nth"]' ).closest( '.wpz-insta_table-row' ),
 		      $parentLeftSect  = $( this ).closest( '.wpz-insta_sidebar-left-section' ),
 		      $proFieldset     = $parentLeftSect.find( '.wpz-insta_sidebar-section-feed .wpz-insta_show-on-hover fieldset.wpz-insta_feed-only-pro.wpz-insta_pro-only' ),
 		      $loadMoreOptions = $parentLeftSect.find( '.wpz-insta_sidebar-section-load-more' ),
 		      $toggleItems     = $colNumOption.add( $proFieldset ).add( $loadMoreOptions );
 
-		$toggleItems.toggleClass( 'hidden', $( this ).val() == '1' );
-		
+		$toggleItems.toggleClass( 'hidden', $( this ).val() == '1' || $( this ).val() == '3' );
+
 		$( '.wpz-insta-admin .wpz-insta_widget-preview .wpz-insta_widget-preview-view' ).toggleClass( 'layout-fullwidth', $( this ).val() == '1' );
+
+		$featNthOption.toggleClass( 'hidden', $( this ).val() != '0' && $( this ).val() != '2' );
 	} );
 
 	$( '#wpz-insta_modal-dialog' ).find( '.wpz-insta_modal-dialog_ok-button, .wpz-insta_modal-dialog_close-button' ).on( 'click', function( e ) {

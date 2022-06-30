@@ -191,12 +191,24 @@ img {
 				display: flex;
 				width: 5000px;
 
-                .zoom-instagram-widget__item {
-                    img {
-                        aspect-ratio: 1;
-                        object-fit: cover;
-                    }
-                }
+				.zoom-instagram-widget__item {
+					img {
+						aspect-ratio: 1;
+						object-fit: cover;
+					}
+				}
+			}
+
+			&.layout-carousel {
+				display: flex;
+
+				.zoom-instagram-widget__item {
+					img {
+						aspect-ratio: 1;
+						object-fit: cover;
+						width: 100%;
+					}
+				}
 			}
 
     		&::before,
