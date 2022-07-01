@@ -248,22 +248,34 @@ if ( ! class_exists( 'WPZOOM_Instagram_Widget_Assets ' ) ) {
 
 		}
 
+
+		/**
+		 * Check the widget block based area has the block
+		 *
+		 * @since  2.0.2
+		 * @param  string      $block_name The block name.
+		 * @return boolean     Return true if post content has provided block name as reusable block, else return false.
+		 */
 		public static function is_active_block_widget( $blockname ) {
 
 			$widget_blocks = get_option( 'widget_block' );
+			$text_widgets  = get_option( 'widget_text' );
+
+			foreach( (array) $text_widgets as $text_widget ) {
+				if ( ! empty( $text_widget['text'] ) &&  has_shortcode( $text_widget['text'], 'instagram' ) ) {
+					return true;
+				}
+			}
 
 			foreach( (array) $widget_blocks as $widget_block ) {
-				if ( ! empty( $widget_block['content'] ) 
-						&& has_block( $blockname, $widget_block['content'] ) 
-				) {
+				if ( ! empty( $widget_block['content'] ) && ( has_block( $blockname, $widget_block['content'] ) || has_shortcode( $widget_block['content'], 'instagram' ) ) ) {
 					return true;
 				}
 			}
 			
 			return false;
 
-	}
-
+		}
 
 		/**
 		 * Check the post content has reusable block
