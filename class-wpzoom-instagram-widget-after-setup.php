@@ -39,7 +39,8 @@ class Wpzoom_Instagram_Widget_After_Setup {
 	public function init() {
 
 		//Run only once
-		if ( get_option( 'wpzoom_run_only_once_01' ) ) {
+		$run_once = get_option( 'wpzoom_run_only_once_01' );
+		if ( !empty( $run_once ) ) {
 			return;
 		}
 
