@@ -258,13 +258,40 @@ if ( ! class_exists( 'WPZOOM_Instagram_Widget_Assets ' ) ) {
 		 */
 		public static function is_active_block_widget( $blockname ) {
 
-			$widget_blocks = get_option( 'widget_block' );
-			$text_widgets  = get_option( 'widget_text' );
+			$allwidgets = [];
 
-			foreach( (array) $text_widgets as $text_widget ) {
-				if ( ! empty( $text_widget['text'] ) &&  has_shortcode( $text_widget['text'], 'instagram' ) ) {
-					return true;
+			$widget_blocks = get_option( 'widget_block' );
+			$sidebars_widgets = get_option('sidebars_widgets');
+		
+			if( is_array( $sidebars_widgets ) ) {
+				foreach ( $sidebars_widgets as $key => $value ) {
+		
+					if( is_array( $value ) ) {
+						foreach ($value as $widget_id) {
+							$pieces       = explode( '-', $widget_id );
+							$multi_number = array_pop( $pieces );
+							$id_base      = implode( '-', $pieces );
+							$widget_data  = get_option( 'widget_' . $id_base );
+							
+							// Remove inactive widgets 
+							if( $key != 'wp_inactive_widgets' ) {
+								unset( $widget_data['_multiwidget'] );
+								$allwidgets[ $key ] = $widget_data;
+							}
+						}
+					}
 				}
+			}
+
+			foreach( (array) $allwidgets as $widget ) {
+				foreach( (array) $widget as $widget_element ) {
+					foreach( (array)$widget_element as $value ) {
+						if( has_shortcode( $value, 'instagram' ) ) {
+							return true;
+						}
+					}
+				}
+
 			}
 
 			foreach( (array) $widget_blocks as $widget_block ) {
