@@ -200,6 +200,10 @@
 			color: $red-color;
 		}
 
+		.featured-off {
+			display: none !important;
+		}
+
 		.pro-only {
 			position: absolute;
 			top: 0;
@@ -1752,6 +1756,31 @@
 
 						> input[type='checkbox'] {
 							margin: 0 1em 0 0;
+						}
+					}
+
+					.wpz-insta_sub-wrapper {
+						display: flex;
+						flex-direction: column;
+						gap: 10px;
+						position: relative;
+						border-left: 1px solid $main-font-color;
+						padding: 10px 0 0 15px;
+						margin: -20px 0 0;
+
+						input {
+							margin-left: 0.5em;
+							margin-right: 0.5em;
+						}
+
+						.wpz-insta_table-cell {
+							&:first-child {
+								width: calc(50% - 9px);
+							}
+
+							&:last-child {
+								width: calc(50% + 9px);
+							}
 						}
 					}
 				}

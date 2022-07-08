@@ -201,7 +201,9 @@ jQuery( function( $ ) {
 
 	$( '.wpz-insta_sidebar-section-layout input[name="_wpz-insta_layout"]' ).on( 'change', function() {
 		const $colNumOption    = $( this ).closest( '.wpz-insta_sidebar-section-layout' ).find( 'input[name="_wpz-insta_col-num"]' ).closest( '.wpz-insta_table-row' ),
-		      $featNthOption   = $( this ).closest( '.wpz-insta_sidebar-section-layout' ).find( 'input[name="_wpz-insta_featured-nth"]' ).closest( '.wpz-insta_table-row' ),
+		      $featOption      = $( this ).closest( '.wpz-insta_sidebar-section-layout' ).find( 'input[name="_wpz-insta_featured"]' ).closest( '.wpz-insta_table-row' ),
+		      $featNthWrap     = $( this ).closest( '.wpz-insta_sidebar-section-layout' ).find( 'input[name="_wpz-insta_featured-nth"]' ).closest( '.wpz-insta_sub-wrapper' ),
+		      $featItems       = $featOption.add( $featNthWrap ),
 		      $parentLeftSect  = $( this ).closest( '.wpz-insta_sidebar-left-section' ),
 		      $proFieldset     = $parentLeftSect.find( '.wpz-insta_sidebar-section-feed .wpz-insta_show-on-hover fieldset.wpz-insta_feed-only-pro.wpz-insta_pro-only' ),
 		      $loadMoreOptions = $parentLeftSect.find( '.wpz-insta_sidebar-section-load-more' ),
@@ -211,7 +213,13 @@ jQuery( function( $ ) {
 
 		$( '.wpz-insta-admin .wpz-insta_widget-preview .wpz-insta_widget-preview-view' ).toggleClass( 'layout-fullwidth', $( this ).val() == '1' );
 
-		$featNthOption.toggleClass( 'hidden', $( this ).val() != '0' && $( this ).val() != '2' );
+		$featItems.toggleClass( 'hidden', $( this ).val() != '0' && $( this ).val() != '2' );
+	} );
+
+	$( '.wpz-insta_sidebar-section-layout input[name="_wpz-insta_featured"]' ).on( 'change', function() {
+		const $featNthWrap = $( this ).closest( '.wpz-insta_sidebar-section-layout' ).find( 'input[name="_wpz-insta_featured-nth"]' ).closest( '.wpz-insta_sub-wrapper' );
+
+		$featNthWrap.toggleClass( 'featured-off', ! $( this ).is( ':checked' ) );
 	} );
 
 	$( '#wpz-insta_modal-dialog' ).find( '.wpz-insta_modal-dialog_ok-button, .wpz-insta_modal-dialog_close-button' ).on( 'click', function( e ) {
@@ -296,7 +304,7 @@ jQuery( function( $ ) {
 	} );
 
 	$.each( formFields, function( i, val ) {
-		formInitialValues[i] = val.is(':checkbox,:radio') ? ( val.is(':checked') ? '1' : '0' ) : $.trim( '' + val.val() );
+		formInitialValues[i] = val.is(':checkbox') ? ( val.is(':checked') ? '1' : '0' ) : $.trim( '' + val.val() );
 	} );
 
 	$( 'form#post' ).on( 'submit', () => formSubmitted = true );
@@ -309,7 +317,7 @@ jQuery( function( $ ) {
 
 				if ( ! $target.is( '.preview-exclude' ) ) {
 					const key          = $target.attr('name'),
-					      currentValue = $target.is(':checkbox,:radio') ? ( $target.is(':checked') ? '1' : '0' ) : $.trim( '' + $target.val() );
+					      currentValue = $target.is(':checkbox') ? ( $target.is(':checked') ? '1' : '0' ) : $.trim( '' + $target.val() );
 
 					if ( key in formInitialValues && currentValue != formInitialValues[key] ) {
 						if ( ! ( key in formChangedValues ) ) {

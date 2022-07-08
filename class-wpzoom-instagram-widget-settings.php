@@ -38,7 +38,10 @@ class WPZOOM_Instagram_Widget_Settings {
 		'col-num'                         => array( 'type' => 'integer', 'default' => 3 ),
 		'spacing-between'                 => array( 'type' => 'number',  'default' => 10 ),
 		'spacing-between-suffix'          => array( 'type' => 'integer', 'default' => 0 ),
-		'featured-nth'                    => array( 'type' => 'integer', 'default' => 0 ),
+		'featured'                        => array( 'type' => 'boolean', 'default' => false ),
+		'featured-nth'                    => array( 'type' => 'integer', 'default' => 3 ),
+		'featured-nth-first'              => array( 'type' => 'boolean', 'default' => true ),
+		'featured-nth-span'               => array( 'type' => 'integer', 'default' => 3 ),
 		'show-account-name'               => array( 'type' => 'boolean', 'default' => true ),
 		'show-account-username'           => array( 'type' => 'boolean', 'default' => true ),
 		'show-account-image'              => array( 'type' => 'boolean', 'default' => true ),
@@ -1114,7 +1117,10 @@ class WPZOOM_Instagram_Widget_Settings {
 			$feed_cols_num = (int) self::get_feed_setting_value( $post->ID, 'col-num' );
 			$feed_spacing_between = (float) self::get_feed_setting_value( $post->ID, 'spacing-between' );
 			$feed_spacing_between_suffix = (int) self::get_feed_setting_value( $post->ID, 'spacing-between-suffix' );
+			$feed_featured = (bool) self::get_feed_setting_value( $post->ID, 'featured' );
 			$feed_featured_nth = (int) self::get_feed_setting_value( $post->ID, 'featured-nth' );
+			$feed_featured_nth_first = (bool) self::get_feed_setting_value( $post->ID, 'featured-nth-first' );
+			$feed_featured_nth_span = (string) self::get_feed_setting_value( $post->ID, 'featured-nth-span' );
 			$show_account_name = (bool) self::get_feed_setting_value( $post->ID, 'show-account-name' );
 			$show_account_username = (bool) self::get_feed_setting_value( $post->ID, 'show-account-username' );
 			$show_account_image = (bool) self::get_feed_setting_value( $post->ID, 'show-account-image' );
@@ -1319,10 +1325,39 @@ class WPZOOM_Instagram_Widget_Settings {
 										</div>
 									</label>
 
-									<label class="wpz-insta_table-row<?php echo ! $pro_toggle && ( 0 === $feed_layout || 2 === $feed_layout ) ? '' : ' hidden'; ?>">
-										<strong class="wpz-insta_table-cell"><?php esc_html_e( 'Feature every', 'instagram-widget-by-wpzoom' ); ?></strong>
-										<div class="wpz-insta_table-cell"><input type="number" name="_wpz-insta_featured-nth" value="<?php echo esc_attr( $feed_featured_nth ); ?>" size="3" min="0" max="1000" step="1" /> <?php _ex( 'posts', 'Feature every 0nth posts', 'instagram-widget-by-wpzoom' ); ?></div>
+									<label class="wpz-insta_table-row">
+										<strong class="wpz-insta_table-cell"><?php esc_html_e( 'Feature photos', 'instagram-widget-by-wpzoom' ); ?></strong>
+										<div class="wpz-insta_table-cell">
+											<input type="hidden" name="_wpz-insta_featured" value="0" />
+											<input type="checkbox" name="_wpz-insta_featured" value="1"<?php checked( $feed_featured ); ?> />
+										</div>
 									</label>
+
+									<div class="wpz-insta_sub-wrapper<?php echo ( ! $pro_toggle && ( 0 === $feed_layout || 2 === $feed_layout ) ? '' : ' hidden' ) . ( ! $pro_toggle || ! $feed_featured ? ' featured-off' : '' ); ?>">
+										<label class="wpz-insta_table-row">
+											<span class="wpz-insta_table-cell"><?php esc_html_e( 'Feature every', 'instagram-widget-by-wpzoom' ); ?></span>
+											<div class="wpz-insta_table-cell">
+												<input type="number" name="_wpz-insta_featured-nth" value="<?php echo esc_attr( $feed_featured_nth ); ?>" size="3" min="0" max="1000" step="1" />
+												<?php esc_html_e( 'photos', 'instagram-widget-by-wpzoom' ); ?>
+											</div>
+										</label>
+
+										<label class="wpz-insta_table-row">
+											<span class="wpz-insta_table-cell"><?php esc_html_e( 'Always feature first photo', 'instagram-widget-by-wpzoom' ); ?></span>
+											<div class="wpz-insta_table-cell">
+												<input type="hidden" name="_wpz-insta_featured-nth-first" value="0" />
+												<input type="checkbox" name="_wpz-insta_featured-nth-first" value="1"<?php checked( $feed_featured_nth_first ); ?> />
+											</div>
+										</label>
+
+										<label class="wpz-insta_table-row">
+											<span class="wpz-insta_table-cell"><?php esc_html_e( 'Featured photos span', 'instagram-widget-by-wpzoom' ); ?></span>
+											<div class="wpz-insta_table-cell">
+												<input type="number" name="_wpz-insta_featured-nth-span" value="<?php echo esc_attr( $feed_featured_nth_span ); ?>" size="3" min="1" max="1000" step="1" />
+												<?php esc_html_e( 'columns', 'instagram-widget-by-wpzoom' ); ?>
+											</div>
+										</label>
+									</div>
 								</div>
 							</div>
 

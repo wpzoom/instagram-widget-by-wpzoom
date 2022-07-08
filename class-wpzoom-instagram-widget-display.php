@@ -213,8 +213,11 @@ class Wpzoom_Instagram_Widget_Display {
 					$new_posts_interval_number = isset( $args['check-new-posts-interval-number'] ) ? intval( $args['check-new-posts-interval-number'] ) : 1;
 					$new_posts_interval_suffix = isset( $args['check-new-posts-interval-suffix'] ) ? intval( $args['check-new-posts-interval-suffix'] ) : 1;
 					$enable_request_timeout = isset( $args['enable-request-timeout'] ) ? boolval( $args['enable-request-timeout'] ) : false;
+					$featured = isset( $args['featured'] ) ? boolval( $args['featured'] ) : false;
+					$featured_nth = isset( $args['featured-nth'] ) ? intval( $args['featured-nth'] ) : 3;
+					$featured_nth_first = isset( $args['featured-nth-first'] ) ? boolval( $args['featured-nth-first'] ) : true;
+					$featured_nth_span = isset( $args['featured-nth-span'] ) ? max( intval( $args['featured-nth-span'] ), 1 ) : 3;
 					$amount = isset( $args['item-num'] ) ? intval( $args['item-num'] ) : 9;
-					$featured_nth = isset( $args['featured-nth'] ) ? intval( $args['featured-nth'] ) : 0;
 					$spacing_between = isset( $args['spacing-between'] ) && intval( $args['spacing-between'] ) > -1 ? intval( $args['spacing-between'] ) : -1;
 					$lightbox = isset( $args['lightbox'] ) ? boolval( $args['lightbox'] ) : true;
 					$show_view_on_insta_button = isset( $args['show-view-button' ] ) ? boolval( $args['show-view-button' ] ) : true;
@@ -273,8 +276,22 @@ class Wpzoom_Instagram_Widget_Display {
 
 						$classes = 'zoom-instagram-widget__items zoom-instagram-widget__items--no-js' . sprintf( ' layout-%s', $layout );
 
-						if ( $this->is_pro && ( 'grid' === $layout || 'masonry' === $layout ) && $featured_nth > 0 ) {
-							$classes .= ' featured-nth featured-nth_' . $featured_nth;
+						if ( $this->is_pro && ( 'grid' === $layout || 'masonry' === $layout ) ) {
+							if ( $featured ) {
+								$classes .= ' featured';
+							}
+
+							if ( $featured_nth > 0 ) {
+								$classes .= ' featured-nth_' . $featured_nth;
+							}
+
+							if ( $featured_nth_first ) {
+								$classes .= ' featured-always-first';
+							}
+
+							if ( $featured_nth_span > 0 ) {
+								$classes .= ' featured-span_' . $featured_nth_span;
+							}
 						}
 
 						if ( $this->is_pro && 'carousel' === $layout ) {
@@ -350,6 +367,10 @@ class Wpzoom_Instagram_Widget_Display {
 			$layout = isset( $args['layout'] ) ? intval( $args['layout'] ) : 0;
 			$amount = isset( $args['item-num'] ) ? intval( $args['item-num'] ) : 9;
 			$col_num = isset( $args['col-num'] ) && intval( $args['col-num'] ) !== 3 ? intval( $args['col-num'] ) : 3;
+			$featured = isset( $args['featured'] ) ? boolval( $args['featured'] ) : false;
+			$featured_nth = isset( $args['featured-nth'] ) ? intval( $args['featured-nth'] ) : 3;
+			$featured_first = isset( $args['featured-nth-first'] ) ? boolval( $args['featured-nth-first'] ) : true;
+			$count2 = $featured_first ? 0 : 1;
 			$show_overlay = isset( $args['show-overlay'] ) ? boolval( $args['show-overlay'] ) : true;
             $show_insta_icon = isset( $args['hover-link'] ) ? boolval( $args['hover-link'] ) : true;
 			$show_media_type_icons = isset( $args['show-media-type-icons'] ) ? boolval( $args['show-media-type-icons'] ) : true;
@@ -427,6 +448,10 @@ class Wpzoom_Instagram_Widget_Display {
 					$classes .= ' swiper-slide';
 				}
 
+				if ( $featured && $featured_nth > 0 && $count2 % $featured_nth == 0 ) {
+					$classes .= ' featured';
+				}
+
 				$output .= '<li class="zoom-instagram-widget__item' . $classes . '" ' . $inline_attrs . '><div class="zoom-instagram-widget__item-inner-wrap">';
 
 				$output .= sprintf( '<img src="%1$s" width="%3$d" height="%2$d" />', esc_url( $src ), esc_attr( $width ), esc_attr( $height ) );
@@ -468,6 +493,7 @@ class Wpzoom_Instagram_Widget_Display {
 
 				$output .= '</div></li>';
 
+				$count2++;
 				if ( ++ $count === $amount ) {
 					break;
 				}
@@ -621,7 +647,9 @@ class Wpzoom_Instagram_Widget_Display {
 		$col_num                = isset( $args['col-num'] ) && intval( $args['col-num'] ) !== 3 ? intval( $args['col-num'] ) : 3;
 		$spacing_between        = isset( $args['spacing-between'] ) && intval( $args['spacing-between'] ) > -1 ? intval( $args['spacing-between'] ) : -1;
 		$spacing_between_suffix = $this->get_suffix( isset( $args['spacing-between-suffix'] ) ? intval( $args['spacing-between-suffix'] ) : 0 );
-		$featured_nth           = isset( $args['featured-nth'] ) ? intval( $args['featured-nth'] ) : 0;
+		$featured               = isset( $args['featured'] ) ? boolval( $args['featured'] ) : false;
+		$featured_nth           = isset( $args['featured-nth'] ) ? intval( $args['featured-nth'] ) : 3;
+		$featured_span          = isset( $args['featured-nth-span'] ) ? max( intval( $args['featured-nth-span'] ) + 1, 1 ) : 3;
 		$button_bg              = isset( $args['view-button-bg-color'] ) ? $this->validate_color( $args['view-button-bg-color'] ) : '';
         $loadmore_bg            = isset( $args['load-more-color'] ) ? $this->validate_color( $args['load-more-color'] ) : '';
 		$bg_color               = isset( $args['bg-color'] ) ? $this->validate_color( $args['bg-color'] ) : '';
@@ -673,10 +701,9 @@ class Wpzoom_Instagram_Widget_Display {
 			$output .= "}";
 		}
 
-		if ( $this->is_pro && $featured_nth > 0 && ( 0 === $layout || 2 === $layout ) ) {
-			$colspan = $col_num + 1;
-			$output .= ".zoom-instagram${feed_id} .zoom-instagram-widget__item:nth-child(${featured_nth}n){";
-			$output .= "grid-column:1/${colspan}!important;";
+		if ( $this->is_pro && $featured && $featured_nth > 0 && $featured_span > 2 && ( 0 === $layout || 2 === $layout ) ) {
+			$output .= ".zoom-instagram${feed_id} .zoom-instagram-widget__item.featured{";
+			$output .= "grid-column:1/${featured_span}!important;";
 			$output .= "}";
 		}
 
