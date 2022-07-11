@@ -125,6 +125,7 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 
 		//Set token from first created user
 		$this->api->set_access_token( $user_account_token );
+		$this->api->set_feed_id( $user_id );
 
 		$items  = $this->api->get_items( $instance );
 		$errors = $this->api->errors->get_error_messages();

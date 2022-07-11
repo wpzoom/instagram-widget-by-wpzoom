@@ -210,6 +210,10 @@ class Wpzoom_Instagram_Widget_Display {
 
 					$this->api->set_access_token( $user_account_token );
 
+					if( isset( $args['feed-id'] ) ) {
+						$this->api->set_feed_id( $args['feed-id'] );
+					}
+
 					$items  = $this->api->get_items( array( 'image-limit' => $amount, 'image-resolution' => $image_size, 'image-width' => $image_width, 'include-pagination' => true, 'bypass-transient' => $preview ) );
 					$errors = $this->api->errors->get_error_messages();
 
