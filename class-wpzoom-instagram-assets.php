@@ -286,7 +286,7 @@ if ( ! class_exists( 'WPZOOM_Instagram_Widget_Assets ' ) ) {
 			foreach( (array) $allwidgets as $widget ) {
 				foreach( (array) $widget as $widget_element ) {
 					foreach( (array)$widget_element as $value ) {
-						if( has_shortcode( $value, 'instagram' ) ) {
+						if( is_string( $value ) && has_shortcode( $value, 'instagram' ) ) {
 							return true;
 						}
 					}
