@@ -34,10 +34,12 @@ class Wpzoom_Instagram_Widget_After_Setup {
 	public function __construct() {
 
 		add_action( 'init', array( $this, 'init' ) );
+		add_action( 'init', array( $this, 'delete_old_transients' ) );
+
 	}
-
+	
 	public function init() {
-
+	
 		//Run only once
 		$run_once = get_option( 'wpzoom_run_only_once_01' );
 		if ( !empty( $run_once ) ) {
@@ -83,6 +85,39 @@ class Wpzoom_Instagram_Widget_After_Setup {
 		}
 
 		add_option( 'wpzoom_run_only_once_01', true );
+
+	}
+
+	public function delete_old_transients() {
+
+		//Run only once
+		$run_once = get_option( 'wpzoom_run_only_once_02' );
+		if ( !empty( $run_once ) ) {
+			return;
+		}
+
+		$get_users = get_posts(
+			array(
+				'numberposts' => -1,
+				'orderby'     => 'date',
+        		'order'       => 'ASC',
+				'post_type'   => 'wpz-insta_user'
+			)
+		);
+
+		$transient = 'zoom_instagram_is_configured_';
+
+		foreach( (array)$get_users as $user ) {
+
+			$user_id            = isset( $user->ID ) ? intval( $user->ID ) : -1;
+			$user_account_token = get_post_meta( $user_id, '_wpz-insta_token', true ) ?: '-1';
+
+			if( get_transient( $transient . $user_account_token ) ) {
+				delete_transient(  $transient . $user_account_token );
+			}
+		}
+
+		add_option( 'wpzoom_run_only_once_02', true );
 
 	}
 
