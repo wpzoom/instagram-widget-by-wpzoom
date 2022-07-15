@@ -726,6 +726,54 @@
 				}
 			}
 
+			.wpz-insta_image-select {
+				display: flex;
+				flex-wrap: wrap;
+				gap: 10px;
+
+				label {
+					text-align: center;
+					color: $blue-grey-color;
+					transition: all .3s ease;
+
+					&:hover {
+						color: $darker-blue-grey-color;
+
+						svg {
+							color: $darker-blue-grey-color;
+							fill: $darker-blue-grey-color;
+						}
+					}
+
+					input {
+						display: none;
+
+						&:checked {
+							& + span {
+								color: $primary-color;
+								fill: $primary-color;
+
+								svg {
+									color: $primary-color;
+									fill: $primary-color;
+								}
+							}
+						}
+					}
+
+					span {
+						display: block;
+					}
+
+					svg {
+						display: block;
+						color: $blue-grey-color;
+						fill: $blue-grey-color;
+						transition: all .3s ease;
+					}
+				}
+			}
+
 			.wpz-insta_notice {
 				display: flex;
 				align-items: center;

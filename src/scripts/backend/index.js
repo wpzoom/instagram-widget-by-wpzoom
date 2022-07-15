@@ -201,9 +201,7 @@ jQuery( function( $ ) {
 
 	$( '.wpz-insta_sidebar-section-layout input[name="_wpz-insta_layout"]' ).on( 'change', function() {
 		const $colNumOption    = $( this ).closest( '.wpz-insta_sidebar-section-layout' ).find( 'input[name="_wpz-insta_col-num"]' ).closest( '.wpz-insta_table-row' ),
-		      $featOption      = $( this ).closest( '.wpz-insta_sidebar-section-layout' ).find( 'input[name="_wpz-insta_featured"]' ).closest( '.wpz-insta_table-row' ),
-		      $featNthWrap     = $( this ).closest( '.wpz-insta_sidebar-section-layout' ).find( 'input[name="_wpz-insta_featured-nth"]' ).closest( '.wpz-insta_sub-wrapper' ),
-		      $featItems       = $featOption.add( $featNthWrap ),
+		      $featOption      = $( this ).closest( '.wpz-insta_sidebar-section-layout' ).find( 'input[name="_wpz-insta_featured-layout"]' ).closest( '.wpz-insta_table-row' ),
 		      $parentLeftSect  = $( this ).closest( '.wpz-insta_sidebar-left-section' ),
 		      $proFieldset     = $parentLeftSect.find( '.wpz-insta_sidebar-section-feed .wpz-insta_show-on-hover fieldset.wpz-insta_feed-only-pro.wpz-insta_pro-only' ),
 		      $loadMoreOptions = $parentLeftSect.find( '.wpz-insta_sidebar-section-load-more' ),
@@ -213,13 +211,25 @@ jQuery( function( $ ) {
 
 		$( '.wpz-insta-admin .wpz-insta_widget-preview .wpz-insta_widget-preview-view' ).toggleClass( 'layout-fullwidth', $( this ).val() == '1' );
 
-		$featItems.toggleClass( 'hidden', $( this ).val() != '0' && $( this ).val() != '2' );
+		$featOption.toggleClass( 'hidden', $( this ).val() != '0' && $( this ).val() != '2' );
 	} );
 
-	$( '.wpz-insta_sidebar-section-layout input[name="_wpz-insta_featured"]' ).on( 'change', function() {
-		const $featNthWrap = $( this ).closest( '.wpz-insta_sidebar-section-layout' ).find( 'input[name="_wpz-insta_featured-nth"]' ).closest( '.wpz-insta_sub-wrapper' );
+	$( '.wpz-insta_sidebar-section-layout input[name="_wpz-insta_col-num"]' ).on( 'input', function() {
+		const colNum               = parseInt( $( this ).closest( '.wpz-insta_sidebar-section-layout' ).find( 'input[name="_wpz-insta_col-num"]' ).val() ),
+		      $featuredLayouts     = $( this ).closest( '.wpz-insta_table' ).find( 'label.featured-layout' ),
+		      $featuredLayoutsWrap = $featuredLayouts.closest( '.wpz-insta_table-row' );
 
-		$featNthWrap.toggleClass( 'featured-off', ! $( this ).is( ':checked' ) );
+		if ( colNum < 3 || colNum > 4 ) {
+			$featuredLayoutsWrap.addClass( 'hidden' );
+		} else {
+			$featuredLayoutsWrap.removeClass( 'hidden' );
+			$featuredLayouts.addClass( 'hidden' );
+			$featuredLayouts.each( function() {
+				if ( $( this ).is( '.featured-layout-columns_' + colNum ) ) {
+					$( this ).removeClass( 'hidden' );
+				}
+			} );
+		}
 	} );
 
 	$( '#wpz-insta_modal-dialog' ).find( '.wpz-insta_modal-dialog_ok-button, .wpz-insta_modal-dialog_close-button' ).on( 'click', function( e ) {

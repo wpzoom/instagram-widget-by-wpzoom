@@ -38,10 +38,7 @@ class WPZOOM_Instagram_Widget_Settings {
 		'col-num'                         => array( 'type' => 'integer', 'default' => 3 ),
 		'spacing-between'                 => array( 'type' => 'number',  'default' => 10 ),
 		'spacing-between-suffix'          => array( 'type' => 'integer', 'default' => 0 ),
-		'featured'                        => array( 'type' => 'boolean', 'default' => false ),
-		'featured-nth'                    => array( 'type' => 'integer', 'default' => 3 ),
-		'featured-nth-first'              => array( 'type' => 'boolean', 'default' => true ),
-		'featured-nth-span'               => array( 'type' => 'integer', 'default' => 3 ),
+		'featured-layout'                 => array( 'type' => 'integer', 'default' => 0 ),
 		'show-account-name'               => array( 'type' => 'boolean', 'default' => true ),
 		'show-account-username'           => array( 'type' => 'boolean', 'default' => true ),
 		'show-account-image'              => array( 'type' => 'boolean', 'default' => true ),
@@ -1099,63 +1096,57 @@ class WPZOOM_Instagram_Widget_Settings {
 
 	function edit_feed_content( $post ) {
 		if ( 'wpz-insta_feed' == $post->post_type ) {
-			$pro_toggle = apply_filters( 'wpz-insta_admin-pro-options-toggle', true );
-			$none_label = __( 'None', 'instagram-widget-by-wpzoom' );
-			$user_id = (int) self::get_feed_setting_value( $post->ID, 'user-id' );
-			$user = $user_id > 0 ? get_post( $user_id ) : null;
-			$user_edit_link = $user instanceof WP_Post ? admin_url( 'edit.php?post_type=wpz-insta_user#post-' . $user_id ) : '';
-			$user_display_name = $user instanceof WP_Post ? sprintf( '@%s', get_the_title( $user ) ) : $none_label;
-			$user_account_type = $user instanceof WP_Post ? ucwords( strtolower( get_post_meta( $user_id, '_wpz-insta_account-type', true ) ?: $none_label ) ) : $none_label;
-			$raw_token = get_post_meta( $user_id, '_wpz-insta_token', true );
-			$user_account_token = $user instanceof WP_Post ? ( false !== $raw_token && ! empty( $raw_token ) ? $raw_token : '-1' ) : '-1';
-			$new_posts_interval_number = (int) self::get_feed_setting_value( $post->ID, 'check-new-posts-interval-number' );
-			$new_posts_interval_suffix = (int) self::get_feed_setting_value( $post->ID, 'check-new-posts-interval-suffix' );
-			$enable_request_timeout = (bool) self::get_feed_setting_value( $post->ID, 'enable-request-timeout' );
-			$raw_feed_layout = (int) self::get_feed_setting_value( $post->ID, 'layout' );
-			$feed_layout = ! $pro_toggle ? $raw_feed_layout : ( $raw_feed_layout > 1 ? 0 : $raw_feed_layout );
-			$feed_items_num = (int) self::get_feed_setting_value( $post->ID, 'item-num' );
-			$feed_cols_num = (int) self::get_feed_setting_value( $post->ID, 'col-num' );
-			$feed_spacing_between = (float) self::get_feed_setting_value( $post->ID, 'spacing-between' );
-			$feed_spacing_between_suffix = (int) self::get_feed_setting_value( $post->ID, 'spacing-between-suffix' );
-			$feed_featured = (bool) self::get_feed_setting_value( $post->ID, 'featured' );
-			$feed_featured_nth = (int) self::get_feed_setting_value( $post->ID, 'featured-nth' );
-			$feed_featured_nth_first = (bool) self::get_feed_setting_value( $post->ID, 'featured-nth-first' );
-			$feed_featured_nth_span = (string) self::get_feed_setting_value( $post->ID, 'featured-nth-span' );
-			$show_account_name = (bool) self::get_feed_setting_value( $post->ID, 'show-account-name' );
-			$show_account_username = (bool) self::get_feed_setting_value( $post->ID, 'show-account-username' );
-			$show_account_image = (bool) self::get_feed_setting_value( $post->ID, 'show-account-image' );
-			$show_account_bio = (bool) self::get_feed_setting_value( $post->ID, 'show-account-bio' );
-			$show_view_instagram_button = (bool) self::get_feed_setting_value( $post->ID, 'show-view-button' );
-			$view_instagram_button_text = (string) self::get_feed_setting_value( $post->ID, 'view-button-text' );
+			$pro_toggle                     = apply_filters( 'wpz-insta_admin-pro-options-toggle', true );
+			$none_label                     = __( 'None', 'instagram-widget-by-wpzoom' );
+			$user_id                        = (int) self::get_feed_setting_value( $post->ID, 'user-id' );
+			$user                           = $user_id > 0 ? get_post( $user_id ) : null;
+			$user_edit_link                 = $user instanceof WP_Post ? admin_url( 'edit.php?post_type=wpz-insta_user#post-' . $user_id ) : '';
+			$user_display_name              = $user instanceof WP_Post ? sprintf( '@%s', get_the_title( $user ) ) : $none_label;
+			$user_account_type              = $user instanceof WP_Post ? ucwords( strtolower( get_post_meta( $user_id, '_wpz-insta_account-type', true ) ?: $none_label ) ) : $none_label;
+			$raw_token                      = get_post_meta( $user_id, '_wpz-insta_token', true );
+			$user_account_token             = $user instanceof WP_Post ? ( false !== $raw_token && ! empty( $raw_token ) ? $raw_token : '-1' ) : '-1';
+			$new_posts_interval_number      = (int) self::get_feed_setting_value( $post->ID, 'check-new-posts-interval-number' );
+			$new_posts_interval_suffix      = (int) self::get_feed_setting_value( $post->ID, 'check-new-posts-interval-suffix' );
+			$enable_request_timeout         = (bool) self::get_feed_setting_value( $post->ID, 'enable-request-timeout' );
+			$raw_feed_layout                = (int) self::get_feed_setting_value( $post->ID, 'layout' );
+			$feed_layout                    = ! $pro_toggle ? $raw_feed_layout : ( $raw_feed_layout > 1 ? 0 : $raw_feed_layout );
+			$feed_items_num                 = (int) self::get_feed_setting_value( $post->ID, 'item-num' );
+			$feed_cols_num                  = (int) self::get_feed_setting_value( $post->ID, 'col-num' );
+			$feed_spacing_between           = (float) self::get_feed_setting_value( $post->ID, 'spacing-between' );
+			$feed_spacing_between_suffix    = (int) self::get_feed_setting_value( $post->ID, 'spacing-between-suffix' );
+			$feed_featured_layout           = (int) self::get_feed_setting_value( $post->ID, 'featured-layout' );
+			$show_account_name              = (bool) self::get_feed_setting_value( $post->ID, 'show-account-name' );
+			$show_account_username          = (bool) self::get_feed_setting_value( $post->ID, 'show-account-username' );
+			$show_account_image             = (bool) self::get_feed_setting_value( $post->ID, 'show-account-image' );
+			$show_account_bio               = (bool) self::get_feed_setting_value( $post->ID, 'show-account-bio' );
+			$show_view_instagram_button     = (bool) self::get_feed_setting_value( $post->ID, 'show-view-button' );
+			$view_instagram_button_text     = (string) self::get_feed_setting_value( $post->ID, 'view-button-text' );
 			$view_instagram_button_bg_color = (string) $this->validate_color( self::get_feed_setting_value( $post->ID, 'view-button-bg-color' ) );
-			$feed_bg_color = (string) $this->validate_color( self::get_feed_setting_value( $post->ID, 'bg-color' ) );
-			$feed_items_radius = (float) self::get_feed_setting_value( $post->ID, 'border-radius' );
-			$feed_items_radius_suffix = (int) self::get_feed_setting_value( $post->ID, 'border-radius-suffix' );
-			$feed_spacing_around = (float) self::get_feed_setting_value( $post->ID, 'spacing-around' );
-			$feed_spacing_around_suffix = (int) self::get_feed_setting_value( $post->ID, 'spacing-around-suffix' );
-			$feed_font_size = (float) self::get_feed_setting_value( $post->ID, 'font-size' );
-			$feed_font_size_suffix = (int) self::get_feed_setting_value( $post->ID, 'font-size-suffix' );
-			$lightbox = (bool) self::get_feed_setting_value( $post->ID, 'lightbox' );
-			$hide_video_thumbnails = (bool) self::get_feed_setting_value( $post->ID, 'hide-video-thumbs' );
-			$show_overlay = (bool) self::get_feed_setting_value( $post->ID, 'show-overlay' );
-			$lazy_load = (bool) self::get_feed_setting_value( $post->ID, 'lazy-load' );
-			$show_media_type_icons = (bool) self::get_feed_setting_value( $post->ID, 'show-media-type-icons' );
-			$image_size = (string) self::get_feed_setting_value( $post->ID, 'image-size' );
-			$image_width = (float) self::get_feed_setting_value( $post->ID, 'image-width' );
-			$image_width_suffix = (int) self::get_feed_setting_value( $post->ID, 'image-width-suffix' );
-			$feed_hover_media_type_icons = (bool) self::get_feed_setting_value( $post->ID, 'hover-media-type-icons' );
-			$feed_hover_link = (bool) self::get_feed_setting_value( $post->ID, 'hover-link' );
-			// $feed_hover_autoplay = (bool) self::get_feed_setting_value( $post->ID, 'hover-autoplay' );
-			$feed_hover_tags_feed = (bool) self::get_feed_setting_value( $post->ID, 'hover-tags-feed' );
-			$feed_hover_date = (bool) self::get_feed_setting_value( $post->ID, 'hover-date' );
-			$show_load_more = (bool) self::get_feed_setting_value( $post->ID, 'show-load-more' );
-			$load_more_text = (string) self::get_feed_setting_value( $post->ID, 'load-more-text' );
-			$load_more_color = (string) self::validate_color( self::get_feed_setting_value( $post->ID, 'load-more-color' ) );
-			$feed_shortcode = sprintf( _x( '[instagram feed="%s"]', 'Instagram Feed Shortcode', 'instagram-widget-by-wpzoom' ), $post->ID );
-			$all_users = get_posts( array(
-				'numberposts' => -1,
-				'post_type'   => 'wpz-insta_user',
-			) );
+			$feed_bg_color                  = (string) $this->validate_color( self::get_feed_setting_value( $post->ID, 'bg-color' ) );
+			$feed_items_radius              = (float) self::get_feed_setting_value( $post->ID, 'border-radius' );
+			$feed_items_radius_suffix       = (int) self::get_feed_setting_value( $post->ID, 'border-radius-suffix' );
+			$feed_spacing_around            = (float) self::get_feed_setting_value( $post->ID, 'spacing-around' );
+			$feed_spacing_around_suffix     = (int) self::get_feed_setting_value( $post->ID, 'spacing-around-suffix' );
+			$feed_font_size                 = (float) self::get_feed_setting_value( $post->ID, 'font-size' );
+			$feed_font_size_suffix          = (int) self::get_feed_setting_value( $post->ID, 'font-size-suffix' );
+			$lightbox                       = (bool) self::get_feed_setting_value( $post->ID, 'lightbox' );
+			$hide_video_thumbnails          = (bool) self::get_feed_setting_value( $post->ID, 'hide-video-thumbs' );
+			$show_overlay                   = (bool) self::get_feed_setting_value( $post->ID, 'show-overlay' );
+			$lazy_load                      = (bool) self::get_feed_setting_value( $post->ID, 'lazy-load' );
+			$show_media_type_icons          = (bool) self::get_feed_setting_value( $post->ID, 'show-media-type-icons' );
+			$image_size                     = (string) self::get_feed_setting_value( $post->ID, 'image-size' );
+			$image_width                    = (float) self::get_feed_setting_value( $post->ID, 'image-width' );
+			$image_width_suffix             = (int) self::get_feed_setting_value( $post->ID, 'image-width-suffix' );
+			$feed_hover_media_type_icons    = (bool) self::get_feed_setting_value( $post->ID, 'hover-media-type-icons' );
+			$feed_hover_link                = (bool) self::get_feed_setting_value( $post->ID, 'hover-link' );
+			// $feed_hover_autoplay            = (bool) self::get_feed_setting_value( $post->ID, 'hover-autoplay' );
+			$feed_hover_tags_feed           = (bool) self::get_feed_setting_value( $post->ID, 'hover-tags-feed' );
+			$feed_hover_date                = (bool) self::get_feed_setting_value( $post->ID, 'hover-date' );
+			$show_load_more                 = (bool) self::get_feed_setting_value( $post->ID, 'show-load-more' );
+			$load_more_text                 = (string) self::get_feed_setting_value( $post->ID, 'load-more-text' );
+			$load_more_color                = (string) self::validate_color( self::get_feed_setting_value( $post->ID, 'load-more-color' ) );
+			$feed_shortcode                 = sprintf( _x( '[instagram feed="%s"]', 'Instagram Feed Shortcode', 'instagram-widget-by-wpzoom' ), $post->ID );
+			$all_users                      = get_posts( array( 'numberposts' => -1, 'post_type' => 'wpz-insta_user' ) );
 
 			?>
 			<div class="wpz-insta_tabs-content">
@@ -1325,39 +1316,47 @@ class WPZOOM_Instagram_Widget_Settings {
 										</div>
 									</label>
 
-									<label class="wpz-insta_table-row">
-										<strong class="wpz-insta_table-cell"><?php esc_html_e( 'Feature photos', 'instagram-widget-by-wpzoom' ); ?></strong>
-										<div class="wpz-insta_table-cell">
-											<input type="hidden" name="_wpz-insta_featured" value="0" />
-											<input type="checkbox" name="_wpz-insta_featured" value="1"<?php checked( $feed_featured ); ?> />
+									<?php if ( ! $pro_toggle ) { ?>
+										<div class="wpz-insta_table-row wpz-insta_table-row-full<?php echo 3 === $feed_cols_num || 4 === $feed_cols_num ? '' : ' hidden'; ?>">
+											<strong class="wpz-insta_table-cell"><label for="_wpz-insta_featured-layout_0"><?php esc_html_e( 'Featured Highlighting', 'instagram-widget-by-wpzoom' ); ?></label></strong>
+											<div class="wpz-insta_table-cell">
+												<div class="wpz-insta_image-select">
+													<?php
+													$featured_layouts = array(
+														3 => array(
+															0 => '<svg width="64" viewBox="0 0 379 1045" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="fadeGrad1"x1="0"y1="0"x2="0"y2="1"><stop offset="0.95"stop-color="white"stop-opacity="1"/><stop offset="1"stop-color="white"stop-opacity="0"/></linearGradient><mask id="fadeMask1"x="0"y="0"width="1"height="1"maskContentUnits="objectBoundingBox"><rect x="0"y="0"width="1"height="1"fill="url(#fadeGrad1)"/></mask></defs><g mask="url(#fadeMask1)"><rect width="112"height="112"rx="12"/><rect x="133"y="0"width="112"height="112"rx="12"/><rect x="266"y="0"width="112"height="112"rx="12"/><rect x="0"y="133"width="112"height="112"rx="12"/><rect x="133"y="133"width="112"height="112"rx="12"/><rect x="266"y="133"width="112"height="112"rx="12"/><rect x="0"y="266"width="112"height="112"rx="12"/><rect x="133"y="266"width="112"height="112"rx="12"/><rect x="266"y="266"width="112"height="112"rx="12"/><rect x="0"y="400"width="112"height="112"rx="12"/><rect x="133"y="400"width="112"height="112"rx="12"/><rect x="266"y="400"width="112"height="112"rx="12"/><rect x="0"y="533"width="112"height="112"rx="12"/><rect x="133"y="533"width="112"height="112"rx="12"/><rect x="266"y="533"width="112"height="112"rx="12"/><rect x="0"y="666"width="112"height="112"rx="12"/><rect x="133"y="666"width="112"height="112"rx="12"/><rect x="266"y="666"width="112"height="112"rx="12"/><rect x="0"y="799"width="112"height="112"rx="12"/><rect x="133"y="799"width="112"height="112"rx="12"/><rect x="266"y="799"width="112"height="112"rx="12"/><rect x="0"y="932"width="112"height="112"rx="12"/><rect x="133"y="932"width="112"height="112"rx="12"/><rect x="266"y="932"width="112"height="112"rx="12"/></g></svg>',
+															1 => '<svg width="64" viewBox="0 0 379 1045" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="fadeGrad2"x1="0"y1="0"x2="0"y2="1"><stop offset="0.95"stop-color="white"stop-opacity="1"/><stop offset="1"stop-color="white"stop-opacity="0"/></linearGradient><mask id="fadeMask2"x="0"y="0"width="1"height="1"maskContentUnits="objectBoundingBox"><rect x="0"y="0"width="1"height="1"fill="url(#fadeGrad2)"/></mask></defs><g mask="url(#fadeMask2)"><rect width="246"height="246"rx="12"/><rect x="266"y="0"width="112"height="112"rx="12"/><rect x="266"y="133"width="112"height="112"rx="12"/><rect x="0"y="266"width="112"height="112"rx="12"/><rect x="133"y="266"width="112"height="112"rx="12"/><rect x="266"y="266"width="112"height="112"rx="12"/><rect x="0"y="400"width="112"height="112"rx="12"/><rect x="133"y="400"width="112"height="112"rx="12"/><rect x="266"y="400"width="112"height="112"rx="12"/><rect x="0"y="533"width="112"height="112"rx="12"/><rect x="133"y="533"width="112"height="112"rx="12"/><rect x="266"y="533"width="112"height="112"rx="12"/><rect x="0"y="666"width="112"height="112"rx="12"/><rect x="133"y="666"width="112"height="112"rx="12"/><rect x="266"y="666"width="112"height="112"rx="12"/><rect x="0"y="799"width="112"height="112"rx="12"/><rect x="133"y="799"width="112"height="112"rx="12"/><rect x="266"y="799"width="112"height="112"rx="12"/><rect x="0"y="932"width="112"height="112"rx="12"/><rect x="133"y="932"width="112"height="112"rx="12"/><rect x="266"y="932"width="112"height="112"rx="12"/></g></svg>',
+															2 => '<svg width="64" viewBox="0 0 379 1045" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="fadeGrad3"x1="0"y1="0"x2="0"y2="1"><stop offset="0.95"stop-color="white"stop-opacity="1"/><stop offset="1"stop-color="white"stop-opacity="0"/></linearGradient><mask id="fadeMask3"x="0"y="0"width="1"height="1"maskContentUnits="objectBoundingBox"><rect x="0"y="0"width="1"height="1"fill="url(#fadeGrad3)"/></mask></defs><g mask="url(#fadeMask3)"><rect width="246"height="246"rx="12"/><rect x="266"y="0"width="112"height="112"rx="12"/><rect x="266"y="133"width="112"height="112"rx="12"/><rect x="0"y="266"width="112"height="112"rx="12"/><rect x="133"y="266"width="112"height="112"rx="12"/><rect x="266"y="266"width="112"height="112"rx="12"/><rect x="0"y="400"width="112"height="112"rx="12"/><rect x="133"y="400"width="246"height="246"rx="12"/><rect x="0"y="533"width="112"height="112"rx="12"/><rect x="0"y="666"width="112"height="112"rx="12"/><rect x="133"y="666"width="112"height="112"rx="12"/><rect x="266"y="666"width="112"height="112"rx="12"/><rect x="0"y="799"width="246"height="246"rx="12"/><rect x="266"y="799"width="112"height="112"rx="12"/><rect x="266"y="932"width="112"height="112"rx="12"/></g></svg>',
+															3 => '<svg width="64" viewBox="0 0 379 1045" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="fadeGrad4"x1="0"y1="0"x2="0"y2="1"><stop offset="0.95"stop-color="white"stop-opacity="1"/><stop offset="1"stop-color="white"stop-opacity="0"/></linearGradient><mask id="fadeMask4"x="0"y="0"width="1"height="1"maskContentUnits="objectBoundingBox"><rect x="0"y="0"width="1"height="1"fill="url(#fadeGrad4)"/></mask></defs><g mask="url(#fadeMask4)"><rect width="246"height="246"rx="12"/><rect x="266"y="0"width="112"height="112"rx="12"/><rect x="266"y="133"width="112"height="112"rx="12"/><rect x="0"y="266"width="112"height="112"rx="12"/><rect x="0"y="400"width="112"height="112"rx="12"/><rect x="133"y="266"width="246"height="246"rx="12"/><rect x="0"y="533"width="246"height="246"rx="12"/><rect x="266"y="533"width="112"height="112"rx="12"/><rect x="266"y="666"width="112"height="112"rx="12"/><rect x="0"y="799"width="112"height="112"rx="12"/><rect x="0"y="932"width="112"height="112"rx="12"/><rect x="133"y="799"width="246"height="246"rx="12"/></g></svg>',
+															4 => '<svg width="64" viewBox="0 0 379 1045" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="fadeGrad5"x1="0"y1="0"x2="0"y2="1"><stop offset="0.95"stop-color="white"stop-opacity="1"/><stop offset="1"stop-color="white"stop-opacity="0"/></linearGradient><mask id="fadeMask5"x="0"y="0"width="1"height="1"maskContentUnits="objectBoundingBox"><rect x="0"y="0"width="1"height="1"fill="url(#fadeGrad5)"/></mask></defs><g mask="url(#fadeMask5)"><rect width="379"height="379"rx="12"/><rect x="0"y="400"width="112"height="112"rx="12"/><rect x="133"y="400"width="112"height="112"rx="12"/><rect x="266"y="400"width="112"height="112"rx="12"/><rect x="0"y="533"width="112"height="112"rx="12"/><rect x="133"y="533"width="112"height="112"rx="12"/><rect x="266"y="533"width="112"height="112"rx="12"/><rect x="0"y="666"width="112"height="112"rx="12"/><rect x="133"y="666"width="112"height="112"rx="12"/><rect x="266"y="666"width="112"height="112"rx="12"/><rect x="0"y="799"width="112"height="112"rx="12"/><rect x="133"y="799"width="112"height="112"rx="12"/><rect x="266"y="799"width="112"height="112"rx="12"/><rect x="0"y="932"width="112"height="112"rx="12"/><rect x="133"y="932"width="112"height="112"rx="12"/><rect x="266"y="932"width="112"height="112"rx="12"/></g></svg>',
+															5 => '<svg width="64" viewBox="0 0 379 1045" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="fadeGrad6"x1="0"y1="0"x2="0"y2="1"><stop offset="0.95"stop-color="white"stop-opacity="1"/><stop offset="1"stop-color="white"stop-opacity="0"/></linearGradient><mask id="fadeMask6"x="0"y="0"width="1"height="1"maskContentUnits="objectBoundingBox"><rect x="0"y="0"width="1"height="1"fill="url(#fadeGrad6)"/></mask></defs><g mask="url(#fadeMask6)"><rect width="379"height="379"rx="12"/><rect x="0"y="400"width="112"height="112"rx="12"/><rect x="133"y="400"width="112"height="112"rx="12"/><rect x="266"y="400"width="112"height="112"rx="12"/><rect x="0"y="533"width="112"height="112"rx="12"/><rect x="133"y="533"width="112"height="112"rx="12"/><rect x="266"y="533"width="112"height="112"rx="12"/><rect x="0"y="666"width="379"height="379"rx="12"/></g></svg>',
+														),
+														4 => array(
+															6  => '<svg width="64" viewBox="0 0 380 968" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="fadeGrad7"x1="0"y1="0"x2="0"y2="1"><stop offset="0.95"stop-color="white"stop-opacity="1"/><stop offset="1"stop-color="white"stop-opacity="0"/></linearGradient><mask id="fadeMask7"x="0"y="0"width="1"height="1"maskContentUnits="objectBoundingBox"><rect x="0"y="0"width="1"height="1"fill="url(#fadeGrad7)"/></mask></defs><g mask="url(#fadeMask7)"><rect width="86"height="86"rx="12"/><rect x="98"y="0"width="86"height="86"rx="12"/><rect x="196"y="0"width="86"height="86"rx="12"/><rect x="294"y="0"width="86"height="86"rx="12"/><rect x="0"y="98"width="86"height="86"rx="12"/><rect x="98"y="98"width="86"height="86"rx="12"/><rect x="196"y="98"width="86"height="86"rx="12"/><rect x="294"y="98"width="86"height="86"rx="12"/><rect x="0"y="196"width="86"height="86"rx="12"/><rect x="98"y="196"width="86"height="86"rx="12"/><rect x="196"y="196"width="86"height="86"rx="12"/><rect x="294"y="196"width="86"height="86"rx="12"/><rect x="0"y="294"width="86"height="86"rx="12"/><rect x="98"y="294"width="86"height="86"rx="12"/><rect x="196"y="294"width="86"height="86"rx="12"/><rect x="294"y="294"width="86"height="86"rx="12"/><rect x="0"y="392"width="86"height="86"rx="12"/><rect x="98"y="392"width="86"height="86"rx="12"/><rect x="196"y="392"width="86"height="86"rx="12"/><rect x="294"y="392"width="86"height="86"rx="12"/><rect x="0"y="490"width="86"height="86"rx="12"/><rect x="98"y="490"width="86"height="86"rx="12"/><rect x="196"y="490"width="86"height="86"rx="12"/><rect x="294"y="490"width="86"height="86"rx="12"/><rect x="0"y="588"width="86"height="86"rx="12"/><rect x="98"y="588"width="86"height="86"rx="12"/><rect x="196"y="588"width="86"height="86"rx="12"/><rect x="294"y="588"width="86"height="86"rx="12"/><rect x="0"y="686"width="86"height="86"rx="12"/><rect x="98"y="686"width="86"height="86"rx="12"/><rect x="196"y="686"width="86"height="86"rx="12"/><rect x="294"y="686"width="86"height="86"rx="12"/><rect x="0"y="784"width="86"height="86"rx="12"/><rect x="98"y="784"width="86"height="86"rx="12"/><rect x="196"y="784"width="86"height="86"rx="12"/><rect x="294"y="784"width="86"height="86"rx="12"/><rect x="0"y="882"width="86"height="86"rx="12"/><rect x="98"y="882"width="86"height="86"rx="12"/><rect x="196"y="882"width="86"height="86"rx="12"/><rect x="294"y="882"width="86"height="86"rx="12"/></g></svg>',
+															7  => '<svg width="64" viewBox="0 0 380 968" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="fadeGrad8"x1="0"y1="0"x2="0"y2="1"><stop offset="0.95"stop-color="white"stop-opacity="1"/><stop offset="1"stop-color="white"stop-opacity="0"/></linearGradient><mask id="fadeMask8"x="0"y="0"width="1"height="1"maskContentUnits="objectBoundingBox"><rect x="0"y="0"width="1"height="1"fill="url(#fadeGrad8)"/></mask></defs><g mask="url(#fadeMask8)"><rect width="184"height="184"rx="12"/><rect x="196"y="0"width="86"height="86"rx="12"/><rect x="294"y="0"width="86"height="86"rx="12"/><rect x="196"y="98"width="86"height="86"rx="12"/><rect x="294"y="98"width="86"height="86"rx="12"/><rect x="0"y="196"width="86"height="86"rx="12"/><rect x="98"y="196"width="86"height="86"rx="12"/><rect x="196"y="196"width="86"height="86"rx="12"/><rect x="294"y="196"width="86"height="86"rx="12"/><rect x="0"y="294"width="86"height="86"rx="12"/><rect x="98"y="294"width="86"height="86"rx="12"/><rect x="196"y="294"width="86"height="86"rx="12"/><rect x="294"y="294"width="86"height="86"rx="12"/><rect x="0"y="392"width="86"height="86"rx="12"/><rect x="98"y="392"width="86"height="86"rx="12"/><rect x="196"y="392"width="86"height="86"rx="12"/><rect x="294"y="392"width="86"height="86"rx="12"/><rect x="0"y="490"width="86"height="86"rx="12"/><rect x="98"y="490"width="86"height="86"rx="12"/><rect x="196"y="490"width="86"height="86"rx="12"/><rect x="294"y="490"width="86"height="86"rx="12"/><rect x="0"y="588"width="86"height="86"rx="12"/><rect x="98"y="588"width="86"height="86"rx="12"/><rect x="196"y="588"width="86"height="86"rx="12"/><rect x="294"y="588"width="86"height="86"rx="12"/><rect x="0"y="686"width="86"height="86"rx="12"/><rect x="98"y="686"width="86"height="86"rx="12"/><rect x="196"y="686"width="86"height="86"rx="12"/><rect x="294"y="686"width="86"height="86"rx="12"/><rect x="0"y="784"width="86"height="86"rx="12"/><rect x="98"y="784"width="86"height="86"rx="12"/><rect x="196"y="784"width="86"height="86"rx="12"/><rect x="294"y="784"width="86"height="86"rx="12"/><rect x="0"y="882"width="86"height="86"rx="12"/><rect x="98"y="882"width="86"height="86"rx="12"/><rect x="196"y="882"width="86"height="86"rx="12"/><rect x="294"y="882"width="86"height="86"rx="12"/></g></svg>',
+															8  => '<svg width="64" viewBox="0 0 380 968" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="fadeGrad9"x1="0"y1="0"x2="0"y2="1"><stop offset="0.95"stop-color="white"stop-opacity="1"/><stop offset="1"stop-color="white"stop-opacity="0"/></linearGradient><mask id="fadeMask9"x="0"y="0"width="1"height="1"maskContentUnits="objectBoundingBox"><rect x="0"y="0"width="1"height="1"fill="url(#fadeGrad9)"/></mask></defs><g mask="url(#fadeMask9)"><rect width="184"height="184"rx="12"/><rect x="196"y="0"width="86"height="86"rx="12"/><rect x="294"y="0"width="86"height="86"rx="12"/><rect x="196"y="98"width="86"height="86"rx="12"/><rect x="294"y="98"width="86"height="86"rx="12"/><rect x="0"y="196"width="86"height="86"rx="12"/><rect x="98"y="196"width="184"height="184"rx="12"/><rect x="294"y="196"width="86"height="86"rx="12"/><rect x="0"y="294"width="86"height="86"rx="12"/><rect x="294"y="294"width="86"height="86"rx="12"/><rect x="0"y="392"width="86"height="86"rx="12"/><rect x="98"y="392"width="86"height="86"rx="12"/><rect x="196"y="392"width="86"height="86"rx="12"/><rect x="294"y="392"width="86"height="86"rx="12"/><rect x="0"y="490"width="184"height="184"rx="12"/><rect x="196"y="490"width="86"height="86"rx="12"/><rect x="294"y="490"width="86"height="86"rx="12"/><rect x="196"y="588"width="86"height="86"rx="12"/><rect x="294"y="588"width="86"height="86"rx="12"/><rect x="0"y="686"width="86"height="86"rx="12"/><rect x="98"y="686"width="184"height="184"rx="12"/><rect x="294"y="686"width="86"height="86"rx="12"/><rect x="0"y="784"width="86"height="86"rx="12"/><rect x="294"y="784"width="86"height="86"rx="12"/><rect x="0"y="882"width="86"height="86"rx="12"/><rect x="98"y="882"width="86"height="86"rx="12"/><rect x="196"y="882"width="86"height="86"rx="12"/><rect x="294"y="882"width="86"height="86"rx="12"/></g></svg>',
+															9  => '<svg width="64" viewBox="0 0 380 968" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="fadeGrad10"x1="0"y1="0"x2="0"y2="1"><stop offset="0.95"stop-color="white"stop-opacity="1"/><stop offset="1"stop-color="white"stop-opacity="0"/></linearGradient><mask id="fadeMask10"x="0"y="0"width="1"height="1"maskContentUnits="objectBoundingBox"><rect x="0"y="0"width="1"height="1"fill="url(#fadeGrad10)"/></mask></defs><g mask="url(#fadeMask10)"><rect width="184"height="184"rx="12"/><rect x="196"y="0"width="86"height="86"rx="12"/><rect x="294"y="0"width="86"height="86"rx="12"/><rect x="196"y="98"width="86"height="86"rx="12"/><rect x="294"y="98"width="86"height="86"rx="12"/><rect x="0"y="196"width="86"height="86"rx="12"/><rect x="98"y="196"width="86"height="86"rx="12"/><rect x="0"y="294"width="86"height="86"rx="12"/><rect x="98"y="294"width="86"height="86"rx="12"/><rect x="196"y="196"width="184"height="184"rx="12"/><rect x="0"y="392"width="184"height="184"rx="12"/><rect x="196"y="392"width="86"height="86"rx="12"/><rect x="294"y="392"width="86"height="86"rx="12"/><rect x="196"y="490"width="86"height="86"rx="12"/><rect x="294"y="490"width="86"height="86"rx="12"/><rect x="0"y="588"width="86"height="86"rx="12"/><rect x="98"y="588"width="86"height="86"rx="12"/><rect x="0"y="686"width="86"height="86"rx="12"/><rect x="98"y="686"width="86"height="86"rx="12"/><rect x="196"y="588"width="184"height="184"rx="12"/><rect x="0"y="784"width="184"height="184"rx="12"/><rect x="196"y="784"width="86"height="86"rx="12"/><rect x="294"y="784"width="86"height="86"rx="12"/><rect x="196"y="882"width="86"height="86"rx="12"/><rect x="294"y="882"width="86"height="86"rx="12"/></g></svg>',
+															10 => '<svg width="64" viewBox="0 0 380 968" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="fadeGrad11"x1="0"y1="0"x2="0"y2="1"><stop offset="0.95"stop-color="white"stop-opacity="1"/><stop offset="1"stop-color="white"stop-opacity="0"/></linearGradient><mask id="fadeMask11"x="0"y="0"width="1"height="1"maskContentUnits="objectBoundingBox"><rect x="0"y="0"width="1"height="1"fill="url(#fadeGrad11)"/></mask></defs><g mask="url(#fadeMask11)"><rect width="184"height="184"rx="12"/><rect x="196"y="0"width="86"height="86"rx="12"/><rect x="294"y="0"width="86"height="86"rx="12"/><rect x="196"y="98"width="184"height="184"rx="12"/><rect x="0"y="196"width="86"height="86"rx="12"/><rect x="98"y="196"width="86"height="86"rx="12"/><rect x="0"y="294"width="184"height="184"rx="12"/><rect x="196"y="294"width="86"height="86"rx="12"/><rect x="294"y="294"width="86"height="86"rx="12"/><rect x="196"y="392"width="184"height="184"rx="12"/><rect x="0"y="490"width="86"height="86"rx="12"/><rect x="98"y="490"width="86"height="86"rx="12"/><rect x="0"y="588"width="184"height="184"rx="12"/><rect x="196"y="588"width="86"height="86"rx="12"/><rect x="294"y="588"width="86"height="86"rx="12"/><rect x="196"y="686"width="184"height="184"rx="12"/><rect x="0"y="784"width="86"height="86"rx="12"/><rect x="98"y="784"width="86"height="86"rx="12"/><rect x="0"y="882"width="184"height="86"rx="12"/><rect x="196"y="882"width="86"height="86"rx="12"/><rect x="294"y="882"width="86"height="86"rx="12"/></g></svg>',
+															11 => '<svg width="64" viewBox="0 0 380 968" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="fadeGrad12"x1="0"y1="0"x2="0"y2="1"><stop offset="0.95"stop-color="white"stop-opacity="1"/><stop offset="1"stop-color="white"stop-opacity="0"/></linearGradient><mask id="fadeMask12"x="0"y="0"width="1"height="1"maskContentUnits="objectBoundingBox"><rect x="0"y="0"width="1"height="1"fill="url(#fadeGrad12)"/></mask></defs><g mask="url(#fadeMask12)"><rect width="184"height="184"rx="12"/><rect x="196"y="0"width="86"height="86"rx="12"/><rect x="294"y="0"width="86"height="86"rx="12"/><rect x="0"y="196"width="86"height="86"rx="12"/><rect x="98"y="196"width="86"height="86"rx="12"/><rect x="0"y="294"width="86"height="86"rx="12"/><rect x="98"y="294"width="86"height="86"rx="12"/><rect x="196"y="98"width="184"height="184"rx="12"/><rect x="0"y="392"width="184"height="184"rx="12"/><rect x="196"y="294"width="86"height="86"rx="12"/><rect x="294"y="294"width="86"height="86"rx="12"/><rect x="196"y="392"width="86"height="86"rx="12"/><rect x="294"y="392"width="86"height="86"rx="12"/><rect x="0"y="588"width="86"height="86"rx="12"/><rect x="98"y="588"width="86"height="86"rx="12"/><rect x="0"y="686"width="86"height="86"rx="12"/><rect x="98"y="686"width="86"height="86"rx="12"/><rect x="196"y="490"width="184"height="184"rx="12"/><rect x="0"y="784"width="184"height="184"rx="12"/><rect x="196"y="686"width="86"height="86"rx="12"/><rect x="294"y="686"width="86"height="86"rx="12"/><rect x="196"y="784"width="86"height="86"rx="12"/><rect x="294"y="784"width="86"height="86"rx="12"/><rect x="196"y="882"width="184"height="86"rx="12"/></g></svg>',
+														),
+													);
+
+													foreach ( $featured_layouts as $columns_amount => $the_layouts ) {
+														foreach( $the_layouts as $id => $featured_layout ) {
+															printf(
+																'<label class="wpz-insta_image-select-item featured-layout %1$s"><input type="radio" name="_wpz-insta_featured-layout" id="_wpz-insta_featured-layout_%2$s" value="%2$s"%3$s /><span>%4$s</span></label>',
+																"featured-layout_$id featured-layout-columns_$columns_amount" . ( $feed_cols_num === $columns_amount ? '' : ' hidden' ),
+																esc_attr( $id ),
+																checked( $feed_featured_layout, $id, false ),
+																$featured_layout
+															);
+														}
+													}
+													?>
+												</div>
+											</div>
 										</div>
-									</label>
-
-									<div class="wpz-insta_sub-wrapper<?php echo ( ! $pro_toggle && ( 0 === $feed_layout || 2 === $feed_layout ) ? '' : ' hidden' ) . ( ! $pro_toggle || ! $feed_featured ? ' featured-off' : '' ); ?>">
-										<label class="wpz-insta_table-row">
-											<span class="wpz-insta_table-cell"><?php esc_html_e( 'Feature every', 'instagram-widget-by-wpzoom' ); ?></span>
-											<div class="wpz-insta_table-cell">
-												<input type="number" name="_wpz-insta_featured-nth" value="<?php echo esc_attr( $feed_featured_nth ); ?>" size="3" min="0" max="1000" step="1" />
-												<?php esc_html_e( 'photos', 'instagram-widget-by-wpzoom' ); ?>
-											</div>
-										</label>
-
-										<label class="wpz-insta_table-row">
-											<span class="wpz-insta_table-cell"><?php esc_html_e( 'Always feature first photo', 'instagram-widget-by-wpzoom' ); ?></span>
-											<div class="wpz-insta_table-cell">
-												<input type="hidden" name="_wpz-insta_featured-nth-first" value="0" />
-												<input type="checkbox" name="_wpz-insta_featured-nth-first" value="1"<?php checked( $feed_featured_nth_first ); ?> />
-											</div>
-										</label>
-
-										<label class="wpz-insta_table-row">
-											<span class="wpz-insta_table-cell"><?php esc_html_e( 'Featured photos span', 'instagram-widget-by-wpzoom' ); ?></span>
-											<div class="wpz-insta_table-cell">
-												<input type="number" name="_wpz-insta_featured-nth-span" value="<?php echo esc_attr( $feed_featured_nth_span ); ?>" size="3" min="1" max="1000" step="1" />
-												<?php esc_html_e( 'columns', 'instagram-widget-by-wpzoom' ); ?>
-											</div>
-										</label>
-									</div>
+									<?php } ?>
 								</div>
 							</div>
 
