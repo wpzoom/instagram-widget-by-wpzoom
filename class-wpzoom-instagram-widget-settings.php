@@ -407,6 +407,7 @@ class WPZOOM_Instagram_Widget_Settings {
 						'wpz-insta_user',
 						'edit-wpz-insta_user',
 						'instagram_page_wpzoom-instagram-users',
+						'wpz-insta_feed_page_wpz-insta_settings',
 						'wpz-insta_feed_page_wpzoom-instagram-support',
 						'settings_page_wpz-insta-connect',
 					)
@@ -1784,6 +1785,10 @@ class WPZOOM_Instagram_Widget_Settings {
 								'name' => __( 'Accounts', 'instagram-widget-by-wpzoom' ),
 								'url'  => admin_url( 'edit.php?post_type=wpz-insta_user' ),
 							),
+							'wpz-insta_feed_page_wpz-insta_settings' => array(
+								'name' => esc_html__( 'Settings', 'instagram-widget-by-wpzoom' ),
+								'url'  => admin_url( 'edit.php?post_type=wpz-insta_feed&page=wpz-insta_settings' ),
+							),
 							'wpz-insta_feed_page_wpzoom-instagram-support' => array(
 								'name' => __( 'Support', 'instagram-widget-by-wpzoom' ),
 								'url'  => admin_url( 'edit.php?post_type=wpz-insta_feed&page=wpzoom-instagram-support' ),
@@ -1813,7 +1818,7 @@ class WPZOOM_Instagram_Widget_Settings {
         $pro_toggle = apply_filters( 'wpz-insta_admin-pro-options-toggle', true );
 
 
-		if ( 'toplevel_page_wpzoom-instagram' == $current_screen->id || 'wpz-insta_feed' == $current_screen->post_type || 'wpz-insta_user' == $current_screen->post_type || 'instagram_page_wpzoom-instagram-users' == $current_screen->id || 'wpz-insta_feed_page_wpzoom-instagram-support' == $current_screen->id || 'settings_page_wpz-insta-connect' == $current_screen->id ) {
+		if ( 'toplevel_page_wpzoom-instagram' == $current_screen->id || 'wpz-insta_feed' == $current_screen->post_type || 'wpz-insta_user' == $current_screen->post_type || 'instagram_page_wpzoom-instagram-users' == $current_screen->id || 'wpz-insta_feed_page_wpz-insta_settings' == $current_screen->id || 'wpz-insta_feed_page_wpzoom-instagram-support' == $current_screen->id || 'settings_page_wpz-insta-connect' == $current_screen->id ) {
 			?>
 			<footer class="wpz-insta_settings-footer">
 				<div class="wpz-insta_settings-footer-wrap">
@@ -2093,6 +2098,14 @@ class WPZOOM_Instagram_Widget_Settings {
 
         $pro_toggle = apply_filters( 'wpz-insta_admin-pro-options-toggle', true );
 
+		add_submenu_page(
+			'edit.php?post_type=wpz-insta_feed',
+			esc_html__( 'Settings', 'instagram-widget-by-wpzoom' ),
+			esc_html__( 'Settings', 'instagram-widget-by-wpzoom' ),
+			'manage_options',
+			'wpz-insta_settings',
+			array( 'WPZOOM_Instagram_General_Settings', 'settings_page' )
+		);
 
 		add_submenu_page(
 			'edit.php?post_type=wpz-insta_feed',

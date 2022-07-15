@@ -24,6 +24,7 @@ if ( ! defined( 'WPZOOM_INSTAGRAM_VERSION' ) ) {
 
 require_once plugin_dir_path( __FILE__ ) . 'class-wpzoom-instagram-image-uploader.php';
 require_once plugin_dir_path( __FILE__ ) . 'class-wpzoom-instagram-widget-settings.php';
+require_once plugin_dir_path( __FILE__ ) . 'class-wpzoom-instagram-general-settings.php';
 require_once plugin_dir_path( __FILE__ ) . 'class-wpzoom-instagram-widget-api.php';
 require_once plugin_dir_path( __FILE__ ) . 'class-wpzoom-instagram-widget-display.php';
 require_once plugin_dir_path( __FILE__ ) . 'class-wpzoom-instagram-widget.php';
@@ -132,6 +133,7 @@ function wpzoom_instagram_get_default_settings() {
 		'user-info-avatar'         => '',
 		'user-info-fullname'       => '',
 		'user-info-biography'      => '',
+		'load-css-js'              => '',
 	);
 }
 
