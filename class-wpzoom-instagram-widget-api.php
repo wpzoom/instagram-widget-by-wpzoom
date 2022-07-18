@@ -41,6 +41,13 @@ class Wpzoom_Instagram_Widget_API {
 	protected $access_token;
 
 	/**
+	 * Feed ID
+	 *
+	 * @var string
+	 */
+	protected $feed_id;
+
+	/**
 	 * Class constructor
 	 */
 	protected function __construct() {
@@ -86,6 +93,18 @@ class Wpzoom_Instagram_Widget_API {
 	 */
 	public function set_access_token( $token ) {
 		$this->access_token = $token;
+	}
+
+	/**
+	 * Manually set the access token.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param string $token The access token to set.
+	 * @return void
+	 */
+	public function set_feed_id( $id ) {
+		$this->feed_id = $id;
 	}
 
 	/**
@@ -211,6 +230,8 @@ class Wpzoom_Instagram_Widget_API {
 	 * @return array|bool Array of tweets or false if method fails
 	 */
 	public function get_items( $instance ) {
+
+
 		$sliced = wp_array_slice_assoc(
 			$instance,
 			array(
@@ -279,9 +300,11 @@ class Wpzoom_Instagram_Widget_API {
 			}
 		}
 
+
+
 		if ( ! empty( $data->data ) ) {
 			if ( ! $bypass_transient ) {
-				set_transient( $transient, wp_json_encode( $data ), $this->get_transient_lifetime() );
+				set_transient( $transient, wp_json_encode( $data ), $this->get_transient_lifetime( $this->feed_id ) );
 			}
 		} else {
 			if ( ! $bypass_transient ) {
@@ -515,9 +538,12 @@ class Wpzoom_Instagram_Widget_API {
 		return $converted;
 	}
 
-	function get_transient_lifetime() {
-		$interval = (int) WPZOOM_Instagram_Widget_Settings::get_feed_setting_value( get_the_ID(), 'check-new-posts-interval-number' );
-		$interval_suffix = (int) WPZOOM_Instagram_Widget_Settings::get_feed_setting_value( get_the_ID(), 'check-new-posts-interval-suffix' );
+	function get_transient_lifetime( $id ) {
+
+		$feed_id = isset( $id ) ? $id : 0; 
+
+		$interval = (int) WPZOOM_Instagram_Widget_Settings::get_feed_setting_value( $feed_id, 'check-new-posts-interval-number' );
+		$interval_suffix = (int) WPZOOM_Instagram_Widget_Settings::get_feed_setting_value( $feed_id, 'check-new-posts-interval-suffix' );
 
 		$values = array(
 			MINUTE_IN_SECONDS,
@@ -566,7 +592,7 @@ class Wpzoom_Instagram_Widget_API {
 		}
 
 		if ( ! empty( $data->data ) ) {
-			set_transient( $transient, wp_json_encode( $data ), $this->get_transient_lifetime() );
+			set_transient( $transient, wp_json_encode( $data ), $this->get_transient_lifetime( $this->feed_id ) );
 		} else {
 			set_transient( $transient, wp_json_encode( false ), MINUTE_IN_SECONDS );
 

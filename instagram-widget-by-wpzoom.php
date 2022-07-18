@@ -3,7 +3,7 @@
  * Plugin Name: WPZOOM Instagram Widget & Block
  * Plugin URI: https://www.wpzoom.com/plugins/instagram-widget/
  * Description: Instagram Widget is a customizable and responsive plugin, made to help you gain even more followers by showcasing your Instagram feed on your WordPress website.
- * Version: 2.0.2
+ * Version: 2.0.5
  * Author: WPZOOM
  * Author URI: https://www.wpzoom.com/
  * Text Domain: instagram-widget-by-wpzoom
@@ -19,15 +19,18 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 if ( ! defined( 'WPZOOM_INSTAGRAM_VERSION' ) ) {
-	define( 'WPZOOM_INSTAGRAM_VERSION', '2.0.2' );
+	define( 'WPZOOM_INSTAGRAM_VERSION', '2.0.5' );
 }
 
 require_once plugin_dir_path( __FILE__ ) . 'class-wpzoom-instagram-image-uploader.php';
 require_once plugin_dir_path( __FILE__ ) . 'class-wpzoom-instagram-widget-settings.php';
+require_once plugin_dir_path( __FILE__ ) . 'class-wpzoom-instagram-general-settings.php';
 require_once plugin_dir_path( __FILE__ ) . 'class-wpzoom-instagram-widget-api.php';
 require_once plugin_dir_path( __FILE__ ) . 'class-wpzoom-instagram-widget-display.php';
 require_once plugin_dir_path( __FILE__ ) . 'class-wpzoom-instagram-widget.php';
 require_once plugin_dir_path( __FILE__ ) . 'class-wpzoom-instagram-block.php';
+require_once plugin_dir_path( __FILE__ ) . 'class-wpzoom-instagram-assets.php';
+
 require_once plugin_dir_path( __FILE__ ) . 'class-wpzoom-instagram-widget-after-setup.php';
 
 add_action( 'widgets_init', 'zoom_instagram_widget_register' );
@@ -130,6 +133,7 @@ function wpzoom_instagram_get_default_settings() {
 		'user-info-avatar'         => '',
 		'user-info-fullname'       => '',
 		'user-info-biography'      => '',
+		'load-css-js'              => '',
 	);
 }
 

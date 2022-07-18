@@ -46,15 +46,6 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 			'username'                      => '',
 		);
 
-		add_action( 'wp_enqueue_scripts', array( $this, 'styles' ) );
-		add_action( 'wp_enqueue_scripts', array( $this, 'register_scripts' ) );
-
-		/**
-		 * Enqueue styles and scripts for SiteOrigin Page Builder.
-		 */
-		add_action( 'siteorigin_panel_enqueue_admin_scripts', array( $this, 'styles' ) );
-		add_action( 'siteorigin_panel_enqueue_admin_scripts', array( $this, 'register_scripts' ) );
-		add_action( 'siteorigin_panel_enqueue_admin_scripts', array( $this, 'enqueue_scripts' ) );
 	}
 
 	/**
@@ -101,79 +92,6 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 	}
 
 	/**
-	 * Load widget specific styles.
-	 */
-	public function styles() {
-		wp_enqueue_style(
-			'zoom-instagram-widget',
-			plugin_dir_url( __FILE__ ) . 'dist/styles/frontend/index.css',
-			array( 'dashicons' ),
-			WPZOOM_INSTAGRAM_VERSION
-		);
-
-		wp_enqueue_style(
-			'magnific-popup',
-			plugin_dir_url( __FILE__ ) . 'dist/styles/library/magnific-popup.css',
-			array( 'dashicons' ),
-			WPZOOM_INSTAGRAM_VERSION
-		);
-
-		wp_enqueue_style(
-			'swiper-css',
-			plugin_dir_url( __FILE__ ) . 'dist/styles/library/swiper.css',
-			array(),
-			'7.0.0-alpha.21'
-		);
-	}
-
-	/**
-	 * Register widget specific scripts.
-	 */
-	public function register_scripts() {
-		wp_register_script(
-			'zoom-instagram-widget-lazy-load',
-			plugin_dir_url( __FILE__ ) . 'dist/scripts/library/lazy.js',
-			array( 'jquery' ),
-			filemtime( plugin_dir_path( __FILE__ ) . 'dist/scripts/library/lazy.js' ),
-			true
-		);
-
-		wp_register_script(
-			'magnific-popup',
-			plugin_dir_url( __FILE__ ) . 'dist/scripts/library/magnific-popup.js',
-			array( 'jquery', 'underscore', 'wp-util' ),
-			filemtime( plugin_dir_path( __FILE__ ) . 'dist/scripts/library/magnific-popup.js' ),
-			true
-		);
-
-		wp_register_script(
-			'swiper-js',
-			plugin_dir_url( __FILE__ ) . 'dist/scripts/library/swiper.js',
-			array(),
-			'7.0.0-alpha.21',
-			true
-		);
-
-		wp_register_script(
-			'zoom-instagram-widget',
-			plugin_dir_url( __FILE__ ) . 'dist/scripts/frontend/index.js',
-			array( 'jquery', 'underscore', 'wp-util', 'magnific-popup', 'swiper-js' ),
-			WPZOOM_INSTAGRAM_VERSION,
-			true
-		);
-	}
-
-	/**
-	 * Load widget specific scripts.
-	 */
-	public function enqueue_scripts() {
-		wp_enqueue_script( 'zoom-instagram-widget-lazy-load' );
-		wp_enqueue_script( 'magnific-popup' );
-		wp_enqueue_script( 'swiper-js' );
-		wp_enqueue_script( 'zoom-instagram-widget' );
-	}
-
-	/**
 	 * Front-end display of widget.
 	 *
 	 * @see WP_Widget::widget()
@@ -184,8 +102,6 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 	public function widget( $args, $instance ) {
 
 		$this->api = Wpzoom_Instagram_Widget_API::getInstance();
-
-		$this->enqueue_scripts();
 
 		$instance = wp_parse_args( (array) $instance, $this->defaults );
 
@@ -209,6 +125,7 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 
 		//Set token from first created user
 		$this->api->set_access_token( $user_account_token );
+		$this->api->set_feed_id( $user_id );
 
 		$items  = $this->api->get_items( $instance );
 		$errors = $this->api->errors->get_error_messages();
@@ -656,7 +573,7 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
         <p style="color: #d54e21">
             <?php
             printf(
-                __( 'This widget will be discontinued in future updates, and we highly recommend adding your <a href="%1$s" target="_blank">Instagram Feeds</a> using the new <a href="%1$s" target="_blank">Gutenberg block</a> or <a href="%3$s" target="_blank">shortcode</a>.', 'instagram-widget-by-wpzoom' ),
+                __( 'We highly recommend adding your <a href="%1$s" target="_blank">Instagram Feeds</a> using the new <a href="%2$s" target="_blank">Gutenberg block</a> or <a href="%3$s" target="_blank">shortcode</a>.', 'instagram-widget-by-wpzoom' ),
                 admin_url( 'edit.php?post_type=wpz-insta_user' ),
                 esc_url( 'https://www.wpzoom.com/documentation/instagram-widget/how-to-insert-the-widget-in-the-block-editor/' ),
                 esc_url( 'https://www.wpzoom.com/documentation/instagram-widget/instagram-widget-how-to-embed-the-instagram-shortcode-in-elementor/' )

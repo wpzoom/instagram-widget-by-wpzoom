@@ -96,6 +96,16 @@ Yes, you can find the documentation for this plugin with more instructions on ou
 
 == Changelog ==
 
+= 2.0.5 =
+* Fixed a PHP error
+
+= 2.0.4 =
+* Fixed an issue with some feeds not showing new posts
+
+= 2.0.3 =
+* JS and CSS assets from the plugin will be loaded only on pages showing an Instagram feed
+* Minor bug fixes and improvements
+
 = 2.0.2 =
 * Fixing some issues with the legacy widget
 
