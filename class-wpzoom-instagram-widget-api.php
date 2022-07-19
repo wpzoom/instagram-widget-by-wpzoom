@@ -108,6 +108,22 @@ class Wpzoom_Instagram_Widget_API {
 	}
 
 	/**
+	 * Fetches a remote URL either safely or not, depending on a setting.
+	 *
+	 * @since 2.0.6
+	 *
+	 * @param  string         $url  URL to retrieve.
+	 * @param  array          $args Optional. Request arguments. Default empty array.
+	 * @return array|WP_Error                 The response or WP_Error on failure.
+	 */
+	public static function remote_get( $url, $args = array() ) {
+		$settings = get_option( 'wpzoom-instagram-general-settings' );
+		$enable_unsafe_requests = ! empty( $settings['enable-unsafe-requests'] ) ? wp_validate_boolean( $settings['enable-unsafe-requests'] ) : false;
+
+		return $enable_unsafe_requests ? wp_remote_get( $url, $args ) : wp_safe_remote_get( $url, $args );
+	}
+
+	/**
 	 * Register custom cron intervals
 	 *
 	 * @since 1.8.0
@@ -163,7 +179,7 @@ class Wpzoom_Instagram_Widget_API {
 							'https://graph.instagram.com/refresh_access_token'
 						);
 
-						$response      = wp_safe_remote_get( $request_url, $this->headers );
+						$response      = self::remote_get( $request_url, $this->headers );
 						$response_code = wp_remote_retrieve_response_code( $response );
 
 						if ( ! is_wp_error( $response ) ) {
@@ -278,7 +294,7 @@ class Wpzoom_Instagram_Widget_API {
 				'https://graph.instagram.com/me/media'
 			);
 
-			$response = wp_safe_remote_get( $request_url, $this->headers );
+			$response = self::remote_get( $request_url, $this->headers );
 
 			if ( is_wp_error( $response ) || 200 != wp_remote_retrieve_response_code( $response ) ) {
 				if ( ! $bypass_transient ) {
@@ -576,7 +592,7 @@ class Wpzoom_Instagram_Widget_API {
 				'https://graph.instagram.com/me'
 			);
 
-			$response = wp_safe_remote_get( $request_url, $this->headers );
+			$response = self::remote_get( $request_url, $this->headers );
 
 			if ( is_wp_error( $response ) || 200 != wp_remote_retrieve_response_code( $response ) ) {
 				set_transient( $transient, wp_json_encode( false ), MINUTE_IN_SECONDS );
@@ -617,7 +633,7 @@ class Wpzoom_Instagram_Widget_API {
 				'https://graph.instagram.com/me'
 			);
 
-			$response = wp_safe_remote_get( $request_url );
+			$response = self::remote_get( $request_url );
 
 			if ( ! is_wp_error( $response ) && 200 == wp_remote_retrieve_response_code( $response ) ) {
 				$output = json_decode( wp_remote_retrieve_body( $response ) );
@@ -712,7 +728,7 @@ class Wpzoom_Instagram_Widget_API {
 			'https://graph.instagram.com/me'
 		);
 
-		$response = wp_safe_remote_get( $request_url );
+		$response = self::remote_get( $request_url );
 
 		if ( is_wp_error( $response ) ) {
 			return $response;

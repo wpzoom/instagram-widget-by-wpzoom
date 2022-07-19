@@ -1323,7 +1323,7 @@ class WPZOOM_Instagram_Widget_Settings {
 									</label>
 
 									<?php if ( ! $pro_toggle ) { ?>
-										<div class="wpz-insta_table-row wpz-insta_table-row-full<?php echo 3 === $feed_cols_num || 4 === $feed_cols_num ? '' : ' hidden'; ?>">
+										<div class="wpz-insta_table-row wpz-insta_table-row-full<?php echo ( 0 === $feed_layout || 2 === $feed_layout ) && ( 3 === $feed_cols_num || 4 === $feed_cols_num ) ? '' : ' hidden'; ?>">
 											<strong class="wpz-insta_table-cell"><label for="_wpz-insta_featured-layout_0"><?php esc_html_e( 'Featured Highlighting', 'instagram-widget-by-wpzoom' ); ?></label></strong>
 											<div class="wpz-insta_table-cell">
 												<div class="wpz-insta_image-select">

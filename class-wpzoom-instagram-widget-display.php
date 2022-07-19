@@ -263,7 +263,7 @@ class Wpzoom_Instagram_Widget_Display {
 							$classes .= ' swiper-wrapper';
 						}
 
-						$output .= '<div class="zoom-instagram-widget__items-wrapper' . ( $this->is_pro && 'carousel' === $layout ? ' swiper-container' : '' ) . '"><ul class="' . $classes . '"' . $attrs . '><li class="masonry-items-sizer"></li>';
+						$output .= '<div class="zoom-instagram-widget__items-wrapper' . ( $this->is_pro && 'carousel' === $layout ? ' swiper-container' : '' ) . '"><ul class="' . $classes . '"' . $attrs . '>' . ( $this->is_pro && 'fullwidth' !== $layout && 'carousel' !== $layout ? '<li class="masonry-items-sizer"></li>' : '' );
 						$output .= self::items_html( $items['items'], $args );
 						$output .= '</ul>';
 						if ( $this->is_pro && 'carousel' === $layout ) {
@@ -271,7 +271,7 @@ class Wpzoom_Instagram_Widget_Display {
 						}
 						$output .= '</div>';
 
-						if ( $show_view_on_insta_button || ( $show_load_more_button && 'fullwidth' !== $layout ) ) {
+						if ( $show_view_on_insta_button || ( $show_load_more_button && 'fullwidth' !== $layout && 'carousel' !== $layout ) ) {
 							$output .= '<div class="zoom-instagram-widget__footer">';
 
 							if ( $show_view_on_insta_button ) {
@@ -282,7 +282,7 @@ class Wpzoom_Instagram_Widget_Display {
 								$output .= '</a>';
 							}
 
-							if ( $show_load_more_button && 'fullwidth' !== $layout ) {
+							if ( $show_load_more_button && 'fullwidth' !== $layout && 'carousel' !== $layout ) {
 								$output .= '<form method="POST" autocomplete="off" class="wpzinsta-pro-load-more"' . ( ! $this->is_pro ? ' disabled' : '' ) . '>';
 								$output .= wp_nonce_field( 'wpzinsta-pro-load-more', '_wpnonce', true, false );
 								$output .= '<input type="hidden" name="feed_id" value="' . esc_attr( isset( $args['feed-id'] ) ? intval( $args['feed-id'] ) : -1 ) . '" />';
@@ -641,17 +641,19 @@ class Wpzoom_Instagram_Widget_Display {
 			$output .= "}";
 		}
 
-		$output .= ".zoom-instagram${feed_id} .zoom-instagram-widget__item,.zoom-instagram${feed_id} .masonry-items-sizer{";
-		$output .= "width:calc(1/${col_num}*100%" . ( $spacing_between > 0 ? " - (1 - 1/${col_num})*${spacing_between}${spacing_between_suffix}" : "" ) . ")!important;";
-		$output .= "}";
-
-		if ( $spacing_between > 0 ) {
-			$output .= ".zoom-instagram${feed_id} .zoom-instagram-widget__item{";
-			$output .= "margin:0 0 ${spacing_between}${spacing_between_suffix}!important;";
-			$output .= "}";
-		}
-
 		if ( $this->is_pro ) {
+			if ( 1 !== $layout && 3 !== $layout ) {
+				$output .= ".zoom-instagram${feed_id} .zoom-instagram-widget__item,.zoom-instagram${feed_id} .masonry-items-sizer{";
+				$output .= "width:calc(1/${col_num}*100%" . ( $spacing_between > 0 ? " - (1 - 1/${col_num})*${spacing_between}${spacing_between_suffix}" : "" ) . ")!important;";
+				$output .= "}";
+			}
+
+			if ( $spacing_between > 0 ) {
+				$output .= ".zoom-instagram${feed_id} .zoom-instagram-widget__item{";
+				$output .= "margin:0 0 ${spacing_between}${spacing_between_suffix}!important;";
+				$output .= "}";
+			}
+
 			if ( $featured_layout > 0 ) {
 				if ( 3 === $col_num ) {
 					switch ( $featured_layout ) {
@@ -731,6 +733,30 @@ class Wpzoom_Instagram_Widget_Display {
 					}
 				}
 			}
+
+			if ( $border_radius > -1 ) {
+				$output .= ".zoom-instagram${feed_id} .zoom-instagram-widget__item .zoom-instagram-widget__item-inner-wrap{";
+				$output .= "border-radius:${border_radius}${border_radius_suffix}!important;";
+				$output .= "}";
+			}
+
+			if ( '' != $loadmore_bg ) {
+				$output .= ".zoom-instagram${feed_id} .wpzinsta-pro-load-more button[type=submit]{";
+				$output .= "background-color:${loadmore_bg}!important;";
+				$output .= "}";
+			}
+		} else {
+			if ( 1 !== $layout ) {
+				$output .= ".zoom-instagram${feed_id} .zoom-instagram-widget__items{";
+				$output .= "display:grid!important;";
+				$output .= "grid-template-columns: repeat(${col_num}, 1fr);";
+
+				if ( $spacing_between > 0 ) {
+					$output .= "gap:${spacing_between}${spacing_between_suffix}!important;";
+				}
+
+				$output .= "}";
+			}
 		}
 
 		if ( $image_width > -1 && 1 === $layout ) {
@@ -739,23 +765,11 @@ class Wpzoom_Instagram_Widget_Display {
 			$output .= "}";
 		}
 
-		if ( $border_radius > -1 ) {
-			$output .= ".zoom-instagram${feed_id} .zoom-instagram-widget__item .zoom-instagram-widget__item-inner-wrap{";
-			$output .= "border-radius:${border_radius}${border_radius_suffix}!important;";
-			$output .= "}";
-		}
-
 		if ( '' != $button_bg ) {
 			$output .= ".zoom-instagram${feed_id} .wpz-insta-view-on-insta-button{";
 			$output .= "background-color:${button_bg}!important;";
 			$output .= "}";
 		}
-
-        if ( '' != $loadmore_bg ) {
-            $output .= ".zoom-instagram${feed_id} .wpzinsta-pro-load-more button[type=submit]{";
-			$output .= "background-color:${loadmore_bg}!important;";
-			$output .= "}";
-        }
 
 		return trim( $output );
 	}

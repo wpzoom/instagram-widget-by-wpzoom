@@ -310,7 +310,13 @@ jQuery( function( $ ) {
 	let formSubmitted = false;
 
 	$( 'form#post .wpz-insta_tabs-content > .wpz-insta_sidebar > .wpz-insta_sidebar-left' ).find( 'input, textarea, select' ).add( 'form#post #title' ).filter( "[name][name!='']" ).not( '.preview-exclude' ).each( function( index ) {
-		formFields[ $.trim( $(this).attr('name') ) ] = $(this);
+		if ( $(this).is(':radio') ) {
+			if ( $(this).is(':checked') ) {
+				formFields[ $.trim( $(this).attr('name') ) ] = $(this);
+			}
+		} else {
+			formFields[ $.trim( $(this).attr('name') ) ] = $(this);
+		}
 	} );
 
 	$.each( formFields, function( i, val ) {

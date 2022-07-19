@@ -216,6 +216,12 @@
 			transform: translate(50%, -50%);
 		}
 
+		.notice-warning {
+			display: block;
+			padding: 11px 15px;
+			margin: 10px 0 0;
+		}
+
 		> .wrap {
 			> h1.wp-heading-inline,
 			> .page-title-action,
