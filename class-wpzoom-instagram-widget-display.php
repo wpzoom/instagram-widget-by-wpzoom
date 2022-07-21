@@ -197,6 +197,7 @@ class Wpzoom_Instagram_Widget_Display {
 					$new_posts_interval_suffix = isset( $args['check-new-posts-interval-suffix'] ) ? intval( $args['check-new-posts-interval-suffix'] ) : 1;
 					$enable_request_timeout = isset( $args['enable-request-timeout'] ) ? boolval( $args['enable-request-timeout'] ) : false;
 					$amount = isset( $args['item-num'] ) ? intval( $args['item-num'] ) : 9;
+					$perpage = isset( $args['perpage-num'] ) ? intval( $args['perpage-num'] ) : 3;
 					$spacing_between = isset( $args['spacing-between'] ) && intval( $args['spacing-between'] ) > -1 ? intval( $args['spacing-between'] ) : -1;
 					$lightbox = isset( $args['lightbox'] ) ? boolval( $args['lightbox'] ) : true;
 					$show_view_on_insta_button = isset( $args['show-view-button' ] ) ? boolval( $args['show-view-button' ] ) : true;
@@ -211,6 +212,10 @@ class Wpzoom_Instagram_Widget_Display {
 
 					if ( $spacing_between > -1 ) {
 						$attrs .= ' data-spacing="' . $spacing_between . '"';
+					}
+
+					if ( $perpage > 0 ) {
+						$attrs .= ' data-perpage="' . $perpage . '"';
 					}
 
 					$this->api->set_access_token( $user_account_token );
@@ -648,13 +653,13 @@ class Wpzoom_Instagram_Widget_Display {
 				$output .= "}";
 			}
 
-			if ( $spacing_between > 0 ) {
+			if ( $spacing_between > 0 && 3 !== $layout ) {
 				$output .= ".zoom-instagram${feed_id} .zoom-instagram-widget__item{";
 				$output .= "margin:0 0 ${spacing_between}${spacing_between_suffix}!important;";
 				$output .= "}";
 			}
 
-			if ( $featured_layout > 0 ) {
+			if ( $featured_layout > 0 && 1 !== $layout && 3 !== $layout ) {
 				if ( 3 === $col_num ) {
 					switch ( $featured_layout ) {
 						case 1:

@@ -201,7 +201,8 @@ jQuery( function( $ ) {
 
 	$( '.wpz-insta_sidebar-section-layout input[name="_wpz-insta_layout"]' ).on( 'change', function() {
 		const $colNumOption    = $( this ).closest( '.wpz-insta_sidebar-section-layout' ).find( 'input[name="_wpz-insta_col-num"]' ).closest( '.wpz-insta_table-row' ),
-		      $featOption      = $( this ).closest( '.wpz-insta_sidebar-section-layout' ).find( 'input[name="_wpz-insta_featured-layout"]' ).closest( '.wpz-insta_table-row' ),
+		      $perPageOption   = $( this ).closest( '.wpz-insta_sidebar-section-layout' ).find( 'input[name="_wpz-insta_perpage-num"]' ).closest( '.wpz-insta_table-row' ),
+		      $featOption      = $( this ).closest( '.wpz-insta_sidebar-section-layout' ).find( '.wpz-insta_table-row-featured-layout' ),
 		      $parentLeftSect  = $( this ).closest( '.wpz-insta_sidebar-left-section' ),
 		      $proFieldset     = $parentLeftSect.find( '.wpz-insta_sidebar-section-feed .wpz-insta_show-on-hover fieldset.wpz-insta_feed-only-pro.wpz-insta_pro-only' ),
 		      $loadMoreOptions = $parentLeftSect.find( '.wpz-insta_sidebar-section-load-more' ),
@@ -212,6 +213,7 @@ jQuery( function( $ ) {
 		$( '.wpz-insta-admin .wpz-insta_widget-preview .wpz-insta_widget-preview-view' ).toggleClass( 'layout-fullwidth', $( this ).val() == '1' );
 
 		$featOption.toggleClass( 'hidden', $( this ).val() != '0' && $( this ).val() != '2' );
+		$perPageOption.toggleClass( 'hidden', $( this ).val() != '3' );
 	} );
 
 	$( '.wpz-insta_sidebar-section-layout input[name="_wpz-insta_col-num"]' ).on( 'input', function() {

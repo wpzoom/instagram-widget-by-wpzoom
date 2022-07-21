@@ -36,6 +36,7 @@ class WPZOOM_Instagram_Widget_Settings {
 		'layout'                          => array( 'type' => 'integer', 'default' => 0 ),
 		'item-num'                        => array( 'type' => 'integer', 'default' => 9 ),
 		'col-num'                         => array( 'type' => 'integer', 'default' => 3 ),
+		'perpage-num'                     => array( 'type' => 'integer', 'default' => 3 ),
 		'spacing-between'                 => array( 'type' => 'number',  'default' => 10 ),
 		'spacing-between-suffix'          => array( 'type' => 'integer', 'default' => 0 ),
 		'featured-layout'                 => array( 'type' => 'integer', 'default' => 0 ),
@@ -1118,6 +1119,7 @@ class WPZOOM_Instagram_Widget_Settings {
 			$feed_layout                    = ! $pro_toggle ? $raw_feed_layout : ( $raw_feed_layout > 1 ? 0 : $raw_feed_layout );
 			$feed_items_num                 = (int) self::get_feed_setting_value( $post->ID, 'item-num' );
 			$feed_cols_num                  = (int) self::get_feed_setting_value( $post->ID, 'col-num' );
+			$feed_perpage_num               = (int) self::get_feed_setting_value( $post->ID, 'perpage-num' );
 			$feed_spacing_between           = (float) self::get_feed_setting_value( $post->ID, 'spacing-between' );
 			$feed_spacing_between_suffix    = (int) self::get_feed_setting_value( $post->ID, 'spacing-between-suffix' );
 			$feed_featured_layout           = (int) self::get_feed_setting_value( $post->ID, 'featured-layout' );
@@ -1307,6 +1309,11 @@ class WPZOOM_Instagram_Widget_Settings {
 										<div class="wpz-insta_table-cell"><input type="number" name="_wpz-insta_col-num" value="<?php echo esc_attr( $feed_cols_num ); ?>" size="3" min="0" max="100" step="1" /></div>
 									</label>
 
+									<label class="wpz-insta_table-row<?php echo 3 !== $feed_layout ? ' hidden' : ''; ?>">
+										<strong class="wpz-insta_table-cell"><?php esc_html_e( 'Number of items per-page', 'instagram-widget-by-wpzoom' ); ?></strong>
+										<div class="wpz-insta_table-cell"><input type="number" name="_wpz-insta_perpage-num" value="<?php echo esc_attr( $feed_perpage_num ); ?>" size="3" min="1" max="100" step="1" /></div>
+									</label>
+
 									<label class="wpz-insta_table-row">
 										<strong class="wpz-insta_table-cell"><?php esc_html_e( 'Padding around images', 'instagram-widget-by-wpzoom' ); ?></strong>
 										<div class="wpz-insta_table-cell">
@@ -1322,10 +1329,12 @@ class WPZOOM_Instagram_Widget_Settings {
 										</div>
 									</label>
 
-									<?php if ( ! $pro_toggle ) { ?>
-										<div class="wpz-insta_table-row wpz-insta_table-row-full<?php echo ( 0 === $feed_layout || 2 === $feed_layout ) && ( 3 === $feed_cols_num || 4 === $feed_cols_num ) ? '' : ' hidden'; ?>">
-											<strong class="wpz-insta_table-cell"><label for="_wpz-insta_featured-layout_0"><?php esc_html_e( 'Featured Highlighting', 'instagram-widget-by-wpzoom' ); ?></label></strong>
-											<div class="wpz-insta_table-cell">
+									<?php echo $pro_toggle ? '<fieldset class="wpz-insta_feed-only-pro wpz-insta_pro-only wpz-insta_pro-only-with-bottom"><legend><strong>' . esc_html__( 'PRO', 'instagram-widget-by-wpzoom' ) . '</strong></legend>' : ''; ?>
+
+									<div class="wpz-insta_table-row wpz-insta_table-row-full wpz-insta_table-row-featured-layout<?php echo ( ( 0 === $feed_layout || 2 === $feed_layout ) && ( 3 === $feed_cols_num || 4 === $feed_cols_num ) ? '' : ' hidden' ) . ( ! $pro_toggle ? '' : ' pro-only-wrapper' ); ?>">
+										<strong class="wpz-insta_table-cell"><label for="_wpz-insta_featured-layout_0"><?php esc_html_e( 'Featured Highlighting', 'instagram-widget-by-wpzoom' ); ?></label></strong>
+										<div class="wpz-insta_table-cell">
+											<?php if ( ! $pro_toggle ) { ?>
 												<div class="wpz-insta_image-select">
 													<?php
 													$featured_layouts = array(
@@ -1360,9 +1369,14 @@ class WPZOOM_Instagram_Widget_Settings {
 													}
 													?>
 												</div>
-											</div>
+											<?php } else { ?>
+												<input type="checkbox"<?php checked( true ); disabled( true ); ?> />
+												<span><?php esc_html_e( 'Highlight every 3rd post', 'instagram-widget-by-wpzoom' ); ?></span>
+											<?php } ?>
 										</div>
-									<?php } ?>
+									</div>
+
+									<?php echo $pro_toggle ? '</fieldset>' : ''; ?>
 								</div>
 							</div>
 
