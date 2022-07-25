@@ -736,6 +736,11 @@
 				display: flex;
 				flex-wrap: wrap;
 				gap: 10px;
+				margin: 5px 0 0;
+
+				&.hidden {
+					display: none;
+				}
 
 				label {
 					text-align: center;
@@ -1802,6 +1807,15 @@
 							white-space: nowrap;
 							line-height: 30px;
 							width: 50%;
+
+							&.table-cell-special {
+								display: flex;
+								align-items: center;
+
+								label {
+									width: 50%;
+								}
+							}
 
 							input {
 								margin: 0;

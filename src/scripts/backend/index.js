@@ -221,7 +221,7 @@ jQuery( function( $ ) {
 		      $featuredLayouts     = $( this ).closest( '.wpz-insta_table' ).find( 'label.featured-layout' ),
 		      $featuredLayoutsWrap = $featuredLayouts.closest( '.wpz-insta_table-row' );
 
-		if ( colNum < 3 || colNum > 4 ) {
+		if ( colNum < 3 || colNum > 6 ) {
 			$featuredLayoutsWrap.addClass( 'hidden' );
 		} else {
 			$featuredLayoutsWrap.removeClass( 'hidden' );
@@ -232,6 +232,10 @@ jQuery( function( $ ) {
 				}
 			} );
 		}
+	} );
+	
+	$( '#_wpz-insta_featured-layout-enable' ).on( 'change', function() {
+		$( this ).closest( '.wpz-insta_table-row' ).find( '.wpz-insta_image-select' ).toggleClass( 'hidden', ! $( this ).is( ':checked' ) );
 	} );
 
 	$( '#wpz-insta_modal-dialog' ).find( '.wpz-insta_modal-dialog_ok-button, .wpz-insta_modal-dialog_close-button' ).on( 'click', function( e ) {

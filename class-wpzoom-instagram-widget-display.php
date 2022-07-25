@@ -608,6 +608,7 @@ class Wpzoom_Instagram_Widget_Display {
 		$col_num                = isset( $args['col-num'] ) && intval( $args['col-num'] ) !== 3 ? intval( $args['col-num'] ) : 3;
 		$spacing_between        = isset( $args['spacing-between'] ) && intval( $args['spacing-between'] ) > -1 ? intval( $args['spacing-between'] ) : -1;
 		$spacing_between_suffix = $this->get_suffix( isset( $args['spacing-between-suffix'] ) ? intval( $args['spacing-between-suffix'] ) : 0 );
+		$feat_layout_enabled    = isset( $args['featured-layout-enable'] ) ? boolval( $args['featured-layout-enable'] ) : false;
 		$featured_layout        = isset( $args['featured-layout'] ) ? intval( $args['featured-layout'] ) : 0;
 		$button_bg              = isset( $args['view-button-bg-color'] ) ? $this->validate_color( $args['view-button-bg-color'] ) : '';
         $loadmore_bg            = isset( $args['load-more-color'] ) ? $this->validate_color( $args['load-more-color'] ) : '';
@@ -627,6 +628,11 @@ class Wpzoom_Instagram_Widget_Display {
 		$hover_date             = isset( $args['hover-date'] ) ? boolval( $args['hover-date'] ) : false;
 		$hover_text_color       = isset( $args['hover-text-color'] ) ? $this->validate_color( $args['hover-text-color'] ) : '';
 		$hover_bg_color         = isset( $args['hover-bg-color'] ) ? $this->validate_color( $args['hover-bg-color'] ) : '';
+
+//TEMP!!!
+$col_num = 6;
+$featured_layout = 18;
+//TEMP!!!
 
 		if ( $font_size > -1 || ! empty( $bg_color ) || $spacing_around > -1 ) {
 			$output .= ".zoom-instagram${feed_id}{";
@@ -659,7 +665,7 @@ class Wpzoom_Instagram_Widget_Display {
 				$output .= "}";
 			}
 
-			if ( $featured_layout > 0 && 1 !== $layout && 3 !== $layout ) {
+			if ( $feat_layout_enabled && $featured_layout > 0 && 1 !== $layout && 3 !== $layout ) {
 				if ( 3 === $col_num ) {
 					switch ( $featured_layout ) {
 						case 1:
@@ -706,34 +712,90 @@ class Wpzoom_Instagram_Widget_Display {
 					}
 				} elseif ( 4 === $col_num ) {
 					switch ( $featured_layout ) {
-						case 7:
+						case 6:
 							$output .= ".zoom-instagram${feed_id} .zoom-instagram-widget__item:nth-child(2){";
 							$output .= "width:calc(2/4*100%" . ( $spacing_between > 0 ? " - (1 - 2/4)*${spacing_between}${spacing_between_suffix}" : "" ) . ")!important;";
 							$output .= "}";
 							break;
 
-						case 8:
+						case 7:
 							$output .= ".zoom-instagram${feed_id} .zoom-instagram-widget__item:nth-child(14n+2),.zoom-instagram${feed_id} .zoom-instagram-widget__item:nth-child(14n+8){";
 							$output .= "width:calc(2/4*100%" . ( $spacing_between > 0 ? " - (1 - 2/4)*${spacing_between}${spacing_between_suffix}" : "" ) . ")!important;";
 							$output .= "}";
 							break;
 
-						case 9:
+						case 8:
 							$output .= ".zoom-instagram${feed_id} .zoom-instagram-widget__item:nth-child(10n+2),.zoom-instagram${feed_id} .zoom-instagram-widget__item:nth-child(10n+9){";
 							$output .= "width:calc(2/4*100%" . ( $spacing_between > 0 ? " - (1 - 2/4)*${spacing_between}${spacing_between_suffix}" : "" ) . ")!important;";
 							$output .= "}";
 							break;
 
-						case 10:
+						case 9:
 							$output .= ".zoom-instagram${feed_id} .zoom-instagram-widget__item:nth-child(6n+2),.zoom-instagram${feed_id} .zoom-instagram-widget__item:nth-child(6n+5){";
 							$output .= "width:calc(2/4*100%" . ( $spacing_between > 0 ? " - (1 - 2/4)*${spacing_between}${spacing_between_suffix}" : "" ) . ")!important;";
 							$output .= "}";
 							break;
 
-						case 11:
+						case 10:
 							$output .= ".zoom-instagram${feed_id} .zoom-instagram-widget__item:nth-child(10n+2),.zoom-instagram${feed_id} .zoom-instagram-widget__item:nth-child(10n+5){";
 							$output .= "width:calc(2/4*100%" . ( $spacing_between > 0 ? " - (1 - 2/4)*${spacing_between}${spacing_between_suffix}" : "" ) . ")!important;";
 							$output .= "}";
+							break;
+					}
+				} elseif ( 5 === $col_num ) {
+					switch ( $featured_layout ) {
+						case 11:
+							$output .= ".zoom-instagram${feed_id} .zoom-instagram-widget__item:nth-child(2){";
+							$output .= "width:calc(2/5*100%" . ( $spacing_between > 0 ? " - (1 - 2/5)*${spacing_between}${spacing_between_suffix}" : "" ) . ")!important;";
+							$output .= "}";
+							break;
+
+						case 12:
+							$output .= ".zoom-instagram${feed_id} .zoom-instagram-widget__item:nth-child(9n+2),.zoom-instagram${feed_id} .zoom-instagram-widget__item:nth-child(9n+7){";
+							$output .= "width:calc(2/5*100%" . ( $spacing_between > 0 ? " - (1 - 2/5)*${spacing_between}${spacing_between_suffix}" : "" ) . ")!important;";
+							$output .= "}";
+							break;
+
+						case 13:
+							$output .= ".zoom-instagram${feed_id} .zoom-instagram-widget__item:nth-child(14n+2),.zoom-instagram${feed_id} .zoom-instagram-widget__item:nth-child(14n+12){";
+							$output .= "width:calc(2/5*100%" . ( $spacing_between > 0 ? " - (1 - 2/5)*${spacing_between}${spacing_between_suffix}" : "" ) . ")!important;";
+							$output .= "}";
+							break;
+
+						case 14:
+							$output .= ".zoom-instagram${feed_id} .zoom-instagram-widget__item:nth-child(39n+2),.zoom-instagram${feed_id} .zoom-instagram-widget__item:nth-child(39n+11),.zoom-instagram${feed_id} .zoom-instagram-widget__item:nth-child(39n+24),.zoom-instagram${feed_id} .zoom-instagram-widget__item:nth-child(39n+29){";
+							$output .= "width:calc(2/5*100%" . ( $spacing_between > 0 ? " - (1 - 2/5)*${spacing_between}${spacing_between_suffix}" : "" ) . ")!important;";
+							$output .= "}";
+							break;
+
+						case 15:
+							$output .= "";
+							break;
+					}
+				} elseif ( 6 === $col_num ) {
+					switch ( $featured_layout ) {
+						case 16:
+							$output .= ".zoom-instagram${feed_id} .zoom-instagram-widget__item:nth-child(2){";
+							$output .= "width:calc(2/6*100%" . ( $spacing_between > 0 ? " - (1 - 2/6)*${spacing_between}${spacing_between_suffix}" : "" ) . ")!important;";
+							$output .= "}";
+							break;
+
+						case 17:
+							$output .= "";
+							break;
+
+						case 18:
+							$output .= ".zoom-instagram${feed_id} .zoom-instagram-widget__item:nth-child(18n+2),.zoom-instagram${feed_id} .zoom-instagram-widget__item:nth-child(18n+15){";
+							$output .= "width:calc(2/6*100%" . ( $spacing_between > 0 ? " - (1 - 2/6)*${spacing_between}${spacing_between_suffix}" : "" ) . ")!important;";
+							$output .= "}";
+							break;
+
+						case 19:
+							$output .= "";
+							break;
+
+						case 20:
+							$output .= "";
 							break;
 					}
 				}
