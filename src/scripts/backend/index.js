@@ -212,7 +212,7 @@ jQuery( function( $ ) {
 
 		$( '.wpz-insta-admin .wpz-insta_widget-preview .wpz-insta_widget-preview-view' ).toggleClass( 'layout-fullwidth', $( this ).val() == '1' );
 
-		$featOption.toggleClass( 'hidden', $( this ).val() != '0' && $( this ).val() != '2' );
+		$featOption.toggleClass( 'hidden', $( this ).val() != '0' );
 		$perPageOption.toggleClass( 'hidden', $( this ).val() != '3' );
 	} );
 

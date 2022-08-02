@@ -1333,7 +1333,7 @@ class WPZOOM_Instagram_Widget_Settings {
 
 									<?php echo $pro_toggle ? '<fieldset class="wpz-insta_feed-only-pro wpz-insta_pro-only wpz-insta_pro-only-with-bottom"><legend><strong>' . esc_html__( 'PRO', 'instagram-widget-by-wpzoom' ) . '</strong></legend>' : ''; ?>
 
-									<div class="wpz-insta_table-row wpz-insta_table-row-full wpz-insta_table-row-featured-layout<?php echo ( ( 0 === $feed_layout || 2 === $feed_layout ) && ( 3 === $feed_cols_num || 4 === $feed_cols_num || 5 === $feed_cols_num || 6 === $feed_cols_num ) ? '' : ' hidden' ) . ( ! $pro_toggle ? '' : ' pro-only-wrapper' ); ?>">
+									<div class="wpz-insta_table-row wpz-insta_table-row-full wpz-insta_table-row-featured-layout<?php echo ( 0 === $feed_layout && $feed_cols_num > 2 && $feed_cols_num < 7 ? '' : ' hidden' ) . ( ! $pro_toggle ? '' : ' pro-only-wrapper' ); ?>">
 										<strong class="wpz-insta_table-cell table-cell-special">
 											<label for="_wpz-insta_featured-layout-enable"><?php esc_html_e( 'Featured Highlighting', 'instagram-widget-by-wpzoom' ); ?></label>
 
