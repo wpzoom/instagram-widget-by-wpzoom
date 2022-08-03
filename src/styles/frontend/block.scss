@@ -201,11 +201,15 @@ img {
 
 			&.layout-carousel {
 				display: flex;
+				height: auto;
 
 				.zoom-instagram-widget__item {
+					height: auto;
+
 					img {
 						aspect-ratio: 1;
 						object-fit: cover;
+						height: auto;
 						width: 100%;
 					}
 				}

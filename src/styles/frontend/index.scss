@@ -117,10 +117,14 @@
 
 		&.layout-carousel {
 			display: flex;
+			height: auto;
 
 			.zoom-instagram-widget__item {
+				height: auto;
+
 				img {
 					aspect-ratio: 1;
+					height: auto;
 					width: 100%;
 				}
 			}
@@ -219,10 +223,14 @@
 
 	&.layout-carousel {
 		display: flex;
+		height: auto;
 
 		.zoom-instagram-widget__item {
+			height: auto;
+
 			img {
 				aspect-ratio: 1;
+				height: auto;
 				width: 100%;
 			}
 		}
