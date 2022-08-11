@@ -58,6 +58,7 @@ class Wpzoom_Instagram_Widget_Display {
 	 * @return string          The markup for the given feed.
 	 */
 	public function get_feed_output( int $feed_id ) {
+
 		if ( $feed_id > -1 ) {
 			$feed = get_post( $feed_id, OBJECT, 'display' );
 
@@ -380,7 +381,7 @@ class Wpzoom_Instagram_Widget_Display {
 
 				$output .= '<li class="zoom-instagram-widget__item' . ( $show_media_type_icons_on_hover ? ' media-icons-hover' : '' ) . '" ' . $inline_attrs . '><div class="zoom-instagram-widget__item-inner-wrap">';
 
-				$output .= sprintf( '<img src="%1$s" width="%3$d" height="%2$d" />', esc_url( $src ), esc_attr( $width ), esc_attr( $height ) );
+				$output .= sprintf( '<img src="%1$s" width="%3$d" height="%2$d" alt="%4$s" />', esc_url( $src ), esc_attr( $width ), esc_attr( $height ), esc_attr( $alt ) );
 
 				if ( $show_overlay ) {
 					$output .= '<div class="hover-layout zoom-instagram-widget__overlay zoom-instagram-widget__black ' . $small_class . '">';
