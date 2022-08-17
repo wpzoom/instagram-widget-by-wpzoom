@@ -1352,7 +1352,8 @@
 				}
 
 				&:not(.show-pro) {
-					.wpz-insta_pro-only {
+					.wpz-insta_pro-only:not(.wpz-insta_feed-layout),
+					.wpz-insta_pro-only > .wpz-insta_feed-layout-pro {
 						/*opacity: 0;
 						max-height: 0;
 						overflow: hidden;
