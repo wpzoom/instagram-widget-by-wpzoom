@@ -1302,7 +1302,7 @@ class WPZOOM_Instagram_Widget_Settings {
 
 								<div class="wpz-insta_feed-layout-etc wpz-insta_table">
 									<label class="wpz-insta_table-row">
-										<strong class="wpz-insta_table-cell"><?php esc_html_e( 'Number of photos', 'instagram-widget-by-wpzoom' ); ?></strong>
+										<strong class="wpz-insta_table-cell"><?php esc_html_e( 'Number of items', 'instagram-widget-by-wpzoom' ); ?></strong>
 										<div class="wpz-insta_table-cell"><input type="number" name="_wpz-insta_item-num" value="<?php echo esc_attr( $feed_items_num ); ?>" size="3" min="1" max="100" step="1" /></div>
 									</label>
 
@@ -1312,15 +1312,15 @@ class WPZOOM_Instagram_Widget_Settings {
 									</label>
 
 									<label class="wpz-insta_table-row<?php echo 3 !== $feed_layout ? ' hidden' : ''; ?>">
-										<strong class="wpz-insta_table-cell"><?php esc_html_e( 'Number of items per-page', 'instagram-widget-by-wpzoom' ); ?></strong>
+										<strong class="wpz-insta_table-cell"><?php esc_html_e( 'Number of visible items', 'instagram-widget-by-wpzoom' ); ?></strong>
 										<div class="wpz-insta_table-cell"><input type="number" name="_wpz-insta_perpage-num" value="<?php echo esc_attr( $feed_perpage_num ); ?>" size="3" min="1" max="100" step="1" /></div>
 									</label>
 
 									<label class="wpz-insta_table-row">
-										<strong class="wpz-insta_table-cell"><?php esc_html_e( 'Padding around images', 'instagram-widget-by-wpzoom' ); ?></strong>
+										<strong class="wpz-insta_table-cell"><?php esc_html_e( 'Padding around items', 'instagram-widget-by-wpzoom' ); ?></strong>
 										<div class="wpz-insta_table-cell">
 											<div class="wpz-insta_suffixed-number-input">
-												<input type="number" name="_wpz-insta_spacing-between" value="<?php echo esc_attr( $feed_spacing_between ); ?>" size="3" min="0" max="5000" step="1" />
+												<input type="number" name="_wpz-insta_spacing-between" value="<?php echo esc_attr( $feed_spacing_between ); ?>" size="3" min="0" max="100" step="1" />
 
 												<select name="_wpz-insta_spacing-between-suffix">
 													<option value="0"<?php selected( $feed_spacing_between_suffix, 0 ); ?>><?php esc_html_e( 'px', 'instagram-widget-by-wpzoom' ); ?></option>
@@ -1335,13 +1335,16 @@ class WPZOOM_Instagram_Widget_Settings {
 
 									<div class="wpz-insta_table-row wpz-insta_table-row-full wpz-insta_table-row-featured-layout<?php echo ( 0 === $feed_layout && $feed_cols_num > 2 && $feed_cols_num < 7 ? '' : ' hidden' ) . ( ! $pro_toggle ? '' : ' pro-only-wrapper' ); ?>">
 										<strong class="wpz-insta_table-cell table-cell-special">
-											<label for="_wpz-insta_featured-layout-enable"><?php esc_html_e( 'Featured Highlighting', 'instagram-widget-by-wpzoom' ); ?></label>
+											<label for="_wpz-insta_featured-layout-enable"><?php esc_html_e( 'Highlight items', 'instagram-widget-by-wpzoom' ); ?></label>
 
 											<?php if ( ! $pro_toggle ) { ?>
 												<input type="hidden" name="_wpz-insta_featured-layout-enable" value="0" />
 												<input type="checkbox" name="_wpz-insta_featured-layout-enable" id="_wpz-insta_featured-layout-enable" value="1"<?php checked( $enable_featured_layout ); ?> />
 											<?php } ?>
 										</strong>
+
+                                        <p class="description"><small><em><?php esc_html_e( 'Works only 3-6 columns', 'instagram-widget-by-wpzoom' ); ?></em></small></p>
+
 
 										<div class="wpz-insta_table-cell">
 											<?php if ( ! $pro_toggle ) { ?>
@@ -1535,10 +1538,10 @@ class WPZOOM_Instagram_Widget_Settings {
 													<?php esc_html_e( 'Thumbnail (150x150)', 'instagram-widget-by-wpzoom' ); ?>
 												</option>
 												<option value="low_resolution"<?php selected( $image_size, 'low_resolution' ); ?>>
-													<?php esc_html_e( 'Low Resolution (320x320)', 'instagram-widget-by-wpzoom' ); ?>
+													<?php esc_html_e( 'Standard Resolution (320x320)', 'instagram-widget-by-wpzoom' ); ?>
 												</option>
 												<option value="standard_resolution"<?php selected( $image_size, 'standard_resolution' ); ?>>
-													<?php esc_html_e( 'Standard Resolution (640x640)', 'instagram-widget-by-wpzoom' ); ?>
+													<?php esc_html_e( 'High Resolution (640x640)', 'instagram-widget-by-wpzoom' ); ?>
 												</option>
 											</select>
 										</div>

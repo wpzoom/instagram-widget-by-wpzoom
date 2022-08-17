@@ -435,6 +435,10 @@ class Wpzoom_Instagram_Widget_Display {
 
 				$classes = '';
 
+                if ( $show_media_type_icons ) {
+                    $classes .= ' media-icons-normal';
+                }
+
 				if ( $show_media_type_icons_on_hover ) {
 					$classes .= ' media-icons-hover';
 				}
