@@ -83,7 +83,7 @@ class WPZOOM_Instagram_General_Settings {
 		);
 		add_settings_section(
 			'wpzoom_instagram_general_settings_section',
-			esc_html__( 'WPZOOM Instagram General Settings', 'instagram-widget-by-wpzoom' ),
+			esc_html__( 'Global Settings', 'instagram-widget-by-wpzoom' ),
 			array( $this, 'section_info' ),
 			'wpzoom-instagram-general-settings'
 		);
@@ -131,6 +131,9 @@ class WPZOOM_Instagram_General_Settings {
 			<?php checked( true, $load_css_js ); ?>
 			   value="1"
 			   type="checkbox">
+
+       <p class="description" id="insta-global-assets-description"><?php _e( 'The plugin loads the CSS/JS assets only if an Instagram block, widget or shortcode is detected on a page. If this doesn\'t happen, enable this option to load the assets on all pages.', 'instagram-widget-by-wpzoom' ); ?></p>
+
 
 		<?php
 	}

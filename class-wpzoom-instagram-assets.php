@@ -250,6 +250,7 @@ if ( ! class_exists( 'WPZOOM_Instagram_Widget_Assets ' ) ) {
 				wp_enqueue_script( 'magnific-popup' );
 				wp_enqueue_script( 'swiper-js' );
 				wp_enqueue_script( 'zoom-instagram-widget' );
+				wp_enqueue_script( 'wpz-insta_block-frontend-script' );
 			}
 
 		}

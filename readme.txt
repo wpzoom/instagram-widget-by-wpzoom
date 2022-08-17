@@ -96,6 +96,9 @@ Yes, you can find the documentation for this plugin with more instructions on ou
 
 == Changelog ==
 
+= 2.0.6 =
+* Added a new Settings page with a new option to load CSS and JS files everywhere
+
 = 2.0.5 =
 * Fixed a PHP error
 
