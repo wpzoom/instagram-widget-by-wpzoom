@@ -118,6 +118,7 @@
 		&.layout-carousel {
 			display: flex;
 			height: auto !important;
+            overflow: visible;
 
             &.zoom-instagram-widget__items--no-js {
 
@@ -181,7 +182,16 @@
 		object-fit: cover;
 		object-position: center;
 		height: 100%;
+        transition: all .5s cubic-bezier(.215,.61,.355,1);
+        will-change: transform;
 	}
+
+    &:hover {
+
+        img {
+            transform: scale(1.07);
+        }
+    }
 }
 
 /* Prevent extra space conflict from theme */
@@ -342,9 +352,19 @@ a.ig-b-v-24:hover {
 	transition: opacity 0.25s ease-in-out;
 	-moz-transition: opacity 0.25s ease-in-out;
 	-webkit-transition: opacity 0.25s ease-in-out;
+
+    .zoom-svg-instagram-stroke {
+        transform: scale(.50);
+    }
+
 }
 .zoom-instagram-widget__item:hover .zoom-instagram-icon-wrap {
 	opacity: 1;
+
+    .zoom-svg-instagram-stroke {
+        // transform: translateY(-50%);
+        transform: scale(.90);
+    }
 }
 .zoom-instagram-widget__item .hover-controls .dashicons {
 	font-size: 20px;
@@ -386,7 +406,7 @@ a.ig-b-v-24:hover {
 }
 
 .zoom-instagram-widget__overlay:hover:after  {
-	opacity: 0.7;
+	opacity: 0.5;
 	background-color: #000000;
 }
 

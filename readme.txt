@@ -96,6 +96,10 @@ Yes, you can find the documentation for this plugin with more instructions on ou
 
 == Changelog ==
 
+= 2.0.7 =
+* Added alt tag to images
+* Multiple fixes and visual improvements
+
 = 2.0.6 =
 * Added a new Settings page with a new option to load CSS and JS files everywhere
 

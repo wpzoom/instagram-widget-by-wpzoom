@@ -2053,7 +2053,7 @@
 					transition: all 0.3s ease;
 
 					&.wpz-insta_widget-preview-size-desktop .wpz-insta_widget-preview-view-inner {
-						max-width: 500px;
+						// max-width: 500px;
 					}
 
 					&.wpz-insta_widget-preview-size-tablet .wpz-insta_widget-preview-view-inner {
@@ -2230,6 +2230,7 @@
 						display: flex;
 						flex-direction: column;
 						min-width: 350px;
+                        flex: 1;
 						padding: 20px;
 						border: 1px solid $light-grey-color;
 						border-radius: 3px;
@@ -2282,7 +2283,8 @@
 							font-weight: 600;
 							line-height: 1;
 							color: #fff;
-							background: $primary-color;
+							// background: #E4405F;
+                            background: $primary-color;
 							background-position: center left;
 							background-repeat: no-repeat;
 							width: 100%;
@@ -2295,13 +2297,18 @@
 
 							&:hover,
 							&:focus {
-								background-color: $secondary-color;
+								// background-color: $secondary-color;
+                                opacity: .8;
 							}
 
 							&.disabled {
 								pointer-events: none;
 								opacity: 0.5;
 							}
+
+                            &.facebook {
+                                background: #1877F2;
+                            }
 
 							svg {
 								margin: 0 16px 0 0;

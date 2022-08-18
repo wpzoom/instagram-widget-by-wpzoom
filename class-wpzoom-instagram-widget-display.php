@@ -185,7 +185,7 @@ class Wpzoom_Instagram_Widget_Display {
 				$show_user_bio = isset( $args['show-account-bio'] ) && boolval( $args['show-account-bio'] );
 				$user_bio = get_the_content( null, false, $user );
 				$show_user_image = isset( $args['show-account-image'] ) && boolval( $args['show-account-image'] );
-				$user_image = get_the_post_thumbnail_url( $user, 'thumbnail' ) ?: plugin_dir_url( __FILE__ ) . 'dist/images/backend/user-avatar.jpg';
+				$user_image = get_the_post_thumbnail_url( $user, 'thumbnail' ) ?: plugin_dir_url( __FILE__ ) . 'dist/images/backend/icon-insta.png';
 				$user_account_token = get_post_meta( $user_id, '_wpz-insta_token', true ) ?: '-1';
 
 				if ( '-1' !== $user_account_token ) {
@@ -519,7 +519,7 @@ class Wpzoom_Instagram_Widget_Display {
 				$count = 0;
 				$user_name = get_the_title( $user );
 				$user_name_display = sprintf( '@%s', $user_name );
-				$user_image = get_the_post_thumbnail_url( $user, 'thumbnail' ) ?: plugin_dir_url( __FILE__ ) . 'dist/images/backend/user-avatar.jpg';
+				$user_image = get_the_post_thumbnail_url( $user, 'thumbnail' ) ?: plugin_dir_url( __FILE__ ) . 'dist/images/backend/icon-insta.png';
 
 				foreach ( $items as $item ) {
 					$count++;
