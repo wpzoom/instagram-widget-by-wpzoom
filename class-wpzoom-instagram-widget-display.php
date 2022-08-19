@@ -201,7 +201,7 @@ class Wpzoom_Instagram_Widget_Display {
 					$enable_request_timeout = isset( $args['enable-request-timeout'] ) ? boolval( $args['enable-request-timeout'] ) : false;
 					$amount = isset( $args['item-num'] ) ? intval( $args['item-num'] ) : 9;
 					$perpage = isset( $args['perpage-num'] ) ? intval( $args['perpage-num'] ) : 3;
-					$spacing_between = isset( $args['spacing-between'] ) && intval( $args['spacing-between'] ) > -1 ? intval( $args['spacing-between'] ) : -1;
+					$spacing_between = isset( $args['spacing-between'] ) && floatval( $args['spacing-between'] ) > -1 ? floatval( $args['spacing-between'] ) : -1;
 					$feat_layout_enabled = isset( $args['featured-layout-enable'] ) ? boolval( $args['featured-layout-enable'] ) : false;
 					$featured_layout = $feat_layout_enabled && isset( $args['featured-layout'] ) ? intval( $args['featured-layout'] ) : 0;
 					$featured_layout_class = $featured_layout > 0 ? sprintf( ' featured-layout featured-layout-%s', $featured_layout ) : '';
@@ -348,11 +348,15 @@ class Wpzoom_Instagram_Widget_Display {
 			}
 		}
 
-		return sprintf(
-			'<div class="zoom-instagram"><p class="select-a-feed">%s%s</p></div>',
-			'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path d="M20 10.8H6.7l4.1-4.5-1.1-1.1-5.8 6.3 5.8 5.8 1.1-1.1-4-3.9H20z" fill="currentColor" stroke="currentColor" stroke-width="1.5"/></svg>',
-			__( 'Please select an account in the panel to the left&hellip;', 'instagram-widget-by-wpzoom' )
-		);
+		if ( $preview ) {
+			return sprintf(
+				'<div class="zoom-instagram"><p class="select-a-feed">%s%s</p></div>',
+				'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path d="M20 10.8H6.7l4.1-4.5-1.1-1.1-5.8 6.3 5.8 5.8 1.1-1.1-4-3.9H20z" fill="currentColor" stroke="currentColor" stroke-width="1.5"/></svg>',
+				__( 'Please select an account in the panel to the left&hellip;', 'instagram-widget-by-wpzoom' )
+			);
+		} else {
+			return '';
+		}
 	}
 
 	/**
@@ -643,7 +647,7 @@ class Wpzoom_Instagram_Widget_Display {
 		$raw_layout             = isset( $args['layout'] ) ? intval( $args['layout'] ) : 0;
 		$layout                 = $this->is_pro ? $raw_layout : ( $raw_layout > 1 ? 0 : $raw_layout );
 		$col_num                = isset( $args['col-num'] ) && intval( $args['col-num'] ) !== 3 ? intval( $args['col-num'] ) : 3;
-		$spacing_between        = isset( $args['spacing-between'] ) && intval( $args['spacing-between'] ) > -1 ? intval( $args['spacing-between'] ) : -1;
+		$spacing_between        = isset( $args['spacing-between'] ) && floatval( $args['spacing-between'] ) > -1 ? floatval( $args['spacing-between'] ) : -1;
 		$spacing_between_suffix = $this->get_suffix( isset( $args['spacing-between-suffix'] ) ? intval( $args['spacing-between-suffix'] ) : 0 );
 		$feat_layout_enabled    = isset( $args['featured-layout-enable'] ) ? boolval( $args['featured-layout-enable'] ) : false;
 		$featured_layout        = isset( $args['featured-layout'] ) ? intval( $args['featured-layout'] ) : 0;

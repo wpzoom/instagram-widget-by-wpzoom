@@ -219,20 +219,22 @@ jQuery( function( $ ) {
 	} );
 
 	$( '.wpz-insta_sidebar-section-layout input[name="_wpz-insta_col-num"]' ).on( 'input', function() {
-		const colNum               = parseInt( $( this ).closest( '.wpz-insta_sidebar-section-layout' ).find( 'input[name="_wpz-insta_col-num"]' ).val() ),
-		      $featuredLayouts     = $( this ).closest( '.wpz-insta_table' ).find( 'label.featured-layout' ),
-		      $featuredLayoutsWrap = $featuredLayouts.closest( '.wpz-insta_table-row' );
+		if ( $( '.wpz-insta_sidebar-section-layout input[name="_wpz-insta_layout"]:checked' ).val() == '0' ) {
+			const colNum               = parseInt( $( this ).closest( '.wpz-insta_sidebar-section-layout' ).find( 'input[name="_wpz-insta_col-num"]' ).val() ),
+			      $featuredLayouts     = $( this ).closest( '.wpz-insta_table' ).find( 'label.featured-layout' ),
+			      $featuredLayoutsWrap = $featuredLayouts.closest( '.wpz-insta_table-row' );
 
-		if ( colNum < 3 || colNum > 6 ) {
-			$featuredLayoutsWrap.addClass( 'hidden' );
-		} else {
-			$featuredLayoutsWrap.removeClass( 'hidden' );
-			$featuredLayouts.addClass( 'hidden' );
-			$featuredLayouts.each( function() {
-				if ( $( this ).is( '.featured-layout-columns_' + colNum ) ) {
-					$( this ).removeClass( 'hidden' );
-				}
-			} );
+			if ( colNum < 3 || colNum > 6 ) {
+				$featuredLayoutsWrap.addClass( 'hidden' );
+			} else {
+				$featuredLayoutsWrap.removeClass( 'hidden' );
+				$featuredLayouts.addClass( 'hidden' );
+				$featuredLayouts.each( function() {
+					if ( $( this ).is( '.featured-layout-columns_' + colNum ) ) {
+						$( this ).removeClass( 'hidden' );
+					}
+				} );
+			}
 		}
 	} );
 	
