@@ -96,6 +96,10 @@ Yes, you can find the documentation for this plugin with more instructions on ou
 
 == Changelog ==
 
+= 2.0.8 =
+* Minor bug fixes
+* Fixed a conflict with Elementor
+
 = 2.0.7 =
 * Added alt tag to images
 * Multiple fixes and visual improvements
