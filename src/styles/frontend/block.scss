@@ -24,6 +24,15 @@ img {
 		}
 	}
 
+
+    .swiper-button-next,
+    .swiper-container-rtl .swiper-button-prev,
+    .swiper-button-prev,
+    .swiper-container-rtl .swiper-button-next {
+        background-image: none;
+    }
+
+
 	.zoom-instagram-widget__header {
 		display: flex;
 		gap: 20px;
@@ -611,6 +620,13 @@ img {
 	justify-content: center;
 	pointer-events: none;
 
+    .swiper-button-next,
+    .swiper-container-rtl .swiper-button-prev,
+    .swiper-button-prev,
+    .swiper-container-rtl .swiper-button-next {
+        background-image: none;
+    }
+
 	.wpz-insta-lightbox .details-wrapper {
 		// width: 335px;
 
@@ -744,6 +760,7 @@ img {
 				color: #000;
 				background: #fff;
 				width: var(--swiper-navigation-size);
+                height: var(--swiper-navigation-size);
 				border-radius: 50%;
 			}
 
