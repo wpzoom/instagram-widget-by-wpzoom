@@ -237,7 +237,11 @@ jQuery( function( $ ) {
 			}
 		}
 	} );
-	
+
+	$( '.wpz-insta_sidebar-section-layout input[name="_wpz-insta_col-num_responsive-enabled"]' ).on( 'change', function() {
+		$( this ).closest( '.wpz-insta_responsive-table-row' ).toggleClass( 'wpz-insta_responsive-enabled', $( this ).is( ':checked' ) );
+	} );
+
 	$( '#_wpz-insta_featured-layout-enable' ).on( 'change', function() {
 		$( this ).closest( '.wpz-insta_table-row' ).find( '.wpz-insta_image-select' ).toggleClass( 'hidden', ! $( this ).is( ':checked' ) );
 	} );
