@@ -647,7 +647,6 @@ class Wpzoom_Instagram_Widget_Display {
 		$raw_layout             = isset( $args['layout'] ) ? intval( $args['layout'] ) : 0;
 		$layout                 = $this->is_pro ? $raw_layout : ( $raw_layout > 1 ? 0 : $raw_layout );
 		$col_num                = isset( $args['col-num'] ) && intval( $args['col-num'] ) !== 3 ? intval( $args['col-num'] ) : 3;
-		$col_num_desktop        = isset( $args['col-num_desktop'] ) && intval( $args['col-num_desktop'] ) !== 3 ? intval( $args['col-num_desktop'] ) : 3;
 		$col_num_tablet         = isset( $args['col-num_tablet'] ) && intval( $args['col-num_tablet'] ) !== 2 ? intval( $args['col-num_tablet'] ) : 2;
 		$col_num_mobile         = isset( $args['col-num_mobile'] ) && intval( $args['col-num_mobile'] ) !== 1 ? intval( $args['col-num_mobile'] ) : 1;
 		$col_num_rspnsve_enbld  = $this->is_pro && isset( $args['col-num_responsive-enabled'] ) ? boolval( $args['col-num_responsive-enabled'] ) : false;
@@ -696,11 +695,12 @@ class Wpzoom_Instagram_Widget_Display {
 			$output .= ".zoom-instagram${feed_id} .zoom-instagram-widget__items{";
 			$output .= "display:grid!important;";
 			$output .= "grid-template-columns:repeat(${col_num},1fr);";
+			$output .= "}";
+		}
 
-			if ( $spacing_between > 0 ) {
-				$output .= "gap:${spacing_between}${spacing_between_suffix}!important;";
-			}
-
+		if ( ( 0 === $layout || 1 === $layout ) && $spacing_between > -1 ) {
+			$output .= ".zoom-instagram${feed_id} .zoom-instagram-widget__items{";
+			$output .= "gap:${spacing_between}${spacing_between_suffix}!important;";
 			$output .= "}";
 		}
 
@@ -710,7 +710,7 @@ class Wpzoom_Instagram_Widget_Display {
 				$output .= "width:calc(1/${col_num}*100%" . ( $spacing_between > 0 ? " - (1 - 1/${col_num})*${spacing_between}${spacing_between_suffix}" : "" ) . ")!important;";
 				$output .= "}";
 
-				if ( $spacing_between > 0 ) {
+				if ( $spacing_between > -1 ) {
 					$output .= ".zoom-instagram${feed_id} .zoom-instagram-widget__item{";
 					$output .= "margin:0 0 ${spacing_between}${spacing_between_suffix}!important;";
 					$output .= "}";
@@ -746,11 +746,11 @@ class Wpzoom_Instagram_Widget_Display {
 			$output .= "@media screen and (min-width:1200px){";
 			if ( 2 === $layout ) {
 				$output .= ".zoom-instagram${feed_id} .zoom-instagram-widget__item,.zoom-instagram${feed_id} .masonry-items-sizer{";
-				$output .= "width:calc(1/${col_num_desktop}*100%" . ( $spacing_between > 0 ? " - (1 - 1/${col_num_desktop})*${spacing_between}${spacing_between_suffix}" : "" ) . ")!important;";
+				$output .= "width:calc(1/${col_num}*100%" . ( $spacing_between > 0 ? " - (1 - 1/${col_num})*${spacing_between}${spacing_between_suffix}" : "" ) . ")!important;";
 				$output .= "}";
 			} else {
 				$output .= ".zoom-instagram${feed_id} .zoom-instagram-widget__items{";
-				$output .= "grid-template-columns:repeat(${col_num_desktop},1fr);";
+				$output .= "grid-template-columns:repeat(${col_num},1fr);";
 				$output .= "}";
 			}
 			$output .= "}";
@@ -763,6 +763,9 @@ class Wpzoom_Instagram_Widget_Display {
 			} else {
 				$output .= ".zoom-instagram${feed_id} .zoom-instagram-widget__items{";
 				$output .= "grid-template-columns:repeat(${col_num_tablet},1fr);";
+				$output .= "}";
+				$output .= ".zoom-instagram${feed_id} .zoom-instagram-widget__item{";
+				$output .= "grid-row:auto!important;grid-column:auto!important;";
 				$output .= "}";
 			}
 			$output .= "}";

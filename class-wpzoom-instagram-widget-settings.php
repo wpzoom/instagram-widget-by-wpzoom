@@ -36,7 +36,6 @@ class WPZOOM_Instagram_Widget_Settings {
 		'layout'                          => array( 'type' => 'integer', 'default' => 0 ),
 		'item-num'                        => array( 'type' => 'integer', 'default' => 9 ),
 		'col-num'                         => array( 'type' => 'integer', 'default' => 3 ),
-		'col-num_desktop'                 => array( 'type' => 'integer', 'default' => 3 ),
 		'col-num_tablet'                  => array( 'type' => 'integer', 'default' => 2 ),
 		'col-num_mobile'                  => array( 'type' => 'integer', 'default' => 1 ),
 		'col-num_responsive-enabled'      => array( 'type' => 'boolean', 'default' => false ),
@@ -1124,7 +1123,6 @@ class WPZOOM_Instagram_Widget_Settings {
 			$feed_layout                      = ! $pro_toggle ? $raw_feed_layout : ( $raw_feed_layout > 1 ? 0 : $raw_feed_layout );
 			$feed_items_num                   = (int) self::get_feed_setting_value( $post->ID, 'item-num' );
 			$feed_cols_num                    = (int) self::get_feed_setting_value( $post->ID, 'col-num' );
-			$feed_cols_num_desktop            = (int) self::get_feed_setting_value( $post->ID, 'col-num_desktop' );
 			$feed_cols_num_tablet             = (int) self::get_feed_setting_value( $post->ID, 'col-num_tablet' );
 			$feed_cols_num_mobile             = (int) self::get_feed_setting_value( $post->ID, 'col-num_mobile' );
 			$feed_cols_num_responsive_enabled = ! $pro_toggle ? (bool) self::get_feed_setting_value( $post->ID, 'col-num_responsive-enabled' ) : false;
@@ -1322,7 +1320,7 @@ class WPZOOM_Instagram_Widget_Settings {
 										<div class="wpz-insta_table-cell">
 											<div class="wpz-insta_responsive-field">
 												<label class="wpz-insta_responsive-field-type wpz-insta_responsive-field_desktop">
-													<input type="number" name="_wpz-insta_col-num_desktop" id="wpz-insta_col-num_desktop" value="<?php echo esc_attr( $feed_cols_num_desktop ); ?>" size="3" min="0" max="100" step="1" />
+													<input type="number" name="_wpz-insta_col-num" id="wpz-insta_col-num_desktop" value="<?php echo esc_attr( $feed_cols_num ); ?>" size="3" min="0" max="100" step="1" />
 													<span class="wpz-insta_responsive-field-name"><span class="dashicons dashicons-desktop"></span> <?php esc_html_e( 'Desktop', 'instagram-widget-by-wpzoom' ); ?></span>
 												</label>
 
