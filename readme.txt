@@ -44,6 +44,9 @@ Formerly known as *Instagram Widget by WPZOOM*, **WPZOOM Social Feed Widget** is
 = ⭐️ PRO FEATURES ⭐️ =
 * **Connect Multiple Instagram Accounts - 🆕**
 * **Masonry Layout - 🆕**
+* **Carousel - 🆕**
+* **Highlight Items - 🆕**
+* **Responsive Columns - 🆕**
 * **Load More button - 🆕**
 * **Customize Colors - 🆕**
 * Premium Support
@@ -95,6 +98,9 @@ Yes, you can find the documentation for this plugin with more instructions on ou
 
 
 == Changelog ==
+
+= 2.0.9 =
+* Fixed a bug in the Full-width style
 
 = 2.0.8 =
 * Minor bug fixes
