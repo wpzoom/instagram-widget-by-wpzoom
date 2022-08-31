@@ -99,6 +99,9 @@ Yes, you can find the documentation for this plugin with more instructions on ou
 
 == Changelog ==
 
+= 2.0.10 =
+* Minor improvements and bug fixes
+
 = 2.0.9 =
 * Fixed a bug in the Full-width style
 
