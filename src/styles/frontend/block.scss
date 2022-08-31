@@ -1,14 +1,15 @@
 .wpzoom-instagram-widget-select-feed select {
 	max-width: 100%;
 }
-img {
-    height: auto;
-    max-width: 100%;
-}
 
 
 .wp-block-wpzoom-instagram-block,
 .zoom-instagram {
+
+    img {
+        height: auto;
+        max-width: 100%;
+    }
 
 	.zoom-instagram {
 		background: none;
