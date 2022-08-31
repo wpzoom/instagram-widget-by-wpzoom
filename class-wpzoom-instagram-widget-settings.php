@@ -316,6 +316,7 @@ class WPZOOM_Instagram_Widget_Settings {
 		add_filter( 'view_mode_post_types', array( $this, 'view_mode_post_types' ) );
 		add_filter( 'display_post_states', array( $this, 'display_post_states' ), 10, 2 );
 		add_filter( 'get_edit_post_link', array( $this, 'get_edit_post_link' ), 10, 3 );
+		add_filter( 'redirect_post_location', array( $this, 'redirect_post_location' ), 10, 2 );
 		add_filter( 'admin_footer_text', array( $this, 'admin_footer_text' ) );
 		add_filter( 'update_footer', array( $this, 'update_footer' ), 11 );
 		add_action( 'manage_wpz-insta_feed_posts_custom_column', array( $this, 'custom_column_feed' ), 10, 2 );
@@ -613,6 +614,14 @@ class WPZOOM_Instagram_Widget_Settings {
 		}
 
 		return $link;
+	}
+
+	function redirect_post_location( $location, $post_id ) {
+		if ( 'wpz-insta_feed' == get_post_type( $post_id ) ) {
+			$location .= false === stripos( $location, '#' ) ? '#design' : '';
+		}
+
+		return $location;
 	}
 
 	function get_token_expire_display( $id ) {
@@ -1357,20 +1366,18 @@ class WPZOOM_Instagram_Widget_Settings {
 										</div>
 									</label>
 
-									<?php echo $pro_toggle ? '<fieldset class="wpz-insta_feed-only-pro wpz-insta_pro-only wpz-insta_pro-only-with-bottom"><legend><strong>' . esc_html__( 'PRO', 'instagram-widget-by-wpzoom' ) . '</strong></legend>' : ''; ?>
+									<?php echo $pro_toggle ? '<fieldset class="wpz-insta_feed-only-pro wpz-insta_pro-only wpz-insta_pro-only-with-bottom' . ( 1 === $feed_layout ? ' hidden' : '' ) . '"><legend><strong>' . esc_html__( 'PRO', 'instagram-widget-by-wpzoom' ) . '</strong></legend>' : ''; ?>
 
 									<div class="wpz-insta_table-row wpz-insta_table-row-full wpz-insta_table-row-featured-layout<?php echo ( 0 === $feed_layout && $feed_cols_num > 2 && $feed_cols_num < 7 ? '' : ' hidden' ) . ( ! $pro_toggle ? '' : ' pro-only-wrapper' ); ?>">
-										<strong class="wpz-insta_table-cell table-cell-special">
-											<label for="_wpz-insta_featured-layout-enable"><?php esc_html_e( 'Highlight items', 'instagram-widget-by-wpzoom' ); ?></label>
-
-											<?php if ( ! $pro_toggle ) { ?>
+										<?php if ( ! $pro_toggle ) { ?>
+											<strong class="wpz-insta_table-cell table-cell-special">
+												<label for="_wpz-insta_featured-layout-enable"><?php esc_html_e( 'Highlight items', 'instagram-widget-by-wpzoom' ); ?></label>
 												<input type="hidden" name="_wpz-insta_featured-layout-enable" value="0" />
 												<input type="checkbox" name="_wpz-insta_featured-layout-enable" id="_wpz-insta_featured-layout-enable" value="1"<?php checked( $enable_featured_layout ); ?> />
-											<?php } ?>
-										</strong>
+											</strong>
 
-                                        <p class="description"><small><em><?php esc_html_e( 'Works only 3-6 columns', 'instagram-widget-by-wpzoom' ); ?></em></small></p>
-
+											<p class="description"><small><em><?php esc_html_e( 'Works only 3-6 columns', 'instagram-widget-by-wpzoom' ); ?></em></small></p>
+										<?php } ?>
 
 										<div class="wpz-insta_table-cell">
 											<?php if ( ! $pro_toggle ) { ?>
@@ -1426,6 +1433,13 @@ class WPZOOM_Instagram_Widget_Settings {
 											<?php } ?>
 										</div>
 									</div>
+
+									<?php if ( $pro_toggle ) { ?>
+										<label class="wpz-insta_table-row">
+											<input type="checkbox"<?php checked( true ); disabled( true ); ?> />
+											<span><?php esc_html_e( 'Responsive columns', 'instagram-widget-by-wpzoom' ); ?></span>
+										</label>
+									<?php } ?>
 
 									<?php echo $pro_toggle ? '</fieldset>' : ''; ?>
 								</div>
