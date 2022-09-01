@@ -1435,10 +1435,12 @@ class WPZOOM_Instagram_Widget_Settings {
 									</div>
 
 									<?php if ( $pro_toggle ) { ?>
-										<label class="wpz-insta_table-row">
-											<input type="checkbox"<?php checked( true ); disabled( true ); ?> />
-											<span><?php esc_html_e( 'Responsive columns', 'instagram-widget-by-wpzoom' ); ?></span>
-										</label>
+										<div class="wpz-insta_table-row wpz-insta_table-row-full pro-only-wrapper">
+											<label class="wpz-insta_table-cell">
+												<input type="checkbox"<?php checked( true ); disabled( true ); ?> />
+												<span><?php esc_html_e( 'Responsive columns', 'instagram-widget-by-wpzoom' ); ?></span>
+											</label>
+										</div>
 									<?php } ?>
 
 									<?php echo $pro_toggle ? '</fieldset>' : ''; ?>
