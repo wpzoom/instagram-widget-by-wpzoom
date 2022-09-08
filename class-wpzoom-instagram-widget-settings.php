@@ -431,6 +431,14 @@ class WPZOOM_Instagram_Widget_Settings {
 		if ( 'wpz-insta_feed' == $post_type || 'wpz-insta_user' == $post_type ) {
 			wp_dequeue_script( 'autosave' );
 		}
+
+		wp_enqueue_script(
+			'zoom-instagram-widget-cron-dismiss',
+			plugin_dir_url( dirname( __FILE__ ) . '/instagram-widget-by-wpzoom.php' ) . 'dist/scripts/backend/cron-dismiss.js',
+			array( 'jquery' ),
+			'2.0.0',
+			true
+		);
 	}
 
 	function admin_notices() {

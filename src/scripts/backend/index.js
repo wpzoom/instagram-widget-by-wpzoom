@@ -370,16 +370,6 @@ jQuery( function( $ ) {
 
 	$( function() {
 		window.wpzInstaReloadPreview();
-
-		$( '.wpz-insta-cron-notice .notice-dismiss' ).on( 'click', function () {
-			let $notice = $(this).closest( '.notice' );
-
-			$.post( ajaxurl, {
-				action:  'wpz-insta_dismiss-cron-notice',
-				nonce:   $notice.attr( 'data-nonce' ),
-				user_id: $notice.attr( 'data-user-id' ),
-			} );
-		} );
 	} );
 
 	$( '#wpz-insta_widget-preview-links .wpz-insta_widget-preview-header-link' ).on( 'click', function () {
