@@ -559,7 +559,12 @@ class Wpzoom_Instagram_Widget_Display {
 
 						$output .= '</div><div class="swiper-pagination"></div><div class="swiper-button-prev"></div><div class="swiper-button-next"></div></div>';
 					} else {
-						$output .= '<img class="wpzoom-swiper-image" src="' . esc_url( $src ) . '" alt="' . esc_attr( $alt ) . '"/>';
+						if ( $is_video ) {
+							$thumb = isset( $item['local-image-url'] ) ? $item['local-image-url'] : '';
+							$output .= '<video controls preload="metadata" poster="' . esc_attr( $thumb ) . '"><source src="' . esc_url( $src ) . '" type="video/mp4"/>' . esc_html( $alt ) . '</video>';
+						} else {
+							$output .= '<img class="wpzoom-swiper-image" src="' . esc_url( $src ) . '" alt="' . esc_attr( $alt ) . '"/>';
+						}
 					}
 
 					$output .= '</div>

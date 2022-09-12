@@ -510,11 +510,12 @@ class Wpzoom_Instagram_Widget_API {
 		$image_uploader = WPZOOM_Instagram_Image_Uploader::getInstance();
 
 		foreach ( $data->data as $key => $item ) {
-			$media_url = 'VIDEO' === $item->media_type && property_exists( $item, 'thumbnail_url' ) && ! empty( $item->thumbnail_url ) ? $item->thumbnail_url : $item->media_url;
+			$is_video = property_exists( $item, 'media_type' ) && 'VIDEO' === $item->media_type;
+			$media_url = $is_video && property_exists( $item, 'thumbnail_url' ) && ! empty( $item->thumbnail_url ) ? $item->thumbnail_url : $item->media_url;
 
 			$converted->data[] = (object) array(
 				'id'           => $item->id,
-				'media_url'    => $media_url,
+				'media_url'    => ( $is_video ? $item->media_url : $media_url ),
 				'user'         => (object) array(
 					'id'              => null,
 					'fullname'        => null,
