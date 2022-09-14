@@ -735,6 +735,7 @@ a.ig-b-v-24:hover {
 
 .wpz-insta-lightbox-wrapper .wpz-insta-lightbox .image-wrapper img {
 	height: 100%;
+    max-height: 100%;
 	max-width: 100%;
 	object-fit: contain;
     min-height: 70vh;
@@ -768,13 +769,11 @@ a.ig-b-v-24:hover {
     max-height: 100%;
 }
 
-
-.wpz-insta-lightbox-wrapper > .swiper-container-autoheight, .swiper-container-autoheight .swiper-slide {
+.wpz-insta-lightbox-wrapper > .swiper-container-autoheight,
+.wpz-insta-lightbox-wrapper > .swiper-container-autoheight .swiper-slide {
     height: 100%;
     max-height: 85vh;
 }
-
-
 
 .wpz-insta-lightbox-wrapper video {
 	height: 100%;
