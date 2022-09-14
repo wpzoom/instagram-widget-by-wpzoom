@@ -2718,20 +2718,21 @@ class WPZOOM_Instagram_Widget_Settings {
 		?>
 		<div class="wrap">
 			<?php $this->page_header(); ?>
+			<div class="wpz-insta-wrap with-bg wpz-insta_settings-support">
+				<div class="inner-wrap fit-max-content">
+					<h2 class="section-title">
+						<svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+							<path fill-rule="evenodd" clip-rule="evenodd" d="M15.9216 2H2.98533C2.43803 2 1.99023 2.45 1.99023 3V17L5.97062 13H15.9216C16.4689 13 16.9167 12.55 16.9167 12V3C16.9167 2.45 16.4689 2 15.9216 2ZM14.9265 4V11H5.14473L3.98047 12.17V4H14.9265ZM18.9068 6H20.897C21.4443 6 21.8921 6.45 21.8921 7V22L17.9117 18H6.96568C6.41837 18 5.97058 17.55 5.97058 17V15H18.9068V6Z"/>
+						</svg>
 
-			<div class="wpz-insta-wrap wpz-insta_settings-support">
-				<h2 class="section-title">
-					<svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-						<path fill-rule="evenodd" clip-rule="evenodd" d="M15.9216 2H2.98533C2.43803 2 1.99023 2.45 1.99023 3V17L5.97062 13H15.9216C16.4689 13 16.9167 12.55 16.9167 12V3C16.9167 2.45 16.4689 2 15.9216 2ZM14.9265 4V11H5.14473L3.98047 12.17V4H14.9265ZM18.9068 6H20.897C21.4443 6 21.8921 6.45 21.8921 7V22L17.9117 18H6.96568C6.41837 18 5.97058 17.55 5.97058 17V15H18.9068V6Z"/>
-					</svg>
+						<?php _e( 'Need assistance?', 'instagram-widget-by-wpzoom' ); ?>
+					</h2>
 
-					<?php _e( 'Need assistance?', 'instagram-widget-by-wpzoom' ); ?>
-				</h2>
+					<p class="section-description"><?php _e( 'Need help setting up your Instagram feeds or have a question? Get in touch with our Support Team.<br/> We’d love the opportunity to help you.', 'instagram-widget-by-wpzoom' ); ?></p>
 
-				<p class="section-description"><?php _e( 'Need help setting up your Instagram feeds or have a question? Get in touch with our Support Team.<br/> We’d love the opportunity to help you.', 'instagram-widget-by-wpzoom' ); ?></p>
-
-				<a href="<?php echo esc_url( 'https://www.wpzoom.com/documentation/instagram-widget/' ); ?>" target="_blank" class="button-primary"><?php _e( 'Documentation', 'instagram-widget-by-wpzoom' ); ?></a>
-                <a href="<?php echo esc_url( 'https://wpzoom.com/support/tickets/' ); ?>" target="_blank" class="button-primary"><?php _e( 'Open Support Desk', 'instagram-widget-by-wpzoom' ); ?></a>
+					<a href="<?php echo esc_url( 'https://www.wpzoom.com/documentation/instagram-widget/' ); ?>" target="_blank" class="button-primary"><?php _e( 'Documentation', 'instagram-widget-by-wpzoom' ); ?></a>
+					<a href="<?php echo esc_url( 'https://wpzoom.com/support/tickets/' ); ?>" target="_blank" class="button-primary"><?php _e( 'Open Support Desk', 'instagram-widget-by-wpzoom' ); ?></a>
+				</div>
 			</div>
 		</div>
 		<?php
