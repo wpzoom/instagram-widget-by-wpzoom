@@ -64,6 +64,10 @@ class Wpzoom_Instagram_Block {
 						'type'    => 'integer',
 						'default' => -1,
 					),
+					'align' => array(
+						'type'    => 'string',
+						'default' => 'center',
+					),
 				),
 			)
 		);

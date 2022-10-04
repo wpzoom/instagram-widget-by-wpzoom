@@ -41,16 +41,24 @@ registerBlockType( 'wpzoom/instagram-block', {
 	title: 'Instagram Feed by WPZOOM',
 	icon: 'instagram',
 	category: 'wpzoom-blocks',
+	supports: {
+		align: true,
+		html: false,
+	},
 	attributes: {
 		feed: {
 			type: 'integer',
 			default: -1,
 		},
+		align: {
+			type: 'string',
+			default: 'center',
+		}
 	},
 
 	edit: function ( props ) {
 		const {
-			attributes: { feed },
+			attributes: { feed, align },
 			setAttributes,
 			className,
 		} = props;
