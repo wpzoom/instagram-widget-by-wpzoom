@@ -651,7 +651,8 @@ class Wpzoom_Instagram_Widget_Display {
 		$feed_id                = isset( $args['feed-id'] ) ? ".feed-" . $args['feed-id'] : "";
 		$raw_layout             = isset( $args['layout'] ) ? intval( $args['layout'] ) : 0;
 		$layout                 = $this->is_pro ? $raw_layout : ( $raw_layout > 1 ? 0 : $raw_layout );
-		$col_num                = isset( $args['col-num'] ) && intval( $args['col-num'] ) !== 3 ? intval( $args['col-num'] ) : 3;
+        $feed_items_num         = isset( $args['item-num'] ) ? ( intval( $args['item-num'] ) ?: 10 ) : 10;
+        $col_num                = isset( $args['col-num'] ) && intval( $args['col-num'] ) !== 3 ? intval( $args['col-num'] ) : 3;
 		$col_num_tablet         = isset( $args['col-num_tablet'] ) && intval( $args['col-num_tablet'] ) !== 2 ? intval( $args['col-num_tablet'] ) : 2;
 		$col_num_mobile         = isset( $args['col-num_mobile'] ) && intval( $args['col-num_mobile'] ) !== 1 ? intval( $args['col-num_mobile'] ) : 1;
 		$col_num_rspnsve_enbld  = $this->is_pro && isset( $args['col-num_responsive-enabled'] ) ? boolval( $args['col-num_responsive-enabled'] ) : false;
@@ -736,10 +737,28 @@ class Wpzoom_Instagram_Widget_Display {
 		}
 
 		if ( $image_width > -1 && 1 === $layout ) {
-			$output .= ".zoom-instagram${feed_id} .zoom-instagram-widget__items img{";
+			$output .= ".zoom-instagram${feed_id} .zoom-instagram-widget__items img {";
 			$output .= "width:${image_width}${image_width_suffix}!important;";
 			$output .= "}";
 		}
+
+        if ( $image_width > -1 && 1 === $layout ) {
+            $output .= ".zoom-instagram${feed_id} .zoom-instagram-widget__items.layout-fullwidth{";
+            $output .= "grid-template-columns:repeat(${feed_items_num},1fr);";
+            $output .= "}";
+        }
+
+        // if ( $image_width > -1 && 1 === $layout ) {
+        //     $output .= ".zoom-instagram${feed_id} .zoom-instagram-widget__items.layout-fullwidth{";
+        //     $output .= "grid-template-columns:repeat(auto-fit, minmax(${image_width}${image_width_suffix}, 1fr));";
+        //     $output .= "}";
+        // }
+
+        // if ( $image_width > -1 && 1 === $layout ) {
+        //     $output .= ".zoom-instagram${feed_id} .zoom-instagram-widget__items.layout-fullwidth .zoom-instagram-widget__item {";
+        //     $output .= "min-width:${image_width}${image_width_suffix} !important;";
+        //     $output .= "}";
+        // }
 
 		if ( '' != $button_bg ) {
 			$output .= ".zoom-instagram${feed_id} .wpz-insta-view-on-insta-button{";

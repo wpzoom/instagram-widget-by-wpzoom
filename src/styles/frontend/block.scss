@@ -180,9 +180,6 @@
             margin: 0;
 
 			&.layout-grid {
-				/*display: grid;
-				grid-template-columns: repeat(3, 1fr);
-				gap: 10px;*/
 
                 .zoom-instagram-widget__item {
 
@@ -198,15 +195,17 @@
 			}
 
 			&.layout-fullwidth {
-				display: flex;
-				width: 5000px;
+                white-space: nowrap;
+                display: grid;
+                // grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+                grid-template-rows:auto;
+                grid-auto-rows: 0;
 
-				.zoom-instagram-widget__item {
-					img {
-						aspect-ratio: 1;
-						object-fit: cover;
-					}
-				}
+                .zoom-instagram-widget__item {
+                    img {
+                        aspect-ratio: 1;
+                    }
+                }
 			}
 
 			&.layout-carousel {
@@ -859,22 +858,8 @@
 
 @media screen and (max-width: 860px) {
 	.wpz-insta-lightbox-wrapper {
-		// display: block;
-		// max-width: 76%;
-		// margin-left: auto;
-		// margin-right: auto;
 
 		.wpz-insta-lightbox {
-			// .image-wrapper {
-			// 	height: auto;
-			// 	max-height: 600px;
-			// 	overflow: hidden;
-
-			// 	img {
-			// 		max-width: 100%;
-			// 		height: auto;
-			// 	}
-			// }
 
 			.details-wrapper .wpz-insta-caption {
 				font-size: 12px;
@@ -883,7 +868,6 @@
 		}
 	}
 }
-
 
 .wp-admin {
 
@@ -895,7 +879,6 @@
         pointer-events: none;
     }
 }
-
 
 
 @media screen and (max-width: 768px) {
@@ -913,6 +896,14 @@
         width: 100%;
     }
 
+    .zoom-instagram .zoom-instagram-widget__items.layout-fullwidth .zoom-instagram-widget__item {
+        max-width: 160px;
+    }
+
+    .zoom-instagram .zoom-instagram-widget__items.layout-fullwidth {
+        // grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)) !important;
+        grid-template-columns: repeat(6,1fr) !important;
+    }
 
 }
 
@@ -926,6 +917,15 @@
 
 
 @media screen and (max-width: 600px) {
+
+    .zoom-instagram .zoom-instagram-widget__items.layout-fullwidth .zoom-instagram-widget__item {
+        max-width: 130px;
+    }
+
+    .zoom-instagram .zoom-instagram-widget__items.layout-fullwidth {
+        // grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)) !important;
+        grid-template-columns: repeat(4,1fr) !important;
+    }
 
     .zoom-instagram.layout-grid.featured-layout.columns-5.featured-layout-11 .zoom-instagram-widget__item:first-child {
         grid-column: span 5 !important;
