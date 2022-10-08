@@ -54,11 +54,11 @@ class Wpzoom_Instagram_Widget_Display {
 	/**
 	 * Returns the markup for the feed with the given ID.
 	 *
-	 * @param  int    $feed_id The ID of the feed to return the markup for.
-	 * @return string          The markup for the given feed.
+	 * @param  int   $feed_id     The ID of the feed to return the markup for.
+	 * @param  array $extra_attrs Any extra attributes to pass for the block output.
+	 * @return string             The markup for the given feed.
 	 */
-	public function get_feed_output( int $feed_id ) {
-
+	public function get_feed_output( int $feed_id, array $extra_attrs = array() ) {
 		if ( $feed_id > -1 ) {
 			$feed = get_post( $feed_id, OBJECT, 'display' );
 
@@ -68,6 +68,10 @@ class Wpzoom_Instagram_Widget_Display {
 
 				foreach( WPZOOM_Instagram_Widget_Settings::$feed_settings as $setting_name => $setting_args ) {
 					$feed_settings[ $setting_name ] = WPZOOM_Instagram_Widget_Settings::get_feed_setting_value( $feed_id, $setting_name );
+				}
+
+				if ( isset( $extra_attrs ) && ! empty( $extra_attrs ) && is_array( $extra_attrs ) ) {
+					$feed_settings['extra-attrs'] = $extra_attrs;
 				}
 
 				$feed_settings['feed-id'] = $feed_id;
@@ -115,15 +119,16 @@ class Wpzoom_Instagram_Widget_Display {
 	/**
 	 * Outputs the markup for the feed with the given ID.
 	 *
-	 * @param  int  $feed_id The ID of the feed to output.
-	 * @param  bool $echo    Whether to output the feed or return it.
+	 * @param  int   $feed_id     The ID of the feed to output.
+	 * @param  bool  $echo        Whether to output the feed or return it.
+	 * @param  array $extra_attrs Any extra attributes to pass for the block output.
 	 * @return void
 	 */
-	public function output_feed( int $feed_id, bool $echo = true ) {
+	public function output_feed( int $feed_id, bool $echo = true, array $extra_attrs = array() ) {
 		$output = sprintf(
 			"<style type=\"text/css\">%s</style>\n%s",
 			$this->output_styles( $feed_id, false ),
-			$this->get_feed_output( $feed_id )
+			$this->get_feed_output( $feed_id, $extra_attrs )
 		);
 
 		if ( $echo ) {
@@ -239,6 +244,11 @@ class Wpzoom_Instagram_Widget_Display {
 
 					if ( isset( $args['feed-id'] ) ) {
 						$wrapper_classes .= sprintf( ' feed-%d', intval( $args['feed-id'] ) );
+					}
+
+					if ( isset( $args['extra-attrs'] ) && is_array( $args['extra-attrs'] ) && isset( $args['extra-attrs']['align'] ) ) {
+						$align = $args['extra-attrs']['align'];
+						$wrapper_classes .= sprintf( ' align%s', in_array( $align, array( 'left', 'right', 'wide', 'full' ) ) ? $align : 'center' );
 					}
 
 					$wrapper_classes .= sprintf( ' layout-%s', $layout );

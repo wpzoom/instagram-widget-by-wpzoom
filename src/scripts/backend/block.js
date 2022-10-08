@@ -52,7 +52,7 @@ registerBlockType( 'wpzoom/instagram-block', {
 		},
 		align: {
 			type: 'string',
-			default: 'center',
+			default: 'none',
 		}
 	},
 

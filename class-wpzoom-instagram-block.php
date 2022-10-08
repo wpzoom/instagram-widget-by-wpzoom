@@ -99,7 +99,7 @@ class Wpzoom_Instagram_Block {
 		$feed_id = isset( $block_attributes['feed'] ) ? intval( $block_attributes['feed'] ) : -1;
 
 		if ( $feed_id > -1 ) {
-			return $this->display->output_feed( $feed_id, false );
+			return $this->display->output_feed( $feed_id, false, $block_attributes );
 		} else {
 			return wp_kses_post( __( '<p class="error"><strong>Please select a feed to display...</strong></p>', 'instagram-widget-by-wpzoom' ) );
 		}
