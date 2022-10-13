@@ -99,6 +99,10 @@ Yes, you can find the documentation for this plugin with more instructions on ou
 
 == Changelog ==
 
+= 2.0.12 =
+* Improvements to the Full-width style
+* Alignment option now available in the Instagram Block
+
 = 2.0.11 =
 * Lightbox feature now supports videos
 * Minor bug fixes
