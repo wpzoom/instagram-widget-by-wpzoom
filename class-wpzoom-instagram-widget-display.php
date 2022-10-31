@@ -267,7 +267,16 @@ class Wpzoom_Instagram_Widget_Display {
 						$wrapper_classes .= ' perpage-' . $perpage;
 					}
 
-					$items  = $this->api->get_items( array( 'image-limit' => $amount, 'image-resolution' => $image_size, 'image-width' => $image_width, 'include-pagination' => true, 'bypass-transient' => $preview ) );
+					$items  = $this->api->get_items( 
+						array( 
+							'image-limit'          => $amount, 
+							'image-resolution'     => $image_size, 
+							'image-width'          => $image_width,
+							'include-pagination'   => true,
+							'disable-video-thumbs' => $hide_video_thumbs,
+							'bypass-transient'     => $preview 
+						) 
+					);
 					$errors = $this->api->errors->get_error_messages();
 
 					$output .= '<div class="zoom-instagram' . $wrapper_classes . '">';
