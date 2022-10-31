@@ -64,7 +64,7 @@ class WPZOOM_Instagram_Widget_Settings {
 		'show-overlay'                    => array( 'type' => 'boolean', 'default' => true ),
 		'lazy-load'                       => array( 'type' => 'boolean', 'default' => true ),
 		'lightbox'                        => array( 'type' => 'boolean', 'default' => true ),
-		'hide-video-thumbs'               => array( 'type' => 'boolean', 'default' => true ),
+		'hide-video-thumbs'               => array( 'type' => 'boolean', 'default' => false ),
 		'show-media-type-icons'           => array( 'type' => 'boolean', 'default' => true ),
 		'hover-media-type-icons'          => array( 'type' => 'boolean', 'default' => true ),
 		'hover-link'                      => array( 'type' => 'boolean', 'default' => true ),
