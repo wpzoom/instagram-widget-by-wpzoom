@@ -654,9 +654,13 @@ jQuery( function( $ ) {
 
 				if ( 'wpz-insta_profile-photo' == field ) {
 					$( 'img.' + field ).attr( 'src', val );
+				} else if ( '_wpz-insta_token' == field ) {
+					$( '#wpz-insta_token', editRow ).val( val );
+					//console.log( $( '#wpz-insta_token', editRow ) );
 				} else {
 					$( ':input[name="' + field + '"]', editRow ).val( val );
 				}
+
 			}
 		};
 	}
