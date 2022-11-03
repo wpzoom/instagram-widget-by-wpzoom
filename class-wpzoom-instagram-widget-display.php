@@ -600,7 +600,7 @@ class Wpzoom_Instagram_Widget_Display {
 							<div class="wpz-insta-follow">
 								<a target="_blank" rel="noopener"
 								href="' . sprintf( 'https://instagram.com/%s?ref=badge', esc_attr( $user_name ) ) . '">
-									' . __( 'Follow', 'wpzoom-instagram-widget' ) . '
+									' . __( 'Follow', 'instagram-widget-by-wpzoom' ) . '
 								</a>
 							</div>
 						</div>
@@ -615,7 +615,7 @@ class Wpzoom_Instagram_Widget_Display {
 					}
 
 					$output .= '<div class="view-post">
-					<a href="' . esc_url( $link ) . '" target="_blank" rel="noopener"><span class="dashicons dashicons-instagram"></span>' . __( 'View on Instagram', 'wpzoom-instagram-widget' ) . '</a>
+					<a href="' . esc_url( $link ) . '" target="_blank" rel="noopener"><span class="dashicons dashicons-instagram"></span>' . __( 'View on Instagram', 'instagram-widget-by-wpzoom' ) . '</a>
 					<span class="delimiter">|</span>
 					<div class="wpz-insta-pagination">' . sprintf( '%d/%d', $count, $amount ) . '</div>
 					</div></div></div></div>';
