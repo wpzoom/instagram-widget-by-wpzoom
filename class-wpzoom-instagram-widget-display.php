@@ -611,7 +611,7 @@ class Wpzoom_Instagram_Widget_Display {
 					}
 
 					if ( ! empty( $item['timestamp'] ) ) {
-						$output .= '<div class="wpz-insta-date">' . sprintf( __( '%s ago' ), human_time_diff( strtotime( $item['timestamp'] ) ) ) . '</div>';
+						$output .= '<div class="wpz-insta-date">' . sprintf( __( '%s ago', 'instagram-widget-by-wpzoom' ), human_time_diff( strtotime( $item['timestamp'] ) ) ) . '</div>';
 					}
 
 					$output .= '<div class="view-post">

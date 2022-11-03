@@ -480,7 +480,7 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 
 										<?php if ( ! empty( $item['timestamp'] ) ) : ?>
 											<div class="wpz-insta-date">
-												<?php printf( __( '%s ago' ), human_time_diff( strtotime( $item['timestamp'] ) ) ); ?>
+												<?php printf( __( '%s ago', 'instagram-widget-by-wpzoom' ), human_time_diff( strtotime( $item['timestamp'] ) ) ); ?>
 											</div>
 										<?php endif; ?>
 
