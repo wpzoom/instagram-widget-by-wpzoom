@@ -19,7 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 if ( ! defined( 'WPZOOM_INSTAGRAM_VERSION' ) ) {
-	define( 'WPZOOM_INSTAGRAM_VERSION', '2.0.14' );
+	define( 'WPZOOM_INSTAGRAM_VERSION', get_file_data( __FILE__, [ 'Version' ] )[0] ); // phpcs:ignore
 }
 
 require_once plugin_dir_path( __FILE__ ) . 'class-wpzoom-instagram-image-uploader.php';
