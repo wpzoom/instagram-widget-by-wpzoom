@@ -436,7 +436,7 @@ class WPZOOM_Instagram_Widget_Settings {
 			'zoom-instagram-widget-cron-dismiss',
 			plugin_dir_url( dirname( __FILE__ ) . '/instagram-widget-by-wpzoom.php' ) . 'dist/scripts/backend/cron-dismiss.js',
 			array( 'jquery' ),
-			'2.0.0',
+			WPZOOM_INSTAGRAM_VERSION,
 			true
 		);
 	}
@@ -1833,14 +1833,14 @@ class WPZOOM_Instagram_Widget_Settings {
 			'zoom-instagram-widget-preview',
 			plugin_dir_url( dirname( __FILE__ ) . '/instagram-widget-by-wpzoom.php' ) . 'dist/styles/frontend/preview.css',
 			array(),
-			'2.0.0'
+			WPZOOM_INSTAGRAM_VERSION
 		);
 
 		wp_enqueue_script(
 			'zoom-instagram-widget-preview',
 			plugin_dir_url( dirname( __FILE__ ) . '/instagram-widget-by-wpzoom.php' ) . 'dist/scripts/frontend/preview.js',
 			array( 'jquery' ),
-			'2.0.0',
+			WPZOOM_INSTAGRAM_VERSION,
 			true
 		);
 	}
@@ -2766,8 +2766,8 @@ class WPZOOM_Instagram_Widget_Settings {
 		if ( self::is_wpzinsta_screen() ) {
 			wp_enqueue_media();
 			wp_enqueue_style( 'wp-color-picker' );
-			wp_enqueue_style( 'zoom-instagram-widget-admin', plugin_dir_url( dirname( __FILE__ ) . '/instagram-widget-by-wpzoom.php' ) . 'dist/styles/backend/index.css', array( 'wp-color-picker' ), '1.7.3' );
-			wp_enqueue_script( 'zoom-instagram-widget-admin', plugin_dir_url( dirname( __FILE__ ) . '/instagram-widget-by-wpzoom.php' ) . 'dist/scripts/backend/index.js', array( 'jquery', 'wp-color-picker' ), '1.7.3' );
+			wp_enqueue_style( 'zoom-instagram-widget-admin', plugin_dir_url( dirname( __FILE__ ) . '/instagram-widget-by-wpzoom.php' ) . 'dist/styles/backend/index.css', array( 'wp-color-picker' ), WPZOOM_INSTAGRAM_VERSION );
+			wp_enqueue_script( 'zoom-instagram-widget-admin', plugin_dir_url( dirname( __FILE__ ) . '/instagram-widget-by-wpzoom.php' ) . 'dist/scripts/backend/index.js', array( 'jquery', 'wp-color-picker' ), WPZOOM_INSTAGRAM_VERSION );
 			wp_localize_script(
 				'zoom-instagram-widget-admin',
 				'zoom_instagram_widget_admin',

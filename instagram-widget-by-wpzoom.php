@@ -3,7 +3,7 @@
  * Plugin Name: WPZOOM Instagram Widget & Block
  * Plugin URI: https://www.wpzoom.com/plugins/instagram-widget/
  * Description: Instagram Widget is a customizable and responsive plugin, made to help you gain even more followers by showcasing your Instagram feed on your WordPress website.
- * Version: 2.0.13
+ * Version: 2.0.14
  * Author: WPZOOM
  * Author URI: https://www.wpzoom.com/
  * Text Domain: instagram-widget-by-wpzoom
@@ -19,7 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 if ( ! defined( 'WPZOOM_INSTAGRAM_VERSION' ) ) {
-	define( 'WPZOOM_INSTAGRAM_VERSION', '2.0.13' );
+	define( 'WPZOOM_INSTAGRAM_VERSION', '2.0.14' );
 }
 
 require_once plugin_dir_path( __FILE__ ) . 'class-wpzoom-instagram-image-uploader.php';
