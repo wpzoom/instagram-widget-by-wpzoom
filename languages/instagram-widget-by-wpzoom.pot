@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: WPZOOM Instagram Widget 1.7.7\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/instagram-widget-"
 "by-wpzoom\n"
-"POT-Creation-Date: 2022-11-03 14:34+0000\n"
+"POT-Creation-Date: 2022-11-03 14:43+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -50,6 +50,12 @@ msgstr ""
 #, php-format
 msgctxt "%2$s = human-readable time difference"
 msgid "%1$s ago"
+msgstr ""
+
+#: class-wpzoom-instagram-widget-display.php:614
+#: class-wpzoom-instagram-widget.php:483
+#, php-format
+msgid "%s ago"
 msgstr ""
 
 #: class-wpzoom-instagram-block.php:104
