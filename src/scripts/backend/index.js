@@ -118,6 +118,8 @@ jQuery( function( $ ) {
 
 	$('#the-list').on('click', '#wpz-insta_reconnect', function (e) {
 		e.preventDefault();
+		
+		//console.log( $(this).data( 'user-id' ) );
 		window.wpzInstaAuthenticateInstagram( $(this).attr('href') );
 	});
 
@@ -633,6 +635,9 @@ jQuery( function( $ ) {
 	};
 
 	if ( 'inlineEditPost' in window ) {
+
+		$( '.inline-edit-save' ).find( '.button-primary' ).addClass( 'disabled' );
+
 		let origInlineEditPost = window.inlineEditPost.edit;
 
 		window.inlineEditPost.edit = function ( id ) {
@@ -641,6 +646,8 @@ jQuery( function( $ ) {
 			if ( typeof( id ) === 'object' ) {
 				id = window.inlineEditPost.getId( id );
 			}
+
+			//console.log( window.inlineEditPost );
 
 			let fields = [ '_wpz-insta_account-type', '_wpz-insta_token', '_wpz-insta_token_expire', '_thumbnail_id', 'wpz-insta_profile-photo', '_wpz-insta_user_name', '_wpz-insta_user-bio' ],
 			    rowData = $( '#inline_' + id ),
@@ -661,11 +668,17 @@ jQuery( function( $ ) {
 					$( ':input[name="' + field + '"]', editRow ).val( val );
 				}
 
+				$( ':input[name="' + field + '"]', editRow ).on( 'change paste keyup', function() {
+					$( '.inline-edit-save', editRow ).find( '.button-primary' ).removeClass( 'disabled' );
+				});
 			}
+
+			$( '#wpz-insta_reconnect', editRow ).attr( 'data-user-id', id );
 		};
 	}
 
 	window.wpzInstaHandleReturnedToken = function ( url, rawToken = false ) {
+
 		if ( url ) {
 			const parsedHash = ! rawToken && 'hash' in url && '' != ('' + url.hash).trim() ? window.wpzInstaParseQuery( '' + url.hash ) : {};
 
@@ -686,7 +699,8 @@ jQuery( function( $ ) {
 
 					$.post( ajaxurl, args )
 						.done( function ( response ) {
-							$('#the-list #wpz-insta_token').val(token);
+							$( '.inline-edit-wpz-insta_user #wpz-insta_token' ).val(token);
+							$( '.inline-edit-save' ).find( '.button-primary' ).removeClass( 'disabled' );
 
 							let date = new Date();
 							date.setDate( date.getDate() + 60 );
