@@ -704,13 +704,13 @@ class WPZOOM_Instagram_Widget_Settings {
 
 				case 'wpz-insta_account-token' :
 					$raw_token = get_post_meta( get_the_ID(), '_wpz-insta_token', true );
-					$oauth_url  = add_query_arg(
+					$oauth_url = add_query_arg(
 						array(
 							'client_id'     => '1242932982579434',
 							'redirect_uri'  => 'https://wpzoom.com/instagram-auth/',
 							'scope'         => 'user_profile,user_media',
 							'response_type' => 'code',
-							'state'         => base64_encode( urlencode( admin_url( 'post.php?post=' . get_the_ID() . '&action=edit' ) ) ),
+							'state'         => 'RETURN_URL',//base64_encode( urlencode( admin_url( 'post.php?post=' . get_the_ID() . '&action=edit' ) ) ),
 						),
 						'https://api.instagram.com/oauth/authorize'
 					);
@@ -2794,6 +2794,7 @@ class WPZOOM_Instagram_Widget_Settings {
 					'edit_user_url'                     => admin_url( 'edit.php?post_type=wpz-insta_user#post-' ),
 					'preview_url'                       => site_url( '?wpz-insta-widget-preview=true' ),
 					'default_user_thumbnail'            => plugins_url( '/dist/images/backend/icon-insta.png', __FILE__ ),
+					'post_edit_url'                     => admin_url( 'post.php?action=edit&post=' ),
 				)
 			);
 		}
