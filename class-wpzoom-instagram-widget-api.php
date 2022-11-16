@@ -269,7 +269,12 @@ class Wpzoom_Instagram_Widget_API {
 		$include_pagination   = ! empty( $sliced['include-pagination'] );
 		$bypass_transient     = ! empty( $sliced['bypass-transient'] );
 
-		$transient = 'zoom_instagram_is_configured';
+		if( isset( $instance['widget-id'] ) ) {
+			$transient = 'zoom_instagram_is_configured_' . $instance['widget-id'];
+		}
+		else {
+			$transient = 'zoom_instagram_is_configured';
+		}
 
 		if ( ! empty( $this->access_token ) ) {
 			$transient = $transient . '_' . $this->access_token;

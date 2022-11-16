@@ -105,6 +105,8 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 
 		$instance = wp_parse_args( (array) $instance, $this->defaults );
 
+		$instance['widget-id'] = $args['widget_id'];
+
 		echo $args['before_widget'];
 
 		if ( $instance['title'] ) {
