@@ -5,7 +5,7 @@ Tags: instagram, instagram feed, instagram gallery, instagram photos, instagram 
 Requires at least: 5.5
 Tested up to: 6.1
 Requires PHP: 7.2
-Stable tag: 2.0.13
+Stable tag: 2.0.14
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -98,6 +98,10 @@ Yes, you can find the documentation for this plugin with more instructions on ou
 
 
 == Changelog ==
+
+= 2.0.14 =
+* Fixed an issue with the amount of items for legacy widget
+* Fixed the re-connect feature when using multiple Instagram accounts. [PRO]
 
 = 2.0.13 =
 * Fixed a bug with the "Hide Video Thumbnails" option not working

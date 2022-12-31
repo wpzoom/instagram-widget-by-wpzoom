@@ -97,6 +97,7 @@
 				img {
 					width: 100%;
 					aspect-ratio: 1/1;
+                    height: 100% !important;
 				}
 			}
 		}
@@ -111,6 +112,7 @@
 			.zoom-instagram-widget__item {
 				img {
 					aspect-ratio: 1;
+                    height: 100% !important;
 				}
 			}
 
@@ -185,6 +187,7 @@
 		height: 100%;
         transition: all .5s cubic-bezier(.215,.61,.355,1);
         will-change: transform;
+        margin-bottom: 0 !important;
 	}
 
     &:hover {

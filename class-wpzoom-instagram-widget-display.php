@@ -346,7 +346,7 @@ class Wpzoom_Instagram_Widget_Display {
 								$output .= '<input type="hidden" name="item_amount" value="' . esc_attr( $amount ) . '" />';
 								$output .= '<input type="hidden" name="image_size" value="' . esc_attr( $image_size ) . '" />';
 								$output .= '<input type="hidden" name="next" value="' . ( ! empty( $items ) && array_key_exists( 'paging', $items ) && is_object( $items['paging'] ) && property_exists( $items['paging'], 'next' ) ? esc_url( $items['paging']->next ) : '' ) . '" />';
-								$output .= '<button type="submit">' . esc_html( ( isset( $args['load-more-text'] ) ? trim( $args['load-more-text'] ) : __( 'Load More', 'instagram-widget-by-wpzoom' ) ) . ( ! $this->is_pro ? __( ' [PRO only]', 'instagram-widget-by-wpzoom' ) : '' ) ) . '</button>';
+								$output .= '<button type="submit">' . esc_html( ( isset( $args['load-more-text'] ) ? trim( $args['load-more-text'] ) : __( 'Load More&hellip;', 'instagram-widget-by-wpzoom' ) ) . ( ! $this->is_pro ? __( ' [PRO only]', 'instagram-widget-by-wpzoom' ) : '' ) ) . '</button>';
 								$output .= '</form>';
 							}
 
