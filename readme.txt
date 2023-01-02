@@ -29,6 +29,7 @@ Formerly known as *Instagram Widget by WPZOOM*, **WPZOOM Social Feed Widget** is
 
 **WPZOOM Social Feed Widget** gives you a WordPress Widget that you can place anywhere you want to display your Instagram Feed. Easy setup and configuration!
 
+[youtube https://www.youtube.com/watch?v=vlEk68RyBMA]
 
 = 📌 FEATURES =
 
