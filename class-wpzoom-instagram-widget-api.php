@@ -423,6 +423,7 @@ class Wpzoom_Instagram_Widget_API {
 			'thumbnail'           => 150,
 			'low_resolution'      => 306,
 			'standard_resolution' => 640,
+			'full_resolution'     => 9999,
 		);
 
 		$diff = PHP_INT_MAX;
@@ -542,6 +543,11 @@ class Wpzoom_Instagram_Widget_API {
 						'url'    => $preview ? $media_url : $image_uploader->get_image( 'standard_resolution', $media_url, $item->id ),
 						'width'  => 640,
 						'height' => 640,
+					),
+					'full_resolution' => (object) array(
+						'url'    => $preview ? $media_url : $image_uploader->get_image( 'full_resolution', $media_url, $item->id ),
+						'width'  => 9999,
+						'height' => 9999,
 					),
 				),
 				'type'         => $item->media_type,

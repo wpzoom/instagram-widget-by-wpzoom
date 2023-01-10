@@ -309,6 +309,10 @@ class WPZOOM_Instagram_Image_Uploader {
 				'width'  => 640,
 				'height' => 640,
 			),
+			self::get_image_size_name( 'full_resolution' ) => array(
+				'width'  => 9999,
+				'height' => 9999,
+			),
 		);
 	}
 
@@ -327,10 +331,11 @@ class WPZOOM_Instagram_Image_Uploader {
 					$thumbnail                         = wp_get_attachment_image_src( $attachment_id, self::get_image_size_name( 'thumbnail' ) );
 					$low_resolution                    = wp_get_attachment_image_src( $attachment_id, self::get_image_size_name( 'low_resolution' ) );
 					$standard_resolution               = wp_get_attachment_image_src( $attachment_id, self::get_image_size_name( 'standard_resolution' ) );
+					$full_resolution                   = wp_get_attachment_image_src( $attachment_id, self::get_image_size_name( 'full_resolution' ) );
 					$item->images->thumbnail->url      = ! empty( $thumbnail ) ? $thumbnail[0] : '';
 					$item->images->low_resolution->url = ! empty( $low_resolution ) ? $low_resolution[0] : '';
-
 					$item->images->standard_resolution->url = ! empty( $standard_resolution ) ? $standard_resolution[0] : '';
+					$item->images->full_resolution->url = ! empty( $full_resolution ) ? $full_resolution[0] : '';
 
 					$transient->data[ $key ] = $item;
 				}
@@ -366,6 +371,7 @@ class WPZOOM_Instagram_Image_Uploader {
 			'thumbnail'           => 150,
 			'low_resolution'      => 320,
 			'standard_resolution' => 640,
+			'full_resolution'     => 9999,
 		);
 
 		$diff = PHP_INT_MAX;

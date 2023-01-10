@@ -1593,6 +1593,9 @@ class WPZOOM_Instagram_Widget_Settings {
 												<option value="standard_resolution"<?php selected( $image_size, 'standard_resolution' ); ?>>
 													<?php esc_html_e( 'High Resolution (640x640)', 'instagram-widget-by-wpzoom' ); ?>
 												</option>
+												<option value="full_resolution"<?php selected( $image_size, 'full_resolution' ); ?>>
+													<?php esc_html_e( 'Full Size', 'instagram-widget-by-wpzoom' ); ?>
+												</option>
 											</select>
 										</div>
 									</label>
