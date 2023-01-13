@@ -437,7 +437,7 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 
 														<div class="swiper-slide wpz-insta-album-image" data-media-type="<?php echo esc_attr( $child_type ); ?>">
 															<?php if ( 'video' == $child_type ) : ?>
-																<video controls preload="metadata" poster="<?php echo esc_attr( $thumb ); ?>">
+																<video controls preload="none" poster="<?php echo esc_attr( $thumb ); ?>">
 																	<source src="<?php echo esc_url( $child->media_url ); ?>" type="video/mp4"/>
 																	<?php echo esc_html( $alt ); ?>
 																</video>

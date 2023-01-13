@@ -7,6 +7,8 @@
 				const $nested = $swipe_el.find( '.image-wrapper > .swiper-container' );
 
 				new Swiper( $swipe_el.get(0), {
+                    preloadImages: false,
+                    lazy: true,
 					direction: 'horizontal',
 					loop: false,
 					spaceBetween: 20,
@@ -24,6 +26,8 @@
 
 				$nested.each( function () {
 					new Swiper( $( this ).get(0), {
+                        preloadImages: false,
+                        lazy: true,
 						direction: 'horizontal',
 						loop: false,
 						spaceBetween: 20,

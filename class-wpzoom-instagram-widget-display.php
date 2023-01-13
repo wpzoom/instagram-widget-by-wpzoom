@@ -216,6 +216,7 @@ class Wpzoom_Instagram_Widget_Display {
 					$image_size = isset( $args['image-size'] ) && in_array( $args['image-size'], array( 'thumbnail', 'low_resolution', 'standard_resolution', 'full_resolution' ) ) ? $args['image-size'] : 'low_resolution';
 					$image_width = isset( $args['image-width'] ) ? intval( $args['image-width'] ) : 320;
 					$hide_video_thumbs = isset( $args['hide-video-thumbs'] ) ? boolval( $args['hide-video-thumbs'] ) : true;
+                    $lazy_load = isset( $args['lazy-load'] ) ? boolval( $args['lazy-load'] ) : true;
 
 					$attrs .= ' data-layout="' . $layout . '"';
 					$attrs .= ' data-columns="' . $col_num . '"';
@@ -476,7 +477,7 @@ class Wpzoom_Instagram_Widget_Display {
 
 				$output .= '<li class="zoom-instagram-widget__item' . $classes . '" ' . $inline_attrs . '><div class="zoom-instagram-widget__item-inner-wrap">';
 
-				$output .= sprintf( '<img src="%1$s" width="%2$d" height="%3$d" alt="%4$s" />', esc_url( $src ), esc_attr( $width ), esc_attr( $height ), esc_attr( $alt ) );
+				$output .= sprintf( '<img class="zoom-instagram-link" data-src="%1$s" width="%2$d" height="%3$d" alt="%4$s" />', esc_url( $src ), esc_attr( $width ), esc_attr( $height ), esc_attr( $alt ) );
 
 				if ( $show_overlay ) {
 					$output .= '<div class="hover-layout zoom-instagram-widget__overlay zoom-instagram-widget__black ' . $small_class . '">';
@@ -567,9 +568,9 @@ class Wpzoom_Instagram_Widget_Display {
 							$thumb = 'video' == $child_type && property_exists( $child, 'thumbnail_url' ) ? $child->thumbnail_url : '';
 							$output .= '<div class="swiper-slide wpz-insta-album-image" data-media-type="' . esc_attr( $child_type ) . '">';
 							if ( 'video' == $child_type ) {
-								$output .= '<video controls autoplay muted preload="metadata" poster="' . esc_attr( $thumb ) . '"><source src="' . esc_url( $child->media_url ) . '" type="video/mp4"/>' . esc_html( $alt ) . '</video>';
+								$output .= '<video controls muted preload="none" poster="' . esc_attr( $thumb ) . '"><source src="' . esc_url( $child->media_url ) . '" type="video/mp4"/></video>';
 							} else {
-								$output .= '<img class="wpzoom-swiper-image" src="' . esc_url( $child->media_url ) . '" alt="' . esc_attr( $alt ) . '"/>';
+								$output .= '<img class="wpzoom-swiper-image swiper-lazy" data-src="' . esc_url( $child->media_url ) . '" alt="' . esc_attr( $alt ) . '"/>';
 							}
 
 							$output .= '</div>';
@@ -579,9 +580,9 @@ class Wpzoom_Instagram_Widget_Display {
 					} else {
 						if ( $is_video ) {
 							$thumb = isset( $item['local-image-url'] ) ? $item['local-image-url'] : '';
-							$output .= '<video controls autoplay muted preload="metadata" poster="' . esc_attr( $thumb ) . '"><source src="' . esc_url( $src ) . '" type="video/mp4"/>' . esc_html( $alt ) . '</video>';
+							$output .= '<video controls muted preload="none" poster="' . esc_attr( $thumb ) . '"><source src="' . esc_url( $src ) . '" type="video/mp4"/></video>';
 						} else {
-							$output .= '<img class="wpzoom-swiper-image" src="' . esc_url( $src_local ) . '" alt="' . esc_attr( $alt ) . '"/>';
+							$output .= '<img class="wpzoom-swiper-image swiper-lazy" data-src="' . esc_url( $src_local ) . '" alt="' . esc_attr( $alt ) . '"/>';
 						}
 					}
 
