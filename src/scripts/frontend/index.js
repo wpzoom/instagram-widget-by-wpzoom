@@ -112,7 +112,10 @@
 							open: function () {
 								const magnificPopup = $.magnificPopup.instance,
 								      currentElement = magnificPopup.st.el,
-								      $thisSwiper = this.content.find( '> .swiper-container' ).get(0).swiper;
+								      $thisSwiper = this.content.find( '> .swiper-container' ).get(0).swiper;									  
+										if(this.content.find( '> .swiper-container > .swiper-wrapper > .swiper-slide[data-uid="' + currentElement.data( 'mfp-src' ) + '"] video')){
+											this.content.find( '> .swiper-container > .swiper-wrapper > .swiper-slide[data-uid="' + currentElement.data( 'mfp-src' ) + '"] video' ).trigger('play');
+										}
 									  //console.log( currentElement );
 								if ( typeof $thisSwiper === 'object' ) {
 									$thisSwiper.slideTo(
