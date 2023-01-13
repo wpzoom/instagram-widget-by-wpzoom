@@ -548,6 +548,7 @@ class Wpzoom_Instagram_Widget_Display {
 					$count++;
 					$link     = isset( $item['link'] ) ? $item['link'] : '';
 					$src      = isset( $item['original-image-url'] ) ? $item['original-image-url'] : '';
+					$src_local = isset( $item['local-image-url'] ) ? $item['local-image-url'] : '';
 					$media_id = isset( $item['image-id'] ) ? $item['image-id'] : '';
 					$alt      = isset( $item['image-caption'] ) ? esc_attr( $item['image-caption'] ) : '';
 					$typ      = isset( $item['type'] ) ? strtolower( $item['type'] ) : 'image';
@@ -563,10 +564,8 @@ class Wpzoom_Instagram_Widget_Display {
 
 						foreach ( $children as $child ) {
 							$child_type = property_exists( $child, 'media_type' ) && in_array( $child->media_type, array( 'VIDEO', 'CAROUSEL_ALBUM' ) ) ? strtolower( $child->media_type ) : 'image';
-							$thumb = 'video' == $child_type && property_exists( $child, 'thumbnail_url' ) ? strtolower( $child->thumbnail_url ) : '';
-
+							$thumb = 'video' == $child_type && property_exists( $child, 'thumbnail_url' ) ? $child->thumbnail_url : '';
 							$output .= '<div class="swiper-slide wpz-insta-album-image" data-media-type="' . esc_attr( $child_type ) . '">';
-
 							if ( 'video' == $child_type ) {
 								$output .= '<video controls autoplay muted preload="metadata" poster="' . esc_attr( $thumb ) . '"><source src="' . esc_url( $child->media_url ) . '" type="video/mp4"/>' . esc_html( $alt ) . '</video>';
 							} else {
@@ -582,7 +581,7 @@ class Wpzoom_Instagram_Widget_Display {
 							$thumb = isset( $item['local-image-url'] ) ? $item['local-image-url'] : '';
 							$output .= '<video controls autoplay muted preload="metadata" poster="' . esc_attr( $thumb ) . '"><source src="' . esc_url( $src ) . '" type="video/mp4"/>' . esc_html( $alt ) . '</video>';
 						} else {
-							$output .= '<img class="wpzoom-swiper-image" src="' . esc_url( $src ) . '" alt="' . esc_attr( $alt ) . '"/>';
+							$output .= '<img class="wpzoom-swiper-image" src="' . esc_url( $src_local ) . '" alt="' . esc_attr( $alt ) . '"/>';
 						}
 					}
 
