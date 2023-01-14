@@ -409,7 +409,7 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 
 		<?php if ( $lightbox ) : ?>
 			<div class="wpz-insta-lightbox-wrapper mfp-hide">
-				<div class="swiper-container">
+				<div class="swiper">
 					<div class="swiper-wrapper">
 						<?php
 						$amount = count( $items );
@@ -429,7 +429,7 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 								<div class="wpz-insta-lightbox">
 									<div class="image-wrapper">
 										<?php if ( $is_album && false !== $children ) : ?>
-											<div class="swiper-container">
+											<div class="swiper">
 												<div class="swiper-wrapper wpz-insta-album-images">
 													<?php foreach ( $children as $child ) :
 														$child_type = property_exists( $child, 'media_type' ) && in_array( $child->media_type, array( 'VIDEO', 'CAROUSEL_ALBUM' ) ) ? strtolower( $child->media_type ) : 'image';

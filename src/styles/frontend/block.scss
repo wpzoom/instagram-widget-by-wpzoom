@@ -719,15 +719,16 @@
 
 		.image-wrapper {
 			img {
-				height: 100%;
-				max-width: 100%;
-				object-fit: contain;
+				// height: 100%;
+				// max-width: 100%;
+				// object-fit: contain;
 			}
 
 			flex-grow: 1;
 			text-align: center;
-			height: 600px;
-			width: 600px;
+            position: relative;
+			// height: 600px;
+			// width: 600px;
 			background: #000;
 		}
 	}

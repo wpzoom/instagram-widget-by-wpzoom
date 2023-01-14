@@ -11,6 +11,11 @@
 	overflow: hidden;
     display: block; /* fix for Neve theme's display: flex; */
 
+    img[src=""],
+    img:not([src]) {
+      visibility: hidden;
+    }
+
 	form[disabled] {
 		pointer-events: none;
 
@@ -298,8 +303,6 @@ a.ig-b-v-24 {
    padding: 5px 15px;
    font-size: 14px;
    transition: all 0.15s ease-in-out;
-   -moz-transition: all 0.15s ease-in-out;
-   -webkit-transition: all 0.15s ease-in-out;
    -webkit-font-smoothing: antialiased;
    -moz-osx-font-smoothing: grayscale;
    text-decoration: none !important;
@@ -319,8 +322,6 @@ a.ig-b-v-24:hover {
 	width: 100%;
 	text-align: center;
 	transition: opacity 0.25s ease-in-out;
-	-moz-transition: opacity 0.25s ease-in-out;
-	-webkit-transition: opacity 0.25s ease-in-out;
 }
 
 .zoom-instagram-widget__items[data-lightbox="1"] .zoom-instagram-widget__item .zoom-instagram-icon-wrap {
@@ -354,8 +355,6 @@ a.ig-b-v-24:hover {
 .zoom-instagram-widget__item .zoom-instagram-icon-wrap {
 	opacity: 0;
 	transition: opacity 0.25s ease-in-out;
-	-moz-transition: opacity 0.25s ease-in-out;
-	-webkit-transition: opacity 0.25s ease-in-out;
 
     .zoom-svg-instagram-stroke {
         transform: scale(.50);
@@ -405,8 +404,6 @@ a.ig-b-v-24:hover {
 	height: 100%;
 	opacity: 0;
 	transition: opacity 0.25s ease-in-out;
-	-moz-transition: opacity 0.25s ease-in-out;
-	-webkit-transition: opacity 0.25s ease-in-out;
 }
 
 .zoom-instagram-widget__overlay:hover:after  {
@@ -578,12 +575,8 @@ a.ig-b-v-24:hover {
 	right: 8px;
 	z-index: 1;
 	transition: opacity 0.25s ease-in-out;
-	-moz-transition: opacity 0.25s ease-in-out;
-	-webkit-transition: opacity 0.25s ease-in-out;
     filter: drop-shadow( 1px 2px 1px rgba(0, 0, 0, .07));
-
 }
-
 
 .zoom-instagram-widget__items .zoom-instagram-widget__item.media-icons-normal .svg-icon {
     opacity: 1;
@@ -604,7 +597,6 @@ a.ig-b-v-24:hover {
 .zoom-instagram-widget__items .zoom-instagram-widget__item.media-icons-hover.media-icons-normal .svg-icon {
     opacity: 1;
 }
-
 
 .zoom-instagram-widget__items .zoom-instagram-widget__item .zoom-instagram-date {
 	position: absolute;
@@ -628,11 +620,10 @@ a.ig-b-v-24:hover {
 }
 
 /** Lightbox **/
-
 .wpzoom-lightbox .mfp-inline-holder .mfp-content {
     max-width: none;
+    height: 100%;
 }
-
 
 .wpz-insta-lightbox {
 	pointer-events: all;
@@ -641,13 +632,22 @@ a.ig-b-v-24:hover {
 	/*flex-wrap: wrap;*/
 	background-color: white;
     border-radius: 4px;
-    height: 100%;
+    max-height: 100%;
+
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
 }
 
 .wpz-insta-lightbox-wrapper {
 	display: flex;
 	justify-content: center;
 	pointer-events: none;
+    height: 80vh;
+
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
 }
 
 .wpz-insta-lightbox-wrapper .wpz-insta-lightbox .details-wrapper {
@@ -738,54 +738,46 @@ a.ig-b-v-24:hover {
 }
 
 .wpz-insta-lightbox-wrapper .wpz-insta-lightbox .image-wrapper img {
-	height: 100%;
     max-height: 100%;
-	max-width: 100%;
-	object-fit: contain;
-    min-height: 70vh;
-    min-width: 700px;
+	object-fit: cover;
+    height: 100%;
+    display: block;
+    margin: 0 auto;
+    padding: 0;
 }
 
 .wpz-insta-lightbox-wrapper .wpz-insta-lightbox .image-wrapper {
 	flex-grow: 1;
 	text-align: center;
-	height: auto;
+    position: relative;
 	width: 100%;
 	max-width: 70%;
-    max-height: 100%;
     background: #000;
     border-radius: 4px 0 0 4px;
+    overflow: hidden;
 }
 
-.wpz-insta-lightbox-wrapper > .swiper-container {
+.wpz-insta-lightbox-wrapper > .swiper {
 	pointer-events: none;
 	width: 1000px;
-	// height: 80vh;
-}
 
-.wpz-insta-lightbox-wrapper > .swiper-container .swiper-container {
-	width: 100%;
-	height: 100%;
-}
+    .swiper-pagination-fraction,
+    .swiper-pagination-custom,
+    .swiper-horizontal > .swiper-pagination-bullets,
+    .swiper-pagination-bullets.swiper-pagination-horizontal {
+        bottom: 25px;
+    }
 
-.wpz-insta-lightbox-wrapper > .swiper-container .swiper-container .swiper-slide {
-	// height: 100%;
-    max-height: 100%;
-}
-
-.wpz-insta-lightbox-wrapper > .swiper-container-autoheight,
-.wpz-insta-lightbox-wrapper > .swiper-container-autoheight .swiper-slide {
-    height: 100%;
-    max-height: 85vh;
 }
 
 .wpz-insta-lightbox-wrapper video {
 	height: 100%;
     max-width: 100%;
+    width: 100%;
 }
 
-.wpz-insta-lightbox-wrapper > .swiper-container .swiper-container .swiper-button-prev,
-.wpz-insta-lightbox-wrapper > .swiper-container .swiper-container .swiper-button-next {
+.wpz-insta-lightbox-wrapper > .swiper .swiper .swiper-button-prev,
+.wpz-insta-lightbox-wrapper > .swiper .swiper .swiper-button-next {
 	--swiper-navigation-size: 30px;
 	color: #000;
 	background: #fff;
@@ -793,35 +785,34 @@ a.ig-b-v-24:hover {
 	border-radius: 50%;
 }
 
-.wpz-insta-lightbox-wrapper > .swiper-container .swiper-container .swiper-button-prev::after,
-.wpz-insta-lightbox-wrapper > .swiper-container .swiper-container .swiper-button-next::after {
+.wpz-insta-lightbox-wrapper > .swiper .swiper .swiper-button-prev::after,
+.wpz-insta-lightbox-wrapper > .swiper .swiper .swiper-button-next::after {
 	font-size: 16px;
 }
 
-.wpz-insta-lightbox-wrapper > .swiper-container > .swiper-wrapper {
+.wpz-insta-lightbox-wrapper > .swiper > .swiper-wrapper {
 	pointer-events: all;
-    // max-height: 80vh;
 }
 
-.wpz-insta-lightbox-wrapper > .swiper-container > .swiper-button-prev,
-.wpz-insta-lightbox-wrapper > .swiper-container > .swiper-button-next {
+.wpz-insta-lightbox-wrapper > .swiper > .swiper-button-prev,
+.wpz-insta-lightbox-wrapper > .swiper > .swiper-button-next {
 	position: fixed;
 	pointer-events: all;
 }
 
-.wpz-insta-lightbox-wrapper > .swiper-container .swiper-button-prev,
-.wpz-insta-lightbox-wrapper > .swiper-container .swiper-button-next {
+.wpz-insta-lightbox-wrapper > .swiper .swiper-button-prev,
+.wpz-insta-lightbox-wrapper > .swiper .swiper-button-next {
 	color: #fff;
 	opacity: 0.75;
 }
 
-.wpz-insta-lightbox-wrapper > .swiper-container .swiper-button-prev:hover,
-.wpz-insta-lightbox-wrapper > .swiper-container .swiper-button-next:hover {
+.wpz-insta-lightbox-wrapper > .swiper .swiper-button-prev:hover,
+.wpz-insta-lightbox-wrapper > .swiper .swiper-button-next:hover {
 	opacity: 1;
 }
 
-.wpz-insta-lightbox-wrapper > .swiper-container .swiper-button-prev.swiper-button-disabled,
-.wpz-insta-lightbox-wrapper > .swiper-container .swiper-button-next.swiper-button-disabled {
+.wpz-insta-lightbox-wrapper > .swiper .swiper-button-prev.swiper-button-disabled,
+.wpz-insta-lightbox-wrapper > .swiper .swiper-button-next.swiper-button-disabled {
 	opacity: 0.25 !important;
 }
 
@@ -877,13 +868,8 @@ a.ig-b-v-24:hover {
 		}
 	}
 
-    .wpz-insta-lightbox-wrapper > .swiper-container {
+    .wpz-insta-lightbox-wrapper > .swiper {
         width: 86%;
-    }
-
-    .wpz-insta-lightbox-wrapper .wpz-insta-lightbox .image-wrapper img {
-        min-height: 500px;
-        min-width: 500px;
     }
 
 }
@@ -894,8 +880,6 @@ a.ig-b-v-24:hover {
         font-size: 12px;
     }
 
-
-
 }
 
 
@@ -903,10 +887,11 @@ a.ig-b-v-24:hover {
 
     .wpz-insta-lightbox {
         flex-direction: column;
+        max-height: none;
     }
 
     .wpz-insta-lightbox-wrapper .wpz-insta-lightbox .image-wrapper img {
-        min-height: 400px;
+        max-height: 400px;
         min-width: 400px;
     }
 
@@ -944,7 +929,7 @@ a.ig-b-v-24:hover {
         min-width: 280px;
     }
 
-    .wpz-insta-lightbox-wrapper > .swiper-container {
+    .wpz-insta-lightbox-wrapper > .swiper {
         width: 76%;
     }
 

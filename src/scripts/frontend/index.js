@@ -51,10 +51,10 @@
 
 		$.fn.zoomLightbox = function () {
 			return $( this ).each( function () {
-				const $swipe_el = $( this ).closest( '.widget' ).find( '.wpz-insta-lightbox-wrapper > .swiper-container' );
+				const $swipe_el = $( this ).closest( '.widget' ).find( '.wpz-insta-lightbox-wrapper > .swiper' );
 
 				if ( $swipe_el.length > 0 ) {
-					const $nested   = $swipe_el.find( '.image-wrapper > .swiper-container' );
+					const $nested   = $swipe_el.find( '.image-wrapper > .swiper' );
 
 					new Swiper( $swipe_el.get(0), {
                         preloadImages: false,
@@ -62,7 +62,7 @@
 						direction: 'horizontal',
 						loop: false,
 						spaceBetween: 20,
-						autoHeight: true,
+						autoHeight: false,
 						watchOverflow: true,
 						navigation: {
 							nextEl: $swipe_el.find( '> .swiper-button-next' ).get(0),
@@ -112,14 +112,14 @@
 							open: function () {
 								const magnificPopup = $.magnificPopup.instance,
 								      currentElement = magnificPopup.st.el,
-								      $thisSwiper = this.content.find( '> .swiper-container' ).get(0).swiper;									  
-										if(this.content.find( '> .swiper-container > .swiper-wrapper > .swiper-slide[data-uid="' + currentElement.data( 'mfp-src' ) + '"] video')){
-											this.content.find( '> .swiper-container > .swiper-wrapper > .swiper-slide[data-uid="' + currentElement.data( 'mfp-src' ) + '"] video' ).trigger('play');
+								      $thisSwiper = this.content.find( '> .swiper' ).get(0).swiper;
+										if(this.content.find( '> .swiper > .swiper-wrapper > .swiper-slide[data-uid="' + currentElement.data( 'mfp-src' ) + '"] video')){
+											this.content.find( '> .swiper > .swiper-wrapper > .swiper-slide[data-uid="' + currentElement.data( 'mfp-src' ) + '"] video' ).trigger('play');
 										}
 									  //console.log( currentElement );
 								if ( typeof $thisSwiper === 'object' ) {
 									$thisSwiper.slideTo(
-										this.content.find( '> .swiper-container > .swiper-wrapper > .swiper-slide[data-uid="' + currentElement.data( 'mfp-src' ) + '"]' ).index()
+										this.content.find( '> .swiper > .swiper-wrapper > .swiper-slide[data-uid="' + currentElement.data( 'mfp-src' ) + '"]' ).index()
 									);
 								}
 							}
@@ -173,7 +173,8 @@
 				});
 
 				// if (imageLazyLoading) {
-				$list.find('.zoom-instagram-link').lazy();
+				$list.find('a.zoom-instagram-link').lazy();
+                $list.find('.zoom-instagram-link2').lazy();
 				// }
 
 				$list.removeClass('zoom-instagram-widget__items--no-js');

@@ -110,7 +110,7 @@ if ( ! class_exists( 'WPZOOM_Instagram_Widget_Assets ' ) ) {
 					'swiper-js',
 					plugins_url( 'dist/scripts/library/swiper.js', __FILE__ ),
 					array(),
-					'7.0.0-alpha.21'
+					'7.4.1'
 				);
 		
 				wp_register_script(
@@ -173,7 +173,7 @@ if ( ! class_exists( 'WPZOOM_Instagram_Widget_Assets ' ) ) {
                     'swiper-css',
                     plugin_dir_url( __FILE__ ) . 'dist/styles/library/swiper.css',
                     array(),
-                    '7.0.0-alpha.21'
+                    '7.4.1'
                 );
 
 				wp_enqueue_style(

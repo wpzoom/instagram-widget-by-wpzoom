@@ -321,7 +321,7 @@ class Wpzoom_Instagram_Widget_Display {
 							$classes .= ' swiper-wrapper';
 						}
 
-						$output .= '<div class="zoom-instagram-widget__items-wrapper' . ( $this->is_pro && 'carousel' === $layout ? ' swiper-container' : '' ) . '"><ul class="' . $classes . '"' . $attrs . '>' . ( $this->is_pro && 'masonry' === $layout ? '<li class="masonry-items-sizer"></li>' : '' );
+						$output .= '<div class="zoom-instagram-widget__items-wrapper' . ( $this->is_pro && 'carousel' === $layout ? ' swiper' : '' ) . '"><ul class="' . $classes . '"' . $attrs . '>' . ( $this->is_pro && 'masonry' === $layout ? '<li class="masonry-items-sizer"></li>' : '' );
 						$output .= self::items_html( $items['items'], $args );
 						$output .= '</ul>';
 						if ( $this->is_pro && 'carousel' === $layout ) {
@@ -355,7 +355,7 @@ class Wpzoom_Instagram_Widget_Display {
 						}
 
 						if ( $lightbox ) {
-							$output .= '<div class="wpz-insta-lightbox-wrapper mfp-hide"><div class="swiper-container"><div class="swiper-wrapper">';
+							$output .= '<div class="wpz-insta-lightbox-wrapper mfp-hide"><div class="swiper"><div class="swiper-wrapper">';
 							$output .= self::lightbox_items_html( $items['items'], $user_id );
 							$output .= '</div><div class="swiper-button-prev"></div><div class="swiper-button-next"></div></div></div>';
 						}
@@ -477,7 +477,7 @@ class Wpzoom_Instagram_Widget_Display {
 
 				$output .= '<li class="zoom-instagram-widget__item' . $classes . '" ' . $inline_attrs . '><div class="zoom-instagram-widget__item-inner-wrap">';
 
-				$output .= sprintf( '<img class="zoom-instagram-link" data-src="%1$s" width="%2$d" height="%3$d" alt="%4$s" />', esc_url( $src ), esc_attr( $width ), esc_attr( $height ), esc_attr( $alt ) );
+				$output .= sprintf( '<img class="zoom-instagram-link2" data-src="%1$s" width="%2$d" height="%3$d" alt="%4$s" />', esc_url( $src ), esc_attr( $width ), esc_attr( $height ), esc_attr( $alt ) );
 
 				if ( $show_overlay ) {
 					$output .= '<div class="hover-layout zoom-instagram-widget__overlay zoom-instagram-widget__black ' . $small_class . '">';
@@ -561,7 +561,7 @@ class Wpzoom_Instagram_Widget_Display {
 					$output .= '<div data-uid="' . $media_id . '" class="swiper-slide wpz-insta-lightbox-item"><div class="wpz-insta-lightbox"><div class="image-wrapper">';
 
 					if ( $is_album && false !== $children ) {
-						$output .= '<div class="swiper-container"><div class="swiper-wrapper wpz-insta-album-images">';
+						$output .= '<div class="swiper" style="height: 100%;"><div class="swiper-wrapper wpz-insta-album-images">';
 
 						foreach ( $children as $child ) {
 							$child_type = property_exists( $child, 'media_type' ) && in_array( $child->media_type, array( 'VIDEO', 'CAROUSEL_ALBUM' ) ) ? strtolower( $child->media_type ) : 'image';
@@ -570,7 +570,7 @@ class Wpzoom_Instagram_Widget_Display {
 							if ( 'video' == $child_type ) {
 								$output .= '<video controls muted preload="none" poster="' . esc_attr( $thumb ) . '"><source src="' . esc_url( $child->media_url ) . '" type="video/mp4"/></video>';
 							} else {
-								$output .= '<img class="wpzoom-swiper-image swiper-lazy" data-src="' . esc_url( $child->media_url ) . '" alt="' . esc_attr( $alt ) . '"/>';
+								$output .= '<img class="wpzoom-swiper-image swiper-lazy" data-src="' . esc_url( $child->media_url ) . '" alt="' . esc_attr( $alt ) . '"/><div class="swiper-lazy-preloader swiper-lazy-preloader-white"></div>';
 							}
 
 							$output .= '</div>';
@@ -582,7 +582,7 @@ class Wpzoom_Instagram_Widget_Display {
 							$thumb = isset( $item['local-image-url'] ) ? $item['local-image-url'] : '';
 							$output .= '<video controls muted preload="none" poster="' . esc_attr( $thumb ) . '"><source src="' . esc_url( $src ) . '" type="video/mp4"/></video>';
 						} else {
-							$output .= '<img class="wpzoom-swiper-image swiper-lazy" data-src="' . esc_url( $src_local ) . '" alt="' . esc_attr( $alt ) . '"/>';
+							$output .= '<img class="wpzoom-swiper-image swiper-lazy" data-src="' . esc_url( $src_local ) . '" alt="' . esc_attr( $alt ) . '"/><div class="swiper-lazy-preloader swiper-lazy-preloader-white"></div>';
 						}
 					}
 
