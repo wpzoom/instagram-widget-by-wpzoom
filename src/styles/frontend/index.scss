@@ -4,7 +4,6 @@
     text-align: center;
 }
 
-
 .wpzoom-instagram-widget-select-feed select {
     max-width: 100%;
 }
@@ -12,13 +11,11 @@
 .wp-block-wpzoom-instagram-block,
 .zoom-instagram {
 
-
     .zoom-instagram {
         background: none;
         padding: 0;
         border: none;
     }
-
 
 }
 
@@ -32,19 +29,12 @@
 
 }
 
+
 /* styling just for the block */
 .zoom-instagram {
     font-size: 14px;
     overflow: hidden;
     display: block; /* fix for Neve theme's display: flex; */
-
-
-    .swiper-button-next,
-    .swiper-container-rtl .swiper-button-prev,
-    .swiper-button-prev,
-    .swiper-container-rtl .swiper-button-next {
-        background-image: none;
-    }
 
 
     img {
@@ -972,12 +962,27 @@ a.ig-b-v-24:hover {
     width: 100%;
 }
 
+
+.wpz-insta-lightbox-wrapper {
+
+    .swiper-button-next,
+    .swiper-rtl .swiper-button-prev,
+    .swiper-button-prev,
+    .swiper--rtl .swiper-button-next {
+        background-image: none;
+    }
+
+}
+
+
+
 .wpz-insta-lightbox-wrapper > .swiper .swiper .swiper-button-prev,
 .wpz-insta-lightbox-wrapper > .swiper .swiper .swiper-button-next {
     --swiper-navigation-size: 30px;
     color: #000;
     background: #fff;
     width: var(--swiper-navigation-size);
+    height: var(--swiper-navigation-size);
     border-radius: 50%;
 }
 

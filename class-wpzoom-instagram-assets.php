@@ -89,7 +89,7 @@ if ( ! class_exists( 'WPZOOM_Instagram_Widget_Assets ' ) ) {
 
 			$should_enqueue     = has_block( 'wpzoom/instagram-block' );
 			$has_reusable_block = self::has_reusable_block( 'wpzoom/instagram-block' );
-			$is_active_widget   = is_active_widget( false, false, 'wpzoom_instagram_widget', true );
+			$is_active_widget   = is_active_widget( false, false, 'wpzoom_instagram_widget', false );
 			$has_shortcode      = ( is_a( $post, 'WP_Post' ) && has_shortcode( $post->post_content, 'instagram' ) );
 			$has_widget_block   = self::is_active_block_widget( 'wpzoom/instagram-block' ); 
 			$load_css_js        = isset( $general_options['load-css-js'] ) ? true : false;
@@ -162,7 +162,7 @@ if ( ! class_exists( 'WPZOOM_Instagram_Widget_Assets ' ) ) {
 
 			$should_enqueue     = has_block( 'wpzoom/instagram-block' );
 			$has_reusable_block = self::has_reusable_block( 'wpzoom/instagram-block' );
-			$is_active_widget   = is_active_widget( false, false, 'wpzoom_instagram_widget', true );
+			$is_active_widget   = is_active_widget( false, false, 'wpzoom_instagram_widget', false );
 			$has_shortcode      = ( is_a( $post, 'WP_Post' ) && has_shortcode( $post->post_content, 'instagram' ) );
 			$has_widget_block   = self::is_active_block_widget( 'wpzoom/instagram-block' ); 
 			$load_css_js        = isset( $general_options['load-css-js'] ) ? true : false;
@@ -177,9 +177,9 @@ if ( ! class_exists( 'WPZOOM_Instagram_Widget_Assets ' ) ) {
                 );
 
 				wp_enqueue_style(
-					'zoom-instagram-widget',
+					'wpz-insta_block-frontend-style',
 					plugin_dir_url( __FILE__ ) . 'dist/styles/frontend/index.css',
-					array( 'dashicons', 'wpz-insta_block-frontend-style' ),
+					array( 'dashicons' ),
 					WPZOOM_INSTAGRAM_VERSION
 				);
 
@@ -240,7 +240,7 @@ if ( ! class_exists( 'WPZOOM_Instagram_Widget_Assets ' ) ) {
 
 			$should_enqueue     = has_block( 'wpzoom/instagram-block' );
 			$has_reusable_block = self::has_reusable_block( 'wpzoom/instagram-block' );
-			$is_active_widget   = is_active_widget( false, false, 'wpzoom_instagram_widget', true );
+			$is_active_widget   = is_active_widget( false, false, 'wpzoom_instagram_widget', false );
 			$has_shortcode      = ( is_a( $post, 'WP_Post' ) && has_shortcode( $post->post_content, 'instagram' ) );
 			$has_widget_block   = self::is_active_block_widget( 'wpzoom/instagram-block' );
 			$load_css_js        = isset( $general_options['load-css-js'] ) ? true : false;
