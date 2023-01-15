@@ -47,7 +47,6 @@ module.exports = {
 		'scripts/frontend/preview': path.resolve( process.cwd(), 'src/scripts/frontend/preview.js' ),
 		'styles/frontend/index': path.resolve( process.cwd(), 'src/styles/frontend/index.scss' ),
 		'styles/frontend/preview': path.resolve( process.cwd(), 'src/styles/frontend/preview.scss' ),
-		'styles/frontend/block': path.resolve( process.cwd(), 'src/styles/frontend/block.scss' ),
 		'styles/backend/index': path.resolve( process.cwd(), 'src/styles/backend/index.scss' )
 	},
 

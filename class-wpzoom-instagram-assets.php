@@ -95,7 +95,7 @@ if ( ! class_exists( 'WPZOOM_Instagram_Widget_Assets ' ) ) {
 			$load_css_js        = isset( $general_options['load-css-js'] ) ? true : false;
 
 			$script_asset_file = include( plugin_dir_path( __FILE__ ) . 'dist/scripts/backend/block.asset.php' );
-			$style_asset_file = include( plugin_dir_path( __FILE__ ) . 'dist/styles/frontend/block.asset.php' );
+			$style_asset_file = include( plugin_dir_path( __FILE__ ) . 'dist/styles/frontend/index.asset.php' );
 
 			if( is_admin() || $load_css_js || $should_enqueue || $has_reusable_block || $is_active_widget || $has_shortcode || $has_widget_block || isset( $_GET['wpz-insta-widget-preview'] ) ) {
 				wp_register_script(
@@ -129,7 +129,7 @@ if ( ! class_exists( 'WPZOOM_Instagram_Widget_Assets ' ) ) {
 			
 				wp_register_style(
 					'wpz-insta_block-frontend-style',
-					plugins_url( 'dist/styles/frontend/block.css', __FILE__ ),
+					plugins_url( 'dist/styles/frontend/index.css', __FILE__ ),
 					array( 'magnific-popup', 'swiper-css' ),
 					$style_asset_file['version']
 				);
@@ -141,7 +141,7 @@ if ( ! class_exists( 'WPZOOM_Instagram_Widget_Assets ' ) ) {
 		public function register_block_assets() {
 
 			$script_asset_file = include( plugin_dir_path( __FILE__ ) . 'dist/scripts/backend/block.asset.php' );
-			$style_asset_file = include( plugin_dir_path( __FILE__ ) . 'dist/styles/frontend/block.asset.php' );
+			$style_asset_file = include( plugin_dir_path( __FILE__ ) . 'dist/styles/frontend/index.asset.php' );
 	
 			wp_register_script(
 				'wpz-insta_block-backend-script',
