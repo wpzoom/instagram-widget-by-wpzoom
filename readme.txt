@@ -5,7 +5,7 @@ Tags: instagram, instagram feed, instagram gallery, instagram photos, instagram 
 Requires at least: 5.5
 Tested up to: 6.1
 Requires PHP: 7.2
-Stable tag: 2.0.14
+Stable tag: 2.1.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -99,6 +99,11 @@ Yes, you can find the documentation for this plugin with more instructions on ou
 
 
 == Changelog ==
+
+= 2.1.0 =
+* Numerous optimization improvements
+* Fixed issues related to Lazy Loading Images
+* Added "Full Size" image option for feeds
 
 = 2.0.14 =
 * Fixed an issue with the amount of items for legacy widget
