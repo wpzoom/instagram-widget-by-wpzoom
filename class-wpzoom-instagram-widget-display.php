@@ -390,6 +390,7 @@ class Wpzoom_Instagram_Widget_Display {
 		$output = '';
 
 		if ( ! empty( $items ) && is_array( $items ) ) {
+			$is_editor = defined( 'REST_REQUEST' ) && true === REST_REQUEST && 'edit' === filter_input( INPUT_GET, 'context', FILTER_SANITIZE_SPECIAL_CHARS );
 			$count = 0;
 			$layout = isset( $args['layout'] ) ? intval( $args['layout'] ) : 0;
 			$amount = isset( $args['item-num'] ) ? intval( $args['item-num'] ) : 9;
@@ -475,9 +476,11 @@ class Wpzoom_Instagram_Widget_Display {
 					$classes .= ' swiper-slide';
 				}
 
+				$src_attr = $is_editor ? sprintf( 'src="%s"', esc_url( $src ) ) : '';
+
 				$output .= '<li class="zoom-instagram-widget__item' . $classes . '" ' . $inline_attrs . '><div class="zoom-instagram-widget__item-inner-wrap">';
 
-				$output .= sprintf( '<img class="zoom-instagram-link2" data-src="%1$s" width="%2$d" height="%3$d" alt="%4$s" />', esc_url( $src ), esc_attr( $width ), esc_attr( $height ), esc_attr( $alt ) );
+				$output .= sprintf( '<img class="zoom-instagram-link2" %5$s data-src="%1$s" width="%2$d" height="%3$d" alt="%4$s" />', esc_url( $src ), esc_attr( $width ), esc_attr( $height ), esc_attr( $alt ), $src_attr );
 
 				if ( $show_overlay ) {
 					$output .= '<div class="hover-layout zoom-instagram-widget__overlay zoom-instagram-widget__black ' . $small_class . '">';
