@@ -281,18 +281,6 @@
 }
 
 
-.wp-admin {
-
-    .wp-block-wpzoom-instagram-block .zoom-instagram-widget__overlay, .zoom-instagram .zoom-instagram-widget__overlay {
-        cursor: pointer;
-    }
-
-    .wp-block-wpzoom-instagram-block .zoom-instagram-widget__items .zoom-instagram-widget__item .zoom-instagram-link, .zoom-instagram .zoom-instagram-widget__items .zoom-instagram-widget__item .zoom-instagram-link {
-        pointer-events: none;
-    }
-}
-
-
 .zoom-instagram-widget-user-info-middle-cell {
     padding: 0px 20px;
 }
@@ -1054,6 +1042,34 @@ a.ig-b-v-24:hover {
     }
 
 }
+
+
+.wp-admin {
+
+    .wp-block-wpzoom-instagram-block .zoom-instagram-widget__overlay, .zoom-instagram .zoom-instagram-widget__overlay {
+        cursor: pointer;
+    }
+
+    .wp-block-wpzoom-instagram-block .zoom-instagram-widget__items .zoom-instagram-widget__item .zoom-instagram-link,
+    .zoom-instagram .zoom-instagram-widget__items .zoom-instagram-widget__item .zoom-instagram-link,
+    .zoom-instagram .zoom-instagram-widget__header .zoom-instagram-widget__header-user a,
+    .zoom-instagram .zoom-instagram-widget__footer .wpz-insta-view-on-insta-button:hover,
+    .zoom-instagram .zoom-instagram-widget__footer .wpz-insta-view-on-insta-button:active,
+    .zoom-instagram .zoom-instagram-widget__footer .wpzinsta-pro-load-more input[type=submit]:hover,
+    .zoom-instagram .zoom-instagram-widget__footer .wpzinsta-pro-load-more input[type=submit]:active,
+    .zoom-instagram .zoom-instagram-widget__footer .wpzinsta-pro-load-more button[type=submit]:hover,
+    .zoom-instagram .zoom-instagram-widget__footer .wpzinsta-pro-load-more button[type=submit]:active {
+        pointer-events: none;
+    }
+
+    .zoom-instagram.layout-masonry .zoom-instagram-widget__items.zoom-instagram-widget__items--no-js .zoom-instagram-widget__item img,
+    .zoom-instagram.layout-masonry .zoom-instagram-widget__items.zoom-instagram-widget__items--no-js .masonry-items-sizer img {
+        filter: none;
+    }
+
+}
+
+
 
 
 @keyframes show {

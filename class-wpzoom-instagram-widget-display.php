@@ -480,7 +480,17 @@ class Wpzoom_Instagram_Widget_Display {
 
 				$output .= '<li class="zoom-instagram-widget__item' . $classes . '" ' . $inline_attrs . '><div class="zoom-instagram-widget__item-inner-wrap">';
 
-				$output .= sprintf( '<img class="zoom-instagram-link2" %5$s data-src="%1$s" width="%2$d" height="%3$d" alt="%4$s" />', esc_url( $src ), esc_attr( $width ), esc_attr( $height ), esc_attr( $alt ), $src_attr );
+
+                if ( self::$instance->is_pro && 2 === $layout ) {
+
+                    $output .= sprintf( '<img class="zoom-instagram-link" %5$s src="%1$s" width="%2$d" height="%3$d" alt="%4$s" />', esc_url( $src ), esc_attr( $width ), esc_attr( $height ), esc_attr( $alt ), $src_attr );
+
+                } else {
+
+                    $output .= sprintf( '<img class="zoom-instagram-link zoom-instagram-link-new" %5$s data-src="%1$s" width="%2$d" height="%3$d" alt="%4$s" />', esc_url( $src ), esc_attr( $width ), esc_attr( $height ), esc_attr( $alt ), $src_attr );
+
+                }
+
 
 				if ( $show_overlay ) {
 					$output .= '<div class="hover-layout zoom-instagram-widget__overlay zoom-instagram-widget__black ' . $small_class . '">';

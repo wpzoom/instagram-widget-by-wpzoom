@@ -375,7 +375,7 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 							</div>
 
 
-							<a class="zoom-instagram-link" data-src="<?php echo $src; ?>"
+							<a class="zoom-instagram-link zoom-instagram-link-old" data-src="<?php echo $src; ?>"
 							   style="<?php echo $inline_style; ?>"
 							   data-mfp-src="<?php echo $media_id; ?>"
 							   href="<?php echo $link; ?>" target="_blank" rel="noopener nofollow" title="<?php echo $alt; ?>"
@@ -383,7 +383,7 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 							</a>
 						</div>
 					<?php else : ?>
-						<a class="zoom-instagram-link" data-src="<?php echo $src; ?>"
+						<a class="zoom-instagram-link zoom-instagram-link-old" data-src="<?php echo $src; ?>"
 						   style="<?php echo $inline_style; ?>"
 						   data-mfp-src="<?php echo $media_id; ?>"
 						   href="<?php echo $link; ?>" target="_blank" rel="noopener nofollow" title="<?php echo $alt; ?>"
@@ -429,7 +429,7 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 								<div class="wpz-insta-lightbox">
 									<div class="image-wrapper">
 										<?php if ( $is_album && false !== $children ) : ?>
-											<div class="swiper">
+											<div class="swiper" style="height: 100%;">
 												<div class="swiper-wrapper wpz-insta-album-images">
 													<?php foreach ( $children as $child ) :
 														$child_type = property_exists( $child, 'media_type' ) && in_array( $child->media_type, array( 'VIDEO', 'CAROUSEL_ALBUM' ) ) ? strtolower( $child->media_type ) : 'image';
@@ -437,12 +437,12 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 
 														<div class="swiper-slide wpz-insta-album-image" data-media-type="<?php echo esc_attr( $child_type ); ?>">
 															<?php if ( 'video' == $child_type ) : ?>
-																<video controls preload="none" poster="<?php echo esc_attr( $thumb ); ?>">
+																<video controls muted preload="none" poster="<?php echo esc_attr( $thumb ); ?>">
 																	<source src="<?php echo esc_url( $child->media_url ); ?>" type="video/mp4"/>
 																	<?php echo esc_html( $alt ); ?>
 																</video>
 															<?php else : ?>
-																<img src="<?php echo esc_url( $child->media_url ); ?>" alt="<?php echo $alt; ?>"/>
+																<img class="wpzoom-swiper-image swiper-lazy"  data-src="<?php echo esc_url( $child->media_url ); ?>" alt="<?php echo $alt; ?>"/><div class="swiper-lazy-preloader swiper-lazy-preloader-white"></div>
 															<?php endif; ?>
 														</div>
 													<?php endforeach; ?>
@@ -453,8 +453,8 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 												<div class="swiper-button-next"></div>
 											</div>
 										<?php else : ?>
-											<img src="<?php echo esc_url( $src ); ?>" alt="<?php echo $alt; ?>"/>
-										<?php endif; ?>
+											<img class="wpzoom-swiper-image swiper-lazy" data-src="<?php echo esc_url( $src ); ?>" alt="<?php echo $alt; ?>"/>
+										<?php endif; ?><div class="swiper-lazy-preloader swiper-lazy-preloader-white"></div>
 									</div>
 									<div class="details-wrapper">
 										<div class="wpz-insta-header">

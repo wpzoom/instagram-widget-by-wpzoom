@@ -173,8 +173,8 @@
 				});
 
 				// if (imageLazyLoading) {
-				$list.find('a.zoom-instagram-link').lazy();
-                $list.find('.zoom-instagram-link2').lazy();
+				$list.find('a.zoom-instagram-link-old').lazy();
+                $list.find('.zoom-instagram-link-new').lazy();
 				// }
 
 				$list.removeClass('zoom-instagram-widget__items--no-js');
