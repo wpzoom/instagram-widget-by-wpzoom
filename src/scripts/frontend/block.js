@@ -7,6 +7,10 @@
 				const $nested = $swipe_el.find( '.image-wrapper > .swiper' );
 
 				new Swiper( $swipe_el.get(0), {
+					lazy:{
+						threshold: 50
+					},
+					watchSlidesVisibility: true,
                     preloadImages: false,
                     lazy: true,
 					direction: 'horizontal',
@@ -26,6 +30,10 @@
 
 				$nested.each( function () {
 					new Swiper( $( this ).get(0), {
+						lazy:{
+							threshold: 50
+						},
+						watchSlidesVisibility: true,	
                         preloadImages: false,
                         lazy: true,
 						direction: 'horizontal',
