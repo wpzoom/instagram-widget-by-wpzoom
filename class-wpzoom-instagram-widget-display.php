@@ -183,6 +183,7 @@ class Wpzoom_Instagram_Widget_Display {
 			if ( $user instanceof WP_Post ) {
 				$show_user_name = isset( $args['show-account-username'] ) && boolval( $args['show-account-username'] );
 				$user_name = get_the_title( $user );
+				$user_name = preg_replace( '/[\x{200B}-\x{200D}\x{FEFF}]/u', '', $user_name );
 				$user_name_display = sprintf( '@%s', $user_name );
 				$user_link = 'https://www.instagram.com/' . $user_name;
 				$show_user_nname = isset( $args['show-account-name'] ) && boolval( $args['show-account-name'] );
