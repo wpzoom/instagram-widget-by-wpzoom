@@ -3,9 +3,9 @@ Contributors: WPZOOM, nvartolomei, ciorici
 Donate link: https://www.wpzoom.com/
 Tags: instagram, instagram feed, instagram gallery, instagram photos, instagram widget, instagram stories, widget, timeline, social network, latest images, feed, story, stories, insta
 Requires at least: 5.5
-Tested up to: 6.1
-Requires PHP: 7.2
-Stable tag: 2.1.3
+Tested up to: 6.2
+Requires PHP: 7.4
+Stable tag: 2.1.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -99,6 +99,9 @@ Yes, you can find the documentation for this plugin with more instructions on ou
 
 
 == Changelog ==
+
+= 2.1.4 =
+* Fixed an issue with the Instagram API
 
 = 2.1.3 =
 * Fixed an issue related to Lazy Loading Images
