@@ -713,115 +713,103 @@ class Wpzoom_Instagram_Widget_Display {
 		$hover_bg_color         = isset( $args['hover-bg-color'] ) ? $this->validate_color( $args['hover-bg-color'] ) : '';
 
 		if ( $font_size > -1 || ! empty( $bg_color ) || $spacing_around > -1 ) {
-			$output .= ".zoom-instagram${feed_id}{";
+			$output .= ".zoom-instagram{$feed_id}{";
 
 			if ( $font_size > -1 ) {
-				$output .= "font-size:${font_size}${font_size_suffix}!important;";
+				$output .= "font-size:{$font_size}{$font_size_suffix}!important;";
 			}
 
 			if ( ! empty( $bg_color ) ) {
-				$output .= "background-color:${bg_color}!important;";
+				$output .= "background-color:{$bg_color}!important;";
 			}
 
 			if ( $spacing_around > -1 ) {
-				$output .= "padding:${spacing_around}${spacing_around_suffix}!important;";
+				$output .= "padding:{$spacing_around}{$spacing_around_suffix}!important;";
 			}
 
 			$output .= "}";
 		}
 
 		if ( 0 === $layout ) {
-			$output .= ".zoom-instagram${feed_id} .zoom-instagram-widget__items{";
+			$output .= ".zoom-instagram{$feed_id} .zoom-instagram-widget__items{";
 			$output .= "display:grid!important;";
-			$output .= "grid-template-columns:repeat(${col_num},1fr);";
+			$output .= "grid-template-columns:repeat({$col_num},1fr);";
 			$output .= "}";
 		}
 
 		if ( ( 0 === $layout || 1 === $layout ) && $spacing_between > -1 ) {
-			$output .= ".zoom-instagram${feed_id} .zoom-instagram-widget__items{";
-			$output .= "gap:${spacing_between}${spacing_between_suffix}!important;";
+			$output .= ".zoom-instagram{$feed_id} .zoom-instagram-widget__items{";
+			$output .= "gap:{$spacing_between}{$spacing_between_suffix}!important;";
 			$output .= "}";
 		}
 
 		if ( $this->is_pro ) {
 			if ( 2 === $layout ) {
-				$output .= ".zoom-instagram${feed_id} .zoom-instagram-widget__item,.zoom-instagram${feed_id} .masonry-items-sizer{";
-				$output .= "width:calc(1/${col_num}*100%" . ( $spacing_between > 0 ? " - (1 - 1/${col_num})*${spacing_between}${spacing_between_suffix}" : "" ) . ")!important;";
+				$output .= ".zoom-instagram{$feed_id} .zoom-instagram-widget__item,.zoom-instagram{$feed_id} .masonry-items-sizer{";
+				$output .= "width:calc(1/{$col_num}*100%" . ( $spacing_between > 0 ? " - (1 - 1/{$col_num})*{$spacing_between}{$spacing_between_suffix}" : "" ) . ")!important;";
 				$output .= "}";
 
 				if ( $spacing_between > -1 ) {
-					$output .= ".zoom-instagram${feed_id} .zoom-instagram-widget__item{";
-					$output .= "margin:0 0 ${spacing_between}${spacing_between_suffix}!important;";
+					$output .= ".zoom-instagram{$feed_id} .zoom-instagram-widget__item{";
+					$output .= "margin:0 0 {$spacing_between}{$spacing_between_suffix}!important;";
 					$output .= "}";
 				}
 			}
 
 			if ( $border_radius > -1 ) {
-				$output .= ".zoom-instagram${feed_id} .zoom-instagram-widget__item .zoom-instagram-widget__item-inner-wrap{";
-				$output .= "border-radius:${border_radius}${border_radius_suffix}!important;";
+				$output .= ".zoom-instagram{$feed_id} .zoom-instagram-widget__item .zoom-instagram-widget__item-inner-wrap{";
+				$output .= "border-radius:{$border_radius}{$border_radius_suffix}!important;";
 				$output .= "}";
 			}
 
 			if ( '' != $loadmore_bg ) {
-				$output .= ".zoom-instagram${feed_id} .wpzinsta-pro-load-more button[type=submit]{";
-				$output .= "background-color:${loadmore_bg}!important;";
+				$output .= ".zoom-instagram{$feed_id} .wpzinsta-pro-load-more button[type=submit]{";
+				$output .= "background-color:{$loadmore_bg}!important;";
 				$output .= "}";
 			}
 		}
 
 		if ( $image_width > -1 && 1 === $layout ) {
-			$output .= ".zoom-instagram${feed_id} .zoom-instagram-widget__items img {";
-			$output .= "width:${image_width}${image_width_suffix}!important;";
+			$output .= ".zoom-instagram{$feed_id} .zoom-instagram-widget__items img {";
+			$output .= "width:{$image_width}{$image_width_suffix}!important;";
 			$output .= "}";
 		}
 
         if ( $image_width > -1 && 1 === $layout ) {
-            $output .= ".zoom-instagram${feed_id} .zoom-instagram-widget__items.layout-fullwidth{";
-            $output .= "grid-template-columns:repeat(${feed_items_num},1fr);";
+            $output .= ".zoom-instagram{$feed_id} .zoom-instagram-widget__items.layout-fullwidth{";
+            $output .= "grid-template-columns:repeat({$feed_items_num},1fr);";
             $output .= "}";
         }
 
-        // if ( $image_width > -1 && 1 === $layout ) {
-        //     $output .= ".zoom-instagram${feed_id} .zoom-instagram-widget__items.layout-fullwidth{";
-        //     $output .= "grid-template-columns:repeat(auto-fit, minmax(${image_width}${image_width_suffix}, 1fr));";
-        //     $output .= "}";
-        // }
-
-        // if ( $image_width > -1 && 1 === $layout ) {
-        //     $output .= ".zoom-instagram${feed_id} .zoom-instagram-widget__items.layout-fullwidth .zoom-instagram-widget__item {";
-        //     $output .= "min-width:${image_width}${image_width_suffix} !important;";
-        //     $output .= "}";
-        // }
-
 		if ( '' != $button_bg ) {
-			$output .= ".zoom-instagram${feed_id} .wpz-insta-view-on-insta-button{";
-			$output .= "background-color:${button_bg}!important;";
+			$output .= ".zoom-instagram{$feed_id} .wpz-insta-view-on-insta-button{";
+			$output .= "background-color:{$button_bg}!important;";
 			$output .= "}";
 		}
 
 		if ( $col_num_rspnsve_enbld ) {
 			$output .= "@media screen and (min-width:1200px){";
 			if ( 2 === $layout ) {
-				$output .= ".zoom-instagram${feed_id} .zoom-instagram-widget__item,.zoom-instagram${feed_id} .masonry-items-sizer{";
-				$output .= "width:calc(1/${col_num}*100%" . ( $spacing_between > 0 ? " - (1 - 1/${col_num})*${spacing_between}${spacing_between_suffix}" : "" ) . ")!important;";
+				$output .= ".zoom-instagram{$feed_id} .zoom-instagram-widget__item,.zoom-instagram{$feed_id} .masonry-items-sizer{";
+				$output .= "width:calc(1/{$col_num}*100%" . ( $spacing_between > 0 ? " - (1 - 1/{$col_num})*{$spacing_between}{$spacing_between_suffix}" : "" ) . ")!important;";
 				$output .= "}";
 			} else {
-				$output .= ".zoom-instagram${feed_id} .zoom-instagram-widget__items{";
-				$output .= "grid-template-columns:repeat(${col_num},1fr);";
+				$output .= ".zoom-instagram{$feed_id} .zoom-instagram-widget__items{";
+				$output .= "grid-template-columns:repeat({$col_num},1fr);";
 				$output .= "}";
 			}
 			$output .= "}";
 
 			$output .= "@media screen and (max-width:768px){";
 			if ( 2 === $layout ) {
-				$output .= ".zoom-instagram${feed_id} .zoom-instagram-widget__item,.zoom-instagram${feed_id} .masonry-items-sizer{";
-				$output .= "width:calc(1/${col_num_tablet}*100%" . ( $spacing_between > 0 ? " - (1 - 1/${col_num_tablet})*${spacing_between}${spacing_between_suffix}" : "" ) . ")!important;";
+				$output .= ".zoom-instagram{$feed_id} .zoom-instagram-widget__item,.zoom-instagram{$feed_id} .masonry-items-sizer{";
+				$output .= "width:calc(1/{$col_num_tablet}*100%" . ( $spacing_between > 0 ? " - (1 - 1/{$col_num_tablet})*{$spacing_between}{$spacing_between_suffix}" : "" ) . ")!important;";
 				$output .= "}";
 			} else {
-				$output .= ".zoom-instagram${feed_id} .zoom-instagram-widget__items{";
-				$output .= "grid-template-columns:repeat(${col_num_tablet},1fr);";
+				$output .= ".zoom-instagram{$feed_id} .zoom-instagram-widget__items{";
+				$output .= "grid-template-columns:repeat({$col_num_tablet},1fr);";
 				$output .= "}";
-				$output .= ".zoom-instagram${feed_id} .zoom-instagram-widget__item{";
+				$output .= ".zoom-instagram{$feed_id} .zoom-instagram-widget__item{";
 				$output .= "grid-row:auto!important;grid-column:auto!important;";
 				$output .= "}";
 			}
@@ -829,12 +817,12 @@ class Wpzoom_Instagram_Widget_Display {
 
 			$output .= "@media screen and (max-width:480px){";
 			if ( 2 === $layout ) {
-				$output .= ".zoom-instagram${feed_id} .zoom-instagram-widget__item,.zoom-instagram${feed_id} .masonry-items-sizer{";
-				$output .= "width:calc(1/${col_num_mobile}*100%" . ( $spacing_between > 0 ? " - (1 - 1/${col_num_mobile})*${spacing_between}${spacing_between_suffix}" : "" ) . ")!important;";
+				$output .= ".zoom-instagram{$feed_id} .zoom-instagram-widget__item,.zoom-instagram{$feed_id} .masonry-items-sizer{";
+				$output .= "width:calc(1/{$col_num_mobile}*100%" . ( $spacing_between > 0 ? " - (1 - 1/{$col_num_mobile})*{$spacing_between}{$spacing_between_suffix}" : "" ) . ")!important;";
 				$output .= "}";
 			} else {
-				$output .= ".zoom-instagram${feed_id} .zoom-instagram-widget__items{";
-				$output .= "grid-template-columns:repeat(${col_num_mobile},1fr);";
+				$output .= ".zoom-instagram{$feed_id} .zoom-instagram-widget__items{";
+				$output .= "grid-template-columns:repeat({$col_num_mobile},1fr);";
 				$output .= "}";
 			}
 			$output .= "}";

@@ -5,7 +5,7 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
-
+#[AllowDynamicProperties]
 class Wpzoom_Instagram_Widget_API {
 	/**
 	 * @var Wpzoom_Instagram_Widget_API The reference to *Singleton* instance of this class
