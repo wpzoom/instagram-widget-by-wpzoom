@@ -646,7 +646,7 @@ class WPZOOM_Instagram_Widget_Settings {
 		$urgent = $already_expired || $expires_soon ? 'urgent' : '';
 
 		return sprintf(
-			_x( '<strong>%1$s</strong> <%2$s id="wpz-insta_token-expire-time" class="%3$s">%4$s</%2$s>', 'Token expire time label', 'instagram-widget-by-wpzoom' ),
+			_x( '<span id="wpz-insta_token-expire-time"><strong>%1$s</strong> <%2$s class="%3$s">%4$s</%2$s></span>', 'Token expire time label', 'instagram-widget-by-wpzoom' ),
 			$prefix,
 			$weight,
 			$urgent,

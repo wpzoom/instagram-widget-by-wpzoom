@@ -661,6 +661,8 @@ jQuery( function( $ ) {
 					$( 'img.' + field ).attr( 'src', val );
 				} else if ( '_wpz-insta_token' == field ) {
 					$( '#wpz-insta_token', editRow ).val( val );
+				} else if( '_wpz-insta_token_expire' == field ) {
+					$( '#wpz-insta_token-expire-time', editRow ).html( val );
 				} else {
 					$( ':input[name="' + field + '"]', editRow ).val( val );
 				}
