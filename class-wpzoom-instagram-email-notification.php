@@ -83,7 +83,7 @@ if ( ! class_exists( 'WPZOOM_Instagram_Email_Notification' ) ) {
 			$instagram_profiles = $this->get_profiles_data();
 
 			$sendto  = get_option( 'admin_email', '' );
-			$subject = esc_html__( 'Important Notice: Expiry of Instagrm API KEY', 'instagram-widget-by-wpzoom' ); 
+			$subject = esc_html__( 'Important Notice: Expiry of Instagram API KEY', 'instagram-widget-by-wpzoom' ); 
 			$message = '';
 			$headers = array( 'Content-Type: text/html; charset=UTF-8' );
 
