@@ -33,6 +33,9 @@ require_once plugin_dir_path( __FILE__ ) . 'class-wpzoom-instagram-assets.php';
 
 require_once plugin_dir_path( __FILE__ ) . 'class-wpzoom-instagram-widget-after-setup.php';
 
+//added 6 july 2023
+require_once plugin_dir_path( __FILE__ ) . 'class-wpzoom-instagram-email-notification.php';
+
 add_action( 'widgets_init', 'zoom_instagram_widget_register' );
 function zoom_instagram_widget_register() {
 	register_widget( 'Wpzoom_Instagram_Widget' );
