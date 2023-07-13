@@ -927,24 +927,26 @@ class WPZOOM_Instagram_Widget_Settings {
 	}
 
 	function add_inline_data( $post, $post_type_object ) {
-		$post_id = $post->ID;
-		$type = ucwords( strtolower( get_post_meta( $post_id, '_wpz-insta_account-type', true ) ?: __( 'None', 'instagram-widget-by-wpzoom' ) ) );
-		$token = get_post_meta( $post_id, '_wpz-insta_token', true );
-		$token_expire = $this->get_token_expire_display( $post_id );
-		$photo_id = get_post_thumbnail_id( $post_id ) ?: -1;
-		$photo_url = get_the_post_thumbnail_url( $post_id, array( 100, 100 ) ) ?: plugins_url( '/dist/images/backend/icon-insta.png', __FILE__ );
-		$user_name = sanitize_text_field( get_post_meta( $post_id, '_wpz-insta_user_name', true ) );
-		$bio = get_the_content();
+		if ( 'wpz-insta_user' == $post_type_object->name ) {
+			$post_id = $post->ID;
+			$type = ucwords( strtolower( get_post_meta( $post_id, '_wpz-insta_account-type', true ) ?: __( 'None', 'instagram-widget-by-wpzoom' ) ) );
+			$token = get_post_meta( $post_id, '_wpz-insta_token', true );
+			$token_expire = $this->get_token_expire_display( $post_id );
+			$photo_id = get_post_thumbnail_id( $post_id ) ?: -1;
+			$photo_url = get_the_post_thumbnail_url( $post_id, array( 100, 100 ) ) ?: plugins_url( '/dist/images/backend/icon-insta.png', __FILE__ );
+			$user_name = sanitize_text_field( get_post_meta( $post_id, '_wpz-insta_user_name', true ) );
+			$bio = get_the_content();
 
-		?>
-		<div class="_wpz-insta_account-type"><?php echo esc_html( $type ); ?></div>
-		<div class="_wpz-insta_token"><?php echo esc_html( $token ); ?></div>
-		<div class="_wpz-insta_token_expire"><?php echo esc_html( $token_expire ); ?></div>
-		<div class="_thumbnail_id"><?php echo esc_html( $photo_id ); ?></div>
-		<div class="wpz-insta_profile-photo"><?php echo esc_html( $photo_url ); ?></div>
-		<div class="_wpz-insta_user_name"><?php echo esc_html( $user_name ); ?></div>
-		<div class="_wpz-insta_user-bio"><?php echo esc_html( $bio ); ?></div>
-		<?php
+			?>
+			<div class="_wpz-insta_account-type"><?php echo esc_html( $type ); ?></div>
+			<div class="_wpz-insta_token"><?php echo esc_html( $token ); ?></div>
+			<div class="_wpz-insta_token_expire"><?php echo esc_html( $token_expire ); ?></div>
+			<div class="_thumbnail_id"><?php echo esc_html( $photo_id ); ?></div>
+			<div class="wpz-insta_profile-photo"><?php echo esc_html( $photo_url ); ?></div>
+			<div class="_wpz-insta_user_name"><?php echo esc_html( $user_name ); ?></div>
+			<div class="_wpz-insta_user-bio"><?php echo esc_html( $bio ); ?></div>
+			<?php
+		}
 	}
 
 	function sort_column_query( $query ) {
