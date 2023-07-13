@@ -5,7 +5,7 @@ Tags: instagram, instagram feed, instagram gallery, instagram photos, instagram 
 Requires at least: 5.5
 Tested up to: 6.2
 Requires PHP: 7.4
-Stable tag: 2.1.4
+Stable tag: 2.1.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -88,7 +88,6 @@ Yes, you can find the documentation for this plugin with more instructions on ou
 [Go to Documentation](https://www.wpzoom.com/documentation/instagram-widget/)
 
 
-
 == Screenshots ==
 
 1. Creating a new feed
@@ -99,6 +98,10 @@ Yes, you can find the documentation for this plugin with more instructions on ou
 
 
 == Changelog ==
+
+= 2.1.5 =
+* Fixes issues in PHP 8.2
+* Fixed an issue with the expiration date in the Users section
 
 = 2.1.4 =
 * Fixed an issue with the Instagram API
