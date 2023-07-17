@@ -132,12 +132,12 @@ class Wpzoom_Instagram_Widget_API {
 	 * @return array
 	 */
 	public function add_cron_interval( $schedules ) {
-		if ( ! empty( $this->access_token ) ) {
-			$schedules['before_access_token_expires'] = array(
-				'interval' => 5097600, // 59 days.
-				'display'  => esc_attr__( 'Before Access Token Expires', 'instagram-widget-by-wpzoom' ),
-			);
-		}
+
+		$schedules['before_access_token_expires'] = array(
+			'interval' => 5097600, // 59 days.
+			'display'  => esc_attr__( 'Before Access Token Expires', 'instagram-widget-by-wpzoom' ),
+		);
+
 		return $schedules;
 	}
 
@@ -147,9 +147,11 @@ class Wpzoom_Instagram_Widget_API {
 	 * @return void
 	 */
 	public function set_schedule() {
-		if ( ! empty( $this->access_token ) && ! wp_next_scheduled( 'wpzoom_instagram_widget_cron_hook' ) ) {
+
+		if ( ! wp_next_scheduled( 'wpzoom_instagram_widget_cron_hook' ) ) {
 			wp_schedule_event( time(), 'before_access_token_expires', 'wpzoom_instagram_widget_cron_hook' );
 		}
+
 	}
 
 	/**
