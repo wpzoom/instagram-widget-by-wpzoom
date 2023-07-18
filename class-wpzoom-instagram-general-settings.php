@@ -114,14 +114,14 @@ class WPZOOM_Instagram_General_Settings {
 		);
 		add_settings_field(
 			'wpzoom_instagram_general_settings_enable_email_notification',
-			esc_html__( 'Send Email Notification', 'instagram-widget-by-wpzoom'), 
+			esc_html__( 'Notify if Access Token is about to expire', 'instagram-widget-by-wpzoom'),
 			array( $this, 'settings_field_enable_email_notification' ),
 			'wpzoom-instagram-general-settings',
 			'wpzoom_instagram_email_notification_section'
 		);
 		add_settings_field(
 			'wpzoom_instagram_general_settings_field_send_email_notification_days_before',
-			esc_html__( 'Send Email Notification Days Before', 'instagram-widget-by-wpzoom'), 
+			esc_html__( 'Email Period', 'instagram-widget-by-wpzoom'),
 			array( $this, 'settings_field_send_email_notification_days_before' ),
 			'wpzoom-instagram-general-settings',
 			'wpzoom_instagram_email_notification_section'
@@ -196,7 +196,7 @@ class WPZOOM_Instagram_General_Settings {
 	 * @since 2.1.5
 	 */
 	public function section_email_notification( $args ) {
-		echo '<h2 class="section-title">' . esc_html__( 'Email Notification', 'instagram-widget-by-wpzoom' ) . '</h2>';
+		echo '<h2 class="section-title">' . esc_html__( 'Email Notifications', 'instagram-widget-by-wpzoom' ) . '</h2>';
 	}
 
 	/**
@@ -218,7 +218,7 @@ class WPZOOM_Instagram_General_Settings {
 			   type="checkbox">
 
 			<p class="description">
-				<?php _e( 'An email will be send before the API Key expires', 'instagram-widget-by-wpzoom' ); ?>
+				<?php _e( 'An email will be sent before the Access Token expires', 'instagram-widget-by-wpzoom' ); ?>
 			</p>
 
 		<?php
@@ -256,7 +256,7 @@ class WPZOOM_Instagram_General_Settings {
 		?>
 		</select>
 		<p class="description">
-				<?php _e( 'Select how many days before the API Key expires to send the email notification', 'instagram-widget-by-wpzoom' ); ?>
+				<?php _e( 'When should this email be sent?', 'instagram-widget-by-wpzoom' ); ?>
 			</p>
 		<?php
 		
