@@ -83,7 +83,6 @@ if ( ! class_exists( 'WPZOOM_Instagram_Email_Notification' ) ) {
 			$instagram_profiles = $this->get_profiles_data();
 
 			$sendto  = get_option( 'admin_email', '' );
-			$subject = esc_html__( 'Important Notice: Expiry of Instagram API KEY', 'instagram-widget-by-wpzoom' ); 
 			$message = '';
 			$headers = array( 'Content-Type: text/html; charset=UTF-8' );
 
@@ -183,11 +182,11 @@ if ( ! class_exists( 'WPZOOM_Instagram_Email_Notification' ) ) {
 											<tr style="font-family:-apple-system, BlinkMacSystemFont, avenir next, avenir, segoe ui, helvetica neue, helvetica, Cantarell, Ubuntu, roboto, noto, arial, sans-serif;box-sizing:border-box;font-size:14px;line-height:1.5">
 												<td style="font-family:-apple-system, BlinkMacSystemFont, avenir next, avenir, segoe ui, helvetica neue, helvetica, Cantarell, Ubuntu, roboto, noto, arial, sans-serif;box-sizing:border-box;font-size:14px;line-height:1.5;vertical-align:top;color:#222222;padding:25px" valign="top">
 
-												<p>Hello, ' . $sendto . '</p>
+												<p>Hello there,</p>
 
-												<p>This is a notification email to inform you that the Access Token for your Instagram profile ' . $profile['name'] . ' used by the WPZOOM Instagram Widget & Block plugin is due to expire or has already expired.</p>
+												<p>This is a notification email to inform you that the Access Token for your Instagram profile <strong>' . $profile['name'] . '</strong> used by the <strong>Instagram Widget by WPZOOM</strong> plugin <strong>is due to expire or has already expired</strong>.</p>
 
-												<p>To prevent any disruptions in the display of your Instagram feed on <a href="' . get_bloginfo( 'url' ) . '">' . get_bloginfo( 'url' ) . '</a>, we kindly ask you to reconnect your Access Token.</p>
+												<p>To prevent any disruptions in the display of your Instagram feed on <a href="' . get_bloginfo( 'url' ) . '">' . get_bloginfo( 'url' ) . '</a>, we kindly ask you to <a href="https://www.wpzoom.com/documentation/instagram-widget/instagram-widget-how-to-reconnect-instagram-account-access-token-expired/">reconnect your Access Token</a>.</p>
 
 												<br style="font-family:&quot;Helvetica Neue&quot;,&quot;Helvetica&quot;,Helvetica,Arial,sans-serif;box-sizing:border-box;font-size:14px;line-height:1.5">
 
@@ -202,7 +201,7 @@ if ( ! class_exists( 'WPZOOM_Instagram_Email_Notification' ) ) {
 											<table width="100%" cellpadding="0" cellspacing="0" style="font-family:&quot;Helvetica Neue&quot;,&quot;Helvetica&quot;,Helvetica,Arial,sans-serif;box-sizing:border-box;font-size:14px;line-height:1.5">
 												<tbody><tr style="font-family:-apple-system, BlinkMacSystemFont, avenir next, avenir, segoe ui, helvetica neue, helvetica, Cantarell, Ubuntu, roboto, noto, arial, sans-serif;box-sizing:border-box;font-size:14px;line-height:1.5">
 												<td style="font-family:-apple-system, BlinkMacSystemFont, avenir next, avenir, segoe ui, helvetica neue, helvetica, Cantarell, Ubuntu, roboto, noto, arial, sans-serif;box-sizing:border-box;font-size:14px;line-height:1.5;vertical-align:top;width:100%;clear:both;color:#777;border-top-width:1px;border-top-color:#d0d0d0;border-top-style:solid;padding:25px" valign="top">
-													<p>Sent from <a href="' . get_bloginfo( 'url' ) . '">' . get_bloginfo( 'name' ) . '</a> using the <strong>WPZOOM Instagram Widget & Block</strong> plugin.</p>
+													<p>Sent from <a href="' . get_bloginfo( 'url' ) . '">' . get_bloginfo( 'name' ) . '</a> using the <strong>Instagram Widget by WPZOOM</strong> plugin.</p>
 													<br style="font-family:&quot;Helvetica Neue&quot;,&quot;Helvetica&quot;,Helvetica,Arial,sans-serif;box-sizing:border-box;font-size:14px;line-height:1.5">
 												</td>
 												</tr>
@@ -215,9 +214,9 @@ if ( ! class_exists( 'WPZOOM_Instagram_Email_Notification' ) ) {
 					if ( $sendto && 'expired' == $profile['token_status'] ) {
 						wp_mail( 
 							$sendto, 
-							$subject,
+                            sprintf( esc_html__( '[%s] Action Required: Your Instagram Access Token expired or is about to expire!', 'instagram-widget-by-wpzoom' ), get_bloginfo( 'name' ) ),
 							$message, 
-							sprintf( "Content-Type: text/html; charset=UTF-8\r\nFrom: %s <%s>\r\nReply-To: %s\r\n", 'WPZOOM Instagram Widget & Block', esc_html( $sendto ), 'no-reply:' . get_site_url() )
+							sprintf( "Content-Type: text/html; charset=UTF-8\r\nFrom: %s <%s>\r\nReply-To: %s\r\n", get_bloginfo( 'name' ), esc_html( $sendto ), 'no-reply:' . get_site_url() )
 						);
 					}
 
