@@ -180,12 +180,10 @@ class WPZOOM_Instagram_General_Settings {
 			   type="checkbox">
 
 		<p class="description">
-			<?php _e( 'Allows insecure requests to the Instagram API. Normally this should be disabled, but it may be required for the plugin to work, </br>depending on the server configuration.', 'instagram-widget-by-wpzoom' ); ?>
-			</br></br>
-			<span class="notice notice-warning">
-				<?php _e( '<strong>Warning!</strong> Potential security risk. Only enable if you&rsquo;re having issues.', 'instagram-widget-by-wpzoom' ); ?>
-			</span>
+			<?php _e( 'Allows insecure requests to the Instagram API. Normally this should be disabled, but it may be required for the plugin to work, </br>depending on the server configuration.', 'instagram-widget-by-wpzoom' ); ?> <?php _e( '<strong>Warning!</strong> Enable only if you know what you&rsquo;re doing.', 'instagram-widget-by-wpzoom' ); ?>
 		</p>
+        <br/>
+        <hr/>
 		<?php
 	}
 
