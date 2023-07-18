@@ -106,6 +106,28 @@ class WPZOOM_Instagram_General_Settings {
 				'wpzoom-instagram-general-settings',
 				'wpzoom_instagram_general_settings_section'
 		);
+		add_settings_section(
+			'wpzoom_instagram_email_notification_section',
+			'',
+			array( $this, 'section_email_notification' ),
+			'wpzoom-instagram-general-settings'
+		);
+		add_settings_field(
+			'wpzoom_instagram_general_settings_enable_email_notification',
+			esc_html__( 'Notify if Access Token is about to expire', 'instagram-widget-by-wpzoom'),
+			array( $this, 'settings_field_enable_email_notification' ),
+			'wpzoom-instagram-general-settings',
+			'wpzoom_instagram_email_notification_section'
+		);
+		add_settings_field(
+			'wpzoom_instagram_general_settings_field_send_email_notification_days_before',
+			esc_html__( 'Email Period', 'instagram-widget-by-wpzoom'),
+			array( $this, 'settings_field_send_email_notification_days_before' ),
+			'wpzoom-instagram-general-settings',
+			'wpzoom_instagram_email_notification_section'
+		);
+
+		
 	}
 
 	/**
@@ -158,13 +180,84 @@ class WPZOOM_Instagram_General_Settings {
 			   type="checkbox">
 
 		<p class="description">
-			<?php _e( 'Allows insecure requests to the Instagram API. Normally this should be disabled, but it may be required for the plugin to work, </br>depending on the server configuration.', 'instagram-widget-by-wpzoom' ); ?>
-			</br></br>
-			<span class="notice notice-warning">
-				<?php _e( '<strong>Warning!</strong> Potential security risk. Only enable if you&rsquo;re having issues.', 'instagram-widget-by-wpzoom' ); ?>
-			</span>
+			<?php _e( 'Allows insecure requests to the Instagram API. Normally this should be disabled, but it may be required for the plugin to work, </br>depending on the server configuration.', 'instagram-widget-by-wpzoom' ); ?> <?php _e( '<strong>Warning!</strong> Enable only if you know what you&rsquo;re doing.', 'instagram-widget-by-wpzoom' ); ?>
 		</p>
+        <br/>
+        <hr/>
 		<?php
+	}
+
+
+	/**
+	 * Output the Email Notificaiton section info
+	 *
+	 * @since 2.1.5
+	 */
+	public function section_email_notification( $args ) {
+		echo '<h2 class="section-title">' . esc_html__( 'Email Notifications', 'instagram-widget-by-wpzoom' ) . '</h2>';
+	}
+
+	/**
+	 * Output the settings field for the email notification
+	 *
+	 * @since 2.1.5
+	 */
+	public function settings_field_enable_email_notification() {
+		
+		$settings = get_option( 'wpzoom-instagram-general-settings' );
+		$enable_email_notification = ! empty( $settings['enable-email-notification'] ) ? wp_validate_boolean( $settings['enable-email-notification'] ) : false;
+
+		?>
+		<input class="regular-text code"
+			   id="wpzoom-instagram-widget-settings_enable_email_notification"
+			   name="wpzoom-instagram-general-settings[enable-email-notification]"
+			<?php checked( true, $enable_email_notification ); ?>
+			   value="1"
+			   type="checkbox">
+
+			<p class="description">
+				<?php _e( 'An email will be sent before the Access Token expires', 'instagram-widget-by-wpzoom' ); ?>
+			</p>
+
+		<?php
+
+	}
+
+	/**
+	 * Output the settings field for the email notification days
+	 *
+	 * @since 2.1.5
+	 */
+	public function settings_field_send_email_notification_days_before() {
+
+		$settings = get_option( 'wpzoom-instagram-general-settings' );
+		$sent_email_notification_days = ! empty( $settings['send-email-notification-days-before'] ) ?  $settings['send-email-notification-days-before'] : '1 day';
+
+		$settings_opts = array(
+			'1 day'   => esc_html__( '1 Day', 'instagram-widget-by-wpzoom' ),
+			'3 days'  => esc_html__( '3 Days', 'instagram-widget-by-wpzoom' ),
+			'5 days'  => esc_html__( '5 Days', 'instagram-widget-by-wpzoom' ),
+			'10 days' => esc_html__( '10 Days', 'instagram-widget-by-wpzoom' ),
+		);
+
+		?>
+		<select lass="regular-text code"
+			id="wpzoom-instagram-widget-settings_enable_email_notification"
+			name="wpzoom-instagram-general-settings[send-email-notification-days-before]"
+		>
+		<?php
+			foreach( $settings_opts as $key => $value ) {
+		?>
+			<option value="<?php echo $key; ?>" <?php selected( $key, $sent_email_notification_days ); ?>><?php echo $value; ?></option>
+		<?php 
+			}
+		?>
+		</select>
+		<p class="description">
+				<?php _e( 'When should this email be sent?', 'instagram-widget-by-wpzoom' ); ?>
+			</p>
+		<?php
+		
 	}
 
 }
