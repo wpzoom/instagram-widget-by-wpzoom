@@ -5,7 +5,7 @@ Tags: instagram, instagram feed, instagram gallery, instagram photos, instagram 
 Requires at least: 5.5
 Tested up to: 6.2
 Requires PHP: 7.4
-Stable tag: 2.1.6
+Stable tag: 2.1.7
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -98,6 +98,9 @@ Yes, you can find the documentation for this plugin with more instructions on ou
 
 
 == Changelog ==
+
+= 2.1.7 =
+* Fix 'Attempt to read property full_name on null' PHP warning (Thanks to @alexdelgado for solution)
 
 = 2.1.6 =
 * Added a new option in the Settings page to enable Email notifications when an Access Token is about to expire
