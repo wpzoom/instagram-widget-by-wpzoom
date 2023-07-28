@@ -65,7 +65,7 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 
 	/**
 	 * Sanitizes and prepares caption content for display.
-	 * 
+	 *
 	 * @param  string $caption The raw caption text to filter.
 	 * @return string          The filtered caption text.
 	 */
@@ -287,6 +287,7 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 		$user_nfo              = is_object( $user_info ) && ! empty( $user_info ) && ! empty( $user_info->data ) ? $user_info->data : false;
 		$username              = false !== $user_nfo ? $user_nfo->username : '';
 		$avatar                = false !== $user_nfo && ! empty( $user_nfo->profile_picture ) ? $user_nfo->profile_picture : plugin_dir_url( __FILE__ ) . 'dist/images/backend/icon-insta.png';
+		$full_name             = false !== $user_nfo && ! empty( $user_nfo->full_name ) ? $user_nfo->full_name : '';
 		?>
 		<ul class="zoom-instagram-widget__items layout-legacy zoom-instagram-widget__items--no-js"
 			data-images-per-row="<?php echo esc_attr( $instance['images-per-row'] ); ?>"
@@ -459,7 +460,7 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 									<div class="details-wrapper">
 										<div class="wpz-insta-header">
 											<div class="wpz-insta-avatar">
-												<img src="<?php echo esc_url( $avatar ); ?>" alt="<?php echo esc_attr( $user_info->data->full_name ); ?>" width="42" height="42"/>
+												<img src="<?php echo esc_url( $avatar ); ?>" alt="<?php echo esc_attr( $full_name ); ?>" width="42" height="42"/>
 											</div>
 											<div class="wpz-insta-buttons">
 												<div class="wpz-insta-username">
