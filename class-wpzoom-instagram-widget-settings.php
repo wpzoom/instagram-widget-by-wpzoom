@@ -417,6 +417,7 @@ class WPZOOM_Instagram_Widget_Settings {
 						'wpz-insta_feed_page_wpz-insta_settings',
 						'wpz-insta_feed_page_wpzoom-instagram-support',
 						'settings_page_wpz-insta-connect',
+						'wpz-insta_feed_page_wpz-insta-connect',
 					)
 				)
 			);
@@ -526,9 +527,17 @@ class WPZOOM_Instagram_Widget_Settings {
 	}
 
 	function submenu_file_filter( $submenu_file, $parent_file ) {
+		global $plugin_page;
+
 		if ( 'post-new.php?post_type=wpz-insta_feed' == $submenu_file ) {
 			$submenu_file = 'edit.php?post_type=wpz-insta_feed';
 		}
+
+		if ( 'wpz-insta-connect' == $plugin_page ) {
+			$submenu_file = 'edit.php?post_type=wpz-insta_user';
+		}
+
+		remove_submenu_page( 'edit.php?post_type=wpz-insta_feed', 'wpz-insta-connect' );
 
 		return $submenu_file;
 	}
@@ -1998,7 +2007,7 @@ class WPZOOM_Instagram_Widget_Settings {
 			if ( 'edit-wpz-insta_feed' == $current_page ) {
 				echo '<a href="' . esc_url( admin_url( 'post-new.php?post_type=wpz-insta_feed' ) ) . '" class="button-primary">' . __( 'Add new feed', 'instagram-widget-by-wpzoom' ) . '</a>';
 			} else {
-				$connect_page = admin_url( 'options-general.php?page=wpz-insta-connect' );
+				$connect_page = admin_url( 'edit.php?post_type=wpz-insta_feed&page=wpz-insta-connect' );
 
 				echo apply_filters(
 					'wpz-insta_user-add-button',
@@ -2248,6 +2257,16 @@ class WPZOOM_Instagram_Widget_Settings {
 			array( $this, 'support_page' )
 		);
 
+		if ( ! $pro_toggle ) {
+			add_submenu_page(
+				'edit.php?post_type=wpz-insta_feed',
+				esc_html__( 'Connect Account', 'instagram-widget-by-wpzoom' ),
+				esc_html__( 'Connect Account', 'instagram-widget-by-wpzoom' ),
+				'manage_options',
+				'wpz-insta-connect',
+				array( $this, 'connect_page' )
+			);
+		}
 
         if ($pro_toggle) {
             add_submenu_page(
