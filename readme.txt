@@ -3,9 +3,9 @@ Contributors: WPZOOM, nvartolomei, ciorici
 Donate link: https://www.wpzoom.com/
 Tags: instagram, instagram feed, instagram gallery, instagram photos, instagram widget, instagram stories, widget, timeline, social network, latest images, feed, story, stories, insta
 Requires at least: 5.5
-Tested up to: 6.2
+Tested up to: 6.3
 Requires PHP: 7.4
-Stable tag: 2.1.8
+Stable tag: 2.1.9
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -98,6 +98,9 @@ Yes, you can find the documentation for this plugin with more instructions on ou
 
 
 == Changelog ==
+
+= 2.1.9 =
+* Minor bug fix with feeds not showing new posts
 
 = 2.1.8 =
 * Allow adding more accounts via access tokens in the PRO version
