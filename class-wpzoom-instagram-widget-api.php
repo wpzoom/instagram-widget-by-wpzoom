@@ -279,7 +279,7 @@ class Wpzoom_Instagram_Widget_API {
 		}
 
 		if ( ! empty( $this->access_token ) ) {
-			$transient = $transient . '_' . $this->access_token;
+			$transient = $transient . '_' . substr( $this->access_token, 0, 20 );
 		}
 
 		$injected_username = trim( $injected_username );
@@ -303,7 +303,7 @@ class Wpzoom_Instagram_Widget_API {
 
 			$response = self::remote_get( $request_url, $this->headers );
 
-			if ( is_wp_error( $response ) || 200 != wp_remote_retrieve_response_code( $response ) ) {
+			if ( is_wp_error( $response ) || 200 !== wp_remote_retrieve_response_code( $response ) ) {
 				if ( ! $bypass_transient ) {
 					set_transient( $transient, wp_json_encode( false ), MINUTE_IN_SECONDS );
 				}
@@ -323,11 +323,14 @@ class Wpzoom_Instagram_Widget_API {
 			}
 		}
 
-
-
 		if ( ! empty( $data->data ) ) {
 			if ( ! $bypass_transient ) {
-				set_transient( $transient, wp_json_encode( $data ), $this->get_transient_lifetime( $this->feed_id ) );
+				set_transient( 
+					$transient,
+					wp_json_encode( $data ),
+					$this->get_transient_lifetime( $this->feed_id )
+				);
+				
 			}
 		} else {
 			if ( ! $bypass_transient ) {
@@ -513,6 +516,7 @@ class Wpzoom_Instagram_Widget_API {
 	}
 
 	public static function convert_items_to_old_structure( $data, $preview = false ) {
+
 		$converted       = new stdClass();
 		$converted->data = array();
 		$image_uploader = WPZOOM_Instagram_Image_Uploader::getInstance();
@@ -570,7 +574,7 @@ class Wpzoom_Instagram_Widget_API {
 
 	function get_transient_lifetime( $id ) {
 
-		$feed_id = isset( $id ) ? $id : 0; 
+		$feed_id = isset( $id ) ? $id : 0;
 
 		$interval = (int) WPZOOM_Instagram_Widget_Settings::get_feed_setting_value( $feed_id, 'check-new-posts-interval-number' );
 		$interval_suffix = (int) WPZOOM_Instagram_Widget_Settings::get_feed_setting_value( $feed_id, 'check-new-posts-interval-suffix' );
@@ -585,7 +589,7 @@ class Wpzoom_Instagram_Widget_API {
 		$keys   = array_keys( $values );
 		$type   = in_array( $interval_suffix, $keys ) ? $values[ $interval_suffix ] : $values[2];
 
-		return $type * $interval;
+		return intval( $type * $interval ) ;
 	}
 
 	public function get_user_info( $injected_username = '' ) {
@@ -601,7 +605,7 @@ class Wpzoom_Instagram_Widget_API {
 			$request_url = add_query_arg(
 				array(
 					'access_token' => $this->access_token,
-					'fields'       => 'account_type,id,media_count,username,profile_picture',
+					'fields'       => 'account_type,id,media_count,username',
 				),
 				'https://graph.instagram.com/me'
 			);
