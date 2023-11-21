@@ -110,6 +110,27 @@ jQuery( function( $ ) {
 
 	$('.zoom-instagram-user-avatar-media-uploader, .inline-edit-wpz-insta_user .wpz-insta_quick-edit-columns .wpz-insta_two-columns').imageMediaControl();
 
+	$('#wpzoom_instagra_clear_data').on( 'click', function( e ){
+		e.preventDefault();
+		var data = {
+			action: 'wpzoom_instagram_clear_data',
+		};
+		var $this = $(this);
+
+		if ( window.confirm( "Are you sure?" ) ) {
+
+			$this.text('Removing data...');
+
+			$.post( zoom_instagram_widget_admin.ajax_url, data, function(response){
+				if ( response.success ) {
+					$this.text('Done!');
+					$this.prop('disabled', true);
+					$this.next().html(response.data.message);
+				}
+			});
+		}
+	});
+
 	$(window).on('beforeunload', function (e) {
 		if ( ! $.isEmptyObject( formChangedValues ) && ! formSubmitted ) {
 			e.preventDefault();

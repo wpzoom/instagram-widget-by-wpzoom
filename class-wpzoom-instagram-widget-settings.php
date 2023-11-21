@@ -2820,6 +2820,7 @@ class WPZOOM_Instagram_Widget_Settings {
 					'preview_url'                       => site_url( '?wpz-insta-widget-preview=true' ),
 					'default_user_thumbnail'            => plugins_url( '/dist/images/backend/icon-insta.png', __FILE__ ),
 					'post_edit_url'                     => admin_url( 'post.php?action=edit&post=' ),
+					'ajax_url'                          => admin_url( 'admin-ajax.php' ),
 				)
 			);
 		}
