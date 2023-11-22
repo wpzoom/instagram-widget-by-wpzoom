@@ -176,6 +176,10 @@ class Wpzoom_Instagram_Widget_Display {
 		$this->api = Wpzoom_Instagram_Widget_API::getInstance();
 		$output = '';
 		$user_id = isset( $args['user-id'] ) ? intval( $args['user-id'] ) : -1;
+		
+		if( $preview ) {
+			$args['preview'] = true;
+		};
 
 		if ( $user_id > 0 ) {
 			$user = get_post( $user_id );
@@ -405,6 +409,7 @@ class Wpzoom_Instagram_Widget_Display {
 			$image_size = isset( $args['image-size'] ) && in_array( $args['image-size'], array( 'thumbnail', 'low_resolution', 'standard_resolution', 'full_resolution' ) ) ? $args['image-size'] : 'low_resolution';
 			$small_class = $image_size <= 180 ? 'small' : '';
 			$svg_icons = plugin_dir_url( __FILE__ ) . 'dist/images/frontend/wpzoom-instagram-icons.svg';
+			$preview = isset( $args['preview'] ) ? true : false;
 
 			foreach ( $items as $item ) {
 				$inline_attrs  = '';
@@ -488,7 +493,12 @@ class Wpzoom_Instagram_Widget_Display {
 
                 } else {
 
-                    $output .= sprintf( '<img class="zoom-instagram-link zoom-instagram-link-new" %5$s data-src="%1$s" width="%2$d" height="%3$d" alt="%4$s" />', esc_url( $src ), esc_attr( $width ), esc_attr( $height ), esc_attr( $alt ), $src_attr );
+					if( $preview ) {
+						$output .= sprintf( '<img class="zoom-instagram-link zoom-instagram-link-new" %5$s src="%1$s" width="%2$d" height="%3$d" alt="%4$s" />', esc_url( $src ), esc_attr( $width ), esc_attr( $height ), esc_attr( $alt ), $src_attr );
+					}
+					else {
+						$output .= sprintf( '<img class="zoom-instagram-link zoom-instagram-link-new" %5$s data-src="%1$s" width="%2$d" height="%3$d" alt="%4$s" />', esc_url( $src ), esc_attr( $width ), esc_attr( $height ), esc_attr( $alt ), $src_attr );
+					}
 
                 }
 
