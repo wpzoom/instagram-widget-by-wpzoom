@@ -331,7 +331,7 @@ class WPZOOM_Instagram_General_Settings {
 		}
 
 		$response = array(
-			'message' => esc_html__( 'All the data is removed', 'recipe-card-blocks-by-wpzoom' ),
+			'message' => esc_html__( 'All images have been removed', 'recipe-card-blocks-by-wpzoom' ),
 		);
 
 		wp_send_json_success( $response );
