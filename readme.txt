@@ -5,7 +5,7 @@ Tags: instagram, instagram feed, instagram gallery, instagram photos, instagram 
 Requires at least: 5.5
 Tested up to: 6.4
 Requires PHP: 7.4
-Stable tag: 2.1.10
+Stable tag: 2.1.11
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -98,6 +98,9 @@ Yes, you can find the documentation for this plugin with more instructions on ou
 
 
 == Changelog ==
+
+= 2.1.11 =
+* Fixed a bug that affects the Media Library on some websites when the plugin is uninstalled.
 
 = 2.1.10 =
 * Fixed a conflict with Elementor
