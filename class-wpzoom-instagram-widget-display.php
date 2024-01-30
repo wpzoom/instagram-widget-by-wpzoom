@@ -592,7 +592,7 @@ class Wpzoom_Instagram_Widget_Display {
 							$thumb = 'video' == $child_type && property_exists( $child, 'thumbnail_url' ) ? $child->thumbnail_url : '';
 							$output .= '<div class="swiper-slide wpz-insta-album-image" data-media-type="' . esc_attr( $child_type ) . '">';
 							if ( 'video' == $child_type ) {
-								$output .= '<video controls muted preload="none" poster="' . esc_attr( $thumb ) . '"><source src="' . esc_url( $child->media_url ) . '" type="video/mp4"/></video>';
+								$output .= '<video controls muted preload="none"><source src="' . esc_url( $child->media_url ) . '" type="video/mp4"/></video>';
 							} else {
 								$output .= '<img class="wpzoom-swiper-image swiper-lazy" data-src="' . esc_url( $child->media_url ) . '" alt="' . esc_attr( $alt ) . '"/><div class="swiper-lazy-preloader swiper-lazy-preloader-white"></div>';
 							}
@@ -604,7 +604,7 @@ class Wpzoom_Instagram_Widget_Display {
 					} else {
 						if ( $is_video ) {
 							$thumb = isset( $item['local-image-url'] ) ? $item['local-image-url'] : '';
-							$output .= '<video controls muted preload="none" poster="' . esc_attr( $thumb ) . '"><source src="' . esc_url( $src ) . '" type="video/mp4"/></video>';
+							$output .= '<video controls muted preload="none"><source src="' . esc_url( $src ) . '" type="video/mp4"/></video>';
 						} else {
 							$output .= '<img class="wpzoom-swiper-image swiper-lazy" data-src="' . esc_url( $src_local ) . '" alt="' . esc_attr( $alt ) . '"/><div class="swiper-lazy-preloader swiper-lazy-preloader-white"></div>';
 						}
