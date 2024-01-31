@@ -229,6 +229,28 @@ class WPZOOM_Instagram_Image_Uploader {
 	}
 
 	/**
+	 * @param $post_name
+	 *
+	 * @return string|WP_Error
+	 */
+	public static function wp_get_attachment_by_post_name( $post_name ) {
+
+		$args           = array(
+			'posts_per_page' => 1,
+			'post_type'      => 'attachment',
+			'name'           => trim( $post_name ),
+		);
+
+		$get_attachment = new WP_Query( $args );
+
+		if ( ! $get_attachment || ! isset( $get_attachment->posts, $get_attachment->posts[0] ) ) {
+			return false;
+		}
+
+		return $get_attachment->posts[0];
+	}
+
+	/**
 	 * @param $media_url
 	 * @param $media_id
 	 *
@@ -238,6 +260,41 @@ class WPZOOM_Instagram_Image_Uploader {
 		require_once ABSPATH . 'wp-admin/includes/media.php';
 		require_once ABSPATH . 'wp-admin/includes/file.php';
 		require_once ABSPATH . 'wp-admin/includes/image.php';
+
+		// Download url to a temp file
+		$tmp = download_url( $media_url );
+
+		if ( ! is_wp_error( $tmp ) ) {
+			
+			$filename = '';
+			$image_meta = wp_read_image_metadata( $tmp );
+		
+			if ( $image_meta ) {
+				if ( trim( $image_meta['title'] ) && ! is_numeric( sanitize_title( $image_meta['title'] ) ) ) {
+					$filename = $image_meta['title'];
+				}
+			}
+			
+			if( empty( $filename ) ) {
+				// Get the filename and extension ("photo.png" => "photo", "png")
+				$filename  = pathinfo( $media_url, PATHINFO_FILENAME );
+				$filename = sanitize_file_name( $filename );
+			}
+	
+			$pattern = '/^(.*?)(\.jpeg|\.jpg_)/';
+			preg_match( $pattern, $filename, $matches );
+			if ( ! empty( $matches[1] ) ) {
+				$filename = $matches[1];
+			}
+
+			//Check if it doesn't exist
+			$get_local_image   = self::wp_get_attachment_by_post_name( $filename );
+	
+			if( $get_local_image && isset( $get_local_image->ID ) ) {
+				update_post_meta( $get_local_image->ID, self::$media_metakey_name, $media_id );
+				return $get_local_image->ID;
+			}
+		}
 
 		add_filter( 'intermediate_image_sizes_advanced', array( self::$instance, 'set_image_sizes' ), 10 );
 		add_filter( 'wp_insert_attachment_data', array( self::$instance, 'insert_post_data' ), 10 );
