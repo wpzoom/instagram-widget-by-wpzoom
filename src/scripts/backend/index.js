@@ -110,10 +110,11 @@ jQuery( function( $ ) {
 
 	$('.zoom-instagram-user-avatar-media-uploader, .inline-edit-wpz-insta_user .wpz-insta_quick-edit-columns .wpz-insta_two-columns').imageMediaControl();
 
-	$('#wpzoom_instagra_clear_data').on( 'click', function( e ){
+	$('#wpzoom_instagram_clear_data').on( 'click', function( e ){
 		e.preventDefault();
 		var data = {
 			action: 'wpzoom_instagram_clear_data',
+			nonce: $(this).data( 'nonce' )
 		};
 		var $this = $(this);
 
