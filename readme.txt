@@ -1,11 +1,11 @@
 === WPZOOM Social Feed Widget & Block ===
 Contributors: WPZOOM, nvartolomei, ciorici
 Donate link: https://www.wpzoom.com/
-Tags: instagram, instagram feed, instagram gallery, instagram photos, instagram widget, instagram stories, widget, timeline, social network, latest images, feed, story, stories, insta
+Tags: instagram, instagram feed, instagram gallery, instagram photos, instagram widget
 Requires at least: 5.5
-Tested up to: 6.4
+Tested up to: 6.5
 Requires PHP: 7.4
-Stable tag: 2.1.13
+Stable tag: 2.1.14
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -13,7 +13,7 @@ Formerly known as "Instagram Widget by WPZOOM". Simple and lightweight widget fo
 
 == Description ==
 
-⭐️ **[Instagram Widget & Block PRO](https://www.wpzoom.com/plugins/instagram-widget/?utm_source=wporg&utm_medium=website&utm_campaign=free_description)** *NOW AVAILABLE!* ⭐️
+⭐️ **[Instagram Widget & Block PRO](https://www.wpzoom.com/plugins/instagram-widget/?utm_source=wporg&utm_medium=insta-free-desc&utm_campaign=insta-free-pro-link)** *NOW AVAILABLE!* ⭐️
 
 
 **Showcase your Instagram Feeds on your WordPress site in seconds!**
@@ -53,7 +53,7 @@ Formerly known as *Instagram Widget by WPZOOM*, **WPZOOM Social Feed Widget** is
 * Premium Support
 * and many new features coming soon!
 
-⭐️ **[Get the PRO version!](https://www.wpzoom.com/plugins/instagram-widget/?utm_source=wporg&utm_medium=website&utm_campaign=free_description)** ⭐️
+⭐️ **[Get the PRO version!](https://www.wpzoom.com/plugins/instagram-widget/?utm_source=wporg&utm_medium=insta-free-desc&utm_campaign=insta-free-pro-link)** ⭐️
 
 
 = Where I can view a Demo? =
@@ -98,6 +98,9 @@ Yes, you can find the documentation for this plugin with more instructions on ou
 
 
 == Changelog ==
+
+= 2.1.14 =
+* Fixed an issue with the "Delete all Instagram Images" button
 
 = 2.1.13 =
 * Minor bug fix in the lightbox
