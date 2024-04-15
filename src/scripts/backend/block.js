@@ -19,23 +19,6 @@ import {
 	CardBody
 } from '@wordpress/components';
 
-const {fetch: origFetch} = window;
-window.fetch = async (...args) => {
-	const requestUrl = args.length > 0 ? args[0] : '';
-	const response = await origFetch(...args);
-
-	if ( requestUrl.includes( 'wpzoom/instagram-block' ) ) {
-		response
-			.clone()
-			.json()
-			.then( body => window.setTimeout( () => window.wpzInstaFrontendInit(), 300 ) )
-			.catch( err => console.error( err ) )
-		;
-	}
-
-	return response;
-};
-
 registerBlockType( 'wpzoom/instagram-block', {
 	apiVersion: 2,
 	title: 'Instagram Feed by WPZOOM',
