@@ -2,10 +2,10 @@
 Contributors: WPZOOM, nvartolomei, ciorici
 Donate link: https://www.wpzoom.com/
 Tags: instagram, instagram feed, instagram gallery, instagram photos, instagram widget
-Requires at least: 5.5
+Requires at least: 6.0
 Tested up to: 6.5
 Requires PHP: 7.4
-Stable tag: 2.1.14
+Stable tag: 2.1.15
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -58,7 +58,7 @@ Formerly known as *Instagram Widget by WPZOOM*, **WPZOOM Social Feed Widget** is
 
 = Where I can view a Demo? =
 
-You can view the widget live in all our themes at [WPZOOM](http://www.wpzoom.com/themes/).
+You can view the widget live in all our themes at [WPZOOM](https://www.wpzoom.com/themes/).
 
 
 = Get Involved =
@@ -98,6 +98,9 @@ Yes, you can find the documentation for this plugin with more instructions on ou
 
 
 == Changelog ==
+
+= 2.1.15 =
+* Fixed a conflict with the Site Editor
 
 = 2.1.14 =
 * Fixed an issue with the "Delete all Instagram Images" button
