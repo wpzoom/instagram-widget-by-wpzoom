@@ -224,7 +224,6 @@ class Wpzoom_Instagram_Widget_Display {
                     $lazy_load = isset( $args['lazy-load'] ) ? boolval( $args['lazy-load'] ) : true;
 
 					$attrs .= ' data-layout="' . $layout . '"';
-					$attrs .= ' data-columns="' . $col_num . '"';
 
 					if ( $lightbox ) {
 						$attrs .= ' data-lightbox="1"';
