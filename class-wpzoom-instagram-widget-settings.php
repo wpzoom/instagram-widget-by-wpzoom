@@ -39,7 +39,10 @@ class WPZOOM_Instagram_Widget_Settings {
 		'col-num_tablet'                  => array( 'type' => 'integer', 'default' => 2 ),
 		'col-num_mobile'                  => array( 'type' => 'integer', 'default' => 1 ),
 		'col-num_responsive-enabled'      => array( 'type' => 'boolean', 'default' => false ),
+		'perpage-num_responsive-enabled'  => array( 'type' => 'boolean', 'default' => false ),
 		'perpage-num'                     => array( 'type' => 'integer', 'default' => 3 ),
+		'perpage-num_tablet'              => array( 'type' => 'integer', 'default' => 2 ),
+		'perpage-num_mobile'              => array( 'type' => 'integer', 'default' => 1 ),
 		'spacing-between'                 => array( 'type' => 'number',  'default' => 10 ),
 		'spacing-between-suffix'          => array( 'type' => 'integer', 'default' => 0 ),
 		'featured-layout-enable'          => array( 'type' => 'boolean', 'default' => false ),
@@ -1155,7 +1158,10 @@ class WPZOOM_Instagram_Widget_Settings {
 			$feed_cols_num_tablet             = (int) self::get_feed_setting_value( $post->ID, 'col-num_tablet' );
 			$feed_cols_num_mobile             = (int) self::get_feed_setting_value( $post->ID, 'col-num_mobile' );
 			$feed_cols_num_responsive_enabled = ! $pro_toggle ? (bool) self::get_feed_setting_value( $post->ID, 'col-num_responsive-enabled' ) : false;
+			$feed_perpage_num_responsive_enabled = ! $pro_toggle ? (bool) self::get_feed_setting_value( $post->ID, 'perpage-num_responsive-enabled' ) : false;
 			$feed_perpage_num                 = (int) self::get_feed_setting_value( $post->ID, 'perpage-num' );
+			$feed_perpage_num_tablet          = (int) self::get_feed_setting_value( $post->ID, 'perpage-num_tablet' );
+			$feed_perpage_num_mobile          = (int) self::get_feed_setting_value( $post->ID, 'perpage-num_mobile' );
 			$feed_spacing_between             = (float) self::get_feed_setting_value( $post->ID, 'spacing-between' );
 			$feed_spacing_between_suffix      = (int) self::get_feed_setting_value( $post->ID, 'spacing-between-suffix' );
 			$enable_featured_layout           = (bool) self::get_feed_setting_value( $post->ID, 'featured-layout-enable' );
@@ -1336,6 +1342,7 @@ class WPZOOM_Instagram_Widget_Settings {
 								</div>
 
 								<div class="wpz-insta_feed-layout-etc wpz-insta_table">
+									
 									<label class="wpz-insta_table-row">
 										<strong class="wpz-insta_table-cell"><?php esc_html_e( 'Number of items', 'instagram-widget-by-wpzoom' ); ?></strong>
 										<div class="wpz-insta_table-cell"><input type="number" name="_wpz-insta_item-num" value="<?php echo esc_attr( $feed_items_num ); ?>" size="3" min="1" max="100" step="1" /></div>
@@ -1365,11 +1372,35 @@ class WPZOOM_Instagram_Widget_Settings {
 											</div>
 										</div>
 									</div>
+									
+									<!-- Carousel Items Number -->
+									<div class="wpz-insta_table-row wpz-insta_responsive-table-row<?php echo ( 3 !== $feed_layout ? ' hidden' : '' ) . ( $feed_perpage_num_responsive_enabled ? ' wpz-insta_responsive-enabled' : '' ); ?>">
+										
+										<div class="wpz-insta_table-cell">
+											<label for="wpz-insta_col-num_desktop"><strong><?php esc_html_e( 'Number of visible items', 'instagram-widget-by-wpzoom' ); ?></strong></label>
+											<input type="checkbox" name="_wpz-insta_perpage-num_responsive-enabled" id="_wpz-insta_perpage-num_responsive-enabled" class="wpz-insta_responsive-checkbox" title="<?php esc_attr_e( 'Responsive', 'instagram-widget-by-wpzoom' ); ?>" value="1"<?php checked( $feed_cols_num_responsive_enabled ); disabled( $pro_toggle ); ?> />
+										</div>
+										<div class="wpz-insta_table-cell">
+											<div class="wpz-insta_responsive-field">
+												
+												<label class="wpz-insta_responsive-field-type wpz-insta_responsive-field_desktop">
+													<input type="number" name="_wpz-insta_perpage-num" value="<?php echo esc_attr( $feed_perpage_num ); ?>" size="3" min="1" max="100" step="1" />
+													<span class="wpz-insta_responsive-field-name"><span class="dashicons dashicons-desktop"></span> <?php esc_html_e( 'Desktop', 'instagram-widget-by-wpzoom' ); ?></span>
+												</label>
 
-									<label class="wpz-insta_table-row<?php echo 3 !== $feed_layout ? ' hidden' : ''; ?>">
-										<strong class="wpz-insta_table-cell"><?php esc_html_e( 'Number of visible items', 'instagram-widget-by-wpzoom' ); ?></strong>
-										<div class="wpz-insta_table-cell"><input type="number" name="_wpz-insta_perpage-num" value="<?php echo esc_attr( $feed_perpage_num ); ?>" size="3" min="1" max="100" step="1" /></div>
-									</label>
+												<label class="wpz-insta_responsive-field-type wpz-insta_responsive-field_tablet">
+													<input type="number" name="_wpz-insta_perpage-num_tablet" value="<?php echo esc_attr( $feed_perpage_num_tablet ); ?>" size="3" min="0" max="100" step="1" />
+													<span class="wpz-insta_responsive-field-name"><span class="dashicons dashicons-tablet"></span> <?php esc_html_e( 'Tablet', 'instagram-widget-by-wpzoom' ); ?></span>
+												</label>
+
+												<label class="wpz-insta_responsive-field-type wpz-insta_responsive-field_mobile">
+													<input type="number" name="_wpz-insta_perpage-num_mobile" value="<?php echo esc_attr( $feed_perpage_num_mobile ); ?>" size="3" min="0" max="100" step="1" />
+													<span class="wpz-insta_responsive-field-name"><span class="dashicons dashicons-smartphone"></span> <?php esc_html_e( 'Mobile', 'instagram-widget-by-wpzoom' ); ?></span>
+												</label>
+
+											</div>
+										</div>
+									</div>
 
 									<label class="wpz-insta_table-row">
 										<strong class="wpz-insta_table-cell"><?php esc_html_e( 'Padding around items', 'instagram-widget-by-wpzoom' ); ?></strong>

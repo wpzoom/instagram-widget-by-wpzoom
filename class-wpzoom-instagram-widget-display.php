@@ -211,6 +211,10 @@ class Wpzoom_Instagram_Widget_Display {
 					$enable_request_timeout = isset( $args['enable-request-timeout'] ) ? boolval( $args['enable-request-timeout'] ) : false;
 					$amount = isset( $args['item-num'] ) ? intval( $args['item-num'] ) : 9;
 					$perpage = isset( $args['perpage-num'] ) ? intval( $args['perpage-num'] ) : 3;
+					$perpage_num_rspnsve_enbld  = $this->is_pro && isset( $args['perpage-num_responsive-enabled'] ) ? boolval( $args['perpage-num_responsive-enabled'] ) : false;
+					$perpage_table = isset( $args['perpage-num_tablet'] ) ? intval( $args['perpage-num_tablet'] ) : 2;
+					$perpage_mobile = isset( $args['perpage-num_mobile'] ) ? intval( $args['perpage-num_mobile'] ) : 2;
+
 					$spacing_between = isset( $args['spacing-between'] ) && floatval( $args['spacing-between'] ) > -1 ? floatval( $args['spacing-between'] ) : -1;
 					$feat_layout_enabled = isset( $args['featured-layout-enable'] ) ? boolval( $args['featured-layout-enable'] ) : false;
 					$featured_layout = $feat_layout_enabled && isset( $args['featured-layout'] ) ? intval( $args['featured-layout'] ) : 0;
@@ -235,6 +239,15 @@ class Wpzoom_Instagram_Widget_Display {
 
 					if ( $perpage > 0 ) {
 						$attrs .= ' data-perpage="' . $perpage . '"';
+					}
+
+					if( $perpage_num_rspnsve_enbld ) {
+						if( $perpage_table > 0 ) {
+							$attrs .= ' data-perpage-tablet="' . $perpage_table . '"';
+						}
+						if( $perpage_mobile > 0 ) { 
+							$attrs .= ' data-perpage-mobile="' . $perpage_mobile . '"';
+						}
 					}
 
 					if ( $featured_layout > 0 ) {
