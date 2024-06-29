@@ -49,7 +49,7 @@ class WPZOOM_Instagram_Widget_Settings {
 		'featured-layout'                 => array( 'type' => 'integer', 'default' => 0 ),
 		'show-account-name'               => array( 'type' => 'boolean', 'default' => true ),
 		'show-account-username'           => array( 'type' => 'boolean', 'default' => true ),
-		'show-account-badge'              => array( 'type' => 'boolean', 'default' => true ),
+		'show-account-badge'              => array( 'type' => 'boolean', 'default' => false ),
 		'show-account-image'              => array( 'type' => 'boolean', 'default' => true ),
 		'show-account-bio'                => array( 'type' => 'boolean', 'default' => true ),
 		'show-view-button'                => array( 'type' => 'boolean', 'default' => true ),
