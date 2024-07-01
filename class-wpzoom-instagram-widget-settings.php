@@ -2149,7 +2149,7 @@ class WPZOOM_Instagram_Widget_Settings {
 
 	function insert_post_data( array $post ) {
 		if ( isset( $_POST['action'] ) && 'inline-save' == $_POST['action'] && isset( $_POST['post_type'] ) && 'wpz-insta_user' == $_POST['post_type'] ) {
-			$post['post_content'] = isset( $_POST['_wpz-insta_user-bio'] ) && isset( $post['ID'] ) ? sanitize_post_field( 'post_content', $_POST['_wpz-insta_user-bio'], $post['ID'], 'db' ) : '';
+			$post['post_content'] = isset( $_POST['_wpz-insta_user-bio'] ) ? sanitize_post_field( 'post_content', $_POST['_wpz-insta_user-bio'], $post['ID'], 'db' ) : '';
 		}
 
 		if ( 'wpz-insta_feed' == $post['post_type'] && 'draft' == $post['post_status'] ) {
