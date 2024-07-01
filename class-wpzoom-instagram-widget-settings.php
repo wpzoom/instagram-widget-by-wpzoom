@@ -316,7 +316,7 @@ class WPZOOM_Instagram_Widget_Settings {
 		add_filter( 'screen_options_show_screen', array( $this, 'disable_screen_options' ), 10, 2 );
 		add_filter( 'hidden_meta_boxes', array( $this, 'hide_meta_boxes' ), 10, 3 );
 		add_filter( 'hidden_columns', array( $this, 'hidden_columns' ), 10, 3 );
-		add_filter( 'wp_insert_post_data', array( $this, 'insert_post_data' ) );
+		add_filter( 'wp_insert_post_data', array( $this, 'insert_post_data' ), 10, 2 );
 		add_filter( 'view_mode_post_types', array( $this, 'view_mode_post_types' ) );
 		add_filter( 'display_post_states', array( $this, 'display_post_states' ), 10, 2 );
 		add_filter( 'get_edit_post_link', array( $this, 'get_edit_post_link' ), 10, 3 );
@@ -2147,9 +2147,10 @@ class WPZOOM_Instagram_Widget_Settings {
 		}
 	}
 
-	function insert_post_data( array $post ) {
+	function insert_post_data( array $post, $postarr ) {
+
 		if ( isset( $_POST['action'] ) && 'inline-save' == $_POST['action'] && isset( $_POST['post_type'] ) && 'wpz-insta_user' == $_POST['post_type'] ) {
-			$post['post_content'] = isset( $_POST['_wpz-insta_user-bio'] ) ? sanitize_post_field( 'post_content', $_POST['_wpz-insta_user-bio'], $post['ID'], 'db' ) : '';
+			$post['post_content'] = isset( $_POST['_wpz-insta_user-bio'] ) ? sanitize_post_field( 'post_content', $_POST['_wpz-insta_user-bio'], $postarr['ID'], 'db' ) : '';
 		}
 
 		if ( 'wpz-insta_feed' == $post['post_type'] && 'draft' == $post['post_status'] ) {
