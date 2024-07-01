@@ -32,12 +32,17 @@ jQuery( function( $ ) {
                     return this._frame;
                 },
                 select: function () {
-                    var $attachmentInput = $this.find('.attachment-input').add($imageMediaControlTarget.find('input#wpz-insta_account-photo'));
+                    var $attachmentInput = $this.find('.attachment-input').add( $imageMediaControlTarget.find('input#wpz-insta_account-photo') );
                     var selection = this.get('selection');
                     var attachmentId = selection.pluck('id');
 
-                    $attachmentInput.val('' + attachmentId).trigger('change');
-                    $imageMediaControlTarget.find('img.wpz-insta_profile-photo').attr('src', '' + selection.first().toJSON().sizes.thumbnail.url);
+                    $attachmentInput.val( '' + attachmentId).trigger('change');
+					
+					var selectionData = selection.first().toJSON();
+					var thumbnail_url = selectionData.sizes.thumbnail?.url ?? selectionData.sizes.full.url;
+
+
+                    $imageMediaControlTarget.find('img.wpz-insta_profile-photo').attr( 'src', '' + thumbnail_url );
                 },
 
                 updateFrame: function () {
