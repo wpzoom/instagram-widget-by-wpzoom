@@ -385,10 +385,11 @@ class Wpzoom_Instagram_Widget_API {
 			$best_size = self::get_best_size( $image_width, $image_resolution );
 			$image_url = $item->images->{$best_size}->url;
 
-			$regexPattern = '/-\d+[Xx]\d+\./';
-			$subst = '.';
+			//$regexPattern = '/-\d+[Xx]\d+\./';
+			//$subst = '-1024x1024.';
 
-			$local_image_url = preg_replace( $regexPattern, $subst, $image_url, 1 );
+			//$local_image_url = preg_replace( $regexPattern, $subst, $image_url, 1 );
+			$local_image_url = $item->images->large_resolution->url;
 
 			$result[] = array(
 				'link'               => $item->link,
@@ -428,6 +429,7 @@ class Wpzoom_Instagram_Widget_API {
 			'thumbnail'           => 150,
 			'low_resolution'      => 306,
 			'standard_resolution' => 640,
+			'large_resolution'    => 1024,
 			'full_resolution'     => 9999,
 		);
 
@@ -554,6 +556,11 @@ class Wpzoom_Instagram_Widget_API {
 						'url'    => $preview ? $media_url : $image_uploader->get_image( 'full_resolution', $media_url, $item->id ),
 						'width'  => 9999,
 						'height' => 9999,
+					),
+					'large_resolution' => (object) array(
+						'url'    => $preview ? $media_url : $image_uploader->get_image( 'large_resolution', $media_url, $item->id ),
+						'width'  => 1024,
+						'height' => 1024,
 					),
 				),
 				'type'         => $item->media_type,

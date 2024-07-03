@@ -257,6 +257,7 @@ class WPZOOM_Instagram_Image_Uploader {
 	 * @return string|WP_Error
 	 */
 	static function upload_image( $media_url, $media_id ) {
+
 		require_once ABSPATH . 'wp-admin/includes/media.php';
 		require_once ABSPATH . 'wp-admin/includes/file.php';
 		require_once ABSPATH . 'wp-admin/includes/image.php';
@@ -298,15 +299,33 @@ class WPZOOM_Instagram_Image_Uploader {
 
 		add_filter( 'intermediate_image_sizes_advanced', array( self::$instance, 'set_image_sizes' ), 10 );
 		add_filter( 'wp_insert_attachment_data', array( self::$instance, 'insert_post_data' ), 10 );
+		
+		add_filter( 'image_editor_output_format', array( self::$instance, 'map_jpeg_to_webp' ), 10 );
 
 		$attachment_id = media_sideload_image( $media_url, null, null, 'id' );
 
+		
 		remove_filter( 'intermediate_image_sizes_advanced', array( self::$instance, 'set_image_sizes' ), 10 );
 		remove_filter( 'wp_insert_attachment_data', array( self::$instance, 'insert_post_data' ), 10 );
+		
+		remove_filter( 'image_editor_output_format', array( self::$instance, 'map_jpeg_to_webp' ), 10 );
 
 		update_post_meta( $attachment_id, self::$media_metakey_name, $media_id );
 
 		return $attachment_id;
+	}
+
+	public function map_jpeg_to_webp( $mappings ) {
+
+		$settings = get_option( 'wpzoom-instagram-general-settings' );
+		$image_format = isset( $settings['image-ext'] ) ? $settings['image-ext'] : 'jpeg';
+
+		if( 'webp' === $image_format ) {
+			$mappings[ 'image/jpeg' ] = 'image/webp';
+		}
+
+		return $mappings;
+	
 	}
 
 	/**
@@ -373,6 +392,10 @@ class WPZOOM_Instagram_Image_Uploader {
 				'width'  => 640,
 				'height' => 640,
 			),
+			self::get_image_size_name( 'large_resolution' ) => array(
+				'width'  => 1024,
+				'height' => 1024,
+			),
 			self::get_image_size_name( 'full_resolution' ) => array(
 				'width'  => 9999,
 				'height' => 9999,
@@ -395,10 +418,12 @@ class WPZOOM_Instagram_Image_Uploader {
 					$thumbnail                         = wp_get_attachment_image_src( $attachment_id, self::get_image_size_name( 'thumbnail' ) );
 					$low_resolution                    = wp_get_attachment_image_src( $attachment_id, self::get_image_size_name( 'low_resolution' ) );
 					$standard_resolution               = wp_get_attachment_image_src( $attachment_id, self::get_image_size_name( 'standard_resolution' ) );
+					$large_resolution                  = wp_get_attachment_image_src( $attachment_id, self::get_image_size_name( 'large_resolution' ) );
 					$full_resolution                   = wp_get_attachment_image_src( $attachment_id, self::get_image_size_name( 'full_resolution' ) );
 					$item->images->thumbnail->url      = ! empty( $thumbnail ) ? $thumbnail[0] : '';
 					$item->images->low_resolution->url = ! empty( $low_resolution ) ? $low_resolution[0] : '';
 					$item->images->standard_resolution->url = ! empty( $standard_resolution ) ? $standard_resolution[0] : '';
+					$item->images->large_resolution->url = ! empty( $large_resolution ) ? $large_resolution[0] : '';
 					$item->images->full_resolution->url = ! empty( $full_resolution ) ? $full_resolution[0] : '';
 
 					$transient->data[ $key ] = $item;
@@ -435,6 +460,7 @@ class WPZOOM_Instagram_Image_Uploader {
 			'thumbnail'           => 150,
 			'low_resolution'      => 320,
 			'standard_resolution' => 640,
+			'large_resolution'    => 1024,
 			'full_resolution'     => 9999,
 		);
 

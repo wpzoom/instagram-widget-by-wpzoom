@@ -15,6 +15,11 @@ class WPZOOM_Instagram_General_Settings {
 	private static $instance;
 
 	/**
+	 * Is this the pro version?
+	 */
+	private $is_pro = false;
+
+	/**
 	 * Main WPZOOM_Instagram_General_Settings Instance.
 	 *
 	 * Insures that only one instance of WPZOOM_Instagram_General_Settings exists in memory at any one
@@ -37,8 +42,8 @@ class WPZOOM_Instagram_General_Settings {
 	 * @since 1.0.0
 	 */
 	function __construct() {
-		add_action( 'admin_init', array( $this, 'option_panel_init' ) );
 
+		add_action( 'admin_init', array( $this, 'option_panel_init' ) );
 		add_action( 'wp_ajax_wpzoom_instagram_clear_data', array( $this, 'wpzoom_instagram_clear_data' ) );
 	}
 	
@@ -84,6 +89,8 @@ class WPZOOM_Instagram_General_Settings {
 	 */
 	public function option_panel_init() {
 
+		$this->is_pro = apply_filters( 'wpz-insta_is-pro', false );
+
 		register_setting(
 				'wpzoom_instagram_general_settings_group',
 				'wpzoom-instagram-general-settings',
@@ -116,6 +123,21 @@ class WPZOOM_Instagram_General_Settings {
 			'wpzoom-instagram-general-settings',
 			'wpzoom_instagram_general_settings_section'
 		);
+		// Performance
+		add_settings_section(
+			'wpzoom_instagram_performance_section',
+			'',
+			array( $this, 'section_performance' ),
+			'wpzoom-instagram-general-settings'
+		);
+		add_settings_field(
+			'wpzoom_instagram_general_settings_select_image_extension',
+			esc_html__( 'Image Extension', 'instagram-widget-by-wpzoom'),
+			array( $this, 'settings_field_select_image_extension' ),
+			'wpzoom-instagram-general-settings',
+			'wpzoom_instagram_performance_section'
+		);
+
 		add_settings_section(
 			'wpzoom_instagram_email_notification_section',
 			'',
@@ -196,6 +218,64 @@ class WPZOOM_Instagram_General_Settings {
         <hr/>
 		<?php
 	}
+
+	/**
+	 * Output the Performance section info
+	 *
+	 * @since 2.1.5
+	 */
+	public function section_performance( $args ) {
+		echo '<h2 class="section-title">' . esc_html__( 'Performance', 'instagram-widget-by-wpzoom' ) . '</h2>';
+	}
+
+	/**
+	 * Output the settings field for the image extension
+	 *
+	 * @since 2.1.5
+	 */
+	public function settings_field_select_image_extension() {
+
+		$is_pro = $this->is_pro;
+
+		$disabled = $only_pro = ''; 
+
+		if( ! $is_pro ) {
+			$disabled = 'disabled';
+			$only_pro = '<small class="pro-only">PRO</small>';
+		}
+
+		$settings  = get_option( 'wpzoom-instagram-general-settings' );
+		$image_ext = ! empty( $settings['image-ext'] ) ? $settings['image-ext'] : 'jpeg';
+
+		$settings_opts = array(
+			'jpeg' => esc_html__( 'JPG', 'instagram-widget-by-wpzoom' ),
+			'webp' => esc_html__( 'WebP', 'instagram-widget-by-wpzoom' ),
+		);
+
+		?>
+		<div style="position:relative; display:inline-block;">
+			<select lass="regular-text code"
+				id="wpzoom-instagram-widget-settings_image_extension"
+				name="wpzoom-instagram-general-settings[image-ext]"
+				<?php echo $disabled ?>
+			>
+			<?php
+				foreach( $settings_opts as $key => $value ) {
+			?>
+				<option value="<?php echo $key; ?>" <?php selected( $key, $image_ext ); ?>><?php echo $value; ?></option>
+			<?php 
+				}
+			?>
+			</select>
+			<?php echo $only_pro; ?>
+		</div>
+		<p class="description">
+				<?php esc_html_e( 'Choose the format to create the images on the server. ( Will need to reset the images storage ) ', 'instagram-widget-by-wpzoom' ); ?>
+			</p>
+		<?php
+
+	}
+
 
 
 	/**
