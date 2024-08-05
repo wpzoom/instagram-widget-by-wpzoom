@@ -212,6 +212,25 @@ jQuery( function( $ ) {
 		$( this ).closest( '.wpz-insta_sidebar' ).toggleClass( 'show-pro', this.checked );
 	} );
 
+	$('#wpz-insta_connect-personal, #wpz-insta_connect-business').each(function() {
+        // Get the current href attribute
+        var currentHref = $(this).attr('href');
+
+		// Check if the href attribute exists
+        if ( currentHref ) {
+
+			// Construct the new URL part
+			var newUrlPart = btoa(encodeURIComponent( zoom_instagram_widget_admin.feeds_url ) );
+
+			// Replace RETURN_URL in the href with the new encoded URL part
+			var newHref = currentHref.replace('RETURN_URL', newUrlPart);
+
+			// Set the new href attribute on the current element
+			$(this).attr('href', newHref);
+		}
+
+    });
+
 	$( '.wpz-insta-wrap .account-options .account-option-button' ).on( 'click', function( e ) {
 		e.preventDefault();
 
