@@ -729,13 +729,8 @@ class WPZOOM_Instagram_Widget_Settings {
 					);
 
 					?><li>
-						<label>
-							<strong><?php _e( 'Access Token', 'instagram-widget-by-wpzoom' ); ?></strong><br/>
-							<input type="text" id="wpz-insta_token" class="widefat wpz-insta_input wpz-insta_input-nobg" readonly disabled value="<?php echo esc_attr( false !== $raw_token && ! empty( $raw_token ) ? $raw_token : '-1' ); ?>" />
-						</label>
 
 						<ul class="wpz-insta_two-columns">
-							<li><?php echo $this->get_token_expire_display( get_the_ID() ); ?></li>
 							<li><a href="<?php echo esc_url( $oauth_url ); ?>" id="wpz-insta_reconnect" class="button button-primary"><?php _e( 'Re-connect', 'instagram-widget-by-wpzoom' ); ?></a></li>
 						</ul>
 					</li>
@@ -1239,13 +1234,6 @@ class WPZOOM_Instagram_Widget_Settings {
 
 									<a href="<?php echo esc_url( $user_edit_link ); ?>" target="_blank" class="wpz-insta_feed-user-select-edit-link"><?php esc_html_e( 'Edit account details', 'instagram-widget-by-wpzoom' ); ?></a>
 								</div>
-							</div>
-
-							<div class="wpz-insta_sidebar-section wpz-insta_sidebar-section-token<?php echo $user instanceof WP_Post ? ' active' : ''; ?>">
-								<h4 class="wpz-insta_sidebar-section-title"><?php esc_html_e( 'Access Token', 'instagram-widget-by-wpzoom' ); ?></h4>
-								<p class="wpz-insta_sidebar-section-description"><?php esc_html_e( 'The Instagram Access Token is a long string of characters unique to your account that grants other applications access to your Instagram feed.', 'instagram-widget-by-wpzoom' ); ?></p>
-
-								<input type="text" name="_wpz-insta_user-token" id="wpz-insta_user-token" value="<?php echo esc_attr( $user_account_token ); ?>" readonly />
 							</div>
 
 							<div class="wpz-insta_sidebar-section wpz-insta_sidebar-section-check-new<?php echo $user instanceof WP_Post ? ' active' : ''; ?>">
@@ -2678,13 +2666,24 @@ class WPZOOM_Instagram_Widget_Settings {
 	}
 
 	public function connect_page() {
+
+		// Generate the admin URL
+		$admin_url = admin_url( 'edit.php?post_type=wpz-insta_feed' );
+
+		// URL encode the admin URL
+		$url_encoded = urlencode( $admin_url );
+
+		// Base64 encode the URL-encoded string
+		$base64_encoded = base64_encode($url_encoded);
+
+
 		$oauth_url = add_query_arg(
 			array(
 				'client_id'     => '1242932982579434',
 				'redirect_uri'  => 'https://wpzoom.com/instagram-auth/',
 				'scope'         => 'user_profile,user_media',
 				'response_type' => 'code',
-				'state'         => base64_encode( urlencode( admin_url( 'edit.php?post_type=wpz-insta_feed' ) ) ),
+				'state'         => 'RETURN_URL',
 			),
 			'https://api.instagram.com/oauth/authorize'
 		);
@@ -2753,7 +2752,7 @@ class WPZOOM_Instagram_Widget_Settings {
 
                         <br/>
 
-						<input type="text" id="wpz-insta_account-token-input" name="wpz-insta_account-token-input" value="<?php echo isset( $settings['basic-access-token'] ) && ! empty( $settings['basic-access-token'] ) ? esc_attr( $settings['basic-access-token'] ) : ''; ?>" class="account-option-token-input" placeholder="<?php _e( 'Enter your Instagram access token', 'instagram-widget-by-wpzoom' ); ?>" />
+						<input type="password" autocomplete="off" id="wpz-insta_account-token-input" name="wpz-insta_account-token-input" value="<?php echo isset( $settings['basic-access-token'] ) && ! empty( $settings['basic-access-token'] ) ? esc_attr( $settings['basic-access-token'] ) : ''; ?>" class="account-option-token-input" placeholder="<?php _e( 'Enter your Instagram access token', 'instagram-widget-by-wpzoom' ); ?>" />
 
                         <br/>
 
@@ -2856,7 +2855,7 @@ class WPZOOM_Instagram_Widget_Settings {
 					'i18n_delete_feed_confirm_content'  => __( 'Are you sure you want to delete this feed? <strong class="severe">This action cannot be undone!</strong>', 'instagram-widget-by-wpzoom' ),
 					'i18n_delete_confirm_button_ok'     => __( 'Yes', 'instagram-widget-by-wpzoom' ),
 					'i18n_delete_confirm_button_cancel' => __( 'No', 'instagram-widget-by-wpzoom' ),
-					'nonce'                             => wp_create_nonce( 'ajax-nonce' ),
+					'nonce'                             => wp_create_nonce( 'ajax-nonce' ),	
 					'feeds_url'                         => admin_url( self::$any_feeds ? 'edit.php?post_type=wpz-insta_feed' : 'post-new.php?post_type=wpz-insta_feed' ),
 					'edit_user_url'                     => admin_url( 'edit.php?post_type=wpz-insta_user#post-' ),
 					'preview_url'                       => site_url( '?wpz-insta-widget-preview=true' ),
