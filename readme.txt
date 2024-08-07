@@ -87,6 +87,9 @@ Yes, you can find the documentation for this plugin with more instructions on ou
 
 [Go to Documentation](https://www.wpzoom.com/documentation/instagram-widget/)
 
+= Where do I report security bugs found in this plugin? =
+
+You can report security bugs through the Patchstack Vulnerability Disclosure Program. The Patchstack team help validate, triage and handle any security vulnerabilities. [Report a security vulnerability.](https://patchstack.com/database/vdp/instagram-widget-by-wpzoom)
 
 == Screenshots ==
 
