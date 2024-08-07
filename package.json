@@ -45,7 +45,7 @@
     "homepage": "https://github.com/wpzoom/instagram-widget#readme",
     "devDependencies": {
         "@wordpress/postcss-themes": "^4.1.0",
-        "@wordpress/scripts": "^26.15.0",
+        "@wordpress/scripts": "^26.19.0",
         "copy-webpack-plugin": "^6.3.2",
         "node-sass-glob-importer": "^5.3.2",
         "postcss": "^8.3.6",
