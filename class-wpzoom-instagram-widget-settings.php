@@ -615,10 +615,13 @@ class WPZOOM_Instagram_Widget_Settings {
 	}
 
 	function display_post_states( $post_states, $post ) {
-		$duplicate = boolval( get_post_meta( $post->ID, '_wpz-insta_feed_is_duplicate', true ) );
 
-		if ( $duplicate ) {
-			$post_states['duplicate'] = __( 'Duplicate', 'instagram-widget-by-wpzoom' );
+		if ( isset( $post->ID ) && ! empty( $post->ID ) ) {
+			$duplicate = boolval( get_post_meta( $post->ID, '_wpz-insta_feed_is_duplicate', true ) );
+
+			if ( $duplicate ) {
+				$post_states['duplicate'] = __( 'Duplicate', 'instagram-widget-by-wpzoom' );
+			}
 		}
 
 		return $post_states;
