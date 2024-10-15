@@ -2305,7 +2305,7 @@ class WPZOOM_Instagram_Widget_Settings {
         if ($pro_toggle) {
             add_submenu_page(
                 'edit.php?post_type=wpz-insta_feed',
-                esc_html__( 'Upgrade to Pro &rarr;', 'wpforms-lite' ),
+                esc_html__( 'Upgrade to Pro &rarr;', 'instagram-widget-by-wpzoom' ),
                 '<span style="color:#e4415f">' . esc_html__( 'Upgrade to Pro &rarr;', 'instagram-widget-by-wpzoom' ) . '</span>',
                 'manage_options',
                 esc_url( 'https://www.wpzoom.com/plugins/instagram-widget/?utm_campaign=liteplugin&utm_medium=admin-menu&utm_source=WordPress&utm_content=Upgrade+to+Pro' )
