@@ -258,7 +258,7 @@ class Wpzoom_Instagram_Widget_Display {
 
 					$this->api->set_access_token( $user_account_token );
 
-					if( $user_business_page_id ) {
+					if( ! empty( $user_business_page_id ) ) {
 						$this->api->set_business_page_id( $user_business_page_id );
 					}
 

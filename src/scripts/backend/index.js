@@ -588,7 +588,7 @@ jQuery( function( $ ) {
 
 	window.wpzInstaAuthenticateInstagram = function ( url, callback ) {
 		let popupWidth = 700,
-		    popupHeight = 500,
+		    popupHeight = 750,
 		    popupTop = ( window.screen.height - popupHeight ) / 2,
 		    popupLeft = ( window.screen.width - popupWidth ) / 2;
 
