@@ -2495,7 +2495,7 @@
 		}
 	}
 
-	#wpz-insta_modal-dialog {
+	#wpz-insta_modal-dialog, #wpz-insta_modal_graph-dialog {
 		display: flex;
 		align-items: center;
 		justify-content: center;
@@ -2606,6 +2606,45 @@
 				.severe {
 					color: $red-color;
 				}
+				.wpz-insta_connect-business-accounts {
+					display: flex;
+
+					.wpz-insta_business-accounts-link {
+						display: flex;
+						align-items: center;
+						text-decoration: none;
+						color: inherit;
+						padding: 10px 20px;
+						border: 1px solid #ddd;
+						margin: 10px 20px;
+						box-shadow: none !important;
+
+						&.selected {
+							border-color: #3496ff;
+						}
+					}
+					
+					.wpz-insta_business-accounts-link:first-child {
+						margin-left: 0;
+					}
+	
+					.wpz-insta_business-accounts-link img {
+						width: 50px;
+						height: 50px;
+						border-radius: 50%;
+						margin-right: 10px;
+						border: 2px solid #ddd;
+						object-fit: cover;
+					}
+	
+					.wpz-insta_business-accounts-link h3 {
+						font-size: 1em;
+						margin: 0;
+						font-weight: normal;
+						color: #333;
+					}
+				}
+
 			}
 
 			.wpz-insta_modal-dialog_footer {

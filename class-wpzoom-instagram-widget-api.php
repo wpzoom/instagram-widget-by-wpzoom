@@ -48,6 +48,13 @@ class Wpzoom_Instagram_Widget_API {
 	protected $feed_id;
 
 	/**
+	 * Business Page ID
+	 *
+	 * @var string
+	 */
+	protected $business_page_id;
+
+	/**
 	 * Class constructor
 	 */
 	protected function __construct() {
@@ -67,6 +74,7 @@ class Wpzoom_Instagram_Widget_API {
 		add_action( 'init', array( $this, 'set_schedule' ) );
 		add_action( 'wpzoom_instagram_widget_cron_hook', array( $this, 'execute_cron' ) );
 		add_filter( 'cron_schedules', array( $this, 'add_cron_interval' ) );
+	
 	}
 
 	/**
@@ -105,6 +113,18 @@ class Wpzoom_Instagram_Widget_API {
 	 */
 	public function set_feed_id( $id ) {
 		$this->feed_id = $id;
+	}
+
+	/**
+	 * Manually set the bussines page id.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param string $id The page id to set.
+	 * @return void
+	 */
+	public function set_business_page_id( $id ) {
+		$this->business_page_id = $id;
 	}
 
 	/**
@@ -292,6 +312,7 @@ class Wpzoom_Instagram_Widget_API {
 		}
 
 		if ( ! empty( $this->access_token ) ) {
+
 			$request_url = add_query_arg(
 				array(
 					'fields'       => 'media_url,media_type,caption,username,permalink,thumbnail_url,timestamp,children{media_url,media_type,thumbnail_url}',
@@ -300,6 +321,17 @@ class Wpzoom_Instagram_Widget_API {
 				),
 				'https://graph.instagram.com/me/media'
 			);
+
+			if( ! empty( $this->business_page_id ) ) {
+				$request_url = add_query_arg(
+					array(
+						'fields'       => 'media_url,media_product_type,thumbnail_url,caption,id,media_type,timestamp,username,permalink,children%7Bmedia_url,id,media_type,timestamp,permalink,thumbnail_url%7D',
+						'access_token' => $this->access_token,
+						'limit'        => $image_limit,
+					),
+					'https://graph.facebook.com/v21.0/' . $this->business_page_id . '/media'
+				);	
+			}
 
 			$response = self::remote_get( $request_url, $this->headers );
 
@@ -527,7 +559,7 @@ class Wpzoom_Instagram_Widget_API {
 
 			$converted->data[] = (object) array(
 				'id'           => $item->id,
-				'media_url'    => ( $is_video ? $item->media_url : $media_url ),
+				'media_url'    => ( $is_video && property_exists( $item, 'media_url' ) ? $item->media_url : $media_url ),
 				'user'         => (object) array(
 					'id'              => null,
 					'fullname'        => null,
@@ -637,6 +669,76 @@ class Wpzoom_Instagram_Widget_API {
 		}
 
 		return $data;
+	}
+
+	// Get Instagram Business Pages
+	public static function get_business_accounts_from_token( $access_token ) {
+
+		$accountsData = array(
+			'accounts' => array(),
+			'error'    => false,
+		);
+		
+		if ( ! empty( $access_token ) ) {
+			
+			// Get Instagram Business Account ID
+			$request_url = add_query_arg(
+				array(
+					'fields'       => 'instagram_business_account,access_token',
+					'limit'        => 500,
+					'access_token' => $access_token,
+					'timeout'      => 60,
+				),
+				'https://graph.facebook.com/me/accounts'
+			);
+
+			$response =  wp_remote_get( $request_url );
+
+			if ( ! is_wp_error( $response ) && 200 == wp_remote_retrieve_response_code( $response ) ) {
+				$pages_arr = json_decode( wp_remote_retrieve_body( $response ) );
+			}
+			else {
+				$page_error = json_decode( wp_remote_retrieve_body( $response ) );
+			}
+
+			if ( isset( $page_error ) && isset( $page_error->error ) ) {
+				$error_message = '';
+				if( isset( $page_error->error->message )  ) {
+					$error_message .= $page_error->error->message;
+				}
+
+				return $error_message;
+			}
+
+			if ( ! empty( $pages_arr ) && is_object( $pages_arr ) && ! empty( $pages_arr->data ) ) {
+				foreach ( $pages_arr->data as $key => $page ) {
+					if( isset( $page->instagram_business_account ) ) {
+						$instagram_business_account_id  = $page->instagram_business_account->id;
+						//$instagram_business_account_token = $page->token;
+						$request_account_url = add_query_arg(
+							array(
+								'fields'       => 'name,username,profile_picture_url,biography',
+								'access_token' => $access_token,
+							),
+							'https://graph.facebook.com/' . $instagram_business_account_id
+						);
+
+						$response_account = wp_remote_get( $request_account_url );
+
+						if ( ! is_wp_error( $response_account ) && 200 == wp_remote_retrieve_response_code( $response_account ) ) {
+							$account_data = json_decode( wp_remote_retrieve_body( $response_account ) );							
+							$accountsData['accounts'][] = $account_data;
+						}
+
+					}
+				}
+
+			}
+
+		}
+		
+		return $accountsData;
+
 	}
 
 	public static function get_basic_user_info_from_token( $access_token ) {

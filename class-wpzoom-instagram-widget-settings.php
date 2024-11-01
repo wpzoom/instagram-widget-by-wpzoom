@@ -331,6 +331,10 @@ class WPZOOM_Instagram_Widget_Settings {
 		add_action( 'edit_form_after_title', array( $this, 'edit_feed_content' ) );
 		add_action( 'in_admin_footer', array( $this, 'page_footer' ) );
 		add_action( 'wp_ajax_wpz-insta_connect-user', array( $this, 'ajax_connect_user' ) );
+
+		add_action( 'wp_ajax_wpz-insta_connect_business-user', array( $this, 'ajax_connect_business_user' ) );
+		add_action( 'wp_ajax_wpz-insta_connect_business-account', array( $this, 'ajax_connect_business_account' ) );
+		
 		add_action( 'wp_ajax_inline-save', array( $this, 'ajax_inline_save' ), 1 );
 		add_action( 'wp_ajax_wpz-insta_dismiss-cron-notice', array( $this, 'ajax_dismiss_cron_notice' ) );
 		add_action( 'save_post_wpz-insta_feed', array( $this, 'save_feed' ), 15, 3 );
@@ -2016,11 +2020,29 @@ class WPZOOM_Instagram_Widget_Settings {
 					</div>
 
 					<div class="wpz-insta_modal-dialog_content">
-						<?php _e( 'Your account is now connected. You can now add a feed and customize it on the next screens.', 'instagram-widget-by-wpzoom' ); ?>
+						<?php _e( 'Your account is now connected. You can now add a feed and customize it on the next screens.', 'instagram-widget-by-wpzoom' ); ?>						
 					</div>
 
 					<div class="wpz-insta_modal-dialog_footer">
 						<span class="wpz-insta_modal-dialog_footer-button wpz-insta_modal-dialog_ok-button button button-primary"><?php _e( 'OK', 'instagram-widget-by-wpzoom' ); ?></span>
+						<span class="wpz-insta_modal-dialog_footer-button wpz-insta_modal-dialog_cancel-button button button-secondary hidden"><?php _e( 'Cancel', 'instagram-widget-by-wpzoom' ); ?></span>
+					</div>
+				</div>
+			</div>
+
+			<div id="wpz-insta_modal_graph-dialog" class="success">
+				<div class="wpz-insta_modal-dialog_wrap">
+					<div class="wpz-insta_modal-dialog_header">
+						<h4 class="wpz-insta_modal-dialog_header-title"><?php _e( 'Please, select the account you want to connect', 'instagram-widget-by-wpzoom' ); ?></h4>
+						<span class="wpz-insta_modal-dialog_header-button wpz-insta_modal-dialog_close-button"><?php _e( 'Close', 'instagram-widget-by-wpzoom' ); ?></span>
+					</div>
+
+					<div class="wpz-insta_modal-dialog_content">
+						<?php do_action( 'wpzoom_instagram_connect_modal_content' ); ?>
+					</div>
+
+					<div class="wpz-insta_modal-dialog_footer">
+						<a id="wpz-insta-graph-connect-account" href="#"  class="wpz-insta_modal-dialog_footer-button wpz-insta_modal-dialog_ok-button button button-primary disabled"><?php _e( 'Connect', 'instagram-widget-by-wpzoom' ); ?></a>
 						<span class="wpz-insta_modal-dialog_footer-button wpz-insta_modal-dialog_cancel-button button button-secondary hidden"><?php _e( 'Cancel', 'instagram-widget-by-wpzoom' ); ?></span>
 					</div>
 				</div>
@@ -2072,6 +2094,85 @@ class WPZOOM_Instagram_Widget_Settings {
 		return $links;
 	}
 
+	public function ajax_connect_business_user() {
+
+		$output = '';
+
+		if ( isset( $_POST['nonce'] ) && wp_verify_nonce( $_POST['nonce'], 'ajax-nonce' ) && isset( $_POST['token'] ) && ! empty( $_POST['token'] ) ) {
+			$token = sanitize_text_field( $_POST['token'] );
+
+			if( ! empty( $token ) ) {
+
+				$accountsData = Wpzoom_Instagram_Widget_API::get_business_accounts_from_token( $token );
+
+				if( false !== $accountsData && is_array( $accountsData ) ) {
+					foreach( $accountsData['accounts'] as $account ) {
+						$account->token = $token;
+						$output .= '<a href="#" class="wpz-insta_business-accounts-link" data-account-info=\'' . wp_json_encode( $account ) . '\' >';
+						$output .= '<img width="50" height="50" src="' . esc_url( $account->profile_picture_url ) . '" alt="' . esc_attr( $account->username ) . '" />';
+						$output .= '<h3>' . esc_html( $account->username ) . '</h3>';
+						$output .= '</a>';
+					}
+
+					printf( 
+						'<div class="wpz-insta_connect-business-accounts">%s</div>', 
+						$output 
+					);
+				}
+
+			}
+
+		}
+
+		wp_die();
+	}
+
+	// Connect bussines account
+	public function ajax_connect_business_account() {
+		
+		if ( isset( $_POST['nonce'] ) && wp_verify_nonce( $_POST['nonce'], 'ajax-nonce' ) ) {
+			
+			$account_info = json_decode( stripslashes( $_POST['account_info'] ), true );
+			
+			if( ! empty( $account_info ) ) {
+				$token                   = isset( $account_info['token'] ) ? sanitize_text_field( $account_info['token'] ) : '';
+				$account_id              = isset( $account_info['id'] ) ? sanitize_text_field( $account_info['id'] ) : '';
+				$account_username        = isset( $account_info['username'] ) ? sanitize_text_field( $account_info['username'] ) : '';
+				$account_name            = isset( $account_info['name'] ) ? sanitize_text_field( $account_info['name'] ) : '';
+				$account_profile_picture = isset( $account_info['profile_picture_url'] ) ? sanitize_text_field( $account_info['profile_picture_url'] ) : '';
+				$account_bio             = isset( $account_info['biography'] ) ? sanitize_text_field( $account_info['biography'] ) : '';
+
+				$insert_post = wp_insert_post( array(
+					'post_title'   => wp_strip_all_tags( $account_username ),
+					'post_type'    => 'wpz-insta_user',
+					'post_status'  => 'publish',
+					'post_content' => $account_bio,
+				), true );
+
+				if ( ! is_wp_error( $insert_post ) ) {
+					update_post_meta( $insert_post, '_wpz-insta_page_id', $account_id );
+					update_post_meta( $insert_post, '_wpz-insta_token', $token );
+					update_post_meta( $insert_post, '_wpz-insta_user_name', $account_name );
+					update_post_meta( $insert_post, '_wpz-insta_token_expire', strtotime( '+60 days' ) );
+					update_post_meta( $insert_post, '_wpz-insta_account-type', 'business' );
+
+					if ( ! empty( $account_profile_picture ) ) {
+						$this->generate_featured_image( $account_profile_picture, $insert_post, $account_username );
+					}
+
+					wp_send_json_success( array( 'update' => false ), 200 );
+				}
+			}
+
+			wp_send_json_success( array( 'update' => false ), 200 );
+
+		}
+
+		wp_send_json_error( null, 500 );
+
+		
+	}
+
 	public function ajax_connect_user() {
 		if ( isset( $_POST['nonce'] ) && wp_verify_nonce( $_POST['nonce'], 'ajax-nonce' ) && isset( $_POST['token'] ) && ! empty( $_POST['token'] ) ) {
 			$token = sanitize_text_field( $_POST['token'] );
@@ -2115,6 +2216,29 @@ class WPZOOM_Instagram_Widget_Settings {
 
 		wp_send_json_error( null, 500 );
 	}
+
+	/*
+	 * Get Bussines Accounts
+	 * 
+	 */
+
+	 public function ajax_get_available_business_accounts() {
+		
+		if ( isset( $_POST['nonce'] ) && wp_verify_nonce( $_POST['nonce'], 'ajax-nonce' ) && isset( $_POST['token'] ) && ! empty( $_POST['token'] ) ) {
+			$token = sanitize_text_field( $_POST['token'] );
+
+			if ( ! empty( $token ) ) {
+				$accounts_data = Wpzoom_Instagram_Widget_API::get_business_accounts_from_token( $token );
+
+				if ( false !== $accounts_data && is_array( $accounts_data ) ) {
+					wp_send_json_success( $accounts_data, 200 );
+				}
+			}
+		}
+
+		wp_send_json_error( null, 500 );
+	}
+
 
 	public function ajax_inline_save() {
 		if ( isset( $_POST['action'] ) && 'inline-save' == $_POST['action'] && isset( $_POST['post_ID'] ) && isset( $_POST['post_type'] ) && 'wpz-insta_user' == $_POST['post_type'] ) {
@@ -2679,7 +2803,6 @@ class WPZOOM_Instagram_Widget_Settings {
 		// Base64 encode the URL-encoded string
 		$base64_encoded = base64_encode($url_encoded);
 
-
 		$oauth_url = add_query_arg(
 			array(
 				'client_id'     => '1242932982579434',
@@ -2689,6 +2812,17 @@ class WPZOOM_Instagram_Widget_Settings {
 				'state'         => 'RETURN_URL',
 			),
 			'https://api.instagram.com/oauth/authorize'
+		);
+
+		$graph_oauth_url = add_query_arg(
+			array(
+				'client_id'     => '990903199151440',
+				'redirect_uri'  => 'https://www.wpzoom.com/graph-auth/',
+				'scope'         => 'instagram_basic,pages_show_list,instagram_manage_insights,instagram_manage_comments,pages_read_engagement,business_management',
+				'response_type' => 'code',
+				'state'         => 'RETURN_URL',
+			),
+			'https://www.facebook.com/dialog/oauth'
 		);
 
 		?>
@@ -2711,8 +2845,28 @@ class WPZOOM_Instagram_Widget_Settings {
 				<p class="section-description"><?php _e( 'Are you connecting your account through Instagram or Facebook?', 'instagram-widget-by-wpzoom' ); ?></p>
 
 				<div class="account-options">
+
+					<!--// Connect Bussines Account-->
+					<div class="account-option account-option_business">
+						<h4 class="account-option-title"><?php esc_html_e( 'Connect using Facebook', 'instagram-widget-by-wpzoom' ); ?></h4>
+
+						<ul class="account-option-checklist">
+							<li><?php _e( 'Connects through your Facebook page', 'instagram-widget-by-wpzoom' ); ?></li>
+							<li><?php _e( 'Show posts from your account', 'instagram-widget-by-wpzoom' ); ?></li>
+							<li><?php _e( 'Show posts where you are tagged <small><em>Coming Soon</em></small>', 'instagram-widget-by-wpzoom' ); ?></li>
+							<li><?php _e( 'Show posts with a specific hashtag <small><em>Coming Soon</em></small>', 'instagram-widget-by-wpzoom' ); ?></li>
+						</ul>
+
+						<a href="<?php echo esc_url( $graph_oauth_url ); ?>" id="wpz-insta_connect-business" class="button button-primary account-option-button facebook">
+							<svg width="16" height="16" role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>Facebook</title><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" fill="#fff" /></svg>
+
+							<?php _e( 'Connect with Facebook', 'instagram-widget-by-wpzoom' ); ?>
+						</a>
+					</div>
+
+
 					<div class="account-option account-option_personal">
-						<h4 class="account-option-title"><?php _e( 'Connect using Instagram', 'instagram-widget-by-wpzoom' ); ?></h4>
+						<h4 class="account-option-title"><?php esc_html_e( 'Connect using Instagram', 'instagram-widget-by-wpzoom' ); ?></h4>
 
 						<ul class="account-option-checklist">
 							<li><?php _e( 'Connects directly through Instagram', 'instagram-widget-by-wpzoom' ); ?></li>
@@ -2730,22 +2884,7 @@ class WPZOOM_Instagram_Widget_Settings {
 						</a>
 					</div>
 
-					<div class="account-option account-option_business">
-						<h4 class="account-option-title"><?php _e( 'Connect using Facebook', 'instagram-widget-by-wpzoom' ); ?></h4>
 
-						<ul class="account-option-checklist">
-							<li><?php _e( 'Connects through your Facebook page', 'instagram-widget-by-wpzoom' ); ?></li>
-							<li><?php _e( 'Show posts from your account', 'instagram-widget-by-wpzoom' ); ?></li>
-							<li><?php _e( 'Show posts where you are tagged <small><em>Coming Soon</em></small>', 'instagram-widget-by-wpzoom' ); ?></li>
-							<li><?php _e( 'Show posts with a specific hashtag <small><em>Coming Soon</em></small>', 'instagram-widget-by-wpzoom' ); ?></li>
-						</ul>
-
-                        <button id="wpz-insta_connect-business" class="account-option-button facebook disabled">
-							<svg width="16" height="16" role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>Facebook</title><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" fill="#fff" /></svg>
-
-							<?php _e( '<em>Coming soon</em>', 'instagram-widget-by-wpzoom' ); ?>
-						</button>
-					</div>
 
 					<div class="account-option account-option_token">
 						<h4 class="account-option-title"><?php _e( 'Connect with Access Token', 'instagram-widget-by-wpzoom' ); ?></h4>
@@ -2860,6 +2999,7 @@ class WPZOOM_Instagram_Widget_Settings {
 					'i18n_delete_confirm_button_cancel' => __( 'No', 'instagram-widget-by-wpzoom' ),
 					'nonce'                             => wp_create_nonce( 'ajax-nonce' ),	
 					'feeds_url'                         => admin_url( self::$any_feeds ? 'edit.php?post_type=wpz-insta_feed' : 'post-new.php?post_type=wpz-insta_feed' ),
+					'users_url' 					    => admin_url( self::$any_users ? 'edit.php?post_type=wpz-insta_user' : 'post-new.php?post_type=wpz-insta_user' ),
 					'edit_user_url'                     => admin_url( 'edit.php?post_type=wpz-insta_user#post-' ),
 					'preview_url'                       => site_url( '?wpz-insta-widget-preview=true' ),
 					'default_user_thumbnail'            => plugins_url( '/dist/images/backend/icon-insta.png', __FILE__ ),

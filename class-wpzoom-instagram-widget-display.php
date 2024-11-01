@@ -198,6 +198,7 @@ class Wpzoom_Instagram_Widget_Display {
 				$show_user_image = isset( $args['show-account-image'] ) && boolval( $args['show-account-image'] );
 				$user_image = get_the_post_thumbnail_url( $user, 'thumbnail' ) ?: plugin_dir_url( __FILE__ ) . 'dist/images/backend/icon-insta.png';
 				$user_account_token = get_post_meta( $user_id, '_wpz-insta_token', true ) ?: '-1';
+				$user_business_page_id = get_post_meta( $user_id, '_wpz-insta_page_id', true ) ?: null;
 
 				if ( '-1' !== $user_account_token ) {
 					$attrs = '';
@@ -256,6 +257,10 @@ class Wpzoom_Instagram_Widget_Display {
 					}
 
 					$this->api->set_access_token( $user_account_token );
+
+					if( $user_business_page_id ) {
+						$this->api->set_business_page_id( $user_business_page_id );
+					}
 
 					if( isset( $args['feed-id'] ) ) {
 						$this->api->set_feed_id( $args['feed-id'] );
