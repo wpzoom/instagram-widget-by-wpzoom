@@ -724,16 +724,29 @@ class WPZOOM_Instagram_Widget_Settings {
 
 				case 'wpz-insta_account-token' :
 					$raw_token = get_post_meta( get_the_ID(), '_wpz-insta_token', true );
+					$business_page_id = get_post_meta( get_the_ID(), '_wpz-insta_page_id', true );
 					$oauth_url = add_query_arg(
 						array(
 							'client_id'     => '1242932982579434',
 							'redirect_uri'  => 'https://wpzoom.com/instagram-auth/',
 							'scope'         => 'user_profile,user_media',
 							'response_type' => 'code',
-							'state'         => 'RETURN_URL',//base64_encode( urlencode( admin_url( 'post.php?post=' . get_the_ID() . '&action=edit' ) ) ),
+							'state'         => 'RETURN_URL',
 						),
 						'https://api.instagram.com/oauth/authorize'
 					);
+					if( $business_page_id ) {
+						$oauth_url = add_query_arg(
+							array(
+								'client_id'     => '990903199151440',
+								'redirect_uri'  => 'https://www.wpzoom.com/graph-auth/',
+								'scope'         => 'instagram_basic,pages_show_list,instagram_manage_insights,instagram_manage_comments,pages_read_engagement,business_management',
+								'response_type' => 'code',
+								'state'         => 'RETURN_URL',
+							),
+							'https://www.facebook.com/dialog/oauth'
+						);;
+					}
 
 					?><li>
 

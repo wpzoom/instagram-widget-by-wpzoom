@@ -642,6 +642,16 @@ class Wpzoom_Instagram_Widget_API {
 				'https://graph.instagram.com/me'
 			);
 
+			if( ! empty( $this->business_page_id ) ) {
+				$request_url = add_query_arg(
+					array(
+						'fields'       => 'name,username,profile_picture_url,biography',
+						'access_token' => $this->access_token,
+					),
+					'https://graph.facebook.com/' . $this->business_page_id
+				);
+			}
+
 			$response = self::remote_get( $request_url, $this->headers );
 
 			if ( is_wp_error( $response ) || 200 != wp_remote_retrieve_response_code( $response ) ) {
