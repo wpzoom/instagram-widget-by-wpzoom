@@ -2046,7 +2046,7 @@ class WPZOOM_Instagram_Widget_Settings {
 			<div id="wpz-insta_modal_graph-dialog" class="success">
 				<div class="wpz-insta_modal-dialog_wrap">
 					<div class="wpz-insta_modal-dialog_header">
-						<h4 class="wpz-insta_modal-dialog_header-title"><?php _e( 'Please, select the account you want to connect', 'instagram-widget-by-wpzoom' ); ?></h4>
+						<h4 class="wpz-insta_modal-dialog_header-title"><?php _e( 'Please select the account you want to connect', 'instagram-widget-by-wpzoom' ); ?></h4>
 						<span class="wpz-insta_modal-dialog_header-button wpz-insta_modal-dialog_close-button"><?php _e( 'Close', 'instagram-widget-by-wpzoom' ); ?></span>
 					</div>
 
@@ -2861,7 +2861,7 @@ class WPZOOM_Instagram_Widget_Settings {
 
 					<!--// Connect Bussines Account-->
 					<div class="account-option account-option_business">
-						<h4 class="account-option-title"><?php esc_html_e( 'Connect using Facebook', 'instagram-widget-by-wpzoom' ); ?></h4>
+						<h4 class="account-option-title"><?php esc_html_e( 'Connect your Business Account', 'instagram-widget-by-wpzoom' ); ?></h4>
 
 						<ul class="account-option-checklist">
 							<li><?php _e( 'Connects through your Facebook page', 'instagram-widget-by-wpzoom' ); ?></li>
@@ -2879,7 +2879,7 @@ class WPZOOM_Instagram_Widget_Settings {
 
 
 					<div class="account-option account-option_personal">
-						<h4 class="account-option-title"><?php esc_html_e( 'Connect using Instagram', 'instagram-widget-by-wpzoom' ); ?></h4>
+						<h4 class="account-option-title"><?php esc_html_e( 'Connect your Personal Account', 'instagram-widget-by-wpzoom' ); ?></h4>
 
 						<ul class="account-option-checklist">
 							<li><?php _e( 'Connects directly through Instagram', 'instagram-widget-by-wpzoom' ); ?></li>
