@@ -2421,13 +2421,13 @@
 				}
 
 				.section-notice {
-					display: flex;
-					align-items: center;
 					font-size: 13px;
 					margin: 0;
 
 					svg {
-						margin: 0 12px 0 0;
+						margin: 0 7px 0 0;
+                        display: inline-block;
+                        vertical-align: middle;
 					}
 				}
 			}

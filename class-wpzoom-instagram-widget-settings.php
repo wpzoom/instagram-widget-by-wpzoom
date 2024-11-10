@@ -740,7 +740,7 @@ class WPZOOM_Instagram_Widget_Settings {
 							array(
 								'client_id'     => '990903199151440',
 								'redirect_uri'  => 'https://www.wpzoom.com/graph-auth/',
-								'scope'         => 'instagram_basic,pages_show_list,business_management',
+								'scope'         => 'instagram_basic,pages_show_list,business_management,instagram_manage_insights',
 								'response_type' => 'code',
 								'state'         => 'RETURN_URL',
 							),
@@ -2831,7 +2831,7 @@ class WPZOOM_Instagram_Widget_Settings {
 			array(
 				'client_id'     => '990903199151440',
 				'redirect_uri'  => 'https://www.wpzoom.com/graph-auth/',
-				'scope'         => 'instagram_basic,pages_show_list,business_management',
+				'scope'         => 'instagram_basic,pages_show_list,business_management,instagram_manage_insights',
 				'response_type' => 'code',
 				'state'         => 'RETURN_URL',
 			),
@@ -2850,22 +2850,23 @@ class WPZOOM_Instagram_Widget_Settings {
 					?>
 				</h1>
 
-				<h2 class="wpz-insta_settings-sub-title wp-heading"><?php _e( 'Connect account', 'instagram-widget-by-wpzoom' ); ?></h2>
+				<h2 class="wpz-insta_settings-sub-title wp-heading"><?php _e( 'Connect your account', 'instagram-widget-by-wpzoom' ); ?></h2>
 			</header>
 
 			<div class="wpz-insta-wrap wpz-insta_settings-connect">
 				<h3 class="section-title"><?php _e( 'Let&rsquo;s connect your Instagram account', 'instagram-widget-by-wpzoom' ); ?></h3>
-				<p class="section-description"><?php _e( 'Are you connecting your account through Instagram or Facebook?', 'instagram-widget-by-wpzoom' ); ?></p>
+				<p class="section-description"><?php _e( 'Are you connecting a Personal or Business account?', 'instagram-widget-by-wpzoom' ); ?></p>
 
 				<div class="account-options">
 
 					<!--// Connect Bussines Account-->
 					<div class="account-option account-option_business">
-						<h4 class="account-option-title"><?php esc_html_e( 'Connect your Business Account', 'instagram-widget-by-wpzoom' ); ?></h4>
+						<h4 class="account-option-title"><?php esc_html_e( 'Connect your Business or Creator Account', 'instagram-widget-by-wpzoom' ); ?></h4>
 
 						<ul class="account-option-checklist">
-							<li><?php _e( 'Connects through your Facebook page', 'instagram-widget-by-wpzoom' ); ?></li>
+							<li><?php _e( 'Works with Instagram Creator or Business accounts ', 'instagram-widget-by-wpzoom' ); ?></li>
 							<li><?php _e( 'Show posts from your account', 'instagram-widget-by-wpzoom' ); ?></li>
+                            <li><?php _e( 'Display user info in the header', 'instagram-widget-by-wpzoom' ); ?></li>
 							<li><?php _e( 'Show posts where you are tagged <small><em>Coming Soon</em></small>', 'instagram-widget-by-wpzoom' ); ?></li>
 							<li><?php _e( 'Show posts with a specific hashtag <small><em>Coming Soon</em></small>', 'instagram-widget-by-wpzoom' ); ?></li>
 						</ul>
@@ -2879,12 +2880,9 @@ class WPZOOM_Instagram_Widget_Settings {
 
 
 					<div class="account-option account-option_personal">
-						<h4 class="account-option-title"><?php esc_html_e( 'Connect your Personal Account', 'instagram-widget-by-wpzoom' ); ?></h4>
+						<h4 class="account-option-title"><?php esc_html_e( 'Connect your Personal Account ⚠️', 'instagram-widget-by-wpzoom' ); ?></h4>
 
-						<ul class="account-option-checklist">
-							<li><?php _e( 'Connects directly through Instagram', 'instagram-widget-by-wpzoom' ); ?></li>
-							<li><?php _e( 'Show posts from your account', 'instagram-widget-by-wpzoom' ); ?></li>
-						</ul>
+                        <p class="notice-warning notice"><?php _e( '<strong>Meta <a href="https://developers.facebook.com/blog/post/2024/09/04/update-on-instagram-basic-display-api/" target="_blank">announced</a> they will stop supporting  Personal Instagram accounts for their API on December 4, 2024.</strong><br/> Convert your Personal account to a <a href="https://help.instagram.com/2358103564437429?helpref=faq_content" target="_blank">Creator</a> or <a href="https://help.instagram.com/502981923235522?helpref=faq_content" target="_blank">Business</a> and re-connect using Facebook to continue displaying your feed. ', 'instagram-widget-by-wpzoom' ); ?></p><br/>
 
 						<a href="<?php echo esc_url( $oauth_url ); ?>" id="wpz-insta_connect-personal" class="button button-primary account-option-button">
 							<svg width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
@@ -2903,7 +2901,7 @@ class WPZOOM_Instagram_Widget_Settings {
 						<h4 class="account-option-title"><?php _e( 'Connect with Access Token', 'instagram-widget-by-wpzoom' ); ?></h4>
 
                         <p><?php _e( 'Using this option, you can connect your client\'s account to which you don\'t have access. Just ask your client to generate an access token using this tool:', 'instagram-widget-by-wpzoom' ); ?></p>
-                        <u><a href="https://www.wpzoom.com/instagram-auth/" target="_blank">Instagram Access Token Generator</a></u>
+                        <u><a href="https://www.wpzoom.com/instagram-auth/" target="_blank"><?php _e( 'Instagram Access Token Generator', 'instagram-widget-by-wpzoom' ); ?></a></u>
 
                         <br/>
 
@@ -2928,7 +2926,7 @@ class WPZOOM_Instagram_Widget_Settings {
 						<path d="M6.3 3.5H7.7V4.9H6.3V3.5ZM6.3 6.3H7.7V10.5H6.3V6.3ZM7 0C3.136 0 0 3.136 0 7C0 10.864 3.136 14 7 14C10.864 14 14 10.864 14 7C14 3.136 10.864 0 7 0ZM7 12.6C3.913 12.6 1.4 10.087 1.4 7C1.4 3.913 3.913 1.4 7 1.4C10.087 1.4 12.6 3.913 12.6 7C12.6 10.087 10.087 12.6 7 12.6Z" />
 					</svg>
 
-					<?php _e( 'Instagram Graph API for Business & Creator accounts will be soon available! This API integration will allow you to show posts with a specific tag or posts you\'re tagged in.', 'instagram-widget-by-wpzoom' ); ?>
+					<?php _e( 'Due to API limitations, you can no longer connect your <strong>Personal Instagram</strong> account starting <strong>December 4, 2024</strong>. The new Facebook/Instagram API supports only <strong>Creator and Business</strong> Instagram accounts.', 'instagram-widget-by-wpzoom' ); ?>
 				</p>
 			</div>
 		</div>
