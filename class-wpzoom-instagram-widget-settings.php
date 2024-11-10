@@ -740,7 +740,7 @@ class WPZOOM_Instagram_Widget_Settings {
 							array(
 								'client_id'     => '990903199151440',
 								'redirect_uri'  => 'https://www.wpzoom.com/graph-auth/',
-								'scope'         => 'instagram_basic,pages_show_list,instagram_manage_insights,business_management',
+								'scope'         => 'instagram_basic,pages_show_list,business_management',
 								'response_type' => 'code',
 								'state'         => 'RETURN_URL',
 							),
@@ -2831,7 +2831,7 @@ class WPZOOM_Instagram_Widget_Settings {
 			array(
 				'client_id'     => '990903199151440',
 				'redirect_uri'  => 'https://www.wpzoom.com/graph-auth/',
-				'scope'         => 'instagram_basic,pages_show_list,instagram_manage_insights,business_management',
+				'scope'         => 'instagram_basic,pages_show_list,business_management',
 				'response_type' => 'code',
 				'state'         => 'RETURN_URL',
 			),
