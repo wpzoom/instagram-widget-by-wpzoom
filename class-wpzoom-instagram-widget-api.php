@@ -75,6 +75,7 @@ class Wpzoom_Instagram_Widget_API {
 		add_action( 'wpzoom_instagram_widget_cron_hook', array( $this, 'execute_cron' ) );
 		add_filter( 'cron_schedules', array( $this, 'add_cron_interval' ) );
 	
+		$this->maybe_show_api_deprecation_notice();
 	}
 
 	/**
@@ -994,6 +995,98 @@ class Wpzoom_Instagram_Widget_API {
 
         return $media_count;
     }
+
+	// Add this new method to check if using Basic Display API
+	public static function is_using_basic_display_api($user_id) {
+		if (empty($user_id)) return false;
+
+		$account_type = get_post_meta($user_id, '_wpz-insta_account-type', true);
+		$page_id = get_post_meta($user_id, '_wpz-insta_page_id', true);
+
+		// If there's no page_id and the account type isn't 'business', it's using Basic Display API
+		return empty($page_id) && (!$account_type || $account_type !== 'business');
+	}
+
+	// Add this method to show the admin notice
+	public function maybe_show_api_deprecation_notice() {
+		// Only show on admin pages
+		if (!is_admin()) return;
+
+		// Get all Instagram users
+		$users = get_posts(array(
+			'post_type' => 'wpz-insta_user',
+			'posts_per_page' => -1,
+		));
+
+		$has_basic_api_users = false;
+		foreach ($users as $user) {
+			if (self::is_using_basic_display_api($user->ID)) {
+				$has_basic_api_users = true;
+				break;
+			}
+		}
+
+		// If we found any users using Basic Display API, show the notice
+		if ($has_basic_api_users) {
+			add_action('admin_notices', function() {
+				$notice_dismissed = get_option('wpz_insta_basic_api_notice_dismissed');
+				if ($notice_dismissed) return;
+
+				?>
+				<div class="notice notice-warning is-dismissible" id="wpz-insta-api-deprecation-notice">
+					<h3 style="margin-bottom: 0;">
+						<svg style="vertical-align: middle;" width="20" height="20" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+							<path fill="#f0b849" d="M12 5.99L19.53 19H4.47L12 5.99M12 2L1 21h22L12 2zm1 14h-2v2h2v-2zm0-6h-2v4h2v-4z"/>
+						</svg>
+						<?php _e('Major Instagram API Update', 'instagram-widget-by-wpzoom'); ?>
+					</h3>
+
+					<p style="font-size: 14px;">
+						<?php _e("We've detected that you're using personal accounts to display your Instagram feed. <strong>Instagram will no longer allow the use of personal accounts within our plugin starting December 4, 2024.</strong>", 'instagram-widget-by-wpzoom'); ?>
+					</p>
+
+					<p style="font-size: 14px;">
+						<?php
+						printf(
+							__('To continue displaying your Instagram feed, you\'ll need to: <br>1. Convert your Instagram account to a <a href="%1$s" target="_blank">Professional account</a> (Creator or Business)<br>2. Re-connect your account using the Facebook login option in the plugin.', 'instagram-widget-by-wpzoom'),
+							'https://help.instagram.com/502981923235522'
+						);
+						?>
+					</p>
+
+					<p style="font-size: 14px;">
+						<a href="<?php echo admin_url('edit.php?post_type=wpz-insta_feed&page=wpz-insta-connect'); ?>" class="button button-primary">
+							<?php _e('Re-connect Your Account', 'instagram-widget-by-wpzoom'); ?>
+						</a>
+
+						<a href="https://www.wpzoom.com/documentation/instagram-widget/basic-display-api-deprecation/" target="_blank" class="button button-secondary">
+							<?php _e('Learn More About This Change', 'instagram-widget-by-wpzoom'); ?>
+						</a>
+					</p>
+				</div>
+
+				<script>
+				jQuery(document).ready(function($) {
+					$(document).on('click', '#wpz-insta-api-deprecation-notice .notice-dismiss', function() {
+						$.ajax({
+							url: ajaxurl,
+							data: {
+								action: 'dismiss_wpz_insta_basic_api_notice'
+							}
+						});
+					});
+				});
+				</script>
+				<?php
+			});
+
+			// Add AJAX handler for dismissing the notice
+			add_action('wp_ajax_dismiss_wpz_insta_basic_api_notice', function() {
+				update_option('wpz_insta_basic_api_notice_dismissed', true);
+				wp_die();
+			});
+		}
+	}
 }
 
 Wpzoom_Instagram_Widget_API::getInstance();
