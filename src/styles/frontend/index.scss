@@ -56,6 +56,22 @@
         gap: 20px;
         margin: 0 0 25px;
 
+
+        .wpz-insta-stats {
+            display: flex;
+            gap: 20px;
+            margin: 5px 0;
+
+            .wpz-insta-posts,
+            .wpz-insta-followers,
+            .wpz-insta-following {
+
+                strong {
+                    font-weight: 600;
+                }
+            }
+        }
+
         .zoom-instagram-widget__header-column-left {
             min-width: 70px;
 

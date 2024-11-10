@@ -870,6 +870,130 @@ class Wpzoom_Instagram_Widget_API {
 
 		return true;
 	}
+
+	// Add this new method to get and cache followers count
+	public function get_followers_count($user_business_page_id, $user_account_token) {
+		if (empty($user_business_page_id) || empty($user_account_token)) {
+			return 0;
+		}
+
+		// Create a unique transient key for this account
+		$transient_key = 'wpz-insta_followers_' . $user_business_page_id;
+
+		// Try to get cached followers count
+		$followers_count = get_transient($transient_key);
+
+		if (false === $followers_count) {
+			// If no cached data, fetch from API
+			$graph_api_url = add_query_arg(
+				array(
+					'fields'       => 'followers_count',
+					'access_token' => $user_account_token,
+				),
+				'https://graph.facebook.com/v21.0/' . $user_business_page_id
+			);
+
+			$response = wp_remote_get($graph_api_url);
+
+			if (!is_wp_error($response) && 200 === wp_remote_retrieve_response_code($response)) {
+				$data = json_decode(wp_remote_retrieve_body($response));
+				if (isset($data->followers_count)) {
+					$followers_count = intval($data->followers_count);
+					// Cache for 24 hours
+					set_transient($transient_key, $followers_count, DAY_IN_SECONDS);
+				} else {
+					$followers_count = 0;
+				}
+			} else {
+				$followers_count = 0;
+			}
+		}
+
+		return $followers_count;
+	}
+
+
+    // Add this new method to get and cache following count
+    public function get_following($user_business_page_id, $user_account_token) {
+        if (empty($user_business_page_id) || empty($user_account_token)) {
+            return 0;
+        }
+
+        // Create a unique transient key for this account
+        $transient_key = 'wpz-insta_following_' . $user_business_page_id;
+
+        // Try to get cached following count
+        $following_count = get_transient($transient_key);
+
+        if (false === $following_count) {
+            // If no cached data, fetch from API
+            $graph_api_url = add_query_arg(
+                array(
+                    'fields'       => 'follows_count',
+                    'access_token' => $user_account_token,
+                ),
+                'https://graph.facebook.com/v21.0/' . $user_business_page_id
+            );
+
+            $response = wp_remote_get($graph_api_url);
+
+            if (!is_wp_error($response) && 200 === wp_remote_retrieve_response_code($response)) {
+                $data = json_decode(wp_remote_retrieve_body($response));
+                if (isset($data->follows_count)) {
+                    $following_count = intval($data->follows_count);
+                    // Cache for 24 hours
+                    set_transient($transient_key, $following_count, DAY_IN_SECONDS);
+                } else {
+                    $following_count = 0;
+                }
+            } else {
+                $following_count = 0;
+            }
+        }
+
+        return $following_count;
+    }
+
+    // Add this new method to get and cache media count
+    public function get_media_count($user_business_page_id, $user_account_token) {
+        if (empty($user_business_page_id) || empty($user_account_token)) {
+            return 0;
+        }
+
+        // Create a unique transient key for this account
+        $transient_key = 'wpz-insta_media_count_' . $user_business_page_id;
+
+        // Try to get cached media count
+        $media_count = get_transient($transient_key);
+
+        if (false === $media_count) {
+            // If no cached data, fetch from API
+            $graph_api_url = add_query_arg(
+                array(
+                    'fields'       => 'media_count',
+                    'access_token' => $user_account_token,
+                ),
+                'https://graph.facebook.com/v21.0/' . $user_business_page_id
+            );
+
+            $response = wp_remote_get($graph_api_url);
+
+            if (!is_wp_error($response) && 200 === wp_remote_retrieve_response_code($response)) {
+                $data = json_decode(wp_remote_retrieve_body($response));
+                if (isset($data->media_count)) {
+                    $media_count = intval($data->media_count);
+                    // Cache for 24 hours
+                    set_transient($transient_key, $media_count, DAY_IN_SECONDS);
+                } else {
+                    $media_count = 0;
+                }
+            } else {
+                $media_count = 0;
+            }
+        }
+
+        return $media_count;
+    }
 }
 
 Wpzoom_Instagram_Widget_API::getInstance();
