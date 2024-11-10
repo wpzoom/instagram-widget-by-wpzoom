@@ -53,6 +53,7 @@
 
     .zoom-instagram-widget__header {
         display: flex;
+        align-items: flex-start;
         gap: 20px;
         margin: 0 0 25px;
 
@@ -71,6 +72,38 @@
                 }
             }
         }
+
+
+
+        .zoom-instagram-widget__header-column-left {
+            position: relative;
+
+            &.has-stories {
+                margin: 3px 0 0 3px;
+
+                &:before {
+                    content: '';
+                    position: absolute;
+                    top: -4px;
+                    left: -4px;
+                    right: -4px;
+                    bottom: -4px;
+                    // background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+                    background:radial-gradient(white 66%, transparent 0), linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+                    border-radius: 50%;
+                    z-index: 0;
+                }
+
+                img {
+                    position: relative;
+                    z-index: 1;
+                    vertical-align: top;
+                    border: .8px solid rgba(0,0,0,.3);
+                    box-shadow: 0 0 0px 2px #fff;
+                }
+            }
+        }
+
 
         .zoom-instagram-widget__header-column-left {
             min-width: 70px;

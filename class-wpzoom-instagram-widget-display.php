@@ -331,7 +331,10 @@ class Wpzoom_Instagram_Widget_Display {
 							}
 
 							if ( $show_user_image && ! empty( $user_image ) ) {
-								$output .= '<div class="zoom-instagram-widget__header-column-left">';
+								$has_stories = $this->api->has_stories($user_business_page_id, $user_account_token);
+								$story_ring_class = $has_stories ? ' has-stories' : '';
+								
+								$output .= '<div class="zoom-instagram-widget__header-column-left' . $story_ring_class . '">';
 								$output .= '<img src="' . esc_url( $user_image ) . '" alt="' . esc_attr( $user_name_display ) . '" width="70"/>';
 								$output .= '</div>';
 							}

@@ -1087,6 +1087,43 @@ class Wpzoom_Instagram_Widget_API {
 			});
 		}
 	}
+
+	// Add this new method to check for stories
+	public function has_stories($user_business_page_id, $user_account_token) {
+		if (empty($user_business_page_id) || empty($user_account_token)) {
+			return false;
+		}
+
+		// Create a unique transient key for this account
+		$transient_key = 'wpz-insta_has_stories_' . $user_business_page_id;
+
+		// Try to get cached stories status
+		$has_stories = get_transient($transient_key);
+
+		if (false === $has_stories) {
+			// If no cached data, fetch from API
+			$graph_api_url = add_query_arg(
+				array(
+					'fields'       => 'stories{id}',
+					'access_token' => $user_account_token,
+				),
+				'https://graph.facebook.com/v21.0/' . $user_business_page_id
+			);
+
+			$response = wp_remote_get($graph_api_url);
+
+			if (!is_wp_error($response) && 200 === wp_remote_retrieve_response_code($response)) {
+				$data = json_decode(wp_remote_retrieve_body($response));
+				$has_stories = isset($data->stories) && !empty($data->stories->data);
+				// Cache for 1 hour since stories change frequently
+				set_transient($transient_key, $has_stories, HOUR_IN_SECONDS);
+			} else {
+				$has_stories = false;
+			}
+		}
+
+		return $has_stories;
+	}
 }
 
 Wpzoom_Instagram_Widget_API::getInstance();
