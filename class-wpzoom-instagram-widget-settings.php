@@ -2914,11 +2914,11 @@ class WPZOOM_Instagram_Widget_Settings {
 						<h4 class="account-option-title"><?php _e( 'Connect with Access Token', 'instagram-widget-by-wpzoom' ); ?></h4>
 
                         <p><?php _e( 'Using this option, you can connect your client\'s account to which you don\'t have access. Just ask your client to generate an access token using this tool:', 'instagram-widget-by-wpzoom' ); ?></p>
-                        <u><a href="https://www.wpzoom.com/instagram-auth/" target="_blank"><?php _e( 'Instagram Access Token Generator', 'instagram-widget-by-wpzoom' ); ?></a></u>
+                        <a href="https://www.wpzoom.com/graph-auth/" target="_blank"><?php _e( 'Access Token Generator', 'instagram-widget-by-wpzoom' ); ?></a>
 
                         <br/>
 
-						<input type="password" autocomplete="off" id="wpz-insta_account-token-input" name="wpz-insta_account-token-input" value="<?php echo isset( $settings['basic-access-token'] ) && ! empty( $settings['basic-access-token'] ) ? esc_attr( $settings['basic-access-token'] ) : ''; ?>" class="account-option-token-input" placeholder="<?php _e( 'Enter your Instagram access token', 'instagram-widget-by-wpzoom' ); ?>" />
+						<input type="password" autocomplete="off" id="wpz-insta_account-token-input" name="wpz-insta_account-token-input" value="<?php echo isset( $settings['basic-access-token'] ) && ! empty( $settings['basic-access-token'] ) ? esc_attr( $settings['basic-access-token'] ) : ''; ?>" class="account-option-token-input" placeholder="<?php _e( 'Enter your Facebook access token', 'instagram-widget-by-wpzoom' ); ?>" />
 
                         <br/>
 
