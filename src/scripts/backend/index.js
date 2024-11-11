@@ -243,7 +243,7 @@ jQuery( function( $ ) {
 			if ( $( this ).is( '#wpz-insta_connect-personal' ) || $( this ).is( '#wpz-insta_connect-business' ) ) {
 				window.wpzInstaAuthenticateInstagram( $( this ).attr( 'href' ) );
 			} else if ( $( this ).is( '#wpz-insta_account-token-button' ) ) {
-				window.wpzInstaHandleReturnedToken( $( '#wpz-insta_account-token-input' ).val().trim().replace( /[^a-z0-9-_.]+/gi, '' ), true );
+				window.wpzInstaHandleReturnedGraphToken( $( '#wpz-insta_account-token-input' ).val().trim().replace( /[^a-z0-9-_.]+/gi, '' ), true );
 			}
 		}
 	} );
@@ -622,17 +622,20 @@ jQuery( function( $ ) {
 						token: token,
 					};
 		
-					// if ( ! rawToken ) {
-					// 	const parsedQuery = 'search' in url && '' != ('' + url.search).trim() ? window.wpzInstaParseQuery( '' + url.search ) : {};
-					// 	args.post_id = ! $.isEmptyObject( parsedQuery ) && 'post' in parsedQuery ? parseInt( parsedQuery.post ) : 0;
-					// }
+					if ( ! rawToken ) {
+						const parsedQuery = 'search' in url && '' != ('' + url.search).trim() ? window.wpzInstaParseQuery( '' + url.search ) : {};
+						args.post_id = ! $.isEmptyObject( parsedQuery ) && 'post' in parsedQuery ? parseInt( parsedQuery.post ) : 0;
+						if( args.post_id > 0 ) {
+							args.action = 'wpz-insta_connect-user';
+						}
+					}
 		
 					$.post( ajaxurl, args )
 						.done( function ( data, status, code ) {
 							if ( 'success' == status ) {
 								
 								var getBusinessUsers = $(data);
-								if ( getBusinessUsers ) {
+								if ( getBusinessUsers && args.post_id <= 0 ) {
 									$( '#wpz-insta_modal_graph-dialog' ).find( '.wpz-insta_modal-dialog_content' ).html( getBusinessUsers );
 									$( '#wpz-insta_modal_graph-dialog' ).removeClass().addClass( 'open success' );
 									$( '.wpz-insta_business-accounts-link').on('click', function (e) {
@@ -641,8 +644,15 @@ jQuery( function( $ ) {
 										$(this).addClass('selected'); // Add to the clicked link
 										$( '#wpz-insta-graph-connect-account').removeClass('disabled');
 									} );
-					
 								}
+								else {
+									window.wpzInstaShowConnectDoneDialog(
+										status,
+										( 'update' in data && data.update )
+									);
+								}
+
+
 							}
 					
 						} )
@@ -780,7 +790,7 @@ jQuery( function( $ ) {
 				id = window.inlineEditPost.getId( id );
 			}
 
-			let fields = [ '_wpz-insta_account-type', '_wpz-insta_token', '_wpz-insta_token_expire', '_thumbnail_id', 'wpz-insta_profile-photo', '_wpz-insta_user_name', '_wpz-insta_user-bio' ],
+			let fields = [ '_wpz-insta_account-type', '_wpz-insta_token', '_wpz-insta_token_expire', '_thumbnail_id', 'wpz-insta_profile-photo', '_wpz-insta_user_name', '_wpz-insta_user-bio', '_wpz-insta_page_id' ],
 			    rowData = $( '#inline_' + id ),
 			    editRow = $( '#edit-' + id ),
 			    reconnectBtn = $( '#wpz-insta_reconnect', editRow ),
