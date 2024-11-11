@@ -332,10 +332,46 @@ class Wpzoom_Instagram_Widget_Display {
 
 							if ( $show_user_image && ! empty( $user_image ) ) {
 								$has_stories = $this->api->has_stories($user_business_page_id, $user_account_token);
+								$stories = $has_stories ? $this->api->get_stories($user_business_page_id, $user_account_token) : array();
 								$story_ring_class = $has_stories ? ' has-stories' : '';
-								
+
 								$output .= '<div class="zoom-instagram-widget__header-column-left' . $story_ring_class . '">';
-								$output .= '<img src="' . esc_url( $user_image ) . '" alt="' . esc_attr( $user_name_display ) . '" width="70"/>';
+								$output .= '<img src="' . esc_url( $user_image ) . '" alt="' . esc_attr( $user_name_display ) . '" width="70"' . ($has_stories ? ' data-stories="true"' : '') . '/>';
+
+								if ($has_stories && !empty($stories)) {
+									$output .= '<div class="wpz-insta-stories-popup mfp-hide">';
+									
+									// Add single progress bar container
+									$output .= '<div class="story-progress-bar">';
+									$total_stories = count($stories);
+									foreach ($stories as $index => $story) {
+										$output .= '<div class="progress-segment' . ($index === 0 ? ' active' : '') . '" style="width:' . (100/$total_stories) . '%">';
+										$output .= '<div class="progress"></div>';
+										$output .= '</div>';
+									}
+									$output .= '</div>';
+									
+									$output .= '<div class="wpz-insta-stories-popup-wrapper">';
+									foreach ($stories as $story) {
+										$output .= '<div class="wpz-insta-story-item' . ($story->media_type === 'VIDEO' ? ' video' : '') . '">';
+										if ($story->media_type === 'VIDEO') {
+											$output .= '<video controls playsinline webkit-playsinline preload="metadata">';
+											$output .= '<source src="' . esc_url($story->media_url) . '" type="video/mp4">';
+											$output .= '</video>';
+										} else {
+											$output .= '<img src="' . esc_url($story->media_url) . '" alt="" loading="lazy" />';
+										}
+										$output .= '<div class="wpz-insta-story-meta">';
+										$output .= '<span class="wpz-insta-story-time">' . human_time_diff(strtotime($story->timestamp), current_time('timestamp')) . ' ago</span>';
+										$output .= '<a href="' . esc_url($story->permalink) . '" target="_blank" rel="noopener" class="wpz-insta-story-link">View on Instagram</a>';
+										$output .= '</div>';
+										$output .= '</div>';
+									}
+									$output .= '</div>';
+									$output .= '<button class="wpz-insta-stories-close">&times;</button>';
+									$output .= '</div>';
+								}
+
 								$output .= '</div>';
 							}
 

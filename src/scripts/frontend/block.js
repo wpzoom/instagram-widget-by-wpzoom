@@ -88,6 +88,112 @@
 				$( this ).find( '.zoom-instagram-link' ).addClass( 'magnific-active' );
 			}
 		} );
+
+		// Add Stories functionality
+		function initInstagramStories() {
+			$('.zoom-instagram-widget__header-column-left img[data-stories="true"]').each(function() {
+				const $img = $(this);
+				const $popup = $img.siblings('.wpz-insta-stories-popup');
+				
+				// Only initialize if popup content exists
+				if ($popup.length > 0) {
+					$img.magnificPopup({
+						type: 'inline',
+						mainClass: 'wpz-insta-stories-popup-container',
+						closeMarkup: '<button title="%title%" type="button" class="mfp-close wpz-insta-stories-close">×</button>',
+						items: {
+							src: $popup.get(0),
+							type: 'inline'
+						},
+						callbacks: {
+							open: function() {
+								const $popup = $(this.content);
+								$popup.find('.wpz-insta-story-item:first').addClass('active');
+								
+								const firstVideo = $popup.find('.wpz-insta-story-item.active video')[0];
+								if (firstVideo) {
+									firstVideo.currentTime = 0;
+									firstVideo.play();
+								}
+							},
+							close: function() {
+								const $popup = $(this.content);
+								$popup.find('video').each(function() {
+									this.pause();
+								});
+								$popup.find('.wpz-insta-story-item').removeClass('active');
+							}
+						},
+						removalDelay: 300,
+						midClick: true
+					});
+				}
+			});
+
+			// Handle story navigation
+			$(document).on('click', '.wpz-insta-story-item', function(e) {
+				if (!$(e.target).is('a')) {
+					const $items = $(this).parent().children('.wpz-insta-story-item');
+					const currentIndex = $items.index(this);
+					const nextIndex = (currentIndex + 1) % $items.length;
+					
+					// Pause current video if any
+					const currentVideo = $(this).find('video')[0];
+					if (currentVideo) {
+						currentVideo.pause();
+					}
+					
+					$(this).removeClass('active');
+					$items.eq(nextIndex).addClass('active');
+					
+					// Play next video if any
+					const nextVideo = $items.eq(nextIndex).find('video')[0];
+					if (nextVideo) {
+						nextVideo.currentTime = 0;
+						nextVideo.play();
+					}
+				}
+			});
+
+			// Add keyboard navigation
+			$(document).on('keyup', function(e) {
+				const $popup = $('.mfp-wrap.wpz-insta-stories-popup-container');
+				if ($popup.length) {
+					const $items = $popup.find('.wpz-insta-story-item');
+					const $current = $items.filter('.active');
+					const currentIndex = $items.index($current);
+					let nextIndex;
+
+					if (e.key === 'ArrowLeft') {
+						nextIndex = currentIndex - 1;
+						if (nextIndex < 0) nextIndex = $items.length - 1;
+					} else if (e.key === 'ArrowRight' || e.key === ' ') {
+						nextIndex = (currentIndex + 1) % $items.length;
+					} else {
+						return;
+					}
+
+					// Pause current video
+					const currentVideo = $current.find('video')[0];
+					if (currentVideo) {
+						currentVideo.pause();
+					}
+
+					$current.removeClass('active');
+					$items.eq(nextIndex).addClass('active');
+
+					// Play next video
+					const nextVideo = $items.eq(nextIndex).find('video')[0];
+					if (nextVideo) {
+						nextVideo.currentTime = 0;
+						nextVideo.play();
+					}
+				}
+			});
+		}
+
+		// Initialize stories functionality
+		initInstagramStories();
 	};
 
 	$( window ).on( 'load', window.wpzInstaFrontendInit );
