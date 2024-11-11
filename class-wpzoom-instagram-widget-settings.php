@@ -2063,6 +2063,11 @@ class WPZOOM_Instagram_Widget_Settings {
 					</div>
 
 					<div class="wpz-insta_modal-dialog_footer">
+
+                        <p class="section-notice"><svg width="14" height="14" viewBox="0 0 14 14" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M6.3 3.5H7.7V4.9H6.3V3.5ZM6.3 6.3H7.7V10.5H6.3V6.3ZM7 0C3.136 0 0 3.136 0 7C0 10.864 3.136 14 7 14C10.864 14 14 10.864 14 7C14 3.136 10.864 0 7 0ZM7 12.6C3.913 12.6 1.4 10.087 1.4 7C1.4 3.913 3.913 1.4 7 1.4C10.087 1.4 12.6 3.913 12.6 7C12.6 10.087 10.087 12.6 7 12.6Z"></path>
+                                            </svg> <?php _e( 'If your account is not shown here, make sure it\'s connected to a Facebook Page and re-connect. <a href="https://help.instagram.com/570895513091465?helpref=faq_content" target="_blank">View instructions</a>', 'instagram-widget-by-wpzoom' ); ?></p>
+
 						<a id="wpz-insta-graph-connect-account" href="#"  class="wpz-insta_modal-dialog_footer-button wpz-insta_modal-dialog_ok-button button button-primary disabled"><?php _e( 'Connect', 'instagram-widget-by-wpzoom' ); ?></a>
 						<span class="wpz-insta_modal-dialog_footer-button wpz-insta_modal-dialog_cancel-button button button-secondary hidden"><?php _e( 'Cancel', 'instagram-widget-by-wpzoom' ); ?></span>
 					</div>

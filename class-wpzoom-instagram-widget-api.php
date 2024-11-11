@@ -1055,7 +1055,7 @@ class Wpzoom_Instagram_Widget_API {
 					</p>
 
 					<p style="font-size: 14px;">
-						<a href="<?php echo admin_url('edit.php?post_type=wpz-insta_feed&page=wpz-insta-connect'); ?>" class="button button-primary">
+						<a href="<?php echo admin_url('edit.php?post_type=wpz-insta_user'); ?>" class="button button-primary">
 							<?php _e('Re-connect Your Account', 'instagram-widget-by-wpzoom'); ?>
 						</a>
 
