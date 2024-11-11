@@ -739,7 +739,7 @@ class WPZOOM_Instagram_Widget_Settings {
 					?><li>
 
 						<ul class="wpz-insta_two-columns">
-							<li><a href="<?php echo esc_url( $oauth_url ); ?>" id="wpz-insta_reconnect" class="button button-primary"><?php _e( 'Re-connect', 'instagram-widget-by-wpzoom' ); ?></a></li>
+							<li><br/><br/><br/><a href="<?php echo esc_url( $oauth_url ); ?>" id="wpz-insta_reconnect" class="button button-primary"><?php _e( 'Re-connect', 'instagram-widget-by-wpzoom' ); ?></a></li>
 						</ul>
 					</li>
 					</ul>

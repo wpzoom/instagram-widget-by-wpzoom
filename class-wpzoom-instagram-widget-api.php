@@ -1042,13 +1042,13 @@ class Wpzoom_Instagram_Widget_API {
 					</h3>
 
 					<p style="font-size: 14px;">
-						<?php _e("We've detected that you're using personal accounts to display your Instagram feed. <strong>Instagram will no longer allow the use of personal accounts within our plugin starting December 4, 2024.</strong>", 'instagram-widget-by-wpzoom'); ?>
+						<?php _e("We've detected that you connected your Instagram account using a method that will soon be discontinued or that you're using a <strong>personal account</strong> to display your Instagram feed. Instagram will discontinue this method on <strong>December 4, 2024</strong>, and will no longer allow the use of personal accounts within our plugin.", 'instagram-widget-by-wpzoom'); ?>
 					</p>
 
 					<p style="font-size: 14px;">
                         <?php
                         printf(
-                            __('To continue displaying your Instagram feed, you\'ll need to: <br>1. Convert your Instagram account to a <a href="%1$s" target="_blank">Professional account</a> (Creator or Business)<br>2. Connect your Instagram account to a Facebook Page. For more information, please refer to <a href="%2$s" target="_blank">this guide</a>.<br>3. Re-connect your account using the Facebook login option in the plugin.', 'instagram-widget-by-wpzoom'),
+                            __('To continue displaying your Instagram feed, you\'ll need to: <br>1. Convert your Personal Instagram account to a <a href="%1$s" target="_blank">Professional account</a> (Creator or Business).<br>2. Link your Instagram account to a Facebook Page. For more information, please refer to <a href="%2$s" target="_blank">this guide</a>.<br>3. Re-connect your account using the Facebook login option in the plugin.', 'instagram-widget-by-wpzoom'),
                             'https://help.instagram.com/502981923235522',
                             'https://help.instagram.com/570895513091465?helpref=faq_content'
                         );
