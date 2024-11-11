@@ -1046,13 +1046,14 @@ class Wpzoom_Instagram_Widget_API {
 					</p>
 
 					<p style="font-size: 14px;">
-						<?php
-						printf(
-							__('To continue displaying your Instagram feed, you\'ll need to: <br>1. Convert your Instagram account to a <a href="%1$s" target="_blank">Professional account</a> (Creator or Business)<br>2. Re-connect your account using the Facebook login option in the plugin.', 'instagram-widget-by-wpzoom'),
-							'https://help.instagram.com/502981923235522'
-						);
-						?>
-					</p>
+                        <?php
+                        printf(
+                            __('To continue displaying your Instagram feed, you\'ll need to: <br>1. Convert your Instagram account to a <a href="%1$s" target="_blank">Professional account</a> (Creator or Business)<br>2. Connect your Instagram account to a Facebook Page. For more information, please refer to <a href="%2$s" target="_blank">this guide</a>.<br>3. Re-connect your account using the Facebook login option in the plugin.', 'instagram-widget-by-wpzoom'),
+                            'https://help.instagram.com/502981923235522',
+                            'https://help.instagram.com/570895513091465?helpref=faq_content'
+                        );
+                        ?>
+                    </p>
 
 					<p style="font-size: 14px;">
 						<a href="<?php echo admin_url('edit.php?post_type=wpz-insta_user'); ?>" class="button button-primary">
