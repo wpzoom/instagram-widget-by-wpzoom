@@ -424,7 +424,10 @@ jQuery( function( $ ) {
 
 					$( 'input#publish' ).toggleClass( 'disabled', $.isEmptyObject( formChangedValues ) );
 
-					window.wpzInstaReloadPreview();
+					if ( key !== 'post_title' ) {
+						window.wpzInstaReloadPreview();
+					}
+
 				}
 			},
 			300
@@ -625,9 +628,6 @@ jQuery( function( $ ) {
 					if ( ! rawToken ) {
 						const parsedQuery = 'search' in url && '' != ('' + url.search).trim() ? window.wpzInstaParseQuery( '' + url.search ) : {};
 						args.post_id = ! $.isEmptyObject( parsedQuery ) && 'post' in parsedQuery ? parseInt( parsedQuery.post ) : 0;
-						if( args.post_id > 0 ) {
-							args.action = 'wpz-insta_connect-user';
-						}
 					}
 		
 					$.post( ajaxurl, args )
@@ -635,7 +635,7 @@ jQuery( function( $ ) {
 							if ( 'success' == status ) {
 								
 								var getBusinessUsers = $(data);
-								if ( getBusinessUsers && args.post_id <= 0 ) {
+								if ( getBusinessUsers ) {
 									$( '#wpz-insta_modal_graph-dialog' ).find( '.wpz-insta_modal-dialog_content' ).html( getBusinessUsers );
 									$( '#wpz-insta_modal_graph-dialog' ).removeClass().addClass( 'open success' );
 									$( '.wpz-insta_business-accounts-link').on('click', function (e) {
@@ -645,13 +645,12 @@ jQuery( function( $ ) {
 										$( '#wpz-insta-graph-connect-account').removeClass('disabled');
 									} );
 								}
-								else {
-									window.wpzInstaShowConnectDoneDialog(
-										status,
-										( 'update' in data && data.update )
-									);
-								}
-
+								// else {
+								// 	window.wpzInstaShowConnectDoneDialog(
+								// 		status,
+								// 		( 'update' in data && data.update )
+								// 	);
+								// }
 
 							}
 					
@@ -669,11 +668,13 @@ jQuery( function( $ ) {
 	$('#wpz-insta-graph-connect-account').on('click', function (e) {
 		e.preventDefault();
 		let account_info = $('.wpz-insta_business-accounts-link.selected').data('account-info');
+		let post_id = $('.wpz-insta_business-accounts-link').parent().data('post-id');
 		if( account_info ) {
 			const args = {	
 				action: 'wpz-insta_connect_business-account',
 				nonce: zoom_instagram_widget_admin.nonce,
 				account_info: JSON.stringify( account_info ),
+				post_id: post_id,
 			};
 
 			$.post( ajaxurl, args )

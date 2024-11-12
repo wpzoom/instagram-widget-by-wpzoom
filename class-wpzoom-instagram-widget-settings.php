@@ -2116,6 +2116,12 @@ class WPZOOM_Instagram_Widget_Settings {
 
 			if( ! empty( $token ) ) {
 
+				$post_id = 0;
+
+				if ( isset( $_POST['post_id'] ) && intval( $_POST['post_id'] ) > 0 ) {
+					$post_id = intval( $_POST['post_id'] );
+				}
+
 				$accountsData = Wpzoom_Instagram_Widget_API::get_business_accounts_from_token( $token );
 
 				if( false !== $accountsData && is_array( $accountsData ) ) {
@@ -2128,7 +2134,8 @@ class WPZOOM_Instagram_Widget_Settings {
 					}
 
 					printf( 
-						'<div class="wpz-insta_connect-business-accounts">%s</div>', 
+						'<div data-post-id="%s" class="wpz-insta_connect-business-accounts">%s</div>', 
+						$post_id,
 						$output 
 					);
 				}
@@ -2159,8 +2166,27 @@ class WPZOOM_Instagram_Widget_Settings {
 
 					$post_id = intval( $_POST['post_id'] );
 						if ( false !== get_post_status( $post_id ) ) {
+
+							// place the current post and $new_title into array
+							$post_update = array(
+								'ID'          => $post_id,
+								'post_title'  => wp_strip_all_tags( $account_username ),
+								'post_content' => $account_bio,
+
+							);
+
+							wp_update_post( $post_update );
+
+							update_post_meta( $post_id, '_wpz-insta_page_id', $account_id );
+							update_post_meta( $post_id, '_wpz-insta_user_name', $account_name );
+							update_post_meta( $post_id, '_wpz-insta_account-type', 'business' );
+
 							update_post_meta( $post_id, '_wpz-insta_token', $token );
 							update_post_meta( $post_id, '_wpz-insta_token_expire', strtotime( '+60 days' ) );
+
+							if ( ! empty( $account_profile_picture ) ) {
+								$this->generate_featured_image( $account_profile_picture, $post_id, $account_username );
+							}
 
 							wp_send_json_success( array( 'update' => true ), 200 );
 						}
