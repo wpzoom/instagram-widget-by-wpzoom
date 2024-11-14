@@ -2894,7 +2894,7 @@ class WPZOOM_Instagram_Widget_Settings {
 
 		$oauth_url = add_query_arg(
 			array(
-				'client_id'            => '1292861578406087',
+				'client_id'            => '843146171317648',
 				'enable_fb_login'      => '0',
 				'redirect_uri'         => 'https://wpzoom.com/instagram-business-auth/',
 				'scope'                => 'instagram_business_basic',
