@@ -759,7 +759,7 @@ class Wpzoom_Instagram_Widget_API {
 			$request_url = add_query_arg(
 				array(
 					'access_token' => $access_token,
-					'fields'       => 'account_type,username',
+					'fields'       => 'name,account_type,username,biography,profile_picture_url',
 				),
 				'https://graph.instagram.com/me'
 			);

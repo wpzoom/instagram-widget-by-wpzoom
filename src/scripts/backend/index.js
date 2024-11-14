@@ -645,15 +645,9 @@ jQuery( function( $ ) {
 										$( '#wpz-insta-graph-connect-account').removeClass('disabled');
 									} );
 								}
-								// else {
-								// 	window.wpzInstaShowConnectDoneDialog(
-								// 		status,
-								// 		( 'update' in data && data.update )
-								// 	);
-								// }
 
 							}
-					
+
 						} )
 						.fail( function () {
 							console.log( 'Failed to connect business user' );

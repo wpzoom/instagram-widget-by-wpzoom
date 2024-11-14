@@ -2237,6 +2237,33 @@ class WPZOOM_Instagram_Widget_Settings {
 					$post_id = intval( $_POST['post_id'] );
 
 					if ( false !== get_post_status( $post_id ) ) {
+
+						$info = Wpzoom_Instagram_Widget_API::get_basic_user_info_from_token( $token );
+						if ( false !== $info && is_object( $info )  ) {
+
+							$account_username = property_exists( $info, 'username' ) && ! empty( $info->username ) ? sanitize_text_field( $info->username ) : '';
+							$account_name     = property_exists( $info, 'name' ) && ! empty( $info->name ) ? sanitize_text_field( $info->name ) : '';
+							$account_bio      = property_exists( $info, 'biography' ) && ! empty( $info->biography ) ? sanitize_text_field( $info->biography ) : '';
+							$account_type     = property_exists( $info, 'account_type' ) && ! empty( $info->account_type ) ? sanitize_text_field( $info->account_type ) : 'business';
+							$user = wp_strip_all_tags( $info->username );
+
+							$post_update = array(
+								'ID'           => $post_id,
+								'post_title'   => $user,
+								'post_content' => $account_bio,
+							);
+
+							wp_update_post( $post_update );
+
+							update_post_meta( $post_id, '_wpz-insta_user_name', $account_name );
+							update_post_meta( $post_id, '_wpz-insta_account-type', $account_type );
+
+							if ( property_exists( $info, 'profile_picture_url' ) && ! empty( $info->profile_picture_url ) ) {
+								$this->generate_featured_image( $info->profile_picture_url, $post_id, $user );
+							}
+
+						}
+
 						update_post_meta( $post_id, '_wpz-insta_token', $token );
 						update_post_meta( $post_id, '_wpz-insta_token_expire', strtotime( '+60 days' ) );
 
@@ -2245,22 +2272,28 @@ class WPZOOM_Instagram_Widget_Settings {
 				} else {
 
 					$info = Wpzoom_Instagram_Widget_API::get_basic_user_info_from_token( $token );
+
 					if ( false !== $info && is_object( $info ) && property_exists( $info, 'username' ) && property_exists( $info, 'account_type' ) ) {	
+
+						$account_name = property_exists( $info, 'name' ) && ! empty( $info->name ) ? sanitize_text_field( $info->name ) : '';
+						$account_bio  = property_exists( $info, 'biography' ) && ! empty( $info->biography ) ? sanitize_text_field( $info->biography ) : '';
 
 						$user = wp_strip_all_tags( $info->username );
 						$insert_post = wp_insert_post( array(
-							'post_title'  => $user,
-							'post_type'   => 'wpz-insta_user',
-							'post_status' => 'publish',
+							'post_title'   => $user,
+							'post_type'    => 'wpz-insta_user',
+							'post_status'  => 'publish',
+							'post_content' => $account_bio,
 						), true );
 
 						if ( ! is_wp_error( $insert_post ) ) {
 							update_post_meta( $insert_post, '_wpz-insta_token', $token );
+							update_post_meta( $insert_post, '_wpz-insta_user_name', $account_name );
 							update_post_meta( $insert_post, '_wpz-insta_token_expire', strtotime( '+60 days' ) );
 							update_post_meta( $insert_post, '_wpz-insta_account-type', sanitize_text_field( $info->account_type ) );
 
-							if ( property_exists( $info, 'profile_picture' ) && ! empty( $info->profile_picture ) ) {
-								$this->generate_featured_image( $info->profile_picture, $insert_post, $user );
+							if ( property_exists( $info, 'profile_picture_url' ) && ! empty( $info->profile_picture_url ) ) {
+								$this->generate_featured_image( $info->profile_picture_url, $insert_post, $user );
 							}
 
 							wp_send_json_success( array( 'update' => false ), 200 );
@@ -2861,13 +2894,14 @@ class WPZOOM_Instagram_Widget_Settings {
 
 		$oauth_url = add_query_arg(
 			array(
-				'client_id'     => '1242932982579434',
-				'redirect_uri'  => 'https://wpzoom.com/instagram-auth/',
-				'scope'         => 'user_profile,user_media',
-				'response_type' => 'code',
-				'state'         => 'RETURN_URL',
+				'client_id'            => '1292861578406087',
+				'enable_fb_login'      => '0',
+				'redirect_uri'         => 'https://wpzoom.com/instagram-business-auth/',
+				'scope'                => 'instagram_business_basic',
+				'response_type'        => 'code',
+				'state'                => 'RETURN_URL',
 			),
-			'https://api.instagram.com/oauth/authorize'
+			'https://www.instagram.com/oauth/authorize'
 		);
 
 		$graph_oauth_url = add_query_arg(
@@ -2942,7 +2976,7 @@ class WPZOOM_Instagram_Widget_Settings {
 
 
 					<div class="account-option account-option_personal">
-						<h4 class="account-option-title"><?php esc_html_e( 'Connect your Personal Account ⚠️', 'instagram-widget-by-wpzoom' ); ?></h4>
+						<h4 class="account-option-title"><?php esc_html_e( 'Connect your Business Account ⚠️', 'instagram-widget-by-wpzoom' ); ?></h4>
 
                         <p class="notice-warning notice"><?php _e( '<strong>Meta <a href="https://developers.facebook.com/blog/post/2024/09/04/update-on-instagram-basic-display-api/" target="_blank">announced</a> they will stop supporting  Personal Instagram accounts for their API on December 4, 2024.</strong><br/> Convert your Personal account to a <a href="https://help.instagram.com/2358103564437429?helpref=faq_content" target="_blank">Creator</a> or <a href="https://help.instagram.com/502981923235522?helpref=faq_content" target="_blank">Business</a> and re-connect using Facebook to continue displaying your feed. ', 'instagram-widget-by-wpzoom' ); ?></p><br/>
 
