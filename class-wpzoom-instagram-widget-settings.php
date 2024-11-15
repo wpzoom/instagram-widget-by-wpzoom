@@ -1529,7 +1529,11 @@ class WPZOOM_Instagram_Widget_Settings {
 										<label class="wpz-insta_table-row">
 											<input type="hidden" name="_wpz-insta_show-account-stats" value="0" />
 											<input type="checkbox" name="_wpz-insta_show-account-stats" value="1"<?php checked( $show_account_stats ); ?> />
-											<span><?php esc_html_e( 'Display following count', 'instagram-widget-by-wpzoom' ); ?></span>
+											<span>
+                                                <?php esc_html_e( 'Display following count', 'instagram-widget-by-wpzoom' ); ?>
+
+                                                <small class="help" aria-hidden="true" data-tooltip="<?php esc_html_e( 'This feature works only when your account is connected via your Facebook Page.', 'instagram-widget-by-wpzoom' ); ?>"><svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='16' height='16'><path fill='#000' fill-rule='evenodd' clip-rule='evenodd' d='M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm-1 16v-2h2v2h-2zm2-3v-1.141A3.991 3.991 0 0016 10a4 4 0 00-8 0h2c0-1.103.897-2 2-2s2 .897 2 2-.897 2-2 2a1 1 0 00-1 1v2h2z'></path></svg></small>
+                                            </span>
 										</label>
 									<?php echo $pro_toggle ? '</fieldset>' : ''; ?>
 									
@@ -2944,8 +2948,10 @@ class WPZOOM_Instagram_Widget_Settings {
 							<li><?php _e( 'Works with Instagram Creator or Business accounts ', 'instagram-widget-by-wpzoom' ); ?></li>
 							<li><?php _e( 'Show posts from your account', 'instagram-widget-by-wpzoom' ); ?></li>
                             <li><?php _e( 'Display user info in the header', 'instagram-widget-by-wpzoom' ); ?></li>
-							<li class="no-feature"><?php _e( 'Show posts where you are tagged <small><em>Coming Soon</em></small>', 'instagram-widget-by-wpzoom' ); ?></li>
-							<li class="no-feature"><?php _e( 'Show posts with a specific hashtag <small><em>Coming Soon</em></small>', 'instagram-widget-by-wpzoom' ); ?></li>
+                            <li><?php _e( '[PRO] Display Follower Count', 'instagram-widget-by-wpzoom' ); ?></li>
+							<li class="no-feature"><?php _e( 'Requires reconnection every 60 days <small><em>To be fixed soon</em></small>', 'instagram-widget-by-wpzoom' ); ?></li>
+							<li class="no-feature"><?php _e( 'Display hashtag feeds <small><em>Coming Soon</em></small>', 'instagram-widget-by-wpzoom' ); ?></li>
+                            <li class="no-feature"><?php _e( 'Display feeds with your mention <small><em>Coming Soon</em></small>', 'instagram-widget-by-wpzoom' ); ?></li>
 						</ul>
 
 						<a href="<?php echo esc_url( $graph_oauth_url ); ?>" id="wpz-insta_connect-business" class="button button-primary account-option-button facebook">
@@ -2966,6 +2972,8 @@ class WPZOOM_Instagram_Widget_Settings {
                             <li><?php _e( 'Show posts from your account', 'instagram-widget-by-wpzoom' ); ?></li>
                             <li><?php _e( 'Display user info in the header', 'instagram-widget-by-wpzoom' ); ?></li>
                             <li><?php _e( 'Does not require a Facebook page', 'instagram-widget-by-wpzoom' ); ?></li>
+                            <li class="x-feature"><?php _e( '[PRO] Display Follower Count', 'instagram-widget-by-wpzoom' ); ?></li>
+
                         </ul>
 
                         <a href="<?php echo esc_url( $oauth_url ); ?>" id="wpz-insta_connect-personal" class="button button-primary account-option-button">

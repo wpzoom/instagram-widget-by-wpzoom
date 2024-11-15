@@ -2360,14 +2360,12 @@
 								margin: 0;
 							}
 
-                            li.no-feature    {
-                                line-height: 18px;
+                            li.no-feature {
                                 background-image: url("data:image/svg+xml,%3Csvg width='18' height='18' viewBox='0 0 18 18' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M9 0C4.02891 0 0 4.02891 0 9C0 13.9711 4.02891 18 9 18C13.9711 18 18 13.9711 18 9C18 4.02891 13.9711 0 9 0ZM8.15625 5.34375C8.15625 4.87969 8.53594 4.5 9 4.5C9.46406 4.5 9.84375 4.87793 9.84375 5.34375V9.84375C9.84375 10.3096 9.46582 10.6875 9 10.6875C8.53418 10.6875 8.15625 10.3113 8.15625 9.84375V5.34375ZM9 14.0625C8.38969 14.0625 7.89469 13.5675 7.89469 12.9572C7.89469 12.3469 8.38934 11.8519 9 11.8519C9.61066 11.8519 10.1053 12.3469 10.1053 12.9572C10.1039 13.5668 9.61172 14.0625 9 14.0625Z' fill='%23DFCD69'/%3E%3C/svg%3E%0A");
-                                background-position: 0 5px;
-                                background-repeat: no-repeat;
-                                min-height: 18px;
-                                padding: 5px 0 5px 32px;
-                                margin: 0;
+                            }
+
+                            li.x-feature {
+                                background-image: url("data:image/svg+xml,%3Csvg width='18' height='18' viewBox='0 0 18 18' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M0 9C0 4.02943 4.02943 0 9 0C13.9705 0 18 4.02943 18 9C18 13.9705 13.9705 18 9 18C4.02943 18 0 13.9705 0 9ZM12.1758 13.0243L9.00005 9.84857L5.82431 13.0243L4.97578 12.1758L8.15152 9.00005L4.97578 5.82431L5.82431 4.97578L9.00005 8.15152L12.1758 4.97578L13.0243 5.82431L9.84857 9.00005L13.0243 12.1758L12.1758 13.0243Z' fill='%23E54B4B'/%3E%3C/svg%3E%0A");
                             }
 
 
