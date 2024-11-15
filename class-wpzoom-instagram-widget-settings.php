@@ -2932,20 +2932,20 @@ class WPZOOM_Instagram_Widget_Settings {
 
 			<div class="wpz-insta-wrap wpz-insta_settings-connect">
 				<h3 class="section-title"><?php _e( 'Let&rsquo;s connect your Instagram account', 'instagram-widget-by-wpzoom' ); ?></h3>
-				<p class="section-description"><?php _e( 'Are you connecting a Personal or Business account?', 'instagram-widget-by-wpzoom' ); ?></p>
+				<p class="section-description"><?php _e( 'Are you connecting via Facebook Page or Instagram?', 'instagram-widget-by-wpzoom' ); ?></p>
 
 				<div class="account-options">
 
 					<!--// Connect Bussines Account-->
 					<div class="account-option account-option_business">
-						<h4 class="account-option-title"><?php esc_html_e( 'Connect your Business or Creator Account', 'instagram-widget-by-wpzoom' ); ?></h4>
+						<h4 class="account-option-title"><?php esc_html_e( 'Connect via Facebook Page', 'instagram-widget-by-wpzoom' ); ?></h4>
 
 						<ul class="account-option-checklist">
 							<li><?php _e( 'Works with Instagram Creator or Business accounts ', 'instagram-widget-by-wpzoom' ); ?></li>
 							<li><?php _e( 'Show posts from your account', 'instagram-widget-by-wpzoom' ); ?></li>
                             <li><?php _e( 'Display user info in the header', 'instagram-widget-by-wpzoom' ); ?></li>
-							<li><?php _e( 'Show posts where you are tagged <small><em>Coming Soon</em></small>', 'instagram-widget-by-wpzoom' ); ?></li>
-							<li><?php _e( 'Show posts with a specific hashtag <small><em>Coming Soon</em></small>', 'instagram-widget-by-wpzoom' ); ?></li>
+							<li class="no-feature"><?php _e( 'Show posts where you are tagged <small><em>Coming Soon</em></small>', 'instagram-widget-by-wpzoom' ); ?></li>
+							<li class="no-feature"><?php _e( 'Show posts with a specific hashtag <small><em>Coming Soon</em></small>', 'instagram-widget-by-wpzoom' ); ?></li>
 						</ul>
 
 						<a href="<?php echo esc_url( $graph_oauth_url ); ?>" id="wpz-insta_connect-business" class="button button-primary account-option-button facebook">
@@ -2954,6 +2954,30 @@ class WPZOOM_Instagram_Widget_Settings {
 							<?php _e( 'Connect with Facebook', 'instagram-widget-by-wpzoom' ); ?>
 						</a>
 					</div>
+
+
+                    <div class="account-option account-option_personal">
+                        <h4 class="account-option-title"><?php esc_html_e( 'Connect via Instagram', 'instagram-widget-by-wpzoom' ); ?></h4>
+
+                        <?php /* <p class="notice-warning notice"><?php _e( '<strong>Meta <a href="https://developers.facebook.com/blog/post/2024/09/04/update-on-instagram-basic-display-api/" target="_blank">announced</a> they will stop supporting  Personal Instagram accounts for their API on December 4, 2024.</strong><br/> Convert your Personal account to a <a href="https://help.instagram.com/2358103564437429?helpref=faq_content" target="_blank">Creator</a> or <a href="https://help.instagram.com/502981923235522?helpref=faq_content" target="_blank">Business</a> and re-connect using Facebook to continue displaying your feed. ', 'instagram-widget-by-wpzoom' ); ?></p><br/> */ ?>
+
+                        <ul class="account-option-checklist">
+                            <li><?php _e( 'Works with Instagram Creator or Business accounts ', 'instagram-widget-by-wpzoom' ); ?></li>
+                            <li><?php _e( 'Show posts from your account', 'instagram-widget-by-wpzoom' ); ?></li>
+                            <li><?php _e( 'Display user info in the header', 'instagram-widget-by-wpzoom' ); ?></li>
+                            <li><?php _e( 'Does not require a Facebook page', 'instagram-widget-by-wpzoom' ); ?></li>
+                        </ul>
+
+                        <a href="<?php echo esc_url( $oauth_url ); ?>" id="wpz-insta_connect-personal" class="button button-primary account-option-button">
+                            <svg width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M15.9582 4.70406C15.9208 3.85391 15.7833 3.26945 15.5863 2.763C15.3832 2.22542 15.0706 1.74412 14.6611 1.34402C14.261 0.937686 13.7765 0.62195 13.2452 0.421959C12.7358 0.22502 12.1544 0.0875418 11.3042 0.0500587C10.4478 0.00940127 10.1758 0 8.00354 0C5.83123 0 5.55933 0.00940127 4.70601 0.0468843C3.85587 0.0843673 3.2714 0.221968 2.76507 0.418784C2.22737 0.62195 1.74607 0.934512 1.34597 1.34402C0.939639 1.74412 0.624025 2.22859 0.423912 2.75995C0.226973 3.26945 0.0894949 3.85074 0.0520119 4.70088C0.0113544 5.55738 0.00195312 5.82928 0.00195312 8.00159C0.00195312 10.1739 0.0113544 10.4458 0.0488374 11.2991C0.0863205 12.1493 0.223921 12.7337 0.420859 13.2402C0.624025 13.7778 0.939639 14.2591 1.34597 14.6592C1.74607 15.0655 2.23054 15.3812 2.7619 15.5812C3.2714 15.7782 3.85269 15.9156 4.70296 15.9531C5.55616 15.9907 5.82818 16 8.00049 16C10.1728 16 10.4447 15.9907 11.298 15.9531C12.1482 15.9156 12.7326 15.7782 13.239 15.5812C14.3142 15.1655 15.1644 14.3153 15.5801 13.2402C15.7769 12.7307 15.9145 12.1493 15.952 11.2991C15.9895 10.4458 15.9989 10.1739 15.9989 8.00159C15.9989 5.82928 15.9957 5.55738 15.9582 4.70406ZM14.5174 11.2366C14.483 12.018 14.3517 12.44 14.2423 12.7213C13.9735 13.4183 13.4203 13.9715 12.7232 14.2404C12.4419 14.3498 12.0169 14.481 11.2386 14.5153C10.3946 14.5529 10.1415 14.5622 8.00671 14.5622C5.87189 14.5622 5.61562 14.5529 4.77475 14.5153C3.99335 14.481 3.57139 14.3498 3.29008 14.2404C2.94321 14.1122 2.62747 13.909 2.3712 13.6433C2.10552 13.3839 1.90235 13.0713 1.77416 12.7244C1.66476 12.4431 1.53351 12.018 1.4992 11.2398C1.46159 10.3959 1.45231 10.1426 1.45231 8.00781C1.45231 5.87299 1.46159 5.61671 1.4992 4.77597C1.53351 3.99457 1.66476 3.57261 1.77416 3.2913C1.90235 2.94431 2.10552 2.6287 2.37437 2.3723C2.6337 2.10662 2.94626 1.90345 3.29326 1.77538C3.57456 1.66598 3.99969 1.53473 4.77792 1.5003C5.62184 1.46281 5.87507 1.45341 8.00977 1.45341C10.1478 1.45341 10.4009 1.46281 11.2417 1.5003C12.0231 1.53473 12.4451 1.66598 12.7264 1.77538C13.0733 1.90345 13.389 2.10662 13.6453 2.3723C13.911 2.63175 14.1141 2.94431 14.2423 3.2913C14.3517 3.57261 14.483 3.99762 14.5174 4.77597C14.5549 5.61989 14.5643 5.87299 14.5643 8.00781C14.5643 10.1426 14.5549 10.3927 14.5174 11.2366Z" fill="#fff" />
+                                <path d="M8.00375 3.89062C5.73462 3.89062 3.89355 5.73157 3.89355 8.00082C3.89355 10.2701 5.73462 12.111 8.00375 12.111C10.273 12.111 12.1139 10.2701 12.1139 8.00082C12.1139 5.73157 10.273 3.89062 8.00375 3.89062ZM8.00375 10.667C6.53165 10.667 5.33757 9.47303 5.33757 8.00082C5.33757 6.5286 6.53165 5.33464 8.00375 5.33464C9.47596 5.33464 10.6699 6.5286 10.6699 8.00082C10.6699 9.47303 9.47596 10.667 8.00375 10.667Z" fill="#fff" />
+                                <path d="M13.2356 3.72907C13.2356 4.25896 12.806 4.68861 12.2759 4.68861C11.7461 4.68861 11.3164 4.25896 11.3164 3.72907C11.3164 3.19906 11.7461 2.76953 12.2759 2.76953C12.806 2.76953 13.2356 3.19906 13.2356 3.72907Z" fill="#fff" />
+                            </svg>
+
+                            <?php _e( 'Connect with Instagram', 'instagram-widget-by-wpzoom' ); ?>
+                        </a>
+                    </div>
 
 					<div class="account-option account-option_token">
 						<h4 class="account-option-title"><?php _e( 'Connect with Access Token', 'instagram-widget-by-wpzoom' ); ?></h4>
@@ -2975,21 +2999,6 @@ class WPZOOM_Instagram_Widget_Settings {
 					</div>
 
 
-					<div class="account-option account-option_personal">
-						<h4 class="account-option-title"><?php esc_html_e( 'Connect your Business Account ⚠️', 'instagram-widget-by-wpzoom' ); ?></h4>
-
-                        <p class="notice-warning notice"><?php _e( '<strong>Meta <a href="https://developers.facebook.com/blog/post/2024/09/04/update-on-instagram-basic-display-api/" target="_blank">announced</a> they will stop supporting  Personal Instagram accounts for their API on December 4, 2024.</strong><br/> Convert your Personal account to a <a href="https://help.instagram.com/2358103564437429?helpref=faq_content" target="_blank">Creator</a> or <a href="https://help.instagram.com/502981923235522?helpref=faq_content" target="_blank">Business</a> and re-connect using Facebook to continue displaying your feed. ', 'instagram-widget-by-wpzoom' ); ?></p><br/>
-
-						<a href="<?php echo esc_url( $oauth_url ); ?>" id="wpz-insta_connect-personal" class="button button-primary account-option-button">
-							<svg width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
-								<path d="M15.9582 4.70406C15.9208 3.85391 15.7833 3.26945 15.5863 2.763C15.3832 2.22542 15.0706 1.74412 14.6611 1.34402C14.261 0.937686 13.7765 0.62195 13.2452 0.421959C12.7358 0.22502 12.1544 0.0875418 11.3042 0.0500587C10.4478 0.00940127 10.1758 0 8.00354 0C5.83123 0 5.55933 0.00940127 4.70601 0.0468843C3.85587 0.0843673 3.2714 0.221968 2.76507 0.418784C2.22737 0.62195 1.74607 0.934512 1.34597 1.34402C0.939639 1.74412 0.624025 2.22859 0.423912 2.75995C0.226973 3.26945 0.0894949 3.85074 0.0520119 4.70088C0.0113544 5.55738 0.00195312 5.82928 0.00195312 8.00159C0.00195312 10.1739 0.0113544 10.4458 0.0488374 11.2991C0.0863205 12.1493 0.223921 12.7337 0.420859 13.2402C0.624025 13.7778 0.939639 14.2591 1.34597 14.6592C1.74607 15.0655 2.23054 15.3812 2.7619 15.5812C3.2714 15.7782 3.85269 15.9156 4.70296 15.9531C5.55616 15.9907 5.82818 16 8.00049 16C10.1728 16 10.4447 15.9907 11.298 15.9531C12.1482 15.9156 12.7326 15.7782 13.239 15.5812C14.3142 15.1655 15.1644 14.3153 15.5801 13.2402C15.7769 12.7307 15.9145 12.1493 15.952 11.2991C15.9895 10.4458 15.9989 10.1739 15.9989 8.00159C15.9989 5.82928 15.9957 5.55738 15.9582 4.70406ZM14.5174 11.2366C14.483 12.018 14.3517 12.44 14.2423 12.7213C13.9735 13.4183 13.4203 13.9715 12.7232 14.2404C12.4419 14.3498 12.0169 14.481 11.2386 14.5153C10.3946 14.5529 10.1415 14.5622 8.00671 14.5622C5.87189 14.5622 5.61562 14.5529 4.77475 14.5153C3.99335 14.481 3.57139 14.3498 3.29008 14.2404C2.94321 14.1122 2.62747 13.909 2.3712 13.6433C2.10552 13.3839 1.90235 13.0713 1.77416 12.7244C1.66476 12.4431 1.53351 12.018 1.4992 11.2398C1.46159 10.3959 1.45231 10.1426 1.45231 8.00781C1.45231 5.87299 1.46159 5.61671 1.4992 4.77597C1.53351 3.99457 1.66476 3.57261 1.77416 3.2913C1.90235 2.94431 2.10552 2.6287 2.37437 2.3723C2.6337 2.10662 2.94626 1.90345 3.29326 1.77538C3.57456 1.66598 3.99969 1.53473 4.77792 1.5003C5.62184 1.46281 5.87507 1.45341 8.00977 1.45341C10.1478 1.45341 10.4009 1.46281 11.2417 1.5003C12.0231 1.53473 12.4451 1.66598 12.7264 1.77538C13.0733 1.90345 13.389 2.10662 13.6453 2.3723C13.911 2.63175 14.1141 2.94431 14.2423 3.2913C14.3517 3.57261 14.483 3.99762 14.5174 4.77597C14.5549 5.61989 14.5643 5.87299 14.5643 8.00781C14.5643 10.1426 14.5549 10.3927 14.5174 11.2366Z" fill="#fff" />
-								<path d="M8.00375 3.89062C5.73462 3.89062 3.89355 5.73157 3.89355 8.00082C3.89355 10.2701 5.73462 12.111 8.00375 12.111C10.273 12.111 12.1139 10.2701 12.1139 8.00082C12.1139 5.73157 10.273 3.89062 8.00375 3.89062ZM8.00375 10.667C6.53165 10.667 5.33757 9.47303 5.33757 8.00082C5.33757 6.5286 6.53165 5.33464 8.00375 5.33464C9.47596 5.33464 10.6699 6.5286 10.6699 8.00082C10.6699 9.47303 9.47596 10.667 8.00375 10.667Z" fill="#fff" />
-								<path d="M13.2356 3.72907C13.2356 4.25896 12.806 4.68861 12.2759 4.68861C11.7461 4.68861 11.3164 4.25896 11.3164 3.72907C11.3164 3.19906 11.7461 2.76953 12.2759 2.76953C12.806 2.76953 13.2356 3.19906 13.2356 3.72907Z" fill="#fff" />
-							</svg>
-
-							<?php _e( 'Connect with Instagram', 'instagram-widget-by-wpzoom' ); ?>
-						</a>
-					</div>
 
 				</div>
 
