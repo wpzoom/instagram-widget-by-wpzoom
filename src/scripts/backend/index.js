@@ -244,12 +244,18 @@ jQuery( function( $ ) {
 				window.wpzInstaAuthenticateInstagram( $( this ).attr( 'href' ) );
 			} else if ( $( this ).is( '#wpz-insta_account-token-button' ) ) {
 				window.wpzInstaHandleReturnedGraphToken( $( '#wpz-insta_account-token-input' ).val().trim().replace( /[^a-z0-9-_.]+/gi, '' ), true );
+			} else if ( $( this ).is( '#wpz-insta-biz_account-token-button' ) ) {
+				window.wpzInstaHandleReturnedToken( $( '#wpz-insta_biz_account-token-input' ).val().trim().replace( /[^a-z0-9-_.]+/gi, '' ), true );
 			}
 		}
 	} );
 
 	$( '#wpz-insta_account-token-input' ).on( 'input', function() {
 		$( '#wpz-insta_account-token-button' ).toggleClass( 'disabled', ( $( '#wpz-insta_account-token-input' ).val().trim().length <= 0 ) );
+	} );
+
+	$( '#wpz-insta_biz_account-token-input' ).on( 'input', function() {
+		$( '#wpz-insta-biz_account-token-button' ).toggleClass( 'disabled', ( $( '#wpz-insta_biz_account-token-input' ).val().trim().length <= 0 ) );
 	} );
 
 	$( '.wpz-insta_sidebar-section-layout input[name="_wpz-insta_layout"]' ).on( 'change', function() {
@@ -658,6 +664,12 @@ jQuery( function( $ ) {
 		}
 	}
 
+	// Set the selected API
+	$('#wpz-insta-select-api').on('change', function (e) {
+		var selected = $(this).val();
+		$(this).parent().find( '#wpz-insta_reconnect' ).attr('href', selected);
+	} );
+
 	// Function to connect the selected business account
 	$('#wpz-insta-graph-connect-account').on('click', function (e) {
 		e.preventDefault();
@@ -785,7 +797,7 @@ jQuery( function( $ ) {
 				id = window.inlineEditPost.getId( id );
 			}
 
-			let fields = [ '_wpz-insta_account-type', '_wpz-insta_token', '_wpz-insta_token_expire', '_thumbnail_id', 'wpz-insta_profile-photo', '_wpz-insta_user_name', '_wpz-insta_user-bio', '_wpz-insta_page_id' ],
+			let fields = [ '_wpz-insta_account-type', '_wpz-insta_token', '_wpz-insta_token_expire', '_thumbnail_id', 'wpz-insta_profile-photo', '_wpz-insta_user_name', '_wpz-insta_user-bio', '_wpz-insta_api-url' ],
 			    rowData = $( '#inline_' + id ),
 			    editRow = $( '#edit-' + id ),
 			    reconnectBtn = $( '#wpz-insta_reconnect', editRow ),
@@ -802,6 +814,8 @@ jQuery( function( $ ) {
 					$( '#wpz-insta_token', editRow ).val( val );
 				} else if( '_wpz-insta_token_expire' == field ) {
 					$( '#wpz-insta_token-expire-time', editRow ).html( val );
+				} else if( '_wpz-insta_api-url' == field ) {
+					$( '#wpz-insta_reconnect', editRow ).attr( 'href', val );
 				} else {
 					$( ':input[name="' + field + '"]', editRow ).val( val );
 				}

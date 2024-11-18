@@ -192,8 +192,9 @@ class Wpzoom_Instagram_Widget_API {
 					$user_name    = get_the_title( $user );
 					$user_display = sprintf( '@%s', $user_name );
 					$token        = get_post_meta( $user->ID, '_wpz-insta_token', true );
+					$connection_type   = get_post_meta( $user->ID, '_wpz-insta_connection-type', true );
 
-					if ( false !== $token && ! empty( $token ) ) {
+					if ( false !== $token && ! empty( $token ) && 'facebook_graph_api' !== $connection_type ) {
 						$request_url = add_query_arg(
 							array(
 								'grant_type'   => 'ig_refresh_token',
@@ -997,22 +998,25 @@ class Wpzoom_Instagram_Widget_API {
     }
 
 	// Add this new method to check if using Basic Display API
-	public static function is_using_basic_display_api($user_id) {
-		if (empty($user_id)) return false;
+	public static function is_using_basic_display_api( $user_id ) {
+		
+		if ( empty ( $user_id ) ) 
+			return false;
 
-		$account_type = get_post_meta($user_id, '_wpz-insta_account-type', true);
-		$page_id = get_post_meta($user_id, '_wpz-insta_page_id', true);
+		$connection_type = get_post_meta( $user_id, '_wpz-insta_connection-type', true );
 
-		// If there's no page_id and the account type isn't 'business', it's using Basic Display API
-		// return empty($page_id) && (!$account_type || $account_type !== 'business');
+		if ( empty( $connection_type ) || 'facebook_graph_api' !== $connection_type && 'business_instagram_login_api' !== $connection_type ) {
+			return true;
+		}
 
-        return $account_type === 'PERSONAL';
 	}
 
 	// Add this method to show the admin notice
 	public function maybe_show_api_deprecation_notice() {
 		// Only show on admin pages
-		if (!is_admin()) return;
+		
+		if ( ! is_admin() ) 
+			return;
 
 		// Get all Instagram users
 		$users = get_posts(array(
@@ -1022,7 +1026,7 @@ class Wpzoom_Instagram_Widget_API {
 
 		$has_basic_api_users = false;
 		foreach ($users as $user) {
-			if (self::is_using_basic_display_api($user->ID)) {
+			if ( self::is_using_basic_display_api( $user->ID ) ) {
 				$has_basic_api_users = true;
 				break;
 			}
