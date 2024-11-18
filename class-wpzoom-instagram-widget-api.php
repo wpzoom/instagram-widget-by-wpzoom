@@ -1054,16 +1054,15 @@ class Wpzoom_Instagram_Widget_API {
 					<p style="font-size: 14px;">
                         <?php
                         printf(
-                            __('To continue displaying your Instagram feed, you\'ll need to: <br>1. Convert your Personal Instagram account to a <a href="%1$s" target="_blank">Professional account</a> (Creator or Business).<br>2. Link your Instagram account to a Facebook Page. For more information, please refer to <a href="%2$s" target="_blank">this guide</a>.<br>3. Re-connect your account using the Facebook login option in the plugin.', 'instagram-widget-by-wpzoom'),
-                            'https://help.instagram.com/502981923235522',
-                            'https://help.instagram.com/570895513091465?helpref=faq_content'
+                            __('To continue displaying your Instagram feed, you\'ll need to: <br>1. Convert your Personal Instagram account to a <a href="%1$s" target="_blank">Professional account</a> (Creator or Business).<br>2. Reconnect your account using the new Facebook or Instagram methods available in the plugin.', 'instagram-widget-by-wpzoom'),
+                            'https://help.instagram.com/502981923235522'
                         );
                         ?>
                     </p>
 
 					<p style="font-size: 14px;">
 						<a href="<?php echo admin_url('edit.php?post_type=wpz-insta_user'); ?>" class="button button-primary">
-							<?php _e('Re-connect Your Account', 'instagram-widget-by-wpzoom'); ?>
+							<?php _e('Reconnect Your Account', 'instagram-widget-by-wpzoom'); ?>
 						</a>
 
 						<a href="https://www.wpzoom.com/documentation/instagram-widget/basic-display-api-deprecation/" target="_blank" class="button button-secondary">

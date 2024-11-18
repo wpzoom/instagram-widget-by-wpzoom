@@ -765,14 +765,13 @@ class WPZOOM_Instagram_Widget_Settings {
 
 					?><li>
 						<ul class="wpz-insta_two-columns">
-							<li><br/><br/>
-							<strong><?php esc_html_e( 'API to connect', 'instagram-widget-by-wpzoom' ); ?></strong>
+							<li><br/>
+                                <h3><span class="dashicons dashicons-update-alt"></span> Reconnect your Account</h3>
 								<select id="wpz-insta-select-api">
-									<option value="<?php echo esc_url( $graph_api_url ); ?>"><?php esc_html_e( 'Facebook Graph', 'instagram-widget-by-wpzoom' ); ?></option>
-									<option value="<?php echo esc_url( $instagram_bussines_api_url ); ?>"><?php esc_html_e( 'Business Instagram Login', 'instagram-widget-by-wpzoom' ); ?></option>
-								</select>
-								<br/>
-								<a href="<?php echo esc_url( $is_business_page ? $graph_api_url : $instagram_bussines_api_url ); ?>" id="wpz-insta_reconnect" class="button button-primary"><?php _e( 'Re-connect', 'instagram-widget-by-wpzoom' ); ?></a></li>
+                                    <option value=""><?php esc_html_e( 'Choose a method', 'instagram-widget-by-wpzoom' ); ?></option>
+									<option value="<?php echo esc_url( $graph_api_url ); ?>"><?php esc_html_e( 'via Facebook Page', 'instagram-widget-by-wpzoom' ); ?></option>
+									<option value="<?php echo esc_url( $instagram_bussines_api_url ); ?>"><?php esc_html_e( 'Instagram', 'instagram-widget-by-wpzoom' ); ?></option>
+								</select> <a href="<?php echo esc_url( $is_business_page ? $graph_api_url : $instagram_bussines_api_url ); ?>" id="wpz-insta_reconnect" class="button button-primary"><?php _e( 'Reconnect', 'instagram-widget-by-wpzoom' ); ?></a></li>
 						</ul>
 					</li>
 					</ul>
@@ -2092,7 +2091,7 @@ class WPZOOM_Instagram_Widget_Settings {
 
                         <p class="section-notice"><svg width="14" height="14" viewBox="0 0 14 14" xmlns="http://www.w3.org/2000/svg">
                                                 <path d="M6.3 3.5H7.7V4.9H6.3V3.5ZM6.3 6.3H7.7V10.5H6.3V6.3ZM7 0C3.136 0 0 3.136 0 7C0 10.864 3.136 14 7 14C10.864 14 14 10.864 14 7C14 3.136 10.864 0 7 0ZM7 12.6C3.913 12.6 1.4 10.087 1.4 7C1.4 3.913 3.913 1.4 7 1.4C10.087 1.4 12.6 3.913 12.6 7C12.6 10.087 10.087 12.6 7 12.6Z"></path>
-                                            </svg> <?php _e( 'If your account is not shown here, make sure it\'s connected to a Facebook Page and re-connect. <a href="https://help.instagram.com/570895513091465?helpref=faq_content" target="_blank">View instructions</a>', 'instagram-widget-by-wpzoom' ); ?></p>
+                                            </svg> <?php _e( 'If your account is not shown here, make sure it\'s connected to a Facebook Page and reconnect. <a href="https://help.instagram.com/570895513091465?helpref=faq_content" target="_blank">View instructions</a>', 'instagram-widget-by-wpzoom' ); ?></p>
 
 						<a id="wpz-insta-graph-connect-account" href="#"  class="wpz-insta_modal-dialog_footer-button wpz-insta_modal-dialog_ok-button button button-primary disabled"><?php _e( 'Connect', 'instagram-widget-by-wpzoom' ); ?></a>
 						<span class="wpz-insta_modal-dialog_footer-button wpz-insta_modal-dialog_cancel-button button button-secondary hidden"><?php _e( 'Cancel', 'instagram-widget-by-wpzoom' ); ?></span>
@@ -2725,7 +2724,7 @@ class WPZOOM_Instagram_Widget_Settings {
 			<?php if ( empty( $settings['basic-access-token'] ) ) : ?>
 				<span><?php _e( 'Connect with Instagram', 'instagram-widget-by-wpzoom' ); ?></span>
 			<?php else : ?>
-				<span class="zoom-instagarm-widget-connected"><?php _e( 'Re-connect with Instagram', 'instagram-widget-by-wpzoom' ); ?></span>
+				<span class="zoom-instagarm-widget-connected"><?php _e( 'Reconnect with Instagram', 'instagram-widget-by-wpzoom' ); ?></span>
 			<?php endif; ?>
 		</a>
 		</p>
@@ -3138,8 +3137,8 @@ class WPZOOM_Instagram_Widget_Settings {
 					'i18n_connect_confirm'              => __( "Instagram Widget is already connected to Instagram.\r\n\r\nDo you want to connect again?", 'instagram-widget-by-wpzoom' ),
 					'i18n_connect_success_title'        => __( 'You&rsquo;ve successfully connected your account!', 'instagram-widget-by-wpzoom' ),
 					'i18n_connect_success_content'      => __( 'Your account is now connected. You can now add a feed and customize it on the next screens.', 'instagram-widget-by-wpzoom' ),
-					'i18n_reconnect_success_title'      => __( 'You&rsquo;ve successfully re-connected your account!', 'instagram-widget-by-wpzoom' ),
-					'i18n_reconnect_success_content'    => __( 'Your account is now re-connected.', 'instagram-widget-by-wpzoom' ),
+					'i18n_reconnect_success_title'      => __( 'You&rsquo;ve successfully reconnected your account!', 'instagram-widget-by-wpzoom' ),
+					'i18n_reconnect_success_content'    => __( 'Your account is now reconnected.', 'instagram-widget-by-wpzoom' ),
 					'i18n_shortcode_success_title'      => __( 'Shortcode copied!', 'instagram-widget-by-wpzoom' ),
 					'i18n_shortcode_success_content'    => __( 'The shortcode for the selected feed was copied to your clipboard.', 'instagram-widget-by-wpzoom' ),
 					'i18n_connect_fail_title'           => __( 'Your account could not be connected!', 'instagram-widget-by-wpzoom' ),

@@ -727,7 +727,11 @@
 					}
 
 					&:last-child {
-						text-align: right;
+						// text-align: right;
+
+                        select {
+                            padding: 3px 55px 2px 10px;
+                        }
 					}
 				}
 			}
@@ -2807,4 +2811,12 @@
 [data-tooltip]:hover:after {
   visibility: visible;
   opacity: 1;
+}
+
+
+@media only screen and (max-width: 1100px) {
+
+    .wpz-insta-admin #wpbody-content > .wrap .wpz-insta-wrap ~ #posts-filter .wp-list-table tbody td .wpz-insta_quick-edit .wpz-insta_quick-edit-columns {
+        flex-direction: column;
+    }
 }
