@@ -2307,6 +2307,8 @@ class WPZOOM_Instagram_Widget_Settings {
 
 						}
 
+						update_post_meta( $post_id, '_wpz-insta_page_id', null );
+
 						update_post_meta( $post_id, '_wpz-insta_token', $token );
 						update_post_meta( $post_id, '_wpz-insta_token_expire', strtotime( '+60 days' ) );
 
