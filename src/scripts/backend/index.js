@@ -236,17 +236,6 @@ jQuery( function( $ ) {
 
     });
 
-	// Update the RETURN_URL in the values of the options
-	$('#wpz-insta-select-api option').each(function() {
-		var newUrlPart = btoa(encodeURIComponent( zoom_instagram_widget_admin.feeds_url ) );
-		let currentValue = $(this).val();
-		if (currentValue.includes('RETURN_URL')) {
-			// Replace 'RETURN_URL' with the new return URL
-			let updatedValue = currentValue.replace('RETURN_URL', encodeURIComponent(newUrlPart));
-			$(this).val(updatedValue);
-		}
-	});
-
 	$( '.wpz-insta-wrap .account-options .account-option-button' ).on( 'click', function( e ) {
 		e.preventDefault();
 
@@ -837,10 +826,22 @@ jQuery( function( $ ) {
 				});
 			}
 
+			// Update the RETURN_URL in the values of the options
+			$('#wpz-insta-select-api option', editRow ).each(function() {
+				var newUrlPart = btoa(encodeURIComponent( zoom_instagram_widget_admin.post_edit_url + id ) );
+				let currentValue = $(this).val();
+				if (currentValue.includes('RETURN_URL')) {
+					// Replace 'RETURN_URL' with the new return URL
+					let updatedValue = currentValue.replace('RETURN_URL', encodeURIComponent(newUrlPart));
+					$(this).val(updatedValue);
+				}
+			});
+
 			reconnectBtn.attr( {
 				'href': reconnectBtn.attr( 'href' ).replace( 'RETURN_URL', btoa( encodeURIComponent( zoom_instagram_widget_admin.post_edit_url + id ) ) ),
 				'data-user-id': id
 			} );
+
 		};
 	}
 
