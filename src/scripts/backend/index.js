@@ -236,6 +236,17 @@ jQuery( function( $ ) {
 
     });
 
+	// Update the RETURN_URL in the values of the options
+	$('#wpz-insta-select-api option').each(function() {
+		var newUrlPart = btoa(encodeURIComponent( zoom_instagram_widget_admin.feeds_url ) );
+		let currentValue = $(this).val();
+		if (currentValue.includes('RETURN_URL')) {
+			// Replace 'RETURN_URL' with the new return URL
+			let updatedValue = currentValue.replace('RETURN_URL', encodeURIComponent(newUrlPart));
+			$(this).val(updatedValue);
+		}
+	});
+
 	$( '.wpz-insta-wrap .account-options .account-option-button' ).on( 'click', function( e ) {
 		e.preventDefault();
 
@@ -667,7 +678,8 @@ jQuery( function( $ ) {
 	// Set the selected API
 	$('#wpz-insta-select-api').on('change', function (e) {
 		var selected = $(this).val();
-		$(this).parent().find( '#wpz-insta_reconnect' ).attr('href', selected);
+		$(this).parent().find( '#wpz-insta_reconnect' ).attr('href', selected );
+
 	} );
 
 	// Function to connect the selected business account
