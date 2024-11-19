@@ -895,7 +895,7 @@ class WPZOOM_Instagram_Widget_Settings {
 
 				break;
 
-			case 'wpz-insta_actions' :
+			case 'wpz-insta_actions' :				
 				?>
 				<nav class="wpz-insta_actions-menu">
 					<strong>&hellip;</strong>
@@ -960,6 +960,12 @@ class WPZOOM_Instagram_Widget_Settings {
 				break;*/
 
 			case 'wpz-insta_actions' :
+				
+				$connection_type = get_post_meta( $post_id, '_wpz-insta_connection-type', true );
+				if ( empty( $connection_type ) || 'facebook_graph_api' !== $connection_type && 'business_instagram_login_api' !== $connection_type ) {
+					printf( '<note style="position:relative;left:-180px;">%s</note>', esc_html__( 'Recoonection required.', 'instagram-widget-by-wpzoom' ) );
+				}
+				
 				?>
 				<nav class="wpz-insta_actions-menu">
 					<strong>&hellip;</strong>
