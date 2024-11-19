@@ -2332,15 +2332,46 @@
 				}
 
 				.account-options {
-					display: flex;
-					flex-wrap: wrap;
 					gap: 30px;
 					margin: 0 0 30px;
+
+                    display: grid;
+                    grid-template-columns: repeat(2, 1fr);
+                    grid-template-rows: repeat(2, 1fr);
+                    grid-column-gap: 40px;
+                    grid-row-gap: 40px;
+
+                    max-width: 1000px;
+
+                    .account-option_business {
+                        grid-area: 1 / 1 / 2 / 2;
+                    }
+
+                    .account-option_personal {
+                        grid-area: 1 / 2 / 2 / 3;
+                    }
+
+                    .account-option_token {
+                        grid-area: 2 / 1 / 3 / 3;
+                        background: #f4f4f473;
+                    }
+
+                    .token_cols {
+                        display: grid;
+                        grid-template-columns: repeat(2, 1fr);
+                        grid-template-rows: 1fr;
+                        grid-column-gap: 40px;
+
+                        .token_col {
+                            border: 1px solid #ddd;
+                            border-radius: 4px;
+                            padding: 20px;
+                        }
+                    }
 
 					.account-option {
 						display: flex;
 						flex-direction: column;
-						min-width: 350px;
                         flex: 1;
 						padding: 20px;
 						border: 1px solid $light-grey-color;
@@ -2369,7 +2400,7 @@
 							}
 
                             li.no-feature {
-                                background-image: url("data:image/svg+xml,%3Csvg width='18' height='18' viewBox='0 0 18 18' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M9 0C4.02891 0 0 4.02891 0 9C0 13.9711 4.02891 18 9 18C13.9711 18 18 13.9711 18 9C18 4.02891 13.9711 0 9 0ZM8.15625 5.34375C8.15625 4.87969 8.53594 4.5 9 4.5C9.46406 4.5 9.84375 4.87793 9.84375 5.34375V9.84375C9.84375 10.3096 9.46582 10.6875 9 10.6875C8.53418 10.6875 8.15625 10.3113 8.15625 9.84375V5.34375ZM9 14.0625C8.38969 14.0625 7.89469 13.5675 7.89469 12.9572C7.89469 12.3469 8.38934 11.8519 9 11.8519C9.61066 11.8519 10.1053 12.3469 10.1053 12.9572C10.1039 13.5668 9.61172 14.0625 9 14.0625Z' fill='%23DFCD69'/%3E%3C/svg%3E%0A");
+                                background-image: url("data:image/svg+xml,%3Csvg width='18' height='18' viewBox='0 0 18 18' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M9 0C4.02891 0 0 4.02891 0 9C0 13.9711 4.02891 18 9 18C13.9711 18 18 13.9711 18 9C18 4.02891 13.9711 0 9 0ZM8.15625 5.34375C8.15625 4.87969 8.53594 4.5 9 4.5C9.46406 4.5 9.84375 4.87793 9.84375 5.34375V9.84375C9.84375 10.3096 9.46582 10.6875 9 10.6875C8.53418 10.6875 8.15625 10.3113 8.15625 9.84375V5.34375ZM9 14.0625C8.38969 14.0625 7.89469 13.5675 7.89469 12.9572C7.89469 12.3469 8.38934 11.8519 9 11.8519C9.61066 11.8519 10.1053 12.3469 10.1053 12.9572C10.1039 13.5668 9.61172 14.0625 9 14.0625Z' fill='%23cccccc'/%3E%3C/svg%3E%0A");
                             }
 
                             li.x-feature {
@@ -2388,6 +2419,8 @@
 							border: 1px solid $light-grey-color;
 							box-shadow: none;
 							transition: all 0.3s ease;
+                            width: 100%;
+                            margin: 0 0 10px;
 
 							&:hover,
 							&:focus {
@@ -2819,4 +2852,20 @@
     .wpz-insta-admin #wpbody-content > .wrap .wpz-insta-wrap ~ #posts-filter .wp-list-table tbody td .wpz-insta_quick-edit .wpz-insta_quick-edit-columns {
         flex-direction: column;
     }
+}
+
+
+
+@media only screen and (max-width: 710px) {
+
+    .wpz-insta-admin #wpbody-content > .wrap .wpz-insta_settings-connect .account-options .token_cols,
+    .wpz-insta-admin #wpbody-content > .wrap .wpz-insta_settings-connect .account-options {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .wpz-insta-admin #wpbody-content > .wrap .wpz-insta_settings-connect .account-options .token_cols .token_col {
+        margin-bottom: 20px;
+    }
+
 }
