@@ -31,25 +31,24 @@ Formerly known as *Instagram Widget by WPZOOM*, **WPZOOM Social Feed Widget** is
 
 [youtube https://www.youtube.com/watch?v=vlEk68RyBMA]
 
-= 📌 FEATURES =
+= FREE FEATURES =
 
 * **Create Multiple Feeds** 🆕
-* **Gutenberg Block** 🆕
-* **Embed using Shortcode in Elementor and other page builders** 🆕
+* **Display your Instagram Feeds using Gutenberg Blocks** 🆕
+* **Embed your feeds using Shortcodes in Elementor and other page builders** 🆕
 * **Multiple Layouts** 🆕
 * **Lightbox**
 * Add your custom avatar and bio
 * Supports Lazy Loading
-* Works with the new WordPress 5.8 block-based widgets screen
 
 = ⭐️ PRO FEATURES ⭐️ =
-* **Connect Multiple Instagram Accounts - 🆕**
+* **Connect Multiple Instagram Accounts**
+* **Display Followers Count - 🆕**
 * **Masonry Layout - 🆕**
-* **Carousel - 🆕**
-* **Highlight Items - 🆕**
+* **Carousel**
 * **Responsive Columns - 🆕**
-* **Load More button - 🆕**
-* **Customize Colors - 🆕**
+* **Load More button**
+* **Customize Colors**
 * Premium Support
 * and many new features coming soon!
 
@@ -58,7 +57,7 @@ Formerly known as *Instagram Widget by WPZOOM*, **WPZOOM Social Feed Widget** is
 
 = Where I can view a Demo? =
 
-You can view the widget live in all our themes at [WPZOOM](https://www.wpzoom.com/themes/).
+**[View Demo](https://demo.wpzoom.com/instagram-widget/)**
 
 
 = Get Involved =
@@ -101,6 +100,11 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 
 
 == Changelog ==
+
+= 2.2.0 =
+* New: Major API changes to work with upcoming changes from Instagram.
+* New: Connect your Instagram account via your Facebook account.
+* Important:  Due to API limitations, you can no longer connect your Personal Instagram account and feeds with accounts connected before this update will stop working on December 4, 2024. The new Facebook/Instagram API supports only Creator and Business Instagram accounts. Please reconnect your account before December 2024 after updating to version 2.2 or higher.  [Learn More.](https://www.wpzoom.com/documentation/instagram-widget/basic-display-api-deprecation/)
 
 = 2.1.19 =
 * Minor bug fix for images in the lightbox in Safari
@@ -396,6 +400,9 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 
 
 == Upgrade Notice ==
+
+= 2.2.0 =
+⚠️ IMPORTANT: Due to API limitations, you can no longer connect your Personal Instagram account and feeds with accounts connected before this update will stop working on December 4, 2024. The new Facebook/Instagram API supports only Creator and Business Instagram accounts. Please reconnect your account before December 2024 after updating to version 2.2 or higher.  [Learn More.](https://www.wpzoom.com/documentation/instagram-widget/basic-display-api-deprecation/)
 
 = 2.0.0 =
 ⚠️ IMPORTANT: Version 2.0 includes major changes in the plugin. Existing Instagram widgets will not be affected, but we highly recommend creating a new feed in the new section "Instagram Widget" and embedding it using the new Gutenberg block or shortcode.
