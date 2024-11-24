@@ -1094,6 +1094,142 @@ class Wpzoom_Instagram_Widget_API {
 			});
 		}
 	}
+
+	// Add this method to your existing API class
+	public function get_account_insights($account_id, $metrics, $period, $days) {
+		$user_post = get_post($account_id);
+		if (!$user_post) {
+			return new WP_Error('invalid_account', 'Invalid account ID');
+		}
+
+		$instagram_account_id = get_post_meta($user_post->ID, '_wpz-insta_page_id', true);
+		$access_token = get_post_meta($user_post->ID, '_wpz-insta_token', true);
+
+		if (empty($instagram_account_id) || empty($access_token)) {
+			return new WP_Error('missing_credentials', 'Missing Instagram account ID or access token.');
+		}
+
+		$metrics_string = implode(',', $metrics);
+
+		// Build the URL based on period type
+		$url = "https://graph.facebook.com/v17.0/{$instagram_account_id}/insights";
+		$params = array(
+			'metric' => $metrics_string,
+			'period' => $period,
+			'access_token' => $access_token
+		);
+
+		// Add date parameters only for non-lifetime metrics
+		if ($period !== 'lifetime') {
+			$until = new DateTime();
+			$since = clone $until;
+
+			if ($period === 'day') {
+				$since->modify("-{$days} days");
+			} elseif ($period === 'week') {
+				$since->modify("-{$days} weeks");
+			} elseif ($period === 'month') {
+				$since->modify("-{$days} months");
+			}
+
+			$params['since'] = $since->format('Y-m-d');
+			$params['until'] = $until->format('Y-m-d');
+		}
+
+		error_log('Making API request to: ' . add_query_arg($params, $url));
+
+		$response = wp_remote_get(add_query_arg($params, $url));
+
+		if (is_wp_error($response)) {
+			return $response;
+		}
+
+		$body = wp_remote_retrieve_body($response);
+		$data = json_decode($body, true);
+
+		if (isset($data['error'])) {
+			error_log('API Error: ' . print_r($data['error'], true));
+			return new WP_Error(
+				'api_error',
+				isset($data['error']['message']) ? $data['error']['message'] : 'Unknown API error'
+			);
+		}
+
+		return $this->process_insights_data($data);
+	}
+
+	private function process_insights_data($raw_data) {
+		$processed_data = array();
+
+		if (!empty($raw_data['data'])) {
+			foreach ($raw_data['data'] as $metric) {
+				$processed_data[$metric['name']] = array(
+					'total' => array_sum(array_column($metric['values'], 'value')),
+					'values' => $metric['values']
+				);
+			}
+		}
+
+		return $processed_data;
+	}
+
+	private function get_access_token($account_id) {
+		// Get the user post by ID
+		$user_post = get_post($account_id);
+		if (!$user_post) {
+			return '';
+		}
+
+		// Get the token from post meta
+		$token = get_post_meta($user_post->ID, '_wpz-insta_token', true);
+
+		if (empty($token)) {
+			// Try to get token from settings as fallback
+			$settings = get_option('wpzoom-instagram-widget-settings', array());
+			$token = !empty($settings['basic-access-token']) ? $settings['basic-access-token'] : '';
+		}
+
+		return $token;
+	}
+
+	public function get_business_discovery($account_id) {
+		$user_post = get_post($account_id);
+		if (!$user_post) {
+			return new WP_Error('invalid_account', 'Invalid account ID');
+		}
+
+		$instagram_account_id = get_post_meta($user_post->ID, '_wpz-insta_page_id', true);
+		$access_token = get_post_meta($user_post->ID, '_wpz-insta_token', true);
+
+		if (empty($instagram_account_id) || empty($access_token)) {
+			return new WP_Error('missing_credentials', 'Missing Instagram account ID or access token.');
+		}
+
+		$url = "https://graph.facebook.com/v21.0/{$instagram_account_id}";
+		$params = array(
+			'fields' => 'business_discovery.username(' . get_post_meta($user_post->ID, '_wpz-insta_user_name', true) . '){followers_count,media_count,website,profile_picture_url}',
+			'access_token' => $access_token
+		);
+
+		$response = wp_remote_get(add_query_arg($params, $url));
+
+		if (is_wp_error($response)) {
+			return $response;
+		}
+
+		$body = wp_remote_retrieve_body($response);
+		$data = json_decode($body, true);
+
+		if (isset($data['error'])) {
+			error_log('API Error: ' . print_r($data['error'], true));
+			return new WP_Error(
+				'api_error',
+				isset($data['error']['message']) ? $data['error']['message'] : 'Unknown API error'
+			);
+		}
+
+		return $data;
+	}
 }
 
 Wpzoom_Instagram_Widget_API::getInstance();

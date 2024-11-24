@@ -46,11 +46,13 @@
     "devDependencies": {
         "@wordpress/postcss-themes": "^4.1.0",
         "@wordpress/scripts": "^26.19.0",
+        "autoprefixer": "^10.4.16",
         "copy-webpack-plugin": "^6.3.2",
         "node-sass-glob-importer": "^5.3.2",
         "postcss": "^8.3.6",
         "postcss-color-function": "^4.1.0",
         "rtlcss-webpack-plugin": "^4.0.6",
+        "thread-loader": "^4.0.2",
         "webpack-fix-style-only-entries": "^0.6.1"
     },
     "dependencies": {
