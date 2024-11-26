@@ -327,23 +327,21 @@ class WPZOOM_Instagram_General_Settings {
 			}
 		}
 
-		$get_users = get_posts(
+		$get_feeds = get_posts(
 			array(
 				'numberposts' => -1,
 				'orderby'     => 'date',
         		'order'       => 'ASC',
-				'post_type'   => 'wpz-insta_user'
+				'post_type'   => 'wpz-insta_feed'
 			)
 		);
 
 		$transient = 'zoom_instagram_is_configured';
 
-		foreach( (array)$get_users as $user ) {
+		foreach( (array)$get_feeds as $feed ) {
 
-			$user_id            = isset( $user->ID ) ? intval( $user->ID ) : -1;
-			$user_account_token = get_post_meta( $user_id, '_wpz-insta_token', true ) ?: '-1';
-
-			$transient = $transient . '_' . substr( $user_account_token, 0, 20 );
+			$feed_id            = isset( $feed->ID ) ? intval( $feed->ID ) : -1;
+			$transient = $transient . '_' . substr( $feed_id, 0, 20 );
 
 			if( get_transient( $transient ) ) {
 				delete_transient(  $transient );

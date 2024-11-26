@@ -842,16 +842,13 @@ class WPZOOM_Instagram_Widget_Settings {
 	}
 
 	function post_action_update_posts( int $post_id ) {
+
 		if ( $post_id > 0 && isset( $_GET['_wpnonce'] ) && wp_verify_nonce( $_GET['_wpnonce'], 'wpz-insta-update-posts_' . $post_id ) ) {
 			$post = get_post( $post_id );
 
 			if ( $post instanceof WP_Post ) {
-				
-				$user_id = (int) self::get_feed_setting_value( $post_id, 'user-id' );
-				$raw_token = get_post_meta( $user_id, '_wpz-insta_token', true );
-				$user_account_token = false !== $raw_token && ! empty( $raw_token ) ? $raw_token : '-1';
 
-				if ( '-1' !== $user_account_token && delete_transient( 'zoom_instagram_is_configured_' . substr( $user_account_token, 0, 20 ) ) ) {
+				if ( delete_transient( 'zoom_instagram_is_configured_' . substr( $post_id, 0, 20 ) ) ) {
 					wp_redirect(
 						add_query_arg(
 							array(
@@ -2451,11 +2448,8 @@ class WPZOOM_Instagram_Widget_Settings {
 				delete_post_meta( $post_ID, '_wpz-insta_feed_is_duplicate' );
 			}
 
-			$user_id = (int) self::get_feed_setting_value( $post_ID, 'user-id' );
-			$raw_token = get_post_meta( $user_id, '_wpz-insta_token', true );
-			$user_account_token = false !== $raw_token && ! empty( $raw_token ) ? $raw_token : '-1';
-			if ( '-1' !== $user_account_token ) {
-				delete_transient( 'zoom_instagram_is_configured_' . substr( $user_account_token, 0, 20 ) );
+			if ( $post_ID ) {
+				delete_transient( 'zoom_instagram_is_configured_' . substr( $post_ID, 0, 20 ) );
 			}
 
 		}
