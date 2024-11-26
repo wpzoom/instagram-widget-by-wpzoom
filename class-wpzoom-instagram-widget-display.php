@@ -734,7 +734,7 @@ class Wpzoom_Instagram_Widget_Display {
 
 	// Check if the URL is a video URL
 	protected static function is_video_url( $url ) {
-		return preg_match( '/\.mp4(\?|$)/i' , $url );
+		return preg_match( '/(\.mp4|\.mov|video_dash|video_dashinit|\/vs=|\/o1\/v\/t16\/)/i' , $url );
 	}
 
 	/**
