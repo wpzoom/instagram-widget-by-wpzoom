@@ -199,7 +199,7 @@ class Wpzoom_Instagram_Widget_Display {
 				$show_user_image = isset( $args['show-account-image'] ) && boolval( $args['show-account-image'] );
 				$user_image = get_the_post_thumbnail_url( $user, 'thumbnail' ) ?: plugin_dir_url( __FILE__ ) . 'dist/images/backend/icon-insta.png';
 				$user_account_token = get_post_meta( $user_id, '_wpz-insta_token', true ) ?: '-1';
-				$user_business_page_id = get_post_meta( $user_id, '_wpz-insta_page_id', true ) ?: null;
+				$user_business_page_id = get_post_meta( $user_id, '_wpz-insta_page_id', true ) ?: null;	
 
 				if ( '-1' !== $user_account_token ) {
 					$attrs = '';
@@ -674,9 +674,19 @@ class Wpzoom_Instagram_Widget_Display {
 
 						$output .= '</div><div class="swiper-pagination"></div><div class="swiper-button-prev"></div><div class="swiper-button-next"></div></div>';
 					} else {
+						
 						if ( $is_video ) {
+
 							$thumb = isset( $item['local-image-url'] ) ? $item['local-image-url'] : '';
-							$output .= '<video controls muted preload="none"><source src="' . esc_url( $src ) . '" type="video/mp4"/></video>';
+
+							if( ! self::is_video_url( $src ) ) {
+								$src = isset( $item['local-image-url'] ) ? $item['local-image-url'] : '';
+								$output .= '<img class="wpzoom-swiper-image swiper-lazy blurred" data-src="' . esc_url( $src_local ) . '" alt="' . esc_attr( $alt ) . '"/>';
+								$output .= '<div class="wpz-no-reel-link-wrapper"><a class="wpz-no-reel-link" target="_blank" href=" ' . esc_url( $link ) . '"><span class="dashicons dashicons-controls-play"></span>' . esc_html__( 'View Reel on Instagram', 'instagram-widget-by-wpzoom' ) . '</a></div>';
+							} else {
+								$output .= '<video controls muted preload="none"><source src="' . esc_url( $src ) . '" type="video/mp4"/></video>';
+							}
+
 						} else {
 							$output .= '<img class="wpzoom-swiper-image swiper-lazy" data-src="' . esc_url( $src_local ) . '" alt="' . esc_attr( $alt ) . '"/><div class="swiper-lazy-preloader swiper-lazy-preloader-white"></div>';
 						}
@@ -720,6 +730,11 @@ class Wpzoom_Instagram_Widget_Display {
 		}
 
 		return $output;
+	}
+
+	// Check if the URL is a video URL
+	protected static function is_video_url( $url ) {
+		return preg_match( '/\.mp4(\?|$)/i' , $url );
 	}
 
 	/**

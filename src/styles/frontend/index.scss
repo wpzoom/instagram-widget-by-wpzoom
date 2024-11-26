@@ -951,7 +951,34 @@ a.ig-b-v-24:hover {
         display: block;
         margin: 0 auto;
         padding: 0;
+
+        &.blurred {
+            filter: blur(2px);
+            -webkit-filter: blur(2px);
+        }
     }
+    .wpz-no-reel-link-wrapper {
+
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color:rgba($color: #fff, $alpha: 0.2);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        .wpz-no-reel-link {
+            font-size: 14px;
+            padding:10px 20px;
+            color: #262626;
+            background-color: #fff;
+            text-decoration: none;
+        }
+    }
+    
+
 }
 
 
