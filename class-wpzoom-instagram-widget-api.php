@@ -194,7 +194,9 @@ class Wpzoom_Instagram_Widget_API {
 					$token        = get_post_meta( $user->ID, '_wpz-insta_token', true );
 					$connection_type   = get_post_meta( $user->ID, '_wpz-insta_connection-type', true );
 
-					if ( false !== $token && ! empty( $token ) && 'facebook_graph_api' !== $connection_type ) {
+
+					if ( false !== $token && ! empty( $token ) ) {
+
 						$request_url = add_query_arg(
 							array(
 								'grant_type'   => 'ig_refresh_token',
@@ -202,6 +204,15 @@ class Wpzoom_Instagram_Widget_API {
 							),
 							'https://graph.instagram.com/refresh_access_token'
 						);
+
+						if( 'facebook_graph_api' == $connection_type ) {
+							$request_url = add_query_arg(
+								array(
+									'access_token' => $token,
+								),
+								'https://www.wpzoom.com/graph-auth'
+							);
+						}
 
 						$response      = self::remote_get( $request_url, $this->headers );
 						$response_code = wp_remote_retrieve_response_code( $response );
