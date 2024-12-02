@@ -973,8 +973,15 @@ a.ig-b-v-24:hover {
             font-size: 14px;
             padding:10px 20px;
             color: #262626;
-            background-color: #fff;
+            background-color: rgba(255,255,255,.7);
+            border-radius: 10px;
+            line-height: 1.4;
             text-decoration: none;
+            transition: all .2s ease;
+
+            &:hover {
+                background-color: rgba(255,255,255,.9);
+            }
         }
     }
     
