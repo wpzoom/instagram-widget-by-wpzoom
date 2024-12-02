@@ -813,6 +813,11 @@ a.ig-b-v-24:hover {
     height: 100%;
 }
 
+.wpzoom-lightbox .mfp-container {
+    backdrop-filter: blur(10px);
+}
+
+
 .wpz-insta-lightbox {
     pointer-events: all;
     display: flex;
@@ -953,8 +958,7 @@ a.ig-b-v-24:hover {
         padding: 0;
 
         &.blurred {
-            filter: blur(2px);
-            -webkit-filter: blur(2px);
+            // filter: blur(12px);
         }
     }
     .wpz-no-reel-link-wrapper {
@@ -964,7 +968,7 @@ a.ig-b-v-24:hover {
         left: 0;
         right: 0;
         bottom: 0;
-        background-color:rgba($color: #fff, $alpha: 0.2);
+        background-color:rgba($color: #000, $alpha: 0.2);
         display: flex;
         justify-content: center;
         align-items: center;
@@ -974,7 +978,7 @@ a.ig-b-v-24:hover {
             padding:10px 20px;
             color: #262626;
             background-color: rgba(255,255,255,.7);
-            border-radius: 10px;
+            border-radius: 50px;
             line-height: 1.4;
             text-decoration: none;
             transition: all .2s ease;
