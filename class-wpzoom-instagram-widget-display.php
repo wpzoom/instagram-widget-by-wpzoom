@@ -682,7 +682,7 @@ class Wpzoom_Instagram_Widget_Display {
 							if( ! self::is_video_url( $src ) ) {
 								$src = isset( $item['local-image-url'] ) ? $item['local-image-url'] : '';
 								$output .= '<img class="wpzoom-swiper-image swiper-lazy blurred" data-src="' . esc_url( $src_local ) . '" alt="' . esc_attr( $alt ) . '"/>';
-								$output .= '<div class="wpz-no-reel-link-wrapper"><a class="wpz-no-reel-link" target="_blank" href=" ' . esc_url( $link ) . '"><span class="dashicons dashicons-controls-play"></span>' . esc_html__( 'View Reel on Instagram', 'instagram-widget-by-wpzoom' ) . '</a></div>';
+								$output .= '<div class="wpz-no-reel-link-wrapper"><a class="wpz-no-reel-link" target="_blank" href="' . esc_url( $link ) . '"><span class="dashicons dashicons-controls-play"></span>' . esc_html__( 'View Reel on Instagram', 'instagram-widget-by-wpzoom' ) . '</a></div>';
 							} else {
 								$output .= '<video controls muted preload="none"><source src="' . esc_url( $src ) . '" type="video/mp4"/></video>';
 							}
