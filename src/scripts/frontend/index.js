@@ -56,7 +56,7 @@
 				if ( $swipe_el.length > 0 ) {
 					const $nested   = $swipe_el.find( '.image-wrapper > .swiper' );
 
-					new Swiper( $swipe_el.get(0), {
+					const swiper = new Swiper( $swipe_el.get(0), {
 						lazy:{
 							threshold: 50
 						},
@@ -75,7 +75,22 @@
 						keyboard: {
 							enabled: true,
 							onlyInViewport: true
-						}
+						},
+						on: {
+							activeIndexChange: function () {
+	
+								// Get the active slide
+								const activeSlide = this.slides[this.activeIndex];
+								const $activeSlide = $(activeSlide);
+	
+								// Play the video in the active slide if it exists
+								const video = $activeSlide.find('video').get(0);
+								if (video) {
+									video.play();
+								}
+	
+							},
+						},
 					} );
 
 					$nested.each( function() {
@@ -104,7 +119,22 @@
 							keyboard: {
 								enabled: true,
 								onlyInViewport: true
-							}
+							},
+							on: {
+								activeIndexChange: function () {
+		
+									// Get the active slide
+									const activeSlide = this.slides[this.activeIndex];
+									const $activeSlide = $(activeSlide);
+		
+									// Play the video in the active slide if it exists
+									const video = $activeSlide.find('video').get(0);
+									if (video) {
+										video.play();
+									}
+		
+								},
+							},	
 						} );
 					} );
 
