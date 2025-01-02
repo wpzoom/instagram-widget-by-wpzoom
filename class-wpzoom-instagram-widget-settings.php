@@ -2200,6 +2200,8 @@ class WPZOOM_Instagram_Widget_Settings {
 				$account_id              = isset( $account_info['id'] ) ? sanitize_text_field( $account_info['id'] ) : '';
 				$account_username        = isset( $account_info['username'] ) ? sanitize_text_field( $account_info['username'] ) : '';
 				$account_name            = isset( $account_info['name'] ) ? sanitize_text_field( $account_info['name'] ) : '';
+				$account_name            = wp_encode_emoji( $account_name );
+
 				$account_profile_picture = isset( $account_info['profile_picture_url'] ) ? sanitize_text_field( $account_info['profile_picture_url'] ) : '';
 				$account_bio             = isset( $account_info['biography'] ) ? sanitize_text_field( $account_info['biography'] ) : '';
 				$account_bio             = wp_encode_emoji( $account_bio );
@@ -2287,6 +2289,8 @@ class WPZOOM_Instagram_Widget_Settings {
 
 							$account_username = property_exists( $info, 'username' ) && ! empty( $info->username ) ? sanitize_text_field( $info->username ) : '';
 							$account_name     = property_exists( $info, 'name' ) && ! empty( $info->name ) ? sanitize_text_field( $info->name ) : '';
+							$account_name     = wp_encode_emoji( $account_name );
+							
 							$account_bio      = property_exists( $info, 'biography' ) && ! empty( $info->biography ) ? sanitize_text_field( $info->biography ) : '';
 
 							// emoji encode	
@@ -2328,6 +2332,8 @@ class WPZOOM_Instagram_Widget_Settings {
 					if ( false !== $info && is_object( $info ) && property_exists( $info, 'username' ) && property_exists( $info, 'account_type' ) ) {	
 
 						$account_name = property_exists( $info, 'name' ) && ! empty( $info->name ) ? sanitize_text_field( $info->name ) : '';
+						$account_name = wp_encode_emoji( $account_name );
+						
 						$account_bio  = property_exists( $info, 'biography' ) && ! empty( $info->biography ) ? sanitize_text_field( $info->biography ) : '';
 
 						// emoji encode	
