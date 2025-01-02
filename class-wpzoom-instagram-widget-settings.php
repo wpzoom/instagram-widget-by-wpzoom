@@ -2202,6 +2202,7 @@ class WPZOOM_Instagram_Widget_Settings {
 				$account_name            = isset( $account_info['name'] ) ? sanitize_text_field( $account_info['name'] ) : '';
 				$account_profile_picture = isset( $account_info['profile_picture_url'] ) ? sanitize_text_field( $account_info['profile_picture_url'] ) : '';
 				$account_bio             = isset( $account_info['biography'] ) ? sanitize_text_field( $account_info['biography'] ) : '';
+				$account_bio             = wp_encode_emoji( $account_bio );
 
 				if ( isset( $_POST['post_id'] ) && intval( $_POST['post_id'] ) > 0 ) {
 
@@ -2287,6 +2288,10 @@ class WPZOOM_Instagram_Widget_Settings {
 							$account_username = property_exists( $info, 'username' ) && ! empty( $info->username ) ? sanitize_text_field( $info->username ) : '';
 							$account_name     = property_exists( $info, 'name' ) && ! empty( $info->name ) ? sanitize_text_field( $info->name ) : '';
 							$account_bio      = property_exists( $info, 'biography' ) && ! empty( $info->biography ) ? sanitize_text_field( $info->biography ) : '';
+
+							// emoji encode	
+							$account_bio      = wp_encode_emoji( $account_bio );
+
 							$account_type     = property_exists( $info, 'account_type' ) && ! empty( $info->account_type ) ? sanitize_text_field( $info->account_type ) : 'business';
 							$user = wp_strip_all_tags( $info->username );
 
@@ -2324,6 +2329,9 @@ class WPZOOM_Instagram_Widget_Settings {
 
 						$account_name = property_exists( $info, 'name' ) && ! empty( $info->name ) ? sanitize_text_field( $info->name ) : '';
 						$account_bio  = property_exists( $info, 'biography' ) && ! empty( $info->biography ) ? sanitize_text_field( $info->biography ) : '';
+
+						// emoji encode	
+						$account_bio  = wp_encode_emoji( $account_bio );
 
 						$user = wp_strip_all_tags( $info->username );
 						$insert_post = wp_insert_post( array(
