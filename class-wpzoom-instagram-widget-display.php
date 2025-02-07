@@ -763,10 +763,7 @@ class Wpzoom_Instagram_Widget_Display {
 
 				$output .= '</ul>';
 			}
-		} else {
-			$output .= '&#8230;';
 		}
-
 		return $output;
 	}
 

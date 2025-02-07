@@ -181,8 +181,6 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 				</ul>
 			<?php endif; ?>
 			<?php
-		} else {
-			echo '&#8230;';
 		}
 	}
 
