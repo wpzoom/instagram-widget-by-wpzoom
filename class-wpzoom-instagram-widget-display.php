@@ -747,15 +747,15 @@ class Wpzoom_Instagram_Widget_Display {
 
 		if ( current_user_can( 'edit_theme_options' ) ) {
 			$output .= sprintf(
-				'<p>%s <strong><a href="%s" target="_blank">%s</a></strong> %s</p>',
-				__( 'Instagram Widget misconfigured or your Access Token <strong>expired</strong>. Please check', 'instagram-widget-by-wpzoom' ),
+				'<p style="font-size: 12px; font-weight: 500;">%s <strong><a href="%s" target="_blank">%s</a></strong> %s</p>',
+				__( '[Admin-only Notice] Instagram Widget misconfigured or your Access Token <strong>expired</strong>. Please check', 'instagram-widget-by-wpzoom' ),
 				admin_url( 'edit.php?post_type=wpz-insta_user' ),
 				__( 'Instagram Settings Page', 'instagram-widget-by-wpzoom' ),
 				__( 'and reconnect your account.', 'instagram-widget-by-wpzoom' )
 			);
 
 			if ( ! empty( $errors ) ) {
-				$output .= '<ul>';
+				$output .= '<ul style="font-size: 12px; font-weight: 500;">';
 
 				foreach ( $errors as $error ) {
 					$output .= '<li>' . esc_html( $error ) . '</li>';
