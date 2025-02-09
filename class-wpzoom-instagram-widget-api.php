@@ -542,7 +542,7 @@ class Wpzoom_Instagram_Widget_API {
 			),
 			'items-with-token-invalid-response'          => array(
 				'code'    => 'items-with-token-invalid-response',
-				'message' => esc_html__( 'Geting items from the Instagram API Feed failed. Invalid response.', 'instagram-widget-by-wpzoom' ),
+				'message' => esc_html__( 'Getting items from the Instagram API Feed failed. Invalid response.', 'instagram-widget-by-wpzoom' ),
 			),
 			'items-with-token-invalid-data-structure'    => array(
 				'code'    => 'items-with-token-invalid-data-structure',
