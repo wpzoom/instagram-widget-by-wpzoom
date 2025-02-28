@@ -669,19 +669,13 @@ jQuery( function( $ ) {
 	// Set the selected API
 	$('#wpz-insta-select-api').on('change', function (e) {
 		var selected = $(this).val();
-        $(this).parent().find( '#wpz-insta_reconnect' ).attr( 'disabled', false );
-        $( '#wpz-insta-token_label' ).hide();
-        if( 'manual_update' === selected ) {
-            $(this).parent().find( '#wpz-insta_reconnect' ).attr( 'disabled', true );
-            $(this).parent().find( '#wpz-insta_reconnect' ).attr( 'href', null );
-            $( '#wpz-insta-token_label' ).show();
-        }
-        else {
-            $(this).parent().find( '#wpz-insta_reconnect' ).attr('href', selected );
-        }
-		
-
+        $(this).parent().find( '#wpz-insta_reconnect' ).attr('href', selected );
 	} );
+
+    $('#wpz-add_manual_token').on( 'click', function (e) { 
+        e.preventDefault();
+        $('#wpz-insta-token_label').toggle();
+    } );
 
 	// Function to connect the selected business account
 	$('#wpz-insta-graph-connect-account').on('click', function (e) {
