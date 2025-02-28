@@ -2078,7 +2078,10 @@ class WPZOOM_Instagram_Widget_Settings {
 					</div>
 
 					<div class="wpz-insta_modal-dialog_content">
-						<?php _e( 'Please, use the token genarator', 'instagram-widget-by-wpzoom' ); ?>						
+                        <p>→ <a href="https://www.wpzoom.com/instagram-business-auth/" target="_blank">Generate Access Token via Instagram</a> or copy the generated:</p><br/>
+                        <p> <code id="wpz_generated_token"></code></p>
+                        <br>
+                        <p>Not sure what to do with your access token? Find more details in this <a href="https://www.wpzoom.com/documentation/instagram-widget/how-to-create-an-access-token-to-manually-connect-an-instagram-account/">support article</a>. </p>
 					</div>
 
 					<div class="wpz-insta_modal-dialog_footer">

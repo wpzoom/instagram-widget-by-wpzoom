@@ -191,7 +191,9 @@ jQuery( function( $ ) {
                 window.opener.wpzInstaHandleReturnedToken( window.location );
                 window.close();
             } else {
+                var getToken = getAccessTokenFromURL( window.location );
                 var notice = $('#wpz-insta_modal-dialog-connection-failed');
+                $('#wpz_generated_token').text( getToken );
                 notice.addClass('open');
                 $('#wpfooter').show();
             }
@@ -199,9 +201,23 @@ jQuery( function( $ ) {
 			window.opener.wpzInstaHandleReturnedGraphToken( window.location );
             window.close();
 		}
-		
-		
 	}
+
+    function getAccessTokenFromURL() {
+        // Get the full URL from window.location.href
+        const url = window.location.href;
+    
+        // Check if the URL contains a hash and if it includes 'access_token'
+        const hash = url.split('#')[1];  // Get everything after the '#'
+        if (hash && hash.includes('access_token=')) {
+            // Extract the query parameters in the hash
+            const params = new URLSearchParams(hash);
+            // Get the value of 'access_token'
+            const accessToken = params.get('access_token');
+            return accessToken;
+        }
+        return null; // Return null if no access_token is found
+    }
 
 
 	$( '#screen-meta #wpz-insta_account-photo-hide, #screen-meta #wpz-insta_account-bio-hide, #screen-meta #wpz-insta_account-token-hide, #screen-meta #wpz-insta_actions-hide' ).closest( 'label' ).remove();
