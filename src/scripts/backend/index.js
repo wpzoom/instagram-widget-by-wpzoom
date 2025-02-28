@@ -145,7 +145,9 @@ jQuery( function( $ ) {
 
 	$('#the-list').on('click', '#wpz-insta_reconnect', function (e) {
 		e.preventDefault();
-		window.wpzInstaAuthenticateInstagram( $(this).attr('href') );
+        if( $(this).attr('href').length > 0 ) {
+            window.wpzInstaAuthenticateInstagram( $(this).attr('href') );
+        }
 	});
 
     $('.wpzoom-instagram-widget-settings-request-type-wrapper').find('input[type=radio]').on('change', function (e) {
@@ -667,7 +669,17 @@ jQuery( function( $ ) {
 	// Set the selected API
 	$('#wpz-insta-select-api').on('change', function (e) {
 		var selected = $(this).val();
-		$(this).parent().find( '#wpz-insta_reconnect' ).attr('href', selected );
+        $(this).parent().find( '#wpz-insta_reconnect' ).attr( 'disabled', false );
+        $( '#wpz-insta-token_label' ).hide();
+        if( 'manual_update' === selected ) {
+            $(this).parent().find( '#wpz-insta_reconnect' ).attr( 'disabled', true );
+            $(this).parent().find( '#wpz-insta_reconnect' ).attr( 'href', null );
+            $( '#wpz-insta-token_label' ).show();
+        }
+        else {
+            $(this).parent().find( '#wpz-insta_reconnect' ).attr('href', selected );
+        }
+		
 
 	} );
 
