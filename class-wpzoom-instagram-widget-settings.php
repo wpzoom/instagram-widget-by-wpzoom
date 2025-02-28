@@ -2073,15 +2073,18 @@ class WPZOOM_Instagram_Widget_Settings {
             <div id="wpz-insta_modal-dialog-connection-failed" class="fail">
 				<div class="wpz-insta_modal-dialog_wrap">
 					<div class="wpz-insta_modal-dialog_header">
-						<h4 class="wpz-insta_modal-dialog_header-title"><?php _e( 'Connection failed!', 'instagram-widget-by-wpzoom' ); ?></h4>
+						<h4 class="wpz-insta_modal-dialog_header-title"><?php _e( 'Connection failed - action required!', 'instagram-widget-by-wpzoom' ); ?></h4>
 						<span class="wpz-insta_modal-dialog_header-button wpz-insta_modal-dialog_close-button"><?php _e( 'Close', 'instagram-widget-by-wpzoom' ); ?></span>
 					</div>
 
 					<div class="wpz-insta_modal-dialog_content">
-                        <p>→ <a href="https://www.wpzoom.com/instagram-business-auth/" target="_blank">Generate Access Token via Instagram</a> or copy the generated:</p><br/>
-                        <p> <code id="wpz_generated_token"></code></p>
-                        <br>
-                        <p>Not sure what to do with your access token? Find more details in this <a href="https://www.wpzoom.com/documentation/instagram-widget/how-to-create-an-access-token-to-manually-connect-an-instagram-account/">support article</a>. </p>
+                        <p>1. Copy the Access Token below:</p><br/>
+                        <p><code id="wpz_generated_token"></code></p><br/>
+                        <p>2. Go back to the other window or close this popup and connect manually by inserting the copied code in the field called <strong>Instagram API Access Token</strong>.</p><br/>
+                         <br>
+                        <p>Not sure what to do with your access token? Find more details in this <a href="https://www.wpzoom.com/documentation/instagram-widget/how-to-create-an-access-token-to-manually-connect-an-instagram-account/" target="_blank">support article</a>. </p><br/>
+                        <p><a href="https://www.wpzoom.com/instagram-business-auth/" target="_blank">Generate Access Token via Instagram</a></p><br/>
+
 					</div>
 
 					<div class="wpz-insta_modal-dialog_footer">
