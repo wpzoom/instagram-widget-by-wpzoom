@@ -2546,7 +2546,7 @@
 		}
 	}
 
-	#wpz-insta_modal-dialog, #wpz-insta_modal_graph-dialog {
+	#wpz-insta_modal-dialog, #wpz-insta_modal_graph-dialog, #wpz-insta_modal-dialog-connection-failed {
 		display: flex;
 		align-items: center;
 		justify-content: center;
@@ -2737,6 +2737,13 @@
 			}
 		}
 	}
+
+    #wpz-insta_modal-dialog-connection-failed {
+        .wpz-insta_modal-dialog_wrap {
+            min-width: 200px;
+        }
+
+    }
 }
 
 @keyframes slidedown {

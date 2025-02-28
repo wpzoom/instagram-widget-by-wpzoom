@@ -2070,6 +2070,24 @@ class WPZOOM_Instagram_Widget_Settings {
 				</div>
 			</footer>
 
+            <div id="wpz-insta_modal-dialog-connection-failed" class="fail">
+				<div class="wpz-insta_modal-dialog_wrap">
+					<div class="wpz-insta_modal-dialog_header">
+						<h4 class="wpz-insta_modal-dialog_header-title"><?php _e( 'Connection failed!', 'instagram-widget-by-wpzoom' ); ?></h4>
+						<span class="wpz-insta_modal-dialog_header-button wpz-insta_modal-dialog_close-button"><?php _e( 'Close', 'instagram-widget-by-wpzoom' ); ?></span>
+					</div>
+
+					<div class="wpz-insta_modal-dialog_content">
+						<?php _e( 'Please, use the token genarator', 'instagram-widget-by-wpzoom' ); ?>						
+					</div>
+
+					<div class="wpz-insta_modal-dialog_footer">
+						<span class="wpz-insta_modal-dialog_footer-button wpz-insta_modal-dialog_ok-button button button-primary"><?php _e( 'OK', 'instagram-widget-by-wpzoom' ); ?></span>
+						<span class="wpz-insta_modal-dialog_footer-button wpz-insta_modal-dialog_cancel-button button button-secondary hidden"><?php _e( 'Cancel', 'instagram-widget-by-wpzoom' ); ?></span>
+					</div>
+				</div>
+			</div>
+
 			<div id="wpz-insta_modal-dialog" class="success">
 				<div class="wpz-insta_modal-dialog_wrap">
 					<div class="wpz-insta_modal-dialog_header">
