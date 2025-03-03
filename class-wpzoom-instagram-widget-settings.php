@@ -3132,7 +3132,7 @@ class WPZOOM_Instagram_Widget_Settings {
 						<path d="M6.3 3.5H7.7V4.9H6.3V3.5ZM6.3 6.3H7.7V10.5H6.3V6.3ZM7 0C3.136 0 0 3.136 0 7C0 10.864 3.136 14 7 14C10.864 14 14 10.864 14 7C14 3.136 10.864 0 7 0ZM7 12.6C3.913 12.6 1.4 10.087 1.4 7C1.4 3.913 3.913 1.4 7 1.4C10.087 1.4 12.6 3.913 12.6 7C12.6 10.087 10.087 12.6 7 12.6Z" />
 					</svg>
 
-					<?php _e( 'Due to API limitations, you can no longer connect your <strong>Personal Instagram</strong> account starting <strong>December 4, 2024</strong>. The new Facebook/Instagram API supports only <strong>Creator and Business</strong> Instagram accounts.', 'instagram-widget-by-wpzoom' ); ?>
+					<?php _e( 'Due to API limitations, you can no longer connect <strong>Personal Instagram</strong> accounts. The new Facebook/Instagram API supports only <strong>Creator and Business</strong> accounts.', 'instagram-widget-by-wpzoom' ); ?>
 				</p>
 			</div>
 		</div>
