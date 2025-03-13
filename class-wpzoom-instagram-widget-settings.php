@@ -3037,7 +3037,6 @@ class WPZOOM_Instagram_Widget_Settings {
 							<li><?php _e( 'Show posts from your account', 'instagram-widget-by-wpzoom' ); ?></li>
                             <li><?php _e( 'Display user info in the header', 'instagram-widget-by-wpzoom' ); ?></li>
                             <li><strong><?php _e( '[PRO] Display Follower Count', 'instagram-widget-by-wpzoom' ); ?></strong></li>
-							<li class="no-feature"><?php _e( 'Requires reconnection every 60 days <small><em>To be fixed soon</em></small>', 'instagram-widget-by-wpzoom' ); ?></li>
 							<li class="no-feature"><?php _e( 'Display hashtag feeds <small><em>Coming Soon</em></small>', 'instagram-widget-by-wpzoom' ); ?></li>
                             <li class="no-feature"><?php _e( 'Display feeds with your mention <small><em>Coming Soon</em></small>', 'instagram-widget-by-wpzoom' ); ?></li>
 						</ul>

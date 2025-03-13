@@ -242,7 +242,7 @@ jQuery( function( $ ) {
 		$( this ).closest( '.wpz-insta_sidebar' ).toggleClass( 'show-pro', this.checked );
 	} );
 
-	$('#wpz-insta_connect-personal, #wpz-insta_connect-business').each(function() {
+	$('#wpz-insta_connect-personal, #wpz-insta_connect-business, .wpz-insta_tabs-config-connect-add').each(function() {
         // Get the current href attribute
         var currentHref = $(this).attr('href');
 
