@@ -361,7 +361,7 @@ class Wpzoom_Instagram_Widget_API {
 
 			$raw_data = json_decode( wp_remote_retrieve_body( $response ) );
 
-			$data = self::convert_items_to_old_structure( $raw_data, $bypass_transient );
+			$data = self::convert_items_to_old_structure( $raw_data, $bypass_transient, $this->access_token );
 
 			if ( $include_pagination && property_exists( $raw_data, 'paging' ) ) {
 				$data->paging = $raw_data->paging;
@@ -403,8 +403,8 @@ class Wpzoom_Instagram_Widget_API {
 			'children'           => '',
 			'image-id'           => '',
 			'image-caption'      => '',
-			'likes_count'        => 0,
-			'comments_count'     => 0,
+			'likes'        => 0,
+			'comments'     => 0,
 		);
 
 		if ( empty( $image_resolution ) ) {
@@ -412,7 +412,8 @@ class Wpzoom_Instagram_Widget_API {
 		}
 
 		foreach ( $data->data as $key => $item ) {
-			$item = (object) wp_parse_args( $item, $defaults );
+
+			$item = (object) wp_parse_args( $item, $defaults );            
 
 			if ( empty( $username ) ) {
 				$username = $item->user->username;
@@ -445,8 +446,8 @@ class Wpzoom_Instagram_Widget_API {
 				'children'           => property_exists( $item, 'children' ) && ! empty( $item->children ) ? $item->children : '',
 				'image-id'           => ! empty( $item->id ) ? esc_attr( $item->id ) : '',
 				'image-caption'      => ! empty( $item->caption->text ) ? esc_attr( $item->caption->text ) : '',
-				'likes_count'        => ! empty( $item->likes->count ) ? esc_attr( $item->likes->count ) : 0,
-				'comments_count'     => ! empty( $item->comments->count ) ? esc_attr( $item->comments->count ) : 0,
+				'likes'        => ! empty( $item->likes ) ? esc_attr( $item->likes ) : 0,
+				'comments'     => ! empty( $item->comments ) ? esc_attr( $item->comments ) : 0,
 			);
 		}
 
@@ -461,6 +462,46 @@ class Wpzoom_Instagram_Widget_API {
 
 		return $result;
 	}
+
+    /**
+     * Get likes and comments count for a media item
+     * 
+     * @param string $media_id The ID of the media item
+     * @return array Array containing likes_count and comments_count
+     */ 
+    public static function get_likes_comments_count( $media_id, $access_token ) {
+
+        // Default values
+        $likes_comments_count = array(
+            'like_count'    => 0,
+            'comments_count' => 0,
+        );
+
+        if( empty( $media_id ) ) {
+            return $likes_comments_count;
+        }
+
+        $request_url = add_query_arg(
+            array(
+                'fields'       => 'like_count,comments_count',
+                'access_token' => $access_token,
+            ),
+            'https://graph.facebook.com/v21.0/' . $media_id  
+        );
+
+        $response = wp_remote_get( $request_url );
+
+        if ( is_wp_error( $response ) || 200 !== wp_remote_retrieve_response_code( $response ) ) {
+            return $likes_comments_count;
+        }
+
+        $raw_data = json_decode( wp_remote_retrieve_body( $response ) );
+
+        $likes_comments_count['like_count'] = $raw_data->like_count;
+        $likes_comments_count['comments_count'] = $raw_data->comments_count;
+
+        return $likes_comments_count;
+    }
 
 	/**
 	 * @param $desired_width int Desired image width in pixels
@@ -560,7 +601,7 @@ class Wpzoom_Instagram_Widget_API {
 		);
 	}
 
-	public static function convert_items_to_old_structure( $data, $preview = false ) {
+	public static function convert_items_to_old_structure( $data, $preview = false, $access_token ) {
 
 		$converted       = new stdClass();
 		$converted->data = array();
@@ -602,8 +643,8 @@ class Wpzoom_Instagram_Widget_API {
 					),
 				),
 				'type'         => $item->media_type,
-				'likes'        => null,
-				'comments'     => null,
+				'likes'        => self::get_likes_comments_count( $item->id, $access_token )['like_count'],
+				'comments'     => self::get_likes_comments_count( $item->id, $access_token )['comments_count'],
 				'created_time' => null,
 				'timestamp'    => $item->timestamp,
 				'children'     => ( isset( $item->children ) ? $item->children : null ),

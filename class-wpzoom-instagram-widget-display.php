@@ -483,19 +483,20 @@ class Wpzoom_Instagram_Widget_Display {
 			$svg_icons = plugin_dir_url( __FILE__ ) . 'dist/images/frontend/wpzoom-instagram-icons.svg';
 			$preview = isset( $args['preview'] ) ? true : false;
 
-			foreach ( $items as $item ) {
+			foreach ( $items as $item ) {                
+
 				$inline_attrs  = '';
 				$overwrite_src = false;
 				$link          = isset( $item['link'] ) ? $item['link'] : '';
 				$src           = isset( $item['image-url'] ) ? $item['image-url'] : '';
 				$media_id      = isset( $item['image-id'] ) ? $item['image-id'] : '';
 				$alt           = isset( $item['image-caption'] ) ? esc_attr( $item['image-caption'] ) : '';
-				$likes         = isset( $item['likes_count'] ) ? intval( $item['likes_count'] ) : 0;
 				$typ           = isset( $item['type'] ) ? strtolower( $item['type'] ) : 'image';
 				$type          = in_array( $typ, array( 'video', 'carousel_album' ) ) ? $typ : false;
 				$is_album      = 'carousel_album' == $type;
 				$is_video      = 'video' == $type;
-				$comments      = isset( $item['comments_count'] ) ? intval( $item['comments_count'] ) : 0;
+				$likes         = isset( $item['likes'] ) ? intval( $item['likes'] ) : 0;
+				$comments      = isset( $item['comments'] ) ? intval( $item['comments'] ) : 0;
 
 				/*if ( $is_video && $hide_video_thumbs ) {
 					continue;
@@ -582,7 +583,7 @@ class Wpzoom_Instagram_Widget_Display {
 						$output .= '<svg class="svg-icon" shape-rendering="geometricPrecision"><use xlink:href="' . esc_url( $svg_icons ) . '#' . $type . '"></use></svg>';
 					}
 
-					if ( ! empty( $likes ) && ! empty( $comments ) ) {
+					if ( ! empty( $likes ) || ! empty( $comments ) ) {
 						$output .= '<div class="hover-controls">
 							<span class="dashicons dashicons-heart"></span>
 							<span class="counter">' . self::format_number( $likes ) . '</span>
