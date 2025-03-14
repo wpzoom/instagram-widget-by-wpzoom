@@ -79,6 +79,9 @@ class WPZOOM_Instagram_Widget_Settings {
 		'show-load-more'                  => array( 'type' => 'boolean', 'default' => true ),
 		'load-more-text'                  => array( 'type' => 'string',  'default' => 'Load More&hellip;' ),
 		'load-more-color'                 => array( 'type' => 'string',  'default' => '' ),
+
+		'show-likes'                      => array( 'type' => 'boolean', 'default' => true ),
+		'show-comments'                   => array( 'type' => 'boolean', 'default' => true ),
 	);
 
 	/**
@@ -1251,6 +1254,9 @@ class WPZOOM_Instagram_Widget_Settings {
 			$feed_shortcode                   = sprintf( _x( '[instagram feed="%s"]', 'Instagram Feed Shortcode', 'instagram-widget-by-wpzoom' ), $post->ID );
 			$all_users                        = get_posts( array( 'numberposts' => -1, 'post_type' => 'wpz-insta_user' ) );
 
+			$feed_show_likes                 = (bool) self::get_feed_setting_value( $post->ID, 'show-likes' );
+			$feed_show_comments              = (bool) self::get_feed_setting_value( $post->ID, 'show-comments' );
+
 			?>
 			<div class="wpz-insta_tabs-content">
 				<div class="wpz-insta_sidebar active show-pro">
@@ -1753,6 +1759,20 @@ class WPZOOM_Instagram_Widget_Settings {
 
 									<div class="wpz-insta_show-on-hover">
 										<strong><?php esc_html_e( 'Show on hover', 'instagram-widget-by-wpzoom' ); ?></strong>
+
+										<?php echo $pro_toggle ? '<fieldset class="wpz-insta_feed-only-pro wpz-insta_pro-only wpz-insta_pro-only-with-bottom"><legend><strong>' . esc_html__( 'PRO', 'instagram-widget-by-wpzoom' ) . '</strong></legend>' : ''; ?>
+										<label class="wpz-insta_table-row">
+											<input type="hidden" name="_wpz-insta_show-likes" value="0" />
+											<input type="checkbox" name="_wpz-insta_show-likes" value="1"<?php checked( $feed_show_likes ); ?> />
+											<span><?php esc_html_e( 'Likes', 'instagram-widget-by-wpzoom' ); ?></span>
+										</label>
+
+										<label class="wpz-insta_table-row">
+											<input type="hidden" name="_wpz-insta_show-comments" value="0" />
+											<input type="checkbox" name="_wpz-insta_show-comments" value="1"<?php checked( $feed_show_comments ); ?> />
+											<span><?php esc_html_e( 'Comments', 'instagram-widget-by-wpzoom' ); ?></span>
+										</label>
+										<?php echo $pro_toggle ? '</fieldset>' : ''; ?>
 
 										<div class="wpz-insta_table">
 											<label class="wpz-insta_table-row">

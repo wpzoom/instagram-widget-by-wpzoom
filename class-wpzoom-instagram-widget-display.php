@@ -483,6 +483,9 @@ class Wpzoom_Instagram_Widget_Display {
 			$svg_icons = plugin_dir_url( __FILE__ ) . 'dist/images/frontend/wpzoom-instagram-icons.svg';
 			$preview = isset( $args['preview'] ) ? true : false;
 
+			$show_likes    = self::$instance->is_pro && isset( $args['show-likes'] ) && boolval( $args['show-likes'] );
+			$show_comments = self::$instance->is_pro && isset( $args['show-comments'] ) && boolval( $args['show-comments'] );
+
 			foreach ( $items as $item ) {                
 
 				$inline_attrs  = '';
@@ -583,13 +586,17 @@ class Wpzoom_Instagram_Widget_Display {
 						$output .= '<svg class="svg-icon" shape-rendering="geometricPrecision"><use xlink:href="' . esc_url( $svg_icons ) . '#' . $type . '"></use></svg>';
 					}
 
-					if ( ! empty( $likes ) || ! empty( $comments ) ) {
-						$output .= '<div class="hover-controls">
-							<span class="dashicons dashicons-heart"></span>
-							<span class="counter">' . self::format_number( $likes ) . '</span>
-							<span class="dashicons dashicons-format-chat"></span>
-							<span class="counter">' . self::format_number( $comments ) . '</span>
-						</div>';
+					if ( $show_likes && ! empty( $likes ) || $show_comments && ! empty( $comments ) ) {
+						$output .= '<div class="hover-controls">';
+							if ( $show_likes && ! empty( $likes ) ) {
+								$output .= '<span class="dashicons dashicons-heart"></span>';
+								$output .= '<span class="counter">' . self::format_number( $likes ) . '</span>';
+							}
+							if ( $show_comments && ! empty( $comments ) ) {
+								$output .= '<span class="dashicons dashicons-format-chat"></span>';
+								$output .= '<span class="counter">' . self::format_number( $comments ) . '</span>';
+							}
+						$output .= '</div>';
 					}
 
 					if ( $show_date_on_hover && isset( $item['timestamp'] ) ) {
