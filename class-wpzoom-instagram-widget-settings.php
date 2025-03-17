@@ -1759,22 +1759,22 @@ class WPZOOM_Instagram_Widget_Settings {
 
 									<div class="wpz-insta_show-on-hover">
 										<strong><?php esc_html_e( 'Show on hover', 'instagram-widget-by-wpzoom' ); ?></strong>
-
-										<?php echo $pro_toggle ? '<fieldset class="wpz-insta_feed-only-pro wpz-insta_pro-only wpz-insta_pro-only-with-bottom"><legend><strong>' . esc_html__( 'PRO', 'instagram-widget-by-wpzoom' ) . '</strong></legend>' : ''; ?>
-										<label class="wpz-insta_table-row">
-											<input type="hidden" name="_wpz-insta_show-likes" value="0" />
-											<input type="checkbox" name="_wpz-insta_show-likes" value="1"<?php checked( $feed_show_likes ); ?> />
-											<span><?php esc_html_e( 'Likes', 'instagram-widget-by-wpzoom' ); ?></span>
-										</label>
-
-										<label class="wpz-insta_table-row">
-											<input type="hidden" name="_wpz-insta_show-comments" value="0" />
-											<input type="checkbox" name="_wpz-insta_show-comments" value="1"<?php checked( $feed_show_comments ); ?> />
-											<span><?php esc_html_e( 'Comments', 'instagram-widget-by-wpzoom' ); ?></span>
-										</label>
-										<?php echo $pro_toggle ? '</fieldset>' : ''; ?>
-
 										<div class="wpz-insta_table">
+										
+											<?php echo $pro_toggle ? '<fieldset class="wpz-insta_feed-only-pro wpz-insta_pro-only wpz-insta_pro-only-with-bottom"><legend><strong>' . esc_html__( 'PRO', 'instagram-widget-by-wpzoom' ) . '</strong></legend>' : ''; ?>
+												<label class="wpz-insta_table-row">
+													<input type="hidden" name="_wpz-insta_show-likes" value="0" />
+													<input type="checkbox" name="_wpz-insta_show-likes" value="1"<?php checked( $feed_show_likes ); ?> />
+													<span><?php esc_html_e( 'Likes', 'instagram-widget-by-wpzoom' ); ?></span>
+												</label>
+
+												<label class="wpz-insta_table-row">
+													<input type="hidden" name="_wpz-insta_show-comments" value="0" />
+													<input type="checkbox" name="_wpz-insta_show-comments" value="1"<?php checked( $feed_show_comments ); ?> />
+													<span><?php esc_html_e( 'Comments', 'instagram-widget-by-wpzoom' ); ?></span>
+												</label>
+											<?php echo $pro_toggle ? '</fieldset>' : ''; ?>
+
 											<label class="wpz-insta_table-row">
 												<input type="hidden" name="_wpz-insta_hover-media-type-icons" value="0" />
 												<input type="checkbox" name="_wpz-insta_hover-media-type-icons" value="1"<?php checked( $feed_hover_media_type_icons ); ?> />

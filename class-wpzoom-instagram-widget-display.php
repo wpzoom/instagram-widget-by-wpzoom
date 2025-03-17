@@ -587,26 +587,35 @@ class Wpzoom_Instagram_Widget_Display {
 					}
 
 					if ( $show_likes && ! empty( $likes ) || $show_comments && ! empty( $comments ) ) {
+						$output .= '<a class="zoom-instagram-link" data-src="' . $src . '" data-mfp-src="' . $media_id . '" href="' . $link . '" target="_blank" rel="noopener nofollow" title="' . $alt . '">';
 						$output .= '<div class="hover-controls">';
 							if ( $show_likes && ! empty( $likes ) ) {
-								$output .= '<span class="dashicons dashicons-heart"></span>';
+								$output .= '<span class="zoom-instagram-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 25 25" id="heart-outline">
+  <path fill="none" stroke="#ffffff" stroke-width="2" d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"></path>
+</svg></span>';
 								$output .= '<span class="counter">' . self::format_number( $likes ) . '</span>';
 							}
 							if ( $show_comments && ! empty( $comments ) ) {
-								$output .= '<span class="dashicons dashicons-format-chat"></span>';
+								$output .= '<span class="zoom-instagram-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 28 28" id="comment">
+  <path fill="#ffffff" d="M25.784 21.017A10.992 10.992 0 0 0 27 16c0-6.065-4.935-11-11-11S5 9.935 5 16s4.935 11 11 11c1.742 0 3.468-.419 5.018-1.215l4.74 1.185a.996.996 0 0 0 .949-.263 1 1 0 0 0 .263-.95l-1.186-4.74zm-2.033.11.874 3.498-3.498-.875a1.006 1.006 0 0 0-.731.098A8.99 8.99 0 0 1 16 25c-4.963 0-9-4.038-9-9s4.037-9 9-9 9 4.038 9 9a8.997 8.997 0 0 1-1.151 4.395.995.995 0 0 0-.098.732z"></path>
+</svg>
+</span>';
 								$output .= '<span class="counter">' . self::format_number( $comments ) . '</span>';
 							}
 						$output .= '</div>';
+						$output .= '</a>';
 					}
 
 					if ( $show_date_on_hover && isset( $item['timestamp'] ) ) {
 						$output .= '<div class="zoom-instagram-date">' . sprintf( _x( '%1$s ago', '%2$s = human-readable time difference', 'instagram-widget-by-wpzoom' ), human_time_diff( strtotime( $item['timestamp'] ), current_time( 'timestamp' ) ) ) . '</div>';
 					}
 
-                    if (! empty ( $show_insta_icon ) ) {
-    					$output .= '<div class="zoom-instagram-icon-wrap"><a class="zoom-svg-instagram-stroke" href="' . $link . '" rel="noopener nofollow" target="_blank" title="' . $alt . '"></a></div>
-    					<a class="zoom-instagram-link" data-src="' . $src . '" data-mfp-src="' . $media_id . '" href="' . $link . '" target="_blank" rel="noopener nofollow" title="' . $alt . '"></a>
-    					</div>';
+                    if ( ! empty ( $show_insta_icon ) ) {
+						if( ( ! $show_likes || empty( $likes ) ) && ( ! $show_comments || empty( $comments ) ) ) {
+    						$output .= '<div class="zoom-instagram-icon-wrap"><a class="zoom-svg-instagram-stroke" href="' . $link . '" rel="noopener nofollow" target="_blank" title="' . $alt . '"></a></div>';
+						}
+
+    					$output .= '<a class="zoom-instagram-link" data-src="' . $src . '" data-mfp-src="' . $media_id . '" href="' . $link . '" target="_blank" rel="noopener nofollow" title="' . $alt . '"></a></div>';
                     }
 				} else {
 					$output .= '<a class="zoom-instagram-link" data-src="' . $src . '" data-mfp-src="' . $media_id . '" href="' . $link . '" target="_blank" rel="noopener nofollow" title="' . $alt . '">';
