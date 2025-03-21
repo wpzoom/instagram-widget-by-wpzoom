@@ -1767,12 +1767,16 @@ class WPZOOM_Instagram_Widget_Settings {
 													<input type="hidden" name="_wpz-insta_show-likes" value="0" />
 													<input type="checkbox" name="_wpz-insta_show-likes" value="1"<?php checked( $feed_show_likes ); ?> />
 													<span><?php esc_html_e( 'Likes', 'instagram-widget-by-wpzoom' ); ?></span>
+													
+													<small class="help" aria-hidden="true" data-tooltip="<?php esc_html_e( 'You must be connected via Facebook Graph API to display likes.', 'instagram-widget-by-wpzoom' ); ?>"><svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='16' height='16'><path fill='#000' fill-rule='evenodd' clip-rule='evenodd' d='M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm-1 16v-2h2v2h-2zm2-3v-1.141A3.991 3.991 0 0016 10a4 4 0 00-8 0h2c0-1.103.897-2 2-2s2 .897 2 2-.897 2-2 2a1 1 0 00-1 1v2h2z'></path></svg></small>
 												</label>
 
 												<label class="wpz-insta_table-row">
 													<input type="hidden" name="_wpz-insta_show-comments" value="0" />
 													<input type="checkbox" name="_wpz-insta_show-comments" value="1"<?php checked( $feed_show_comments ); ?> />
 													<span><?php esc_html_e( 'Comments', 'instagram-widget-by-wpzoom' ); ?></span>
+													
+													<small class="help" aria-hidden="true" data-tooltip="<?php esc_html_e( 'You must be connected via Facebook Graph API to display comments.', 'instagram-widget-by-wpzoom' ); ?>"><svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='16' height='16'><path fill='#000' fill-rule='evenodd' clip-rule='evenodd' d='M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm-1 16v-2h2v2h-2zm2-3v-1.141A3.991 3.991 0 0016 10a4 4 0 00-8 0h2c0-1.103.897-2 2-2s2 .897 2 2-.897 2-2 2a1 1 0 00-1 1v2h2z'></path></svg></small>
 												</label>
 											<?php echo $pro_toggle ? '</fieldset>' : ''; ?>
 

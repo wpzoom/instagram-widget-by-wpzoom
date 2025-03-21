@@ -601,7 +601,7 @@ class Wpzoom_Instagram_Widget_API {
 		);
 	}
 
-	public static function convert_items_to_old_structure( $data, $preview = false, $access_token ) {
+	public static function convert_items_to_old_structure( $data, $preview = false, $access_token = '' ) {
 
 		$converted       = new stdClass();
 		$converted->data = array();
