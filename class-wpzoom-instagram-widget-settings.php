@@ -151,6 +151,7 @@ class WPZOOM_Instagram_Widget_Settings {
 		add_filter( 'plugin_action_links', array( $this, 'add_action_links' ), 10, 2 );
 
 		add_action( 'admin_enqueue_scripts', array( $this, 'scripts' ), 9 );
+
 	}
 
 	public function init() {
@@ -2246,72 +2247,72 @@ class WPZOOM_Instagram_Widget_Settings {
 		
 		if ( isset( $_POST['nonce'] ) && wp_verify_nonce( $_POST['nonce'], 'ajax-nonce' ) ) {
 			
-			$account_info = json_decode( stripslashes( $_POST['account_info'] ), true );
+            $accounts = json_decode( stripslashes( $_POST['account_info'] ), true ); 
 			
-			if( ! empty( $account_info ) ) {
-				$token                   = isset( $account_info['token'] ) ? sanitize_text_field( $account_info['token'] ) : '';
-				$account_id              = isset( $account_info['id'] ) ? sanitize_text_field( $account_info['id'] ) : '';
-				$account_username        = isset( $account_info['username'] ) ? sanitize_text_field( $account_info['username'] ) : '';
-				$account_name            = isset( $account_info['name'] ) ? sanitize_text_field( $account_info['name'] ) : '';
-				$account_name            = wp_encode_emoji( $account_name );
+			if( ! empty( $accounts ) ) {
+                foreach( $accounts as $account_info ) {
+                    $token                   = isset( $account_info['token'] ) ? sanitize_text_field( $account_info['token'] ) : '';
+                    $account_id              = isset( $account_info['id'] ) ? sanitize_text_field( $account_info['id'] ) : '';
+                    $account_username        = isset( $account_info['username'] ) ? sanitize_text_field( $account_info['username'] ) : '';
+                    $account_name            = isset( $account_info['name'] ) ? sanitize_text_field( $account_info['name'] ) : '';
+                    $account_name            = wp_encode_emoji( $account_name );
 
-				$account_profile_picture = isset( $account_info['profile_picture_url'] ) ? sanitize_text_field( $account_info['profile_picture_url'] ) : '';
-				$account_bio             = isset( $account_info['biography'] ) ? sanitize_text_field( $account_info['biography'] ) : '';
-				$account_bio             = wp_encode_emoji( $account_bio );
+                    $account_profile_picture = isset( $account_info['profile_picture_url'] ) ? sanitize_text_field( $account_info['profile_picture_url'] ) : '';
+                    $account_bio             = isset( $account_info['biography'] ) ? sanitize_text_field( $account_info['biography'] ) : '';
+                    $account_bio             = wp_encode_emoji( $account_bio );
 
-				if ( isset( $_POST['post_id'] ) && intval( $_POST['post_id'] ) > 0 ) {
+                    if ( isset( $_POST['post_id'] ) && intval( $_POST['post_id'] ) > 0 ) {
 
-					$post_id = intval( $_POST['post_id'] );
-						if ( false !== get_post_status( $post_id ) ) {
+                        $post_id = intval( $_POST['post_id'] );
+                            if ( false !== get_post_status( $post_id ) ) {
 
-							// place the current post and $new_title into array
-							$post_update = array(
-								'ID'          => $post_id,
-								'post_title'  => wp_strip_all_tags( $account_username ),
-								'post_content' => $account_bio,
+                                // place the current post and $new_title into array
+                                $post_update = array(
+                                    'ID'          => $post_id,
+                                    'post_title'  => wp_strip_all_tags( $account_username ),
+                                    'post_content' => $account_bio,
 
-							);
+                                );
 
-							wp_update_post( $post_update );
+                                wp_update_post( $post_update );
 
-							update_post_meta( $post_id, '_wpz-insta_page_id', $account_id );
-							update_post_meta( $post_id, '_wpz-insta_user_name', $account_name );
-							update_post_meta( $post_id, '_wpz-insta_account-type', 'business' );
-							update_post_meta( $post_id, '_wpz-insta_connection-type', 'facebook_graph_api' );
+                                update_post_meta( $post_id, '_wpz-insta_page_id', $account_id );
+                                update_post_meta( $post_id, '_wpz-insta_user_name', $account_name );
+                                update_post_meta( $post_id, '_wpz-insta_account-type', 'business' );
+                                update_post_meta( $post_id, '_wpz-insta_connection-type', 'facebook_graph_api' );
 
-							update_post_meta( $post_id, '_wpz-insta_token', $token );
-							update_post_meta( $post_id, '_wpz-insta_token_expire', strtotime( '+60 days' ) );
+                                update_post_meta( $post_id, '_wpz-insta_token', $token );
+                                update_post_meta( $post_id, '_wpz-insta_token_expire', strtotime( '+60 days' ) );
 
-							if ( ! empty( $account_profile_picture ) ) {
-								$this->generate_featured_image( $account_profile_picture, $post_id, $account_username );
-							}
+                                if ( ! empty( $account_profile_picture ) ) {
+                                    $this->generate_featured_image( $account_profile_picture, $post_id, $account_username );
+                                }
 
-							wp_send_json_success( array( 'update' => true ), 200 );
-						}
-				} else {
+                                wp_send_json_success( array( 'update' => true ), 200 );
+                            }
+                    } else {
 
-					$insert_post = wp_insert_post( array(
-						'post_title'   => wp_strip_all_tags( $account_username ),
-						'post_type'    => 'wpz-insta_user',
-						'post_status'  => 'publish',
-						'post_content' => $account_bio,
-					), true );
+                        $insert_post = wp_insert_post( array(
+                            'post_title'   => wp_strip_all_tags( $account_username ),
+                            'post_type'    => 'wpz-insta_user',
+                            'post_status'  => 'publish',
+                            'post_content' => $account_bio,
+                        ), true );
 
-					if ( ! is_wp_error( $insert_post ) ) {
-						update_post_meta( $insert_post, '_wpz-insta_page_id', $account_id );
-						update_post_meta( $insert_post, '_wpz-insta_token', $token );
-						update_post_meta( $insert_post, '_wpz-insta_user_name', $account_name );
-						update_post_meta( $insert_post, '_wpz-insta_token_expire', strtotime( '+60 days' ) );
-						update_post_meta( $insert_post, '_wpz-insta_account-type', 'business' );
-						update_post_meta( $insert_post, '_wpz-insta_connection-type', 'facebook_graph_api' );
+                        if ( ! is_wp_error( $insert_post ) ) {
+                            update_post_meta( $insert_post, '_wpz-insta_page_id', $account_id );
+                            update_post_meta( $insert_post, '_wpz-insta_token', $token );
+                            update_post_meta( $insert_post, '_wpz-insta_user_name', $account_name );
+                            update_post_meta( $insert_post, '_wpz-insta_token_expire', strtotime( '+60 days' ) );
+                            update_post_meta( $insert_post, '_wpz-insta_account-type', 'business' );
+                            update_post_meta( $insert_post, '_wpz-insta_connection-type', 'facebook_graph_api' );
 
-						if ( ! empty( $account_profile_picture ) ) {
-							$this->generate_featured_image( $account_profile_picture, $insert_post, $account_username );
-						}
+                            if ( ! empty( $account_profile_picture ) ) {
+                                $this->generate_featured_image( $account_profile_picture, $insert_post, $account_username );
+                            }
 
-						wp_send_json_success( array( 'update' => false ), 200 );
+                        }
 					}
-
 				}
 			}
 
@@ -3241,6 +3242,7 @@ class WPZOOM_Instagram_Widget_Settings {
 					'default_user_thumbnail'            => plugins_url( '/dist/images/backend/icon-insta.png', __FILE__ ),
 					'post_edit_url'                     => admin_url( 'post.php?action=edit&post=' ),
 					'ajax_url'                          => admin_url( 'admin-ajax.php' ),
+                    'is_pro'                            => apply_filters( 'wpz-insta_is-pro', false ),
 				)
 			);
 		}
