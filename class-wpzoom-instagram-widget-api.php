@@ -298,7 +298,7 @@ class Wpzoom_Instagram_Widget_API {
 
 		$image_limit          = $sliced['image-limit'];
 		$image_width          = $sliced['image-width'];
-		$image_resolution     = ! empty( $sliced['image-resolution'] ) ? $sliced['image-resolution'] : 'low_resolution';
+		$image_resolution     = ! empty( $sliced['image-resolution'] ) ? $sliced['image-resolution'] : 'standard_resolution';
 		$injected_username    = ! empty( $sliced['username'] ) ? $sliced['username'] : '';
 		$disable_video_thumbs = ! empty( $sliced['disable-video-thumbs'] );
 		$include_pagination   = ! empty( $sliced['include-pagination'] );
@@ -408,7 +408,7 @@ class Wpzoom_Instagram_Widget_API {
 		);
 
 		if ( empty( $image_resolution ) ) {
-			$image_resolution = 'low_resolution';
+			$image_resolution = 'standard_resolution';
 		}
 
 		foreach ( $data->data as $key => $item ) {
@@ -508,7 +508,7 @@ class Wpzoom_Instagram_Widget_API {
 	 *
 	 * @return string Image size for Instagram API
 	 */
-	public static function get_best_size( $desired_width, $image_resolution = 'low_resolution' ) {
+	public static function get_best_size( $desired_width, $image_resolution = 'standard_resolution' ) {
 		$size  = 'thumbnail';
 		$sizes = array(
 			'thumbnail'           => 150,

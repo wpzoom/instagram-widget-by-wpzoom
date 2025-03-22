@@ -42,7 +42,7 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 			'images-per-row'                => 3,
 			'image-width'                   => 120,
 			'image-spacing'                 => 10,
-			'image-resolution'              => 'low_resolution',
+			'image-resolution'              => 'standard_resolution',
 			'username'                      => '',
 		);
 
