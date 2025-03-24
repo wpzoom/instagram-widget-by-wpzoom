@@ -522,12 +522,31 @@ a.ig-b-v-24:hover {
 .zoom-instagram-widget__item .hover-controls {
     opacity: 0;
     z-index: 9;
-    margin-top: -15px;
-    position: absolute;
-    top: 40%;
     width: 100%;
     text-align: center;
     transition: opacity 0.25s ease-in-out;
+	height: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	position: relative;
+
+	.zoom-instagram-icon {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 18px;
+		height: 18px;
+		svg {
+			width: 100%;
+			height: 100%;
+		}
+		&.icon-heart-outline {
+			position:relative;
+			top: 1px;
+		}
+	}
+
 }
 
 .zoom-instagram-widget__items[data-lightbox="1"] .zoom-instagram-widget__item .zoom-instagram-icon-wrap {
@@ -602,7 +621,7 @@ a.ig-b-v-24:hover {
         }
 
         .counter {
-            padding-left: 1px;
+            padding-left: 5px;
             padding-right: 12px;
             font-weight: 500;
             color: #ffffff;
@@ -677,10 +696,13 @@ a.ig-b-v-24:hover {
     }
 
     .hover-controls .counter {
-        padding-left: 1px;
-        padding-right: 4px;
-        font-size: 11px;
+        padding-left: 5px;
+        padding-right: 12px;
+        font-size: 13px;
     }
+	.hover-controls .counter:last-child {
+		padding-right: 0;
+	}
 }
 
 
