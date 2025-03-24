@@ -257,5 +257,21 @@
 
 		var debounceInit = _.debounce(siteOriginInit, 1500);
 		$(document).on('panels_setup_preview', debounceInit);
+
+
+		$(window).on(
+			'elementor/frontend/init',
+			function () {
+				elementorFrontend.hooks.addAction('frontend/element_ready/widget', function ($scope) {
+	
+					if ($scope.data('widget_type') == "wpzoom-elementor-instagram-widget.default") {
+						requestTick();
+					}
+	
+				});
+			}
+		);
+
 	} );
+
 } )( jQuery );

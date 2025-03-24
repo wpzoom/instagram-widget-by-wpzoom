@@ -188,3 +188,10 @@ register_deactivation_hook( __FILE__, 'wpzoom_instagram_plugin_deactivation' );
 function wpzoom_instagram_plugin_deactivation() {
 	wp_clear_scheduled_hook( 'wpzoom_instagram_widget_cron_hook' );
 }
+
+/**
+ * Check if the Elementor Page Builder is enabled load the widget
+ */
+if ( defined( 'ELEMENTOR_VERSION' ) && is_callable( 'Elementor\Plugin::instance' ) ) {
+	require_once 'elementor/class-wpzoom-instagram-elementor.php';
+}
