@@ -80,8 +80,8 @@ class WPZOOM_Instagram_Widget_Settings {
 		'load-more-text'                  => array( 'type' => 'string',  'default' => 'Load More&hellip;' ),
 		'load-more-color'                 => array( 'type' => 'string',  'default' => '' ),
 
-		'show-likes'                      => array( 'type' => 'boolean', 'default' => true ),
-		'show-comments'                   => array( 'type' => 'boolean', 'default' => true ),
+		'show-likes'                      => array( 'type' => 'boolean', 'default' => false ),
+		'show-comments'                   => array( 'type' => 'boolean', 'default' => false ),
 	);
 
 	/**
