@@ -409,6 +409,28 @@ class WPZOOM_Instagram_Widget_Settings {
 
 			add_filter( 'final_output', array( $this, 'replace_preview_content' ) );
 		}
+		
+		if ( current_user_can( 'manage_options' ) && isset( $_GET['wpz-insta-widget-preview-local'] ) ) {
+			remove_action( 'admin_enqueue_scripts', 'wp_auth_check_load' );
+			remove_filter( 'heartbeat_send', 'wp_auth_check' );
+			remove_filter( 'heartbeat_nopriv_send', 'wp_auth_check' );
+			add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_preview_scripts' ), 999 );
+
+			ob_start();
+
+			add_action( 'shutdown', function() {
+				$final = '';
+				$levels = ob_get_level();
+
+				for ( $i = 0; $i < $levels; $i++ ) {
+					$final .= ob_get_clean();
+				}
+
+				echo apply_filters( 'final_output', $final );
+			}, 0 );
+
+			add_filter( 'final_output', array( $this, 'replace_cached_preview_content' ) );
+		}
 	}
 
 	static function is_wpzinsta_screen() {
@@ -1989,9 +2011,23 @@ class WPZOOM_Instagram_Widget_Settings {
 		printf( '<div class="zoom-new-instagram-widget">%s</div>', $display->get_preview( $preview_args ) );
 	}
 
+	function cached_preview_frame() {
+		$display = Wpzoom_Instagram_Widget_Display::getInstance();
+		$preview_args = self::get_clean_feed_settings_from_query();
+		$preview_args['feed-id'] = get_the_ID();
+
+		printf( '<div class="zoom-new-instagram-widget">%s</div>', $display->get_cached_preview( $preview_args ) );
+	}
+
 	public function get_preview_frame() {
 		ob_start();
 		$this->preview_frame();
+		return ob_get_clean();
+	}
+
+	public function get_cached_preview_frame() {
+		ob_start();
+		$this->cached_preview_frame();
 		return ob_get_clean();
 	}
 
@@ -2002,6 +2038,28 @@ class WPZOOM_Instagram_Widget_Settings {
 			$document = new DiDom\Document( $output );
 			$body_content = $document->find( 'body > *:not(script):not(link)' );
 			$widget_document = new DiDom\Document( WPZOOM_Instagram_Widget_Settings::get_instance()->get_preview_frame() );
+			$widget_content = $widget_document->find( '.zoom-new-instagram-widget' )[0];
+
+			foreach ( $body_content as $element ) {
+				$element->remove();
+			}
+
+			$document->find( 'body' )[0]->prependChild( $widget_content );
+			$output = $document->html();
+		} catch ( Exception $e ) {
+			$output = __( 'Error rendering preview!', 'instagram-widget-by-wpzoom' );
+		}
+
+		return $output;
+	}
+
+	function replace_cached_preview_content( $output ) {
+		try {
+			require_once( plugin_dir_path( __FILE__ ) . 'vendor/autoload.php' );
+
+			$document = new DiDom\Document( $output );
+			$body_content = $document->find( 'body > *:not(script):not(link)' );
+			$widget_document = new DiDom\Document( WPZOOM_Instagram_Widget_Settings::get_instance()->get_cached_preview_frame() );
 			$widget_content = $widget_document->find( '.zoom-new-instagram-widget' )[0];
 
 			foreach ( $body_content as $element ) {
@@ -3245,6 +3303,7 @@ class WPZOOM_Instagram_Widget_Settings {
 					'users_url' 					    => admin_url( self::$any_users ? 'edit.php?post_type=wpz-insta_user' : 'post-new.php?post_type=wpz-insta_user' ),
 					'edit_user_url'                     => admin_url( 'edit.php?post_type=wpz-insta_user#post-' ),
 					'preview_url'                       => site_url( '?wpz-insta-widget-preview=true' ),
+					'cached_preview_url'                 => site_url( '?wpz-insta-widget-preview-local=true' ),
 					'default_user_thumbnail'            => plugins_url( '/dist/images/backend/icon-insta.png', __FILE__ ),
 					'post_edit_url'                     => admin_url( 'post.php?action=edit&post=' ),
 					'ajax_url'                          => admin_url( 'admin-ajax.php' ),

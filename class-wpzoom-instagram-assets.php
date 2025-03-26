@@ -98,7 +98,7 @@ if ( ! class_exists( 'WPZOOM_Instagram_Widget_Assets ' ) ) {
 			$style_asset_file = include( plugin_dir_path( __FILE__ ) . 'dist/styles/frontend/index.asset.php' );
 			$has_instagram_feed_elementor_widget = self::has_instagram_feed_elementor_widget( $post->ID );
 
-			if( is_admin() || $load_css_js || $should_enqueue || $has_reusable_block || $is_active_widget || $has_shortcode || $has_widget_block || isset( $_GET['wpz-insta-widget-preview'] ) || $has_instagram_feed_elementor_widget ) {
+			if( is_admin() || $load_css_js || $should_enqueue || $has_reusable_block || $is_active_widget || $has_shortcode || $has_widget_block || isset( $_GET['wpz-insta-widget-preview'] ) || isset( $_GET['wpz-insta-widget-preview-local'] ) || $has_instagram_feed_elementor_widget ) {
 				wp_register_script(
 					'magnific-popup',
 					plugins_url( 'dist/scripts/library/magnific-popup.js', __FILE__ ),
@@ -169,7 +169,7 @@ if ( ! class_exists( 'WPZOOM_Instagram_Widget_Assets ' ) ) {
 			$load_css_js        = isset( $general_options['load-css-js'] ) ? true : false;
 			$has_instagram_feed_elementor_widget = self::has_instagram_feed_elementor_widget( $post->ID );
 
-			if( is_admin() || $load_css_js || $should_enqueue || $has_reusable_block || $is_active_widget || $has_shortcode || $has_widget_block || isset( $_GET['wpz-insta-widget-preview'] ) || $has_instagram_feed_elementor_widget ) {
+			if( is_admin() || $load_css_js || $should_enqueue || $has_reusable_block || $is_active_widget || $has_shortcode || $has_widget_block || isset( $_GET['wpz-insta-widget-preview'] ) || isset( $_GET['wpz-insta-widget-preview-local'] ) || $has_instagram_feed_elementor_widget ) {
 
                 wp_enqueue_style(
                     'swiper-css',
@@ -248,7 +248,7 @@ if ( ! class_exists( 'WPZOOM_Instagram_Widget_Assets ' ) ) {
 			$load_css_js        = isset( $general_options['load-css-js'] ) ? true : false;
 			$has_instagram_feed_elementor_widget = self::has_instagram_feed_elementor_widget( $post->ID );
 
-			if( is_admin() || $load_css_js || $should_enqueue || $has_reusable_block || $is_active_widget || $has_shortcode || $has_widget_block || isset( $_GET['wpz-insta-widget-preview'] ) || $has_instagram_feed_elementor_widget ) {
+			if( is_admin() || $load_css_js || $should_enqueue || $has_reusable_block || $is_active_widget || $has_shortcode || $has_widget_block || isset( $_GET['wpz-insta-widget-preview'] ) || isset( $_GET['wpz-insta-widget-preview-local'] ) || $has_instagram_feed_elementor_widget ) {
 				wp_enqueue_script( 'zoom-instagram-widget-lazy-load' );
 				wp_enqueue_script( 'magnific-popup' );
 				wp_enqueue_script( 'swiper-js' );

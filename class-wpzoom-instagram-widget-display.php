@@ -167,6 +167,20 @@ class Wpzoom_Instagram_Widget_Display {
 	}
 
 	/**
+	 * Returns the markup for the preview of a feed configured with the given arguments.
+	 *
+	 * @param  array  $args The arguments to define how to return the feed preview.
+	 * @return string
+	 */
+	public function get_cached_preview( array $args ) {
+		return sprintf(
+			"<style type=\"text/css\">%s</style>\n%s",
+			$this->output_preview_styles( $args, false ),
+			$this->feed_content( $args, false )
+		);
+	}
+
+	/**
 	 * Returns the markup for a feed configured with the given arguments.
 	 *
 	 * @param  array  $args The arguments to define how to return the feed content.
