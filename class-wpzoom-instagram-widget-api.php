@@ -293,6 +293,7 @@ class Wpzoom_Instagram_Widget_API {
 				'disable-video-thumbs',
 				'include-pagination',
 				'bypass-transient',
+				'preview-transient',
 			)
 		);
 
@@ -303,6 +304,9 @@ class Wpzoom_Instagram_Widget_API {
 		$disable_video_thumbs = ! empty( $sliced['disable-video-thumbs'] );
 		$include_pagination   = ! empty( $sliced['include-pagination'] );
 		$bypass_transient     = ! empty( $sliced['bypass-transient'] );
+		$preview_transient    = ! empty( $sliced['preview-transient'] );
+
+
 
 		if( isset( $instance['widget-id'] ) ) {
 			$transient = 'zoom_instagram_is_configured_' . $instance['widget-id'];
@@ -313,6 +317,11 @@ class Wpzoom_Instagram_Widget_API {
 
 		if ( ! empty( $this->access_token ) && ! empty( $this->feed_id ) ) {
 			$transient = $transient . '_' . substr( $this->feed_id, 0, 20 );
+		}
+
+		if( $preview_transient ) {
+			$transient = 'zoom_instagram_is_configured_preview';
+			$image_limit = 100;
 		}
 
 		$injected_username = trim( $injected_username );

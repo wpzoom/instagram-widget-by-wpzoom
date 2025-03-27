@@ -167,20 +167,6 @@ class Wpzoom_Instagram_Widget_Display {
 	}
 
 	/**
-	 * Returns the markup for the preview of a feed configured with the given arguments.
-	 *
-	 * @param  array  $args The arguments to define how to return the feed preview.
-	 * @return string
-	 */
-	public function get_cached_preview( array $args ) {
-		return sprintf(
-			"<style type=\"text/css\">%s</style>\n%s",
-			$this->output_preview_styles( $args, false ),
-			$this->feed_content( $args, false )
-		);
-	}
-
-	/**
 	 * Returns the markup for a feed configured with the given arguments.
 	 *
 	 * @param  array  $args The arguments to define how to return the feed content.
@@ -192,7 +178,7 @@ class Wpzoom_Instagram_Widget_Display {
 		$user_id = isset( $args['user-id'] ) ? intval( $args['user-id'] ) : -1;
 		
 		if( $preview ) {
-			$args['preview'] = true;
+			$args['preview-transient'] = true;
 		};
 
 		if ( $user_id > 0 ) {
@@ -313,7 +299,8 @@ class Wpzoom_Instagram_Widget_Display {
 							'image-width'          => $image_width,
 							'include-pagination'   => true,
 							'disable-video-thumbs' => $hide_video_thumbs,
-							'bypass-transient'     => $preview 
+							//'bypass-transient'     => $preview,
+							'preview-transient'    => $preview
 						) 
 					);
 					$errors = $this->api->errors->get_error_messages();
