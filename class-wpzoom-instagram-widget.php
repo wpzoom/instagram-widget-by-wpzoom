@@ -309,7 +309,7 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 				$src           = $item['image-url'];
 				$media_id      = $item['image-id'];
 				$alt           = esc_attr( $item['image-caption'] );
-				$likes         = $item['likes_count'];
+				$likes         = isset( $item['likes'] ) ? $item['likes'] : 0;
 				$type          = in_array(
 					$item['type'],
 					array(
@@ -319,7 +319,7 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 				) ? strtolower( $item['type'] ) : false;
 				$is_album      = 'carousel_album' == $type;
 				$is_video      = 'video' == $type;
-				$comments      = $item['comments_count'];
+				$comments      = isset( $item['comments'] ) ? $item['comments'] : 0;
 
 				if ( ! empty( $media_id ) && empty( $src ) ) {
 					$inline_attrs  = 'data-media-id="' . esc_attr( $media_id ) . '"';
