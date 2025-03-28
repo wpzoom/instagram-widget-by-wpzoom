@@ -82,6 +82,9 @@ class WPZOOM_Instagram_Widget_Settings {
 
 		'show-likes'                      => array( 'type' => 'boolean', 'default' => false ),
 		'show-comments'                   => array( 'type' => 'boolean', 'default' => false ),
+
+		'preview-id'                      => array( 'type' => 'string',  'default' => '' ),
+
 	);
 
 	/**
@@ -1320,6 +1323,7 @@ class WPZOOM_Instagram_Widget_Settings {
 									<input type="checkbox" name="_wpz-insta_enable-request-timeout" id="wpz-insta_enable-request-timeout" value="1"<?php checked( $enable_request_timeout ); ?> />
 									<strong><?php esc_html_e( 'Enable request timeout', 'instagram-widget-by-wpzoom' ); ?></strong>
 									<p class="description"><?php esc_html_e( 'The time within which a response must be returned will be set to 15 seconds to prevent your request from being blocked by the Instagram API.', 'instagram-widget-by-wpzoom' ); ?></p>
+									<input type="hidden" name="_wpz-insta_preview-id" value="<?php echo esc_attr( get_the_ID() ); ?>" />
 								</label>
 							</div>
 						</div>
@@ -2524,7 +2528,7 @@ class WPZOOM_Instagram_Widget_Settings {
 
 			if ( $post_ID ) {
 				delete_transient( 'zoom_instagram_is_configured_' . substr( $post_ID, 0, 20 ) );
-				delete_transient( 'zoom_instagram_is_configured_preview' );
+				delete_transient( 'zoom_instagram_preview_' . substr( $post_ID, 0, 20 ) );
 			}
 
 		}
