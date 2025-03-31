@@ -2528,7 +2528,6 @@ class WPZOOM_Instagram_Widget_Settings {
 
 			if ( $post_ID ) {
 				delete_transient( 'zoom_instagram_is_configured_' . substr( $post_ID, 0, 20 ) );
-				delete_transient( 'zoom_instagram_preview_' . substr( $post_ID, 0, 20 ) );
 			}
 
 		}

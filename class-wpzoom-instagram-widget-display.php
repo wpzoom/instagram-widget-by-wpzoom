@@ -305,7 +305,8 @@ class Wpzoom_Instagram_Widget_Display {
 							'disable-video-thumbs' => $hide_video_thumbs,
 							'bypass-transient'     => $preview,
 							'preview'              => $preview,
-							'preview-id'           => $preview_id
+							'preview-id'           => $preview_id,
+							'user-id'              => $user_id
 						) 
 					);
 					$errors = $this->api->errors->get_error_messages();
