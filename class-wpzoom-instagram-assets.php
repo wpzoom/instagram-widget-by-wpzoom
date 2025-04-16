@@ -96,7 +96,11 @@ if ( ! class_exists( 'WPZOOM_Instagram_Widget_Assets ' ) ) {
 
 			$script_asset_file = include( plugin_dir_path( __FILE__ ) . 'dist/scripts/backend/block.asset.php' );
 			$style_asset_file = include( plugin_dir_path( __FILE__ ) . 'dist/styles/frontend/index.asset.php' );
-			$has_instagram_feed_elementor_widget = self::has_instagram_feed_elementor_widget( $post->ID );
+
+			$has_instagram_feed_elementor_widget = false;
+			if( $post && $post->ID ) {
+				$has_instagram_feed_elementor_widget = self::has_instagram_feed_elementor_widget( $post->ID );
+			}
 
 			if( is_admin() || $load_css_js || $should_enqueue || $has_reusable_block || $is_active_widget || $has_shortcode || $has_widget_block || isset( $_GET['wpz-insta-widget-preview'] ) || $has_instagram_feed_elementor_widget ) {
 				wp_register_script(
@@ -167,7 +171,11 @@ if ( ! class_exists( 'WPZOOM_Instagram_Widget_Assets ' ) ) {
 			$has_shortcode      = ( is_a( $post, 'WP_Post' ) && has_shortcode( $post->post_content, 'instagram' ) );
 			$has_widget_block   = self::is_active_block_widget( 'wpzoom/instagram-block' ); 
 			$load_css_js        = isset( $general_options['load-css-js'] ) ? true : false;
-			$has_instagram_feed_elementor_widget = self::has_instagram_feed_elementor_widget( $post->ID );
+
+			$has_instagram_feed_elementor_widget = false;
+			if( $post && $post->ID ) {
+				$has_instagram_feed_elementor_widget = self::has_instagram_feed_elementor_widget( $post->ID );
+			}
 
 			if( is_admin() || $load_css_js || $should_enqueue || $has_reusable_block || $is_active_widget || $has_shortcode || $has_widget_block || isset( $_GET['wpz-insta-widget-preview'] ) || $has_instagram_feed_elementor_widget ) {
 
@@ -246,7 +254,11 @@ if ( ! class_exists( 'WPZOOM_Instagram_Widget_Assets ' ) ) {
 			$has_shortcode      = ( is_a( $post, 'WP_Post' ) && has_shortcode( $post->post_content, 'instagram' ) );
 			$has_widget_block   = self::is_active_block_widget( 'wpzoom/instagram-block' );
 			$load_css_js        = isset( $general_options['load-css-js'] ) ? true : false;
-			$has_instagram_feed_elementor_widget = self::has_instagram_feed_elementor_widget( $post->ID );
+
+			$has_instagram_feed_elementor_widget = false;
+			if( $post && $post->ID ) {
+				$has_instagram_feed_elementor_widget = self::has_instagram_feed_elementor_widget( $post->ID );
+			}
 
 			if( is_admin() || $load_css_js || $should_enqueue || $has_reusable_block || $is_active_widget || $has_shortcode || $has_widget_block || isset( $_GET['wpz-insta-widget-preview'] ) || $has_instagram_feed_elementor_widget ) {
 				wp_enqueue_script( 'zoom-instagram-widget-lazy-load' );
