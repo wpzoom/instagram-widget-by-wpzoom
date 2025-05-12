@@ -281,8 +281,6 @@ class Wpzoom_Instagram_Widget_API {
 	 * @return array|bool Array of tweets or false if method fails
 	 */
 	public function get_items( $instance ) {
-
-
 		$sliced = wp_array_slice_assoc(
 			$instance,
 			array(
@@ -325,12 +323,17 @@ class Wpzoom_Instagram_Widget_API {
 		}
 
 		if ( ! empty( $this->access_token ) ) {
+			$all_items = array();
+			$non_video_count = 0;
+			$total_requests = 0;
+			$max_requests = 5; // Limit the number of API requests to prevent timeouts
+			$items_per_request = min(50, max(30, intval($image_limit) * 2)); // Request more items if videos are disabled, but not more than 50
 
 			$request_url = add_query_arg(
 				array(
 					'fields'       => 'media_url,media_type,caption,username,permalink,thumbnail_url,timestamp,children{media_url,media_type,thumbnail_url}',
 					'access_token' => $this->access_token,
-					'limit'        => $image_limit,
+					'limit'        => $items_per_request,
 				),
 				'https://graph.instagram.com/me/media'
 			);
@@ -340,52 +343,90 @@ class Wpzoom_Instagram_Widget_API {
 					array(
 						'fields'       => 'media_url,media_product_type,thumbnail_url,caption,id,media_type,timestamp,username,permalink,children%7Bmedia_url,id,media_type,timestamp,permalink,thumbnail_url%7D',
 						'access_token' => $this->access_token,
-						'limit'        => $image_limit,
+						'limit'        => $items_per_request,
 					),
 					'https://graph.facebook.com/v21.0/' . $this->business_page_id . '/media'
 				);
 			}
 
-			$response = self::remote_get( $request_url, $this->headers );
+			while ($total_requests < $max_requests) {
+				$total_requests++;
+				
+				$response = self::remote_get( $request_url, $this->headers );
 
-			if ( is_wp_error( $response ) || 200 !== wp_remote_retrieve_response_code( $response ) ) {
+				if ( is_wp_error( $response ) || 200 !== wp_remote_retrieve_response_code( $response ) ) {
+					if ( ! $bypass_transient ) {
+						set_transient( $transient, wp_json_encode( false ), MINUTE_IN_SECONDS );
+					}
+
+					$error_data = $this->get_error( 'items-with-token-invalid-response' );
+					$this->errors->add( $error_data['code'], $error_data['message'] );
+
+					return false;
+				}
+
+				$raw_data = json_decode( wp_remote_retrieve_body( $response ) );
+
+				if (empty($raw_data) || !isset($raw_data->data) || !is_array($raw_data->data)) {
+					break;
+				}
+
+				foreach ($raw_data->data as $item) {
+					// Include item if videos are allowed or if it's not a video
+					if (!$disable_video_thumbs || (isset($item->media_type) && $item->media_type !== 'VIDEO')) {
+						$all_items[] = $item;
+						if (isset($item->media_type) && $item->media_type !== 'VIDEO') {
+							$non_video_count++;
+						}
+					}
+
+					// Break if we have enough items
+					if (!$disable_video_thumbs && count($all_items) >= $image_limit) {
+						break 2;
+					}
+					if ($disable_video_thumbs && $non_video_count >= $image_limit) {
+						break 2;
+					}
+				}
+
+				// Check if we have a next page and need more items
+				if (!isset($raw_data->paging) || 
+					!isset($raw_data->paging->next) || 
+					(!$disable_video_thumbs && count($all_items) >= $image_limit) || 
+					($disable_video_thumbs && $non_video_count >= $image_limit)) {
+					break;
+				}
+
+				$request_url = $raw_data->paging->next;
+			}
+
+			// Create data object with collected items
+			$data = new stdClass();
+			$data->data = array_slice($all_items, 0, $disable_video_thumbs ? $image_limit : $image_limit);
+			if (isset($raw_data->paging)) {
+				$data->paging = $raw_data->paging;
+			}
+
+			$data = self::convert_items_to_old_structure( $data, $bypass_transient, $this->access_token );
+
+			if ( ! empty( $data->data ) ) {
+				if ( ! $bypass_transient ) {
+					set_transient(
+						$transient,
+						wp_json_encode( $data ),
+						$this->get_transient_lifetime( $this->feed_id )
+					);
+				}
+			} else {
 				if ( ! $bypass_transient ) {
 					set_transient( $transient, wp_json_encode( false ), MINUTE_IN_SECONDS );
 				}
 
-				$error_data = $this->get_error( 'items-with-token-invalid-response' );
+				$error_data = $this->get_error( 'items-with-token-invalid-data-structure' );
 				$this->errors->add( $error_data['code'], $error_data['message'] );
 
 				return false;
 			}
-
-			$raw_data = json_decode( wp_remote_retrieve_body( $response ) );
-
-			$data = self::convert_items_to_old_structure( $raw_data, $bypass_transient, $this->access_token );
-
-			if ( $include_pagination && property_exists( $raw_data, 'paging' ) ) {
-				$data->paging = $raw_data->paging;
-			}
-		}
-
-		if ( ! empty( $data->data ) ) {
-			if ( ! $bypass_transient ) {
-				set_transient(
-					$transient,
-					wp_json_encode( $data ),
-					$this->get_transient_lifetime( $this->feed_id )
-				);
-
-			}
-		} else {
-			if ( ! $bypass_transient ) {
-				set_transient( $transient, wp_json_encode( false ), MINUTE_IN_SECONDS );
-			}
-
-			$error_data = $this->get_error( 'items-with-token-invalid-data-structure' );
-			$this->errors->add( $error_data['code'], $error_data['message'] );
-
-			return false;
 		}
 
 		return self::processing_response_data( $data, $image_width, $image_resolution, $image_limit, $disable_video_thumbs, $include_pagination );
@@ -411,6 +452,8 @@ class Wpzoom_Instagram_Widget_API {
 			$image_resolution = 'standard_resolution';
 		}
 
+		$image_items = array();
+
 		foreach ( $data->data as $key => $item ) {
 
 			$item = (object) wp_parse_args( $item, $defaults );            
@@ -427,6 +470,8 @@ class Wpzoom_Instagram_Widget_API {
 				$image_limit ++;
 				continue;
 			}
+
+			$image_items[] = $item;
 
 			$best_size = self::get_best_size( $image_width, $image_resolution );
 			$image_url = $item->images->{$best_size}->url;
@@ -450,6 +495,8 @@ class Wpzoom_Instagram_Widget_API {
 				'comments'     => ! empty( $item->comments ) ? esc_attr( $item->comments ) : 0,
 			);
 		}
+
+		print_r( count( $result ) );
 
 		$result = array(
 			'items'    => $result,
