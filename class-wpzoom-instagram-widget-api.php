@@ -293,16 +293,18 @@ class Wpzoom_Instagram_Widget_API {
 				'disable-video-thumbs',
 				'include-pagination',
 				'bypass-transient',
+				'skip-likes-comments',
 			)
 		);
 
-		$image_limit          = $sliced['image-limit'];
-		$image_width          = $sliced['image-width'];
-		$image_resolution     = ! empty( $sliced['image-resolution'] ) ? $sliced['image-resolution'] : 'standard_resolution';
-		$injected_username    = ! empty( $sliced['username'] ) ? $sliced['username'] : '';
-		$disable_video_thumbs = ! empty( $sliced['disable-video-thumbs'] );
-		$include_pagination   = ! empty( $sliced['include-pagination'] );
-		$bypass_transient     = ! empty( $sliced['bypass-transient'] );
+		$image_limit           = $sliced['image-limit'];
+		$image_width           = $sliced['image-width'];
+		$image_resolution      = ! empty( $sliced['image-resolution'] ) ? $sliced['image-resolution'] : 'standard_resolution';
+		$injected_username     = ! empty( $sliced['username'] ) ? $sliced['username'] : '';
+		$disable_video_thumbs  = ! empty( $sliced['disable-video-thumbs'] );
+		$include_pagination    = ! empty( $sliced['include-pagination'] );
+		$bypass_transient      = ! empty( $sliced['bypass-transient'] );
+		$skip_likes_comments   = ! empty( $sliced['skip-likes-comments'] );
 
 		if( isset( $instance['widget-id'] ) ) {
 			$transient = 'zoom_instagram_is_configured_' . $instance['widget-id'];
@@ -361,7 +363,7 @@ class Wpzoom_Instagram_Widget_API {
 
 			$raw_data = json_decode( wp_remote_retrieve_body( $response ) );
 
-			$data = self::convert_items_to_old_structure( $raw_data, $bypass_transient, $this->access_token );
+			$data = self::convert_items_to_old_structure( $raw_data, $bypass_transient, $this->access_token, $skip_likes_comments );
 
 			if ( $include_pagination && property_exists( $raw_data, 'paging' ) ) {
 				$data->paging = $raw_data->paging;
@@ -467,6 +469,7 @@ class Wpzoom_Instagram_Widget_API {
      * Get likes and comments count for a media item
      * 
      * @param string $media_id The ID of the media item
+     * @param string $access_token The access token for API requests
      * @return array Array containing likes_count and comments_count
      */ 
     public static function get_likes_comments_count( $media_id, $access_token ) {
@@ -477,8 +480,16 @@ class Wpzoom_Instagram_Widget_API {
             'comments_count' => 0,
         );
 
-        if( empty( $media_id ) ) {
+        if( empty( $media_id ) || empty( $access_token ) ) {
             return $likes_comments_count;
+        }
+
+        // Check cache first to avoid duplicate API calls
+        $cache_key = 'wpz_insta_likes_comments_' . md5( $media_id . $access_token );
+        $cached_data = get_transient( $cache_key );
+
+        if ( false !== $cached_data ) {
+            return $cached_data;
         }
 
         $request_url = add_query_arg(
@@ -489,16 +500,26 @@ class Wpzoom_Instagram_Widget_API {
             'https://graph.facebook.com/v21.0/' . $media_id  
         );
 
-        $response = wp_remote_get( $request_url );
+        $response = self::remote_get( $request_url );
 
         if ( is_wp_error( $response ) || 200 !== wp_remote_retrieve_response_code( $response ) ) {
+            // Cache failed requests for a short time to avoid rapid retries
+            set_transient( $cache_key, $likes_comments_count, 5 * MINUTE_IN_SECONDS );
             return $likes_comments_count;
         }
 
         $raw_data = json_decode( wp_remote_retrieve_body( $response ) );
 
-        $likes_comments_count['like_count'] = $raw_data->like_count;
-        $likes_comments_count['comments_count'] = $raw_data->comments_count;
+        if ( isset( $raw_data->like_count ) ) {
+            $likes_comments_count['like_count'] = intval( $raw_data->like_count );
+        }
+        
+        if ( isset( $raw_data->comments_count ) ) {
+            $likes_comments_count['comments_count'] = intval( $raw_data->comments_count );
+        }
+
+        // Cache successful results for 15 minutes
+        set_transient( $cache_key, $likes_comments_count, 15 * MINUTE_IN_SECONDS );
 
         return $likes_comments_count;
     }
@@ -601,7 +622,7 @@ class Wpzoom_Instagram_Widget_API {
 		);
 	}
 
-	public static function convert_items_to_old_structure( $data, $preview = false, $access_token = '' ) {
+	public static function convert_items_to_old_structure( $data, $preview = false, $access_token = '', $skip_likes_comments = false ) {
 
 		$converted       = new stdClass();
 		$converted->data = array();
@@ -610,6 +631,12 @@ class Wpzoom_Instagram_Widget_API {
 		foreach ( $data->data as $key => $item ) {
 			$is_video = property_exists( $item, 'media_type' ) && 'VIDEO' === $item->media_type;
 			$media_url = $is_video && property_exists( $item, 'thumbnail_url' ) && ! empty( $item->thumbnail_url ) ? $item->thumbnail_url : $item->media_url;
+
+			// Get likes and comments count only once per item, not twice!
+			$likes_comments = array( 'like_count' => 0, 'comments_count' => 0 );
+			if ( ! $skip_likes_comments && ! empty( $access_token ) && ! empty( $item->id ) ) {
+				$likes_comments = self::get_likes_comments_count( $item->id, $access_token );
+			}
 
 			$converted->data[] = (object) array(
 				'id'           => $item->id,
@@ -643,8 +670,8 @@ class Wpzoom_Instagram_Widget_API {
 					),
 				),
 				'type'         => $item->media_type,
-				'likes'        => self::get_likes_comments_count( $item->id, $access_token )['like_count'],
-				'comments'     => self::get_likes_comments_count( $item->id, $access_token )['comments_count'],
+				'likes'        => $likes_comments['like_count'],
+				'comments'     => $likes_comments['comments_count'],
 				'created_time' => null,
 				'timestamp'    => $item->timestamp,
 				'children'     => ( isset( $item->children ) ? $item->children : null ),

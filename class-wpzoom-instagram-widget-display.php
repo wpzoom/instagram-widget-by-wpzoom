@@ -292,6 +292,9 @@ class Wpzoom_Instagram_Widget_Display {
 						$wrapper_classes .= ' perpage-' . $perpage;
 					}
 
+					// Check if this is a load-more request to optimize API calls
+					$is_load_more_request = isset( $_POST['_wpnonce'] ) && wp_verify_nonce( $_POST['_wpnonce'], 'wpzinsta-pro-load-more' );
+					
 					$items  = $this->api->get_items( 
 						array( 
 							'image-limit'          => $amount, 
@@ -299,7 +302,8 @@ class Wpzoom_Instagram_Widget_Display {
 							'image-width'          => $image_width,
 							'include-pagination'   => true,
 							'disable-video-thumbs' => $hide_video_thumbs,
-							'bypass-transient'     => $preview 
+							'bypass-transient'     => $preview,
+							'skip-likes-comments'  => $is_load_more_request // Skip likes/comments for load-more to improve performance
 						) 
 					);
 					$errors = $this->api->errors->get_error_messages();
