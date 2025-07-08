@@ -25,6 +25,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ### Core Plugin Structure
 This is a WordPress plugin for displaying Instagram feeds with both widget and Gutenberg block support.
 
+**Plugin Versions**: This is the **free version** of the WPZOOM Instagram Widget. A **PRO version** is available at `../instagram-pro-by-wpzoom/` that extends this plugin with additional features, licensing, and automatic updates.
+
 **Main Entry Point**: `instagram-widget-by-wpzoom.php` - Plugin bootstrap file that loads all classes and registers the widget.
 
 **Key Classes**:
@@ -84,3 +86,7 @@ The webpack configuration creates separate bundles for different contexts:
 
 ### API Integration
 The plugin connects to Instagram's API to fetch feed data. The API handling is abstracted into the `Wpzoom_Instagram_Widget_API` class.
+
+## Related Projects
+- **PRO Version**: `../instagram-pro-by-wpzoom/` - Extended version with additional features, licensing, and automatic updates
+- See the PRO version's CLAUDE.md for details about the premium features and architecture
