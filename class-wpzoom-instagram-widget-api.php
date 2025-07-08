@@ -282,6 +282,7 @@ class Wpzoom_Instagram_Widget_API {
 	 */
 	public function get_items( $instance ) {
 
+
 		$sliced = wp_array_slice_assoc(
 			$instance,
 			array(
@@ -292,9 +293,6 @@ class Wpzoom_Instagram_Widget_API {
 				'disable-video-thumbs',
 				'include-pagination',
 				'bypass-transient',
-				'preview',
-				'preview-id',
-				'user-id'
 			)
 		);
 
@@ -305,10 +303,6 @@ class Wpzoom_Instagram_Widget_API {
 		$disable_video_thumbs = ! empty( $sliced['disable-video-thumbs'] );
 		$include_pagination   = ! empty( $sliced['include-pagination'] );
 		$bypass_transient     = ! empty( $sliced['bypass-transient'] );
-		$user_id              = ! empty( $sliced['user-id'] ) ? $sliced['user-id'] : '';
-		
-		$preview              = ! empty( $sliced['preview'] );
-		$preview_id           = ! empty( $sliced['preview-id'] ) ? $sliced['preview-id'] : '';		
 
 		if( isset( $instance['widget-id'] ) ) {
 			$transient = 'zoom_instagram_is_configured_' . $instance['widget-id'];
@@ -317,16 +311,7 @@ class Wpzoom_Instagram_Widget_API {
 			$transient = 'zoom_instagram_is_configured';
 		}
 
-		if( ! empty( $this->access_token ) && $preview && ! empty( $preview_id ) ) {
-			if( $image_limit <= 20 ) {
-				$image_limit = 20;
-				$bypass_transient = false;
-			}
-			$transient = 'zoom_instagram_preview_' . substr( $preview_id, 0, 20 ) . '_' . $user_id;
-			
-		}
-
-		if ( ! empty( $this->access_token ) && ! empty( $this->feed_id ) && ! $preview ) {
+		if ( ! empty( $this->access_token ) && ! empty( $this->feed_id ) ) {
 			$transient = $transient . '_' . substr( $this->feed_id, 0, 20 );
 		}
 
@@ -388,7 +373,7 @@ class Wpzoom_Instagram_Widget_API {
 				set_transient(
 					$transient,
 					wp_json_encode( $data ),
-					$preview ? DAY_IN_SECONDS : $this->get_transient_lifetime( $this->feed_id )
+					$this->get_transient_lifetime( $this->feed_id )
 				);
 
 			}

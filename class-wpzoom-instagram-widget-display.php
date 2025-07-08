@@ -174,16 +174,12 @@ class Wpzoom_Instagram_Widget_Display {
 	 */
 	private function feed_content( array $args, bool $preview = false ) {
 		$this->api = Wpzoom_Instagram_Widget_API::getInstance();
-		$output = $preview_id = '';
+		$output = '';
 		$user_id = isset( $args['user-id'] ) ? intval( $args['user-id'] ) : -1;
-	
-
+		
 		if( $preview ) {
 			$args['preview'] = true;
-			$preview_id = isset( $args['preview-id'] ) ? $args['preview-id'] : '';
 		};
-
-		
 
 		if ( $user_id > 0 ) {
 			$user = get_post( $user_id );
@@ -303,10 +299,7 @@ class Wpzoom_Instagram_Widget_Display {
 							'image-width'          => $image_width,
 							'include-pagination'   => true,
 							'disable-video-thumbs' => $hide_video_thumbs,
-							'bypass-transient'     => $preview,
-							'preview'              => $preview,
-							'preview-id'           => $preview_id,
-							'user-id'              => $user_id
+							'bypass-transient'     => $preview 
 						) 
 					);
 					$errors = $this->api->errors->get_error_messages();
