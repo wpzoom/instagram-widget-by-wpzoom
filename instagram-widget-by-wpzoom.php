@@ -137,6 +137,7 @@ function wpzoom_instagram_get_default_settings() {
 		'user-info-fullname'       => '',
 		'user-info-biography'      => '',
 		'load-css-js'              => '',
+		'enable-webp'              => false,
 	);
 }
 

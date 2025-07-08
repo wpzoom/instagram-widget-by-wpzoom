@@ -70,7 +70,15 @@ class WPZOOM_Instagram_Image_Uploader {
 		
 		} else {
 			
+			// Apply WebP conversion only for this specific upload
+			$webp_filter_added = self::maybe_add_webp_filter();
+			
 			$attachment_id = self::upload_image( $media_url, $media_id );
+			
+			// Remove WebP filter after upload
+			if ( $webp_filter_added ) {
+				self::remove_webp_filter();
+			}
 			
 			if( ! is_wp_error( $attachment_id ) ) {
 				
@@ -167,7 +175,16 @@ class WPZOOM_Instagram_Image_Uploader {
 			$post          = array_shift( $query->posts );
 			$attachment_id = $post->ID;
 		} else {
+			// Apply WebP conversion only for this specific upload
+			$webp_filter_added = self::maybe_add_webp_filter();
+			
 			$attachment_id = self::upload_image( $media_url, $sliced['media-id'] );
+			
+			// Remove WebP filter after upload
+			if ( $webp_filter_added ) {
+				self::remove_webp_filter();
+			}
+			
 			self::$instance->set_images_to_transient( $attachment_id, $sliced['media-id'] );
 		}
 
@@ -452,6 +469,57 @@ class WPZOOM_Instagram_Image_Uploader {
 		}
 
 		return $size;
+	}
+
+	/**
+	 * Maybe add WebP filter for Instagram image processing
+	 */
+	private static function maybe_add_webp_filter() {
+		$settings = get_option( 'wpzoom-instagram-general-settings' );
+		$enable_webp = ! empty( $settings['enable-webp'] ) ? wp_validate_boolean( $settings['enable-webp'] ) : false;
+		
+		if ( $enable_webp && function_exists( 'imagewebp' ) ) {
+			add_filter( 'image_editor_output_format', array( __CLASS__, 'convert_to_webp' ), 10, 3 );
+			return true;
+		}
+		
+		return false;
+	}
+
+	/**
+	 * Remove WebP filter after Instagram image processing
+	 */
+	private static function remove_webp_filter() {
+		remove_filter( 'image_editor_output_format', array( __CLASS__, 'convert_to_webp' ), 10 );
+	}
+
+	/**
+	 * Simple WebP conversion for Instagram images
+	 */
+	public static function convert_to_webp( $mappings, $filename, $mime_type ) {
+		// Only convert JPEG images
+		if ( in_array( $mime_type, [ 'image/jpeg', 'image/jpg' ] ) ) {
+			$mappings['image/jpeg'] = 'image/webp';
+			$mappings['image/jpg'] = 'image/webp';
+		}
+		
+		return $mappings;
+	}
+
+	/**
+	 * Get WebP debug information
+	 */
+	public static function get_webp_debug_info() {
+		$settings = get_option( 'wpzoom-instagram-general-settings' );
+		$enable_webp = ! empty( $settings['enable-webp'] ) ? wp_validate_boolean( $settings['enable-webp'] ) : false;
+		$webp_supported = function_exists( 'imagewebp' );
+		
+		return array(
+			'webp_enabled_in_settings' => $enable_webp,
+			'webp_supported_by_server' => $webp_supported,
+			'gd_info' => function_exists( 'gd_info' ) ? gd_info() : 'GD extension not available',
+			'imagewebp_function_exists' => function_exists( 'imagewebp' )
+		);
 	}
 }
 

@@ -110,6 +110,13 @@ class WPZOOM_Instagram_General_Settings {
 				'wpzoom_instagram_general_settings_section'
 		);
 		add_settings_field(
+				'wpzoom_instagram_general_settings_enable_webp',
+				esc_html__( 'Enable WebP Image Format', 'instagram-widget-by-wpzoom'), 
+				array( $this, 'settings_field_enable_webp' ),
+				'wpzoom-instagram-general-settings',
+				'wpzoom_instagram_general_settings_section'
+		);
+		add_settings_field(
 			'wpzoom_instagram_general_settings_field_clear_data',
 			esc_html__( 'Delete All Images', 'instagram-widget-by-wpzoom'),
 			array( $this, 'settings_field_clear_data' ),
@@ -155,6 +162,12 @@ class WPZOOM_Instagram_General_Settings {
 	 * @since 1.0.0
 	 */
 	public function sanitize_field( $values ) {
+		// Ensure boolean values are properly set
+		$values['enable-webp'] = isset( $values['enable-webp'] ) ? wp_validate_boolean( $values['enable-webp'] ) : false;
+		$values['load-css-js'] = isset( $values['load-css-js'] ) ? wp_validate_boolean( $values['load-css-js'] ) : false;
+		$values['enable-unsafe-requests'] = isset( $values['enable-unsafe-requests'] ) ? wp_validate_boolean( $values['enable-unsafe-requests'] ) : false;
+		$values['enable-email-notification'] = isset( $values['enable-email-notification'] ) ? wp_validate_boolean( $values['enable-email-notification'] ) : false;
+		
 		return $values;
 	}
 
@@ -197,6 +210,35 @@ class WPZOOM_Instagram_General_Settings {
 		<?php
 	}
 
+	public function settings_field_enable_webp() {
+		$settings = get_option( 'wpzoom-instagram-general-settings' );
+
+		$enable_webp = ! empty( $settings['enable-webp'] ) ? wp_validate_boolean( $settings['enable-webp'] ) : false;
+		$webp_supported = function_exists( 'imagewebp' );
+		?>
+		<input class="regular-text code"
+			   id="wpzoom-instagram-widget-settings_enable-webp"
+			   name="wpzoom-instagram-general-settings[enable-webp]"
+			<?php checked( true, $enable_webp ); ?>
+			<?php disabled( false, $webp_supported ); ?>
+			   value="1"
+			   type="checkbox">
+
+		<p class="description">
+			<?php _e( 'Convert Instagram images to WebP format for better performance and smaller file sizes. WebP format reduces image size by 25-35% compared to JPEG without quality loss.', 'instagram-widget-by-wpzoom' ); ?>
+		</p>
+		
+		<?php if ( ! $webp_supported ) : ?>
+		<p class="description" style="color: #d63638;">
+			<strong><?php _e( 'Warning:', 'instagram-widget-by-wpzoom' ); ?></strong>
+			<?php _e( 'WebP support is not available on this server. Please contact your hosting provider to enable WebP support in the GD library.', 'instagram-widget-by-wpzoom' ); ?>
+		</p>
+		<?php endif; ?>
+		
+        <br/>
+        <hr/>
+		<?php
+	}
 
 	/**
 	 * Output the Email Notificaiton section info

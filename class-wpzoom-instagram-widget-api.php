@@ -622,9 +622,17 @@ class Wpzoom_Instagram_Widget_API {
 		$converted->data = array();
 		$image_uploader = WPZOOM_Instagram_Image_Uploader::getInstance();
 
+		// Check if WebP is enabled
+		$general_settings = get_option( 'wpzoom-instagram-general-settings' );
+		$webp_enabled = isset( $general_settings['enable-webp-format'] ) && $general_settings['enable-webp-format'];
+
 		foreach ( $data->data as $key => $item ) {
 			$is_video = property_exists( $item, 'media_type' ) && 'VIDEO' === $item->media_type;
 			$media_url = $is_video && property_exists( $item, 'thumbnail_url' ) && ! empty( $item->thumbnail_url ) ? $item->thumbnail_url : $item->media_url;
+
+			// For preview mode, use image uploader if WebP is enabled (to get correct WebP URLs)
+			// Otherwise use original URLs for faster preview loading
+			$use_image_uploader = !$preview || $webp_enabled;
 
 			$converted->data[] = (object) array(
 				'id'           => $item->id,
@@ -637,22 +645,22 @@ class Wpzoom_Instagram_Widget_API {
 				),
 				'images'       => (object) array(
 					'thumbnail'           => (object) array(
-						'url'    => $preview ? $media_url : $image_uploader->get_image( 'thumbnail', $media_url, $item->id ),
+						'url'    => $use_image_uploader ? $image_uploader->get_image( 'thumbnail', $media_url, $item->id ) : $media_url,
 						'width'  => 150,
 						'height' => 150,
 					),
 					'low_resolution'      => (object) array(
-						'url'    => $preview ? $media_url : $image_uploader->get_image( 'low_resolution', $media_url, $item->id ),
+						'url'    => $use_image_uploader ? $image_uploader->get_image( 'low_resolution', $media_url, $item->id ) : $media_url,
 						'width'  => 320,
 						'height' => 320,
 					),
 					'standard_resolution' => (object) array(
-						'url'    => $preview ? $media_url : $image_uploader->get_image( 'standard_resolution', $media_url, $item->id ),
+						'url'    => $use_image_uploader ? $image_uploader->get_image( 'standard_resolution', $media_url, $item->id ) : $media_url,
 						'width'  => 640,
 						'height' => 640,
 					),
 					'full_resolution' => (object) array(
-						'url'    => $preview ? $media_url : $image_uploader->get_image( 'full_resolution', $media_url, $item->id ),
+						'url'    => $use_image_uploader ? $image_uploader->get_image( 'full_resolution', $media_url, $item->id ) : $media_url,
 						'width'  => 9999,
 						'height' => 9999,
 					),
