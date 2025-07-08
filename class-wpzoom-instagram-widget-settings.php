@@ -861,18 +861,19 @@ class WPZOOM_Instagram_Widget_Settings {
 
 			if ( $post instanceof WP_Post ) {
 
-				if ( delete_transient( 'zoom_instagram_is_configured_' . substr( $post_id, 0, 20 ) ) ) {
-					wp_redirect(
-						add_query_arg(
-							array(
-								'post_type' => 'wpz-insta_feed',
-								'wpz-insta_update-posts' => 'true',
-							),
-							admin_url( 'edit.php' )
-						)
-					);
-					exit;
-				}
+				// Clear all transients for this feed (including video variants)
+				$this->clear_feed_transients( $post_id, true );
+
+				wp_redirect(
+					add_query_arg(
+						array(
+							'post_type' => 'wpz-insta_feed',
+							'wpz-insta_update-posts' => 'true',
+						),
+						admin_url( 'edit.php' )
+					)
+				);
+				exit;
 			}
 		}
 
@@ -1479,7 +1480,7 @@ class WPZOOM_Instagram_Widget_Settings {
 												<input type="checkbox" name="_wpz-insta_featured-layout-enable" id="_wpz-insta_featured-layout-enable" value="1"<?php checked( $enable_featured_layout ); ?> />
 											</strong>
 
-											<p class="description"><small><em><?php esc_html_e( 'Works only 3-6 columns', 'instagram-widget-by-wpzoom' ); ?></em></small></p>
+											<p class="description"><small><em><?php esc_html_e( 'Works only with 3-6 columns', 'instagram-widget-by-wpzoom' ); ?></em></small></p>
 										<?php } ?>
 
 										<div class="wpz-insta_table-cell">
@@ -2490,6 +2491,14 @@ class WPZOOM_Instagram_Widget_Settings {
 		if ( ! wp_is_post_revision( $post ) && ! wp_is_post_autosave( $post ) && 'auto-draft' != get_post_status( $post ) && isset( $_POST ) && ! empty( $_POST ) ) {
 			$meta_keys = get_registered_meta_keys( 'post', 'wpz-insta_feed' );
 
+			// Check if critical settings changed that require transient clearing
+			$old_item_num = get_post_meta( $post_ID, '_wpz-insta_item-num', true );
+			$old_hide_video_thumbs = get_post_meta( $post_ID, '_wpz-insta_hide-video-thumbs', true );
+			$new_item_num = isset( $_POST['_wpz-insta_item-num'] ) ? intval( $_POST['_wpz-insta_item-num'] ) : 9;
+			$new_hide_video_thumbs = isset( $_POST['_wpz-insta_hide-video-thumbs'] ) ? boolval( $_POST['_wpz-insta_hide-video-thumbs'] ) : false;
+
+			$should_clear_transients = ( $old_item_num != $new_item_num ) || ( $old_hide_video_thumbs != $new_hide_video_thumbs );
+
 			if ( ! empty( $meta_keys ) ) {
 				$meta_keys = array_filter( $meta_keys, function( $key ) { return strpos( $key, 'wpz-insta_' ) !== false; }, ARRAY_FILTER_USE_KEY );
 
@@ -2522,10 +2531,42 @@ class WPZOOM_Instagram_Widget_Settings {
 				delete_post_meta( $post_ID, '_wpz-insta_feed_is_duplicate' );
 			}
 
+			// Clear all relevant transients for this feed
 			if ( $post_ID ) {
-				delete_transient( 'zoom_instagram_is_configured_' . substr( $post_ID, 0, 20 ) );
+				$this->clear_feed_transients( $post_ID, $should_clear_transients );
 			}
 
+		}
+	}
+
+	/**
+	 * Clear all transients for a specific feed
+	 * This includes both regular and video-specific transient variants
+	 */
+	private function clear_feed_transients( $post_ID, $force_clear = false ) {
+		$transient_base = 'zoom_instagram_is_configured_' . substr( $post_ID, 0, 20 );
+
+		// Always clear the basic transients for this feed
+		delete_transient( $transient_base );
+		delete_transient( $transient_base . '_no_videos' );
+
+		// Also clear the generic widget transient if it exists
+		delete_transient( 'zoom_instagram_is_configured' );
+		delete_transient( 'zoom_instagram_is_configured_no_videos' );
+
+		if ( $force_clear ) {
+			// For critical setting changes (item count or video settings),
+			// be more aggressive about clearing potential cached variants
+			$patterns_to_clear = array(
+				$transient_base,
+				$transient_base . '_no_videos',
+				'zoom_instagram_is_configured',
+				'zoom_instagram_is_configured_no_videos'
+			);
+
+			foreach ( $patterns_to_clear as $pattern ) {
+				delete_transient( $pattern );
+			}
 		}
 	}
 
