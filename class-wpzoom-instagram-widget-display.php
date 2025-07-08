@@ -833,6 +833,7 @@ class Wpzoom_Instagram_Widget_Display {
 		$spacing_between_suffix = $this->get_suffix( isset( $args['spacing-between-suffix'] ) ? intval( $args['spacing-between-suffix'] ) : 0 );
 		$feat_layout_enabled    = isset( $args['featured-layout-enable'] ) ? boolval( $args['featured-layout-enable'] ) : false;
 		$featured_layout        = isset( $args['featured-layout'] ) ? intval( $args['featured-layout'] ) : 0;
+		$image_aspect_ratio     = isset( $args['image-aspect-ratio'] ) ? $args['image-aspect-ratio'] : 'square';
 		$button_bg              = isset( $args['view-button-bg-color'] ) ? $this->validate_color( $args['view-button-bg-color'] ) : '';
         $loadmore_bg            = isset( $args['load-more-color'] ) ? $this->validate_color( $args['load-more-color'] ) : '';
 		$bg_color               = isset( $args['bg-color'] ) ? $this->validate_color( $args['bg-color'] ) : '';
@@ -924,6 +925,13 @@ class Wpzoom_Instagram_Widget_Display {
 		if ( '' != $button_bg ) {
 			$output .= ".zoom-instagram{$feed_id} .wpz-insta-view-on-insta-button{";
 			$output .= "background-color:{$button_bg}!important;";
+			$output .= "}";
+		}
+
+		// Add aspect ratio CSS for grid layout
+		if ( 0 === $layout && 'portrait' === $image_aspect_ratio ) {
+			$output .= ".zoom-instagram{$feed_id} .zoom-instagram-widget__items.layout-grid .zoom-instagram-widget__item img{";
+			$output .= "aspect-ratio:3/4!important;";
 			$output .= "}";
 		}
 

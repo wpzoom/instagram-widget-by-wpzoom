@@ -70,6 +70,7 @@ class WPZOOM_Instagram_Widget_Settings {
 		'lazy-load'                       => array( 'type' => 'boolean', 'default' => true ),
 		'lightbox'                        => array( 'type' => 'boolean', 'default' => true ),
 		'allowed-post-types'              => array( 'type' => 'string',  'default' => 'IMAGE,VIDEO,CAROUSEL_ALBUM' ),
+		'image-aspect-ratio'              => array( 'type' => 'string',  'default' => 'square' ),
 		'show-media-type-icons'           => array( 'type' => 'boolean', 'default' => true ),
 		'hover-media-type-icons'          => array( 'type' => 'boolean', 'default' => true ),
 		'hover-link'                      => array( 'type' => 'boolean', 'default' => true ),
@@ -1273,6 +1274,7 @@ class WPZOOM_Instagram_Widget_Settings {
 			$feed_font_size_suffix            = (int) self::get_feed_setting_value( $post->ID, 'font-size-suffix' );
 			$lightbox                         = (bool) self::get_feed_setting_value( $post->ID, 'lightbox' );
 			$allowed_post_types               = (string) self::get_feed_setting_value( $post->ID, 'allowed-post-types' );
+			$image_aspect_ratio               = (string) self::get_feed_setting_value( $post->ID, 'image-aspect-ratio' );
 			$show_overlay                     = (bool) self::get_feed_setting_value( $post->ID, 'show-overlay' );
 			$lazy_load                        = (bool) self::get_feed_setting_value( $post->ID, 'lazy-load' );
 			$show_media_type_icons            = (bool) self::get_feed_setting_value( $post->ID, 'show-media-type-icons' );
@@ -1747,6 +1749,16 @@ class WPZOOM_Instagram_Widget_Settings {
 											</select>
 										</div>
 									</label>
+
+                                    <label class="wpz-insta_table-row">
+                                        <strong class="wpz-insta_table-cell"><?php esc_html_e( 'Image aspect ratio', 'instagram-widget-by-wpzoom' ); ?></strong>
+                                        <div class="wpz-insta_table-cell">
+                                            <select name="_wpz-insta_image-aspect-ratio">
+                                                <option value="square"<?php selected( $image_aspect_ratio, 'square' ); ?>><?php esc_html_e( 'Square (1:1)', 'instagram-widget-by-wpzoom' ); ?></option>
+                                                <option value="portrait"<?php selected( $image_aspect_ratio, 'portrait' ); ?>><?php esc_html_e( 'Portrait (3:4)', 'instagram-widget-by-wpzoom' ); ?></option>
+                                            </select>
+                                        </div>
+                                    </label>
 
 									<label class="wpz-insta_table-row">
 										<strong class="wpz-insta_table-cell"><?php esc_html_e( 'Image Width', 'instagram-widget-by-wpzoom' ); ?></strong>
