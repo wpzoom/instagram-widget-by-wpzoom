@@ -69,7 +69,7 @@ class WPZOOM_Instagram_Widget_Settings {
 		'show-overlay'                    => array( 'type' => 'boolean', 'default' => true ),
 		'lazy-load'                       => array( 'type' => 'boolean', 'default' => true ),
 		'lightbox'                        => array( 'type' => 'boolean', 'default' => true ),
-		'hide-video-thumbs'               => array( 'type' => 'boolean', 'default' => false ),
+		'allowed-post-types'              => array( 'type' => 'string',  'default' => 'IMAGE,VIDEO,CAROUSEL_ALBUM' ),
 		'show-media-type-icons'           => array( 'type' => 'boolean', 'default' => true ),
 		'hover-media-type-icons'          => array( 'type' => 'boolean', 'default' => true ),
 		'hover-link'                      => array( 'type' => 'boolean', 'default' => true ),
@@ -1128,22 +1128,35 @@ class WPZOOM_Instagram_Widget_Settings {
 			$setting_args = self::$feed_settings[ $setting_name ];
 			$setting_type = isset( $setting_args['type'] ) ? $setting_args['type'] : 'string';
 
-			switch ( $setting_type ) {
-				case 'number':
-					$out = floatval( $value );
-					break;
+			// Special handling for allowed-post-types which can be an array from checkboxes
+			if ( $setting_name === 'allowed-post-types' && is_array( $value ) ) {
+				$valid_types = array( 'IMAGE', 'VIDEO', 'CAROUSEL_ALBUM' );
+				$selected_types = array_intersect( $value, $valid_types );
+				
+				// Ensure at least one type is selected
+				if ( empty( $selected_types ) ) {
+					$selected_types = array( 'IMAGE' );
+				}
+				
+				$out = implode( ',', $selected_types );
+			} else {
+				switch ( $setting_type ) {
+					case 'number':
+						$out = floatval( $value );
+						break;
 
-				case 'integer':
-					$out = intval( $value );
-					break;
+					case 'integer':
+						$out = intval( $value );
+						break;
 
-				case 'boolean':
-					$out = boolval( $value );
-					break;
+					case 'boolean':
+						$out = boolval( $value );
+						break;
 
-				default:
-					$out = esc_html( trim( '' . $value ) );
-					break;
+					default:
+						$out = esc_html( trim( '' . $value ) );
+						break;
+				}
 			}
 		}
 
@@ -1160,7 +1173,28 @@ class WPZOOM_Instagram_Widget_Settings {
 			$meta_key = sprintf( _x( '_wpz-insta_%s', 'Feed setting ID', 'instagram-widget-by-wpzoom' ), $setting_name );
 			$meta_key_exists = metadata_exists( 'post', $feed_id, $meta_key );
 
-			$raw = $meta_key_exists ? get_post_meta( $feed_id, $meta_key, true ) : $setting_default;
+			// Backward compatibility: migrate from old hide-video-thumbs to new allowed-post-types
+			if ( $setting_name === 'allowed-post-types' && ! $meta_key_exists ) {
+				$old_hide_video_meta_key = '_wpz-insta_hide-video-thumbs';
+				$old_hide_video_exists = metadata_exists( 'post', $feed_id, $old_hide_video_meta_key );
+				
+				if ( $old_hide_video_exists ) {
+					$hide_video_value = get_post_meta( $feed_id, $old_hide_video_meta_key, true );
+					// Convert old setting: if hide videos was true, only show IMAGE and CAROUSEL_ALBUM
+					// if hide videos was false, show all types
+					$migrated_value = $hide_video_value ? 'IMAGE,CAROUSEL_ALBUM' : 'IMAGE,VIDEO,CAROUSEL_ALBUM';
+					
+					// Save the migrated value for future use
+					update_post_meta( $feed_id, $meta_key, $migrated_value );
+					
+					$raw = $migrated_value;
+				} else {
+					$raw = $setting_default;
+				}
+			} else {
+				$raw = $meta_key_exists ? get_post_meta( $feed_id, $meta_key, true ) : $setting_default;
+			}
+			
 			$value = self::sanitize_feed_setting_value( $setting_name, $raw );
 		}
 
@@ -1238,7 +1272,7 @@ class WPZOOM_Instagram_Widget_Settings {
 			$feed_font_size                   = (float) self::get_feed_setting_value( $post->ID, 'font-size' );
 			$feed_font_size_suffix            = (int) self::get_feed_setting_value( $post->ID, 'font-size-suffix' );
 			$lightbox                         = (bool) self::get_feed_setting_value( $post->ID, 'lightbox' );
-			$hide_video_thumbnails            = (bool) self::get_feed_setting_value( $post->ID, 'hide-video-thumbs' );
+			$allowed_post_types               = (string) self::get_feed_setting_value( $post->ID, 'allowed-post-types' );
 			$show_overlay                     = (bool) self::get_feed_setting_value( $post->ID, 'show-overlay' );
 			$lazy_load                        = (bool) self::get_feed_setting_value( $post->ID, 'lazy-load' );
 			$show_media_type_icons            = (bool) self::get_feed_setting_value( $post->ID, 'show-media-type-icons' );
@@ -1747,11 +1781,28 @@ class WPZOOM_Instagram_Widget_Settings {
 										<span><?php esc_html_e( 'Open items in lightbox', 'instagram-widget-by-wpzoom' ); ?></span>
 									</label>
 
-									<label class="wpz-insta_table-row">
-										<input type="hidden" name="_wpz-insta_hide-video-thumbs" value="0" />
-										<input type="checkbox" name="_wpz-insta_hide-video-thumbs" value="1"<?php checked( $hide_video_thumbnails ); ?> />
-										<span><?php esc_html_e( 'Hide video thumbnails', 'instagram-widget-by-wpzoom' ); ?></span>
-									</label>
+									<div class="wpz-insta_table-row wpz-insta_table-row-full">
+										<strong class="wpz-insta_table-cell"><?php esc_html_e( 'Post Types to Show', 'instagram-widget-by-wpzoom' ); ?></strong>
+										<div class="wpz-insta_table-cell">
+											<?php 
+											$selected_types = explode( ',', $allowed_post_types );
+											$selected_types = array_map( 'trim', $selected_types );
+											?>
+											<label class="wpz-insta_checkbox-inline">
+												<input type="checkbox" name="_wpz-insta_allowed-post-types[]" value="IMAGE"<?php checked( in_array( 'IMAGE', $selected_types ) ); ?> />
+												<span><?php esc_html_e( 'Photos', 'instagram-widget-by-wpzoom' ); ?></span>
+											</label>
+											<label class="wpz-insta_checkbox-inline">
+												<input type="checkbox" name="_wpz-insta_allowed-post-types[]" value="VIDEO"<?php checked( in_array( 'VIDEO', $selected_types ) ); ?> />
+												<span><?php esc_html_e( 'Videos', 'instagram-widget-by-wpzoom' ); ?></span>
+											</label>
+											<label class="wpz-insta_checkbox-inline">
+												<input type="checkbox" name="_wpz-insta_allowed-post-types[]" value="CAROUSEL_ALBUM"<?php checked( in_array( 'CAROUSEL_ALBUM', $selected_types ) ); ?> />
+												<span><?php esc_html_e( 'Albums/Carousels', 'instagram-widget-by-wpzoom' ); ?></span>
+											</label>
+											<input type="hidden" name="_wpz-insta_allowed-post-types-submitted" value="1" />
+										</div>
+									</div>
 
 									<label class="wpz-insta_table-row">
 										<input type="hidden" name="_wpz-insta_show-media-type-icons" value="0" />
@@ -2491,18 +2542,53 @@ class WPZOOM_Instagram_Widget_Settings {
 		if ( ! wp_is_post_revision( $post ) && ! wp_is_post_autosave( $post ) && 'auto-draft' != get_post_status( $post ) && isset( $_POST ) && ! empty( $_POST ) ) {
 			$meta_keys = get_registered_meta_keys( 'post', 'wpz-insta_feed' );
 
-			// Check if critical settings changed that require transient clearing
-			$old_item_num = get_post_meta( $post_ID, '_wpz-insta_item-num', true );
-			$old_hide_video_thumbs = get_post_meta( $post_ID, '_wpz-insta_hide-video-thumbs', true );
-			$new_item_num = isset( $_POST['_wpz-insta_item-num'] ) ? intval( $_POST['_wpz-insta_item-num'] ) : 9;
-			$new_hide_video_thumbs = isset( $_POST['_wpz-insta_hide-video-thumbs'] ) ? boolval( $_POST['_wpz-insta_hide-video-thumbs'] ) : false;
+					// Check if critical settings changed that require transient clearing
+		$old_item_num = get_post_meta( $post_ID, '_wpz-insta_item-num', true );
+		$old_allowed_post_types = get_post_meta( $post_ID, '_wpz-insta_allowed-post-types', true );
+		$old_user_id = get_post_meta( $post_ID, '_wpz-insta_user-id', true );
+		$new_item_num = isset( $_POST['_wpz-insta_item-num'] ) ? intval( $_POST['_wpz-insta_item-num'] ) : 9;
+		$new_user_id = isset( $_POST['_wpz-insta_user-id'] ) ? intval( $_POST['_wpz-insta_user-id'] ) : -1;
+		
+		// Handle new post types selection
+		$new_allowed_post_types = $old_allowed_post_types;
+		if ( isset( $_POST['_wpz-insta_allowed-post-types-submitted'] ) ) {
+			$post_types = isset( $_POST['_wpz-insta_allowed-post-types'] ) && is_array( $_POST['_wpz-insta_allowed-post-types'] ) 
+				? $_POST['_wpz-insta_allowed-post-types'] 
+				: array();
+			
+			// Sanitize and validate post types
+			$valid_types = array( 'IMAGE', 'VIDEO', 'CAROUSEL_ALBUM' );
+			$selected_types = array_intersect( $post_types, $valid_types );
+			
+			// Ensure at least one type is selected
+			if ( empty( $selected_types ) ) {
+				$selected_types = array( 'IMAGE' );
+			}
+			
+			$new_allowed_post_types = implode( ',', $selected_types );
+		}
 
-			$should_clear_transients = ( $old_item_num != $new_item_num ) || ( $old_hide_video_thumbs != $new_hide_video_thumbs );
+				$should_clear_transients = ( $old_item_num != $new_item_num ) || ( $old_allowed_post_types != $new_allowed_post_types ) || ( $old_user_id != $new_user_id );
 
-			if ( ! empty( $meta_keys ) ) {
-				$meta_keys = array_filter( $meta_keys, function( $key ) { return strpos( $key, 'wpz-insta_' ) !== false; }, ARRAY_FILTER_USE_KEY );
+		if ( ! empty( $meta_keys ) ) {
+			$meta_keys = array_filter( $meta_keys, function( $key ) { return strpos( $key, 'wpz-insta_' ) !== false; }, ARRAY_FILTER_USE_KEY );
 
-				foreach ( $meta_keys as $key => $args ) {
+							// Save the new post types setting if submitted
+				if ( isset( $_POST['_wpz-insta_allowed-post-types-submitted'] ) ) {
+					update_post_meta( $post_ID, '_wpz-insta_allowed-post-types', $new_allowed_post_types );
+					
+					// Remove the old hide-video-thumbs setting since we've migrated to post types
+					if ( metadata_exists( 'post', $post_ID, '_wpz-insta_hide-video-thumbs' ) ) {
+						delete_post_meta( $post_ID, '_wpz-insta_hide-video-thumbs' );
+					}
+				}
+
+			foreach ( $meta_keys as $key => $args ) {
+					// Skip allowed-post-types as it's handled separately above
+					if ( $key === '_wpz-insta_allowed-post-types' ) {
+						continue;
+					}
+					
 					if ( isset( $_POST[ $key ] ) ) {
 						$value = wp_unslash( $_POST[ $key ] );
 
@@ -2544,6 +2630,8 @@ class WPZOOM_Instagram_Widget_Settings {
 	 * This includes both regular and video-specific transient variants
 	 */
 	private function clear_feed_transients( $post_ID, $force_clear = false ) {
+		global $wpdb;
+		
 		$transient_base = 'zoom_instagram_is_configured_' . substr( $post_ID, 0, 20 );
 
 		// Always clear the basic transients for this feed
@@ -2555,17 +2643,22 @@ class WPZOOM_Instagram_Widget_Settings {
 		delete_transient( 'zoom_instagram_is_configured_no_videos' );
 
 		if ( $force_clear ) {
-			// For critical setting changes (item count or video settings),
-			// be more aggressive about clearing potential cached variants
-			$patterns_to_clear = array(
-				$transient_base,
-				$transient_base . '_no_videos',
-				'zoom_instagram_is_configured',
-				'zoom_instagram_is_configured_no_videos'
+			// For critical setting changes (account, item count, or post type changes),
+			// be more aggressive and clear ALL transients with this feed's pattern
+			// This handles dynamically generated filtered transient keys
+			
+			$transient_patterns = array(
+				'_transient_' . $transient_base . '%',
+				'_transient_zoom_instagram_is_configured%'
 			);
-
-			foreach ( $patterns_to_clear as $pattern ) {
-				delete_transient( $pattern );
+			
+			foreach ( $transient_patterns as $pattern ) {
+				$wpdb->query( 
+					$wpdb->prepare( 
+						"DELETE FROM {$wpdb->options} WHERE option_name LIKE %s", 
+						$pattern 
+					) 
+				);
 			}
 		}
 	}

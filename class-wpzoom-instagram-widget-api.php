@@ -283,28 +283,35 @@ class Wpzoom_Instagram_Widget_API {
     public function get_items( $instance ) {
 
 
-        $sliced = wp_array_slice_assoc(
-            $instance,
-            array(
-                'image-limit',
-                'image-width',
-                'image-resolution',
-                'username',
-                'disable-video-thumbs',
-                'include-pagination',
-                'bypass-transient',
-                'skip-likes-comments',
-            )
-        );
+        		$sliced = wp_array_slice_assoc(
+			$instance,
+			array(
+				'image-limit',
+				'image-width',
+				'image-resolution',
+				'username',
+				'allowed-post-types',
+				'include-pagination',
+				'pagination-cursor',
+				'bypass-transient',
+				'skip-likes-comments',
+			)
+		);
 
-        $image_limit           = $sliced['image-limit'];
-        $image_width           = $sliced['image-width'];
-        $image_resolution      = ! empty( $sliced['image-resolution'] ) ? $sliced['image-resolution'] : 'standard_resolution';
-        $injected_username     = ! empty( $sliced['username'] ) ? $sliced['username'] : '';
-        $disable_video_thumbs  = ! empty( $sliced['disable-video-thumbs'] );
-        $include_pagination    = ! empty( $sliced['include-pagination'] );
-        $bypass_transient      = ! empty( $sliced['bypass-transient'] );
-        $skip_likes_comments   = ! empty( $sliced['skip-likes-comments'] );
+		$image_limit           = $sliced['image-limit'];
+		$image_width           = $sliced['image-width'];
+		$image_resolution      = ! empty( $sliced['image-resolution'] ) ? $sliced['image-resolution'] : 'standard_resolution';
+		$injected_username     = ! empty( $sliced['username'] ) ? $sliced['username'] : '';
+		$allowed_post_types    = ! empty( $sliced['allowed-post-types'] ) ? $sliced['allowed-post-types'] : 'IMAGE,VIDEO,CAROUSEL_ALBUM';
+		
+		// Handle legacy widget's disable-video-thumbs setting
+		if ( empty( $sliced['allowed-post-types'] ) && isset( $instance['disable-video-thumbs'] ) && $instance['disable-video-thumbs'] ) {
+			$allowed_post_types = 'IMAGE,CAROUSEL_ALBUM'; // Hide videos if legacy setting is enabled
+		}
+		$include_pagination    = ! empty( $sliced['include-pagination'] );
+		$pagination_cursor     = ! empty( $sliced['pagination-cursor'] ) ? $sliced['pagination-cursor'] : '';
+		$bypass_transient      = ! empty( $sliced['bypass-transient'] );
+		$skip_likes_comments   = ! empty( $sliced['skip-likes-comments'] );
 
 		if( isset( $instance['widget-id'] ) ) {
 			$transient = 'zoom_instagram_is_configured_' . $instance['widget-id'];
@@ -317,9 +324,9 @@ class Wpzoom_Instagram_Widget_API {
 			$transient = $transient . '_' . substr( $this->feed_id, 0, 20 );
 		}
 
-		// Add video thumb setting to transient key to avoid cache conflicts
-		if ( $disable_video_thumbs ) {
-			$transient .= '_no_videos';
+		// Add post type filtering to transient key for proper caching
+		if ( $allowed_post_types !== 'IMAGE,VIDEO,CAROUSEL_ALBUM' ) {
+			$transient .= '_filtered_' . md5( $allowed_post_types );
 		}
 
 		$injected_username = trim( $injected_username );
@@ -327,13 +334,13 @@ class Wpzoom_Instagram_Widget_API {
 		if ( ! $bypass_transient ) {
 			$data = json_decode( get_transient( $transient ) );
 			if ( false !== $data && is_object( $data ) && ! empty( $data->data ) ) {
-				return self::processing_response_data( $data, $image_width, $image_resolution, $image_limit, $disable_video_thumbs, $include_pagination );
+				return self::processing_response_data( $data, $image_width, $image_resolution, $image_limit, $allowed_post_types, $include_pagination );
 			}
 		}
 
 		if ( ! empty( $this->access_token ) ) {
-			// Fetch data with retry mechanism for video filtering
-			$data = $this->fetch_items_with_retry( $image_limit, $disable_video_thumbs, $skip_likes_comments, $include_pagination );
+			// Fetch data with retry mechanism for post type filtering
+			$data = $this->fetch_items_with_retry( $image_limit, $allowed_post_types, $skip_likes_comments, $include_pagination, $pagination_cursor );
 
 			if ( false === $data ) {
 				if ( ! $bypass_transient ) {
@@ -367,14 +374,14 @@ class Wpzoom_Instagram_Widget_API {
 			return false;
 		}
 
-		return self::processing_response_data( $data, $image_width, $image_resolution, $image_limit, $disable_video_thumbs, $include_pagination );
+		return self::processing_response_data( $data, $image_width, $image_resolution, $image_limit, $allowed_post_types, $include_pagination );
 	}
 
 	/**
-	 * Fetch items with retry mechanism for video filtering
-	 * This ensures we get enough non-video items while maintaining correct pagination
+	 * Fetch items with retry mechanism for post type filtering
+	 * This ensures we get enough items of the allowed types while maintaining correct pagination
 	 */
-	private function fetch_items_with_retry( $image_limit, $disable_video_thumbs, $skip_likes_comments, $include_pagination, $after_cursor = '' ) {
+	private function fetch_items_with_retry( $image_limit, $allowed_post_types, $skip_likes_comments, $include_pagination, $after_cursor = '' ) {
 		$max_retries = 3; // Prevent infinite loops
 		$retry_count = 0;
 		$all_items = array();
@@ -426,11 +433,11 @@ class Wpzoom_Instagram_Widget_API {
 				$final_paging = $raw_data->paging;
 			}
 
-			// Count non-video items if video filtering is enabled
-			$non_video_count = $this->count_non_video_items( $all_items, $disable_video_thumbs );
+			// Count items of allowed post types
+			$allowed_items_count = $this->count_allowed_items( $all_items, $allowed_post_types );
 
 			// Check if we have enough items or if there's no more data
-			$has_enough_items = $non_video_count >= $image_limit;
+			$has_enough_items = $allowed_items_count >= $image_limit;
 			$has_more_data = property_exists( $raw_data, 'paging' ) &&
 							 property_exists( $raw_data->paging, 'next' ) &&
 							 ! empty( $raw_data->paging->next );
@@ -460,16 +467,15 @@ class Wpzoom_Instagram_Widget_API {
 	}
 
 	/**
-	 * Count non-video items in the data array
+	 * Count items that match the allowed post types
 	 */
-	private function count_non_video_items( $items, $disable_video_thumbs ) {
-		if ( ! $disable_video_thumbs ) {
-			return count( $items );
-		}
-
+	private function count_allowed_items( $items, $allowed_post_types ) {
+		// Convert comma-separated string to array
+		$allowed_types = array_map( 'trim', explode( ',', $allowed_post_types ) );
+		
 		$count = 0;
 		foreach ( $items as $item ) {
-			if ( ! ( isset( $item->type ) && 'VIDEO' === $item->type ) ) {
+			if ( isset( $item->type ) && in_array( $item->type, $allowed_types ) ) {
 				$count++;
 			}
 		}
@@ -477,10 +483,14 @@ class Wpzoom_Instagram_Widget_API {
 		return $count;
 	}
 
-    public static function processing_response_data( $data, $image_width, $image_resolution, $image_limit, $disable_video_thumbs = false, $include_pagination = false ) {
+    public static function processing_response_data( $data, $image_width, $image_resolution, $image_limit, $allowed_post_types = 'IMAGE,VIDEO,CAROUSEL_ALBUM', $include_pagination = false ) {
         $result   = array();
         $username = '';
-        $processed_count = 0; // Count of non-video items processed
+        $processed_count = 0; // Count of allowed post type items processed
+        
+        // Convert comma-separated string to array
+        $allowed_types = array_map( 'trim', explode( ',', $allowed_post_types ) );
+        
         $defaults = array(
             'link'               => '',
             'image-url'          => '',
@@ -506,13 +516,13 @@ class Wpzoom_Instagram_Widget_API {
                 $username = $item->user->username;
             }
 
-            // Stop when we've processed enough non-video items
+            // Stop when we've processed enough items of allowed types
             if ( $processed_count >= $image_limit ) {
                 break;
             }
 
-            // Skip video items if video thumbnails are disabled
-            if ( ! empty( $disable_video_thumbs ) && isset( $item->type ) && 'VIDEO' == $item->type ) {
+            // Skip items that are not in the allowed post types
+            if ( isset( $item->type ) && ! in_array( $item->type, $allowed_types ) ) {
                 continue;
             }
 
@@ -538,7 +548,7 @@ class Wpzoom_Instagram_Widget_API {
                 'comments'     => ! empty( $item->comments ) ? esc_attr( $item->comments ) : 0,
             );
 
-            $processed_count++; // Increment count of processed non-video items
+            $processed_count++; // Increment count of processed allowed post type items
         }
 
         $result = array(

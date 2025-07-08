@@ -227,7 +227,7 @@ class Wpzoom_Instagram_Widget_Display {
 					$show_load_more_button = ( ! $this->is_pro && $preview ) || ( $this->is_pro && isset( $args['show-load-more'] ) && boolval( $args['show-load-more'] ) );
 					$image_size = isset( $args['image-size'] ) && in_array( $args['image-size'], array( 'thumbnail', 'low_resolution', 'standard_resolution', 'full_resolution' ) ) ? $args['image-size'] : 'standard_resolution';
 					$image_width = isset( $args['image-width'] ) ? intval( $args['image-width'] ) : 320;
-					$hide_video_thumbs = isset( $args['hide-video-thumbs'] ) ? boolval( $args['hide-video-thumbs'] ) : true;
+					$allowed_post_types = isset( $args['allowed-post-types'] ) ? $args['allowed-post-types'] : 'IMAGE,VIDEO,CAROUSEL_ALBUM';
                     $lazy_load = isset( $args['lazy-load'] ) ? boolval( $args['lazy-load'] ) : true;
 
 					$attrs .= ' data-layout="' . $layout . '"';
@@ -295,13 +295,39 @@ class Wpzoom_Instagram_Widget_Display {
 					// Check if this is a load-more request to optimize API calls
 					$is_load_more_request = isset( $_POST['_wpnonce'] ) && wp_verify_nonce( $_POST['_wpnonce'], 'wpzinsta-pro-load-more' );
 					
+					// Override parameters with POST data for load more requests
+					$pagination_cursor = '';
+					if ( $is_load_more_request ) {
+						if ( isset( $_POST['item_amount'] ) ) {
+							$amount = intval( $_POST['item_amount'] );
+						}
+						if ( isset( $_POST['image_size'] ) ) {
+							$image_size = sanitize_text_field( $_POST['image_size'] );
+						}
+						if ( isset( $_POST['allowed_post_types'] ) ) {
+							$allowed_post_types = sanitize_text_field( $_POST['allowed_post_types'] );
+						}
+						if ( isset( $_POST['next'] ) ) {
+							$next_url = sanitize_text_field( $_POST['next'] );
+							// Extract cursor from URL - the 'after' parameter contains the cursor
+							$parsed_url = parse_url( $next_url );
+							if ( isset( $parsed_url['query'] ) ) {
+								parse_str( $parsed_url['query'], $params );
+								if ( isset( $params['after'] ) ) {
+									$pagination_cursor = $params['after'];
+								}
+							}
+						}
+					}
+					
 					$items  = $this->api->get_items( 
 						array( 
 							'image-limit'          => $amount, 
 							'image-resolution'     => $image_size, 
 							'image-width'          => $image_width,
 							'include-pagination'   => true,
-							'disable-video-thumbs' => $hide_video_thumbs,
+							'allowed-post-types'   => $allowed_post_types,
+							'pagination-cursor'    => $pagination_cursor,
 							'bypass-transient'     => $preview,
 							'skip-likes-comments'  => $is_load_more_request // Skip likes/comments for load-more to improve performance
 						) 
@@ -427,6 +453,7 @@ class Wpzoom_Instagram_Widget_Display {
 								$output .= '<input type="hidden" name="feed_id" value="' . esc_attr( isset( $args['feed-id'] ) ? intval( $args['feed-id'] ) : -1 ) . '" />';
 								$output .= '<input type="hidden" name="item_amount" value="' . esc_attr( $amount ) . '" />';
 								$output .= '<input type="hidden" name="image_size" value="' . esc_attr( $image_size ) . '" />';
+								$output .= '<input type="hidden" name="allowed_post_types" value="' . esc_attr( $allowed_post_types ) . '" />';
 								$output .= '<input type="hidden" name="next" value="' . ( ! empty( $items ) && array_key_exists( 'paging', $items ) && is_object( $items['paging'] ) && property_exists( $items['paging'], 'next' ) ? esc_url( $items['paging']->next ) : '' ) . '" />';
 								$output .= '<button type="submit">' . esc_html( ( isset( $args['load-more-text'] ) ? trim( $args['load-more-text'] ) : __( 'Load More&hellip;', 'instagram-widget-by-wpzoom' ) ) . ( ! $this->is_pro ? __( ' [PRO only]', 'instagram-widget-by-wpzoom' ) : '' ) ) . '</button>';
 								$output .= '</form>';
@@ -481,7 +508,7 @@ class Wpzoom_Instagram_Widget_Display {
 			$show_media_type_icons = isset( $args['show-media-type-icons'] ) ? boolval( $args['show-media-type-icons'] ) : true;
 			$show_media_type_icons_on_hover = isset( $args['hover-media-type-icons'] ) ? boolval( $args['hover-media-type-icons'] ) : true;
 			$show_date_on_hover = isset( $args['hover-date'] ) ? boolval( $args['hover-date'] ) : true;
-			$hide_video_thumbs = isset( $args['hide-video-thumbs'] ) ? boolval( $args['hide-video-thumbs'] ) : false;
+			$allowed_post_types = isset( $args['allowed-post-types'] ) ? $args['allowed-post-types'] : 'IMAGE,VIDEO,CAROUSEL_ALBUM';
 			$image_size = isset( $args['image-size'] ) && in_array( $args['image-size'], array( 'thumbnail', 'low_resolution', 'standard_resolution', 'full_resolution' ) ) ? $args['image-size'] : 'standard_resolution';
 			$small_class = $image_size <= 180 ? 'small' : '';
 			$svg_icons = plugin_dir_url( __FILE__ ) . 'dist/images/frontend/wpzoom-instagram-icons.svg';
@@ -505,9 +532,7 @@ class Wpzoom_Instagram_Widget_Display {
 				$likes         = isset( $item['likes'] ) ? intval( $item['likes'] ) : 0;
 				$comments      = isset( $item['comments'] ) ? intval( $item['comments'] ) : 0;
 
-				/*if ( $is_video && $hide_video_thumbs ) {
-					continue;
-				}*/
+				// Post type filtering is now handled in the API layer
 
 				if ( ! empty( $media_id ) && empty( $src ) ) {
 					$inline_attrs  = 'data-media-id="' . esc_attr( $media_id ) . '"';
