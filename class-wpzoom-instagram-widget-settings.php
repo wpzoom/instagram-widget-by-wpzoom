@@ -1816,6 +1816,26 @@ class WPZOOM_Instagram_Widget_Settings {
 										</div>
 									</div>
 
+									<?php
+									// Show pagination notice when Load More is enabled and not all post types are selected
+									$all_types_selected = count( $selected_types ) === 3 && 
+														in_array( 'IMAGE', $selected_types ) && 
+														in_array( 'VIDEO', $selected_types ) && 
+														in_array( 'CAROUSEL_ALBUM', $selected_types );
+									
+									if ( $show_load_more && ! $all_types_selected ) : ?>
+									<div class="wpz-insta_table-row wpz-insta_table-row-full wpz-insta_pagination-notice">
+										<div class="wpz-insta_table-cell" colspan="2">
+											<div class="wpz-insta_notice wpz-insta_notice-warning">
+												<span class="wpz-insta_notice-icon">⚠️</span>
+												<span class="wpz-insta_notice-text">
+													<?php esc_html_e( 'Note: When Load More is enabled with filtered post types, some posts may be skipped during pagination due to how Instagram\'s API handles filtering.', 'instagram-widget-by-wpzoom' ); ?>
+												</span>
+											</div>
+										</div>
+									</div>
+									<?php endif; ?>
+
 									<label class="wpz-insta_table-row">
 										<input type="hidden" name="_wpz-insta_show-media-type-icons" value="0" />
 										<input type="checkbox" name="_wpz-insta_show-media-type-icons" value="1"<?php checked( $show_media_type_icons ); ?> />
