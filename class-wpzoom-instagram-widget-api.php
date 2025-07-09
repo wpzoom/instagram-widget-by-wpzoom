@@ -317,36 +317,53 @@ class Wpzoom_Instagram_Widget_API {
 
 		$image_limit = intval( $image_limit );
 
-		// Create unique transient key using PASSED parameters, not instance state
-		$feed_id_short = ! empty( $feed_id ) ? substr( $feed_id, 0, 20 ) : 'default';
-		$transient = 'zoom_instagram_is_configured_feed_' . $feed_id_short;
-		
-		// Add account hash to ensure uniqueness between different accounts
-		if ( ! empty( $access_token ) ) {
-			$account_hash = substr( md5( $access_token ), 0, 8 );
-			$transient .= '_acc_' . $account_hash;
+		// Create transient key with backward compatibility
+		$legacy_transient = 'zoom_instagram_is_configured';
+		if ( ! empty( $feed_id ) ) {
+			$legacy_transient .= '_' . substr( $feed_id, 0, 20 );
 		}
 		
-		// Add current page ID to prevent cross-page contamination 
-		global $post;
-		if ( is_object( $post ) && property_exists( $post, 'ID' ) ) {
-			$transient .= '_page_' . $post->ID;
-		}
+		// Create new enhanced transient key for better cache isolation
+		$enhanced_transient = 'zoom_instagram_is_configured';
+		if ( ! empty( $feed_id ) ) {
+			$enhanced_transient .= '_feed_' . substr( $feed_id, 0, 20 );
+			
+			// Add account hash to ensure uniqueness between different accounts
+			if ( ! empty( $access_token ) ) {
+				$account_hash = substr( md5( $access_token ), 0, 8 );
+				$enhanced_transient .= '_acc_' . $account_hash;
+			}
+			
+			// Add business page ID to transient key if present for additional specificity
+			if ( ! empty( $business_page_id ) ) {
+				$enhanced_transient .= '_biz_' . substr( $business_page_id, 0, 10 );
+			}
 
-		// Add business page ID to transient key if present for additional specificity
-		if ( ! empty( $business_page_id ) ) {
-			$transient .= '_page_' . substr( $business_page_id, 0, 10 );
+			// Add post type filtering to transient key for proper caching
+			if ( $allowed_post_types !== 'IMAGE,VIDEO,CAROUSEL_ALBUM' ) {
+				$enhanced_transient .= '_filtered_' . substr( md5( $allowed_post_types ), 0, 8 );
+			}
 		}
-
-		// Add post type filtering to transient key for proper caching
-		if ( $allowed_post_types !== 'IMAGE,VIDEO,CAROUSEL_ALBUM' ) {
-			$transient .= '_filtered_' . md5( $allowed_post_types );
-		}
+		
+		// Use enhanced key as primary, but keep it reasonable length
+		$transient = strlen( $enhanced_transient ) > 170 ? $legacy_transient : $enhanced_transient;
 
 		$injected_username = trim( $injected_username );
 
 		if ( ! $bypass_transient ) {
+			// Try new enhanced transient key first
 			$data = json_decode( get_transient( $transient ) );
+			
+			// Fallback to legacy transient key for backward compatibility
+			if ( false === $data && $transient !== $legacy_transient ) {
+				$data = json_decode( get_transient( $legacy_transient ) );
+				
+				// If found in legacy cache, migrate to new format for future requests
+				if ( false !== $data && is_object( $data ) && ! empty( $data->data ) ) {
+					set_transient( $transient, wp_json_encode( $data ), $this->get_transient_lifetime( $feed_id ) );
+				}
+			}
+			
 			if ( false !== $data && is_object( $data ) && ! empty( $data->data ) ) {
 				return self::processing_response_data( $data, $image_width, $image_resolution, $image_limit, $allowed_post_types, $include_pagination );
 			}
@@ -354,16 +371,40 @@ class Wpzoom_Instagram_Widget_API {
 
 		if ( ! empty( $access_token ) ) {
 			// Pass parameters directly to avoid instance state collision
-			$data = $this->fetch_items_with_retry( $image_limit, $allowed_post_types, $skip_likes_comments, $include_pagination, $pagination_cursor, $access_token, $business_page_id );
+			try {
+				$data = $this->fetch_items_with_retry( $image_limit, $allowed_post_types, $skip_likes_comments, $include_pagination, $pagination_cursor, $access_token, $business_page_id );
 
-			if ( false === $data ) {
-				if ( ! $bypass_transient ) {
-					set_transient( $transient, wp_json_encode( false ), MINUTE_IN_SECONDS );
+				if ( false === $data ) {
+					// If primary cache fails, try fallback to legacy cache
+					if ( ! $bypass_transient && $transient !== $legacy_transient ) {
+						$fallback_data = json_decode( get_transient( $legacy_transient ) );
+						if ( false !== $fallback_data && is_object( $fallback_data ) && ! empty( $fallback_data->data ) ) {
+							error_log( 'Instagram Widget: Using fallback cache data due to API failure' );
+							return self::processing_response_data( $fallback_data, $image_width, $image_resolution, $image_limit, $allowed_post_types, $include_pagination );
+						}
+					}
+
+					if ( ! $bypass_transient ) {
+						set_transient( $transient, wp_json_encode( false ), MINUTE_IN_SECONDS );
+					}
+
+					$error_data = $this->get_error( 'items-with-token-invalid-response' );
+					$this->errors->add( $error_data['code'], $error_data['message'] );
+
+					return false;
 				}
-
-				$error_data = $this->get_error( 'items-with-token-invalid-response' );
-				$this->errors->add( $error_data['code'], $error_data['message'] );
-
+			} catch ( Exception $e ) {
+				error_log( 'Instagram Widget: API call failed with exception: ' . $e->getMessage() );
+				
+				// Try fallback cache on exception
+				if ( ! $bypass_transient && $transient !== $legacy_transient ) {
+					$fallback_data = json_decode( get_transient( $legacy_transient ) );
+					if ( false !== $fallback_data && is_object( $fallback_data ) && ! empty( $fallback_data->data ) ) {
+						error_log( 'Instagram Widget: Using fallback cache data due to API exception' );
+						return self::processing_response_data( $fallback_data, $image_width, $image_resolution, $image_limit, $allowed_post_types, $include_pagination );
+					}
+				}
+				
 				return false;
 			}
 		}

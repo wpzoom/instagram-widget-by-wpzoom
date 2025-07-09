@@ -2753,6 +2753,68 @@ class WPZOOM_Instagram_Widget_Settings {
 		}
 	}
 
+	/**
+	 * Clean up orphaned transients from plugin updates
+	 * This helps prevent database bloat from unused cache entries
+	 */
+	public static function cleanup_orphaned_transients() {
+		global $wpdb;
+		
+		// Simple approach: Get all Instagram transients and check them individually
+		$transients = $wpdb->get_results( 
+			"SELECT option_name FROM {$wpdb->options} WHERE option_name LIKE '_transient_zoom_instagram_%'"
+		);
+		
+		if ( empty( $transients ) ) {
+			return;
+		}
+		
+		// Get all existing feeds for validation
+		$existing_feeds = get_posts( array(
+			'post_type'      => 'wpz-insta_feed',
+			'posts_per_page' => -1,
+			'fields'         => 'ids',
+		) );
+		
+		$deleted_count = 0;
+		
+		foreach ( $transients as $transient ) {
+			$option_name = $transient->option_name;
+			$transient_name = str_replace( '_transient_', '', $option_name );
+			
+			// Always keep user info transients
+			if ( strpos( $transient_name, 'zoom_instagram_user_info' ) !== false ) {
+				continue;
+			}
+			
+			// Keep general configuration transients
+			if ( $transient_name === 'zoom_instagram_is_configured' ) {
+				continue;
+			}
+			
+			// Check if this transient belongs to an existing feed
+			$is_valid = false;
+			foreach ( $existing_feeds as $feed_id ) {
+				$feed_id_short = substr( $feed_id, 0, 20 );
+				if ( strpos( $transient_name, '_' . $feed_id_short ) !== false || 
+					 strpos( $transient_name, '_feed_' . $feed_id_short ) !== false ) {
+					$is_valid = true;
+					break;
+				}
+			}
+			
+			// If not valid, delete this transient
+			if ( ! $is_valid ) {
+				delete_transient( $transient_name );
+				$deleted_count++;
+			}
+		}
+		
+		if ( $deleted_count > 0 ) {
+			error_log( "Instagram Widget: Cleaned up {$deleted_count} orphaned transients" );
+		}
+	}
+
 	public function save_user( int $post_ID, WP_Post $post, bool $update ) {
 		if ( ! wp_is_post_revision( $post ) && ! wp_is_post_autosave( $post ) && 'auto-draft' != get_post_status( $post ) && isset( $_POST ) && ! empty( $_POST ) ) {
 			$meta_keys = get_registered_meta_keys( 'post', 'wpz-insta_user' );

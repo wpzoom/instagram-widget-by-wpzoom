@@ -60,6 +60,13 @@ class Wpzoom_Instagram_Widget_Display {
 	 * This replaces the slow form POST method with fast AJAX
 	 */
 	public function ajax_load_more_posts() {
+		// Prevent caching of AJAX responses by optimization plugins
+		if ( ! headers_sent() ) {
+			header( 'Cache-Control: no-cache, must-revalidate, max-age=0' );
+			header( 'Pragma: no-cache' );
+			header( 'Expires: Wed, 11 Jan 1984 05:00:00 GMT' );
+		}
+		
 		// Verify nonce
 		if ( ! wp_verify_nonce( $_POST['_wpnonce'], 'wpzinsta-pro-load-more' ) ) {
 			wp_send_json_error( 'Invalid nonce' );
