@@ -1014,7 +1014,9 @@ class Wpzoom_Instagram_Widget_Display {
 			}
 
 			if ( '' != $loadmore_bg ) {
-				$output .= ".zoom-instagram{$feed_id} .wpzinsta-pro-load-more button[type=submit]{";
+				// Target both old form-based button and new AJAX button
+				$output .= ".zoom-instagram{$feed_id} .wpzinsta-pro-load-more button[type=submit],";
+				$output .= ".zoom-instagram{$feed_id} .zoom-instagram-widget__footer .wpzinsta-pro-load-more-wrapper .wpzinsta-pro-load-more-btn{";
 				$output .= "background-color:{$loadmore_bg}!important;";
 				$output .= "}";
 			}
