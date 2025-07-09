@@ -778,7 +778,7 @@ class WPZOOM_Instagram_Widget_Settings {
 									<option value="<?php echo esc_url( $instagram_bussines_api_url ); ?>"><?php esc_html_e( 'Instagram', 'instagram-widget-by-wpzoom' ); ?></option>
 								</select> <a href="<?php echo esc_url( $is_business_page ? $graph_api_url : $instagram_bussines_api_url ); ?>" id="wpz-insta_reconnect" class="button button-primary"><?php _e( 'Reconnect', 'instagram-widget-by-wpzoom' ); ?></a><br/><br/>
                                 <note><?php echo wp_kses_post( __('If the connection fails, please generate a new API token <br/> and enter it in the field below.', 'instagram-widget-by-wpzoom' ) ); ?></note>
-                                <a id="wpz-add_manual_token" href="#"><?php esc_html_e( 'Add Manual', 'instagram-widget-by-wpzoom' ); ?></a>
+                                <a id="wpz-add_manual_token" href="#"><?php esc_html_e( 'Connect with Access Token', 'instagram-widget-by-wpzoom' ); ?></a>
                             </li>
 						</ul>
 					</li>
@@ -790,7 +790,7 @@ class WPZOOM_Instagram_Widget_Settings {
                         <p>→ <a href="https://www.wpzoom.com/instagram-business-auth/" target="_blank">Generate Access Token via Instagram</a></p>
 					</label>
 
-					<div class="wpz-insta_notice"><p><?php _e( 'Due to restrictions set by Instagram, Instagram Widget cannot import the profile photo and bio text for Personal accounts.', 'instagram-widget-by-wpzoom' ); ?></p></div></div><?php
+					</div><?php
 
 					break;
 			}
