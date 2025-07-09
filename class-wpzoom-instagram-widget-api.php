@@ -382,18 +382,25 @@ class Wpzoom_Instagram_Widget_API {
 	 * This ensures we get enough items of the allowed types while maintaining correct pagination
 	 */
 	private function fetch_items_with_retry( $image_limit, $allowed_post_types, $skip_likes_comments, $include_pagination, $after_cursor = '' ) {
-		$max_retries = 3; // Prevent infinite loops
+		$max_retries = 5; // Increase retries to ensure we get enough content
 		$retry_count = 0;
 		$all_items = array();
 		$final_paging = null;
 		$current_cursor = $after_cursor;
+		
+		// Use a larger API limit when filtering to ensure we get enough of the desired type
+		// But only for initial loads - load more requests should use standard pagination
+		$all_types = 'IMAGE,VIDEO,CAROUSEL_ALBUM';
+		$is_filtering = ( $allowed_post_types !== $all_types );
+		$is_initial_load = empty( $after_cursor );
+		$api_limit = ( $is_filtering && $is_initial_load ) ? min( $image_limit * 2, 25 ) : $image_limit; // Instagram max is 25
 
 		do {
 			$request_url = add_query_arg(
 				array(
 					'fields'       => 'media_url,media_type,caption,username,permalink,thumbnail_url,timestamp,children{media_url,media_type,thumbnail_url}',
 					'access_token' => $this->access_token,
-					'limit'        => $image_limit,
+					'limit'        => $api_limit,
 				),
 				'https://graph.instagram.com/me/media'
 			);
@@ -403,7 +410,7 @@ class Wpzoom_Instagram_Widget_API {
 					array(
 						'fields'       => 'media_url,media_product_type,thumbnail_url,caption,id,media_type,timestamp,username,permalink,children%7Bmedia_url,id,media_type,timestamp,permalink,thumbnail_url%7D',
 						'access_token' => $this->access_token,
-						'limit'        => $image_limit,
+						'limit'        => $api_limit,
 					),
 					'https://graph.facebook.com/v21.0/' . $this->business_page_id . '/media'
 				);
@@ -453,6 +460,7 @@ class Wpzoom_Instagram_Widget_API {
 			$retry_count++;
 
 			// Continue if we need more items and have more data available
+			// Be more aggressive about fetching when filtering is active
 		} while ( ! $has_enough_items && $has_more_data && $retry_count < $max_retries );
 
 		// Build final data structure
