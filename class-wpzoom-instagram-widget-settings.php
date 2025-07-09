@@ -2358,6 +2358,9 @@ class WPZOOM_Instagram_Widget_Settings {
                                     $this->generate_featured_image( $account_profile_picture, $post_id, $account_username );
                                 }
 
+                                // Clear transients for all feeds using this account (free version reconnection fix)
+                                $this->clear_transients_for_account_feeds( $post_id );
+
                                 wp_send_json_success( array( 'update' => true ), 200 );
                             }
                     } else {
@@ -2446,6 +2449,9 @@ class WPZOOM_Instagram_Widget_Settings {
 
 						update_post_meta( $post_id, '_wpz-insta_token', $token );
 						update_post_meta( $post_id, '_wpz-insta_token_expire', strtotime( '+60 days' ) );
+
+						// Clear transients for all feeds using this account (free version reconnection fix)
+						$this->clear_transients_for_account_feeds( $post_id );
 
 						wp_send_json_success( array( 'update' => true ), 200 );
 					}
@@ -2634,6 +2640,34 @@ class WPZOOM_Instagram_Widget_Settings {
 				$this->clear_feed_transients( $post_ID, $should_clear_transients );
 			}
 
+		}
+	}
+
+	/**
+	 * Clear all transients for feeds using a specific account
+	 * This is used when reconnecting an account to ensure existing feeds
+	 * refresh their cached data from the new account
+	 */
+	private function clear_transients_for_account_feeds( $user_id ) {
+		if ( ! $user_id ) {
+			return;
+		}
+
+		// Find all feeds that use this account
+		$feeds_using_account = get_posts( array(
+			'post_type'      => 'wpz-insta_feed',
+			'posts_per_page' => -1,
+			'meta_query'     => array(
+				array(
+					'key'   => '_wpz-insta_user-id',
+					'value' => (string) $user_id,
+				),
+			),
+		) );
+
+		// Clear transients for each feed using this account
+		foreach ( $feeds_using_account as $feed ) {
+			$this->clear_feed_transients( $feed->ID, true );
 		}
 	}
 

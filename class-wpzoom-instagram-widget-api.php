@@ -382,7 +382,7 @@ class Wpzoom_Instagram_Widget_API {
 	 * This ensures we get enough items of the allowed types while maintaining correct pagination
 	 */
 	private function fetch_items_with_retry( $image_limit, $allowed_post_types, $skip_likes_comments, $include_pagination, $after_cursor = '' ) {
-		$max_retries = 5; // Increase retries to ensure we get enough content
+		$max_retries = 3; // Increase retries to ensure we get enough content
 		$retry_count = 0;
 		$all_items = array();
 		$final_paging = null;
