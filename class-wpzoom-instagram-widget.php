@@ -126,13 +126,10 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 		$user_account_token = get_post_meta( $user_id, '_wpz-insta_token', true ) ?: '-1';
 		$user_business_page_id = get_post_meta( $user_id, '_wpz-insta_page_id', true ) ?: null;
 
-		//Set token from first created user
-		$this->api->set_access_token( $user_account_token );
-		$this->api->set_feed_id( $user_id );
-
-		if ( ! empty( $user_business_page_id ) ) {
-			$this->api->set_business_page_id( $user_business_page_id );
-		}
+		// Pass token and IDs directly to avoid singleton state collision
+		$instance['access-token'] = $user_account_token;
+		$instance['feed-id'] = $user_id;
+		$instance['business-page-id'] = $user_business_page_id;
 
 		$items  = $this->api->get_items( $instance );
 		$errors = $this->api->errors->get_error_messages();

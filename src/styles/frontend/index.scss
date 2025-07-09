@@ -141,8 +141,7 @@
 
 
         .wpz-insta-view-on-insta-button,
-        .wpzinsta-pro-load-more input[type='submit'],
-        .wpzinsta-pro-load-more button[type='submit'] {
+        .wpzinsta-pro-load-more input[type='submit'] {
             display: flex;
             align-items: center;
             justify-content: center;
@@ -166,42 +165,124 @@
             &:hover,
             &:active {
                 text-decoration: none;
-                // background-color: #70b5fe;
                 opacity: .8;
             }
-
-            .button-icon {
-                height: 18px;
-                width: 18px;
-                transition: all 0.3s linear;
-            }
         }
 
-        .wpzinsta-pro-load-more button[type='submit'] {
-            gap: 0;
-
-            &::before {
-                content: '';
-                background-image: url("data:image/svg+xml,%3Csvg version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' viewBox='0 0 50 50' xml:space='preserve'%3E%3Cpath fill='%23ffffff' d='M43.935,25.145c0-10.318-8.364-18.683-18.683-18.683c-10.318,0-18.683,8.365-18.683,18.683h4.068c0-8.071,6.543-14.615,14.615-14.615c8.072,0,14.615,6.543,14.615,14.615H43.935z'%3E%3CanimateTransform attributeType='xml' attributeName='transform' type='rotate' from='0 25 25' to='360 25 25' dur='0.6s' repeatCount='indefinite'/%3E%3C/path%3E%3C/svg%3E");
-                background-repeat: no-repeat;
-                background-position: center;
-                height: 18px;
-                width: 0;
+        // New AJAX load more button
+        .wpzinsta-pro-load-more-wrapper {
+            margin: 0;
+            
+            .wpzinsta-pro-load-more-btn {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 0;
+                cursor: pointer;
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
+                font-size: 14px;
+                font-weight: 500;
+                text-decoration: none;
+                text-transform: none;
+                letter-spacing: normal;
+                line-height: 18px;
+                color: #fff;
+                background-color: #3496ff;
+                padding: 8px 12px;
+                border: none;
+                border-radius: 3px;
+                margin: 0;
                 transition: all 0.3s linear;
-            }
-        }
-    }
 
-
-    .wpzinsta-pro-load-more {
-        margin: 0;
-
-        &.loading {
-            button[type='submit'] {
-                gap: 6px;
+                &:hover,
+                &:active {
+                    text-decoration: none;
+                    opacity: .8;
+                }
 
                 &::before {
-                    width: 18px;
+                    content: '';
+                    background-image: url("data:image/svg+xml,%3Csvg version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' viewBox='0 0 50 50' xml:space='preserve'%3E%3Cpath fill='%23ffffff' d='M43.935,25.145c0-10.318-8.364-18.683-18.683-18.683c-10.318,0-18.683,8.365-18.683,18.683h4.068c0-8.071,6.543-14.615,14.615-14.615c8.072,0,14.615,6.543,14.615,14.615H43.935z'%3E%3CanimateTransform attributeType='xml' attributeName='transform' type='rotate' from='0 25 25' to='360 25 25' dur='0.6s' repeatCount='indefinite'/%3E%3C/path%3E%3C/svg%3E");
+                    background-repeat: no-repeat;
+                    background-position: center;
+                    height: 18px;
+                    width: 0;
+                    transition: all 0.3s linear;
+                }
+
+                &:disabled {
+                    opacity: 0.6;
+                    cursor: not-allowed;
+                }
+            }
+
+            &.loading {
+                .wpzinsta-pro-load-more-btn {
+                    gap: 6px;
+
+                    &::before {
+                        width: 18px;
+                    }
+                }
+            }
+
+            &[data-disabled="true"] {
+                .wpzinsta-pro-load-more-btn {
+                    opacity: 0.6;
+                    cursor: not-allowed;
+                }
+            }
+        }
+
+        // Legacy support for old form-based load more
+        .wpzinsta-pro-load-more {
+            margin: 0;
+
+            button[type='submit'] {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 6px;
+                cursor: pointer;
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
+                font-size: 14px;
+                font-weight: 500;
+                text-decoration: none;
+                text-transform: none;
+                letter-spacing: normal;
+                line-height: 18px;
+                color: #fff;
+                background-color: #3496ff;
+                padding: 8px 12px;
+                border: none;
+                border-radius: 3px;
+                margin: 0;
+                transition: all 0.3s linear;
+
+                &:hover,
+                &:active {
+                    text-decoration: none;
+                    opacity: .8;
+                }
+
+                &::before {
+                    content: '';
+                    background-image: url("data:image/svg+xml,%3Csvg version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' viewBox='0 0 50 50' xml:space='preserve'%3E%3Cpath fill='%23ffffff' d='M43.935,25.145c0-10.318-8.364-18.683-18.683-18.683c-10.318,0-18.683,8.365-18.683,18.683h4.068c0-8.071,6.543-14.615,14.615-14.615c8.072,0,14.615,6.543,14.615,14.615H43.935z'%3E%3CanimateTransform attributeType='xml' attributeName='transform' type='rotate' from='0 25 25' to='360 25 25' dur='0.6s' repeatCount='indefinite'/%3E%3C/path%3E%3C/svg%3E");
+                    background-repeat: no-repeat;
+                    background-position: center;
+                    height: 18px;
+                    width: 0;
+                    transition: all 0.3s linear;
+                }
+            }
+
+            &.loading {
+                button[type='submit'] {
+                    gap: 6px;
+
+                    &::before {
+                        width: 18px;
+                    }
                 }
             }
         }

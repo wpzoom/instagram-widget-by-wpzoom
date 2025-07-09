@@ -2678,34 +2678,58 @@ class WPZOOM_Instagram_Widget_Settings {
 	private function clear_feed_transients( $post_ID, $force_clear = false ) {
 		global $wpdb;
 		
-		$transient_base = 'zoom_instagram_is_configured_' . substr( $post_ID, 0, 20 );
-
-		// Always clear the basic transients for this feed
-		delete_transient( $transient_base );
-		delete_transient( $transient_base . '_no_videos' );
-
-		// Also clear the generic widget transient if it exists
-		delete_transient( 'zoom_instagram_is_configured' );
-		delete_transient( 'zoom_instagram_is_configured_no_videos' );
-
-		if ( $force_clear ) {
-			// For critical setting changes (account, item count, or post type changes),
-			// be more aggressive and clear ALL transients with this feed's pattern
-			// This handles dynamically generated filtered transient keys
+		// Get the account details for this specific feed to generate accurate transient keys
+		$user_id = intval( self::get_feed_setting_value( $post_ID, 'user-id' ) );
+		$user_account_token = get_post_meta( $user_id, '_wpz-insta_token', true ) ?: '';
+		$user_business_page_id = get_post_meta( $user_id, '_wpz-insta_page_id', true ) ?: '';
+		
+		// Generate the same specific transient patterns that would be used by this feed
+		$base_patterns = array(
+			'zoom_instagram_is_configured',
+			'zoom_instagram_is_configured_feed_' . $post_ID,
+		);
+		
+		// Add account-specific patterns if we have the account details
+		if ( ! empty( $user_account_token ) ) {
+			$account_hash = substr( md5( $user_account_token ), 0, 8 );
+			$base_patterns[] = 'zoom_instagram_is_configured_feed_' . $post_ID . '_acc_' . $account_hash;
 			
-			$transient_patterns = array(
-				'_transient_' . $transient_base . '%',
-				'_transient_zoom_instagram_is_configured%'
-			);
+			// Add business page variant if applicable
+			if ( ! empty( $user_business_page_id ) ) {
+				$page_suffix = substr( $user_business_page_id, 0, 10 );
+				$base_patterns[] = 'zoom_instagram_is_configured_feed_' . $post_ID . '_acc_' . $account_hash . '_page_' . $page_suffix;
+			}
+		}
+
+		// Clear specific transients for this feed only
+		foreach ( $base_patterns as $pattern ) {
+			delete_transient( $pattern );
 			
-			foreach ( $transient_patterns as $pattern ) {
+			// Also clear filtered variants (for post type filtering)
+			if ( $force_clear ) {
 				$wpdb->query( 
 					$wpdb->prepare( 
 						"DELETE FROM {$wpdb->options} WHERE option_name LIKE %s", 
-						$pattern 
+						'_transient_' . $pattern . '%'
 					) 
 				);
 			}
+		}
+
+		// Only clear legacy patterns if force_clear is true and only for this specific feed
+		if ( $force_clear ) {
+			// Clear old-style transients that might still exist for this feed
+			$legacy_base = 'zoom_instagram_is_configured_' . substr( $post_ID, 0, 20 );
+			delete_transient( $legacy_base );
+			delete_transient( $legacy_base . '_no_videos' );
+			
+			// Clear filtered variants of legacy transients for this feed only
+			$wpdb->query( 
+				$wpdb->prepare( 
+					"DELETE FROM {$wpdb->options} WHERE option_name LIKE %s", 
+					'_transient_' . $legacy_base . '%'
+				) 
+			);
 		}
 	}
 

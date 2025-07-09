@@ -282,8 +282,7 @@ class Wpzoom_Instagram_Widget_API {
      */
     public function get_items( $instance ) {
 
-
-        		$sliced = wp_array_slice_assoc(
+		$sliced = wp_array_slice_assoc(
 			$instance,
 			array(
 				'image-limit',
@@ -295,6 +294,9 @@ class Wpzoom_Instagram_Widget_API {
 				'pagination-cursor',
 				'bypass-transient',
 				'skip-likes-comments',
+				'access-token',        // Add access token to parameters
+				'feed-id',            // Add feed ID to parameters  
+				'business-page-id',   // Add business page ID to parameters
 			)
 		);
 
@@ -303,25 +305,37 @@ class Wpzoom_Instagram_Widget_API {
 		$image_resolution      = ! empty( $sliced['image-resolution'] ) ? $sliced['image-resolution'] : 'standard_resolution';
 		$injected_username     = ! empty( $sliced['username'] ) ? $sliced['username'] : '';
 		$allowed_post_types    = ! empty( $sliced['allowed-post-types'] ) ? $sliced['allowed-post-types'] : 'IMAGE,VIDEO,CAROUSEL_ALBUM';
-		
-		// Handle legacy widget's disable-video-thumbs setting
-		if ( empty( $sliced['allowed-post-types'] ) && isset( $instance['disable-video-thumbs'] ) && $instance['disable-video-thumbs'] ) {
-			$allowed_post_types = 'IMAGE,CAROUSEL_ALBUM'; // Hide videos if legacy setting is enabled
-		}
-		$include_pagination    = ! empty( $sliced['include-pagination'] );
+		$include_pagination    = ! empty( $sliced['include-pagination'] ) ? boolval( $sliced['include-pagination'] ) : false;
 		$pagination_cursor     = ! empty( $sliced['pagination-cursor'] ) ? $sliced['pagination-cursor'] : '';
-		$bypass_transient      = ! empty( $sliced['bypass-transient'] );
-		$skip_likes_comments   = ! empty( $sliced['skip-likes-comments'] );
+		$bypass_transient      = ! empty( $sliced['bypass-transient'] ) ? boolval( $sliced['bypass-transient'] ) : false;
+		$skip_likes_comments   = ! empty( $sliced['skip-likes-comments'] ) ? boolval( $sliced['skip-likes-comments'] ) : false;
+		
+		// Get API parameters directly from instance instead of relying on singleton state
+		$access_token          = ! empty( $sliced['access-token'] ) ? $sliced['access-token'] : $this->access_token;
+		$feed_id              = ! empty( $sliced['feed-id'] ) ? $sliced['feed-id'] : $this->feed_id;
+		$business_page_id     = ! empty( $sliced['business-page-id'] ) ? $sliced['business-page-id'] : $this->business_page_id;
 
-		if( isset( $instance['widget-id'] ) ) {
-			$transient = 'zoom_instagram_is_configured_' . $instance['widget-id'];
+		$image_limit = intval( $image_limit );
+
+		// Create unique transient key using PASSED parameters, not instance state
+		$feed_id_short = ! empty( $feed_id ) ? substr( $feed_id, 0, 20 ) : 'default';
+		$transient = 'zoom_instagram_is_configured_feed_' . $feed_id_short;
+		
+		// Add account hash to ensure uniqueness between different accounts
+		if ( ! empty( $access_token ) ) {
+			$account_hash = substr( md5( $access_token ), 0, 8 );
+			$transient .= '_acc_' . $account_hash;
 		}
-		else {
-			$transient = 'zoom_instagram_is_configured';
+		
+		// Add current page ID to prevent cross-page contamination 
+		global $post;
+		if ( is_object( $post ) && property_exists( $post, 'ID' ) ) {
+			$transient .= '_page_' . $post->ID;
 		}
 
-		if ( ! empty( $this->access_token ) && ! empty( $this->feed_id ) ) {
-			$transient = $transient . '_' . substr( $this->feed_id, 0, 20 );
+		// Add business page ID to transient key if present for additional specificity
+		if ( ! empty( $business_page_id ) ) {
+			$transient .= '_page_' . substr( $business_page_id, 0, 10 );
 		}
 
 		// Add post type filtering to transient key for proper caching
@@ -338,9 +352,9 @@ class Wpzoom_Instagram_Widget_API {
 			}
 		}
 
-		if ( ! empty( $this->access_token ) ) {
-			// Fetch data with retry mechanism for post type filtering
-			$data = $this->fetch_items_with_retry( $image_limit, $allowed_post_types, $skip_likes_comments, $include_pagination, $pagination_cursor );
+		if ( ! empty( $access_token ) ) {
+			// Pass parameters directly to avoid instance state collision
+			$data = $this->fetch_items_with_retry( $image_limit, $allowed_post_types, $skip_likes_comments, $include_pagination, $pagination_cursor, $access_token, $business_page_id );
 
 			if ( false === $data ) {
 				if ( ! $bypass_transient ) {
@@ -359,7 +373,7 @@ class Wpzoom_Instagram_Widget_API {
 				set_transient(
 					$transient,
 					wp_json_encode( $data ),
-					$this->get_transient_lifetime( $this->feed_id )
+					$this->get_transient_lifetime( $feed_id )
 				);
 
 			}
@@ -381,38 +395,86 @@ class Wpzoom_Instagram_Widget_API {
 	 * Fetch items with retry mechanism for post type filtering
 	 * This ensures we get enough items of the allowed types while maintaining correct pagination
 	 */
-	private function fetch_items_with_retry( $image_limit, $allowed_post_types, $skip_likes_comments, $include_pagination, $after_cursor = '' ) {
-		$max_retries = 3; // Increase retries to ensure we get enough content
+	private function fetch_items_with_retry( $image_limit, $allowed_post_types, $skip_likes_comments, $include_pagination, $after_cursor = '', $access_token = '', $business_page_id = '' ) {
+		// For load more requests with pagination cursor, we don't need retries - just use exact pagination
+		$is_load_more_request = ! empty( $after_cursor );
+		
+		if ( $is_load_more_request ) {
+			// Load more: single API call with exact pagination
+			$api_limit = $image_limit; // Use exact amount requested
+			
+			$request_url = add_query_arg(
+				array(
+					'fields'       => 'media_url,media_type,caption,username,permalink,thumbnail_url,timestamp,children{media_url,media_type,thumbnail_url}',
+					'access_token' => $access_token,
+					'limit'        => $api_limit,
+					'after'        => $after_cursor,
+				),
+				'https://graph.instagram.com/me/media'
+			);
+
+			if( ! empty( $business_page_id ) ) {
+				$request_url = add_query_arg(
+					array(
+						'fields'       => 'media_url,media_product_type,thumbnail_url,caption,id,media_type,timestamp,username,permalink,children%7Bmedia_url,id,media_type,timestamp,permalink,thumbnail_url%7D',
+						'access_token' => $access_token,
+						'limit'        => $api_limit,
+						'after'        => $after_cursor,
+					),
+					'https://graph.facebook.com/v21.0/' . $business_page_id . '/media'
+				);
+			}
+
+			$response = self::remote_get( $request_url, $this->headers );
+
+			if ( is_wp_error( $response ) || 200 !== wp_remote_retrieve_response_code( $response ) ) {
+				return false;
+			}
+
+			$raw_data = json_decode( wp_remote_retrieve_body( $response ) );
+			$converted_data = self::convert_items_to_old_structure( $raw_data, false, $access_token, $skip_likes_comments );
+
+			// Build final data structure
+			$final_data = new stdClass();
+			$final_data->data = $converted_data->data ?? array();
+
+			if ( $include_pagination && property_exists( $raw_data, 'paging' ) ) {
+				$final_data->paging = $raw_data->paging;
+			}
+
+			return $final_data;
+		}
+		
+		// Original retry logic for initial loads only
+		$max_retries = 2; // Reduce retries from 3 to 2
 		$retry_count = 0;
 		$all_items = array();
 		$final_paging = null;
 		$current_cursor = $after_cursor;
 		
 		// Use a larger API limit when filtering to ensure we get enough of the desired type
-		// But only for initial loads - load more requests should use standard pagination
 		$all_types = 'IMAGE,VIDEO,CAROUSEL_ALBUM';
 		$is_filtering = ( $allowed_post_types !== $all_types );
-		$is_initial_load = empty( $after_cursor );
-		$api_limit = ( $is_filtering && $is_initial_load ) ? min( $image_limit * 2, 25 ) : $image_limit; // Instagram max is 25
+		$api_limit = $is_filtering ? min( $image_limit * 2, 25 ) : $image_limit; // Instagram max is 25
 
 		do {
 			$request_url = add_query_arg(
 				array(
 					'fields'       => 'media_url,media_type,caption,username,permalink,thumbnail_url,timestamp,children{media_url,media_type,thumbnail_url}',
-					'access_token' => $this->access_token,
+					'access_token' => $access_token,
 					'limit'        => $api_limit,
 				),
 				'https://graph.instagram.com/me/media'
 			);
 
-			if( ! empty( $this->business_page_id ) ) {
+			if( ! empty( $business_page_id ) ) {
 				$request_url = add_query_arg(
 					array(
 						'fields'       => 'media_url,media_product_type,thumbnail_url,caption,id,media_type,timestamp,username,permalink,children%7Bmedia_url,id,media_type,timestamp,permalink,thumbnail_url%7D',
-						'access_token' => $this->access_token,
+						'access_token' => $access_token,
 						'limit'        => $api_limit,
 					),
-					'https://graph.facebook.com/v21.0/' . $this->business_page_id . '/media'
+					'https://graph.facebook.com/v21.0/' . $business_page_id . '/media'
 				);
 			}
 
@@ -428,7 +490,7 @@ class Wpzoom_Instagram_Widget_API {
 			}
 
 			$raw_data = json_decode( wp_remote_retrieve_body( $response ) );
-			$converted_data = self::convert_items_to_old_structure( $raw_data, false, $this->access_token, $skip_likes_comments );
+			$converted_data = self::convert_items_to_old_structure( $raw_data, false, $access_token, $skip_likes_comments );
 
 			// Collect items from this batch
 			if ( ! empty( $converted_data->data ) ) {
@@ -460,7 +522,6 @@ class Wpzoom_Instagram_Widget_API {
 			$retry_count++;
 
 			// Continue if we need more items and have more data available
-			// Be more aggressive about fetching when filtering is active
 		} while ( ! $has_enough_items && $has_more_data && $retry_count < $max_retries );
 
 		// Build final data structure

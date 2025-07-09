@@ -266,6 +266,12 @@ if ( ! class_exists( 'WPZOOM_Instagram_Widget_Assets ' ) ) {
 				wp_enqueue_script( 'swiper-js' );
 				wp_enqueue_script( 'zoom-instagram-widget' );
 				wp_enqueue_script( 'wpz-insta_block-frontend-script' );
+				
+				// Localize AJAX URL for fast load more functionality
+				wp_localize_script( 'zoom-instagram-widget', 'wpzInstaAjax', array(
+					'ajaxurl' => admin_url( 'admin-ajax.php' ),
+					'nonce'   => wp_create_nonce( 'wpzinsta-ajax' )
+				) );
 			}
 
 		}
