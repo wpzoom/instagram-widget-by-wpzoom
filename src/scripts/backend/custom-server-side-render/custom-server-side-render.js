@@ -146,7 +146,7 @@ export default function CustomServerSideRender( props ) {
 		return fetchRequest;
 	}
 
-	const debouncedFetchData = useDebounce( fetchData, 500 );
+	const debouncedFetchData = useDebounce( fetchData, 200 );
 
 	// When the component unmounts, set isMountedRef to false. This will
 	// let the async fetch callbacks know when to stop.
@@ -178,7 +178,7 @@ export default function CustomServerSideRender( props ) {
 		}
 		const timeout = setTimeout( () => {
 			setShowLoader( true );
-		}, 1000 );
+		}, 300 );
 		return () => clearTimeout( timeout );
 	}, [ isLoading ] );
 

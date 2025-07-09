@@ -424,18 +424,43 @@ jQuery( function( $ ) {
 	let formChangedValues = {};
 	let formSubmitted = false;
 
+	// Helper function to get current checkbox array values
+	function getCheckboxArrayValue( name ) {
+		const checkedValues = [];
+		$( 'input[name="' + name + '"]' ).each( function() {
+			if ( $(this).is(':checked') ) {
+				checkedValues.push( $(this).val() );
+			}
+		} );
+		return checkedValues.sort().join(','); // Sort for consistent comparison
+	}
+
 	$( 'form#post .wpz-insta_tabs-content > .wpz-insta_sidebar > .wpz-insta_sidebar-left' ).find( 'input, textarea, select' ).add( 'form#post #title' ).filter( "[name][name!='']" ).not( '.preview-exclude' ).each( function( index ) {
+		const fieldName = $.trim( $(this).attr('name') );
+		
 		if ( $(this).is(':radio') ) {
 			if ( $(this).is(':checked') ) {
-				formFields[ $.trim( $(this).attr('name') ) ] = $(this);
+				formFields[ fieldName ] = $(this);
 			}
+		} else if ( fieldName.endsWith('[]') ) {
+			// Handle checkbox arrays - store all checkboxes with this name
+			const baseName = fieldName.replace('[]', '');
+			if ( ! formFields[ baseName ] ) {
+				formFields[ baseName ] = [];
+			}
+			formFields[ baseName ].push( $(this) );
 		} else {
-			formFields[ $.trim( $(this).attr('name') ) ] = $(this);
+			formFields[ fieldName ] = $(this);
 		}
 	} );
 
 	$.each( formFields, function( i, val ) {
-		formInitialValues[i] = val.is(':checkbox') ? ( val.is(':checked') ? '1' : '0' ) : $.trim( '' + val.val() );
+		if ( Array.isArray( val ) ) {
+			// Handle checkbox arrays - get comma-separated list of checked values
+			formInitialValues[i] = getCheckboxArrayValue( i + '[]' );
+		} else {
+			formInitialValues[i] = val.is(':checkbox') ? ( val.is(':checked') ? '1' : '0' ) : $.trim( '' + val.val() );
+		}
 	} );
 
 	$( 'form#post' ).on( 'submit', () => formSubmitted = true );
@@ -447,16 +472,26 @@ jQuery( function( $ ) {
 				const $target = $( e.target );
 
 				if ( ! $target.is( '.preview-exclude' ) ) {
-					const key          = $target.attr('name'),
-					      currentValue = $target.is(':checkbox') ? ( $target.is(':checked') ? '1' : '0' ) : $.trim( '' + $target.val() );
+					const key = $target.attr('name');
+					let trackingKey = key;
+					let currentValue;
 
-					if ( key in formInitialValues && currentValue != formInitialValues[key] ) {
-						if ( ! ( key in formChangedValues ) ) {
-							formChangedValues[key] = true;
+					if ( key.endsWith('[]') ) {
+						// Handle checkbox arrays
+						trackingKey = key.replace('[]', '');
+						currentValue = getCheckboxArrayValue( key );
+					} else {
+						// Handle regular fields
+						currentValue = $target.is(':checkbox') ? ( $target.is(':checked') ? '1' : '0' ) : $.trim( '' + $target.val() );
+					}
+
+					if ( trackingKey in formInitialValues && currentValue != formInitialValues[trackingKey] ) {
+						if ( ! ( trackingKey in formChangedValues ) ) {
+							formChangedValues[trackingKey] = true;
 						}
 					} else {
-						if ( key in formChangedValues ) {
-							delete formChangedValues[key];
+						if ( trackingKey in formChangedValues ) {
+							delete formChangedValues[trackingKey];
 						}
 					}
 

@@ -2,6 +2,123 @@
 	$( window ).on( 'load', function () {
 		var ticking = false;
 
+		// Fast AJAX Load More functionality
+		function initLoadMoreButtons() {
+			$('.wpzinsta-pro-load-more-btn').off('click.loadmore').on('click.loadmore', function(e) {
+				e.preventDefault();
+				
+				const $button = $(this);
+				const $wrapper = $button.closest('.wpzinsta-pro-load-more-wrapper');
+				const $feedContainer = $button.closest('.zoom-instagram');
+				const $itemsContainer = $feedContainer.find('.zoom-instagram-widget__items');
+				
+				// Check if disabled or already loading
+				if ($wrapper.attr('data-disabled') === 'true' || $button.prop('disabled') || $button.hasClass('loading')) {
+					return;
+				}
+				
+				// Get data from button
+				const feedId = $button.attr('data-feed-id');
+				const itemAmount = $button.attr('data-item-amount');
+				const imageSize = $button.attr('data-image-size');
+				const allowedPostTypes = $button.attr('data-allowed-post-types');
+				const nextUrl = $button.attr('data-next-url');
+				const nonce = $button.attr('data-nonce');
+				
+				if (!nextUrl) {
+					$button.hide();
+					return;
+				}
+				
+				// Show loading state
+				$button.addClass('loading').prop('disabled', true);
+				$wrapper.addClass('loading');
+				const originalText = $button.find('.button-text').text();
+				$button.find('.button-text').text('Loading...');
+				
+				// Make AJAX request
+				$.ajax({
+					url: wpzInstaAjax.ajaxurl,
+					type: 'POST',
+					dataType: 'json',
+					data: {
+						action: 'wpzoom_instagram_load_more',
+						feed_id: feedId,
+						item_amount: itemAmount,
+						image_size: imageSize,
+						allowed_post_types: allowedPostTypes,
+						next: nextUrl,
+						_wpnonce: nonce
+					},
+									success: function(response) {
+					if (response.success && response.data.html) {
+						// Store current item count before adding new items
+						const currentItemCount = $itemsContainer.find('li').length;
+						
+						// Append new items
+						$itemsContainer.append(response.data.html);
+						
+						// Update button state
+						if (response.data.has_more && response.data.next_url) {
+							$button.attr('data-next-url', response.data.next_url);
+						} else {
+							$button.hide();
+						}
+						
+						// Reinitialize any image processing for the specific container
+						$itemsContainer.zoomLoadAsyncImages();
+						
+						// Check if this is masonry layout and handle accordingly
+						if ($itemsContainer.hasClass('layout-masonry') && typeof $.fn.masonry === 'function') {
+							// For masonry layout, use WordPress masonry
+							const $newItems = $itemsContainer.find('li').slice(currentItemCount);
+							
+							// Initialize masonry if not already done
+							if (!$itemsContainer.data('masonry')) {
+								$itemsContainer.masonry({
+									itemSelector: '.zoom-instagram-widget__item',
+									columnWidth: '.masonry-items-sizer',
+									percentPosition: true,
+									gutter: parseInt($itemsContainer.data('spacing') || 10)
+								});
+							}
+							
+							// Add new items to masonry
+							$itemsContainer.masonry('appended', $newItems);
+						} else {
+							// For grid/other layouts, use existing function
+							setTimeout(function() {
+								$itemsContainer.zoomInstagramWidget({
+									onlyNewItems: true,
+									startIndex: currentItemCount
+								});
+							}, 100);
+						}
+						
+						// Trigger custom event for other scripts
+						$feedContainer.trigger('wpz-insta:loaded-more', [response.data]);
+					} else {
+						console.error('Load more failed:', response.data || 'Unknown error');
+						$button.hide();
+					}
+				},
+					error: function(xhr, status, error) {
+						console.error('AJAX load more error:', error);
+						$button.hide();
+					},
+					complete: function() {
+						// Remove loading state
+						$button.removeClass('loading').prop('disabled', false);
+						$wrapper.removeClass('loading');
+						$button.find('.button-text').text(originalText);
+					}
+				});
+			});
+		}
+
+		// Initialize load more buttons
+		initLoadMoreButtons();
+
 		$.fn.zoomLoadAsyncImages = function () {
 			return $(this).each(function () {
 				var $list = $(this);
@@ -19,32 +136,31 @@
 					};
 				});
 
-				var getAsyncImages = function (images) {
-
-					var isLastImage = images.length == 0;
-
-					if (isLastImage) {
-						return;
+				// Process images in parallel batches for better performance
+				var processImageBatch = function (images, batchSize) {
+					batchSize = batchSize || 3; // Process 3 images at once
+					
+					for (var i = 0; i < images.length; i += batchSize) {
+						var batch = images.slice(i, i + batchSize);
+						
+						batch.forEach(function(image) {
+							wp.ajax.post('wpzoom_instagram_get_image_async', {
+								'media-id': image['media-id'],
+								nonce: image['nonce'],
+								'image-resolution': imageResolution,
+								'image-width': desiredItemWidth,
+								'regenerate-thumbnails': image['regenerate-thumbnails']
+							}).done(function (data) {
+								$list.find('li[data-media-id="' + image['media-id'] + '"] .zoom-instagram-link').css('background-image', 'url(' + data.image_src + ')');
+							}).fail(function () {
+								// Silently fail for missing images
+							});
+						});
 					}
-
-					var image = images.shift();
-
-					wp.ajax.post('wpzoom_instagram_get_image_async', {
-						'media-id': image['media-id'],
-						nonce: image['nonce'],
-						'image-resolution': imageResolution,
-						'image-width': desiredItemWidth,
-						'regenerate-thumbnails': image['regenerate-thumbnails']
-					}).done(function (data) {
-						$list.find('li[data-media-id="' + image['media-id'] + '"] .zoom-instagram-link').css('background-image', 'url(' + data.image_src + ')');
-					}).fail(function () {
-					}).always(function () {
-						getAsyncImages(images);
-					});
 				};
 
 				if (delayedItems.length) {
-					getAsyncImages(delayedItems.toArray());
+					processImageBatch(delayedItems.toArray(), 3);
 				}
 			});
 		};
@@ -138,39 +254,49 @@
 						} );
 					} );
 
-					$( this ).find( '.zoom-instagram-link' ).magnificPopup( {
-						items: {
-							type: 'inline',
-							src: $( this ).closest( '.widget' ).find( '.wpz-insta-lightbox-wrapper' )
+					const galleryTrigger = $( this ).closest( '.widget' ).find( '.zoom-instagram-widget__items' );
+
+					galleryTrigger.magnificPopup( {
+						delegate: '.zoom-instagram-link',
+						type: 'inline',
+						inline: {
+							src: $swipe_el.closest( '.wpz-insta-lightbox-wrapper' )
 						},
-						closeBtnInside: false,
-						mainClass: 'wpzoom-lightbox',
-						midClick: true,
+						gallery: {
+							enabled: true,
+							navigateByImgClick: false,
+							preload: [ 0, 1 ]
+						},
 						callbacks: {
-							open: function () {
-								const magnificPopup = $.magnificPopup.instance,
-								      currentElement = magnificPopup.st.el,
-								      $thisSwiper = this.content.find( '> .swiper' ).get(0).swiper;
-										if(this.content.find( '> .swiper > .swiper-wrapper > .swiper-slide[data-uid="' + currentElement.data( 'mfp-src' ) + '"] video')){
-											this.content.find( '> .swiper > .swiper-wrapper > .swiper-slide[data-uid="' + currentElement.data( 'mfp-src' ) + '"] video' ).trigger('play');
-										}
-									  //console.log( currentElement );
-								if ( typeof $thisSwiper === 'object' ) {
-									$thisSwiper.slideTo(
-										this.content.find( '> .swiper > .swiper-wrapper > .swiper-slide[data-uid="' + currentElement.data( 'mfp-src' ) + '"]' ).index()
-									);
+							beforeOpen: function () {
+								const activeSlide = $swipe_el.find( '[data-uid="' + this.currItem.el.attr( 'data-mfp-src' ) + '"]' );
+								const activeSlideIndex = activeSlide.index();
+
+								if ( undefined !== activeSlideIndex ) {
+									swiper.slideTo( activeSlideIndex );
 								}
+
+								if ( typeof window.wpzInstaFrontendInit === 'function' ) {
+									window.wpzInstaFrontendInit();
+								}
+							},
+							afterClose: function () {
+								// Destroy swiper videos
+								$swipe_el.find( 'video' ).each( function () {
+									this.pause();
+									this.currentTime = 0;
+								} );
 							}
 						}
 					} );
-					$( this ).find( '.zoom-instagram-link' ).addClass( 'magnific-active' );
 				}
 			} );
 		};
 
-		$.fn.zoomInstagramWidget = function () {
+		$.fn.zoomInstagramWidget = function (options) {
 			return $(this).each(function () {
 				var $list = $(this);
+				var opts = options || {};
 
 				var minItemsPerRow = $list.data('images-per-row');
 				var desiredItemWidth = $list.data('image-width');
@@ -190,8 +316,19 @@
 					itemWidth = Math.floor(((containerWidth - 1 - (fitPerRow - 1) * itemSpacing) / fitPerRow));
 				}
 
-				$list.find('li').each(function (i) {
-					var loop = ++i;
+				// If onlyNewItems is specified, only process items from that index onwards
+				var $itemsToProcess = opts.onlyNewItems && opts.startIndex !== undefined 
+					? $list.find('li').slice(opts.startIndex)
+					: $list.find('li');
+
+				$itemsToProcess.each(function (relativeIndex) {
+					// Calculate the global index (position among all items)
+					var globalIndex = opts.onlyNewItems && opts.startIndex !== undefined 
+						? opts.startIndex + relativeIndex 
+						: relativeIndex;
+					
+					var loop = globalIndex + 1; // 1-based indexing
+					
 					if (loop % fitPerRow == 1) {
 						$(this).css('clear', 'left');
 					} else {
@@ -205,6 +342,7 @@
 					}
 				});
 
+				// Always update link dimensions for all items
 				$list.find('a.zoom-instagram-link').css({
 					width: itemWidth,
 					height: itemWidth
@@ -236,12 +374,49 @@
 		}
 
 		function update() {
-			$('.zoom-instagram-widget__items').zoomInstagramWidget();
+			$('.zoom-instagram-widget__items').each(function() {
+				const $container = $(this);
+				
+				if ($container.hasClass('layout-masonry') && typeof $.fn.masonry === 'function') {
+					// Initialize masonry for masonry layouts
+					if (!$container.data('masonry')) {
+						$container.masonry({
+							itemSelector: '.zoom-instagram-widget__item',
+							columnWidth: '.masonry-items-sizer',
+							percentPosition: true,
+							gutter: parseInt($container.data('spacing') || 10)
+						});
+					} else {
+						// Refresh masonry layout
+						$container.masonry('layout');
+					}
+				} else {
+					// Use existing grid function for non-masonry layouts
+					$container.zoomInstagramWidget();
+				}
+			});
 			ticking = false;
 		}
 
 		$(window).on('resize orientationchange', requestTick);
-		requestTick();
+		
+		// Initialize layouts on page load
+		$('.zoom-instagram-widget__items').each(function() {
+			const $container = $(this);
+			
+			if ($container.hasClass('layout-masonry') && typeof $.fn.masonry === 'function') {
+				// Initialize masonry for masonry layouts
+				$container.masonry({
+					itemSelector: '.zoom-instagram-widget__item',
+					columnWidth: '.masonry-items-sizer',
+					percentPosition: true,
+					gutter: parseInt($container.data('spacing') || 10)
+				});
+			} else {
+				// Use existing grid function for non-masonry layouts
+				$container.zoomInstagramWidget();
+			}
+		});
 
 		$('.zoom-instagram-widget__items').zoomLoadAsyncImages();
 		$('.zoom-instagram-widget__items[data-lightbox="1"]').zoomLightbox();
@@ -249,7 +424,22 @@
 		var siteOriginInit = function () {
 			var $widgets = $('.zoom-instagram-widget__items');
 			if ($widgets.length) {
-				$('.zoom-instagram-widget__items').zoomInstagramWidget();
+				$widgets.each(function() {
+					const $container = $(this);
+					
+					if ($container.hasClass('layout-masonry') && typeof $.fn.masonry === 'function') {
+						// Initialize masonry for masonry layouts
+						$container.masonry({
+							itemSelector: '.zoom-instagram-widget__item',
+							columnWidth: '.masonry-items-sizer',
+							percentPosition: true,
+							gutter: parseInt($container.data('spacing') || 10)
+						});
+					} else {
+						// Use existing grid function for non-masonry layouts
+						$container.zoomInstagramWidget();
+					}
+				});
 				$('.zoom-instagram-widget__items').zoomLoadAsyncImages();
 			}
 
@@ -258,6 +448,10 @@
 		var debounceInit = _.debounce(siteOriginInit, 1500);
 		$(document).on('panels_setup_preview', debounceInit);
 
+		// Re-initialize load more buttons when new content is added dynamically
+		$(document).on('wpz-insta:loaded-more', function() {
+			initLoadMoreButtons();
+		});
 
 		$(window).on(
 			'elementor/frontend/init',
@@ -265,7 +459,23 @@
 				elementorFrontend.hooks.addAction('frontend/element_ready/widget', function ($scope) {
 	
 					if ($scope.data('widget_type') == "wpzoom-elementor-instagram-widget.default") {
-						requestTick();
+						// Handle both masonry and regular layouts for Elementor
+						$scope.find('.zoom-instagram-widget__items').each(function() {
+							const $container = $(this);
+							
+							if ($container.hasClass('layout-masonry') && typeof $.fn.masonry === 'function') {
+								// Initialize masonry for masonry layouts
+								$container.masonry({
+									itemSelector: '.zoom-instagram-widget__item',
+									columnWidth: '.masonry-items-sizer',
+									percentPosition: true,
+									gutter: parseInt($container.data('spacing') || 10)
+								});
+							} else {
+								// Use existing grid function for non-masonry layouts
+								$container.zoomInstagramWidget();
+							}
+						});
 					}
 	
 				});

@@ -49,6 +49,120 @@ class Wpzoom_Instagram_Widget_Display {
 		$this->is_pro = apply_filters( 'wpz-insta_is-pro', false );
 
 		add_shortcode( 'instagram', array( $this, 'get_shortcode_output' ) );
+		
+		// Add AJAX handlers for fast load more functionality
+		add_action( 'wp_ajax_wpzoom_instagram_load_more', array( $this, 'ajax_load_more_posts' ) );
+		add_action( 'wp_ajax_nopriv_wpzoom_instagram_load_more', array( $this, 'ajax_load_more_posts' ) );
+	}
+
+	/**
+	 * AJAX handler for load more posts functionality
+	 * This replaces the slow form POST method with fast AJAX
+	 */
+	public function ajax_load_more_posts() {
+		// Prevent caching of AJAX responses by optimization plugins
+		if ( ! headers_sent() ) {
+			header( 'Cache-Control: no-cache, must-revalidate, max-age=0' );
+			header( 'Pragma: no-cache' );
+			header( 'Expires: Wed, 11 Jan 1984 05:00:00 GMT' );
+		}
+		
+		// Verify nonce
+		if ( ! wp_verify_nonce( $_POST['_wpnonce'], 'wpzinsta-pro-load-more' ) ) {
+			wp_send_json_error( 'Invalid nonce' );
+		}
+
+		// Sanitize input data
+		$feed_id = intval( $_POST['feed_id'] );
+		$item_amount = intval( $_POST['item_amount'] );
+		$image_size = sanitize_text_field( $_POST['image_size'] );
+		$allowed_post_types = sanitize_text_field( $_POST['allowed_post_types'] );
+		$next_url = sanitize_text_field( $_POST['next'] );
+
+		// Extract pagination cursor from URL
+		$pagination_cursor = '';
+		if ( ! empty( $next_url ) ) {
+			$parsed_url = parse_url( $next_url );
+			if ( isset( $parsed_url['query'] ) ) {
+				parse_str( $parsed_url['query'], $params );
+				if ( isset( $params['after'] ) ) {
+					$pagination_cursor = $params['after'];
+				}
+			}
+		}
+
+		// Get feed settings
+		$feed_post = get_post( $feed_id );
+		if ( ! $feed_post || 'wpz-insta_feed' !== $feed_post->post_type ) {
+			wp_send_json_error( 'Invalid feed ID' );
+		}
+
+		// Get user account details for this feed
+		$user_id = WPZOOM_Instagram_Widget_Settings::get_feed_setting_value( $feed_id, 'user-id' );
+		$user_account_token = get_post_meta( $user_id, '_wpz-insta_token', true );
+		$user_business_page_id = get_post_meta( $user_id, '_wpz-insta_page_id', true );
+
+		if ( empty( $user_account_token ) ) {
+			wp_send_json_error( 'No valid access token found' );
+		}
+
+		// Initialize API
+		$this->api = Wpzoom_Instagram_Widget_API::getInstance();
+		$this->api->set_access_token( $user_account_token );
+		$this->api->set_feed_id( $feed_id );
+
+		if ( ! empty( $user_business_page_id ) ) {
+			$this->api->set_business_page_id( $user_business_page_id );
+		}
+
+		// Get feed layout settings
+		$image_width = (int) WPZOOM_Instagram_Widget_Settings::get_feed_setting_value( $feed_id, 'image-width' );
+
+		// Fetch items using optimized API call
+		$items = $this->api->get_items( 
+			array( 
+				'image-limit'          => $item_amount, 
+				'image-resolution'     => $image_size, 
+				'image-width'          => $image_width,
+				'include-pagination'   => true,
+				'allowed-post-types'   => $allowed_post_types,
+				'pagination-cursor'    => $pagination_cursor,
+				'bypass-transient'     => true, // Always get fresh data for load more
+				'skip-likes-comments'  => true  // Skip likes/comments for speed
+			) 
+		);
+
+		if ( ! is_array( $items ) || empty( $items['items'] ) ) {
+			wp_send_json_error( 'No more posts to load' );
+		}
+
+		// Prepare args for HTML generation
+		$args = array(
+			'layout'               => WPZOOM_Instagram_Widget_Settings::get_feed_setting_value( $feed_id, 'layout' ),
+			'item-num'             => $item_amount,
+			'col-num'              => WPZOOM_Instagram_Widget_Settings::get_feed_setting_value( $feed_id, 'col-num' ),
+			'show-overlay'         => WPZOOM_Instagram_Widget_Settings::get_feed_setting_value( $feed_id, 'show-overlay' ),
+			'hover-link'           => WPZOOM_Instagram_Widget_Settings::get_feed_setting_value( $feed_id, 'hover-link' ),
+			'show-media-type-icons' => WPZOOM_Instagram_Widget_Settings::get_feed_setting_value( $feed_id, 'show-media-type-icons' ),
+			'hover-media-type-icons' => WPZOOM_Instagram_Widget_Settings::get_feed_setting_value( $feed_id, 'hover-media-type-icons' ),
+			'hover-date'           => WPZOOM_Instagram_Widget_Settings::get_feed_setting_value( $feed_id, 'hover-date' ),
+			'allowed-post-types'   => $allowed_post_types,
+			'image-size'           => $image_size,
+			'show-likes'           => false, // Skip for performance
+			'show-comments'        => false, // Skip for performance
+		);
+
+		// Generate HTML for new items
+		$html = self::items_html( $items['items'], $args );
+
+		// Prepare response data
+		$response = array(
+			'html' => $html,
+			'has_more' => ! empty( $items['paging'] ) && property_exists( $items['paging'], 'next' ) && ! empty( $items['paging']->next ),
+			'next_url' => ! empty( $items['paging'] ) && property_exists( $items['paging'], 'next' ) ? $items['paging']->next : '',
+		);
+
+		wp_send_json_success( $response );
 	}
 
 	/**
@@ -227,7 +341,7 @@ class Wpzoom_Instagram_Widget_Display {
 					$show_load_more_button = ( ! $this->is_pro && $preview ) || ( $this->is_pro && isset( $args['show-load-more'] ) && boolval( $args['show-load-more'] ) );
 					$image_size = isset( $args['image-size'] ) && in_array( $args['image-size'], array( 'thumbnail', 'low_resolution', 'standard_resolution', 'full_resolution' ) ) ? $args['image-size'] : 'standard_resolution';
 					$image_width = isset( $args['image-width'] ) ? intval( $args['image-width'] ) : 320;
-					$hide_video_thumbs = isset( $args['hide-video-thumbs'] ) ? boolval( $args['hide-video-thumbs'] ) : true;
+					$allowed_post_types = isset( $args['allowed-post-types'] ) ? $args['allowed-post-types'] : 'IMAGE,VIDEO,CAROUSEL_ALBUM';
                     $lazy_load = isset( $args['lazy-load'] ) ? boolval( $args['lazy-load'] ) : true;
 
 					$attrs .= ' data-layout="' . $layout . '"';
@@ -257,15 +371,8 @@ class Wpzoom_Instagram_Widget_Display {
 						$attrs .= ' data-featured-layout="' . $featured_layout . '"';
 					}
 
-					$this->api->set_access_token( $user_account_token );
-
-					if( ! empty( $user_business_page_id ) ) {
-						$this->api->set_business_page_id( $user_business_page_id );
-					}
-
-					if( isset( $args['feed-id'] ) ) {
-						$this->api->set_feed_id( $args['feed-id'] );
-					}
+					// Instead of setting API instance state (which causes collisions), 
+					// we'll pass parameters directly to get_items() call
 
 					if ( isset( $args['feed-id'] ) ) {
 						$wrapper_classes .= sprintf( ' feed-%d', intval( $args['feed-id'] ) );
@@ -292,14 +399,47 @@ class Wpzoom_Instagram_Widget_Display {
 						$wrapper_classes .= ' perpage-' . $perpage;
 					}
 
+					// Check if this is a load-more request to optimize API calls
+					$is_load_more_request = isset( $_POST['_wpnonce'] ) && wp_verify_nonce( $_POST['_wpnonce'], 'wpzinsta-pro-load-more' );
+					
+					// Override parameters with POST data for load more requests
+					$pagination_cursor = '';
+					if ( $is_load_more_request ) {
+						if ( isset( $_POST['item_amount'] ) ) {
+							$amount = intval( $_POST['item_amount'] );
+						}
+						if ( isset( $_POST['image_size'] ) ) {
+							$image_size = sanitize_text_field( $_POST['image_size'] );
+						}
+						if ( isset( $_POST['allowed_post_types'] ) ) {
+							$allowed_post_types = sanitize_text_field( $_POST['allowed_post_types'] );
+						}
+						if ( isset( $_POST['next'] ) ) {
+							$next_url = sanitize_text_field( $_POST['next'] );
+							// Extract cursor from URL - the 'after' parameter contains the cursor
+							$parsed_url = parse_url( $next_url );
+							if ( isset( $parsed_url['query'] ) ) {
+								parse_str( $parsed_url['query'], $params );
+								if ( isset( $params['after'] ) ) {
+									$pagination_cursor = $params['after'];
+								}
+							}
+						}
+					}
+					
 					$items  = $this->api->get_items( 
 						array( 
 							'image-limit'          => $amount, 
 							'image-resolution'     => $image_size, 
 							'image-width'          => $image_width,
 							'include-pagination'   => true,
-							'disable-video-thumbs' => $hide_video_thumbs,
-							'bypass-transient'     => $preview 
+							'allowed-post-types'   => $allowed_post_types,
+							'pagination-cursor'    => $pagination_cursor,
+							'bypass-transient'     => $preview,
+							'skip-likes-comments'  => $is_load_more_request, // Skip likes/comments for load-more to improve performance
+							'access-token'         => $user_account_token,   // Pass token directly to avoid state collision
+							'feed-id'             => isset( $args['feed-id'] ) ? $args['feed-id'] : -1,
+							'business-page-id'    => $user_business_page_id, // Pass business page ID directly
 						) 
 					);
 					$errors = $this->api->errors->get_error_messages();
@@ -418,14 +558,37 @@ class Wpzoom_Instagram_Widget_Display {
 							}
 
 							if ( $show_load_more_button && 'fullwidth' !== $layout && 'carousel' !== $layout ) {
-								$output .= '<form method="POST" autocomplete="off" class="wpzinsta-pro-load-more"' . ( ! $this->is_pro ? ' disabled' : '' ) . '>';
-								$output .= wp_nonce_field( 'wpzinsta-pro-load-more', '_wpnonce', true, false );
-								$output .= '<input type="hidden" name="feed_id" value="' . esc_attr( isset( $args['feed-id'] ) ? intval( $args['feed-id'] ) : -1 ) . '" />';
-								$output .= '<input type="hidden" name="item_amount" value="' . esc_attr( $amount ) . '" />';
-								$output .= '<input type="hidden" name="image_size" value="' . esc_attr( $image_size ) . '" />';
-								$output .= '<input type="hidden" name="next" value="' . ( ! empty( $items ) && array_key_exists( 'paging', $items ) && is_object( $items['paging'] ) && property_exists( $items['paging'], 'next' ) ? esc_url( $items['paging']->next ) : '' ) . '" />';
-								$output .= '<button type="submit">' . esc_html( ( isset( $args['load-more-text'] ) ? trim( $args['load-more-text'] ) : __( 'Load More&hellip;', 'instagram-widget-by-wpzoom' ) ) . ( ! $this->is_pro ? __( ' [PRO only]', 'instagram-widget-by-wpzoom' ) : '' ) ) . '</button>';
-								$output .= '</form>';
+								$next_url = ! empty( $items ) && array_key_exists( 'paging', $items ) && is_object( $items['paging'] ) && property_exists( $items['paging'], 'next' ) ? esc_url( $items['paging']->next ) : '';
+								$has_more = ! empty( $next_url );
+								
+								// New fast button-based AJAX system (always generate for performance)
+								$output .= '<div class="wpzinsta-pro-load-more-wrapper"' . ( ! $this->is_pro ? ' data-disabled="true"' : '' ) . '>';
+								$output .= '<button type="button" class="wpzinsta-pro-load-more-btn"' . 
+										   ' data-feed-id="' . esc_attr( isset( $args['feed-id'] ) ? intval( $args['feed-id'] ) : -1 ) . '"' .
+										   ' data-item-amount="' . esc_attr( $amount ) . '"' .
+										   ' data-image-size="' . esc_attr( $image_size ) . '"' .
+										   ' data-allowed-post-types="' . esc_attr( $allowed_post_types ) . '"' .
+										   ' data-next-url="' . esc_attr( $next_url ) . '"' .
+										   ' data-nonce="' . wp_create_nonce( 'wpzinsta-pro-load-more' ) . '"' .
+										   ( ! $has_more ? ' disabled style="display:none;"' : '' ) .
+										   ( ! $this->is_pro ? ' disabled' : '' ) . '>';
+								$output .= '<span class="button-text">' . esc_html( ( isset( $args['load-more-text'] ) ? trim( $args['load-more-text'] ) : __( 'Load More&hellip;', 'instagram-widget-by-wpzoom' ) ) . ( ! $this->is_pro ? __( ' [PRO only]', 'instagram-widget-by-wpzoom' ) : '' ) ) . '</span>';
+								$output .= '</button>';
+								$output .= '</div>';
+								
+								// Legacy form system for PRO version compatibility (hidden, PRO JavaScript expects this)
+								if ( $this->is_pro ) {
+									$feed_id_for_form = isset( $args['feed-id'] ) ? intval( $args['feed-id'] ) : -1;
+									$output .= '<form method="post" action="" class="wpzinsta-pro-load-more" style="display:none;" data-feed-id="' . esc_attr( $feed_id_for_form ) . '">';
+									$output .= '<input type="hidden" name="feed_id" value="' . esc_attr( $feed_id_for_form ) . '" />';
+									$output .= '<input type="hidden" name="item_amount" value="' . esc_attr( $amount ) . '" />';
+									$output .= '<input type="hidden" name="image_size" value="' . esc_attr( $image_size ) . '" />';
+									$output .= '<input type="hidden" name="allowed_post_types" value="' . esc_attr( $allowed_post_types ) . '" />';
+									$output .= '<input type="hidden" name="next" value="' . esc_attr( $next_url ) . '" />';
+									$output .= wp_nonce_field( 'wpzinsta-pro-load-more', '_wpnonce', true, false );
+									$output .= '<button type="submit" style="display:none;">Load More (Hidden)</button>';
+									$output .= '</form>';
+								}
 							}
 
 							$output .= '</div>';
@@ -477,7 +640,7 @@ class Wpzoom_Instagram_Widget_Display {
 			$show_media_type_icons = isset( $args['show-media-type-icons'] ) ? boolval( $args['show-media-type-icons'] ) : true;
 			$show_media_type_icons_on_hover = isset( $args['hover-media-type-icons'] ) ? boolval( $args['hover-media-type-icons'] ) : true;
 			$show_date_on_hover = isset( $args['hover-date'] ) ? boolval( $args['hover-date'] ) : true;
-			$hide_video_thumbs = isset( $args['hide-video-thumbs'] ) ? boolval( $args['hide-video-thumbs'] ) : false;
+			$allowed_post_types = isset( $args['allowed-post-types'] ) ? $args['allowed-post-types'] : 'IMAGE,VIDEO,CAROUSEL_ALBUM';
 			$image_size = isset( $args['image-size'] ) && in_array( $args['image-size'], array( 'thumbnail', 'low_resolution', 'standard_resolution', 'full_resolution' ) ) ? $args['image-size'] : 'standard_resolution';
 			$small_class = $image_size <= 180 ? 'small' : '';
 			$svg_icons = plugin_dir_url( __FILE__ ) . 'dist/images/frontend/wpzoom-instagram-icons.svg';
@@ -501,9 +664,7 @@ class Wpzoom_Instagram_Widget_Display {
 				$likes         = isset( $item['likes'] ) ? intval( $item['likes'] ) : 0;
 				$comments      = isset( $item['comments'] ) ? intval( $item['comments'] ) : 0;
 
-				/*if ( $is_video && $hide_video_thumbs ) {
-					continue;
-				}*/
+				// Post type filtering is now handled in the API layer
 
 				if ( ! empty( $media_id ) && empty( $src ) ) {
 					$inline_attrs  = 'data-media-id="' . esc_attr( $media_id ) . '"';
@@ -804,6 +965,7 @@ class Wpzoom_Instagram_Widget_Display {
 		$spacing_between_suffix = $this->get_suffix( isset( $args['spacing-between-suffix'] ) ? intval( $args['spacing-between-suffix'] ) : 0 );
 		$feat_layout_enabled    = isset( $args['featured-layout-enable'] ) ? boolval( $args['featured-layout-enable'] ) : false;
 		$featured_layout        = isset( $args['featured-layout'] ) ? intval( $args['featured-layout'] ) : 0;
+		$image_aspect_ratio     = isset( $args['image-aspect-ratio'] ) ? $args['image-aspect-ratio'] : 'square';
 		$button_bg              = isset( $args['view-button-bg-color'] ) ? $this->validate_color( $args['view-button-bg-color'] ) : '';
         $loadmore_bg            = isset( $args['load-more-color'] ) ? $this->validate_color( $args['load-more-color'] ) : '';
 		$bg_color               = isset( $args['bg-color'] ) ? $this->validate_color( $args['bg-color'] ) : '';
@@ -874,7 +1036,9 @@ class Wpzoom_Instagram_Widget_Display {
 			}
 
 			if ( '' != $loadmore_bg ) {
-				$output .= ".zoom-instagram{$feed_id} .wpzinsta-pro-load-more button[type=submit]{";
+				// Target both old form-based button and new AJAX button
+				$output .= ".zoom-instagram{$feed_id} .wpzinsta-pro-load-more button[type=submit],";
+				$output .= ".zoom-instagram{$feed_id} .zoom-instagram-widget__footer .wpzinsta-pro-load-more-wrapper .wpzinsta-pro-load-more-btn{";
 				$output .= "background-color:{$loadmore_bg}!important;";
 				$output .= "}";
 			}
@@ -895,6 +1059,13 @@ class Wpzoom_Instagram_Widget_Display {
 		if ( '' != $button_bg ) {
 			$output .= ".zoom-instagram{$feed_id} .wpz-insta-view-on-insta-button{";
 			$output .= "background-color:{$button_bg}!important;";
+			$output .= "}";
+		}
+
+		// Add aspect ratio CSS for grid layout
+		if ( 0 === $layout && 'portrait' === $image_aspect_ratio ) {
+			$output .= ".zoom-instagram{$feed_id} .zoom-instagram-widget__items.layout-grid .zoom-instagram-widget__item img{";
+			$output .= "aspect-ratio:3/4!important;";
 			$output .= "}";
 		}
 
