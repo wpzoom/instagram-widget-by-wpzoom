@@ -554,6 +554,7 @@ class Wpzoom_Instagram_Widget_Display {
 								$next_url = ! empty( $items ) && array_key_exists( 'paging', $items ) && is_object( $items['paging'] ) && property_exists( $items['paging'], 'next' ) ? esc_url( $items['paging']->next ) : '';
 								$has_more = ! empty( $next_url );
 								
+								// New fast button-based AJAX system (always generate for performance)
 								$output .= '<div class="wpzinsta-pro-load-more-wrapper"' . ( ! $this->is_pro ? ' data-disabled="true"' : '' ) . '>';
 								$output .= '<button type="button" class="wpzinsta-pro-load-more-btn"' . 
 										   ' data-feed-id="' . esc_attr( isset( $args['feed-id'] ) ? intval( $args['feed-id'] ) : -1 ) . '"' .
@@ -567,6 +568,20 @@ class Wpzoom_Instagram_Widget_Display {
 								$output .= '<span class="button-text">' . esc_html( ( isset( $args['load-more-text'] ) ? trim( $args['load-more-text'] ) : __( 'Load More&hellip;', 'instagram-widget-by-wpzoom' ) ) . ( ! $this->is_pro ? __( ' [PRO only]', 'instagram-widget-by-wpzoom' ) : '' ) ) . '</span>';
 								$output .= '</button>';
 								$output .= '</div>';
+								
+								// Legacy form system for PRO version compatibility (hidden, PRO JavaScript expects this)
+								if ( $this->is_pro ) {
+									$feed_id_for_form = isset( $args['feed-id'] ) ? intval( $args['feed-id'] ) : -1;
+									$output .= '<form method="post" action="" class="wpzinsta-pro-load-more" style="display:none;" data-feed-id="' . esc_attr( $feed_id_for_form ) . '">';
+									$output .= '<input type="hidden" name="feed_id" value="' . esc_attr( $feed_id_for_form ) . '" />';
+									$output .= '<input type="hidden" name="item_amount" value="' . esc_attr( $amount ) . '" />';
+									$output .= '<input type="hidden" name="image_size" value="' . esc_attr( $image_size ) . '" />';
+									$output .= '<input type="hidden" name="allowed_post_types" value="' . esc_attr( $allowed_post_types ) . '" />';
+									$output .= '<input type="hidden" name="next" value="' . esc_attr( $next_url ) . '" />';
+									$output .= wp_nonce_field( 'wpzinsta-pro-load-more', '_wpnonce', true, false );
+									$output .= '<button type="submit" style="display:none;">Load More (Hidden)</button>';
+									$output .= '</form>';
+								}
 							}
 
 							$output .= '</div>';

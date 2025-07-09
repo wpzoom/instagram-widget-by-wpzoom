@@ -141,7 +141,8 @@
 
 
         .wpz-insta-view-on-insta-button,
-        .wpzinsta-pro-load-more input[type='submit'] {
+        .wpzinsta-pro-load-more input[type='submit'],
+        .wpzinsta-pro-load-more-wrapper .wpzinsta-pro-load-more-btn {
             display: flex;
             align-items: center;
             justify-content: center;
@@ -1224,7 +1225,9 @@ a.ig-b-v-24:hover {
     .zoom-instagram .zoom-instagram-widget__footer .wpzinsta-pro-load-more input[type=submit]:hover,
     .zoom-instagram .zoom-instagram-widget__footer .wpzinsta-pro-load-more input[type=submit]:active,
     .zoom-instagram .zoom-instagram-widget__footer .wpzinsta-pro-load-more button[type=submit]:hover,
-    .zoom-instagram .zoom-instagram-widget__footer .wpzinsta-pro-load-more button[type=submit]:active {
+    .zoom-instagram .zoom-instagram-widget__footer .wpzinsta-pro-load-more button[type=submit]:active,
+    .zoom-instagram .zoom-instagram-widget__footer .wpzinsta-pro-load-more-wrapper .wpzinsta-pro-load-more-btn:hover,
+    .zoom-instagram .zoom-instagram-widget__footer .wpzinsta-pro-load-more-wrapper .wpzinsta-pro-load-more-btn:active {
         pointer-events: none;
     }
 
