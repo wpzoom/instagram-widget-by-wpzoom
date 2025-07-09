@@ -51,7 +51,7 @@
         "postcss": "^8.4.31",
         "postcss-color-function": "^4.1.0",
         "rtlcss-webpack-plugin": "^4.0.6",
-        "thread-loader": "^4.0.4"
+        "webpack-fix-style-only-entries": "^0.6.1"
     },
     "dependencies": {
         "@types/jquery": "^3.5.6",

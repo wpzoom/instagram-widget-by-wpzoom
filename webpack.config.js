@@ -4,7 +4,7 @@ const defaultConfig = require( '@wordpress/scripts/config/webpack.config' );
 const postcssConfig = require( './postcss.config' );
 
 const MiniCssExtractPlugin = require( 'mini-css-extract-plugin' );
-
+const FixStyleOnlyEntriesPlugin = require( 'webpack-fix-style-only-entries' );
 const RtlCssPlugin = require( 'rtlcss-webpack-plugin' );
 const nodeSassGlobImporter = require( 'node-sass-glob-importer' );
 const CopyPlugin = require( 'copy-webpack-plugin' );
@@ -111,7 +111,7 @@ module.exports = {
 
 	plugins: [
 		...defaultConfig.plugins,
-
+		new FixStyleOnlyEntriesPlugin(),
 		new MiniCssExtractPlugin( {
 			filename: '[name].css',
 		} ),
