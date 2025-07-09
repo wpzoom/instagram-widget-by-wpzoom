@@ -50,31 +50,58 @@
 						next: nextUrl,
 						_wpnonce: nonce
 					},
-					success: function(response) {
-						if (response.success && response.data.html) {
-							// Append new items
-							$itemsContainer.append(response.data.html);
-							
-							// Update button state
-							if (response.data.has_more && response.data.next_url) {
-								$button.attr('data-next-url', response.data.next_url);
-							} else {
-								$button.hide();
-							}
-							
-							// Reinitialize any image processing
-							$itemsContainer.zoomLoadAsyncImages();
-							
-							// Update layout
-							requestTick();
-							
-							// Trigger custom event for other scripts
-							$feedContainer.trigger('wpz-insta:loaded-more', [response.data]);
+									success: function(response) {
+					if (response.success && response.data.html) {
+						// Store current item count before adding new items
+						const currentItemCount = $itemsContainer.find('li').length;
+						
+						// Append new items
+						$itemsContainer.append(response.data.html);
+						
+						// Update button state
+						if (response.data.has_more && response.data.next_url) {
+							$button.attr('data-next-url', response.data.next_url);
 						} else {
-							console.error('Load more failed:', response.data || 'Unknown error');
 							$button.hide();
 						}
-					},
+						
+						// Reinitialize any image processing for the specific container
+						$itemsContainer.zoomLoadAsyncImages();
+						
+						// Check if this is masonry layout and handle accordingly
+						if ($itemsContainer.hasClass('layout-masonry') && typeof $.fn.masonry === 'function') {
+							// For masonry layout, use WordPress masonry
+							const $newItems = $itemsContainer.find('li').slice(currentItemCount);
+							
+							// Initialize masonry if not already done
+							if (!$itemsContainer.data('masonry')) {
+								$itemsContainer.masonry({
+									itemSelector: '.zoom-instagram-widget__item',
+									columnWidth: '.masonry-items-sizer',
+									percentPosition: true,
+									gutter: parseInt($itemsContainer.data('spacing') || 10)
+								});
+							}
+							
+							// Add new items to masonry
+							$itemsContainer.masonry('appended', $newItems);
+						} else {
+							// For grid/other layouts, use existing function
+							setTimeout(function() {
+								$itemsContainer.zoomInstagramWidget({
+									onlyNewItems: true,
+									startIndex: currentItemCount
+								});
+							}, 100);
+						}
+						
+						// Trigger custom event for other scripts
+						$feedContainer.trigger('wpz-insta:loaded-more', [response.data]);
+					} else {
+						console.error('Load more failed:', response.data || 'Unknown error');
+						$button.hide();
+					}
+				},
 					error: function(xhr, status, error) {
 						console.error('AJAX load more error:', error);
 						$button.hide();
@@ -266,9 +293,10 @@
 			} );
 		};
 
-		$.fn.zoomInstagramWidget = function () {
+		$.fn.zoomInstagramWidget = function (options) {
 			return $(this).each(function () {
 				var $list = $(this);
+				var opts = options || {};
 
 				var minItemsPerRow = $list.data('images-per-row');
 				var desiredItemWidth = $list.data('image-width');
@@ -288,8 +316,19 @@
 					itemWidth = Math.floor(((containerWidth - 1 - (fitPerRow - 1) * itemSpacing) / fitPerRow));
 				}
 
-				$list.find('li').each(function (i) {
-					var loop = ++i;
+				// If onlyNewItems is specified, only process items from that index onwards
+				var $itemsToProcess = opts.onlyNewItems && opts.startIndex !== undefined 
+					? $list.find('li').slice(opts.startIndex)
+					: $list.find('li');
+
+				$itemsToProcess.each(function (relativeIndex) {
+					// Calculate the global index (position among all items)
+					var globalIndex = opts.onlyNewItems && opts.startIndex !== undefined 
+						? opts.startIndex + relativeIndex 
+						: relativeIndex;
+					
+					var loop = globalIndex + 1; // 1-based indexing
+					
 					if (loop % fitPerRow == 1) {
 						$(this).css('clear', 'left');
 					} else {
@@ -303,6 +342,7 @@
 					}
 				});
 
+				// Always update link dimensions for all items
 				$list.find('a.zoom-instagram-link').css({
 					width: itemWidth,
 					height: itemWidth
@@ -334,12 +374,49 @@
 		}
 
 		function update() {
-			$('.zoom-instagram-widget__items').zoomInstagramWidget();
+			$('.zoom-instagram-widget__items').each(function() {
+				const $container = $(this);
+				
+				if ($container.hasClass('layout-masonry') && typeof $.fn.masonry === 'function') {
+					// Initialize masonry for masonry layouts
+					if (!$container.data('masonry')) {
+						$container.masonry({
+							itemSelector: '.zoom-instagram-widget__item',
+							columnWidth: '.masonry-items-sizer',
+							percentPosition: true,
+							gutter: parseInt($container.data('spacing') || 10)
+						});
+					} else {
+						// Refresh masonry layout
+						$container.masonry('layout');
+					}
+				} else {
+					// Use existing grid function for non-masonry layouts
+					$container.zoomInstagramWidget();
+				}
+			});
 			ticking = false;
 		}
 
 		$(window).on('resize orientationchange', requestTick);
-		requestTick();
+		
+		// Initialize layouts on page load
+		$('.zoom-instagram-widget__items').each(function() {
+			const $container = $(this);
+			
+			if ($container.hasClass('layout-masonry') && typeof $.fn.masonry === 'function') {
+				// Initialize masonry for masonry layouts
+				$container.masonry({
+					itemSelector: '.zoom-instagram-widget__item',
+					columnWidth: '.masonry-items-sizer',
+					percentPosition: true,
+					gutter: parseInt($container.data('spacing') || 10)
+				});
+			} else {
+				// Use existing grid function for non-masonry layouts
+				$container.zoomInstagramWidget();
+			}
+		});
 
 		$('.zoom-instagram-widget__items').zoomLoadAsyncImages();
 		$('.zoom-instagram-widget__items[data-lightbox="1"]').zoomLightbox();
@@ -347,7 +424,22 @@
 		var siteOriginInit = function () {
 			var $widgets = $('.zoom-instagram-widget__items');
 			if ($widgets.length) {
-				$('.zoom-instagram-widget__items').zoomInstagramWidget();
+				$widgets.each(function() {
+					const $container = $(this);
+					
+					if ($container.hasClass('layout-masonry') && typeof $.fn.masonry === 'function') {
+						// Initialize masonry for masonry layouts
+						$container.masonry({
+							itemSelector: '.zoom-instagram-widget__item',
+							columnWidth: '.masonry-items-sizer',
+							percentPosition: true,
+							gutter: parseInt($container.data('spacing') || 10)
+						});
+					} else {
+						// Use existing grid function for non-masonry layouts
+						$container.zoomInstagramWidget();
+					}
+				});
 				$('.zoom-instagram-widget__items').zoomLoadAsyncImages();
 			}
 
@@ -367,7 +459,23 @@
 				elementorFrontend.hooks.addAction('frontend/element_ready/widget', function ($scope) {
 	
 					if ($scope.data('widget_type') == "wpzoom-elementor-instagram-widget.default") {
-						requestTick();
+						// Handle both masonry and regular layouts for Elementor
+						$scope.find('.zoom-instagram-widget__items').each(function() {
+							const $container = $(this);
+							
+							if ($container.hasClass('layout-masonry') && typeof $.fn.masonry === 'function') {
+								// Initialize masonry for masonry layouts
+								$container.masonry({
+									itemSelector: '.zoom-instagram-widget__item',
+									columnWidth: '.masonry-items-sizer',
+									percentPosition: true,
+									gutter: parseInt($container.data('spacing') || 10)
+								});
+							} else {
+								// Use existing grid function for non-masonry layouts
+								$container.zoomInstagramWidget();
+							}
+						});
 					}
 	
 				});
