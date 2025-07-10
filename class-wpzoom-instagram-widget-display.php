@@ -155,9 +155,17 @@ class Wpzoom_Instagram_Widget_Display {
 		// Generate HTML for new items
 		$html = self::items_html( $items['items'], $args );
 
+		// Generate lightbox content for new items if lightbox is enabled
+		$lightbox_html = '';
+		$lightbox_enabled = isset( $args['lightbox'] ) ? boolval( $args['lightbox'] ) : true;
+		if ( $lightbox_enabled ) {
+			$lightbox_html = self::lightbox_items_html( $items['items'], $user_id );
+		}
+
 		// Prepare response data
 		$response = array(
 			'html' => $html,
+			'lightbox_html' => $lightbox_html,
 			'has_more' => ! empty( $items['paging'] ) && property_exists( $items['paging'], 'next' ) && ! empty( $items['paging']->next ),
 			'next_url' => ! empty( $items['paging'] ) && property_exists( $items['paging'], 'next' ) ? $items['paging']->next : '',
 		);
@@ -830,7 +838,24 @@ class Wpzoom_Instagram_Widget_Display {
 					$type     = in_array( $typ, array( 'video', 'carousel_album' ) ) ? $typ : false;
 					$is_album = 'carousel_album' == $type;
 					$is_video = 'video' == $type;
-					$children = $is_album && isset( $item['children'] ) && is_object( $item['children'] ) && isset( $item['children']->data ) ? $item['children']->data : false;
+					// Handle both data structures: $item['children']->data (legacy) and $item['children'] (direct)
+					$children = false;
+					if ( $is_album && isset( $item['children'] ) ) {
+						if ( is_object( $item['children'] ) && isset( $item['children']->data ) ) {
+							// Legacy structure: children wrapped in data property
+							$children = $item['children']->data;
+						} elseif ( is_object( $item['children'] ) && property_exists( $item['children'], 'data' ) ) {
+							// Alternative data property check
+							$children = $item['children']->data;
+						} elseif ( is_array( $item['children'] ) || ( is_object( $item['children'] ) && ! property_exists( $item['children'], 'data' ) ) ) {
+							// Direct structure: children are the data itself
+							$children = $item['children'];
+						}
+
+						if ( $children ) {
+							$children_count = is_array( $children ) ? count( $children ) : ( is_object( $children ) && property_exists( $children, 'data' ) ? count( $children->data ) : 1 );
+						}
+					}
 
 					$output .= '<div data-uid="' . $media_id . '" class="swiper-slide wpz-insta-lightbox-item"><div class="wpz-insta-lightbox"><div class="image-wrapper">';
 

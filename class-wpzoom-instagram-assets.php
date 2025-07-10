@@ -231,13 +231,13 @@ if ( ! class_exists( 'WPZOOM_Instagram_Widget_Assets ' ) ) {
 				true
 			);
 
-							wp_register_script(
-					'zoom-instagram-widget',
-					plugin_dir_url( __FILE__ ) . 'dist/scripts/frontend/index.js',
-					array( 'jquery', 'underscore', 'wp-util', 'magnific-popup', 'swiper-js', 'masonry' ),
-					WPZOOM_INSTAGRAM_VERSION,
-					true
-				);
+									wp_register_script(
+			'zoom-instagram-widget',
+			plugin_dir_url( __FILE__ ) . 'dist/scripts/frontend/index.js',
+			array( 'jquery', 'underscore', 'wp-util', 'magnific-popup', 'swiper-js' ),
+			WPZOOM_INSTAGRAM_VERSION,
+			true
+		);
 		}
 
 		/**
