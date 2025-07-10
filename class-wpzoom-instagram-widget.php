@@ -424,7 +424,20 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 							$type     = in_array( $item['type'], array( 'VIDEO', 'CAROUSEL_ALBUM' ) ) ? strtolower( $item['type'] ) : false;
 							$is_album = 'carousel_album' == $type;
 							$is_video = 'video' == $type;
-							$children = $is_album && isset( $item['children'] ) && is_object( $item['children'] ) && isset( $item['children']->data ) ? $item['children']->data : false; ?>
+							// Handle both data structures: $item['children']->data (legacy) and $item['children'] (direct)
+							$children = false;
+							if ( $is_album && isset( $item['children'] ) ) {
+								if ( is_object( $item['children'] ) && isset( $item['children']->data ) ) {
+									// Legacy structure: children wrapped in data property
+									$children = $item['children']->data;
+								} elseif ( is_object( $item['children'] ) && property_exists( $item['children'], 'data' ) ) {
+									// Alternative data property check
+									$children = $item['children']->data;
+								} elseif ( is_array( $item['children'] ) || ( is_object( $item['children'] ) && ! property_exists( $item['children'], 'data' ) ) ) {
+									// Direct structure: children are the data itself
+									$children = $item['children'];
+								}
+							} ?>
 
 							<div data-uid="<?php echo $media_id; ?>" class="swiper-slide wpz-insta-lightbox-item">
 								<div class="wpz-insta-lightbox">
