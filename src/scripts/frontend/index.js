@@ -88,7 +88,6 @@
 								$itemsContainer.masonry('appended', $newItems);
 							} else {
 								// Fallback for masonry when library not available
-								console.log('Instagram Widget: Masonry library not available, using grid fallback');
 								setTimeout(function() {
 									$itemsContainer.zoomInstagramWidget({
 										onlyNewItems: true,
@@ -108,7 +107,6 @@
 						
 						// Handle lightbox content for new items
 						if ($itemsContainer.attr('data-lightbox') === '1' && response.data.lightbox_html) {
-							console.log('Instagram Widget: Adding new lightbox content after load more');
 							
 							// Find the existing lightbox wrapper
 							const $lightboxWrapper = $feedContainer.find('.wpz-insta-lightbox-wrapper .swiper-wrapper');
@@ -116,12 +114,10 @@
 							if ($lightboxWrapper.length > 0) {
 								// Append new lightbox slides
 								$lightboxWrapper.append(response.data.lightbox_html);
-								console.log('Instagram Widget: Added new lightbox slides');
 								
 								// Update the existing Swiper instance to recognize new slides
 								const $swiperContainer = $lightboxWrapper.parent();
 								if ($swiperContainer.length > 0 && $swiperContainer.get(0).swiper) {
-									console.log('Instagram Widget: Updating Swiper with new slides');
 									$swiperContainer.get(0).swiper.update();
 								}
 								
@@ -130,7 +126,6 @@
 								$allNestedSwipers.each(function() {
 									// Only initialize if not already initialized
 									if (!this.swiper) {
-										console.log('Instagram Widget: Initializing nested Swiper for album');
 										new Swiper(this, {
 											lazy: {
 												threshold: 50
@@ -179,7 +174,6 @@
 								const $newLinks = $newItems.find('.zoom-instagram-link');
 								
 								if ($newLinks.length > 0) {
-									console.log('Instagram Widget: Initializing lightbox for new items:', $newLinks.length);
 									
 									$newLinks.magnificPopup({
 										items: {
@@ -191,19 +185,16 @@
 										midClick: true,
 										callbacks: {
 											open: function() {
-												console.log('Instagram Widget: MagnificPopup opened for new item');
 												const magnificPopup = $.magnificPopup.instance,
 												currentElement = magnificPopup.st.el,
 												$thisSwiper = this.content.find('> .swiper').get(0).swiper;
 												
-												console.log('Instagram Widget: Current element data-mfp-src:', currentElement.data('mfp-src'));
 												
 												if (this.content.find('> .swiper > .swiper-wrapper > .swiper-slide[data-uid="' + currentElement.data('mfp-src') + '"] video')) {
 													this.content.find('> .swiper > .swiper-wrapper > .swiper-slide[data-uid="' + currentElement.data('mfp-src') + '"] video').trigger('play');
 												}
 												if (typeof $thisSwiper === 'object') {
 													const targetSlideIndex = this.content.find('> .swiper > .swiper-wrapper > .swiper-slide[data-uid="' + currentElement.data('mfp-src') + '"]').index();
-													console.log('Instagram Widget: Sliding to index:', targetSlideIndex);
 													$thisSwiper.slideTo(targetSlideIndex);
 												}
 											},
@@ -220,7 +211,6 @@
 									$newLinks.addClass('magnific-active');
 								}
 							} else {
-								console.log('Instagram Widget: Lightbox wrapper not found, initializing for entire container');
 								$itemsContainer.zoomLightbox();
 							}
 						}
@@ -297,30 +287,23 @@
 
 			$.fn.zoomLightbox = function () {
 		return $( this ).each( function () {
-			console.log('Instagram Widget: Initializing lightbox for element:', this);
 			
 			// Try multiple strategies to find the lightbox wrapper
 			let $swipe_el = $( this ).closest( '.widget' ).find( '.wpz-insta-lightbox-wrapper > .swiper' );
-			console.log('Instagram Widget: Strategy 1 (.widget context):', $swipe_el.length > 0);
 			
 			// Fallback 1: Look in the same Instagram widget container
 			if ( $swipe_el.length === 0 ) {
 				$swipe_el = $( this ).closest( '.zoom-instagram' ).find( '.wpz-insta-lightbox-wrapper > .swiper' );
-				console.log('Instagram Widget: Strategy 2 (.zoom-instagram context):', $swipe_el.length > 0);
 			}
 			
 			// Fallback 2: Look for siblings or nearby elements
 			if ( $swipe_el.length === 0 ) {
 				$swipe_el = $( this ).parent().parent().find( '.wpz-insta-lightbox-wrapper > .swiper' );
-				console.log('Instagram Widget: Strategy 3 (parent context):', $swipe_el.length > 0);
 			}
 			
-			console.log('Instagram Widget: Final swiper element:', $swipe_el.length > 0, $swipe_el);
 			
 			// Debug: Check if lightbox wrapper has content
 			const $lightboxWrapper = $swipe_el.closest( '.wpz-insta-lightbox-wrapper' );
-			console.log('Instagram Widget: Lightbox wrapper:', $lightboxWrapper.length > 0);
-			console.log('Instagram Widget: Lightbox wrapper content:', $lightboxWrapper.html());
 
 			if ( $swipe_el.length > 0 ) {
 					const $nested   = $swipe_el.find( '.image-wrapper > .swiper' );
@@ -409,22 +392,17 @@
 
 					// Find the gallery trigger using the same strategy as swiper element
 					let galleryTrigger = $( this ).closest( '.widget' ).find( '.zoom-instagram-widget__items' );
-					console.log('Instagram Widget: Gallery trigger strategy 1 (.widget):', galleryTrigger.length > 0);
 					
 					// Fallback 1: Look in the same Instagram widget container
 					if ( galleryTrigger.length === 0 ) {
 						galleryTrigger = $( this ).closest( '.zoom-instagram' ).find( '.zoom-instagram-widget__items' );
-						console.log('Instagram Widget: Gallery trigger strategy 2 (.zoom-instagram):', galleryTrigger.length > 0);
 					}
 					
 					// Fallback 2: Use this element directly if it's the items container
 					if ( galleryTrigger.length === 0 ) {
 						galleryTrigger = $( this );
-						console.log('Instagram Widget: Gallery trigger strategy 3 (this element):', galleryTrigger.length > 0);
 					}
 					
-					console.log('Instagram Widget: Final gallery trigger:', galleryTrigger.length > 0, galleryTrigger);
-
 					// Use the same approach as block.js - call magnificPopup directly on the links
 					galleryTrigger.find( '.zoom-instagram-link' ).magnificPopup( {
 						items: {
@@ -436,14 +414,10 @@
 						midClick: true,
 						callbacks: {
 							open: function () {
-								console.log('Instagram Widget: MagnificPopup opened');
 								const magnificPopup = $.magnificPopup.instance,
 								currentElement = magnificPopup.st.el,
 								$thisSwiper = this.content.find( '> .swiper' ).get(0).swiper;
 								
-								console.log('Instagram Widget: Current element:', currentElement);
-								console.log('Instagram Widget: Swiper instance:', $thisSwiper);
-
 								if( this.content.find( '> .swiper > .swiper-wrapper > .swiper-slide[data-uid="' + currentElement.data( 'mfp-src' ) + '"] video' ) ) {
 									this.content.find( '> .swiper > .swiper-wrapper > .swiper-slide[data-uid="' + currentElement.data( 'mfp-src' ) + '"] video' ).trigger('play');
 								}
