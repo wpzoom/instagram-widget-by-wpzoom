@@ -270,7 +270,7 @@ if ( ! class_exists( 'WPZOOM_Instagram_Widget_Assets ' ) ) {
 				// Localize AJAX URL for fast load more functionality
 				wp_localize_script( 'zoom-instagram-widget', 'wpzInstaAjax', array(
 					'ajaxurl' => admin_url( 'admin-ajax.php' ),
-					'nonce'   => wp_create_nonce( 'wpzinsta-ajax' )
+					'nonce'   => wp_create_nonce( 'wpzinsta-pro-load-more' )
 				) );
 			}
 

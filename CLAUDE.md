@@ -87,6 +87,28 @@ The webpack configuration creates separate bundles for different contexts:
 ### API Integration
 The plugin connects to Instagram's API to fetch feed data. The API handling is abstracted into the `Wpzoom_Instagram_Widget_API` class.
 
+## Recent Changes & Issues
+
+### Load More Functionality
+- **Fast AJAX Load More**: The plugin now includes enhanced "Load More" functionality with optimized performance
+- **Key Components**:
+  - Frontend JavaScript: `src/scripts/frontend/index.js` - Contains fast AJAX load more implementation
+  - Backend Handler: `class-wpzoom-instagram-widget-display.php` - Contains `ajax_load_more_posts()` method
+  - AJAX Action: `wpzoom_instagram_load_more` - Handles load more requests with proper nonce verification
+
+### Common Issues & Fixes
+- **Nonce Mismatch**: Ensure that JavaScript localization (`wpzInstaAjax.nonce`) uses the same nonce as the PHP AJAX handler
+  - Load More: Uses `'wpzinsta-pro-load-more'` nonce
+  - Async Images: Uses per-media-ID nonces: `'wpzoom_instagram_get_image_async_' + media_id`
+- **404 AJAX Errors**: Usually caused by nonce mismatches or missing AJAX handler registration
+- **Build Issues**: Always run `npm run build` after making changes to source files
+
+### Development Notes
+- The load more functionality is implemented in the free version but designed to work with PRO version features
+- Always verify AJAX nonces match between JavaScript and PHP handlers
+- Use `wp.ajax.post()` for WordPress AJAX requests in frontend JavaScript
+- The plugin supports both masonry and grid layouts with different initialization logic
+
 ## Related Projects
 - **PRO Version**: `../instagram-pro-by-wpzoom/` - Extended version with additional features, licensing, and automatic updates
 - See the PRO version's CLAUDE.md for details about the premium features and architecture
