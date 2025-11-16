@@ -2080,6 +2080,11 @@ class WPZOOM_Instagram_Widget_Settings {
 	}
 
 	function replace_preview_content( $output ) {
+		// Return early if output is empty to avoid DOMDocument error
+		if ( empty( $output ) ) {
+			return $output;
+		}
+
 		try {
 			require_once( plugin_dir_path( __FILE__ ) . 'vendor/autoload.php' );
 
