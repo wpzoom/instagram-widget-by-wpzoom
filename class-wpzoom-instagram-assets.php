@@ -97,7 +97,12 @@ if ( ! class_exists( 'WPZOOM_Instagram_Widget_Assets ' ) ) {
 			$script_asset_file = include( plugin_dir_path( __FILE__ ) . 'dist/scripts/backend/block.asset.php' );
 			$style_asset_file = include( plugin_dir_path( __FILE__ ) . 'dist/styles/frontend/index.asset.php' );
 
-			if( is_admin() || $load_css_js || $should_enqueue || $has_reusable_block || $is_active_widget || $has_shortcode || $has_widget_block || isset( $_GET['wpz-insta-widget-preview'] ) ) {
+			$has_instagram_feed_elementor_widget = false;
+			if( $post && $post->ID ) {
+				$has_instagram_feed_elementor_widget = self::has_instagram_feed_elementor_widget( $post->ID );
+			}
+
+			if( is_admin() || $load_css_js || $should_enqueue || $has_reusable_block || $is_active_widget || $has_shortcode || $has_widget_block || isset( $_GET['wpz-insta-widget-preview'] ) || $has_instagram_feed_elementor_widget ) {
 				wp_register_script(
 					'magnific-popup',
 					plugins_url( 'dist/scripts/library/magnific-popup.js', __FILE__ ),
@@ -167,7 +172,12 @@ if ( ! class_exists( 'WPZOOM_Instagram_Widget_Assets ' ) ) {
 			$has_widget_block   = self::is_active_block_widget( 'wpzoom/instagram-block' ); 
 			$load_css_js        = isset( $general_options['load-css-js'] ) ? true : false;
 
-			if( is_admin() || $load_css_js || $should_enqueue || $has_reusable_block || $is_active_widget || $has_shortcode || $has_widget_block || isset( $_GET['wpz-insta-widget-preview'] ) ) {
+			$has_instagram_feed_elementor_widget = false;
+			if( $post && $post->ID ) {
+				$has_instagram_feed_elementor_widget = self::has_instagram_feed_elementor_widget( $post->ID );
+			}
+
+			if( is_admin() || $load_css_js || $should_enqueue || $has_reusable_block || $is_active_widget || $has_shortcode || $has_widget_block || isset( $_GET['wpz-insta-widget-preview'] ) || $has_instagram_feed_elementor_widget ) {
 
                 wp_enqueue_style(
                     'swiper-css',
@@ -221,13 +231,13 @@ if ( ! class_exists( 'WPZOOM_Instagram_Widget_Assets ' ) ) {
 				true
 			);
 
-			wp_register_script(
-				'zoom-instagram-widget',
-				plugin_dir_url( __FILE__ ) . 'dist/scripts/frontend/index.js',
-				array( 'jquery', 'underscore', 'wp-util', 'magnific-popup', 'swiper-js' ),
-				WPZOOM_INSTAGRAM_VERSION,
-				true
-			);
+									wp_register_script(
+			'zoom-instagram-widget',
+			plugin_dir_url( __FILE__ ) . 'dist/scripts/frontend/index.js',
+			array( 'jquery', 'underscore', 'wp-util', 'magnific-popup', 'swiper-js' ),
+			WPZOOM_INSTAGRAM_VERSION,
+			true
+		);
 		}
 
 		/**
@@ -245,12 +255,23 @@ if ( ! class_exists( 'WPZOOM_Instagram_Widget_Assets ' ) ) {
 			$has_widget_block   = self::is_active_block_widget( 'wpzoom/instagram-block' );
 			$load_css_js        = isset( $general_options['load-css-js'] ) ? true : false;
 
-			if( is_admin() || $load_css_js || $should_enqueue || $has_reusable_block || $is_active_widget || $has_shortcode || $has_widget_block || isset( $_GET['wpz-insta-widget-preview'] ) ) {
+			$has_instagram_feed_elementor_widget = false;
+			if( $post && $post->ID ) {
+				$has_instagram_feed_elementor_widget = self::has_instagram_feed_elementor_widget( $post->ID );
+			}
+
+			if( is_admin() || $load_css_js || $should_enqueue || $has_reusable_block || $is_active_widget || $has_shortcode || $has_widget_block || isset( $_GET['wpz-insta-widget-preview'] ) || $has_instagram_feed_elementor_widget ) {
 				wp_enqueue_script( 'zoom-instagram-widget-lazy-load' );
 				wp_enqueue_script( 'magnific-popup' );
 				wp_enqueue_script( 'swiper-js' );
 				wp_enqueue_script( 'zoom-instagram-widget' );
 				wp_enqueue_script( 'wpz-insta_block-frontend-script' );
+				
+				// Localize AJAX URL for fast load more functionality
+				wp_localize_script( 'zoom-instagram-widget', 'wpzInstaAjax', array(
+					'ajaxurl' => admin_url( 'admin-ajax.php' ),
+					'nonce'   => wp_create_nonce( 'wpzinsta-ajax' )
+				) );
 			}
 
 		}
@@ -412,6 +433,40 @@ if ( ! class_exists( 'WPZOOM_Instagram_Widget_Assets ' ) ) {
 			}
 
 			return $post;
+		}
+
+		/**
+		 * Check the content has instagram feed elementor widget
+		 *
+		 * @since  2.2.4
+		 * @param  int         $post_id The post ID.
+		 * @param  boolean|int $content The post content.
+		 * @return boolean     Return true if post content has instagram feed elementor widget, else return false.
+		 */
+		public static function has_instagram_feed_elementor_widget( $post_id = 0, $content = '' ) {
+
+			if ( !defined( 'ELEMENTOR_VERSION' ) && !is_callable( 'Elementor\Plugin::instance' ) ) {
+				return false;
+			}
+
+			$post_id = $post_id > 0 ? $post_id : get_the_ID();
+			
+			$elementor_data = get_post_meta( $post_id, '_elementor_data' );	
+
+			if ( isset( $elementor_data[0] ) && is_string( $elementor_data[0] ) ) {
+
+				$regExp = '/"widgetType":"([^"]*)/i';
+				$outputArray = array();
+		
+				if ( preg_match_all( $regExp, $elementor_data[0], $outputArray, PREG_SET_ORDER) ) {}
+				foreach( $outputArray as $found ) {
+					if( in_array( 'wpzoom-elementor-instagram-widget', $found ) ) {
+						return true;
+					}
+				}	
+			}
+			
+			return false;
 		}
 
 	}

@@ -4,10 +4,46 @@ const defaultConfig = require( '@wordpress/scripts/config/webpack.config' );
 const postcssConfig = require( './postcss.config' );
 
 const MiniCssExtractPlugin = require( 'mini-css-extract-plugin' );
-const FixStyleOnlyEntriesPlugin = require( 'webpack-fix-style-only-entries' );
+const RemoveEmptyScriptsPlugin = require( 'webpack-remove-empty-scripts' );
 const RtlCssPlugin = require( 'rtlcss-webpack-plugin' );
 const nodeSassGlobImporter = require( 'node-sass-glob-importer' );
 const CopyPlugin = require( 'copy-webpack-plugin' );
+const fs = require( 'fs' );
+
+// Custom plugin to generate asset files for CSS-only entries
+class GenerateCSSAssetFiles {
+	apply(compiler) {
+		compiler.hooks.afterEmit.tap('GenerateCSSAssetFiles', (compilation) => {
+			const cssEntries = [
+				'styles/frontend/index',
+				'styles/frontend/preview',
+				'styles/backend/index'
+			];
+
+			cssEntries.forEach(entry => {
+				const assetPath = path.join(compiler.options.output.path, `${entry}.asset.php`);
+				const cssPath = path.join(compiler.options.output.path, `${entry}.css`);
+				
+				// Generate a version hash based on CSS file content
+				let version = 'css-' + Date.now();
+				if (fs.existsSync(cssPath)) {
+					const cssContent = fs.readFileSync(cssPath, 'utf8');
+					version = 'css-' + require('crypto').createHash('md5').update(cssContent).digest('hex').substring(0, 12);
+				}
+
+				const assetContent = `<?php return array('dependencies' => array(), 'version' => '${version}');`;
+				
+				// Ensure directory exists
+				const assetDir = path.dirname(assetPath);
+				if (!fs.existsSync(assetDir)) {
+					fs.mkdirSync(assetDir, { recursive: true });
+				}
+				
+				fs.writeFileSync(assetPath, assetContent);
+			});
+		});
+	}
+}
 
 const isProduction = process.env.NODE_ENV === 'production';
 
@@ -111,7 +147,7 @@ module.exports = {
 
 	plugins: [
 		...defaultConfig.plugins,
-		new FixStyleOnlyEntriesPlugin(),
+		new RemoveEmptyScriptsPlugin(),
 		new MiniCssExtractPlugin( {
 			filename: '[name].css',
 		} ),
@@ -134,5 +170,6 @@ module.exports = {
 				},
 			],
 		} ),
+		new GenerateCSSAssetFiles(),
 	],
 };

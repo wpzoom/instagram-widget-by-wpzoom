@@ -42,7 +42,7 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 			'images-per-row'                => 3,
 			'image-width'                   => 120,
 			'image-spacing'                 => 10,
-			'image-resolution'              => 'low_resolution',
+			'image-resolution'              => 'standard_resolution',
 			'username'                      => '',
 		);
 
@@ -126,13 +126,10 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 		$user_account_token = get_post_meta( $user_id, '_wpz-insta_token', true ) ?: '-1';
 		$user_business_page_id = get_post_meta( $user_id, '_wpz-insta_page_id', true ) ?: null;
 
-		//Set token from first created user
-		$this->api->set_access_token( $user_account_token );
-		$this->api->set_feed_id( $user_id );
-
-		if ( ! empty( $user_business_page_id ) ) {
-			$this->api->set_business_page_id( $user_business_page_id );
-		}
+		// Pass token and IDs directly to avoid singleton state collision
+		$instance['access-token'] = $user_account_token;
+		$instance['feed-id'] = $user_id;
+		$instance['business-page-id'] = $user_business_page_id;
 
 		$items  = $this->api->get_items( $instance );
 		$errors = $this->api->errors->get_error_messages();
@@ -167,22 +164,20 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 	protected function display_errors( $errors ) {
 		if ( current_user_can( 'edit_theme_options' ) ) {
 			?>
-			<p>
-				<?php _e( 'Instagram Widget misconfigured or your Access Token <strong>expired</strong>. Please check', 'instagram-widget-by-wpzoom' ); ?>
-				  <strong><a href="<?php echo admin_url( 'edit.php?post_type=wpz-insta_user' ); ?>" target="_blank"><?php _e( 'Instagram Settings Page', 'instagram-widget-by-wpzoom' ); ?></a></strong> <?php _e( 'and re-connect your account.', 'instagram-widget-by-wpzoom' ); ?>
+			<p style="font-size: 12px; font-weight: 500;">
+				<?php _e( '[Admin-Only Notice] Instagram Widget misconfigured or your Access Token <strong>expired</strong>. Please check', 'instagram-widget-by-wpzoom' ); ?>
+				  <strong><a href="<?php echo admin_url( 'edit.php?post_type=wpz-insta_user' ); ?>" target="_blank"><?php _e( 'Instagram Settings Page', 'instagram-widget-by-wpzoom' ); ?></a></strong> <?php _e( 'and reconnect your account.', 'instagram-widget-by-wpzoom' ); ?>
 
 			</p>
 
 			<?php if ( ! empty( $errors ) ) : ?>
-				<ul>
+				<ul style="font-size: 12px; font-weight: 500;">
 					<?php foreach ( $errors as $error ) : ?>
 						<li><?php echo $error; ?></li>
 					<?php endforeach; ?>
 				</ul>
 			<?php endif; ?>
 			<?php
-		} else {
-			echo '&#8230;';
 		}
 	}
 
@@ -311,7 +306,7 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 				$src           = $item['image-url'];
 				$media_id      = $item['image-id'];
 				$alt           = esc_attr( $item['image-caption'] );
-				$likes         = $item['likes_count'];
+				$likes         = isset( $item['likes'] ) ? $item['likes'] : 0;
 				$type          = in_array(
 					$item['type'],
 					array(
@@ -321,7 +316,7 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 				) ? strtolower( $item['type'] ) : false;
 				$is_album      = 'carousel_album' == $type;
 				$is_video      = 'video' == $type;
-				$comments      = $item['comments_count'];
+				$comments      = isset( $item['comments'] ) ? $item['comments'] : 0;
 
 				if ( ! empty( $media_id ) && empty( $src ) ) {
 					$inline_attrs  = 'data-media-id="' . esc_attr( $media_id ) . '"';
@@ -429,7 +424,20 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 							$type     = in_array( $item['type'], array( 'VIDEO', 'CAROUSEL_ALBUM' ) ) ? strtolower( $item['type'] ) : false;
 							$is_album = 'carousel_album' == $type;
 							$is_video = 'video' == $type;
-							$children = $is_album && isset( $item['children'] ) && is_object( $item['children'] ) && isset( $item['children']->data ) ? $item['children']->data : false; ?>
+							// Handle both data structures: $item['children']->data (legacy) and $item['children'] (direct)
+							$children = false;
+							if ( $is_album && isset( $item['children'] ) ) {
+								if ( is_object( $item['children'] ) && isset( $item['children']->data ) ) {
+									// Legacy structure: children wrapped in data property
+									$children = $item['children']->data;
+								} elseif ( is_object( $item['children'] ) && property_exists( $item['children'], 'data' ) ) {
+									// Alternative data property check
+									$children = $item['children']->data;
+								} elseif ( is_array( $item['children'] ) || ( is_object( $item['children'] ) && ! property_exists( $item['children'], 'data' ) ) ) {
+									// Direct structure: children are the data itself
+									$children = $item['children'];
+								}
+							} ?>
 
 							<div data-uid="<?php echo $media_id; ?>" class="swiper-slide wpz-insta-lightbox-item">
 								<div class="wpz-insta-lightbox">

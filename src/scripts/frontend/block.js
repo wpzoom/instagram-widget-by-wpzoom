@@ -6,7 +6,7 @@
 			if ( $swipe_el.length > 0 ) {
 				const $nested = $swipe_el.find( '.image-wrapper > .swiper' );
 
-				new Swiper( $swipe_el.get(0), {
+				const swiper = new Swiper( $swipe_el.get(0), {
 					lazy:{
 						threshold: 50
 					},
@@ -25,7 +25,22 @@
 					keyboard: {
 						enabled: true,
 						onlyInViewport: true
-					}
+					},
+					on: {
+						activeIndexChange: function () {
+
+							// Get the active slide
+							const activeSlide = this.slides[this.activeIndex];
+							const $activeSlide = $(activeSlide);
+
+							// Play the video in the active slide if it exists
+							const video = $activeSlide.find('video').get(0);
+							if (video) {
+								video.play();
+							}
+
+						},
+					},
 				} );
 
 				$nested.each( function () {
@@ -54,7 +69,22 @@
 						keyboard: {
 							enabled: true,
 							onlyInViewport: true
-						}
+						},
+						on: {
+							activeIndexChange: function () {
+	
+								// Get the active slide
+								const activeSlide = this.slides[this.activeIndex];
+								const $activeSlide = $(activeSlide);
+	
+								// Play the video in the active slide if it exists
+								const video = $activeSlide.find('video').get(0);
+								if (video) {
+									video.play();
+								}
+	
+							},
+						},
 					} );
 				} );
 
@@ -70,13 +100,11 @@
 						open: function () {
 							const magnificPopup = $.magnificPopup.instance,
 							currentElement = magnificPopup.st.el,
-							$thisSwiper = this.content.find( '> .swiper' ).get(0).swiper;
+							$thisSwiper = this.content.find( '> .swiper' ).get(0).swiper;							
+
 							if( this.content.find( '> .swiper > .swiper-wrapper > .swiper-slide[data-uid="' + currentElement.data( 'mfp-src' ) + '"] video' ) ) {
 								this.content.find( '> .swiper > .swiper-wrapper > .swiper-slide[data-uid="' + currentElement.data( 'mfp-src' ) + '"] video' ).trigger('play');
 							}
-
-							//console.log( typeof $thisSwiper );
-
 							if ( typeof $thisSwiper === 'object' ) {
 								$thisSwiper.slideTo(
 									this.content.find( '> .swiper > .swiper-wrapper > .swiper-slide[data-uid="' + currentElement.data( 'mfp-src' ) + '"]' ).index()
