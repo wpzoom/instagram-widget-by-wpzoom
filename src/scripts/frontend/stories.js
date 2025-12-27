@@ -158,6 +158,21 @@ import 'zuck.js/skins/snapgram';
 					onOpen: function( storyId, callback ) {
 						// Set active instance for keyboard navigation
 						activeZuckInstance = zuckInstance;
+
+						// Reset story to first item when opening
+						const storyIndex = zuckInstance.findStoryIndex( storyId );
+						if ( storyIndex !== -1 && zuckInstance.data[ storyIndex ] ) {
+							zuckInstance.data[ storyIndex ].currentItem = 0;
+							zuckInstance.data[ storyIndex ].seen = false;
+
+							// Reset all items' seen status
+							if ( zuckInstance.data[ storyIndex ].items ) {
+								zuckInstance.data[ storyIndex ].items.forEach( function( item ) {
+									item.seen = false;
+								} );
+							}
+						}
+
 						callback();
 					},
 					onView: function( storyId ) {
@@ -170,6 +185,21 @@ import 'zuck.js/skins/snapgram';
 					onClose: function( storyId, callback ) {
 						// Modal closed - clear active instance
 						activeZuckInstance = null;
+
+						// Reset story position for next open
+						const storyIndex = zuckInstance.findStoryIndex( storyId );
+						if ( storyIndex !== -1 && zuckInstance.data[ storyIndex ] ) {
+							zuckInstance.data[ storyIndex ].currentItem = 0;
+							zuckInstance.data[ storyIndex ].seen = false;
+
+							// Reset all items' seen status
+							if ( zuckInstance.data[ storyIndex ].items ) {
+								zuckInstance.data[ storyIndex ].items.forEach( function( item ) {
+									item.seen = false;
+								} );
+							}
+						}
+
 						callback();
 					},
 					onNavigateItem: function( storyId, nextStoryId, callback ) {
