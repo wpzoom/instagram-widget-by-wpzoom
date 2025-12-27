@@ -479,10 +479,17 @@ class Wpzoom_Instagram_Widget_Display {
 							}
 
 							if ( $show_user_image && ! empty( $user_image ) ) {
-								// Get stories in a single API call (has_stories now uses cached data from get_stories)
-								$stories = $this->api->get_stories( $user_business_page_id, $user_account_token );
-								$has_stories = ! empty( $stories );
-								$story_ring_class = $has_stories ? ' has-stories' : '';
+								// Stories feature is only available in Pro version
+								$stories = array();
+								$has_stories = false;
+								$story_ring_class = '';
+
+								if ( $this->is_pro ) {
+									// Get stories in a single API call (has_stories now uses cached data from get_stories)
+									$stories = $this->api->get_stories( $user_business_page_id, $user_account_token );
+									$has_stories = ! empty( $stories );
+									$story_ring_class = $has_stories ? ' has-stories' : '';
+								}
 
 								$output .= '<div class="zoom-instagram-widget__header-column-left' . esc_attr( $story_ring_class ) . '">';
 
