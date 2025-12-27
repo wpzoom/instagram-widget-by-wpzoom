@@ -310,6 +310,7 @@ class Wpzoom_Instagram_Widget_Display {
 				$show_user_name = isset( $args['show-account-username'] ) && boolval( $args['show-account-username'] );
 				$show_user_badge = $this->is_pro && isset( $args['show-account-badge'] ) && boolval( $args['show-account-badge'] );
                 $show_user_stats = $this->is_pro && isset( $args['show-account-stats'] ) && boolval( $args['show-account-stats'] );
+				$show_stories = $this->is_pro && ( ! isset( $args['show-stories'] ) || boolval( $args['show-stories'] ) );
 				$user_name = get_the_title( $user );
 				$user_name = preg_replace( '/[\x{200B}-\x{200D}\x{FEFF}]/u', '', $user_name );
 				$user_name_display = sprintf( '@%s', $user_name );
@@ -479,12 +480,12 @@ class Wpzoom_Instagram_Widget_Display {
 							}
 
 							if ( $show_user_image && ! empty( $user_image ) ) {
-								// Stories feature is only available in Pro version
+								// Stories feature is only available in Pro version and when enabled in feed settings
 								$stories = array();
 								$has_stories = false;
 								$story_ring_class = '';
 
-								if ( $this->is_pro ) {
+								if ( $show_stories ) {
 									// Get stories in a single API call (has_stories now uses cached data from get_stories)
 									$stories = $this->api->get_stories( $user_business_page_id, $user_account_token );
 									$has_stories = ! empty( $stories );

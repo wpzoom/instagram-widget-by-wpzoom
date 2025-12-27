@@ -51,6 +51,7 @@ class WPZOOM_Instagram_Widget_Settings {
 		'show-account-username'           => array( 'type' => 'boolean', 'default' => true ),
 		'show-account-badge'              => array( 'type' => 'boolean', 'default' => false ),
 		'show-account-stats'              => array( 'type' => 'boolean', 'default' => true ),
+		'show-stories'                    => array( 'type' => 'boolean', 'default' => true ),
 		'show-account-image'              => array( 'type' => 'boolean', 'default' => true ),
 		'show-account-bio'                => array( 'type' => 'boolean', 'default' => true ),
 		'show-view-button'                => array( 'type' => 'boolean', 'default' => true ),
@@ -1260,6 +1261,7 @@ class WPZOOM_Instagram_Widget_Settings {
 			$show_account_username            = (bool) self::get_feed_setting_value( $post->ID, 'show-account-username' );
 			$show_account_badge               = (bool) self::get_feed_setting_value( $post->ID, 'show-account-badge' );
 			$show_account_stats               = (bool) self::get_feed_setting_value( $post->ID, 'show-account-stats' );
+			$show_stories                     = (bool) self::get_feed_setting_value( $post->ID, 'show-stories' );
 			$show_account_image               = (bool) self::get_feed_setting_value( $post->ID, 'show-account-image' );
 			$show_account_bio                 = (bool) self::get_feed_setting_value( $post->ID, 'show-account-bio' );
 			$show_view_instagram_button       = (bool) self::get_feed_setting_value( $post->ID, 'show-view-button' );
@@ -1623,6 +1625,16 @@ class WPZOOM_Instagram_Widget_Settings {
                                                 <?php esc_html_e( 'Display following count', 'instagram-widget-by-wpzoom' ); ?>
 
                                                 <small class="help" aria-hidden="true" data-tooltip="<?php esc_html_e( 'This feature works only when your account is connected via your Facebook Page.', 'instagram-widget-by-wpzoom' ); ?>"><svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='16' height='16'><path fill='#000' fill-rule='evenodd' clip-rule='evenodd' d='M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm-1 16v-2h2v2h-2zm2-3v-1.141A3.991 3.991 0 0016 10a4 4 0 00-8 0h2c0-1.103.897-2 2-2s2 .897 2 2-.897 2-2 2a1 1 0 00-1 1v2h2z'></path></svg></small>
+                                            </span>
+										</label>
+
+										<label class="wpz-insta_table-row">
+											<input type="hidden" name="_wpz-insta_show-stories" value="0" />
+											<input type="checkbox" name="_wpz-insta_show-stories" value="1"<?php checked( $show_stories ); ?> />
+											<span>
+                                                <?php esc_html_e( 'Display Instagram Stories', 'instagram-widget-by-wpzoom' ); ?>
+
+                                                <small class="help" aria-hidden="true" data-tooltip="<?php esc_html_e( 'Shows a clickable stories ring around the profile image when the account has active stories. This feature works only when your account is connected via your Facebook Page.', 'instagram-widget-by-wpzoom' ); ?>"><svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='16' height='16'><path fill='#000' fill-rule='evenodd' clip-rule='evenodd' d='M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm-1 16v-2h2v2h-2zm2-3v-1.141A3.991 3.991 0 0016 10a4 4 0 00-8 0h2c0-1.103.897-2 2-2s2 .897 2 2-.897 2-2 2a1 1 0 00-1 1v2h2z'></path></svg></small>
                                             </span>
 										</label>
 									<?php echo $pro_toggle ? '</fieldset>' : ''; ?>
