@@ -18,6 +18,98 @@ import 'zuck.js/skins/snapgram';
 	// Store active Zuck instance for keyboard navigation
 	let activeZuckInstance = null;
 
+	// Counter for unique instance IDs
+	let instanceCounter = 0;
+
+	// Track if touch handlers are set up
+	let touchHandlersInitialized = false;
+
+	/**
+	 * Setup touch handlers:
+	 * - Block horizontal swipes (no user switching in single-user mode)
+	 * - Swipe down to close the modal
+	 */
+	function setupTouchHandlers() {
+		if ( touchHandlersInitialized ) {
+			return;
+		}
+		touchHandlersInitialized = true;
+
+		let touchStartX = 0;
+		let touchStartY = 0;
+		let touchMoveY = 0;
+		let isTracking = false;
+
+		// Intercept touch events on the modal
+		document.addEventListener( 'touchstart', function( e ) {
+			const $modal = $( '#zuck-modal' );
+			if ( ! $modal.is( ':visible' ) ) {
+				return;
+			}
+
+			const $target = $( e.target );
+			// Only track if touch is on the story viewer (not on close button, etc.)
+			if ( ! $target.closest( '.story-viewer' ).length ) {
+				return;
+			}
+
+			const touch = e.touches[ 0 ];
+			touchStartX = touch.clientX;
+			touchStartY = touch.clientY;
+			touchMoveY = touchStartY;
+			isTracking = true;
+		}, { passive: true } );
+
+		document.addEventListener( 'touchmove', function( e ) {
+			if ( ! isTracking ) {
+				return;
+			}
+
+			const $modal = $( '#zuck-modal' );
+			if ( ! $modal.is( ':visible' ) ) {
+				isTracking = false;
+				return;
+			}
+
+			const touch = e.touches[ 0 ];
+			const deltaX = Math.abs( touch.clientX - touchStartX );
+			const deltaY = touch.clientY - touchStartY;
+			touchMoveY = touch.clientY;
+
+			// If this is a horizontal swipe, block it
+			if ( deltaX > 30 && deltaX > Math.abs( deltaY ) ) {
+				e.preventDefault();
+				e.stopPropagation();
+			}
+		}, { passive: false } );
+
+		document.addEventListener( 'touchend', function( e ) {
+			if ( ! isTracking ) {
+				return;
+			}
+
+			const $modal = $( '#zuck-modal' );
+			if ( ! $modal.is( ':visible' ) ) {
+				isTracking = false;
+				return;
+			}
+
+			const deltaY = touchMoveY - touchStartY;
+			const deltaX = Math.abs( e.changedTouches[ 0 ].clientX - touchStartX );
+
+			isTracking = false;
+
+			// Swipe down to close (vertical movement > 100px and more vertical than horizontal)
+			if ( deltaY > 100 && deltaY > deltaX ) {
+				// Find and click the close button
+				const $closeBtn = $modal.find( '.close' );
+				if ( $closeBtn.length ) {
+					$closeBtn.get( 0 ).click();
+				}
+			}
+		}, { passive: true } );
+	}
+
 	/**
 	 * Add global keyboard handler for arrow key navigation
 	 */
@@ -79,10 +171,14 @@ import 'zuck.js/skins/snapgram';
 			// Mark as initialized
 			initializedContainers.add( containerElement );
 
+			// Generate unique instance ID for this feed
+			const instanceId = ++instanceCounter;
+
 			// Transform data to Zuck.js format
+			// Use instanceId to ensure unique story IDs across different feeds
 			const timeline = [
 				{
-					id: storiesData.id || 'wpz-insta-story-' + Date.now(),
+					id: 'wpz-feed-' + instanceId + '-' + ( storiesData.id || 'story' ),
 					photo: storiesData.photo || '',
 					name: storiesData.name || '',
 					link: storiesData.link || '',
@@ -103,27 +199,24 @@ import 'zuck.js/skins/snapgram';
 			];
 
 			// Create a unique container for Zuck.js
-			// Use a more stable ID that won't change on re-init
-			const storiesContainerId = 'wpz-insta-zuck-' + ( storiesData.id || '' ).replace( /[^a-zA-Z0-9-]/g, '-' );
+			// Use instanceId to ensure each feed has its own container
+			const storiesContainerId = 'wpz-insta-zuck-' + instanceId;
 
-			// Check if container already exists
-			let $storiesContainer = $( '#' + storiesContainerId );
-			if ( $storiesContainer.length === 0 ) {
-				$storiesContainer = $( '<div>' )
-					.attr( 'id', storiesContainerId )
-					.addClass( 'wpz-insta-zuck-container' )
-					.css( {
-						position: 'absolute',
-						left: '-9999px',
-						top: '-9999px',
-						width: '1px',
-						height: '1px',
-						overflow: 'hidden',
-					} );
+			// Create new container for this feed instance
+			const $storiesContainer = $( '<div>' )
+				.attr( 'id', storiesContainerId )
+				.addClass( 'wpz-insta-zuck-container' )
+				.css( {
+					position: 'absolute',
+					left: '-9999px',
+					top: '-9999px',
+					width: '1px',
+					height: '1px',
+					overflow: 'hidden',
+				} );
 
-				// Append to body for the modal to work properly
-				$( 'body' ).append( $storiesContainer );
-			}
+			// Append to body for the modal to work properly
+			$( 'body' ).append( $storiesContainer );
 
 			// Initialize Zuck.js
 			const zuckInstance = new Zuck( $storiesContainer.get( 0 ), {
@@ -156,6 +249,16 @@ import 'zuck.js/skins/snapgram';
 				},
 				callbacks: {
 					onOpen: function( storyId, callback ) {
+						// If a different Zuck instance was active, we need to clear the modal
+						// to prevent mixing stories from different feeds
+						if ( activeZuckInstance && activeZuckInstance !== zuckInstance ) {
+							// Clear the modal content to force fresh rendering
+							const $modalContent = $( '#zuck-modal-content' );
+							if ( $modalContent.length ) {
+								$modalContent.html( '' );
+							}
+						}
+
 						// Set active instance for keyboard navigation
 						activeZuckInstance = zuckInstance;
 
@@ -237,8 +340,9 @@ import 'zuck.js/skins/snapgram';
 		} );
 	}
 
-	// Setup global keyboard handler once
+	// Setup global handlers once
 	setupGlobalKeyboardHandler();
+	setupTouchHandlers();
 
 	// Initialize on DOM ready
 	$( document ).ready( initInstagramStories );
