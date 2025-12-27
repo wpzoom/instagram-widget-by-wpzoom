@@ -231,13 +231,30 @@ if ( ! class_exists( 'WPZOOM_Instagram_Widget_Assets ' ) ) {
 				true
 			);
 
-									wp_register_script(
-			'zoom-instagram-widget',
-			plugin_dir_url( __FILE__ ) . 'dist/scripts/frontend/index.js',
-			array( 'jquery', 'underscore', 'wp-util', 'magnific-popup', 'swiper-js' ),
-			WPZOOM_INSTAGRAM_VERSION,
-			true
-		);
+				wp_register_script(
+				'zoom-instagram-widget',
+				plugin_dir_url( __FILE__ ) . 'dist/scripts/frontend/index.js',
+				array( 'jquery', 'underscore', 'wp-util', 'magnific-popup', 'swiper-js' ),
+				WPZOOM_INSTAGRAM_VERSION,
+				true
+			);
+
+			// Register Instagram Stories script (uses Zuck.js)
+			wp_register_script(
+				'wpz-insta-stories',
+				plugin_dir_url( __FILE__ ) . 'dist/scripts/frontend/stories.js',
+				array( 'jquery' ),
+				WPZOOM_INSTAGRAM_VERSION,
+				true
+			);
+
+			// Register Instagram Stories CSS (Zuck.js styles)
+			wp_register_style(
+				'wpz-insta-stories',
+				plugin_dir_url( __FILE__ ) . 'dist/scripts/frontend/stories.css',
+				array(),
+				WPZOOM_INSTAGRAM_VERSION
+			);
 		}
 
 		/**
@@ -266,11 +283,32 @@ if ( ! class_exists( 'WPZOOM_Instagram_Widget_Assets ' ) ) {
 				wp_enqueue_script( 'swiper-js' );
 				wp_enqueue_script( 'zoom-instagram-widget' );
 				wp_enqueue_script( 'wpz-insta_block-frontend-script' );
-				
+				wp_enqueue_script( 'wpz-insta-stories' );
+				wp_enqueue_style( 'wpz-insta-stories' );
+
 				// Localize AJAX URL for fast load more functionality
 				wp_localize_script( 'zoom-instagram-widget', 'wpzInstaAjax', array(
 					'ajaxurl' => admin_url( 'admin-ajax.php' ),
 					'nonce'   => wp_create_nonce( 'wpzinsta-ajax' )
+				) );
+
+				// Localize i18n strings for Instagram Stories
+				wp_localize_script( 'wpz-insta-stories', 'wpzInstaStories', array(
+					'i18n' => array(
+						'unmute'      => __( 'Touch to unmute', 'instagram-widget-by-wpzoom' ),
+						'keyboardTip' => __( 'Press space to see next', 'instagram-widget-by-wpzoom' ),
+						'visitLink'   => __( 'Visit link', 'instagram-widget-by-wpzoom' ),
+						'ago'         => __( 'ago', 'instagram-widget-by-wpzoom' ),
+						'hour'        => __( 'hour', 'instagram-widget-by-wpzoom' ),
+						'hours'       => __( 'hours', 'instagram-widget-by-wpzoom' ),
+						'minute'      => __( 'minute', 'instagram-widget-by-wpzoom' ),
+						'minutes'     => __( 'minutes', 'instagram-widget-by-wpzoom' ),
+						'fromnow'     => __( 'from now', 'instagram-widget-by-wpzoom' ),
+						'seconds'     => __( 'seconds', 'instagram-widget-by-wpzoom' ),
+						'yesterday'   => __( 'yesterday', 'instagram-widget-by-wpzoom' ),
+						'tomorrow'    => __( 'tomorrow', 'instagram-widget-by-wpzoom' ),
+						'days'        => __( 'days', 'instagram-widget-by-wpzoom' ),
+					),
 				) );
 			}
 

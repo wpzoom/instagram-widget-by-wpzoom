@@ -479,45 +479,52 @@ class Wpzoom_Instagram_Widget_Display {
 							}
 
 							if ( $show_user_image && ! empty( $user_image ) ) {
-								$has_stories = $this->api->has_stories($user_business_page_id, $user_account_token);
-								$stories = $has_stories ? $this->api->get_stories($user_business_page_id, $user_account_token) : array();
+								// Get stories in a single API call (has_stories now uses cached data from get_stories)
+								$stories = $this->api->get_stories( $user_business_page_id, $user_account_token );
+								$has_stories = ! empty( $stories );
 								$story_ring_class = $has_stories ? ' has-stories' : '';
 
-								$output .= '<div class="zoom-instagram-widget__header-column-left' . $story_ring_class . '">';
-								$output .= '<img src="' . esc_url( $user_image ) . '" alt="' . esc_attr( $user_name_display ) . '" width="70"' . ($has_stories ? ' data-stories="true"' : '') . '/>';
+								$output .= '<div class="zoom-instagram-widget__header-column-left' . esc_attr( $story_ring_class ) . '">';
 
-								if ($has_stories && !empty($stories)) {
-									$output .= '<div class="wpz-insta-stories-popup mfp-hide">';
-									
-									// Add single progress bar container
-									$output .= '<div class="story-progress-bar">';
-									$total_stories = count($stories);
-									foreach ($stories as $index => $story) {
-										$output .= '<div class="progress-segment' . ($index === 0 ? ' active' : '') . '" style="width:' . (100/$total_stories) . '%">';
-										$output .= '<div class="progress"></div>';
-										$output .= '</div>';
+								if ( $has_stories ) {
+									// Build Zuck.js compatible data structure
+									$stories_data = array(
+										'id'          => 'wpz-insta-' . $user_business_page_id,
+										'photo'       => $user_image,
+										'name'        => $user_name_display,
+										'link'        => $user_link,
+										'lastUpdated' => time(),
+										'items'       => array(),
+									);
+
+									foreach ( $stories as $story ) {
+										$is_video = isset( $story->media_type ) && 'VIDEO' === $story->media_type;
+										$stories_data['items'][] = array(
+											'id'       => isset( $story->id ) ? $story->id : uniqid( 'story-' ),
+											'type'     => $is_video ? 'video' : 'photo',
+											'src'      => $story->media_url,
+											'preview'  => $is_video && ! empty( $story->thumbnail_url ) ? $story->thumbnail_url : $story->media_url,
+											'length'   => $is_video ? 0 : 5, // 0 = use video duration, 5 = 5 seconds for images
+											'link'     => isset( $story->permalink ) ? $story->permalink : '',
+											'linkText' => __( 'View on Instagram', 'instagram-widget-by-wpzoom' ),
+											'time'     => isset( $story->timestamp ) ? strtotime( $story->timestamp ) : time(),
+										);
 									}
+
+									// Add aria-label for accessibility
+									$aria_label = sprintf(
+										/* translators: %s: username */
+										esc_attr__( '%s has stories available. Click to view.', 'instagram-widget-by-wpzoom' ),
+										$user_name_display
+									);
+
+									// Output clickable image with Zuck.js data
+									$output .= '<div class="wpz-insta-stories" data-stories="' . esc_attr( wp_json_encode( $stories_data ) ) . '" aria-label="' . $aria_label . '" role="button" tabindex="0">';
+									$output .= '<img src="' . esc_url( $user_image ) . '" alt="' . esc_attr( $user_name_display ) . '" width="70" />';
 									$output .= '</div>';
-									
-									$output .= '<div class="wpz-insta-stories-popup-wrapper">';
-									foreach ($stories as $story) {
-										$output .= '<div class="wpz-insta-story-item' . ($story->media_type === 'VIDEO' ? ' video' : '') . '">';
-										if ($story->media_type === 'VIDEO') {
-											$output .= '<video controls playsinline webkit-playsinline preload="metadata">';
-											$output .= '<source src="' . esc_url($story->media_url) . '" type="video/mp4">';
-											$output .= '</video>';
-										} else {
-											$output .= '<img src="' . esc_url($story->media_url) . '" alt="" loading="lazy" />';
-										}
-										$output .= '<div class="wpz-insta-story-meta">';
-										$output .= '<span class="wpz-insta-story-time">' . human_time_diff(strtotime($story->timestamp), current_time('timestamp')) . ' ago</span>';
-										$output .= '<a href="' . esc_url($story->permalink) . '" target="_blank" rel="noopener" class="wpz-insta-story-link">View on Instagram</a>';
-										$output .= '</div>';
-										$output .= '</div>';
-									}
-									$output .= '</div>';
-									$output .= '<button class="wpz-insta-stories-close">&times;</button>';
-									$output .= '</div>';
+								} else {
+									// No stories - just show the image
+									$output .= '<img src="' . esc_url( $user_image ) . '" alt="' . esc_attr( $user_name_display ) . '" width="70" />';
 								}
 
 								$output .= '</div>';

@@ -77,6 +77,7 @@ module.exports = {
 	entry: {
 		'scripts/frontend/index': path.resolve( process.cwd(), 'src/scripts/frontend/index.js' ),
 		'scripts/frontend/block': path.resolve( process.cwd(), 'src/scripts/frontend/block.js' ),
+		'scripts/frontend/stories': path.resolve( process.cwd(), 'src/scripts/frontend/stories.js' ),
 		'scripts/backend/index': path.resolve( process.cwd(), 'src/scripts/backend/index.js' ),
 		'scripts/backend/block': path.resolve( process.cwd(), 'src/scripts/backend/block.js' ),
 		'scripts/backend/cron-dismiss': path.resolve( process.cwd(), 'src/scripts/backend/cron-dismiss.js' ),

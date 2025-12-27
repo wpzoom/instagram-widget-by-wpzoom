@@ -1382,46 +1382,20 @@ class Wpzoom_Instagram_Widget_API {
         }
     }
 
-    // Add this new method to check for stories
-    public function has_stories($user_business_page_id, $user_account_token) {
-        if (empty($user_business_page_id) || empty($user_account_token)) {
-            return false;
-        }
-
-        // Create a unique transient key for this account
-        $transient_key = 'wpz-insta_has_stories_' . $user_business_page_id;
-
-        // Try to get cached stories status
-        $has_stories = get_transient($transient_key);
-
-        if (false === $has_stories) {
-            // If no cached data, fetch from API
-            $graph_api_url = add_query_arg(
-                array(
-                    'fields'       => 'stories{id}',
-                    'access_token' => $user_account_token,
-                ),
-                'https://graph.facebook.com/v21.0/' . $user_business_page_id
-            );
-
-            $response = wp_remote_get($graph_api_url);
-
-            if (!is_wp_error($response) && 200 === wp_remote_retrieve_response_code($response)) {
-                $data = json_decode(wp_remote_retrieve_body($response));
-                $has_stories = isset($data->stories) && !empty($data->stories->data);
-                // Cache for 1 hour since stories change frequently
-                set_transient($transient_key, $has_stories, HOUR_IN_SECONDS);
-            } else {
-                $has_stories = false;
-            }
-        }
-
-        return $has_stories;
-    }
-
-    // Add this new method to get stories content
-    public function get_stories($user_business_page_id, $user_account_token) {
-        if (empty($user_business_page_id) || empty($user_account_token)) {
+    /**
+     * Get Instagram stories for a business account.
+     *
+     * This method fetches stories with all necessary fields including thumbnail_url
+     * for video posters. Results are cached for 1 hour.
+     *
+     * @since 2.0.0
+     *
+     * @param string $user_business_page_id The Instagram business page ID.
+     * @param string $user_account_token    The access token for API requests.
+     * @return array Array of story objects, or empty array if none.
+     */
+    public function get_stories( $user_business_page_id, $user_account_token ) {
+        if ( empty( $user_business_page_id ) || empty( $user_account_token ) ) {
             return array();
         }
 
@@ -1429,31 +1403,65 @@ class Wpzoom_Instagram_Widget_API {
         $transient_key = 'wpz-insta_stories_' . $user_business_page_id;
 
         // Try to get cached stories
-        $stories = get_transient($transient_key);
+        $cached = get_transient( $transient_key );
 
-        if (false === $stories) {
-            // If no cached data, fetch from API
-            $graph_api_url = add_query_arg(
-                array(
-                    'fields'       => 'stories{media_type,media_url,timestamp,permalink}',
-                    'access_token' => $user_account_token,
-                ),
-                'https://graph.facebook.com/v21.0/' . $user_business_page_id
-            );
-
-            $response = wp_remote_get($graph_api_url);
-
-            if (!is_wp_error($response) && 200 === wp_remote_retrieve_response_code($response)) {
-                $data = json_decode(wp_remote_retrieve_body($response));
-                $stories = isset($data->stories) && !empty($data->stories->data) ? $data->stories->data : array();
-                // Cache for 1 hour since stories change frequently
-                set_transient($transient_key, $stories, HOUR_IN_SECONDS);
-            } else {
-                $stories = array();
-            }
+        // Check for valid cached data (could be empty array for "no stories")
+        if ( false !== $cached ) {
+            return $cached;
         }
 
+        // Fetch from API - include thumbnail_url for video posters
+        $graph_api_url = add_query_arg(
+            array(
+                'fields'       => 'stories{media_type,media_url,thumbnail_url,timestamp,permalink}',
+                'access_token' => $user_account_token,
+            ),
+            'https://graph.facebook.com/v21.0/' . $user_business_page_id
+        );
+
+        $response = self::remote_get( $graph_api_url, $this->headers );
+
+        if ( is_wp_error( $response ) ) {
+            error_log( 'Instagram Widget: Stories API error - ' . $response->get_error_message() );
+            return array();
+        }
+
+        $response_code = wp_remote_retrieve_response_code( $response );
+
+        if ( 200 !== $response_code ) {
+            $body = wp_remote_retrieve_body( $response );
+            $error_data = json_decode( $body );
+            $error_msg = isset( $error_data->error->message ) ? $error_data->error->message : 'Unknown error';
+            error_log( 'Instagram Widget: Stories API returned ' . $response_code . ' - ' . $error_msg );
+            return array();
+        }
+
+        $data = json_decode( wp_remote_retrieve_body( $response ) );
+        $stories = isset( $data->stories ) && ! empty( $data->stories->data ) ? $data->stories->data : array();
+
+        // Cache for 1 hour (stories expire after 24h, so 1h cache is reasonable)
+        // Empty array is also cached to prevent repeated API calls when no stories exist
+        set_transient( $transient_key, $stories, HOUR_IN_SECONDS );
+
         return $stories;
+    }
+
+    /**
+     * Check if an Instagram business account has active stories.
+     *
+     * This is a convenience method that checks if get_stories() returns any results.
+     * It's more efficient than the previous implementation as it reuses the cached
+     * stories data instead of making a separate API call.
+     *
+     * @since 2.0.0
+     *
+     * @param string $user_business_page_id The Instagram business page ID.
+     * @param string $user_account_token    The access token for API requests.
+     * @return bool True if the account has active stories, false otherwise.
+     */
+    public function has_stories( $user_business_page_id, $user_account_token ) {
+        $stories = $this->get_stories( $user_business_page_id, $user_account_token );
+        return ! empty( $stories );
     }
 }
 
