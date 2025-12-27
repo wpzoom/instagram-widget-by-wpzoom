@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: WPZOOM Instagram Widget 1.7.7\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/instagram-widget-"
 "by-wpzoom\n"
-"POT-Creation-Date: 2025-12-13 12:32+0000\n"
+"POT-Creation-Date: 2025-12-27 08:39+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -26,7 +26,7 @@ msgstr ""
 "X-Textdomain-Support: yes\n"
 "X-Generator: Loco https://localise.biz/"
 
-#: class-wpzoom-instagram-widget-display.php:583
+#: class-wpzoom-instagram-widget-display.php:637
 msgid " [PRO only]"
 msgstr ""
 
@@ -46,16 +46,22 @@ msgstr ""
 msgid " Show <strong>overlay with Instagram icon</strong> on hover"
 msgstr ""
 
-#: class-wpzoom-instagram-widget-display.php:779
+#: class-wpzoom-instagram-widget-display.php:833
 #, php-format
 msgctxt "%2$s = human-readable time difference"
 msgid "%1$s ago"
 msgstr ""
 
-#: class-wpzoom-instagram-widget-display.php:923
+#: class-wpzoom-instagram-widget-display.php:977
 #: class-wpzoom-instagram-widget.php:499
 #, php-format
 msgid "%s ago"
+msgstr ""
+
+#. %s: username
+#: class-wpzoom-instagram-widget-display.php:525
+#, php-format
+msgid "%s has stories available. Click to view."
 msgstr ""
 
 #: class-wpzoom-instagram-general-settings.php:247
@@ -116,10 +122,14 @@ msgid ""
 "<strong>expired</strong>. Please check"
 msgstr ""
 
-#: class-wpzoom-instagram-widget-display.php:954
+#: class-wpzoom-instagram-widget-display.php:1008
 msgid ""
 "[Admin-only Notice] Instagram Widget misconfigured or your Access Token "
 "<strong>expired</strong>. Please check"
+msgstr ""
+
+#: class-wpzoom-instagram-assets.php:304
+msgid "ago"
 msgstr ""
 
 #: class-wpzoom-instagram-general-settings.php:193
@@ -133,7 +143,7 @@ msgstr ""
 msgid "An email will be sent before the Access Token expires"
 msgstr ""
 
-#: class-wpzoom-instagram-widget-display.php:957
+#: class-wpzoom-instagram-widget-display.php:1011
 #: class-wpzoom-instagram-widget.php:169
 msgid "and reconnect your account."
 msgstr ""
@@ -156,6 +166,10 @@ msgstr ""
 
 #: class-wpzoom-instagram-image-uploader.php:147
 msgid "Could not retrieve image url with provided media id"
+msgstr ""
+
+#: class-wpzoom-instagram-assets.php:313
+msgid "days"
 msgstr ""
 
 #: class-wpzoom-instagram-general-settings.php:114
@@ -201,23 +215,27 @@ msgid ""
 " This ensures your photos look beautiful on all devices."
 msgstr ""
 
-#: class-wpzoom-instagram-widget-display.php:912
+#: class-wpzoom-instagram-widget-display.php:966
 #: class-wpzoom-instagram-widget.php:212 class-wpzoom-instagram-widget.php:486
 msgid "Follow"
 msgstr ""
 
-#: class-wpzoom-instagram-widget-display.php:518
+#: class-wpzoom-instagram-widget-display.php:572
 #: class-wpzoom-instagram-widget.php:235
 msgid "followers"
 msgstr ""
 
-#: class-wpzoom-instagram-widget-display.php:525
+#: class-wpzoom-instagram-widget-display.php:579
 #: class-wpzoom-instagram-widget.php:246
 msgid "following"
 msgstr ""
 
 #: class-wpzoom-instagram-widget.php:634
 msgid "Force image resolution:"
+msgstr ""
+
+#: class-wpzoom-instagram-assets.php:309
+msgid "from now"
 msgstr ""
 
 #: class-wpzoom-instagram-widget-api.php:819
@@ -255,6 +273,14 @@ msgstr ""
 
 #: class-wpzoom-instagram-widget.php:732
 msgid "Hide video <strong>thumbnails</strong>"
+msgstr ""
+
+#: class-wpzoom-instagram-assets.php:305
+msgid "hour"
+msgstr ""
+
+#: class-wpzoom-instagram-assets.php:306
+msgid "hours"
 msgstr ""
 
 #. Author URI of the plugin
@@ -296,7 +322,7 @@ msgstr ""
 msgid "Instagram Feed"
 msgstr ""
 
-#: class-wpzoom-instagram-widget-display.php:956
+#: class-wpzoom-instagram-widget-display.php:1010
 #: class-wpzoom-instagram-widget.php:169
 msgid "Instagram Settings Page"
 msgstr ""
@@ -340,7 +366,7 @@ msgstr ""
 msgid "Load CSS and JS on all pages"
 msgstr ""
 
-#: class-wpzoom-instagram-widget-display.php:583
+#: class-wpzoom-instagram-widget-display.php:637
 msgid "Load More&hellip;"
 msgstr ""
 
@@ -350,6 +376,14 @@ msgstr ""
 
 #: class-wpzoom-instagram-widget-api.php:1334
 msgid "Major Instagram API Update"
+msgstr ""
+
+#: class-wpzoom-instagram-assets.php:307
+msgid "minute"
+msgstr ""
+
+#: class-wpzoom-instagram-assets.php:308
+msgid "minutes"
 msgstr ""
 
 #: class-wpzoom-instagram-general-settings.php:127
@@ -368,13 +402,21 @@ msgstr ""
 msgid "Please configure Instagram Widget"
 msgstr ""
 
-#: class-wpzoom-instagram-widget-display.php:623
+#: class-wpzoom-instagram-widget-display.php:677
 msgid "Please select an account in the panel to the left&hellip;"
 msgstr ""
 
-#: class-wpzoom-instagram-widget-display.php:511
+#: class-wpzoom-instagram-widget-display.php:565
 #: class-wpzoom-instagram-widget.php:224
 msgid "posts"
+msgstr ""
+
+#: class-wpzoom-instagram-assets.php:302
+msgid "Press space to see next"
+msgstr ""
+
+#: class-wpzoom-instagram-assets.php:310
+msgid "seconds"
 msgstr ""
 
 #: elementor/widgets/wpzoom-instagram-feed/wpzoom-instagram-feed.php:159
@@ -452,14 +494,27 @@ msgid ""
 "Instagram methods."
 msgstr ""
 
-#: class-wpzoom-instagram-widget-display.php:561
-#: class-wpzoom-instagram-widget-display.php:927
+#: class-wpzoom-instagram-assets.php:312
+msgid "tomorrow"
+msgstr ""
+
+#: class-wpzoom-instagram-assets.php:301
+msgid "Touch to unmute"
+msgstr ""
+
+#: class-wpzoom-instagram-widget-display.php:517
+#: class-wpzoom-instagram-widget-display.php:615
+#: class-wpzoom-instagram-widget-display.php:981
 #: class-wpzoom-instagram-widget.php:32 class-wpzoom-instagram-widget.php:504
 msgid "View on Instagram"
 msgstr ""
 
-#: class-wpzoom-instagram-widget-display.php:888
+#: class-wpzoom-instagram-widget-display.php:942
 msgid "View Reel on Instagram"
+msgstr ""
+
+#: class-wpzoom-instagram-assets.php:303
+msgid "Visit link"
 msgstr ""
 
 #: class-wpzoom-instagram-widget-api.php:252
@@ -508,6 +563,10 @@ msgstr ""
 
 #. Name of the plugin
 msgid "WPZOOM Instagram Widget & Block"
+msgstr ""
+
+#: class-wpzoom-instagram-assets.php:311
+msgid "yesterday"
 msgstr ""
 
 #: class-wpzoom-instagram-general-settings.php:282
