@@ -247,6 +247,11 @@ import 'zuck.js/skins/snapgram';
 	 * Initialize Instagram Stories with Zuck.js
 	 */
 	function initInstagramStories() {
+		// Skip initialization in feed editor preview (iframe) or admin context
+		if ( window.location.search.indexOf( 'wpz-insta-widget-preview' ) !== -1 ) {
+			return;
+		}
+
 		// Find all story containers
 		$( '.wpz-insta-stories' ).each( function() {
 			const $container = $( this );
