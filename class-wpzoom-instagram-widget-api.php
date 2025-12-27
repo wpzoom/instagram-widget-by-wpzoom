@@ -232,7 +232,7 @@ class Wpzoom_Instagram_Widget_API {
                             update_post_meta( $user->ID, '_wpz-insta_token_expire', strtotime( '+60 days' ) );
                         } else {
                             if ( ! isset( $data->error ) ) {
-                                error_log( __( 'Something wrong! Doesn\'t isset $data->error.', 'instagram-widget-by-wpzoom' ) );
+                                error_log( __( 'Something went wrong: $data->error.', 'instagram-widget-by-wpzoom' ) );
                                 return false;
                             } else {
                                 error_log( $data->error->error_user_msg );

@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: WPZOOM Instagram Widget 1.7.7\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/instagram-widget-"
 "by-wpzoom\n"
-"POT-Creation-Date: 2025-12-27 08:39+0000\n"
+"POT-Creation-Date: 2025-12-27 08:44+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -420,7 +420,7 @@ msgid "seconds"
 msgstr ""
 
 #: elementor/widgets/wpzoom-instagram-feed/wpzoom-instagram-feed.php:159
-msgid "Select a Instagram Feed"
+msgid "Select an Instagram Feed"
 msgstr ""
 
 #: instagram-widget-by-wpzoom.php:61
@@ -432,7 +432,7 @@ msgid "Show <strong>media type icons</strong>"
 msgstr ""
 
 #: class-wpzoom-instagram-widget-api.php:235
-msgid "Something wrong! Doesn't isset $data->error."
+msgid "Something went wrong: $data->error."
 msgstr ""
 
 #: class-wpzoom-instagram-widget.php:648

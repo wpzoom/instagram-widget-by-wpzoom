@@ -156,7 +156,7 @@ class WPZOOM_Instagram_Feed extends Widget_Base {
 		$this->add_control(
 			'instagram_feed_id',
 			array(
-				'label'    => esc_html__( 'Select a Instagram Feed', 'instagram-widget-by-wpzoom' ),
+				'label'    => esc_html__( 'Select an Instagram Feed', 'instagram-widget-by-wpzoom' ),
 				'type'     => Controls_Manager::SELECT2,
 				'label_block' => true,
 				'options'  => $this->get_instagram_feed_posts(),
