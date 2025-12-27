@@ -1851,6 +1851,18 @@
 						align-items: center;
 						width: 100%;
 
+						&.wpz-insta_disabled {
+							> input[type="checkbox"] {
+								opacity: 0.5;
+								pointer-events: none;
+							}
+
+							// Gray out only the text, not the help icon
+							> span {
+								color: rgba(0, 0, 0, 0.4);
+							}
+						}
+
 						&.wpz-insta_table-row-full {
 							flex-direction: column;
 							align-items: stretch;

@@ -1237,6 +1237,7 @@ class WPZOOM_Instagram_Widget_Settings {
 			$user_edit_link                   = $user instanceof WP_Post ? admin_url( 'edit.php?post_type=wpz-insta_user#post-' . $user_id ) : '';
 			$user_display_name                = $user instanceof WP_Post ? sprintf( '@%s', get_the_title( $user ) ) : $none_label;
 			$user_account_type                = $user instanceof WP_Post ? ucwords( strtolower( get_post_meta( $user_id, '_wpz-insta_account-type', true ) ?: $none_label ) ) : $none_label;
+			$user_has_facebook_connection     = $user instanceof WP_Post ? ! empty( get_post_meta( $user_id, '_wpz-insta_page_id', true ) ) : false;
 			$raw_token                        = get_post_meta( $user_id, '_wpz-insta_token', true );
 			$user_account_token               = $user instanceof WP_Post ? ( false !== $raw_token && ! empty( $raw_token ) ? $raw_token : '-1' ) : '-1';
 			$new_posts_interval_number        = (int) self::get_feed_setting_value( $post->ID, 'check-new-posts-interval-number' );
@@ -1628,9 +1629,9 @@ class WPZOOM_Instagram_Widget_Settings {
                                             </span>
 										</label>
 
-										<label class="wpz-insta_table-row">
+										<label class="wpz-insta_table-row<?php echo ! $user_has_facebook_connection ? ' wpz-insta_disabled' : ''; ?>">
 											<input type="hidden" name="_wpz-insta_show-stories" value="0" />
-											<input type="checkbox" name="_wpz-insta_show-stories" value="1"<?php checked( $show_stories ); ?> />
+											<input type="checkbox" name="_wpz-insta_show-stories" value="1"<?php checked( $show_stories ); ?><?php disabled( ! $user_has_facebook_connection ); ?> />
 											<span>
                                                 <?php esc_html_e( 'Display Instagram Stories', 'instagram-widget-by-wpzoom' ); ?>
 
@@ -2034,9 +2035,10 @@ class WPZOOM_Instagram_Widget_Settings {
 							$user_type = ucwords( strtolower( esc_html( get_post_meta( $user_id, '_wpz-insta_account-type', true ) ?: $none_label ) ) );
 							$raw_token = get_post_meta( $user_id, '_wpz-insta_token', true );
 							$user_token = sanitize_text_field( false !== $raw_token && ! empty( $raw_token ) ? $raw_token : '-1' );
+							$user_has_page_id = ! empty( get_post_meta( $user_id, '_wpz-insta_page_id', true ) );
 
 							?>
-							<li data-user-id="<?php echo esc_attr( $user_id ); ?>" data-user-name="<?php echo esc_attr( $user_name ); ?>" data-user-type="<?php echo esc_attr( $user_type ); ?>" data-user-token="<?php echo esc_attr( $user_token ); ?>">
+							<li data-user-id="<?php echo esc_attr( $user_id ); ?>" data-user-name="<?php echo esc_attr( $user_name ); ?>" data-user-type="<?php echo esc_attr( $user_type ); ?>" data-user-token="<?php echo esc_attr( $user_token ); ?>" data-has-page-id="<?php echo $user_has_page_id ? '1' : '0'; ?>">
 								<h3><?php echo $user_name; ?></h3>
 								<p><?php echo $user_type; ?></p>
 							</li>
