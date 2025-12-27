@@ -278,7 +278,14 @@
   line-height: 48px;
   cursor: pointer;
   text-align: center;
+  color: #fff !important;
+  text-decoration: none;
 }
+#zuck-modal-content .story-viewer .head .right .close:hover,
+#zuck-modal-content .story-viewer .head .back:hover {
+    opacity: .7;
+}
+
 #zuck-modal-content .story-viewer .head .left .back {
   display: none;
   width: 24px;

@@ -12,6 +12,113 @@ import 'zuck.js/skins/snapgram';
 ( function( $ ) {
 	'use strict';
 
+	// Inject CSS fixes for iOS Safari viewport height issue and modal styling
+	function injectModalStyles() {
+		const styleId = 'wpz-insta-stories-modal-fix';
+		if ( document.getElementById( styleId ) ) {
+			return;
+		}
+
+		const style = document.createElement( 'style' );
+		style.id = styleId;
+		style.textContent = `
+			/* Body scroll lock when stories modal is open */
+			body.wpz-insta-stories-open {
+				overflow: hidden !important;
+				position: fixed !important;
+				width: 100% !important;
+				height: 100% !important;
+			}
+
+			/* Full-screen overlay background */
+			.wpz-insta-stories-overlay {
+				position: fixed !important;
+				top: 0 !important;
+				left: 0 !important;
+				right: 0 !important;
+				bottom: 0 !important;
+				width: 100% !important;
+				height: 100% !important;
+				background: #000 !important;
+				z-index: 99999 !important;
+				display: none;
+			}
+			.wpz-insta-stories-overlay.active {
+				display: block !important;
+			}
+
+			/* Fix iOS Safari viewport height issue */
+			#zuck-modal {
+				position: fixed !important;
+				top: 0 !important;
+				left: 0 !important;
+				right: 0 !important;
+				bottom: 0 !important;
+				width: 100% !important;
+				height: 100% !important;
+				height: 100dvh !important;
+				min-height: -webkit-fill-available !important;
+				z-index: 100000 !important;
+				background: #000 !important;
+			}
+			#zuck-modal-content,
+			#zuck-modal-content .story-viewer,
+			#zuck-modal-content .story-viewer > .slides,
+			#zuck-modal-content .story-viewer > .slides > * {
+				height: 100% !important;
+				height: 100dvh !important;
+				min-height: -webkit-fill-available !important;
+			}
+			/* Ensure the slider also uses full height */
+			#zuck-modal .slider {
+				height: 100% !important;
+				height: 100dvh !important;
+				min-height: -webkit-fill-available !important;
+			}
+			#zuck-modal .slider > * {
+				height: 100% !important;
+				height: 100dvh !important;
+				min-height: -webkit-fill-available !important;
+			}
+		`;
+		document.head.appendChild( style );
+
+		// Create overlay element
+		if ( ! document.getElementById( 'wpz-insta-stories-overlay' ) ) {
+			const overlay = document.createElement( 'div' );
+			overlay.id = 'wpz-insta-stories-overlay';
+			overlay.className = 'wpz-insta-stories-overlay';
+			document.body.appendChild( overlay );
+		}
+	}
+
+	// Show/hide overlay and lock body scroll
+	function showModalOverlay() {
+		const overlay = document.getElementById( 'wpz-insta-stories-overlay' );
+		if ( overlay ) {
+			overlay.classList.add( 'active' );
+		}
+		document.body.classList.add( 'wpz-insta-stories-open' );
+		// Store scroll position
+		document.body.dataset.scrollY = window.scrollY;
+	}
+
+	function hideModalOverlay() {
+		const overlay = document.getElementById( 'wpz-insta-stories-overlay' );
+		if ( overlay ) {
+			overlay.classList.remove( 'active' );
+		}
+		document.body.classList.remove( 'wpz-insta-stories-open' );
+		// Restore scroll position
+		const scrollY = document.body.dataset.scrollY;
+		if ( scrollY ) {
+			window.scrollTo( 0, parseInt( scrollY, 10 ) );
+		}
+	}
+
+	// Inject modal styles immediately
+	injectModalStyles();
+
 	// Track initialized containers to prevent duplicate initialization
 	const initializedContainers = new Set();
 
@@ -249,6 +356,9 @@ import 'zuck.js/skins/snapgram';
 				},
 				callbacks: {
 					onOpen: function( storyId, callback ) {
+						// Show overlay and lock body scroll
+						showModalOverlay();
+
 						// If a different Zuck instance was active, we need to clear the modal
 						// to prevent mixing stories from different feeds
 						if ( activeZuckInstance && activeZuckInstance !== zuckInstance ) {
@@ -286,6 +396,9 @@ import 'zuck.js/skins/snapgram';
 						callback();
 					},
 					onClose: function( storyId, callback ) {
+						// Hide overlay and unlock body scroll
+						hideModalOverlay();
+
 						// Modal closed - clear active instance
 						activeZuckInstance = null;
 
