@@ -569,7 +569,7 @@ class WPZOOM_Instagram_Widget_Settings {
 	}
 
 	function set_custom_edit_columns_feed( $columns ) {
-		unset( $columns['cb'], $columns['date'] );
+		unset( $columns['cb'], $columns['date'], $columns['rocket_insights'] );
 
 		$columns['wpz-insta_account'] = __( 'Show posts from', 'instagram-widget-by-wpzoom' );
 		$columns['wpz-insta_actions'] = __( 'Actions', 'instagram-widget-by-wpzoom' );
@@ -578,7 +578,7 @@ class WPZOOM_Instagram_Widget_Settings {
 	}
 
 	function set_custom_edit_columns_user( $columns ) {
-		unset( $columns['cb'], $columns['title'], $columns['date'] );
+		unset( $columns['cb'], $columns['title'], $columns['date'], $columns['rocket_insights'] );
 
 		$columns['wpz-insta_account-username'] = __( 'Username', 'instagram-widget-by-wpzoom' );
 		$columns['wpz-insta_account-type'] = __( 'Type', 'instagram-widget-by-wpzoom' );
