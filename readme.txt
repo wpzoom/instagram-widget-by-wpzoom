@@ -5,7 +5,7 @@ Tags: instagram, instagram feed, instagram gallery, instagram photos, instagram 
 Requires at least: 6.0
 Tested up to: 6.9
 Requires PHP: 7.4
-Stable tag: 2.2.11
+Stable tag: 2.2.12
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -27,39 +27,39 @@ WPZOOM Social Feed Widget makes it easy to showcase your Instagram photos, video
 
 = Why Choose WPZOOM Social Feed Widget? =
 
-**Quick & Easy Setup** — Connect your Instagram account and display feeds in just 3 steps
-**Fully Responsive** — Looks perfect on desktop, tablet, and mobile devices
-**Multiple Embed Options** — Gutenberg Block, Shortcode, Widget, and Elementor support
-**Lightweight & Fast** — Optimized for performance with lazy loading
-**Regular Updates** — Fully compatible with the latest Instagram API
+**Quick & Easy Setup** - Connect your Instagram account and display feeds in just 3 steps
+**Fully Responsive** - Looks perfect on desktop, tablet, and mobile devices
+**Multiple Embed Options** - Gutenberg Block, Shortcode, Widget, and Elementor support
+**Lightweight & Fast** - Optimized for performance with lazy loading
+**Regular Updates** - Fully compatible with the latest Instagram API
 
-> "Finally, an Instagram plugin that just works!" — Join thousands of satisfied users
+> "Finally, an Instagram plugin that just works!" - Join thousands of satisfied users
 
 = 📸 FREE FEATURES =
 
-* **Create Unlimited Instagram Feeds** — Display as many feeds as you need
-* **Gutenberg Block** — Native WordPress block editor support
-* **Shortcode Support** — Embed feeds in Elementor, Beaver Builder, Divi, and any page builder
-* **Multiple Layouts** — Grid and other layout options to match your design
-* **Lightbox Gallery** — View photos and videos in a beautiful popup
-* **Custom Header** — Add your own avatar and bio text
-* **Lazy Loading** — Improves page speed and performance
-* **Responsive Design** — Mobile-friendly out of the box
+* **Create Unlimited Instagram Feeds** - Display as many feeds as you need
+* **Gutenberg Block** - Native WordPress block editor support
+* **Shortcode Support** - Embed feeds in Elementor, Beaver Builder, Divi, and any page builder
+* **Multiple Layouts** - Grid and other layout options to match your design
+* **Lightbox Gallery** - View photos and videos in a beautiful popup
+* **Custom Header** - Add your own avatar and bio text
+* **Lazy Loading** - Improves page speed and performance
+* **Responsive Design** - Mobile-friendly out of the box
 
 = ⭐️ PRO FEATURES =
 
 Upgrade to **[Instagram Widget PRO](https://www.wpzoom.com/plugins/instagram-widget/?utm_source=wporg&utm_medium=insta-free-desc&utm_campaign=insta-free-pro-link)** for powerful features:
 
-* **📊 Instagram Insights & Analytics — 🆕** — Track follower growth, reach, impressions, engagement, and individual post performance with beautiful charts
-* **Display Instagram Stories** — Show your Instagram Stories directly on your website
-* **Display Follower Count** — Show your real-time follower count in the feed header
-* **Masonry Layout** — Pinterest-style grid for a modern look
-* **Carousel/Slider** — Showcase your photos in an interactive slider
-* **Responsive Column Control** — Set different columns for desktop, tablet, and mobile
-* **Load More Button** — Let visitors load additional posts without page refresh
-* **Advanced Color Customization** — Full control over colors and styling
-* **Connect Multiple Accounts** — Display feeds from different Instagram accounts
-* **Priority Support** — Get help when you need it
+* **📊 Instagram Insights & Analytics 🆕** - Track follower growth, reach, impressions, engagement, and individual post performance with beautiful charts
+* **Display Instagram Stories** - Show your Instagram Stories directly on your website
+* **Display Follower Count** - Show your real-time follower count in the feed header
+* **Masonry Layout** - Pinterest-style grid for a modern look
+* **Carousel/Slider** - Showcase your photos in an interactive slider
+* **Responsive Column Control** - Set different columns for desktop, tablet, and mobile
+* **Load More Button** - Let visitors load additional posts without page refresh
+* **Advanced Color Customization** - Full control over colors and styling
+* **Connect Multiple Accounts** - Display feeds from different Instagram accounts
+* **Priority Support** - Get help when you need it
 
 ⭐️ **[Upgrade to PRO Today!](https://www.wpzoom.com/plugins/instagram-widget/?utm_source=wporg&utm_medium=insta-free-desc&utm_campaign=insta-free-pro-link)** ⭐️
 
@@ -67,23 +67,22 @@ Upgrade to **[Instagram Widget PRO](https://www.wpzoom.com/plugins/instagram-wid
 
 Track your Instagram performance directly from your WordPress dashboard:
 
-* **Follower Growth** — Monitor new followers, lost followers, and net growth over time
-* **Reach & Impressions** — See how many accounts your content is reaching
-* **Engagement Metrics** — Track accounts engaged and total interactions
-* **Post Performance** — Analyze likes, comments, saves, and reach for each post
-* **Interactive Charts** — Beautiful visualizations of your Instagram data
-* **Multiple Date Ranges** — View data for 7, 14, 30, or 90 days
+* **Follower Growth**: Monitor new followers, lost followers, and net growth over time
+* **Reach & Impressions**: See how many accounts your content is reaching
+* **Engagement Metrics**: Track accounts engaged and total interactions
+* **Post Performance**: Analyze likes, comments, saves, and reach for each post
+* **Interactive Charts**: Beautiful visualizations of your Instagram data
+* **Multiple Date Ranges**: View data for 7, 14, 30, or 90 days
 
-*Instagram Insights requires a Business or Creator account connected via Facebook.*
 
 = Works With Your Favorite Tools =
 
-* ✅ Gutenberg / Block Editor
-* ✅ Elementor
-* ✅ Beaver Builder
-* ✅ Divi Builder
-* ✅ WPBakery Page Builder
-* ✅ Any theme or page builder with shortcode support
+* Gutenberg / Block Editor
+* Elementor
+* Beaver Builder
+* Divi Builder
+* WPBakery Page Builder
+* Any theme or page builder with shortcode support
 
 = Get Involved =
 
@@ -168,6 +167,9 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 
 
 == Changelog ==
+
+= 2.2.12 =
+* Minor bug fixes
 
 = 2.2.11 =
 * Minor bug fixes
