@@ -1,0 +1,142 @@
+/**
+ * Review notice styles
+ *
+ * @package wpzoom/instagram-widget-by-wpzoom
+ * @since 2.2.12
+ */
+
+:root {
+	--wpzoom-instagram-primary-color: #e1306c;
+}
+
+.wpzoom-instagram-review-notice {
+	position: relative;
+	display: flex;
+	align-items: flex-start;
+	padding: 20px 25px !important;
+	border-left-color: var(--wpzoom-instagram-primary-color) !important;
+	background: linear-gradient(135deg, #fff 0%, #fdf2f5 100%);
+	border-radius: 4px;
+}
+
+.wpzoom-instagram-review-notice .wpzoom-instagram-notice-dismiss {
+	position: absolute;
+	top: 10px;
+	right: 10px;
+	text-decoration: none;
+}
+
+.wpzoom-instagram-review-notice .wpzoom-instagram-notice-image {
+	flex-shrink: 0;
+	margin-right: 20px;
+	padding: 10px;
+	background: #fff;
+	border-radius: 12px;
+	box-shadow: 0 2px 8px rgba(225, 48, 108, 0.15);
+}
+
+.wpzoom-instagram-review-notice .wpzoom-instagram-notice-image img {
+	display: block;
+	width: 60px;
+	height: auto;
+}
+
+.wpzoom-instagram-review-notice .wpzoom-instagram-notice-text {
+	flex: 1;
+	padding-right: 30px;
+}
+
+.wpzoom-instagram-review-notice .wpzoom-instagram-notice-text h3 {
+	margin: 0 0 10px;
+	font-size: 18px;
+	font-weight: 600;
+	color: #1d2327;
+}
+
+.wpzoom-instagram-review-notice .wpzoom-instagram-notice-text p {
+	margin: 0 0 15px;
+	font-size: 14px;
+	line-height: 1.6;
+	color: #50575e;
+}
+
+.wpzoom-instagram-review-notice .wpzoom-instagram-notice-buttons {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 10px;
+}
+
+.wpzoom-instagram-review-notice .wpzoom-instagram-notice-buttons .button {
+	display: inline-flex;
+	align-items: center;
+	font-weight: 500;
+	font-size: 13px;
+	padding: 6px 14px;
+	border-radius: 4px;
+	text-decoration: none;
+	transition: all 0.2s ease;
+}
+
+.wpzoom-instagram-review-notice .wpzoom-instagram-notice-buttons .button-primary {
+	background: var(--wpzoom-instagram-primary-color) !important;
+	border-color: var(--wpzoom-instagram-primary-color) !important;
+	color: #fff !important;
+}
+
+.wpzoom-instagram-review-notice .wpzoom-instagram-notice-buttons .button-primary:hover {
+	background: #c13584 !important;
+	border-color: #c13584 !important;
+}
+
+.wpzoom-instagram-review-notice .wpzoom-instagram-notice-buttons .button-primary .dashicons {
+	font-size: 14px;
+	width: 14px;
+	height: 14px;
+	margin-right: 5px;
+	margin-top: 2px;
+}
+
+.wpzoom-instagram-review-notice .wpzoom-instagram-notice-buttons .button-secondary {
+	background: #fff !important;
+	border-color: #c3c4c7 !important;
+	color: #50575e !important;
+}
+
+.wpzoom-instagram-review-notice .wpzoom-instagram-notice-buttons .button-secondary:hover {
+	background: #f6f7f7 !important;
+	border-color: #8c8f94 !important;
+	color: #1d2327 !important;
+}
+
+.wpzoom-instagram-review-notice .wpzoom-instagram-already-reviewed {
+	color: #787c82;
+	font-size: 13px;
+	text-decoration: none;
+}
+
+.wpzoom-instagram-review-notice .wpzoom-instagram-already-reviewed:hover {
+	color: #1d2327;
+	text-decoration: underline;
+}
+
+/* Responsive adjustments */
+@media screen and (max-width: 782px) {
+	.wpzoom-instagram-review-notice {
+		flex-direction: column;
+	}
+
+	.wpzoom-instagram-review-notice .wpzoom-instagram-notice-image {
+		margin-right: 0;
+		margin-bottom: 15px;
+	}
+
+	.wpzoom-instagram-review-notice .wpzoom-instagram-notice-text {
+		padding-right: 20px;
+	}
+
+	.wpzoom-instagram-review-notice .wpzoom-instagram-notice-buttons {
+		flex-direction: column;
+		align-items: flex-start;
+	}
+}

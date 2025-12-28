@@ -4,7 +4,7 @@
  * Handles the UI interactions for the Instagram Insights dashboard
  * including chart rendering, data fetching, and metric displays.
  *
- * @package suspended
+ * @package wpzoom/instagram-widget-by-wpzoom
  * @since 2.0.0
  */
 

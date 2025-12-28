@@ -6,7 +6,7 @@
  * Displays analytics data including followers, reach, impressions,
  * engagement, and recent posts performance.
  *
- * @package suspended
+ * @package wpzoom/instagram-widget-by-wpzoom
  * @since 2.0.0
  */
 

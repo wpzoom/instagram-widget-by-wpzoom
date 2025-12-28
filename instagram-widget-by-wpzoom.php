@@ -47,6 +47,7 @@ require_once WPZOOM_INSTAGRAM_PLUGIN_PATH . 'class-wpzoom-instagram-assets.php';
 require_once WPZOOM_INSTAGRAM_PLUGIN_PATH . 'class-wpzoom-instagram-widget-after-setup.php';
 require_once WPZOOM_INSTAGRAM_PLUGIN_PATH . 'class-wpzoom-instagram-email-notification.php';
 require_once WPZOOM_INSTAGRAM_PLUGIN_PATH . 'class-wpzoom-instagram-insights.php';
+require_once WPZOOM_INSTAGRAM_PLUGIN_PATH . 'class-wpzoom-instagram-review-notice.php';
 
 add_action( 'widgets_init', 'zoom_instagram_widget_register' );
 function zoom_instagram_widget_register() {

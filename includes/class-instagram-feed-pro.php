@@ -5,7 +5,7 @@
  * Handles fetching and caching of Instagram insights data
  * for business accounts connected via Facebook Graph API.
  *
- * @package suspended
+ * @package wpzoom/instagram-widget-by-wpzoom
  * @since 2.0.0
  */
 
