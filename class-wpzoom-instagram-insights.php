@@ -63,13 +63,24 @@ class WPZOOM_Instagram_Insights {
     }
 
     /**
+     * Check if Pro version is active
+     *
+     * @return bool
+     */
+    private function is_pro() {
+        return apply_filters( 'wpz-insta_is-pro', false );
+    }
+
+    /**
      * Add Insights submenu page
      */
     public function add_insights_submenu() {
+        // Show "PRO" badge for free users, "NEW" for Pro users
+        $badge_text = $this->is_pro() ? __( 'NEW', 'instagram-widget-by-wpzoom' ) : __( 'PRO', 'instagram-widget-by-wpzoom' );
         $menu_title = sprintf(
             '%s <span class="wpz-insta-menu-badge">%s</span>',
             __( 'Insights', 'instagram-widget-by-wpzoom' ),
-            __( 'NEW', 'instagram-widget-by-wpzoom' )
+            $badge_text
         );
 
         add_submenu_page(
@@ -205,6 +216,12 @@ class WPZOOM_Instagram_Insights {
      * Render the insights page
      */
     public function render_insights_page() {
+        // If not Pro, show the demo/upsell version
+        if ( ! $this->is_pro() ) {
+            $this->render_demo_insights_page();
+            return;
+        }
+
         $accounts = $this->get_connected_accounts();
         ?>
         <div class="wrap wpzoom-instagram-insights">
@@ -440,6 +457,200 @@ class WPZOOM_Instagram_Insights {
             'posts'       => $media_data['items'],
             'next_cursor' => $media_data['next_cursor'],
         ) );
+    }
+
+    /**
+     * Render the demo/upsell version of the insights page for non-Pro users
+     */
+    private function render_demo_insights_page() {
+        $upgrade_url = 'https://www.wpzoom.com/plugins/instagram-widget/?utm_source=wpadmin&utm_medium=insights-page&utm_campaign=upgrade-to-pro';
+        ?>
+        <div class="wrap wpzoom-instagram-insights is-demo">
+            <h1><?php esc_html_e( 'Instagram Insights', 'instagram-widget-by-wpzoom' ); ?></h1>
+
+            <!-- Upsell Modal Overlay -->
+            <div class="insights-upsell-overlay">
+                <div class="insights-upsell-modal">
+                    <div class="upsell-icon">
+                        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z" fill="url(#instagram-gradient)"/>
+                            <defs>
+                                <linearGradient id="instagram-gradient" x1="2" y1="2" x2="22" y2="22" gradientUnits="userSpaceOnUse">
+                                    <stop stop-color="#f09433"/>
+                                    <stop offset="0.25" stop-color="#e6683c"/>
+                                    <stop offset="0.5" stop-color="#dc2743"/>
+                                    <stop offset="0.75" stop-color="#cc2366"/>
+                                    <stop offset="1" stop-color="#bc1888"/>
+                                </linearGradient>
+                            </defs>
+                        </svg>
+                    </div>
+                    <h2><?php esc_html_e( 'Unlock Instagram Insights', 'instagram-widget-by-wpzoom' ); ?></h2>
+                    <p class="upsell-description">
+                        <?php esc_html_e( 'Track your Instagram account\'s growth and performance with detailed analytics. Get insights on followers, reach, engagement, and individual post performance.', 'instagram-widget-by-wpzoom' ); ?>
+                    </p>
+                    <ul class="upsell-features">
+                        <li><?php esc_html_e( 'Follower growth tracking with daily breakdowns', 'instagram-widget-by-wpzoom' ); ?></li>
+                        <li><?php esc_html_e( 'Reach and impressions analytics', 'instagram-widget-by-wpzoom' ); ?></li>
+                        <li><?php esc_html_e( 'Engagement metrics and trends', 'instagram-widget-by-wpzoom' ); ?></li>
+                        <li><?php esc_html_e( 'Individual post performance insights', 'instagram-widget-by-wpzoom' ); ?></li>
+                        <li><?php esc_html_e( 'Interactive charts and visualizations', 'instagram-widget-by-wpzoom' ); ?></li>
+                    </ul>
+                    <a href="<?php echo esc_url( $upgrade_url ); ?>" class="button-upsell-primary" target="_blank" rel="noopener">
+                        <?php esc_html_e( 'Upgrade to PRO', 'instagram-widget-by-wpzoom' ); ?>
+                    </a>
+                    <p class="upsell-note">
+                        <?php esc_html_e( 'Part of the Instagram Widget PRO plugin', 'instagram-widget-by-wpzoom' ); ?>
+                    </p>
+                </div>
+            </div>
+
+            <!-- Demo Content (blurred background) -->
+            <div class="insights-demo-content">
+                <div class="insights-container">
+                    <div class="insights-header">
+                        <div class="account-selector">
+                            <select disabled>
+                                <option><?php esc_html_e( 'Demo Account', 'instagram-widget-by-wpzoom' ); ?></option>
+                            </select>
+                        </div>
+
+                        <div class="period-selector">
+                            <select disabled>
+                                <option><?php esc_html_e( 'Last 30 days', 'instagram-widget-by-wpzoom' ); ?></option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="date-range-display">
+                        <span><?php echo esc_html( sprintf( __( 'Data for %s - %s', 'instagram-widget-by-wpzoom' ), gmdate( 'M j, Y', strtotime( '-30 days' ) ), gmdate( 'M j, Y' ) ) ); ?></span>
+                    </div>
+
+                    <div class="insights-metrics">
+                        <div class="metric-card followers">
+                            <h3><?php esc_html_e( 'Total Followers', 'instagram-widget-by-wpzoom' ); ?></h3>
+                            <div class="metric-value">12,458</div>
+                            <div class="followers-breakdown">
+                                <div class="breakdown-item new">
+                                    <span class="breakdown-label"><?php esc_html_e( 'New', 'instagram-widget-by-wpzoom' ); ?></span>
+                                    <span class="breakdown-value">+347</span>
+                                </div>
+                                <div class="breakdown-item lost">
+                                    <span class="breakdown-label"><?php esc_html_e( 'Lost', 'instagram-widget-by-wpzoom' ); ?></span>
+                                    <span class="breakdown-value">-52</span>
+                                </div>
+                                <div class="breakdown-item net">
+                                    <span class="breakdown-label"><?php esc_html_e( 'Net', 'instagram-widget-by-wpzoom' ); ?></span>
+                                    <span class="breakdown-value positive">+295</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="metric-card reach">
+                            <h3><?php esc_html_e( 'Accounts Reached', 'instagram-widget-by-wpzoom' ); ?></h3>
+                            <div class="metric-value">45,892</div>
+                            <div class="metric-change positive">+12.4%</div>
+                        </div>
+
+                        <div class="metric-card impressions">
+                            <h3><?php esc_html_e( 'Views', 'instagram-widget-by-wpzoom' ); ?></h3>
+                            <div class="metric-value">128,456</div>
+                            <div class="metric-change positive">+8.7%</div>
+                        </div>
+
+                        <div class="metric-card engagement">
+                            <h3><?php esc_html_e( 'Accounts Engaged', 'instagram-widget-by-wpzoom' ); ?></h3>
+                            <div class="metric-value">3,247</div>
+                            <div class="metric-change positive">+5.2%</div>
+                        </div>
+
+                        <div class="metric-card total-likes">
+                            <h3><?php esc_html_e( 'Total Likes', 'instagram-widget-by-wpzoom' ); ?></h3>
+                            <div class="metric-value">8,934</div>
+                            <div class="metric-change positive">+15.3%</div>
+                        </div>
+                    </div>
+
+                    <div class="insights-charts">
+                        <div class="chart-container">
+                            <h3 class="chart-title"><?php esc_html_e( 'Follower Growth', 'instagram-widget-by-wpzoom' ); ?></h3>
+                            <div class="demo-chart-placeholder">
+                                <svg viewBox="0 0 400 200" preserveAspectRatio="none">
+                                    <defs>
+                                        <linearGradient id="chart-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                                            <stop offset="0%" style="stop-color:rgba(66, 133, 244, 0.3)"/>
+                                            <stop offset="100%" style="stop-color:rgba(66, 133, 244, 0)"/>
+                                        </linearGradient>
+                                    </defs>
+                                    <path d="M0,150 Q50,140 100,130 T200,100 T300,80 T400,50 L400,200 L0,200 Z" fill="url(#chart-gradient)"/>
+                                    <path d="M0,150 Q50,140 100,130 T200,100 T300,80 T400,50" stroke="rgb(66, 133, 244)" stroke-width="2" fill="none"/>
+                                    <circle cx="0" cy="150" r="4" fill="rgb(66, 133, 244)"/>
+                                    <circle cx="100" cy="130" r="4" fill="rgb(66, 133, 244)"/>
+                                    <circle cx="200" cy="100" r="4" fill="rgb(66, 133, 244)"/>
+                                    <circle cx="300" cy="80" r="4" fill="rgb(66, 133, 244)"/>
+                                    <circle cx="400" cy="50" r="4" fill="rgb(66, 133, 244)"/>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="chart-container">
+                            <h3 class="chart-title"><?php esc_html_e( 'Reach', 'instagram-widget-by-wpzoom' ); ?></h3>
+                            <div class="demo-chart-placeholder">
+                                <svg viewBox="0 0 400 200" preserveAspectRatio="none">
+                                    <defs>
+                                        <linearGradient id="reach-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                                            <stop offset="0%" style="stop-color:rgba(255, 99, 132, 0.3)"/>
+                                            <stop offset="100%" style="stop-color:rgba(255, 99, 132, 0)"/>
+                                        </linearGradient>
+                                    </defs>
+                                    <path d="M0,120 Q50,100 100,110 T200,80 T300,90 T400,60 L400,200 L0,200 Z" fill="url(#reach-gradient)"/>
+                                    <path d="M0,120 Q50,100 100,110 T200,80 T300,90 T400,60" stroke="rgb(255, 99, 132)" stroke-width="2" fill="none"/>
+                                    <circle cx="0" cy="120" r="4" fill="rgb(255, 99, 132)"/>
+                                    <circle cx="100" cy="110" r="4" fill="rgb(255, 99, 132)"/>
+                                    <circle cx="200" cy="80" r="4" fill="rgb(255, 99, 132)"/>
+                                    <circle cx="300" cy="90" r="4" fill="rgb(255, 99, 132)"/>
+                                    <circle cx="400" cy="60" r="4" fill="rgb(255, 99, 132)"/>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="recent-posts-section">
+                        <h2><?php esc_html_e( 'Recent Posts Performance', 'instagram-widget-by-wpzoom' ); ?></h2>
+                        <div class="recent-posts-grid">
+                            <?php for ( $i = 0; $i < 3; $i++ ) : ?>
+                                <div class="recent-post demo-post">
+                                    <div class="post-thumbnail">
+                                        <div class="demo-thumbnail-placeholder"></div>
+                                    </div>
+                                    <div class="post-content">
+                                        <div class="post-caption"><?php esc_html_e( 'Sample post caption showing engagement metrics...', 'instagram-widget-by-wpzoom' ); ?></div>
+                                        <div class="post-stats">
+                                            <div class="stat">
+                                                <span class="label"><?php esc_html_e( 'Impressions', 'instagram-widget-by-wpzoom' ); ?>:</span>
+                                                <span class="value"><?php echo esc_html( number_format( rand( 1000, 5000 ) ) ); ?></span>
+                                            </div>
+                                            <div class="stat">
+                                                <span class="label"><?php esc_html_e( 'Reach', 'instagram-widget-by-wpzoom' ); ?>:</span>
+                                                <span class="value"><?php echo esc_html( number_format( rand( 800, 4000 ) ) ); ?></span>
+                                            </div>
+                                            <div class="stat">
+                                                <span class="label"><?php esc_html_e( 'Likes', 'instagram-widget-by-wpzoom' ); ?>:</span>
+                                                <span class="value"><?php echo esc_html( number_format( rand( 100, 500 ) ) ); ?></span>
+                                            </div>
+                                            <div class="stat">
+                                                <span class="label"><?php esc_html_e( 'Comments', 'instagram-widget-by-wpzoom' ); ?>:</span>
+                                                <span class="value"><?php echo esc_html( rand( 5, 50 ) ); ?></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            <?php endfor; ?>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <?php
     }
 }
 
