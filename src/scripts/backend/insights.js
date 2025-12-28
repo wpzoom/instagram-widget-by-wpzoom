@@ -41,6 +41,7 @@ document.addEventListener('DOMContentLoaded', function() {
     let followersChart = null;
     let engagementChart = null;
     let isLoading = false;
+    let dailyFollowerChanges = []; // Store daily changes for tooltip display
 
     /**
      * Show loading state on the page
@@ -242,8 +243,15 @@ document.addEventListener('DOMContentLoaded', function() {
                     tooltip: {
                         callbacks: {
                             label: function(context) {
-                                const value = context.parsed.y;
-                                return formatCompactNumber(value);
+                                const total = context.parsed.y;
+                                const index = context.dataIndex;
+                                const dailyChange = dailyFollowerChanges[index] || 0;
+                                const changePrefix = dailyChange >= 0 ? '+' : '';
+
+                                return [
+                                    `${wpzoomInsights.i18n.followers || 'Followers'}: ${formatNumber(total)}`,
+                                    `${changePrefix}${dailyChange} ${wpzoomInsights.i18n.followersChange || 'followers'}`
+                                ];
                             }
                         }
                     }
@@ -559,6 +567,9 @@ document.addEventListener('DOMContentLoaded', function() {
         // The API returns daily changes, so we calculate cumulative counts
         if (data.follower_count && data.follower_count.length > 0 && data.followers_stats) {
             const labels = data.follower_count.map(item => formatDate(item.end_time));
+
+            // Store daily changes for tooltip display
+            dailyFollowerChanges = data.follower_count.map(item => item.value);
 
             // Calculate cumulative follower counts starting from period_start
             const startingCount = data.followers_stats.period_start || 0;
