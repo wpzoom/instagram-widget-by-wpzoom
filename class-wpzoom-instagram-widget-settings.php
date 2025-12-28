@@ -3346,7 +3346,7 @@ class WPZOOM_Instagram_Widget_Settings {
 					<?php
 					printf(
 						__( 'Instagram Widget <small>by <a href="%s" target="_blank" title="WPZOOM - WordPress themes with modern features and professional support">WPZOOM</a></small>', 'instagram-widget-by-wpzoom' ),
-						esc_url( 'https://wpzoom.com' )
+						esc_url( 'https://www.wpzoom.com' )
 					);
 					?>
 				</h1>
@@ -3362,7 +3362,7 @@ class WPZOOM_Instagram_Widget_Settings {
 
 					<!--// Connect Bussines Account-->
 					<div class="account-option account-option_business">
-						<h4 class="account-option-title"><span class="dashicons dashicons-facebook"></span> <?php esc_html_e( 'Connect via Facebook Page', 'instagram-widget-by-wpzoom' ); ?></h4>
+						<h4 class="account-option-title"><span class="dashicons dashicons-facebook-alt"></span> <?php esc_html_e( 'Connect via Facebook Page', 'instagram-widget-by-wpzoom' ); ?></h4>
 
 						<ul class="account-option-checklist">
 							<li><?php _e( 'Works with Instagram Creator or Business accounts ', 'instagram-widget-by-wpzoom' ); ?></li>
