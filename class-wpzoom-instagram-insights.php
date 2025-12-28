@@ -91,11 +91,19 @@ class WPZOOM_Instagram_Insights {
             'version' => WPZOOM_INSTAGRAM_VERSION
         );
 
-        // Enqueue styles
+        // Enqueue main backend styles (includes footer styles)
+        wp_enqueue_style(
+            'wpzoom-instagram-widget-backend',
+            WPZOOM_INSTAGRAM_PLUGIN_URL . 'dist/styles/backend/index.css',
+            array(),
+            WPZOOM_INSTAGRAM_VERSION
+        );
+
+        // Enqueue insights-specific styles
         wp_enqueue_style(
             'wpzoom-instagram-insights',
             WPZOOM_INSTAGRAM_PLUGIN_URL . 'dist/styles/backend/insights.css',
-            array(),
+            array( 'wpzoom-instagram-widget-backend' ),
             WPZOOM_INSTAGRAM_VERSION
         );
 

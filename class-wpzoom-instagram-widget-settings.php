@@ -432,6 +432,7 @@ class WPZOOM_Instagram_Widget_Settings {
 						'instagram_page_wpzoom-instagram-users',
 						'wpz-insta_feed_page_wpz-insta_settings',
 						'wpz-insta_feed_page_wpzoom-instagram-support',
+						'wpz-insta_feed_page_wpzoom-instagram-insights',
 						'settings_page_wpz-insta-connect',
 						'wpz-insta_feed_page_wpz-insta-connect',
 					)
@@ -2257,7 +2258,7 @@ class WPZOOM_Instagram_Widget_Settings {
         $pro_toggle = apply_filters( 'wpz-insta_admin-pro-options-toggle', true );
 
 
-		if ( 'toplevel_page_wpzoom-instagram' == $current_screen->id || 'wpz-insta_feed' == $current_screen->post_type || 'wpz-insta_user' == $current_screen->post_type || 'instagram_page_wpzoom-instagram-users' == $current_screen->id || 'wpz-insta_feed_page_wpz-insta_settings' == $current_screen->id || 'wpz-insta_feed_page_wpzoom-instagram-support' == $current_screen->id || 'settings_page_wpz-insta-connect' == $current_screen->id ) {
+		if ( 'toplevel_page_wpzoom-instagram' == $current_screen->id || 'wpz-insta_feed' == $current_screen->post_type || 'wpz-insta_user' == $current_screen->post_type || 'instagram_page_wpzoom-instagram-users' == $current_screen->id || 'wpz-insta_feed_page_wpz-insta_settings' == $current_screen->id || 'wpz-insta_feed_page_wpzoom-instagram-support' == $current_screen->id || 'wpz-insta_feed_page_wpzoom-instagram-insights' == $current_screen->id || 'settings_page_wpz-insta-connect' == $current_screen->id ) {
 			?>
 			<footer class="wpz-insta_settings-footer">
 				<div class="wpz-insta_settings-footer-wrap">
