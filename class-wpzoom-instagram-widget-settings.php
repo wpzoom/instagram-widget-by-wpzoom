@@ -350,6 +350,7 @@ class WPZOOM_Instagram_Widget_Settings {
 		add_action( 'quick_edit_custom_box', array( $this, 'user_quick_edit_box' ), 10, 3 );
 		add_action( 'post_action_wpz-insta_duplicate-feed', array( $this, 'post_action_duplicate_feed' ) );
 		add_action( 'post_action_wpz-insta_update-posts', array( $this, 'post_action_update_posts' ) );
+		add_action( 'post_action_wpz-insta_update-stories', array( $this, 'post_action_update_stories' ) );
 		add_action( 'post_edit_form_tag', array( $this, 'post_edit_form_tag' ) );
 
 		add_action( 'in_admin_header', function() {
@@ -477,6 +478,16 @@ class WPZOOM_Instagram_Widget_Settings {
 				'<div class="notice notice-%s inline is-dismissible"><p>%s</p></div>',
 				( $success ? 'success' : 'error' ),
 				( $success ? __( 'Feed posts updated.', 'instagram-widget-by-wpzoom' ) : __( 'There was an error updating the posts for the selected feed.', 'instagram-widget-by-wpzoom' ) )
+			);
+		}
+
+		if ( 'edit' == $screen->base && 'wpz-insta_feed' == $screen->post_type && isset( $_GET['wpz-insta_update-stories'] ) ) {
+			$success = 'true' === $_GET['wpz-insta_update-stories'];
+
+			printf(
+				'<div class="notice notice-%s inline is-dismissible"><p>%s</p></div>',
+				( $success ? 'success' : 'error' ),
+				( $success ? __( 'Stories cache cleared.', 'instagram-widget-by-wpzoom' ) : __( 'There was an error clearing the stories cache.', 'instagram-widget-by-wpzoom' ) )
 			);
 		}
 
@@ -866,6 +877,15 @@ class WPZOOM_Instagram_Widget_Settings {
 				// Clear all transients for this feed (including video variants)
 				$this->clear_feed_transients( $post_id, true );
 
+				// Also clear stories cache for the associated user
+				$user_id = intval( get_post_meta( $post_id, '_wpz-insta_user-id', true ) );
+				if ( $user_id > 0 ) {
+					$page_id = get_post_meta( $user_id, '_wpz-insta_page_id', true );
+					if ( ! empty( $page_id ) ) {
+						delete_transient( 'wpz-insta_stories_' . $page_id );
+					}
+				}
+
 				wp_redirect(
 					add_query_arg(
 						array(
@@ -884,6 +904,50 @@ class WPZOOM_Instagram_Widget_Settings {
 				array(
 					'post_type' => 'wpz-insta_feed',
 					'wpz-insta_update-posts' => 'false',
+				),
+				admin_url( 'edit.php' )
+			)
+		);
+		exit;
+	}
+
+	/**
+	 * Handle the "Update Stories" action - clears only the stories cache.
+	 */
+	function post_action_update_stories( int $post_id ) {
+
+		if ( $post_id > 0 && isset( $_GET['_wpnonce'] ) && wp_verify_nonce( $_GET['_wpnonce'], 'wpz-insta-update-stories_' . $post_id ) ) {
+			$post = get_post( $post_id );
+
+			if ( $post instanceof WP_Post ) {
+
+				// Clear stories cache for the associated user
+				$user_id = intval( get_post_meta( $post_id, '_wpz-insta_user-id', true ) );
+				if ( $user_id > 0 ) {
+					$page_id = get_post_meta( $user_id, '_wpz-insta_page_id', true );
+					if ( ! empty( $page_id ) ) {
+						delete_transient( 'wpz-insta_stories_' . $page_id );
+					}
+				}
+
+				wp_redirect(
+					add_query_arg(
+						array(
+							'post_type' => 'wpz-insta_feed',
+							'wpz-insta_update-stories' => 'true',
+						),
+						admin_url( 'edit.php' )
+					)
+				);
+				exit;
+			}
+		}
+
+		wp_redirect(
+			add_query_arg(
+				array(
+					'post_type' => 'wpz-insta_feed',
+					'wpz-insta_update-stories' => 'false',
 				),
 				admin_url( 'edit.php' )
 			)
@@ -919,6 +983,15 @@ class WPZOOM_Instagram_Widget_Settings {
 						<?php if ( current_user_can( 'edit_post', $post_id ) ) { ?>
 							<li class="wpz-insta_actions-menu_divider"></li>
 							<li class="wpz-insta_actions-menu_update-posts"><a href="<?php echo esc_url( wp_nonce_url( admin_url( 'post.php?post=' . $post_id . '&action=wpz-insta_update-posts' ), 'wpz-insta-update-posts_' . $post_id ) ); ?>"><?php _e( 'Update posts', 'instagram-widget-by-wpzoom' ); ?></a></li>
+							<?php
+							// Show "Update Stories" only if stories are enabled and account is connected via Facebook
+							$show_stories = get_post_meta( $post_id, '_wpz-insta_show-stories', true );
+							$user_id = intval( get_post_meta( $post_id, '_wpz-insta_user-id', true ) );
+							$page_id = $user_id > 0 ? get_post_meta( $user_id, '_wpz-insta_page_id', true ) : '';
+							if ( $show_stories && ! empty( $page_id ) ) :
+							?>
+							<li class="wpz-insta_actions-menu_update-stories"><a href="<?php echo esc_url( wp_nonce_url( admin_url( 'post.php?post=' . $post_id . '&action=wpz-insta_update-stories' ), 'wpz-insta-update-stories_' . $post_id ) ); ?>"><?php _e( 'Update Stories', 'instagram-widget-by-wpzoom' ); ?></a></li>
+							<?php endif; ?>
 						<?php } ?>
 						<li class="wpz-insta_actions-menu_divider"></li>
 						<?php if ( current_user_can( 'delete_post', $post_id ) ) { ?><li class="wpz-insta_actions-menu_delete wpz-insta_actions-menu_delete-feed"><a href="<?php echo esc_url( get_delete_post_link( $post_id, '', true ) ); ?>"><?php _e( 'Delete feed', 'instagram-widget-by-wpzoom' ); ?></a></li><?php } ?>
