@@ -212,21 +212,56 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         };
 
-        // Initialize Followers Chart
+        // Initialize Follower Growth Chart
+        // Shows actual follower count over time (like Instagram's native chart)
         followersChart = new Chart(followersCtx.getContext('2d'), {
             type: 'line',
             data: {
                 labels: [],
                 datasets: [{
-                    label: wpzoomInsights.i18n.followers,
+                    label: wpzoomInsights.i18n.followerGrowth || 'Follower growth',
                     data: [],
-                    borderColor: 'rgb(75, 192, 192)',
-                    backgroundColor: 'rgba(75, 192, 192, 0.1)',
-                    tension: 0.1,
-                    fill: true
+                    borderColor: 'rgb(66, 133, 244)',
+                    backgroundColor: 'rgba(66, 133, 244, 0.1)',
+                    tension: 0.3,
+                    fill: true,
+                    pointRadius: 4,
+                    pointBackgroundColor: '#fff',
+                    pointBorderColor: 'rgb(66, 133, 244)',
+                    pointBorderWidth: 2,
+                    pointHoverRadius: 6
                 }]
             },
-            options: chartOptions
+            options: {
+                ...chartOptions,
+                plugins: {
+                    ...chartOptions.plugins,
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                const value = context.parsed.y;
+                                return formatCompactNumber(value);
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: false,
+                        grid: {
+                            color: 'rgba(0, 0, 0, 0.1)'
+                        },
+                        ticks: {
+                            callback: function(value) {
+                                return formatCompactNumber(value);
+                            }
+                        }
+                    }
+                }
+            }
         });
 
         // Initialize Reach Chart (formerly Engagement Chart)
@@ -499,16 +534,42 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     /**
+     * Calculate cumulative follower counts from daily changes
+     * The API returns daily change values, so we need to calculate running totals
+     * @param {Array} dailyChanges - Array of {end_time, value} with daily change values
+     * @param {number} startingCount - The follower count at the start of the period
+     * @returns {Array} Array of cumulative follower counts
+     */
+    function calculateCumulativeFollowers(dailyChanges, startingCount) {
+        let cumulative = startingCount;
+        return dailyChanges.map(item => {
+            cumulative += item.value;
+            return cumulative;
+        });
+    }
+
+    /**
      * Update chart data
      * @param {Object} data - Insights data
      */
     function updateCharts(data) {
         if (!followersChart || !engagementChart) return;
 
-        // Update Followers Chart if we have follower data
-        if (data.follower_count && data.follower_count.length > 0) {
-            followersChart.data.labels = data.follower_count.map(item => formatDate(item.end_time));
-            followersChart.data.datasets[0].data = data.follower_count.map(item => item.value);
+        // Update Follower Growth Chart
+        // The API returns daily changes, so we calculate cumulative counts
+        if (data.follower_count && data.follower_count.length > 0 && data.followers_stats) {
+            const labels = data.follower_count.map(item => formatDate(item.end_time));
+
+            // Calculate cumulative follower counts starting from period_start
+            const startingCount = data.followers_stats.period_start || 0;
+            const cumulativeData = calculateCumulativeFollowers(data.follower_count, startingCount);
+
+            // Update tick formatter based on data range
+            const smartFormatter = createSmartTickFormatter(cumulativeData);
+            followersChart.options.scales.y.ticks.callback = smartFormatter;
+
+            followersChart.data.labels = labels;
+            followersChart.data.datasets[0].data = cumulativeData;
             followersChart.update();
         }
 
@@ -534,6 +595,49 @@ document.addEventListener('DOMContentLoaded', function() {
     function formatNumber(num) {
         if (num === null || num === undefined) return '-';
         return new Intl.NumberFormat().format(num);
+    }
+
+    /**
+     * Format a number in compact notation (1k, 2.5k, 1M, etc.)
+     * @param {number} num - Number to format
+     * @param {boolean} forceExact - If true, show exact number without compact notation
+     * @returns {string} Formatted compact number
+     */
+    function formatCompactNumber(num, forceExact = false) {
+        if (num === null || num === undefined) return '-';
+
+        if (forceExact) {
+            return new Intl.NumberFormat().format(num);
+        }
+
+        if (num >= 1000000) {
+            return (num / 1000000).toFixed(1).replace(/\.0$/, '') + 'M';
+        }
+        if (num >= 1000) {
+            return (num / 1000).toFixed(1).replace(/\.0$/, '') + 'k';
+        }
+        return num.toString();
+    }
+
+    /**
+     * Create a smart tick formatter that uses exact numbers when range is small
+     * @param {Array} data - The chart data array
+     * @returns {function} Tick callback function
+     */
+    function createSmartTickFormatter(data) {
+        if (!data || data.length === 0) {
+            return (value) => formatCompactNumber(value);
+        }
+
+        const min = Math.min(...data);
+        const max = Math.max(...data);
+        const range = max - min;
+
+        // If the range is less than 5% of the max value, use exact numbers
+        // This prevents all ticks showing as "2k" when values are 1990-2010
+        const useExact = range < (max * 0.05) || range < 100;
+
+        return (value) => formatCompactNumber(value, useExact);
     }
 
     /**

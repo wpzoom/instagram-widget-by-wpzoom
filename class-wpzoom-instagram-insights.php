@@ -115,6 +115,7 @@ class WPZOOM_Instagram_Insights {
             'i18n' => array(
                 // Chart labels
                 'followers' => __( 'Followers', 'instagram-widget-by-wpzoom' ),
+                'followerGrowth' => __( 'Follower growth', 'instagram-widget-by-wpzoom' ),
                 'reach' => __( 'Reach', 'instagram-widget-by-wpzoom' ),
                 'impressions' => __( 'Views', 'instagram-widget-by-wpzoom' ),
                 'views' => __( 'Views', 'instagram-widget-by-wpzoom' ),
@@ -264,7 +265,7 @@ class WPZOOM_Instagram_Insights {
 
                     <div class="insights-charts">
                         <div class="chart-container">
-                            <canvas id="followers-chart" aria-label="<?php esc_attr_e( 'Followers Chart', 'instagram-widget-by-wpzoom' ); ?>" role="img"></canvas>
+                            <canvas id="followers-chart" aria-label="<?php esc_attr_e( 'Follower Growth Chart', 'instagram-widget-by-wpzoom' ); ?>" role="img"></canvas>
                         </div>
                         <div class="chart-container">
                             <canvas id="engagement-chart" aria-label="<?php esc_attr_e( 'Reach Chart', 'instagram-widget-by-wpzoom' ); ?>" role="img"></canvas>
