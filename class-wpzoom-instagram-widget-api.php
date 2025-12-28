@@ -1439,6 +1439,20 @@ class Wpzoom_Instagram_Widget_API {
         $data = json_decode( wp_remote_retrieve_body( $response ) );
         $stories = isset( $data->stories ) && ! empty( $data->stories->data ) ? $data->stories->data : array();
 
+        /**
+         * Filter the stories returned from the API.
+         *
+         * This filter allows modifying the stories array before caching.
+         * Useful for demo sites to show placeholder stories when none exist.
+         *
+         * @since 2.0.0
+         *
+         * @param array  $stories               Array of story objects from the API.
+         * @param string $user_business_page_id The Instagram business page ID.
+         * @param string $user_account_token    The access token used for the request.
+         */
+        $stories = apply_filters( 'wpz_insta_stories', $stories, $user_business_page_id, $user_account_token );
+
         // Cache for 1 hour (stories expire after 24h, so 1h cache is reasonable)
         // Empty array is also cached to prevent repeated API calls when no stories exist
         set_transient( $transient_key, $stories, HOUR_IN_SECONDS );
