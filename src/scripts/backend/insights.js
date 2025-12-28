@@ -408,26 +408,18 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
 
-        // Update profile views
-        if (data.profile_views && data.profile_views.length > 0) {
-            const totalViews = data.profile_views.reduce((sum, item) => sum + item.value, 0);
-            const profileViewsCount = document.getElementById('profile-views-count');
-            if (profileViewsCount) {
-                profileViewsCount.textContent = formatNumber(totalViews);
+        // Update total likes
+        if (data.likes && data.likes.length > 0) {
+            const totalLikes = data.likes.reduce((sum, item) => sum + item.value, 0);
+            const likesCount = document.getElementById('total-likes-count');
+            if (likesCount) {
+                likesCount.textContent = formatNumber(totalLikes);
             }
 
-            // Calculate trend
-            if (data.profile_views.length > 1) {
-                const midpoint = Math.floor(data.profile_views.length / 2);
-                const firstHalf = data.profile_views.slice(0, midpoint).reduce((sum, item) => sum + item.value, 0);
-                const secondHalf = data.profile_views.slice(midpoint).reduce((sum, item) => sum + item.value, 0);
-                const viewsChange = calculateChange(firstHalf, secondHalf);
-
-                const viewsChangeEl = document.getElementById('profile-views-change');
-                if (viewsChangeEl) {
-                    viewsChangeEl.textContent = formatChange(viewsChange);
-                    updateChangeClass('profile-views-change', viewsChange);
-                }
+            const likesChange = document.getElementById('total-likes-change');
+            if (likesChange) {
+                likesChange.textContent = wpzoomInsights.i18n.totalPeriod || 'Total for period';
+                likesChange.classList.remove('positive', 'negative');
             }
         }
 

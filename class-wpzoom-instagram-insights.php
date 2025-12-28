@@ -116,7 +116,8 @@ class WPZOOM_Instagram_Insights {
                 // Chart labels
                 'followers' => __( 'Followers', 'instagram-widget-by-wpzoom' ),
                 'reach' => __( 'Reach', 'instagram-widget-by-wpzoom' ),
-                'impressions' => __( 'Impressions', 'instagram-widget-by-wpzoom' ),
+                'impressions' => __( 'Views', 'instagram-widget-by-wpzoom' ),
+                'views' => __( 'Views', 'instagram-widget-by-wpzoom' ),
                 'accounts_engaged' => __( 'Accounts Engaged', 'instagram-widget-by-wpzoom' ),
 
                 // Date format
@@ -231,7 +232,7 @@ class WPZOOM_Instagram_Insights {
                         </div>
 
                         <div class="metric-card impressions">
-                            <h3><?php esc_html_e( 'Impressions', 'instagram-widget-by-wpzoom' ); ?></h3>
+                            <h3><?php esc_html_e( 'Views', 'instagram-widget-by-wpzoom' ); ?></h3>
                             <div class="metric-value" id="impressions-count">-</div>
                             <div class="metric-change" id="impressions-change">-</div>
                         </div>
@@ -242,10 +243,10 @@ class WPZOOM_Instagram_Insights {
                             <div class="metric-change" id="engagement-change">-</div>
                         </div>
 
-                        <div class="metric-card profile-views">
-                            <h3><?php esc_html_e( 'Profile Views', 'instagram-widget-by-wpzoom' ); ?></h3>
-                            <div class="metric-value" id="profile-views-count">-</div>
-                            <div class="metric-change" id="profile-views-change">-</div>
+                        <div class="metric-card total-likes">
+                            <h3><?php esc_html_e( 'Total Likes', 'instagram-widget-by-wpzoom' ); ?></h3>
+                            <div class="metric-value" id="total-likes-count">-</div>
+                            <div class="metric-change" id="total-likes-change">-</div>
                         </div>
                     </div>
 

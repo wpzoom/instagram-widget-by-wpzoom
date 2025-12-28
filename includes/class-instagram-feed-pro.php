@@ -202,6 +202,9 @@ class Instagram_Feed_Pro {
     /**
      * Get insights data for a specific date chunk
      *
+     * Uses Instagram Graph API v21.0+ with updated metric formats.
+     * Note: As of 2025, some metrics require metric_type parameter.
+     *
      * @param string $instagram_account_id Instagram business account ID
      * @param string $access_token Access token
      * @param string $since_date Start date (Y-m-d)
@@ -211,74 +214,134 @@ class Instagram_Feed_Pro {
     private function get_chunk_insights( $instagram_account_id, $access_token, $since_date, $until_date ) {
         $formatted_data = array();
 
-        // 1. Get follower_count
-        $user_metrics_params = array(
-            'metric' => 'follower_count',
-            'period' => 'day',
+        // Convert dates to Unix timestamps for API
+        $since_timestamp = strtotime( $since_date );
+        $until_timestamp = strtotime( $until_date );
+
+        // 1. Get follower_count (time series)
+        $follower_params = array(
+            'metric'       => 'follower_count',
+            'period'       => 'day',
             'access_token' => $access_token,
-            'since' => $since_date,
-            'until' => $until_date
+            'since'        => $since_timestamp,
+            'until'        => $until_timestamp,
         );
 
-        $user_metrics_url = "https://graph.facebook.com/v21.0/{$instagram_account_id}/insights?" . http_build_query( $user_metrics_params );
+        $follower_url = "https://graph.facebook.com/v21.0/{$instagram_account_id}/insights?" . http_build_query( $follower_params );
+        $follower_response = wp_remote_get( $follower_url );
 
-        $user_response = wp_remote_get( $user_metrics_url );
-        if ( ! is_wp_error( $user_response ) && 200 === wp_remote_retrieve_response_code( $user_response ) ) {
-            $user_data = json_decode( wp_remote_retrieve_body( $user_response ), true );
-            if ( ! empty( $user_data['data'] ) ) {
-                foreach ( $user_data['data'] as $metric ) {
-                    $formatted_data[ $metric['name'] ] = $metric['values'];
-                }
-            }
-        }
-
-        // 2. Get account metrics (reach, impressions)
-        $account_metrics = array( 'reach', 'impressions' );
-
-        foreach ( $account_metrics as $metric ) {
-            $params = array(
-                'metric' => $metric,
-                'period' => 'day',
-                'access_token' => $access_token,
-                'since' => $since_date,
-                'until' => $until_date
-            );
-
-            $url = "https://graph.facebook.com/v21.0/{$instagram_account_id}/insights?" . http_build_query( $params );
-
-            $response = wp_remote_get( $url );
-            if ( ! is_wp_error( $response ) && 200 === wp_remote_retrieve_response_code( $response ) ) {
-                $data = json_decode( wp_remote_retrieve_body( $response ), true );
-                if ( ! empty( $data['data'] ) ) {
-                    foreach ( $data['data'] as $metric_data ) {
-                        $formatted_data[ $metric_data['name'] ] = $metric_data['values'];
+        if ( ! is_wp_error( $follower_response ) && 200 === wp_remote_retrieve_response_code( $follower_response ) ) {
+            $follower_data = json_decode( wp_remote_retrieve_body( $follower_response ), true );
+            if ( ! empty( $follower_data['data'] ) ) {
+                foreach ( $follower_data['data'] as $metric ) {
+                    if ( ! empty( $metric['values'] ) ) {
+                        $formatted_data[ $metric['name'] ] = $metric['values'];
                     }
                 }
             }
         }
 
-        // 3. Get engagement metrics (accounts_engaged)
-        $engagement_params = array(
-            'metric' => 'accounts_engaged',
-            'period' => 'day',
-            'metric_type' => 'total_value',
+        // 2. Get reach (time_series for chart data)
+        $reach_params = array(
+            'metric'       => 'reach',
+            'period'       => 'day',
+            'metric_type'  => 'time_series',
             'access_token' => $access_token,
-            'since' => $since_date,
-            'until' => $until_date
+            'since'        => $since_timestamp,
+            'until'        => $until_timestamp,
+        );
+
+        $reach_url = "https://graph.facebook.com/v21.0/{$instagram_account_id}/insights?" . http_build_query( $reach_params );
+        $reach_response = wp_remote_get( $reach_url );
+
+        if ( ! is_wp_error( $reach_response ) && 200 === wp_remote_retrieve_response_code( $reach_response ) ) {
+            $reach_data = json_decode( wp_remote_retrieve_body( $reach_response ), true );
+            if ( ! empty( $reach_data['data'] ) ) {
+                foreach ( $reach_data['data'] as $metric ) {
+                    if ( ! empty( $metric['values'] ) ) {
+                        $formatted_data[ $metric['name'] ] = $metric['values'];
+                    }
+                }
+            }
+        }
+
+        // 3. Get views (replacement for impressions, time_series for chart)
+        $views_params = array(
+            'metric'       => 'views',
+            'period'       => 'day',
+            'metric_type'  => 'time_series',
+            'access_token' => $access_token,
+            'since'        => $since_timestamp,
+            'until'        => $until_timestamp,
+        );
+
+        $views_url = "https://graph.facebook.com/v21.0/{$instagram_account_id}/insights?" . http_build_query( $views_params );
+        $views_response = wp_remote_get( $views_url );
+
+        if ( ! is_wp_error( $views_response ) && 200 === wp_remote_retrieve_response_code( $views_response ) ) {
+            $views_data = json_decode( wp_remote_retrieve_body( $views_response ), true );
+            if ( ! empty( $views_data['data'] ) ) {
+                foreach ( $views_data['data'] as $metric ) {
+                    if ( ! empty( $metric['values'] ) ) {
+                        // Store as 'views' but also as 'impressions' for backward compatibility
+                        $formatted_data['views'] = $metric['values'];
+                        $formatted_data['impressions'] = $metric['values'];
+                    }
+                }
+            }
+        }
+
+        // 4. Get accounts_engaged (total_value only)
+        $engagement_params = array(
+            'metric'       => 'accounts_engaged',
+            'period'       => 'day',
+            'metric_type'  => 'total_value',
+            'access_token' => $access_token,
+            'since'        => $since_timestamp,
+            'until'        => $until_timestamp,
         );
 
         $engagement_url = "https://graph.facebook.com/v21.0/{$instagram_account_id}/insights?" . http_build_query( $engagement_params );
-
         $engagement_response = wp_remote_get( $engagement_url );
+
         if ( ! is_wp_error( $engagement_response ) && 200 === wp_remote_retrieve_response_code( $engagement_response ) ) {
             $engagement_data = json_decode( wp_remote_retrieve_body( $engagement_response ), true );
             if ( ! empty( $engagement_data['data'] ) ) {
                 foreach ( $engagement_data['data'] as $metric ) {
                     if ( isset( $metric['total_value']['value'] ) ) {
                         $formatted_data[ $metric['name'] ] = array( array(
-                            'end_time' => date( 'Y-m-d\TH:i:s+0000' ),
-                            'value' => $metric['total_value']['value']
+                            'end_time' => gmdate( 'Y-m-d\TH:i:s+0000' ),
+                            'value'    => $metric['total_value']['value'],
                         ) );
+                    }
+                }
+            }
+        }
+
+        // 5. Get profile_links_taps (replacement for profile_views)
+        $taps_params = array(
+            'metric'       => 'profile_links_taps',
+            'period'       => 'day',
+            'metric_type'  => 'total_value',
+            'access_token' => $access_token,
+            'since'        => $since_timestamp,
+            'until'        => $until_timestamp,
+        );
+
+        $taps_url = "https://graph.facebook.com/v21.0/{$instagram_account_id}/insights?" . http_build_query( $taps_params );
+        $taps_response = wp_remote_get( $taps_url );
+
+        if ( ! is_wp_error( $taps_response ) && 200 === wp_remote_retrieve_response_code( $taps_response ) ) {
+            $taps_data = json_decode( wp_remote_retrieve_body( $taps_response ), true );
+            if ( ! empty( $taps_data['data'] ) ) {
+                foreach ( $taps_data['data'] as $metric ) {
+                    if ( isset( $metric['total_value']['value'] ) ) {
+                        // Store as profile_links_taps and also as profile_views for UI compatibility
+                        $formatted_data['profile_links_taps'] = array( array(
+                            'end_time' => gmdate( 'Y-m-d\TH:i:s+0000' ),
+                            'value'    => $metric['total_value']['value'],
+                        ) );
+                        $formatted_data['profile_views'] = $formatted_data['profile_links_taps'];
                     }
                 }
             }
@@ -325,17 +388,18 @@ class Instagram_Feed_Pro {
         foreach ( $data['data'] as $media ) {
             $insights_data = array();
 
-            // First request for basic metrics that work for all types
-            $basic_metrics = array( 'reach', 'saved', 'total_interactions' );
+            // Get metrics available for all media types: reach, saved, total_interactions, views
+            // Note: 'views' replaces deprecated 'impressions' as of 2025
+            $basic_metrics = array( 'reach', 'saved', 'total_interactions', 'views' );
 
             $basic_params = array(
-                'metric' => implode( ',', $basic_metrics ),
-                'access_token' => $access_token
+                'metric'       => implode( ',', $basic_metrics ),
+                'access_token' => $access_token,
             );
 
-            $basic_url = "https://graph.facebook.com/v21.0/{$media['id']}/insights?" . http_build_query( $basic_params );
-
+            $basic_url      = "https://graph.facebook.com/v21.0/{$media['id']}/insights?" . http_build_query( $basic_params );
             $basic_response = wp_remote_get( $basic_url );
+
             if ( ! is_wp_error( $basic_response ) && 200 === wp_remote_retrieve_response_code( $basic_response ) ) {
                 $basic_insights = json_decode( wp_remote_retrieve_body( $basic_response ), true );
 
@@ -348,46 +412,35 @@ class Instagram_Feed_Pro {
                 }
             }
 
-            // Additional metrics based on media type
-            if ( $media['media_type'] === 'VIDEO' || $media['media_type'] === 'REEL' ) {
-                // Video-specific metrics
-                $video_params = array(
-                    'metric' => 'video_views',
-                    'access_token' => $access_token
+            // Store views as impressions for backward compatibility with UI
+            if ( isset( $insights_data['views'] ) ) {
+                $insights_data['impressions'] = $insights_data['views'];
+            }
+
+            // Get additional metrics for reels (ig_reels_avg_watch_time, shares)
+            if ( 'REEL' === $media['media_type'] ) {
+                $reel_params = array(
+                    'metric'       => 'ig_reels_avg_watch_time,shares,likes,comments',
+                    'access_token' => $access_token,
                 );
 
-                $video_url = "https://graph.facebook.com/v21.0/{$media['id']}/insights?" . http_build_query( $video_params );
-                $video_response = wp_remote_get( $video_url );
+                $reel_url      = "https://graph.facebook.com/v21.0/{$media['id']}/insights?" . http_build_query( $reel_params );
+                $reel_response = wp_remote_get( $reel_url );
 
-                if ( ! is_wp_error( $video_response ) && 200 === wp_remote_retrieve_response_code( $video_response ) ) {
-                    $video_insights = json_decode( wp_remote_retrieve_body( $video_response ), true );
-                    if ( ! empty( $video_insights['data'] ) ) {
-                        foreach ( $video_insights['data'] as $metric ) {
+                if ( ! is_wp_error( $reel_response ) && 200 === wp_remote_retrieve_response_code( $reel_response ) ) {
+                    $reel_insights = json_decode( wp_remote_retrieve_body( $reel_response ), true );
+                    if ( ! empty( $reel_insights['data'] ) ) {
+                        foreach ( $reel_insights['data'] as $metric ) {
                             if ( ! empty( $metric['values'] ) ) {
                                 $insights_data[ $metric['name'] ] = $metric['values'][0]['value'];
                             }
                         }
                     }
                 }
-            } else {
-                // Photo/Carousel-specific metrics
-                $photo_params = array(
-                    'metric' => 'impressions',
-                    'access_token' => $access_token
-                );
 
-                $photo_url = "https://graph.facebook.com/v21.0/{$media['id']}/insights?" . http_build_query( $photo_params );
-                $photo_response = wp_remote_get( $photo_url );
-
-                if ( ! is_wp_error( $photo_response ) && 200 === wp_remote_retrieve_response_code( $photo_response ) ) {
-                    $photo_insights = json_decode( wp_remote_retrieve_body( $photo_response ), true );
-                    if ( ! empty( $photo_insights['data'] ) ) {
-                        foreach ( $photo_insights['data'] as $metric ) {
-                            if ( ! empty( $metric['values'] ) ) {
-                                $insights_data[ $metric['name'] ] = $metric['values'][0]['value'];
-                            }
-                        }
-                    }
+                // Use views as video_views equivalent for reels
+                if ( isset( $insights_data['views'] ) ) {
+                    $insights_data['video_views'] = $insights_data['views'];
                 }
             }
 
@@ -428,7 +481,10 @@ class Instagram_Feed_Pro {
     }
 
     /**
-     * Get profile metrics (profile views, website clicks, etc.)
+     * Get profile metrics (follows/unfollows, shares, likes, etc.)
+     *
+     * Note: As of 2025, profile_views is deprecated. Using follows_and_unfollows,
+     * shares, likes as alternative metrics.
      *
      * @param string $instagram_account_id Instagram business account ID
      * @param string $access_token Access token
@@ -437,23 +493,66 @@ class Instagram_Feed_Pro {
      * @return array Profile metrics data
      */
     private function get_profile_metrics( $instagram_account_id, $access_token, $since_date, $until_date ) {
-        $params = array(
-            'metric' => 'profile_views,website_clicks,email_contacts,get_directions_clicks',
-            'period' => 'day',
+        $profile_data      = array();
+        $since_timestamp   = strtotime( $since_date );
+        $until_timestamp   = strtotime( $until_date );
+
+        // Get follows_and_unfollows with breakdown
+        $follows_params = array(
+            'metric'       => 'follows_and_unfollows',
+            'period'       => 'day',
+            'metric_type'  => 'total_value',
+            'breakdown'    => 'follow_type',
             'access_token' => $access_token,
-            'since' => $since_date,
-            'until' => $until_date
+            'since'        => $since_timestamp,
+            'until'        => $until_timestamp,
         );
 
-        $url = "https://graph.facebook.com/v21.0/{$instagram_account_id}/insights?" . http_build_query( $params );
-        $response = wp_remote_get( $url );
-        $profile_data = array();
+        $follows_url      = "https://graph.facebook.com/v21.0/{$instagram_account_id}/insights?" . http_build_query( $follows_params );
+        $follows_response = wp_remote_get( $follows_url );
 
-        if ( ! is_wp_error( $response ) && 200 === wp_remote_retrieve_response_code( $response ) ) {
-            $data = json_decode( wp_remote_retrieve_body( $response ), true );
-            if ( ! empty( $data['data'] ) ) {
-                foreach ( $data['data'] as $metric ) {
-                    $profile_data[ $metric['name'] ] = $metric['values'];
+        if ( ! is_wp_error( $follows_response ) && 200 === wp_remote_retrieve_response_code( $follows_response ) ) {
+            $follows_data = json_decode( wp_remote_retrieve_body( $follows_response ), true );
+            if ( ! empty( $follows_data['data'] ) ) {
+                foreach ( $follows_data['data'] as $metric ) {
+                    if ( isset( $metric['total_value'] ) ) {
+                        $profile_data['follows_and_unfollows'] = array( array(
+                            'end_time' => gmdate( 'Y-m-d\TH:i:s+0000' ),
+                            'value'    => $metric['total_value']['value'] ?? 0,
+                        ) );
+
+                        // Parse breakdown for follows vs unfollows
+                        if ( ! empty( $metric['total_value']['breakdowns'] ) ) {
+                            $profile_data['follows_breakdown'] = $metric['total_value']['breakdowns'];
+                        }
+                    }
+                }
+            }
+        }
+
+        // Get shares and likes totals
+        $engagement_params = array(
+            'metric'       => 'shares,likes',
+            'period'       => 'day',
+            'metric_type'  => 'total_value',
+            'access_token' => $access_token,
+            'since'        => $since_timestamp,
+            'until'        => $until_timestamp,
+        );
+
+        $engagement_url      = "https://graph.facebook.com/v21.0/{$instagram_account_id}/insights?" . http_build_query( $engagement_params );
+        $engagement_response = wp_remote_get( $engagement_url );
+
+        if ( ! is_wp_error( $engagement_response ) && 200 === wp_remote_retrieve_response_code( $engagement_response ) ) {
+            $engagement_data = json_decode( wp_remote_retrieve_body( $engagement_response ), true );
+            if ( ! empty( $engagement_data['data'] ) ) {
+                foreach ( $engagement_data['data'] as $metric ) {
+                    if ( isset( $metric['total_value']['value'] ) ) {
+                        $profile_data[ $metric['name'] ] = array( array(
+                            'end_time' => gmdate( 'Y-m-d\TH:i:s+0000' ),
+                            'value'    => $metric['total_value']['value'],
+                        ) );
+                    }
                 }
             }
         }
