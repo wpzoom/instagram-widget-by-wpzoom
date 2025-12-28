@@ -265,11 +265,12 @@ class Instagram_Feed_Pro {
             }
         }
 
-        // 3. Get views (replacement for impressions, time_series for chart)
+        // 3. Get views (replacement for impressions)
+        // Note: 'views' metric only supports total_value, not time_series
         $views_params = array(
             'metric'       => 'views',
             'period'       => 'day',
-            'metric_type'  => 'time_series',
+            'metric_type'  => 'total_value',
             'access_token' => $access_token,
             'since'        => $since_timestamp,
             'until'        => $until_timestamp,
@@ -282,10 +283,13 @@ class Instagram_Feed_Pro {
             $views_data = json_decode( wp_remote_retrieve_body( $views_response ), true );
             if ( ! empty( $views_data['data'] ) ) {
                 foreach ( $views_data['data'] as $metric ) {
-                    if ( ! empty( $metric['values'] ) ) {
-                        // Store as 'views' but also as 'impressions' for backward compatibility
-                        $formatted_data['views'] = $metric['values'];
-                        $formatted_data['impressions'] = $metric['values'];
+                    if ( isset( $metric['total_value']['value'] ) ) {
+                        // Store as total value since views doesn't support time_series
+                        $formatted_data['views'] = array( array(
+                            'end_time' => gmdate( 'Y-m-d\TH:i:s+0000' ),
+                            'value'    => $metric['total_value']['value'],
+                        ) );
+                        $formatted_data['impressions'] = $formatted_data['views'];
                     }
                 }
             }

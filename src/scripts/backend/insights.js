@@ -229,7 +229,8 @@ document.addEventListener('DOMContentLoaded', function() {
             options: chartOptions
         });
 
-        // Initialize Engagement Chart
+        // Initialize Reach Chart (formerly Engagement Chart)
+        // Note: 'views' metric doesn't support time_series, so we only show reach
         engagementChart = new Chart(engagementCtx.getContext('2d'), {
             type: 'line',
             data: {
@@ -240,14 +241,6 @@ document.addEventListener('DOMContentLoaded', function() {
                         data: [],
                         borderColor: 'rgb(255, 99, 132)',
                         backgroundColor: 'rgba(255, 99, 132, 0.1)',
-                        tension: 0.1,
-                        fill: true
-                    },
-                    {
-                        label: wpzoomInsights.i18n.impressions,
-                        data: [],
-                        borderColor: 'rgb(54, 162, 235)',
-                        backgroundColor: 'rgba(54, 162, 235, 0.1)',
                         tension: 0.1,
                         fill: true
                     }
@@ -370,26 +363,19 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
 
-        // Update impressions
+        // Update views (formerly impressions)
+        // Note: views metric only returns total_value, not time_series
         if (data.impressions && data.impressions.length > 0) {
-            const totalImpressions = data.impressions.reduce((sum, item) => sum + item.value, 0);
+            const totalViews = data.impressions.reduce((sum, item) => sum + item.value, 0);
             const impressionsCount = document.getElementById('impressions-count');
             if (impressionsCount) {
-                impressionsCount.textContent = formatNumber(totalImpressions);
+                impressionsCount.textContent = formatNumber(totalViews);
             }
 
-            // Calculate trend
-            if (data.impressions.length > 1) {
-                const midpoint = Math.floor(data.impressions.length / 2);
-                const firstHalf = data.impressions.slice(0, midpoint).reduce((sum, item) => sum + item.value, 0);
-                const secondHalf = data.impressions.slice(midpoint).reduce((sum, item) => sum + item.value, 0);
-                const impressionsChange = calculateChange(firstHalf, secondHalf);
-
-                const impressionsChangeEl = document.getElementById('impressions-change');
-                if (impressionsChangeEl) {
-                    impressionsChangeEl.textContent = formatChange(impressionsChange);
-                    updateChangeClass('impressions-change', impressionsChange);
-                }
+            const impressionsChangeEl = document.getElementById('impressions-change');
+            if (impressionsChangeEl) {
+                impressionsChangeEl.textContent = wpzoomInsights.i18n.totalPeriod || 'Total for period';
+                impressionsChangeEl.classList.remove('positive', 'negative');
             }
         }
 
@@ -520,20 +506,14 @@ document.addEventListener('DOMContentLoaded', function() {
             followersChart.update();
         }
 
-        // Update Engagement Chart with reach and impressions
+        // Update Reach Chart
+        // Note: 'views' metric doesn't support time_series, so we only show reach
         if (data.reach && data.reach.length > 0) {
             const dates = data.reach.map(item => formatDate(item.end_time));
             const reachData = data.reach.map(item => item.value);
 
             engagementChart.data.labels = dates;
             engagementChart.data.datasets[0].data = reachData;
-
-            // Add impressions if available
-            if (data.impressions && data.impressions.length > 0) {
-                const impressionsData = data.impressions.map(item => item.value);
-                engagementChart.data.datasets[1].data = impressionsData;
-            }
-
             engagementChart.update();
         }
     }

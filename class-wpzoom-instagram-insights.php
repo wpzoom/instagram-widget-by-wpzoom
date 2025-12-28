@@ -255,7 +255,7 @@ class WPZOOM_Instagram_Insights {
                             <canvas id="followers-chart" aria-label="<?php esc_attr_e( 'Followers Chart', 'instagram-widget-by-wpzoom' ); ?>" role="img"></canvas>
                         </div>
                         <div class="chart-container">
-                            <canvas id="engagement-chart" aria-label="<?php esc_attr_e( 'Engagement Chart', 'instagram-widget-by-wpzoom' ); ?>" role="img"></canvas>
+                            <canvas id="engagement-chart" aria-label="<?php esc_attr_e( 'Reach Chart', 'instagram-widget-by-wpzoom' ); ?>" role="img"></canvas>
                         </div>
                     </div>
 
