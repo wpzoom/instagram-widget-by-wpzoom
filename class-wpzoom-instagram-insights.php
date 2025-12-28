@@ -239,7 +239,7 @@ class WPZOOM_Instagram_Insights {
                         </div>
 
                         <div class="metric-card reach">
-                            <h3><?php esc_html_e( 'Reach', 'instagram-widget-by-wpzoom' ); ?></h3>
+                            <h3><?php esc_html_e( 'Accounts Reached', 'instagram-widget-by-wpzoom' ); ?></h3>
                             <div class="metric-value" id="reach-count">-</div>
                             <div class="metric-change" id="reach-change">-</div>
                         </div>

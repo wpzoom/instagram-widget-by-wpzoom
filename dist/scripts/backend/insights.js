@@ -1,1 +1,16044 @@
-(()=>{"use strict";function t(t){return t+.5|0}const e=(t,e,i)=>Math.max(Math.min(t,i),e);function i(i){return e(t(2.55*i),0,255)}function s(i){return e(t(255*i),0,255)}function n(i){return e(t(i/2.55)/100,0,1)}function o(i){return e(t(100*i),0,100)}const r={0:0,1:1,2:2,3:3,4:4,5:5,6:6,7:7,8:8,9:9,A:10,B:11,C:12,D:13,E:14,F:15,a:10,b:11,c:12,d:13,e:14,f:15},a=[..."0123456789ABCDEF"],l=t=>a[15&t],h=t=>a[(240&t)>>4]+a[15&t],c=t=>(240&t)>>4==(15&t);const d=/^(hsla?|hwb|hsv)\(\s*([-+.e\d]+)(?:deg)?[\s,]+([-+.e\d]+)%[\s,]+([-+.e\d]+)%(?:[\s,]+([-+.e\d]+)(%)?)?\s*\)$/;function u(t,e,i){const s=e*Math.min(i,1-i),n=(e,n=(e+t/30)%12)=>i-s*Math.max(Math.min(n-3,9-n,1),-1);return[n(0),n(8),n(4)]}function f(t,e,i){const s=(s,n=(s+t/60)%6)=>i-i*e*Math.max(Math.min(n,4-n,1),0);return[s(5),s(3),s(1)]}function g(t,e,i){const s=u(t,1,.5);let n;for(e+i>1&&(n=1/(e+i),e*=n,i*=n),n=0;n<3;n++)s[n]*=1-e-i,s[n]+=e;return s}function p(t){const e=t.r/255,i=t.g/255,s=t.b/255,n=Math.max(e,i,s),o=Math.min(e,i,s),r=(n+o)/2;let a,l,h;return n!==o&&(h=n-o,l=r>.5?h/(2-n-o):h/(n+o),a=function(t,e,i,s,n){return t===n?(e-i)/s+(e<i?6:0):e===n?(i-t)/s+2:(t-e)/s+4}(e,i,s,h,n),a=60*a+.5),[0|a,l||0,r]}function m(t,e,i,n){return(Array.isArray(e)?t(e[0],e[1],e[2]):t(e,i,n)).map(s)}function x(t,e,i){return m(u,t,e,i)}function b(t){return(t%360+360)%360}const y={x:"dark",Z:"light",Y:"re",X:"blu",W:"gr",V:"medium",U:"slate",A:"ee",T:"ol",S:"or",B:"ra",C:"lateg",D:"ights",R:"in",Q:"turquois",E:"hi",P:"ro",O:"al",N:"le",M:"de",L:"yello",F:"en",K:"ch",G:"arks",H:"ea",I:"ightg",J:"wh"},v={OiceXe:"f0f8ff",antiquewEte:"faebd7",aqua:"ffff",aquamarRe:"7fffd4",azuY:"f0ffff",beige:"f5f5dc",bisque:"ffe4c4",black:"0",blanKedOmond:"ffebcd",Xe:"ff",XeviTet:"8a2be2",bPwn:"a52a2a",burlywood:"deb887",caMtXe:"5f9ea0",KartYuse:"7fff00",KocTate:"d2691e",cSO:"ff7f50",cSnflowerXe:"6495ed",cSnsilk:"fff8dc",crimson:"dc143c",cyan:"ffff",xXe:"8b",xcyan:"8b8b",xgTMnPd:"b8860b",xWay:"a9a9a9",xgYF:"6400",xgYy:"a9a9a9",xkhaki:"bdb76b",xmagFta:"8b008b",xTivegYF:"556b2f",xSange:"ff8c00",xScEd:"9932cc",xYd:"8b0000",xsOmon:"e9967a",xsHgYF:"8fbc8f",xUXe:"483d8b",xUWay:"2f4f4f",xUgYy:"2f4f4f",xQe:"ced1",xviTet:"9400d3",dAppRk:"ff1493",dApskyXe:"bfff",dimWay:"696969",dimgYy:"696969",dodgerXe:"1e90ff",fiYbrick:"b22222",flSOwEte:"fffaf0",foYstWAn:"228b22",fuKsia:"ff00ff",gaRsbSo:"dcdcdc",ghostwEte:"f8f8ff",gTd:"ffd700",gTMnPd:"daa520",Way:"808080",gYF:"8000",gYFLw:"adff2f",gYy:"808080",honeyMw:"f0fff0",hotpRk:"ff69b4",RdianYd:"cd5c5c",Rdigo:"4b0082",ivSy:"fffff0",khaki:"f0e68c",lavFMr:"e6e6fa",lavFMrXsh:"fff0f5",lawngYF:"7cfc00",NmoncEffon:"fffacd",ZXe:"add8e6",ZcSO:"f08080",Zcyan:"e0ffff",ZgTMnPdLw:"fafad2",ZWay:"d3d3d3",ZgYF:"90ee90",ZgYy:"d3d3d3",ZpRk:"ffb6c1",ZsOmon:"ffa07a",ZsHgYF:"20b2aa",ZskyXe:"87cefa",ZUWay:"778899",ZUgYy:"778899",ZstAlXe:"b0c4de",ZLw:"ffffe0",lime:"ff00",limegYF:"32cd32",lRF:"faf0e6",magFta:"ff00ff",maPon:"800000",VaquamarRe:"66cdaa",VXe:"cd",VScEd:"ba55d3",VpurpN:"9370db",VsHgYF:"3cb371",VUXe:"7b68ee",VsprRggYF:"fa9a",VQe:"48d1cc",VviTetYd:"c71585",midnightXe:"191970",mRtcYam:"f5fffa",mistyPse:"ffe4e1",moccasR:"ffe4b5",navajowEte:"ffdead",navy:"80",Tdlace:"fdf5e6",Tive:"808000",TivedBb:"6b8e23",Sange:"ffa500",SangeYd:"ff4500",ScEd:"da70d6",pOegTMnPd:"eee8aa",pOegYF:"98fb98",pOeQe:"afeeee",pOeviTetYd:"db7093",papayawEp:"ffefd5",pHKpuff:"ffdab9",peru:"cd853f",pRk:"ffc0cb",plum:"dda0dd",powMrXe:"b0e0e6",purpN:"800080",YbeccapurpN:"663399",Yd:"ff0000",Psybrown:"bc8f8f",PyOXe:"4169e1",saddNbPwn:"8b4513",sOmon:"fa8072",sandybPwn:"f4a460",sHgYF:"2e8b57",sHshell:"fff5ee",siFna:"a0522d",silver:"c0c0c0",skyXe:"87ceeb",UXe:"6a5acd",UWay:"708090",UgYy:"708090",snow:"fffafa",sprRggYF:"ff7f",stAlXe:"4682b4",tan:"d2b48c",teO:"8080",tEstN:"d8bfd8",tomato:"ff6347",Qe:"40e0d0",viTet:"ee82ee",JHt:"f5deb3",wEte:"ffffff",wEtesmoke:"f5f5f5",Lw:"ffff00",LwgYF:"9acd32"};let _;const w=/^rgba?\(\s*([-+.\d]+)(%)?[\s,]+([-+.e\d]+)(%)?[\s,]+([-+.e\d]+)(%)?(?:[\s,/]+([-+.e\d]+)(%)?)?\s*\)$/,M=t=>t<=.0031308?12.92*t:1.055*Math.pow(t,1/2.4)-.055,k=t=>t<=.04045?t/12.92:Math.pow((t+.055)/1.055,2.4);function S(t,e,i){if(t){let s=p(t);s[e]=Math.max(0,Math.min(s[e]+s[e]*i,0===e?360:1)),s=x(s),t.r=s[0],t.g=s[1],t.b=s[2]}}function D(t,e){return t?Object.assign(e||{},t):t}function P(t){var e={r:0,g:0,b:0,a:255};return Array.isArray(t)?t.length>=3&&(e={r:t[0],g:t[1],b:t[2],a:255},t.length>3&&(e.a=s(t[3]))):(e=D(t,{r:0,g:0,b:0,a:1})).a=s(e.a),e}function I(t){return"r"===t.charAt(0)?function(t){const s=w.exec(t);let n,o,r,a=255;if(s){if(s[7]!==n){const t=+s[7];a=s[8]?i(t):e(255*t,0,255)}return n=+s[1],o=+s[3],r=+s[5],n=255&(s[2]?i(n):e(n,0,255)),o=255&(s[4]?i(o):e(o,0,255)),r=255&(s[6]?i(r):e(r,0,255)),{r:n,g:o,b:r,a}}}(t):function(t){const e=d.exec(t);let n,o=255;if(!e)return;e[5]!==n&&(o=e[6]?i(+e[5]):s(+e[5]));const r=b(+e[2]),a=+e[3]/100,l=+e[4]/100;return n="hwb"===e[1]?function(t,e,i){return m(g,t,e,i)}(r,a,l):"hsv"===e[1]?function(t,e,i){return m(f,t,e,i)}(r,a,l):x(r,a,l),{r:n[0],g:n[1],b:n[2],a:o}}(t)}class O{constructor(t){if(t instanceof O)return t;const e=typeof t;let i;var s,n,o;"object"===e?i=P(t):"string"===e&&(o=(s=t).length,"#"===s[0]&&(4===o||5===o?n={r:255&17*r[s[1]],g:255&17*r[s[2]],b:255&17*r[s[3]],a:5===o?17*r[s[4]]:255}:7!==o&&9!==o||(n={r:r[s[1]]<<4|r[s[2]],g:r[s[3]]<<4|r[s[4]],b:r[s[5]]<<4|r[s[6]],a:9===o?r[s[7]]<<4|r[s[8]]:255})),i=n||function(t){_||(_=function(){const t={},e=Object.keys(v),i=Object.keys(y);let s,n,o,r,a;for(s=0;s<e.length;s++){for(r=a=e[s],n=0;n<i.length;n++)o=i[n],a=a.replace(o,y[o]);o=parseInt(v[r],16),t[a]=[o>>16&255,o>>8&255,255&o]}return t}(),_.transparent=[0,0,0,0]);const e=_[t.toLowerCase()];return e&&{r:e[0],g:e[1],b:e[2],a:4===e.length?e[3]:255}}(t)||I(t)),this._rgb=i,this._valid=!!i}get valid(){return this._valid}get rgb(){var t=D(this._rgb);return t&&(t.a=n(t.a)),t}set rgb(t){this._rgb=P(t)}rgbString(){return this._valid?(t=this._rgb)&&(t.a<255?`rgba(${t.r}, ${t.g}, ${t.b}, ${n(t.a)})`:`rgb(${t.r}, ${t.g}, ${t.b})`):void 0;var t}hexString(){return this._valid?(t=this._rgb,e=(t=>c(t.r)&&c(t.g)&&c(t.b)&&c(t.a))(t)?l:h,t?"#"+e(t.r)+e(t.g)+e(t.b)+((t,e)=>t<255?e(t):"")(t.a,e):void 0):void 0;var t,e}hslString(){return this._valid?function(t){if(!t)return;const e=p(t),i=e[0],s=o(e[1]),r=o(e[2]);return t.a<255?`hsla(${i}, ${s}%, ${r}%, ${n(t.a)})`:`hsl(${i}, ${s}%, ${r}%)`}(this._rgb):void 0}mix(t,e){if(t){const i=this.rgb,s=t.rgb;let n;const o=e===n?.5:e,r=2*o-1,a=i.a-s.a,l=((r*a===-1?r:(r+a)/(1+r*a))+1)/2;n=1-l,i.r=255&l*i.r+n*s.r+.5,i.g=255&l*i.g+n*s.g+.5,i.b=255&l*i.b+n*s.b+.5,i.a=o*i.a+(1-o)*s.a,this.rgb=i}return this}interpolate(t,e){return t&&(this._rgb=function(t,e,i){const o=k(n(t.r)),r=k(n(t.g)),a=k(n(t.b));return{r:s(M(o+i*(k(n(e.r))-o))),g:s(M(r+i*(k(n(e.g))-r))),b:s(M(a+i*(k(n(e.b))-a))),a:t.a+i*(e.a-t.a)}}(this._rgb,t._rgb,e)),this}clone(){return new O(this.rgb)}alpha(t){return this._rgb.a=s(t),this}clearer(t){return this._rgb.a*=1-t,this}greyscale(){const e=this._rgb,i=t(.3*e.r+.59*e.g+.11*e.b);return e.r=e.g=e.b=i,this}opaquer(t){return this._rgb.a*=1+t,this}negate(){const t=this._rgb;return t.r=255-t.r,t.g=255-t.g,t.b=255-t.b,this}lighten(t){return S(this._rgb,2,t),this}darken(t){return S(this._rgb,2,-t),this}saturate(t){return S(this._rgb,1,t),this}desaturate(t){return S(this._rgb,1,-t),this}rotate(t){return function(t,e){var i=p(t);i[0]=b(i[0]+e),i=x(i),t.r=i[0],t.g=i[1],t.b=i[2]}(this._rgb,t),this}}function C(){}const T=(()=>{let t=0;return()=>t++})();function A(t){return null==t}function E(t){if(Array.isArray&&Array.isArray(t))return!0;const e=Object.prototype.toString.call(t);return"[object"===e.slice(0,7)&&"Array]"===e.slice(-6)}function L(t){return null!==t&&"[object Object]"===Object.prototype.toString.call(t)}function z(t){return("number"==typeof t||t instanceof Number)&&isFinite(+t)}function R(t,e){return z(t)?t:e}function B(t,e){return void 0===t?e:t}function F(t,e,i){if(t&&"function"==typeof t.call)return t.apply(i,e)}function H(t,e,i,s){let n,o,r;if(E(t))if(o=t.length,s)for(n=o-1;n>=0;n--)e.call(i,t[n],n);else for(n=0;n<o;n++)e.call(i,t[n],n);else if(L(t))for(r=Object.keys(t),o=r.length,n=0;n<o;n++)e.call(i,t[r[n]],r[n])}function j(t,e){let i,s,n,o;if(!t||!e||t.length!==e.length)return!1;for(i=0,s=t.length;i<s;++i)if(n=t[i],o=e[i],n.datasetIndex!==o.datasetIndex||n.index!==o.index)return!1;return!0}function W(t){if(E(t))return t.map(W);if(L(t)){const e=Object.create(null),i=Object.keys(t),s=i.length;let n=0;for(;n<s;++n)e[i[n]]=W(t[i[n]]);return e}return t}function V(t){return-1===["__proto__","prototype","constructor"].indexOf(t)}function N(t,e,i,s){if(!V(t))return;const n=e[t],o=i[t];L(n)&&L(o)?$(n,o,s):e[t]=W(o)}function $(t,e,i){const s=E(e)?e:[e],n=s.length;if(!L(t))return t;const o=(i=i||{}).merger||N;let r;for(let e=0;e<n;++e){if(r=s[e],!L(r))continue;const n=Object.keys(r);for(let e=0,s=n.length;e<s;++e)o(n[e],t,r,i)}return t}function Y(t,e){return $(t,e,{merger:U})}function U(t,e,i){if(!V(t))return;const s=e[t],n=i[t];L(s)&&L(n)?Y(s,n):Object.prototype.hasOwnProperty.call(e,t)||(e[t]=W(n))}const q={"":t=>t,x:t=>t.x,y:t=>t.y};function X(t,e){const i=q[e]||(q[e]=function(t){const e=function(t){const e=t.split("."),i=[];let s="";for(const t of e)s+=t,s.endsWith("\\")?s=s.slice(0,-1)+".":(i.push(s),s="");return i}(t);return t=>{for(const i of e){if(""===i)break;t=t&&t[i]}return t}}(e));return i(t)}function K(t){return t.charAt(0).toUpperCase()+t.slice(1)}const G=t=>void 0!==t,Z=t=>"function"==typeof t,Q=(t,e)=>{if(t.size!==e.size)return!1;for(const i of t)if(!e.has(i))return!1;return!0},J=Math.PI,tt=2*J,et=tt+J,it=Number.POSITIVE_INFINITY,st=J/180,nt=J/2,ot=J/4,rt=2*J/3,at=Math.log10,lt=Math.sign;function ht(t,e,i){return Math.abs(t-e)<i}function ct(t){const e=Math.round(t);t=ht(t,e,t/1e3)?e:t;const i=Math.pow(10,Math.floor(at(t))),s=t/i;return(s<=1?1:s<=2?2:s<=5?5:10)*i}function dt(t){return!function(t){return"symbol"==typeof t||"object"==typeof t&&null!==t&&!(Symbol.toPrimitive in t||"toString"in t||"valueOf"in t)}(t)&&!isNaN(parseFloat(t))&&isFinite(t)}function ut(t){return t*(J/180)}function ft(t){if(!z(t))return;let e=1,i=0;for(;Math.round(t*e)/e!==t;)e*=10,i++;return i}function gt(t,e){return Math.sqrt(Math.pow(e.x-t.x,2)+Math.pow(e.y-t.y,2))}function pt(t,e){return(t-e+et)%tt-J}function mt(t){return(t%tt+tt)%tt}function xt(t,e,i,s){const n=mt(t),o=mt(e),r=mt(i),a=mt(o-n),l=mt(r-n),h=mt(n-o),c=mt(n-r);return n===o||n===r||s&&o===r||a>l&&h<c}function bt(t,e,i){return Math.max(e,Math.min(i,t))}function yt(t,e,i,s=1e-6){return t>=Math.min(e,i)-s&&t<=Math.max(e,i)+s}function vt(t,e,i){i=i||(i=>t[i]<e);let s,n=t.length-1,o=0;for(;n-o>1;)s=o+n>>1,i(s)?o=s:n=s;return{lo:o,hi:n}}const _t=(t,e,i,s)=>vt(t,i,s?s=>{const n=t[s][e];return n<i||n===i&&t[s+1][e]===i}:s=>t[s][e]<i),wt=(t,e,i)=>vt(t,i,s=>t[s][e]>=i),Mt=["push","pop","shift","splice","unshift"];function kt(t,e){const i=t._chartjs;if(!i)return;const s=i.listeners,n=s.indexOf(e);-1!==n&&s.splice(n,1),s.length>0||(Mt.forEach(e=>{delete t[e]}),delete t._chartjs)}const St="undefined"==typeof window?function(t){return t()}:window.requestAnimationFrame;function Dt(t,e){let i=[],s=!1;return function(...n){i=n,s||(s=!0,St.call(window,()=>{s=!1,t.apply(e,i)}))}}const Pt=t=>"start"===t?"left":"end"===t?"right":"center",It=(t,e,i)=>"start"===t?e:"end"===t?i:(e+i)/2;const Ot=t=>0===t||1===t,Ct=(t,e,i)=>-Math.pow(2,10*(t-=1))*Math.sin((t-e)*tt/i),Tt=(t,e,i)=>Math.pow(2,-10*t)*Math.sin((t-e)*tt/i)+1,At={linear:t=>t,easeInQuad:t=>t*t,easeOutQuad:t=>-t*(t-2),easeInOutQuad:t=>(t/=.5)<1?.5*t*t:-.5*(--t*(t-2)-1),easeInCubic:t=>t*t*t,easeOutCubic:t=>(t-=1)*t*t+1,easeInOutCubic:t=>(t/=.5)<1?.5*t*t*t:.5*((t-=2)*t*t+2),easeInQuart:t=>t*t*t*t,easeOutQuart:t=>-((t-=1)*t*t*t-1),easeInOutQuart:t=>(t/=.5)<1?.5*t*t*t*t:-.5*((t-=2)*t*t*t-2),easeInQuint:t=>t*t*t*t*t,easeOutQuint:t=>(t-=1)*t*t*t*t+1,easeInOutQuint:t=>(t/=.5)<1?.5*t*t*t*t*t:.5*((t-=2)*t*t*t*t+2),easeInSine:t=>1-Math.cos(t*nt),easeOutSine:t=>Math.sin(t*nt),easeInOutSine:t=>-.5*(Math.cos(J*t)-1),easeInExpo:t=>0===t?0:Math.pow(2,10*(t-1)),easeOutExpo:t=>1===t?1:1-Math.pow(2,-10*t),easeInOutExpo:t=>Ot(t)?t:t<.5?.5*Math.pow(2,10*(2*t-1)):.5*(2-Math.pow(2,-10*(2*t-1))),easeInCirc:t=>t>=1?t:-(Math.sqrt(1-t*t)-1),easeOutCirc:t=>Math.sqrt(1-(t-=1)*t),easeInOutCirc:t=>(t/=.5)<1?-.5*(Math.sqrt(1-t*t)-1):.5*(Math.sqrt(1-(t-=2)*t)+1),easeInElastic:t=>Ot(t)?t:Ct(t,.075,.3),easeOutElastic:t=>Ot(t)?t:Tt(t,.075,.3),easeInOutElastic(t){const e=.1125;return Ot(t)?t:t<.5?.5*Ct(2*t,e,.45):.5+.5*Tt(2*t-1,e,.45)},easeInBack(t){const e=1.70158;return t*t*((e+1)*t-e)},easeOutBack(t){const e=1.70158;return(t-=1)*t*((e+1)*t+e)+1},easeInOutBack(t){let e=1.70158;return(t/=.5)<1?t*t*((1+(e*=1.525))*t-e)*.5:.5*((t-=2)*t*((1+(e*=1.525))*t+e)+2)},easeInBounce:t=>1-At.easeOutBounce(1-t),easeOutBounce(t){const e=7.5625,i=2.75;return t<1/i?e*t*t:t<2/i?e*(t-=1.5/i)*t+.75:t<2.5/i?e*(t-=2.25/i)*t+.9375:e*(t-=2.625/i)*t+.984375},easeInOutBounce:t=>t<.5?.5*At.easeInBounce(2*t):.5*At.easeOutBounce(2*t-1)+.5};function Et(t){if(t&&"object"==typeof t){const e=t.toString();return"[object CanvasPattern]"===e||"[object CanvasGradient]"===e}return!1}function Lt(t){return Et(t)?t:new O(t)}function zt(t){return Et(t)?t:new O(t).saturate(.5).darken(.1).hexString()}const Rt=["x","y","borderWidth","radius","tension"],Bt=["color","borderColor","backgroundColor"],Ft=new Map;function Ht(t,e,i){return function(t,e){e=e||{};const i=t+JSON.stringify(e);let s=Ft.get(i);return s||(s=new Intl.NumberFormat(t,e),Ft.set(i,s)),s}(e,i).format(t)}const jt={values:t=>E(t)?t:""+t,numeric(t,e,i){if(0===t)return"0";const s=this.chart.options.locale;let n,o=t;if(i.length>1){const e=Math.max(Math.abs(i[0].value),Math.abs(i[i.length-1].value));(e<1e-4||e>1e15)&&(n="scientific"),o=function(t,e){let i=e.length>3?e[2].value-e[1].value:e[1].value-e[0].value;return Math.abs(i)>=1&&t!==Math.floor(t)&&(i=t-Math.floor(t)),i}(t,i)}const r=at(Math.abs(o)),a=isNaN(r)?1:Math.max(Math.min(-1*Math.floor(r),20),0),l={notation:n,minimumFractionDigits:a,maximumFractionDigits:a};return Object.assign(l,this.options.ticks.format),Ht(t,s,l)},logarithmic(t,e,i){if(0===t)return"0";const s=i[e].significand||t/Math.pow(10,Math.floor(at(t)));return[1,2,3,5,10,15].includes(s)||e>.8*i.length?jt.numeric.call(this,t,e,i):""}};var Wt={formatters:jt};const Vt=Object.create(null),Nt=Object.create(null);function $t(t,e){if(!e)return t;const i=e.split(".");for(let e=0,s=i.length;e<s;++e){const s=i[e];t=t[s]||(t[s]=Object.create(null))}return t}function Yt(t,e,i){return"string"==typeof e?$($t(t,e),i):$($t(t,""),e)}class Ut{constructor(t,e){this.animation=void 0,this.backgroundColor="rgba(0,0,0,0.1)",this.borderColor="rgba(0,0,0,0.1)",this.color="#666",this.datasets={},this.devicePixelRatio=t=>t.chart.platform.getDevicePixelRatio(),this.elements={},this.events=["mousemove","mouseout","click","touchstart","touchmove"],this.font={family:"'Helvetica Neue', 'Helvetica', 'Arial', sans-serif",size:12,style:"normal",lineHeight:1.2,weight:null},this.hover={},this.hoverBackgroundColor=(t,e)=>zt(e.backgroundColor),this.hoverBorderColor=(t,e)=>zt(e.borderColor),this.hoverColor=(t,e)=>zt(e.color),this.indexAxis="x",this.interaction={mode:"nearest",intersect:!0,includeInvisible:!1},this.maintainAspectRatio=!0,this.onHover=null,this.onClick=null,this.parsing=!0,this.plugins={},this.responsive=!0,this.scale=void 0,this.scales={},this.showLine=!0,this.drawActiveElementsOnTop=!0,this.describe(t),this.apply(e)}set(t,e){return Yt(this,t,e)}get(t){return $t(this,t)}describe(t,e){return Yt(Nt,t,e)}override(t,e){return Yt(Vt,t,e)}route(t,e,i,s){const n=$t(this,t),o=$t(this,i),r="_"+e;Object.defineProperties(n,{[r]:{value:n[e],writable:!0},[e]:{enumerable:!0,get(){const t=this[r],e=o[s];return L(t)?Object.assign({},e,t):B(t,e)},set(t){this[r]=t}}})}apply(t){t.forEach(t=>t(this))}}var qt=new Ut({_scriptable:t=>!t.startsWith("on"),_indexable:t=>"events"!==t,hover:{_fallback:"interaction"},interaction:{_scriptable:!1,_indexable:!1}},[function(t){t.set("animation",{delay:void 0,duration:1e3,easing:"easeOutQuart",fn:void 0,from:void 0,loop:void 0,to:void 0,type:void 0}),t.describe("animation",{_fallback:!1,_indexable:!1,_scriptable:t=>"onProgress"!==t&&"onComplete"!==t&&"fn"!==t}),t.set("animations",{colors:{type:"color",properties:Bt},numbers:{type:"number",properties:Rt}}),t.describe("animations",{_fallback:"animation"}),t.set("transitions",{active:{animation:{duration:400}},resize:{animation:{duration:0}},show:{animations:{colors:{from:"transparent"},visible:{type:"boolean",duration:0}}},hide:{animations:{colors:{to:"transparent"},visible:{type:"boolean",easing:"linear",fn:t=>0|t}}}})},function(t){t.set("layout",{autoPadding:!0,padding:{top:0,right:0,bottom:0,left:0}})},function(t){t.set("scale",{display:!0,offset:!1,reverse:!1,beginAtZero:!1,bounds:"ticks",clip:!0,grace:0,grid:{display:!0,lineWidth:1,drawOnChartArea:!0,drawTicks:!0,tickLength:8,tickWidth:(t,e)=>e.lineWidth,tickColor:(t,e)=>e.color,offset:!1},border:{display:!0,dash:[],dashOffset:0,width:1},title:{display:!1,text:"",padding:{top:4,bottom:4}},ticks:{minRotation:0,maxRotation:50,mirror:!1,textStrokeWidth:0,textStrokeColor:"",padding:3,display:!0,autoSkip:!0,autoSkipPadding:3,labelOffset:0,callback:Wt.formatters.values,minor:{},major:{},align:"center",crossAlign:"near",showLabelBackdrop:!1,backdropColor:"rgba(255, 255, 255, 0.75)",backdropPadding:2}}),t.route("scale.ticks","color","","color"),t.route("scale.grid","color","","borderColor"),t.route("scale.border","color","","borderColor"),t.route("scale.title","color","","color"),t.describe("scale",{_fallback:!1,_scriptable:t=>!t.startsWith("before")&&!t.startsWith("after")&&"callback"!==t&&"parser"!==t,_indexable:t=>"borderDash"!==t&&"tickBorderDash"!==t&&"dash"!==t}),t.describe("scales",{_fallback:"scale"}),t.describe("scale.ticks",{_scriptable:t=>"backdropPadding"!==t&&"callback"!==t,_indexable:t=>"backdropPadding"!==t})}]);function Xt(t,e,i,s,n){let o=e[n];return o||(o=e[n]=t.measureText(n).width,i.push(n)),o>s&&(s=o),s}function Kt(t,e,i){const s=t.currentDevicePixelRatio,n=0!==i?Math.max(i/2,.5):0;return Math.round((e-n)*s)/s+n}function Gt(t,e){(e||t)&&((e=e||t.getContext("2d")).save(),e.resetTransform(),e.clearRect(0,0,t.width,t.height),e.restore())}function Zt(t,e,i,s){Qt(t,e,i,s,null)}function Qt(t,e,i,s,n){let o,r,a,l,h,c,d,u;const f=e.pointStyle,g=e.rotation,p=e.radius;let m=(g||0)*st;if(f&&"object"==typeof f&&(o=f.toString(),"[object HTMLImageElement]"===o||"[object HTMLCanvasElement]"===o))return t.save(),t.translate(i,s),t.rotate(m),t.drawImage(f,-f.width/2,-f.height/2,f.width,f.height),void t.restore();if(!(isNaN(p)||p<=0)){switch(t.beginPath(),f){default:n?t.ellipse(i,s,n/2,p,0,0,tt):t.arc(i,s,p,0,tt),t.closePath();break;case"triangle":c=n?n/2:p,t.moveTo(i+Math.sin(m)*c,s-Math.cos(m)*p),m+=rt,t.lineTo(i+Math.sin(m)*c,s-Math.cos(m)*p),m+=rt,t.lineTo(i+Math.sin(m)*c,s-Math.cos(m)*p),t.closePath();break;case"rectRounded":h=.516*p,l=p-h,r=Math.cos(m+ot)*l,d=Math.cos(m+ot)*(n?n/2-h:l),a=Math.sin(m+ot)*l,u=Math.sin(m+ot)*(n?n/2-h:l),t.arc(i-d,s-a,h,m-J,m-nt),t.arc(i+u,s-r,h,m-nt,m),t.arc(i+d,s+a,h,m,m+nt),t.arc(i-u,s+r,h,m+nt,m+J),t.closePath();break;case"rect":if(!g){l=Math.SQRT1_2*p,c=n?n/2:l,t.rect(i-c,s-l,2*c,2*l);break}m+=ot;case"rectRot":d=Math.cos(m)*(n?n/2:p),r=Math.cos(m)*p,a=Math.sin(m)*p,u=Math.sin(m)*(n?n/2:p),t.moveTo(i-d,s-a),t.lineTo(i+u,s-r),t.lineTo(i+d,s+a),t.lineTo(i-u,s+r),t.closePath();break;case"crossRot":m+=ot;case"cross":d=Math.cos(m)*(n?n/2:p),r=Math.cos(m)*p,a=Math.sin(m)*p,u=Math.sin(m)*(n?n/2:p),t.moveTo(i-d,s-a),t.lineTo(i+d,s+a),t.moveTo(i+u,s-r),t.lineTo(i-u,s+r);break;case"star":d=Math.cos(m)*(n?n/2:p),r=Math.cos(m)*p,a=Math.sin(m)*p,u=Math.sin(m)*(n?n/2:p),t.moveTo(i-d,s-a),t.lineTo(i+d,s+a),t.moveTo(i+u,s-r),t.lineTo(i-u,s+r),m+=ot,d=Math.cos(m)*(n?n/2:p),r=Math.cos(m)*p,a=Math.sin(m)*p,u=Math.sin(m)*(n?n/2:p),t.moveTo(i-d,s-a),t.lineTo(i+d,s+a),t.moveTo(i+u,s-r),t.lineTo(i-u,s+r);break;case"line":r=n?n/2:Math.cos(m)*p,a=Math.sin(m)*p,t.moveTo(i-r,s-a),t.lineTo(i+r,s+a);break;case"dash":t.moveTo(i,s),t.lineTo(i+Math.cos(m)*(n?n/2:p),s+Math.sin(m)*p);break;case!1:t.closePath()}t.fill(),e.borderWidth>0&&t.stroke()}}function Jt(t,e,i){return i=i||.5,!e||t&&t.x>e.left-i&&t.x<e.right+i&&t.y>e.top-i&&t.y<e.bottom+i}function te(t,e){t.save(),t.beginPath(),t.rect(e.left,e.top,e.right-e.left,e.bottom-e.top),t.clip()}function ee(t){t.restore()}function ie(t,e,i,s,n){if(!e)return t.lineTo(i.x,i.y);if("middle"===n){const s=(e.x+i.x)/2;t.lineTo(s,e.y),t.lineTo(s,i.y)}else"after"===n!=!!s?t.lineTo(e.x,i.y):t.lineTo(i.x,e.y);t.lineTo(i.x,i.y)}function se(t,e,i,s){if(!e)return t.lineTo(i.x,i.y);t.bezierCurveTo(s?e.cp1x:e.cp2x,s?e.cp1y:e.cp2y,s?i.cp2x:i.cp1x,s?i.cp2y:i.cp1y,i.x,i.y)}function ne(t,e,i,s,n){if(n.strikethrough||n.underline){const o=t.measureText(s),r=e-o.actualBoundingBoxLeft,a=e+o.actualBoundingBoxRight,l=i-o.actualBoundingBoxAscent,h=i+o.actualBoundingBoxDescent,c=n.strikethrough?(l+h)/2:h;t.strokeStyle=t.fillStyle,t.beginPath(),t.lineWidth=n.decorationWidth||2,t.moveTo(r,c),t.lineTo(a,c),t.stroke()}}function oe(t,e){const i=t.fillStyle;t.fillStyle=e.color,t.fillRect(e.left,e.top,e.width,e.height),t.fillStyle=i}function re(t,e,i,s,n,o={}){const r=E(e)?e:[e],a=o.strokeWidth>0&&""!==o.strokeColor;let l,h;for(t.save(),t.font=n.string,function(t,e){e.translation&&t.translate(e.translation[0],e.translation[1]),A(e.rotation)||t.rotate(e.rotation),e.color&&(t.fillStyle=e.color),e.textAlign&&(t.textAlign=e.textAlign),e.textBaseline&&(t.textBaseline=e.textBaseline)}(t,o),l=0;l<r.length;++l)h=r[l],o.backdrop&&oe(t,o.backdrop),a&&(o.strokeColor&&(t.strokeStyle=o.strokeColor),A(o.strokeWidth)||(t.lineWidth=o.strokeWidth),t.strokeText(h,i,s,o.maxWidth)),t.fillText(h,i,s,o.maxWidth),ne(t,i,s,h,o),s+=Number(n.lineHeight);t.restore()}function ae(t,e){const{x:i,y:s,w:n,h:o,radius:r}=e;t.arc(i+r.topLeft,s+r.topLeft,r.topLeft,1.5*J,J,!0),t.lineTo(i,s+o-r.bottomLeft),t.arc(i+r.bottomLeft,s+o-r.bottomLeft,r.bottomLeft,J,nt,!0),t.lineTo(i+n-r.bottomRight,s+o),t.arc(i+n-r.bottomRight,s+o-r.bottomRight,r.bottomRight,nt,0,!0),t.lineTo(i+n,s+r.topRight),t.arc(i+n-r.topRight,s+r.topRight,r.topRight,0,-nt,!0),t.lineTo(i+r.topLeft,s)}const le=/^(normal|(\d+(?:\.\d+)?)(px|em|%)?)$/,he=/^(normal|italic|initial|inherit|unset|(oblique( -?[0-9]?[0-9]deg)?))$/;function ce(t,e){const i=(""+t).match(le);if(!i||"normal"===i[1])return 1.2*e;switch(t=+i[2],i[3]){case"px":return t;case"%":t/=100}return e*t}const de=t=>+t||0;function ue(t,e){const i={},s=L(e),n=s?Object.keys(e):e,o=L(t)?s?i=>B(t[i],t[e[i]]):e=>t[e]:()=>t;for(const t of n)i[t]=de(o(t));return i}function fe(t){return ue(t,["topLeft","topRight","bottomLeft","bottomRight"])}function ge(t){const e=function(t){return ue(t,{top:"y",right:"x",bottom:"y",left:"x"})}(t);return e.width=e.left+e.right,e.height=e.top+e.bottom,e}function pe(t,e){t=t||{},e=e||qt.font;let i=B(t.size,e.size);"string"==typeof i&&(i=parseInt(i,10));let s=B(t.style,e.style);s&&!(""+s).match(he)&&(console.warn('Invalid font style specified: "'+s+'"'),s=void 0);const n={family:B(t.family,e.family),lineHeight:ce(B(t.lineHeight,e.lineHeight),i),size:i,style:s,weight:B(t.weight,e.weight),string:""};return n.string=function(t){return!t||A(t.size)||A(t.family)?null:(t.style?t.style+" ":"")+(t.weight?t.weight+" ":"")+t.size+"px "+t.family}(n),n}function me(t,e,i,s){let n,o,r,a=!0;for(n=0,o=t.length;n<o;++n)if(r=t[n],void 0!==r&&(void 0!==e&&"function"==typeof r&&(r=r(e),a=!1),void 0!==i&&E(r)&&(r=r[i%r.length],a=!1),void 0!==r))return s&&!a&&(s.cacheable=!1),r}function xe(t,e){return Object.assign(Object.create(t),e)}function be(t,e=[""],i,s,n=()=>t[0]){const o=i||t;void 0===s&&(s=Oe("_fallback",t));const r={[Symbol.toStringTag]:"Object",_cacheable:!0,_scopes:t,_rootScopes:o,_fallback:s,_getTarget:n,override:i=>be([i,...t],e,o,s)};return new Proxy(r,{deleteProperty:(e,i)=>(delete e[i],delete e._keys,delete t[0][i],!0),get:(i,s)=>Me(i,s,()=>function(t,e,i,s){let n;for(const o of e)if(n=Oe(_e(o,t),i),void 0!==n)return we(t,n)?Pe(i,s,t,n):n}(s,e,t,i)),getOwnPropertyDescriptor:(t,e)=>Reflect.getOwnPropertyDescriptor(t._scopes[0],e),getPrototypeOf:()=>Reflect.getPrototypeOf(t[0]),has:(t,e)=>Ce(t).includes(e),ownKeys:t=>Ce(t),set(t,e,i){const s=t._storage||(t._storage=n());return t[e]=s[e]=i,delete t._keys,!0}})}function ye(t,e,i,s){const n={_cacheable:!1,_proxy:t,_context:e,_subProxy:i,_stack:new Set,_descriptors:ve(t,s),setContext:e=>ye(t,e,i,s),override:n=>ye(t.override(n),e,i,s)};return new Proxy(n,{deleteProperty:(e,i)=>(delete e[i],delete t[i],!0),get:(t,e,i)=>Me(t,e,()=>function(t,e,i){const{_proxy:s,_context:n,_subProxy:o,_descriptors:r}=t;let a=s[e];return Z(a)&&r.isScriptable(e)&&(a=function(t,e,i,s){const{_proxy:n,_context:o,_subProxy:r,_stack:a}=i;if(a.has(t))throw new Error("Recursion detected: "+Array.from(a).join("->")+"->"+t);a.add(t);let l=e(o,r||s);return a.delete(t),we(t,l)&&(l=Pe(n._scopes,n,t,l)),l}(e,a,t,i)),E(a)&&a.length&&(a=function(t,e,i,s){const{_proxy:n,_context:o,_subProxy:r,_descriptors:a}=i;if(void 0!==o.index&&s(t))return e[o.index%e.length];if(L(e[0])){const i=e,s=n._scopes.filter(t=>t!==i);e=[];for(const l of i){const i=Pe(s,n,t,l);e.push(ye(i,o,r&&r[t],a))}}return e}(e,a,t,r.isIndexable)),we(e,a)&&(a=ye(a,n,o&&o[e],r)),a}(t,e,i)),getOwnPropertyDescriptor:(e,i)=>e._descriptors.allKeys?Reflect.has(t,i)?{enumerable:!0,configurable:!0}:void 0:Reflect.getOwnPropertyDescriptor(t,i),getPrototypeOf:()=>Reflect.getPrototypeOf(t),has:(e,i)=>Reflect.has(t,i),ownKeys:()=>Reflect.ownKeys(t),set:(e,i,s)=>(t[i]=s,delete e[i],!0)})}function ve(t,e={scriptable:!0,indexable:!0}){const{_scriptable:i=e.scriptable,_indexable:s=e.indexable,_allKeys:n=e.allKeys}=t;return{allKeys:n,scriptable:i,indexable:s,isScriptable:Z(i)?i:()=>i,isIndexable:Z(s)?s:()=>s}}const _e=(t,e)=>t?t+K(e):e,we=(t,e)=>L(e)&&"adapters"!==t&&(null===Object.getPrototypeOf(e)||e.constructor===Object);function Me(t,e,i){if(Object.prototype.hasOwnProperty.call(t,e)||"constructor"===e)return t[e];const s=i();return t[e]=s,s}function ke(t,e,i){return Z(t)?t(e,i):t}const Se=(t,e)=>!0===t?e:"string"==typeof t?X(e,t):void 0;function De(t,e,i,s,n){for(const o of e){const e=Se(i,o);if(e){t.add(e);const o=ke(e._fallback,i,n);if(void 0!==o&&o!==i&&o!==s)return o}else if(!1===e&&void 0!==s&&i!==s)return null}return!1}function Pe(t,e,i,s){const n=e._rootScopes,o=ke(e._fallback,i,s),r=[...t,...n],a=new Set;a.add(s);let l=Ie(a,r,i,o||i,s);return null!==l&&(void 0===o||o===i||(l=Ie(a,r,o,l,s),null!==l))&&be(Array.from(a),[""],n,o,()=>function(t,e,i){const s=t._getTarget();e in s||(s[e]={});const n=s[e];return E(n)&&L(i)?i:n||{}}(e,i,s))}function Ie(t,e,i,s,n){for(;i;)i=De(t,e,i,s,n);return i}function Oe(t,e){for(const i of e){if(!i)continue;const e=i[t];if(void 0!==e)return e}}function Ce(t){let e=t._keys;return e||(e=t._keys=function(t){const e=new Set;for(const i of t)for(const t of Object.keys(i).filter(t=>!t.startsWith("_")))e.add(t);return Array.from(e)}(t._scopes)),e}const Te=Number.EPSILON||1e-14,Ae=(t,e)=>e<t.length&&!t[e].skip&&t[e],Ee=t=>"x"===t?"y":"x";function Le(t,e,i,s){const n=t.skip?e:t,o=e,r=i.skip?e:i,a=gt(o,n),l=gt(r,o);let h=a/(a+l),c=l/(a+l);h=isNaN(h)?0:h,c=isNaN(c)?0:c;const d=s*h,u=s*c;return{previous:{x:o.x-d*(r.x-n.x),y:o.y-d*(r.y-n.y)},next:{x:o.x+u*(r.x-n.x),y:o.y+u*(r.y-n.y)}}}function ze(t,e,i){return Math.max(Math.min(t,i),e)}function Re(t,e,i,s,n){let o,r,a,l;if(e.spanGaps&&(t=t.filter(t=>!t.skip)),"monotone"===e.cubicInterpolationMode)!function(t,e="x"){const i=Ee(e),s=t.length,n=Array(s).fill(0),o=Array(s);let r,a,l,h=Ae(t,0);for(r=0;r<s;++r)if(a=l,l=h,h=Ae(t,r+1),l){if(h){const t=h[e]-l[e];n[r]=0!==t?(h[i]-l[i])/t:0}o[r]=a?h?lt(n[r-1])!==lt(n[r])?0:(n[r-1]+n[r])/2:n[r-1]:n[r]}!function(t,e,i){const s=t.length;let n,o,r,a,l,h=Ae(t,0);for(let c=0;c<s-1;++c)l=h,h=Ae(t,c+1),l&&h&&(ht(e[c],0,Te)?i[c]=i[c+1]=0:(n=i[c]/e[c],o=i[c+1]/e[c],a=Math.pow(n,2)+Math.pow(o,2),a<=9||(r=3/Math.sqrt(a),i[c]=n*r*e[c],i[c+1]=o*r*e[c])))}(t,n,o),function(t,e,i="x"){const s=Ee(i),n=t.length;let o,r,a,l=Ae(t,0);for(let h=0;h<n;++h){if(r=a,a=l,l=Ae(t,h+1),!a)continue;const n=a[i],c=a[s];r&&(o=(n-r[i])/3,a[`cp1${i}`]=n-o,a[`cp1${s}`]=c-o*e[h]),l&&(o=(l[i]-n)/3,a[`cp2${i}`]=n+o,a[`cp2${s}`]=c+o*e[h])}}(t,o,e)}(t,n);else{let i=s?t[t.length-1]:t[0];for(o=0,r=t.length;o<r;++o)a=t[o],l=Le(i,a,t[Math.min(o+1,r-(s?0:1))%r],e.tension),a.cp1x=l.previous.x,a.cp1y=l.previous.y,a.cp2x=l.next.x,a.cp2y=l.next.y,i=a}e.capBezierPoints&&function(t,e){let i,s,n,o,r,a=Jt(t[0],e);for(i=0,s=t.length;i<s;++i)r=o,o=a,a=i<s-1&&Jt(t[i+1],e),o&&(n=t[i],r&&(n.cp1x=ze(n.cp1x,e.left,e.right),n.cp1y=ze(n.cp1y,e.top,e.bottom)),a&&(n.cp2x=ze(n.cp2x,e.left,e.right),n.cp2y=ze(n.cp2y,e.top,e.bottom)))}(t,i)}function Be(){return"undefined"!=typeof window&&"undefined"!=typeof document}function Fe(t){let e=t.parentNode;return e&&"[object ShadowRoot]"===e.toString()&&(e=e.host),e}function He(t,e,i){let s;return"string"==typeof t?(s=parseInt(t,10),-1!==t.indexOf("%")&&(s=s/100*e.parentNode[i])):s=t,s}const je=t=>t.ownerDocument.defaultView.getComputedStyle(t,null),We=["top","right","bottom","left"];function Ve(t,e,i){const s={};i=i?"-"+i:"";for(let n=0;n<4;n++){const o=We[n];s[o]=parseFloat(t[e+"-"+o+i])||0}return s.width=s.left+s.right,s.height=s.top+s.bottom,s}function Ne(t,e){if("native"in t)return t;const{canvas:i,currentDevicePixelRatio:s}=e,n=je(i),o="border-box"===n.boxSizing,r=Ve(n,"padding"),a=Ve(n,"border","width"),{x:l,y:h,box:c}=function(t,e){const i=t.touches,s=i&&i.length?i[0]:t,{offsetX:n,offsetY:o}=s;let r,a,l=!1;if(((t,e,i)=>(t>0||e>0)&&(!i||!i.shadowRoot))(n,o,t.target))r=n,a=o;else{const t=e.getBoundingClientRect();r=s.clientX-t.left,a=s.clientY-t.top,l=!0}return{x:r,y:a,box:l}}(t,i),d=r.left+(c&&a.left),u=r.top+(c&&a.top);let{width:f,height:g}=e;return o&&(f-=r.width+a.width,g-=r.height+a.height),{x:Math.round((l-d)/f*i.width/s),y:Math.round((h-u)/g*i.height/s)}}const $e=t=>Math.round(10*t)/10;function Ye(t,e,i){const s=e||1,n=$e(t.height*s),o=$e(t.width*s);t.height=$e(t.height),t.width=$e(t.width);const r=t.canvas;return r.style&&(i||!r.style.height&&!r.style.width)&&(r.style.height=`${t.height}px`,r.style.width=`${t.width}px`),(t.currentDevicePixelRatio!==s||r.height!==n||r.width!==o)&&(t.currentDevicePixelRatio=s,r.height=n,r.width=o,t.ctx.setTransform(s,0,0,s,0,0),!0)}const Ue=function(){let t=!1;try{const e={get passive(){return t=!0,!1}};Be()&&(window.addEventListener("test",null,e),window.removeEventListener("test",null,e))}catch(t){}return t}();function qe(t,e){const i=function(t,e){return je(t).getPropertyValue(e)}(t,e),s=i&&i.match(/^(\d+)(\.\d+)?px$/);return s?+s[1]:void 0}function Xe(t,e,i,s){return{x:t.x+i*(e.x-t.x),y:t.y+i*(e.y-t.y)}}function Ke(t,e,i,s){return{x:t.x+i*(e.x-t.x),y:"middle"===s?i<.5?t.y:e.y:"after"===s?i<1?t.y:e.y:i>0?e.y:t.y}}function Ge(t,e,i,s){const n={x:t.cp2x,y:t.cp2y},o={x:e.cp1x,y:e.cp1y},r=Xe(t,n,i),a=Xe(n,o,i),l=Xe(o,e,i),h=Xe(r,a,i),c=Xe(a,l,i);return Xe(h,c,i)}function Ze(t,e,i){return t?function(t,e){return{x:i=>t+t+e-i,setWidth(t){e=t},textAlign:t=>"center"===t?t:"right"===t?"left":"right",xPlus:(t,e)=>t-e,leftForLtr:(t,e)=>t-e}}(e,i):{x:t=>t,setWidth(t){},textAlign:t=>t,xPlus:(t,e)=>t+e,leftForLtr:(t,e)=>t}}function Qe(t,e){let i,s;"ltr"!==e&&"rtl"!==e||(i=t.canvas.style,s=[i.getPropertyValue("direction"),i.getPropertyPriority("direction")],i.setProperty("direction",e,"important"),t.prevTextDirection=s)}function Je(t,e){void 0!==e&&(delete t.prevTextDirection,t.canvas.style.setProperty("direction",e[0],e[1]))}function ti(t){return"angle"===t?{between:xt,compare:pt,normalize:mt}:{between:yt,compare:(t,e)=>t-e,normalize:t=>t}}function ei({start:t,end:e,count:i,loop:s,style:n}){return{start:t%i,end:e%i,loop:s&&(e-t+1)%i==0,style:n}}function ii(t,e,i){if(!i)return[t];const{property:s,start:n,end:o}=i,r=e.length,{compare:a,between:l,normalize:h}=ti(s),{start:c,end:d,loop:u,style:f}=function(t,e,i){const{property:s,start:n,end:o}=i,{between:r,normalize:a}=ti(s),l=e.length;let h,c,{start:d,end:u,loop:f}=t;if(f){for(d+=l,u+=l,h=0,c=l;h<c&&r(a(e[d%l][s]),n,o);++h)d--,u--;d%=l,u%=l}return u<d&&(u+=l),{start:d,end:u,loop:f,style:t.style}}(t,e,i),g=[];let p,m,x,b=!1,y=null;const v=()=>b||l(n,x,p)&&0!==a(n,x),_=()=>!b||0===a(o,p)||l(o,x,p);for(let t=c,i=c;t<=d;++t)m=e[t%r],m.skip||(p=h(m[s]),p!==x&&(b=l(p,n,o),null===y&&v()&&(y=0===a(p,n)?t:i),null!==y&&_()&&(g.push(ei({start:y,end:t,loop:u,count:r,style:f})),y=null),i=t,x=p));return null!==y&&g.push(ei({start:y,end:d,loop:u,count:r,style:f})),g}function si(t,e){const i=[],s=t.segments;for(let n=0;n<s.length;n++){const o=ii(s[n],t.points,e);o.length&&i.push(...o)}return i}function ni(t){return{backgroundColor:t.backgroundColor,borderCapStyle:t.borderCapStyle,borderDash:t.borderDash,borderDashOffset:t.borderDashOffset,borderJoinStyle:t.borderJoinStyle,borderWidth:t.borderWidth,borderColor:t.borderColor}}function oi(t,e){if(!e)return!1;const i=[],s=function(t,e){return Et(e)?(i.includes(e)||i.push(e),i.indexOf(e)):e};return JSON.stringify(t,s)!==JSON.stringify(e,s)}function ri(t,e,i){return t.options.clip?t[i]:e[i]}function ai(t,e){const i=e._clip;if(i.disabled)return!1;const s=function(t,e){const{xScale:i,yScale:s}=t;return i&&s?{left:ri(i,e,"left"),right:ri(i,e,"right"),top:ri(s,e,"top"),bottom:ri(s,e,"bottom")}:e}(e,t.chartArea);return{left:!1===i.left?0:s.left-(!0===i.left?0:i.left),right:!1===i.right?t.width:s.right+(!0===i.right?0:i.right),top:!1===i.top?0:s.top-(!0===i.top?0:i.top),bottom:!1===i.bottom?t.height:s.bottom+(!0===i.bottom?0:i.bottom)}}class li{constructor(){this._request=null,this._charts=new Map,this._running=!1,this._lastDate=void 0}_notify(t,e,i,s){const n=e.listeners[s],o=e.duration;n.forEach(s=>s({chart:t,initial:e.initial,numSteps:o,currentStep:Math.min(i-e.start,o)}))}_refresh(){this._request||(this._running=!0,this._request=St.call(window,()=>{this._update(),this._request=null,this._running&&this._refresh()}))}_update(t=Date.now()){let e=0;this._charts.forEach((i,s)=>{if(!i.running||!i.items.length)return;const n=i.items;let o,r=n.length-1,a=!1;for(;r>=0;--r)o=n[r],o._active?(o._total>i.duration&&(i.duration=o._total),o.tick(t),a=!0):(n[r]=n[n.length-1],n.pop());a&&(s.draw(),this._notify(s,i,t,"progress")),n.length||(i.running=!1,this._notify(s,i,t,"complete"),i.initial=!1),e+=n.length}),this._lastDate=t,0===e&&(this._running=!1)}_getAnims(t){const e=this._charts;let i=e.get(t);return i||(i={running:!1,initial:!0,items:[],listeners:{complete:[],progress:[]}},e.set(t,i)),i}listen(t,e,i){this._getAnims(t).listeners[e].push(i)}add(t,e){e&&e.length&&this._getAnims(t).items.push(...e)}has(t){return this._getAnims(t).items.length>0}start(t){const e=this._charts.get(t);e&&(e.running=!0,e.start=Date.now(),e.duration=e.items.reduce((t,e)=>Math.max(t,e._duration),0),this._refresh())}running(t){if(!this._running)return!1;const e=this._charts.get(t);return!!(e&&e.running&&e.items.length)}stop(t){const e=this._charts.get(t);if(!e||!e.items.length)return;const i=e.items;let s=i.length-1;for(;s>=0;--s)i[s].cancel();e.items=[],this._notify(t,e,Date.now(),"complete")}remove(t){return this._charts.delete(t)}}var hi=new li;const ci="transparent",di={boolean:(t,e,i)=>i>.5?e:t,color(t,e,i){const s=Lt(t||ci),n=s.valid&&Lt(e||ci);return n&&n.valid?n.mix(s,i).hexString():e},number:(t,e,i)=>t+(e-t)*i};class ui{constructor(t,e,i,s){const n=e[i];s=me([t.to,s,n,t.from]);const o=me([t.from,n,s]);this._active=!0,this._fn=t.fn||di[t.type||typeof o],this._easing=At[t.easing]||At.linear,this._start=Math.floor(Date.now()+(t.delay||0)),this._duration=this._total=Math.floor(t.duration),this._loop=!!t.loop,this._target=e,this._prop=i,this._from=o,this._to=s,this._promises=void 0}active(){return this._active}update(t,e,i){if(this._active){this._notify(!1);const s=this._target[this._prop],n=i-this._start,o=this._duration-n;this._start=i,this._duration=Math.floor(Math.max(o,t.duration)),this._total+=n,this._loop=!!t.loop,this._to=me([t.to,e,s,t.from]),this._from=me([t.from,s,e])}}cancel(){this._active&&(this.tick(Date.now()),this._active=!1,this._notify(!1))}tick(t){const e=t-this._start,i=this._duration,s=this._prop,n=this._from,o=this._loop,r=this._to;let a;if(this._active=n!==r&&(o||e<i),!this._active)return this._target[s]=r,void this._notify(!0);e<0?this._target[s]=n:(a=e/i%2,a=o&&a>1?2-a:a,a=this._easing(Math.min(1,Math.max(0,a))),this._target[s]=this._fn(n,r,a))}wait(){const t=this._promises||(this._promises=[]);return new Promise((e,i)=>{t.push({res:e,rej:i})})}_notify(t){const e=t?"res":"rej",i=this._promises||[];for(let t=0;t<i.length;t++)i[t][e]()}}class fi{constructor(t,e){this._chart=t,this._properties=new Map,this.configure(e)}configure(t){if(!L(t))return;const e=Object.keys(qt.animation),i=this._properties;Object.getOwnPropertyNames(t).forEach(s=>{const n=t[s];if(!L(n))return;const o={};for(const t of e)o[t]=n[t];(E(n.properties)&&n.properties||[s]).forEach(t=>{t!==s&&i.has(t)||i.set(t,o)})})}_animateOptions(t,e){const i=e.options,s=function(t,e){if(!e)return;let i=t.options;if(i)return i.$shared&&(t.options=i=Object.assign({},i,{$shared:!1,$animations:{}})),i;t.options=e}(t,i);if(!s)return[];const n=this._createAnimations(s,i);return i.$shared&&function(t,e){const i=[],s=Object.keys(e);for(let e=0;e<s.length;e++){const n=t[s[e]];n&&n.active()&&i.push(n.wait())}return Promise.all(i)}(t.options.$animations,i).then(()=>{t.options=i},()=>{}),n}_createAnimations(t,e){const i=this._properties,s=[],n=t.$animations||(t.$animations={}),o=Object.keys(e),r=Date.now();let a;for(a=o.length-1;a>=0;--a){const l=o[a];if("$"===l.charAt(0))continue;if("options"===l){s.push(...this._animateOptions(t,e));continue}const h=e[l];let c=n[l];const d=i.get(l);if(c){if(d&&c.active()){c.update(d,h,r);continue}c.cancel()}d&&d.duration?(n[l]=c=new ui(d,t,l,h),s.push(c)):t[l]=h}return s}update(t,e){if(0===this._properties.size)return void Object.assign(t,e);const i=this._createAnimations(t,e);return i.length?(hi.add(this._chart,i),!0):void 0}}function gi(t,e){const i=t&&t.options||{},s=i.reverse,n=void 0===i.min?e:0,o=void 0===i.max?e:0;return{start:s?o:n,end:s?n:o}}function pi(t,e){const i=[],s=t._getSortedDatasetMetas(e);let n,o;for(n=0,o=s.length;n<o;++n)i.push(s[n].index);return i}function mi(t,e,i,s={}){const n=t.keys,o="single"===s.mode;let r,a,l,h;if(null===e)return;let c=!1;for(r=0,a=n.length;r<a;++r){if(l=+n[r],l===i){if(c=!0,s.all)continue;break}h=t.values[l],z(h)&&(o||0===e||lt(e)===lt(h))&&(e+=h)}return c||s.all?e:0}function xi(t,e){const i=t&&t.options.stacked;return i||void 0===i&&void 0!==e.stack}function bi(t,e,i){const s=t[e]||(t[e]={});return s[i]||(s[i]={})}function yi(t,e,i,s){for(const n of e.getMatchingVisibleMetas(s).reverse()){const e=t[n.index];if(i&&e>0||!i&&e<0)return n.index}return null}function vi(t,e){const{chart:i,_cachedMeta:s}=t,n=i._stacks||(i._stacks={}),{iScale:o,vScale:r,index:a}=s,l=o.axis,h=r.axis,c=function(t,e,i){return`${t.id}.${e.id}.${i.stack||i.type}`}(o,r,s),d=e.length;let u;for(let t=0;t<d;++t){const i=e[t],{[l]:o,[h]:d}=i;u=(i._stacks||(i._stacks={}))[h]=bi(n,c,o),u[a]=d,u._top=yi(u,r,!0,s.type),u._bottom=yi(u,r,!1,s.type),(u._visualValues||(u._visualValues={}))[a]=d}}function _i(t,e){const i=t.scales;return Object.keys(i).filter(t=>i[t].axis===e).shift()}function wi(t,e){const i=t.controller.index,s=t.vScale&&t.vScale.axis;if(s){e=e||t._parsed;for(const t of e){const e=t._stacks;if(!e||void 0===e[s]||void 0===e[s][i])return;delete e[s][i],void 0!==e[s]._visualValues&&void 0!==e[s]._visualValues[i]&&delete e[s]._visualValues[i]}}}const Mi=t=>"reset"===t||"none"===t,ki=(t,e)=>e?t:Object.assign({},t);class Si{static defaults={};static datasetElementType=null;static dataElementType=null;constructor(t,e){this.chart=t,this._ctx=t.ctx,this.index=e,this._cachedDataOpts={},this._cachedMeta=this.getMeta(),this._type=this._cachedMeta.type,this.options=void 0,this._parsing=!1,this._data=void 0,this._objectData=void 0,this._sharedOptions=void 0,this._drawStart=void 0,this._drawCount=void 0,this.enableOptionSharing=!1,this.supportsDecimation=!1,this.$context=void 0,this._syncList=[],this.datasetElementType=new.target.datasetElementType,this.dataElementType=new.target.dataElementType,this.initialize()}initialize(){const t=this._cachedMeta;this.configure(),this.linkScales(),t._stacked=xi(t.vScale,t),this.addElements(),this.options.fill&&!this.chart.isPluginEnabled("filler")&&console.warn("Tried to use the 'fill' option without the 'Filler' plugin enabled. Please import and register the 'Filler' plugin and make sure it is not disabled in the options")}updateIndex(t){this.index!==t&&wi(this._cachedMeta),this.index=t}linkScales(){const t=this.chart,e=this._cachedMeta,i=this.getDataset(),s=(t,e,i,s)=>"x"===t?e:"r"===t?s:i,n=e.xAxisID=B(i.xAxisID,_i(t,"x")),o=e.yAxisID=B(i.yAxisID,_i(t,"y")),r=e.rAxisID=B(i.rAxisID,_i(t,"r")),a=e.indexAxis,l=e.iAxisID=s(a,n,o,r),h=e.vAxisID=s(a,o,n,r);e.xScale=this.getScaleForId(n),e.yScale=this.getScaleForId(o),e.rScale=this.getScaleForId(r),e.iScale=this.getScaleForId(l),e.vScale=this.getScaleForId(h)}getDataset(){return this.chart.data.datasets[this.index]}getMeta(){return this.chart.getDatasetMeta(this.index)}getScaleForId(t){return this.chart.scales[t]}_getOtherScale(t){const e=this._cachedMeta;return t===e.iScale?e.vScale:e.iScale}reset(){this._update("reset")}_destroy(){const t=this._cachedMeta;this._data&&kt(this._data,this),t._stacked&&wi(t)}_dataCheck(){const t=this.getDataset(),e=t.data||(t.data=[]),i=this._data;if(L(e)){const t=this._cachedMeta;this._data=function(t,e){const{iScale:i,vScale:s}=e,n="x"===i.axis?"x":"y",o="x"===s.axis?"x":"y",r=Object.keys(t),a=new Array(r.length);let l,h,c;for(l=0,h=r.length;l<h;++l)c=r[l],a[l]={[n]:c,[o]:t[c]};return a}(e,t)}else if(i!==e){if(i){kt(i,this);const t=this._cachedMeta;wi(t),t._parsed=[]}e&&Object.isExtensible(e)&&((s=e)._chartjs?s._chartjs.listeners.push(this):(Object.defineProperty(s,"_chartjs",{configurable:!0,enumerable:!1,value:{listeners:[this]}}),Mt.forEach(t=>{const e="_onData"+K(t),i=s[t];Object.defineProperty(s,t,{configurable:!0,enumerable:!1,value(...t){const n=i.apply(this,t);return s._chartjs.listeners.forEach(i=>{"function"==typeof i[e]&&i[e](...t)}),n}})}))),this._syncList=[],this._data=e}var s}addElements(){const t=this._cachedMeta;this._dataCheck(),this.datasetElementType&&(t.dataset=new this.datasetElementType)}buildOrUpdateElements(t){const e=this._cachedMeta,i=this.getDataset();let s=!1;this._dataCheck();const n=e._stacked;e._stacked=xi(e.vScale,e),e.stack!==i.stack&&(s=!0,wi(e),e.stack=i.stack),this._resyncElements(t),(s||n!==e._stacked)&&(vi(this,e._parsed),e._stacked=xi(e.vScale,e))}configure(){const t=this.chart.config,e=t.datasetScopeKeys(this._type),i=t.getOptionScopes(this.getDataset(),e,!0);this.options=t.createResolver(i,this.getContext()),this._parsing=this.options.parsing,this._cachedDataOpts={}}parse(t,e){const{_cachedMeta:i,_data:s}=this,{iScale:n,_stacked:o}=i,r=n.axis;let a,l,h,c=0===t&&e===s.length||i._sorted,d=t>0&&i._parsed[t-1];if(!1===this._parsing)i._parsed=s,i._sorted=!0,h=s;else{h=E(s[t])?this.parseArrayData(i,s,t,e):L(s[t])?this.parseObjectData(i,s,t,e):this.parsePrimitiveData(i,s,t,e);const n=()=>null===l[r]||d&&l[r]<d[r];for(a=0;a<e;++a)i._parsed[a+t]=l=h[a],c&&(n()&&(c=!1),d=l);i._sorted=c}o&&vi(this,h)}parsePrimitiveData(t,e,i,s){const{iScale:n,vScale:o}=t,r=n.axis,a=o.axis,l=n.getLabels(),h=n===o,c=new Array(s);let d,u,f;for(d=0,u=s;d<u;++d)f=d+i,c[d]={[r]:h||n.parse(l[f],f),[a]:o.parse(e[f],f)};return c}parseArrayData(t,e,i,s){const{xScale:n,yScale:o}=t,r=new Array(s);let a,l,h,c;for(a=0,l=s;a<l;++a)h=a+i,c=e[h],r[a]={x:n.parse(c[0],h),y:o.parse(c[1],h)};return r}parseObjectData(t,e,i,s){const{xScale:n,yScale:o}=t,{xAxisKey:r="x",yAxisKey:a="y"}=this._parsing,l=new Array(s);let h,c,d,u;for(h=0,c=s;h<c;++h)d=h+i,u=e[d],l[h]={x:n.parse(X(u,r),d),y:o.parse(X(u,a),d)};return l}getParsed(t){return this._cachedMeta._parsed[t]}getDataElement(t){return this._cachedMeta.data[t]}applyStack(t,e,i){const s=this.chart,n=this._cachedMeta,o=e[t.axis];return mi({keys:pi(s,!0),values:e._stacks[t.axis]._visualValues},o,n.index,{mode:i})}updateRangeFromParsed(t,e,i,s){const n=i[e.axis];let o=null===n?NaN:n;const r=s&&i._stacks[e.axis];s&&r&&(s.values=r,o=mi(s,n,this._cachedMeta.index)),t.min=Math.min(t.min,o),t.max=Math.max(t.max,o)}getMinMax(t,e){const i=this._cachedMeta,s=i._parsed,n=i._sorted&&t===i.iScale,o=s.length,r=this._getOtherScale(t),a=((t,e,i)=>t&&!e.hidden&&e._stacked&&{keys:pi(i,!0),values:null})(e,i,this.chart),l={min:Number.POSITIVE_INFINITY,max:Number.NEGATIVE_INFINITY},{min:h,max:c}=function(t){const{min:e,max:i,minDefined:s,maxDefined:n}=t.getUserBounds();return{min:s?e:Number.NEGATIVE_INFINITY,max:n?i:Number.POSITIVE_INFINITY}}(r);let d,u;function f(){u=s[d];const e=u[r.axis];return!z(u[t.axis])||h>e||c<e}for(d=0;d<o&&(f()||(this.updateRangeFromParsed(l,t,u,a),!n));++d);if(n)for(d=o-1;d>=0;--d)if(!f()){this.updateRangeFromParsed(l,t,u,a);break}return l}getAllParsedValues(t){const e=this._cachedMeta._parsed,i=[];let s,n,o;for(s=0,n=e.length;s<n;++s)o=e[s][t.axis],z(o)&&i.push(o);return i}getMaxOverflow(){return!1}getLabelAndValue(t){const e=this._cachedMeta,i=e.iScale,s=e.vScale,n=this.getParsed(t);return{label:i?""+i.getLabelForValue(n[i.axis]):"",value:s?""+s.getLabelForValue(n[s.axis]):""}}_update(t){const e=this._cachedMeta;this.update(t||"default"),e._clip=function(t){let e,i,s,n;return L(t)?(e=t.top,i=t.right,s=t.bottom,n=t.left):e=i=s=n=t,{top:e,right:i,bottom:s,left:n,disabled:!1===t}}(B(this.options.clip,function(t,e,i){if(!1===i)return!1;const s=gi(t,i),n=gi(e,i);return{top:n.end,right:s.end,bottom:n.start,left:s.start}}(e.xScale,e.yScale,this.getMaxOverflow())))}update(t){}draw(){const t=this._ctx,e=this.chart,i=this._cachedMeta,s=i.data||[],n=e.chartArea,o=[],r=this._drawStart||0,a=this._drawCount||s.length-r,l=this.options.drawActiveElementsOnTop;let h;for(i.dataset&&i.dataset.draw(t,n,r,a),h=r;h<r+a;++h){const e=s[h];e.hidden||(e.active&&l?o.push(e):e.draw(t,n))}for(h=0;h<o.length;++h)o[h].draw(t,n)}getStyle(t,e){const i=e?"active":"default";return void 0===t&&this._cachedMeta.dataset?this.resolveDatasetElementOptions(i):this.resolveDataElementOptions(t||0,i)}getContext(t,e,i){const s=this.getDataset();let n;if(t>=0&&t<this._cachedMeta.data.length){const e=this._cachedMeta.data[t];n=e.$context||(e.$context=function(t,e,i){return xe(t,{active:!1,dataIndex:e,parsed:void 0,raw:void 0,element:i,index:e,mode:"default",type:"data"})}(this.getContext(),t,e)),n.parsed=this.getParsed(t),n.raw=s.data[t],n.index=n.dataIndex=t}else n=this.$context||(this.$context=function(t,e){return xe(t,{active:!1,dataset:void 0,datasetIndex:e,index:e,mode:"default",type:"dataset"})}(this.chart.getContext(),this.index)),n.dataset=s,n.index=n.datasetIndex=this.index;return n.active=!!e,n.mode=i,n}resolveDatasetElementOptions(t){return this._resolveElementOptions(this.datasetElementType.id,t)}resolveDataElementOptions(t,e){return this._resolveElementOptions(this.dataElementType.id,e,t)}_resolveElementOptions(t,e="default",i){const s="active"===e,n=this._cachedDataOpts,o=t+"-"+e,r=n[o],a=this.enableOptionSharing&&G(i);if(r)return ki(r,a);const l=this.chart.config,h=l.datasetElementScopeKeys(this._type,t),c=s?[`${t}Hover`,"hover",t,""]:[t,""],d=l.getOptionScopes(this.getDataset(),h),u=Object.keys(qt.elements[t]),f=l.resolveNamedOptions(d,u,()=>this.getContext(i,s,e),c);return f.$shared&&(f.$shared=a,n[o]=Object.freeze(ki(f,a))),f}_resolveAnimations(t,e,i){const s=this.chart,n=this._cachedDataOpts,o=`animation-${e}`,r=n[o];if(r)return r;let a;if(!1!==s.options.animation){const s=this.chart.config,n=s.datasetAnimationScopeKeys(this._type,e),o=s.getOptionScopes(this.getDataset(),n);a=s.createResolver(o,this.getContext(t,i,e))}const l=new fi(s,a&&a.animations);return a&&a._cacheable&&(n[o]=Object.freeze(l)),l}getSharedOptions(t){if(t.$shared)return this._sharedOptions||(this._sharedOptions=Object.assign({},t))}includeOptions(t,e){return!e||Mi(t)||this.chart._animationsDisabled}_getSharedOptions(t,e){const i=this.resolveDataElementOptions(t,e),s=this._sharedOptions,n=this.getSharedOptions(i),o=this.includeOptions(e,n)||n!==s;return this.updateSharedOptions(n,e,i),{sharedOptions:n,includeOptions:o}}updateElement(t,e,i,s){Mi(s)?Object.assign(t,i):this._resolveAnimations(e,s).update(t,i)}updateSharedOptions(t,e,i){t&&!Mi(e)&&this._resolveAnimations(void 0,e).update(t,i)}_setStyle(t,e,i,s){t.active=s;const n=this.getStyle(e,s);this._resolveAnimations(e,i,s).update(t,{options:!s&&this.getSharedOptions(n)||n})}removeHoverStyle(t,e,i){this._setStyle(t,i,"active",!1)}setHoverStyle(t,e,i){this._setStyle(t,i,"active",!0)}_removeDatasetHoverStyle(){const t=this._cachedMeta.dataset;t&&this._setStyle(t,void 0,"active",!1)}_setDatasetHoverStyle(){const t=this._cachedMeta.dataset;t&&this._setStyle(t,void 0,"active",!0)}_resyncElements(t){const e=this._data,i=this._cachedMeta.data;for(const[t,e,i]of this._syncList)this[t](e,i);this._syncList=[];const s=i.length,n=e.length,o=Math.min(n,s);o&&this.parse(0,o),n>s?this._insertElements(s,n-s,t):n<s&&this._removeElements(n,s-n)}_insertElements(t,e,i=!0){const s=this._cachedMeta,n=s.data,o=t+e;let r;const a=t=>{for(t.length+=e,r=t.length-1;r>=o;r--)t[r]=t[r-e]};for(a(n),r=t;r<o;++r)n[r]=new this.dataElementType;this._parsing&&a(s._parsed),this.parse(t,e),i&&this.updateElements(n,t,e,"reset")}updateElements(t,e,i,s){}_removeElements(t,e){const i=this._cachedMeta;if(this._parsing){const s=i._parsed.splice(t,e);i._stacked&&wi(i,s)}i.data.splice(t,e)}_sync(t){if(this._parsing)this._syncList.push(t);else{const[e,i,s]=t;this[e](i,s)}this.chart._dataChanges.push([this.index,...t])}_onDataPush(){const t=arguments.length;this._sync(["_insertElements",this.getDataset().data.length-t,t])}_onDataPop(){this._sync(["_removeElements",this._cachedMeta.data.length-1,1])}_onDataShift(){this._sync(["_removeElements",0,1])}_onDataSplice(t,e){e&&this._sync(["_removeElements",t,e]);const i=arguments.length-2;i&&this._sync(["_insertElements",t,i])}_onDataUnshift(){this._sync(["_insertElements",0,arguments.length])}}function Di(t,e,i,s){const{controller:n,data:o,_sorted:r}=t,a=n._cachedMeta.iScale,l=t.dataset&&t.dataset.options?t.dataset.options.spanGaps:null;if(a&&e===a.axis&&"r"!==e&&r&&o.length){const r=a._reversePixels?wt:_t;if(!s){const s=r(o,e,i);if(l){const{vScale:e}=n._cachedMeta,{_parsed:i}=t,o=i.slice(0,s.lo+1).reverse().findIndex(t=>!A(t[e.axis]));s.lo-=Math.max(0,o);const r=i.slice(s.hi).findIndex(t=>!A(t[e.axis]));s.hi+=Math.max(0,r)}return s}if(n._sharedOptions){const t=o[0],s="function"==typeof t.getRange&&t.getRange(e);if(s){const t=r(o,e,i-s),n=r(o,e,i+s);return{lo:t.lo,hi:n.hi}}}}return{lo:0,hi:o.length-1}}function Pi(t,e,i,s,n){const o=t.getSortedVisibleDatasetMetas(),r=i[e];for(let t=0,i=o.length;t<i;++t){const{index:i,data:a}=o[t],{lo:l,hi:h}=Di(o[t],e,r,n);for(let t=l;t<=h;++t){const e=a[t];e.skip||s(e,i,t)}}}function Ii(t,e,i,s,n){const o=[];return n||t.isPointInArea(e)?(Pi(t,i,e,function(i,r,a){(n||Jt(i,t.chartArea,0))&&i.inRange(e.x,e.y,s)&&o.push({element:i,datasetIndex:r,index:a})},!0),o):o}function Oi(t,e,i,s,n,o){return o||t.isPointInArea(e)?"r"!==i||s?function(t,e,i,s,n,o){let r=[];const a=function(t){const e=-1!==t.indexOf("x"),i=-1!==t.indexOf("y");return function(t,s){const n=e?Math.abs(t.x-s.x):0,o=i?Math.abs(t.y-s.y):0;return Math.sqrt(Math.pow(n,2)+Math.pow(o,2))}}(i);let l=Number.POSITIVE_INFINITY;return Pi(t,i,e,function(i,h,c){const d=i.inRange(e.x,e.y,n);if(s&&!d)return;const u=i.getCenterPoint(n);if(!o&&!t.isPointInArea(u)&&!d)return;const f=a(e,u);f<l?(r=[{element:i,datasetIndex:h,index:c}],l=f):f===l&&r.push({element:i,datasetIndex:h,index:c})}),r}(t,e,i,s,n,o):function(t,e,i,s){let n=[];return Pi(t,i,e,function(t,i,o){const{startAngle:r,endAngle:a}=t.getProps(["startAngle","endAngle"],s),{angle:l}=function(t,e){const i=e.x-t.x,s=e.y-t.y,n=Math.sqrt(i*i+s*s);let o=Math.atan2(s,i);return o<-.5*J&&(o+=tt),{angle:o,distance:n}}(t,{x:e.x,y:e.y});xt(l,r,a)&&n.push({element:t,datasetIndex:i,index:o})}),n}(t,e,i,n):[]}function Ci(t,e,i,s,n){const o=[],r="x"===i?"inXRange":"inYRange";let a=!1;return Pi(t,i,e,(t,s,l)=>{t[r]&&t[r](e[i],n)&&(o.push({element:t,datasetIndex:s,index:l}),a=a||t.inRange(e.x,e.y,n))}),s&&!a?[]:o}var Ti={evaluateInteractionItems:Pi,modes:{index(t,e,i,s){const n=Ne(e,t),o=i.axis||"x",r=i.includeInvisible||!1,a=i.intersect?Ii(t,n,o,s,r):Oi(t,n,o,!1,s,r),l=[];return a.length?(t.getSortedVisibleDatasetMetas().forEach(t=>{const e=a[0].index,i=t.data[e];i&&!i.skip&&l.push({element:i,datasetIndex:t.index,index:e})}),l):[]},dataset(t,e,i,s){const n=Ne(e,t),o=i.axis||"xy",r=i.includeInvisible||!1;let a=i.intersect?Ii(t,n,o,s,r):Oi(t,n,o,!1,s,r);if(a.length>0){const e=a[0].datasetIndex,i=t.getDatasetMeta(e).data;a=[];for(let t=0;t<i.length;++t)a.push({element:i[t],datasetIndex:e,index:t})}return a},point:(t,e,i,s)=>Ii(t,Ne(e,t),i.axis||"xy",s,i.includeInvisible||!1),nearest(t,e,i,s){const n=Ne(e,t),o=i.axis||"xy",r=i.includeInvisible||!1;return Oi(t,n,o,i.intersect,s,r)},x:(t,e,i,s)=>Ci(t,Ne(e,t),"x",i.intersect,s),y:(t,e,i,s)=>Ci(t,Ne(e,t),"y",i.intersect,s)}};const Ai=["left","top","right","bottom"];function Ei(t,e){return t.filter(t=>t.pos===e)}function Li(t,e){return t.filter(t=>-1===Ai.indexOf(t.pos)&&t.box.axis===e)}function zi(t,e){return t.sort((t,i)=>{const s=e?i:t,n=e?t:i;return s.weight===n.weight?s.index-n.index:s.weight-n.weight})}function Ri(t,e,i,s){return Math.max(t[i],e[i])+Math.max(t[s],e[s])}function Bi(t,e){t.top=Math.max(t.top,e.top),t.left=Math.max(t.left,e.left),t.bottom=Math.max(t.bottom,e.bottom),t.right=Math.max(t.right,e.right)}function Fi(t,e,i,s){const{pos:n,box:o}=i,r=t.maxPadding;if(!L(n)){i.size&&(t[n]-=i.size);const e=s[i.stack]||{size:0,count:1};e.size=Math.max(e.size,i.horizontal?o.height:o.width),i.size=e.size/e.count,t[n]+=i.size}o.getPadding&&Bi(r,o.getPadding());const a=Math.max(0,e.outerWidth-Ri(r,t,"left","right")),l=Math.max(0,e.outerHeight-Ri(r,t,"top","bottom")),h=a!==t.w,c=l!==t.h;return t.w=a,t.h=l,i.horizontal?{same:h,other:c}:{same:c,other:h}}function Hi(t,e){const i=e.maxPadding;return function(t){const s={left:0,top:0,right:0,bottom:0};return t.forEach(t=>{s[t]=Math.max(e[t],i[t])}),s}(t?["left","right"]:["top","bottom"])}function ji(t,e,i,s){const n=[];let o,r,a,l,h,c;for(o=0,r=t.length,h=0;o<r;++o){a=t[o],l=a.box,l.update(a.width||e.w,a.height||e.h,Hi(a.horizontal,e));const{same:r,other:d}=Fi(e,i,a,s);h|=r&&n.length,c=c||d,l.fullSize||n.push(a)}return h&&ji(n,e,i,s)||c}function Wi(t,e,i,s,n){t.top=i,t.left=e,t.right=e+s,t.bottom=i+n,t.width=s,t.height=n}function Vi(t,e,i,s){const n=i.padding;let{x:o,y:r}=e;for(const a of t){const t=a.box,l=s[a.stack]||{count:1,placed:0,weight:1},h=a.stackWeight/l.weight||1;if(a.horizontal){const s=e.w*h,o=l.size||t.height;G(l.start)&&(r=l.start),t.fullSize?Wi(t,n.left,r,i.outerWidth-n.right-n.left,o):Wi(t,e.left+l.placed,r,s,o),l.start=r,l.placed+=s,r=t.bottom}else{const s=e.h*h,r=l.size||t.width;G(l.start)&&(o=l.start),t.fullSize?Wi(t,o,n.top,r,i.outerHeight-n.bottom-n.top):Wi(t,o,e.top+l.placed,r,s),l.start=o,l.placed+=s,o=t.right}}e.x=o,e.y=r}var Ni={addBox(t,e){t.boxes||(t.boxes=[]),e.fullSize=e.fullSize||!1,e.position=e.position||"top",e.weight=e.weight||0,e._layers=e._layers||function(){return[{z:0,draw(t){e.draw(t)}}]},t.boxes.push(e)},removeBox(t,e){const i=t.boxes?t.boxes.indexOf(e):-1;-1!==i&&t.boxes.splice(i,1)},configure(t,e,i){e.fullSize=i.fullSize,e.position=i.position,e.weight=i.weight},update(t,e,i,s){if(!t)return;const n=ge(t.options.layout.padding),o=Math.max(e-n.width,0),r=Math.max(i-n.height,0),a=function(t){const e=function(t){const e=[];let i,s,n,o,r,a;for(i=0,s=(t||[]).length;i<s;++i)n=t[i],({position:o,options:{stack:r,stackWeight:a=1}}=n),e.push({index:i,box:n,pos:o,horizontal:n.isHorizontal(),weight:n.weight,stack:r&&o+r,stackWeight:a});return e}(t),i=zi(e.filter(t=>t.box.fullSize),!0),s=zi(Ei(e,"left"),!0),n=zi(Ei(e,"right")),o=zi(Ei(e,"top"),!0),r=zi(Ei(e,"bottom")),a=Li(e,"x"),l=Li(e,"y");return{fullSize:i,leftAndTop:s.concat(o),rightAndBottom:n.concat(l).concat(r).concat(a),chartArea:Ei(e,"chartArea"),vertical:s.concat(n).concat(l),horizontal:o.concat(r).concat(a)}}(t.boxes),l=a.vertical,h=a.horizontal;H(t.boxes,t=>{"function"==typeof t.beforeLayout&&t.beforeLayout()});const c=l.reduce((t,e)=>e.box.options&&!1===e.box.options.display?t:t+1,0)||1,d=Object.freeze({outerWidth:e,outerHeight:i,padding:n,availableWidth:o,availableHeight:r,vBoxMaxWidth:o/2/c,hBoxMaxHeight:r/2}),u=Object.assign({},n);Bi(u,ge(s));const f=Object.assign({maxPadding:u,w:o,h:r,x:n.left,y:n.top},n),g=function(t,e){const i=function(t){const e={};for(const i of t){const{stack:t,pos:s,stackWeight:n}=i;if(!t||!Ai.includes(s))continue;const o=e[t]||(e[t]={count:0,placed:0,weight:0,size:0});o.count++,o.weight+=n}return e}(t),{vBoxMaxWidth:s,hBoxMaxHeight:n}=e;let o,r,a;for(o=0,r=t.length;o<r;++o){a=t[o];const{fullSize:r}=a.box,l=i[a.stack],h=l&&a.stackWeight/l.weight;a.horizontal?(a.width=h?h*s:r&&e.availableWidth,a.height=n):(a.width=s,a.height=h?h*n:r&&e.availableHeight)}return i}(l.concat(h),d);ji(a.fullSize,f,d,g),ji(l,f,d,g),ji(h,f,d,g)&&ji(l,f,d,g),function(t){const e=t.maxPadding;function i(i){const s=Math.max(e[i]-t[i],0);return t[i]+=s,s}t.y+=i("top"),t.x+=i("left"),i("right"),i("bottom")}(f),Vi(a.leftAndTop,f,d,g),f.x+=f.w,f.y+=f.h,Vi(a.rightAndBottom,f,d,g),t.chartArea={left:f.left,top:f.top,right:f.left+f.w,bottom:f.top+f.h,height:f.h,width:f.w},H(a.chartArea,e=>{const i=e.box;Object.assign(i,t.chartArea),i.update(f.w,f.h,{left:0,top:0,right:0,bottom:0})})}};class $i{acquireContext(t,e){}releaseContext(t){return!1}addEventListener(t,e,i){}removeEventListener(t,e,i){}getDevicePixelRatio(){return 1}getMaximumSize(t,e,i,s){return e=Math.max(0,e||t.width),i=i||t.height,{width:e,height:Math.max(0,s?Math.floor(e/s):i)}}isAttached(t){return!0}updateConfig(t){}}class Yi extends $i{acquireContext(t){return t&&t.getContext&&t.getContext("2d")||null}updateConfig(t){t.options.animation=!1}}const Ui="$chartjs",qi={touchstart:"mousedown",touchmove:"mousemove",touchend:"mouseup",pointerenter:"mouseenter",pointerdown:"mousedown",pointermove:"mousemove",pointerup:"mouseup",pointerleave:"mouseout",pointerout:"mouseout"},Xi=t=>null===t||""===t,Ki=!!Ue&&{passive:!0};function Gi(t,e,i){t&&t.canvas&&t.canvas.removeEventListener(e,i,Ki)}function Zi(t,e){for(const i of t)if(i===e||i.contains(e))return!0}function Qi(t,e,i){const s=t.canvas,n=new MutationObserver(t=>{let e=!1;for(const i of t)e=e||Zi(i.addedNodes,s),e=e&&!Zi(i.removedNodes,s);e&&i()});return n.observe(document,{childList:!0,subtree:!0}),n}function Ji(t,e,i){const s=t.canvas,n=new MutationObserver(t=>{let e=!1;for(const i of t)e=e||Zi(i.removedNodes,s),e=e&&!Zi(i.addedNodes,s);e&&i()});return n.observe(document,{childList:!0,subtree:!0}),n}const ts=new Map;let es=0;function is(){const t=window.devicePixelRatio;t!==es&&(es=t,ts.forEach((e,i)=>{i.currentDevicePixelRatio!==t&&e()}))}function ss(t,e,i){const s=t.canvas,n=s&&Fe(s);if(!n)return;const o=Dt((t,e)=>{const s=n.clientWidth;i(t,e),s<n.clientWidth&&i()},window),r=new ResizeObserver(t=>{const e=t[0],i=e.contentRect.width,s=e.contentRect.height;0===i&&0===s||o(i,s)});return r.observe(n),function(t,e){ts.size||window.addEventListener("resize",is),ts.set(t,e)}(t,o),r}function ns(t,e,i){i&&i.disconnect(),"resize"===e&&function(t){ts.delete(t),ts.size||window.removeEventListener("resize",is)}(t)}function os(t,e,i){const s=t.canvas,n=Dt(e=>{null!==t.ctx&&i(function(t,e){const i=qi[t.type]||t.type,{x:s,y:n}=Ne(t,e);return{type:i,chart:e,native:t,x:void 0!==s?s:null,y:void 0!==n?n:null}}(e,t))},t);return function(t,e,i){t&&t.addEventListener(e,i,Ki)}(s,e,n),n}class rs extends $i{acquireContext(t,e){const i=t&&t.getContext&&t.getContext("2d");return i&&i.canvas===t?(function(t,e){const i=t.style,s=t.getAttribute("height"),n=t.getAttribute("width");if(t[Ui]={initial:{height:s,width:n,style:{display:i.display,height:i.height,width:i.width}}},i.display=i.display||"block",i.boxSizing=i.boxSizing||"border-box",Xi(n)){const e=qe(t,"width");void 0!==e&&(t.width=e)}if(Xi(s))if(""===t.style.height)t.height=t.width/(e||2);else{const e=qe(t,"height");void 0!==e&&(t.height=e)}}(t,e),i):null}releaseContext(t){const e=t.canvas;if(!e[Ui])return!1;const i=e[Ui].initial;["height","width"].forEach(t=>{const s=i[t];A(s)?e.removeAttribute(t):e.setAttribute(t,s)});const s=i.style||{};return Object.keys(s).forEach(t=>{e.style[t]=s[t]}),e.width=e.width,delete e[Ui],!0}addEventListener(t,e,i){this.removeEventListener(t,e);const s=t.$proxies||(t.$proxies={}),n={attach:Qi,detach:Ji,resize:ss}[e]||os;s[e]=n(t,e,i)}removeEventListener(t,e){const i=t.$proxies||(t.$proxies={}),s=i[e];s&&(({attach:ns,detach:ns,resize:ns}[e]||Gi)(t,e,s),i[e]=void 0)}getDevicePixelRatio(){return window.devicePixelRatio}getMaximumSize(t,e,i,s){return function(t,e,i,s){const n=je(t),o=Ve(n,"margin"),r=He(n.maxWidth,t,"clientWidth")||it,a=He(n.maxHeight,t,"clientHeight")||it,l=function(t,e,i){let s,n;if(void 0===e||void 0===i){const o=t&&Fe(t);if(o){const t=o.getBoundingClientRect(),r=je(o),a=Ve(r,"border","width"),l=Ve(r,"padding");e=t.width-l.width-a.width,i=t.height-l.height-a.height,s=He(r.maxWidth,o,"clientWidth"),n=He(r.maxHeight,o,"clientHeight")}else e=t.clientWidth,i=t.clientHeight}return{width:e,height:i,maxWidth:s||it,maxHeight:n||it}}(t,e,i);let{width:h,height:c}=l;if("content-box"===n.boxSizing){const t=Ve(n,"border","width"),e=Ve(n,"padding");h-=e.width+t.width,c-=e.height+t.height}return h=Math.max(0,h-o.width),c=Math.max(0,s?h/s:c-o.height),h=$e(Math.min(h,r,l.maxWidth)),c=$e(Math.min(c,a,l.maxHeight)),h&&!c&&(c=$e(h/2)),(void 0!==e||void 0!==i)&&s&&l.height&&c>l.height&&(c=l.height,h=$e(Math.floor(c*s))),{width:h,height:c}}(t,e,i,s)}isAttached(t){const e=t&&Fe(t);return!(!e||!e.isConnected)}}class as{static defaults={};static defaultRoutes=void 0;x;y;active=!1;options;$animations;tooltipPosition(t){const{x:e,y:i}=this.getProps(["x","y"],t);return{x:e,y:i}}hasValue(){return dt(this.x)&&dt(this.y)}getProps(t,e){const i=this.$animations;if(!e||!i)return this;const s={};return t.forEach(t=>{s[t]=i[t]&&i[t].active()?i[t]._to:this[t]}),s}}function ls(t,e,i,s,n){const o=B(s,0),r=Math.min(B(n,t.length),t.length);let a,l,h,c=0;for(i=Math.ceil(i),n&&(a=n-s,i=a/Math.floor(a/i)),h=o;h<0;)c++,h=Math.round(o+c*i);for(l=Math.max(o,0);l<r;l++)l===h&&(e.push(t[l]),c++,h=Math.round(o+c*i))}const hs=(t,e,i)=>"top"===e||"left"===e?t[e]+i:t[e]-i,cs=(t,e)=>Math.min(e||t,t);function ds(t,e){const i=[],s=t.length/e,n=t.length;let o=0;for(;o<n;o+=s)i.push(t[Math.floor(o)]);return i}function us(t,e,i){const s=t.ticks.length,n=Math.min(e,s-1),o=t._startPixel,r=t._endPixel,a=1e-6;let l,h=t.getPixelForTick(n);if(!(i&&(l=1===s?Math.max(h-o,r-h):0===e?(t.getPixelForTick(1)-h)/2:(h-t.getPixelForTick(n-1))/2,h+=n<e?l:-l,h<o-a||h>r+a)))return h}function fs(t){return t.drawTicks?t.tickLength:0}function gs(t,e){if(!t.display)return 0;const i=pe(t.font,e),s=ge(t.padding);return(E(t.text)?t.text.length:1)*i.lineHeight+s.height}function ps(t,e,i){let s=Pt(t);return(i&&"right"!==e||!i&&"right"===e)&&(s=(t=>"left"===t?"right":"right"===t?"left":t)(s)),s}class ms extends as{constructor(t){super(),this.id=t.id,this.type=t.type,this.options=void 0,this.ctx=t.ctx,this.chart=t.chart,this.top=void 0,this.bottom=void 0,this.left=void 0,this.right=void 0,this.width=void 0,this.height=void 0,this._margins={left:0,right:0,top:0,bottom:0},this.maxWidth=void 0,this.maxHeight=void 0,this.paddingTop=void 0,this.paddingBottom=void 0,this.paddingLeft=void 0,this.paddingRight=void 0,this.axis=void 0,this.labelRotation=void 0,this.min=void 0,this.max=void 0,this._range=void 0,this.ticks=[],this._gridLineItems=null,this._labelItems=null,this._labelSizes=null,this._length=0,this._maxLength=0,this._longestTextCache={},this._startPixel=void 0,this._endPixel=void 0,this._reversePixels=!1,this._userMax=void 0,this._userMin=void 0,this._suggestedMax=void 0,this._suggestedMin=void 0,this._ticksLength=0,this._borderValue=0,this._cache={},this._dataLimitsCached=!1,this.$context=void 0}init(t){this.options=t.setContext(this.getContext()),this.axis=t.axis,this._userMin=this.parse(t.min),this._userMax=this.parse(t.max),this._suggestedMin=this.parse(t.suggestedMin),this._suggestedMax=this.parse(t.suggestedMax)}parse(t,e){return t}getUserBounds(){let{_userMin:t,_userMax:e,_suggestedMin:i,_suggestedMax:s}=this;return t=R(t,Number.POSITIVE_INFINITY),e=R(e,Number.NEGATIVE_INFINITY),i=R(i,Number.POSITIVE_INFINITY),s=R(s,Number.NEGATIVE_INFINITY),{min:R(t,i),max:R(e,s),minDefined:z(t),maxDefined:z(e)}}getMinMax(t){let e,{min:i,max:s,minDefined:n,maxDefined:o}=this.getUserBounds();if(n&&o)return{min:i,max:s};const r=this.getMatchingVisibleMetas();for(let a=0,l=r.length;a<l;++a)e=r[a].controller.getMinMax(this,t),n||(i=Math.min(i,e.min)),o||(s=Math.max(s,e.max));return i=o&&i>s?s:i,s=n&&i>s?i:s,{min:R(i,R(s,i)),max:R(s,R(i,s))}}getPadding(){return{left:this.paddingLeft||0,top:this.paddingTop||0,right:this.paddingRight||0,bottom:this.paddingBottom||0}}getTicks(){return this.ticks}getLabels(){const t=this.chart.data;return this.options.labels||(this.isHorizontal()?t.xLabels:t.yLabels)||t.labels||[]}getLabelItems(t=this.chart.chartArea){return this._labelItems||(this._labelItems=this._computeLabelItems(t))}beforeLayout(){this._cache={},this._dataLimitsCached=!1}beforeUpdate(){F(this.options.beforeUpdate,[this])}update(t,e,i){const{beginAtZero:s,grace:n,ticks:o}=this.options,r=o.sampleSize;this.beforeUpdate(),this.maxWidth=t,this.maxHeight=e,this._margins=i=Object.assign({left:0,right:0,top:0,bottom:0},i),this.ticks=null,this._labelSizes=null,this._gridLineItems=null,this._labelItems=null,this.beforeSetDimensions(),this.setDimensions(),this.afterSetDimensions(),this._maxLength=this.isHorizontal()?this.width+i.left+i.right:this.height+i.top+i.bottom,this._dataLimitsCached||(this.beforeDataLimits(),this.determineDataLimits(),this.afterDataLimits(),this._range=function(t,e,i){const{min:s,max:n}=t,o=(l=(n-s)/2,"string"==typeof(a=e)&&a.endsWith("%")?parseFloat(a)/100*l:+a),r=(t,e)=>i&&0===t?0:t+e;var a,l;return{min:r(s,-Math.abs(o)),max:r(n,o)}}(this,n,s),this._dataLimitsCached=!0),this.beforeBuildTicks(),this.ticks=this.buildTicks()||[],this.afterBuildTicks();const a=r<this.ticks.length;this._convertTicksToLabels(a?ds(this.ticks,r):this.ticks),this.configure(),this.beforeCalculateLabelRotation(),this.calculateLabelRotation(),this.afterCalculateLabelRotation(),o.display&&(o.autoSkip||"auto"===o.source)&&(this.ticks=function(t,e){const i=t.options.ticks,s=function(t){const e=t.options.offset,i=t._tickSize(),s=t._length/i+(e?0:1),n=t._maxLength/i;return Math.floor(Math.min(s,n))}(t),n=Math.min(i.maxTicksLimit||s,s),o=i.major.enabled?function(t){const e=[];let i,s;for(i=0,s=t.length;i<s;i++)t[i].major&&e.push(i);return e}(e):[],r=o.length,a=o[0],l=o[r-1],h=[];if(r>n)return function(t,e,i,s){let n,o=0,r=i[0];for(s=Math.ceil(s),n=0;n<t.length;n++)n===r&&(e.push(t[n]),o++,r=i[o*s])}(e,h,o,r/n),h;const c=function(t,e,i){const s=function(t){const e=t.length;let i,s;if(e<2)return!1;for(s=t[0],i=1;i<e;++i)if(t[i]-t[i-1]!==s)return!1;return s}(t),n=e.length/i;if(!s)return Math.max(n,1);const o=function(t){const e=[],i=Math.sqrt(t);let s;for(s=1;s<i;s++)t%s===0&&(e.push(s),e.push(t/s));return i===(0|i)&&e.push(i),e.sort((t,e)=>t-e).pop(),e}(s);for(let t=0,e=o.length-1;t<e;t++){const e=o[t];if(e>n)return e}return Math.max(n,1)}(o,e,n);if(r>0){let t,i;const s=r>1?Math.round((l-a)/(r-1)):null;for(ls(e,h,c,A(s)?0:a-s,a),t=0,i=r-1;t<i;t++)ls(e,h,c,o[t],o[t+1]);return ls(e,h,c,l,A(s)?e.length:l+s),h}return ls(e,h,c),h}(this,this.ticks),this._labelSizes=null,this.afterAutoSkip()),a&&this._convertTicksToLabels(this.ticks),this.beforeFit(),this.fit(),this.afterFit(),this.afterUpdate()}configure(){let t,e,i=this.options.reverse;this.isHorizontal()?(t=this.left,e=this.right):(t=this.top,e=this.bottom,i=!i),this._startPixel=t,this._endPixel=e,this._reversePixels=i,this._length=e-t,this._alignToPixels=this.options.alignToPixels}afterUpdate(){F(this.options.afterUpdate,[this])}beforeSetDimensions(){F(this.options.beforeSetDimensions,[this])}setDimensions(){this.isHorizontal()?(this.width=this.maxWidth,this.left=0,this.right=this.width):(this.height=this.maxHeight,this.top=0,this.bottom=this.height),this.paddingLeft=0,this.paddingTop=0,this.paddingRight=0,this.paddingBottom=0}afterSetDimensions(){F(this.options.afterSetDimensions,[this])}_callHooks(t){this.chart.notifyPlugins(t,this.getContext()),F(this.options[t],[this])}beforeDataLimits(){this._callHooks("beforeDataLimits")}determineDataLimits(){}afterDataLimits(){this._callHooks("afterDataLimits")}beforeBuildTicks(){this._callHooks("beforeBuildTicks")}buildTicks(){return[]}afterBuildTicks(){this._callHooks("afterBuildTicks")}beforeTickToLabelConversion(){F(this.options.beforeTickToLabelConversion,[this])}generateTickLabels(t){const e=this.options.ticks;let i,s,n;for(i=0,s=t.length;i<s;i++)n=t[i],n.label=F(e.callback,[n.value,i,t],this)}afterTickToLabelConversion(){F(this.options.afterTickToLabelConversion,[this])}beforeCalculateLabelRotation(){F(this.options.beforeCalculateLabelRotation,[this])}calculateLabelRotation(){const t=this.options,e=t.ticks,i=cs(this.ticks.length,t.ticks.maxTicksLimit),s=e.minRotation||0,n=e.maxRotation;let o,r,a,l=s;if(!this._isVisible()||!e.display||s>=n||i<=1||!this.isHorizontal())return void(this.labelRotation=s);const h=this._getLabelSizes(),c=h.widest.width,d=h.highest.height,u=bt(this.chart.width-c,0,this.maxWidth);o=t.offset?this.maxWidth/i:u/(i-1),c+6>o&&(o=u/(i-(t.offset?.5:1)),r=this.maxHeight-fs(t.grid)-e.padding-gs(t.title,this.chart.options.font),a=Math.sqrt(c*c+d*d),l=Math.min(Math.asin(bt((h.highest.height+6)/o,-1,1)),Math.asin(bt(r/a,-1,1))-Math.asin(bt(d/a,-1,1)))*(180/J),l=Math.max(s,Math.min(n,l))),this.labelRotation=l}afterCalculateLabelRotation(){F(this.options.afterCalculateLabelRotation,[this])}afterAutoSkip(){}beforeFit(){F(this.options.beforeFit,[this])}fit(){const t={width:0,height:0},{chart:e,options:{ticks:i,title:s,grid:n}}=this,o=this._isVisible(),r=this.isHorizontal();if(o){const o=gs(s,e.options.font);if(r?(t.width=this.maxWidth,t.height=fs(n)+o):(t.height=this.maxHeight,t.width=fs(n)+o),i.display&&this.ticks.length){const{first:e,last:s,widest:n,highest:o}=this._getLabelSizes(),a=2*i.padding,l=ut(this.labelRotation),h=Math.cos(l),c=Math.sin(l);if(r){const e=i.mirror?0:c*n.width+h*o.height;t.height=Math.min(this.maxHeight,t.height+e+a)}else{const e=i.mirror?0:h*n.width+c*o.height;t.width=Math.min(this.maxWidth,t.width+e+a)}this._calculatePadding(e,s,c,h)}}this._handleMargins(),r?(this.width=this._length=e.width-this._margins.left-this._margins.right,this.height=t.height):(this.width=t.width,this.height=this._length=e.height-this._margins.top-this._margins.bottom)}_calculatePadding(t,e,i,s){const{ticks:{align:n,padding:o},position:r}=this.options,a=0!==this.labelRotation,l="top"!==r&&"x"===this.axis;if(this.isHorizontal()){const r=this.getPixelForTick(0)-this.left,h=this.right-this.getPixelForTick(this.ticks.length-1);let c=0,d=0;a?l?(c=s*t.width,d=i*e.height):(c=i*t.height,d=s*e.width):"start"===n?d=e.width:"end"===n?c=t.width:"inner"!==n&&(c=t.width/2,d=e.width/2),this.paddingLeft=Math.max((c-r+o)*this.width/(this.width-r),0),this.paddingRight=Math.max((d-h+o)*this.width/(this.width-h),0)}else{let i=e.height/2,s=t.height/2;"start"===n?(i=0,s=t.height):"end"===n&&(i=e.height,s=0),this.paddingTop=i+o,this.paddingBottom=s+o}}_handleMargins(){this._margins&&(this._margins.left=Math.max(this.paddingLeft,this._margins.left),this._margins.top=Math.max(this.paddingTop,this._margins.top),this._margins.right=Math.max(this.paddingRight,this._margins.right),this._margins.bottom=Math.max(this.paddingBottom,this._margins.bottom))}afterFit(){F(this.options.afterFit,[this])}isHorizontal(){const{axis:t,position:e}=this.options;return"top"===e||"bottom"===e||"x"===t}isFullSize(){return this.options.fullSize}_convertTicksToLabels(t){let e,i;for(this.beforeTickToLabelConversion(),this.generateTickLabels(t),e=0,i=t.length;e<i;e++)A(t[e].label)&&(t.splice(e,1),i--,e--);this.afterTickToLabelConversion()}_getLabelSizes(){let t=this._labelSizes;if(!t){const e=this.options.ticks.sampleSize;let i=this.ticks;e<i.length&&(i=ds(i,e)),this._labelSizes=t=this._computeLabelSizes(i,i.length,this.options.ticks.maxTicksLimit)}return t}_computeLabelSizes(t,e,i){const{ctx:s,_longestTextCache:n}=this,o=[],r=[],a=Math.floor(e/cs(e,i));let l,h,c,d,u,f,g,p,m,x,b,y=0,v=0;for(l=0;l<e;l+=a){if(d=t[l].label,u=this._resolveTickFontOptions(l),s.font=f=u.string,g=n[f]=n[f]||{data:{},gc:[]},p=u.lineHeight,m=x=0,A(d)||E(d)){if(E(d))for(h=0,c=d.length;h<c;++h)b=d[h],A(b)||E(b)||(m=Xt(s,g.data,g.gc,m,b),x+=p)}else m=Xt(s,g.data,g.gc,m,d),x=p;o.push(m),r.push(x),y=Math.max(m,y),v=Math.max(x,v)}!function(t,e){H(t,t=>{const i=t.gc,s=i.length/2;let n;if(s>e){for(n=0;n<s;++n)delete t.data[i[n]];i.splice(0,s)}})}(n,e);const _=o.indexOf(y),w=r.indexOf(v),M=t=>({width:o[t]||0,height:r[t]||0});return{first:M(0),last:M(e-1),widest:M(_),highest:M(w),widths:o,heights:r}}getLabelForValue(t){return t}getPixelForValue(t,e){return NaN}getValueForPixel(t){}getPixelForTick(t){const e=this.ticks;return t<0||t>e.length-1?null:this.getPixelForValue(e[t].value)}getPixelForDecimal(t){this._reversePixels&&(t=1-t);const e=this._startPixel+t*this._length;return bt(this._alignToPixels?Kt(this.chart,e,0):e,-32768,32767)}getDecimalForPixel(t){const e=(t-this._startPixel)/this._length;return this._reversePixels?1-e:e}getBasePixel(){return this.getPixelForValue(this.getBaseValue())}getBaseValue(){const{min:t,max:e}=this;return t<0&&e<0?e:t>0&&e>0?t:0}getContext(t){const e=this.ticks||[];if(t>=0&&t<e.length){const i=e[t];return i.$context||(i.$context=function(t,e,i){return xe(t,{tick:i,index:e,type:"tick"})}(this.getContext(),t,i))}return this.$context||(this.$context=xe(this.chart.getContext(),{scale:this,type:"scale"}))}_tickSize(){const t=this.options.ticks,e=ut(this.labelRotation),i=Math.abs(Math.cos(e)),s=Math.abs(Math.sin(e)),n=this._getLabelSizes(),o=t.autoSkipPadding||0,r=n?n.widest.width+o:0,a=n?n.highest.height+o:0;return this.isHorizontal()?a*i>r*s?r/i:a/s:a*s<r*i?a/i:r/s}_isVisible(){const t=this.options.display;return"auto"!==t?!!t:this.getMatchingVisibleMetas().length>0}_computeGridLineItems(t){const e=this.axis,i=this.chart,s=this.options,{grid:n,position:o,border:r}=s,a=n.offset,l=this.isHorizontal(),h=this.ticks.length+(a?1:0),c=fs(n),d=[],u=r.setContext(this.getContext()),f=u.display?u.width:0,g=f/2,p=function(t){return Kt(i,t,f)};let m,x,b,y,v,_,w,M,k,S,D,P;if("top"===o)m=p(this.bottom),_=this.bottom-c,M=m-g,S=p(t.top)+g,P=t.bottom;else if("bottom"===o)m=p(this.top),S=t.top,P=p(t.bottom)-g,_=m+g,M=this.top+c;else if("left"===o)m=p(this.right),v=this.right-c,w=m-g,k=p(t.left)+g,D=t.right;else if("right"===o)m=p(this.left),k=t.left,D=p(t.right)-g,v=m+g,w=this.left+c;else if("x"===e){if("center"===o)m=p((t.top+t.bottom)/2+.5);else if(L(o)){const t=Object.keys(o)[0],e=o[t];m=p(this.chart.scales[t].getPixelForValue(e))}S=t.top,P=t.bottom,_=m+g,M=_+c}else if("y"===e){if("center"===o)m=p((t.left+t.right)/2);else if(L(o)){const t=Object.keys(o)[0],e=o[t];m=p(this.chart.scales[t].getPixelForValue(e))}v=m-g,w=v-c,k=t.left,D=t.right}const I=B(s.ticks.maxTicksLimit,h),O=Math.max(1,Math.ceil(h/I));for(x=0;x<h;x+=O){const t=this.getContext(x),e=n.setContext(t),s=r.setContext(t),o=e.lineWidth,h=e.color,c=s.dash||[],u=s.dashOffset,f=e.tickWidth,g=e.tickColor,p=e.tickBorderDash||[],m=e.tickBorderDashOffset;b=us(this,x,a),void 0!==b&&(y=Kt(i,b,o),l?v=w=k=D=y:_=M=S=P=y,d.push({tx1:v,ty1:_,tx2:w,ty2:M,x1:k,y1:S,x2:D,y2:P,width:o,color:h,borderDash:c,borderDashOffset:u,tickWidth:f,tickColor:g,tickBorderDash:p,tickBorderDashOffset:m}))}return this._ticksLength=h,this._borderValue=m,d}_computeLabelItems(t){const e=this.axis,i=this.options,{position:s,ticks:n}=i,o=this.isHorizontal(),r=this.ticks,{align:a,crossAlign:l,padding:h,mirror:c}=n,d=fs(i.grid),u=d+h,f=c?-h:u,g=-ut(this.labelRotation),p=[];let m,x,b,y,v,_,w,M,k,S,D,P,I="middle";if("top"===s)_=this.bottom-f,w=this._getXAxisLabelAlignment();else if("bottom"===s)_=this.top+f,w=this._getXAxisLabelAlignment();else if("left"===s){const t=this._getYAxisLabelAlignment(d);w=t.textAlign,v=t.x}else if("right"===s){const t=this._getYAxisLabelAlignment(d);w=t.textAlign,v=t.x}else if("x"===e){if("center"===s)_=(t.top+t.bottom)/2+u;else if(L(s)){const t=Object.keys(s)[0],e=s[t];_=this.chart.scales[t].getPixelForValue(e)+u}w=this._getXAxisLabelAlignment()}else if("y"===e){if("center"===s)v=(t.left+t.right)/2-u;else if(L(s)){const t=Object.keys(s)[0],e=s[t];v=this.chart.scales[t].getPixelForValue(e)}w=this._getYAxisLabelAlignment(d).textAlign}"y"===e&&("start"===a?I="top":"end"===a&&(I="bottom"));const O=this._getLabelSizes();for(m=0,x=r.length;m<x;++m){b=r[m],y=b.label;const t=n.setContext(this.getContext(m));M=this.getPixelForTick(m)+n.labelOffset,k=this._resolveTickFontOptions(m),S=k.lineHeight,D=E(y)?y.length:1;const e=D/2,i=t.color,a=t.textStrokeColor,h=t.textStrokeWidth;let d,u=w;if(o?(v=M,"inner"===w&&(u=m===x-1?this.options.reverse?"left":"right":0===m?this.options.reverse?"right":"left":"center"),P="top"===s?"near"===l||0!==g?-D*S+S/2:"center"===l?-O.highest.height/2-e*S+S:-O.highest.height+S/2:"near"===l||0!==g?S/2:"center"===l?O.highest.height/2-e*S:O.highest.height-D*S,c&&(P*=-1),0===g||t.showLabelBackdrop||(v+=S/2*Math.sin(g))):(_=M,P=(1-D)*S/2),t.showLabelBackdrop){const e=ge(t.backdropPadding),i=O.heights[m],s=O.widths[m];let n=P-e.top,o=0-e.left;switch(I){case"middle":n-=i/2;break;case"bottom":n-=i}switch(w){case"center":o-=s/2;break;case"right":o-=s;break;case"inner":m===x-1?o-=s:m>0&&(o-=s/2)}d={left:o,top:n,width:s+e.width,height:i+e.height,color:t.backdropColor}}p.push({label:y,font:k,textOffset:P,options:{rotation:g,color:i,strokeColor:a,strokeWidth:h,textAlign:u,textBaseline:I,translation:[v,_],backdrop:d}})}return p}_getXAxisLabelAlignment(){const{position:t,ticks:e}=this.options;if(-ut(this.labelRotation))return"top"===t?"left":"right";let i="center";return"start"===e.align?i="left":"end"===e.align?i="right":"inner"===e.align&&(i="inner"),i}_getYAxisLabelAlignment(t){const{position:e,ticks:{crossAlign:i,mirror:s,padding:n}}=this.options,o=t+n,r=this._getLabelSizes().widest.width;let a,l;return"left"===e?s?(l=this.right+n,"near"===i?a="left":"center"===i?(a="center",l+=r/2):(a="right",l+=r)):(l=this.right-o,"near"===i?a="right":"center"===i?(a="center",l-=r/2):(a="left",l=this.left)):"right"===e?s?(l=this.left+n,"near"===i?a="right":"center"===i?(a="center",l-=r/2):(a="left",l-=r)):(l=this.left+o,"near"===i?a="left":"center"===i?(a="center",l+=r/2):(a="right",l=this.right)):a="right",{textAlign:a,x:l}}_computeLabelArea(){if(this.options.ticks.mirror)return;const t=this.chart,e=this.options.position;return"left"===e||"right"===e?{top:0,left:this.left,bottom:t.height,right:this.right}:"top"===e||"bottom"===e?{top:this.top,left:0,bottom:this.bottom,right:t.width}:void 0}drawBackground(){const{ctx:t,options:{backgroundColor:e},left:i,top:s,width:n,height:o}=this;e&&(t.save(),t.fillStyle=e,t.fillRect(i,s,n,o),t.restore())}getLineWidthForValue(t){const e=this.options.grid;if(!this._isVisible()||!e.display)return 0;const i=this.ticks.findIndex(e=>e.value===t);return i>=0?e.setContext(this.getContext(i)).lineWidth:0}drawGrid(t){const e=this.options.grid,i=this.ctx,s=this._gridLineItems||(this._gridLineItems=this._computeGridLineItems(t));let n,o;const r=(t,e,s)=>{s.width&&s.color&&(i.save(),i.lineWidth=s.width,i.strokeStyle=s.color,i.setLineDash(s.borderDash||[]),i.lineDashOffset=s.borderDashOffset,i.beginPath(),i.moveTo(t.x,t.y),i.lineTo(e.x,e.y),i.stroke(),i.restore())};if(e.display)for(n=0,o=s.length;n<o;++n){const t=s[n];e.drawOnChartArea&&r({x:t.x1,y:t.y1},{x:t.x2,y:t.y2},t),e.drawTicks&&r({x:t.tx1,y:t.ty1},{x:t.tx2,y:t.ty2},{color:t.tickColor,width:t.tickWidth,borderDash:t.tickBorderDash,borderDashOffset:t.tickBorderDashOffset})}}drawBorder(){const{chart:t,ctx:e,options:{border:i,grid:s}}=this,n=i.setContext(this.getContext()),o=i.display?n.width:0;if(!o)return;const r=s.setContext(this.getContext(0)).lineWidth,a=this._borderValue;let l,h,c,d;this.isHorizontal()?(l=Kt(t,this.left,o)-o/2,h=Kt(t,this.right,r)+r/2,c=d=a):(c=Kt(t,this.top,o)-o/2,d=Kt(t,this.bottom,r)+r/2,l=h=a),e.save(),e.lineWidth=n.width,e.strokeStyle=n.color,e.beginPath(),e.moveTo(l,c),e.lineTo(h,d),e.stroke(),e.restore()}drawLabels(t){if(!this.options.ticks.display)return;const e=this.ctx,i=this._computeLabelArea();i&&te(e,i);const s=this.getLabelItems(t);for(const t of s){const i=t.options,s=t.font;re(e,t.label,0,t.textOffset,s,i)}i&&ee(e)}drawTitle(){const{ctx:t,options:{position:e,title:i,reverse:s}}=this;if(!i.display)return;const n=pe(i.font),o=ge(i.padding),r=i.align;let a=n.lineHeight/2;"bottom"===e||"center"===e||L(e)?(a+=o.bottom,E(i.text)&&(a+=n.lineHeight*(i.text.length-1))):a+=o.top;const{titleX:l,titleY:h,maxWidth:c,rotation:d}=function(t,e,i,s){const{top:n,left:o,bottom:r,right:a,chart:l}=t,{chartArea:h,scales:c}=l;let d,u,f,g=0;const p=r-n,m=a-o;if(t.isHorizontal()){if(u=It(s,o,a),L(i)){const t=Object.keys(i)[0],s=i[t];f=c[t].getPixelForValue(s)+p-e}else f="center"===i?(h.bottom+h.top)/2+p-e:hs(t,i,e);d=a-o}else{if(L(i)){const t=Object.keys(i)[0],s=i[t];u=c[t].getPixelForValue(s)-m+e}else u="center"===i?(h.left+h.right)/2-m+e:hs(t,i,e);f=It(s,r,n),g="left"===i?-nt:nt}return{titleX:u,titleY:f,maxWidth:d,rotation:g}}(this,a,e,r);re(t,i.text,0,0,n,{color:i.color,maxWidth:c,rotation:d,textAlign:ps(r,e,s),textBaseline:"middle",translation:[l,h]})}draw(t){this._isVisible()&&(this.drawBackground(),this.drawGrid(t),this.drawBorder(),this.drawTitle(),this.drawLabels(t))}_layers(){const t=this.options,e=t.ticks&&t.ticks.z||0,i=B(t.grid&&t.grid.z,-1),s=B(t.border&&t.border.z,0);return this._isVisible()&&this.draw===ms.prototype.draw?[{z:i,draw:t=>{this.drawBackground(),this.drawGrid(t),this.drawTitle()}},{z:s,draw:()=>{this.drawBorder()}},{z:e,draw:t=>{this.drawLabels(t)}}]:[{z:e,draw:t=>{this.draw(t)}}]}getMatchingVisibleMetas(t){const e=this.chart.getSortedVisibleDatasetMetas(),i=this.axis+"AxisID",s=[];let n,o;for(n=0,o=e.length;n<o;++n){const o=e[n];o[i]!==this.id||t&&o.type!==t||s.push(o)}return s}_resolveTickFontOptions(t){return pe(this.options.ticks.setContext(this.getContext(t)).font)}_maxDigits(){const t=this._resolveTickFontOptions(0).lineHeight;return(this.isHorizontal()?this.width:this.height)/t}}class xs{constructor(t,e,i){this.type=t,this.scope=e,this.override=i,this.items=Object.create(null)}isForType(t){return Object.prototype.isPrototypeOf.call(this.type.prototype,t.prototype)}register(t){const e=Object.getPrototypeOf(t);let i;(function(t){return"id"in t&&"defaults"in t})(e)&&(i=this.register(e));const s=this.items,n=t.id,o=this.scope+"."+n;if(!n)throw new Error("class does not have id: "+t);return n in s||(s[n]=t,function(t,e,i){const s=$(Object.create(null),[i?qt.get(i):{},qt.get(e),t.defaults]);qt.set(e,s),t.defaultRoutes&&function(t,e){Object.keys(e).forEach(i=>{const s=i.split("."),n=s.pop(),o=[t].concat(s).join("."),r=e[i].split("."),a=r.pop(),l=r.join(".");qt.route(o,n,l,a)})}(e,t.defaultRoutes),t.descriptors&&qt.describe(e,t.descriptors)}(t,o,i),this.override&&qt.override(t.id,t.overrides)),o}get(t){return this.items[t]}unregister(t){const e=this.items,i=t.id,s=this.scope;i in e&&delete e[i],s&&i in qt[s]&&(delete qt[s][i],this.override&&delete Vt[i])}}class bs{constructor(){this.controllers=new xs(Si,"datasets",!0),this.elements=new xs(as,"elements"),this.plugins=new xs(Object,"plugins"),this.scales=new xs(ms,"scales"),this._typedRegistries=[this.controllers,this.scales,this.elements]}add(...t){this._each("register",t)}remove(...t){this._each("unregister",t)}addControllers(...t){this._each("register",t,this.controllers)}addElements(...t){this._each("register",t,this.elements)}addPlugins(...t){this._each("register",t,this.plugins)}addScales(...t){this._each("register",t,this.scales)}getController(t){return this._get(t,this.controllers,"controller")}getElement(t){return this._get(t,this.elements,"element")}getPlugin(t){return this._get(t,this.plugins,"plugin")}getScale(t){return this._get(t,this.scales,"scale")}removeControllers(...t){this._each("unregister",t,this.controllers)}removeElements(...t){this._each("unregister",t,this.elements)}removePlugins(...t){this._each("unregister",t,this.plugins)}removeScales(...t){this._each("unregister",t,this.scales)}_each(t,e,i){[...e].forEach(e=>{const s=i||this._getRegistryForType(e);i||s.isForType(e)||s===this.plugins&&e.id?this._exec(t,s,e):H(e,e=>{const s=i||this._getRegistryForType(e);this._exec(t,s,e)})})}_exec(t,e,i){const s=K(t);F(i["before"+s],[],i),e[t](i),F(i["after"+s],[],i)}_getRegistryForType(t){for(let e=0;e<this._typedRegistries.length;e++){const i=this._typedRegistries[e];if(i.isForType(t))return i}return this.plugins}_get(t,e,i){const s=e.get(t);if(void 0===s)throw new Error('"'+t+'" is not a registered '+i+".");return s}}var ys=new bs;class vs{constructor(){this._init=void 0}notify(t,e,i,s){if("beforeInit"===e&&(this._init=this._createDescriptors(t,!0),this._notify(this._init,t,"install")),void 0===this._init)return;const n=s?this._descriptors(t).filter(s):this._descriptors(t),o=this._notify(n,t,e,i);return"afterDestroy"===e&&(this._notify(n,t,"stop"),this._notify(this._init,t,"uninstall"),this._init=void 0),o}_notify(t,e,i,s){s=s||{};for(const n of t){const t=n.plugin;if(!1===F(t[i],[e,s,n.options],t)&&s.cancelable)return!1}return!0}invalidate(){A(this._cache)||(this._oldCache=this._cache,this._cache=void 0)}_descriptors(t){if(this._cache)return this._cache;const e=this._cache=this._createDescriptors(t);return this._notifyStateChanges(t),e}_createDescriptors(t,e){const i=t&&t.config,s=B(i.options&&i.options.plugins,{}),n=function(t){const e={},i=[],s=Object.keys(ys.plugins.items);for(let t=0;t<s.length;t++)i.push(ys.getPlugin(s[t]));const n=t.plugins||[];for(let t=0;t<n.length;t++){const s=n[t];-1===i.indexOf(s)&&(i.push(s),e[s.id]=!0)}return{plugins:i,localIds:e}}(i);return!1!==s||e?function(t,{plugins:e,localIds:i},s,n){const o=[],r=t.getContext();for(const a of e){const e=a.id,l=_s(s[e],n);null!==l&&o.push({plugin:a,options:ws(t.config,{plugin:a,local:i[e]},l,r)})}return o}(t,n,s,e):[]}_notifyStateChanges(t){const e=this._oldCache||[],i=this._cache,s=(t,e)=>t.filter(t=>!e.some(e=>t.plugin.id===e.plugin.id));this._notify(s(e,i),t,"stop"),this._notify(s(i,e),t,"start")}}function _s(t,e){return e||!1!==t?!0===t?{}:t:null}function ws(t,{plugin:e,local:i},s,n){const o=t.pluginScopeKeys(e),r=t.getOptionScopes(s,o);return i&&e.defaults&&r.push(e.defaults),t.createResolver(r,n,[""],{scriptable:!1,indexable:!1,allKeys:!0})}function Ms(t,e){const i=qt.datasets[t]||{};return((e.datasets||{})[t]||{}).indexAxis||e.indexAxis||i.indexAxis||"x"}function ks(t){if("x"===t||"y"===t||"r"===t)return t}function Ss(t){return"top"===t||"bottom"===t?"x":"left"===t||"right"===t?"y":void 0}function Ds(t,...e){if(ks(t))return t;for(const i of e){const e=i.axis||Ss(i.position)||t.length>1&&ks(t[0].toLowerCase());if(e)return e}throw new Error(`Cannot determine type of '${t}' axis. Please provide 'axis' or 'position' option.`)}function Ps(t,e,i){if(i[e+"AxisID"]===t)return{axis:e}}function Is(t){const e=t.options||(t.options={});e.plugins=B(e.plugins,{}),e.scales=function(t,e){const i=Vt[t.type]||{scales:{}},s=e.scales||{},n=Ms(t.type,e),o=Object.create(null);return Object.keys(s).forEach(e=>{const r=s[e];if(!L(r))return console.error(`Invalid scale configuration for scale: ${e}`);if(r._proxy)return console.warn(`Ignoring resolver passed as options for scale: ${e}`);const a=Ds(e,r,function(t,e){if(e.data&&e.data.datasets){const i=e.data.datasets.filter(e=>e.xAxisID===t||e.yAxisID===t);if(i.length)return Ps(t,"x",i[0])||Ps(t,"y",i[0])}return{}}(e,t),qt.scales[r.type]),l=function(t,e){return t===e?"_index_":"_value_"}(a,n),h=i.scales||{};o[e]=Y(Object.create(null),[{axis:a},r,h[a],h[l]])}),t.data.datasets.forEach(i=>{const n=i.type||t.type,r=i.indexAxis||Ms(n,e),a=(Vt[n]||{}).scales||{};Object.keys(a).forEach(t=>{const e=function(t,e){let i=t;return"_index_"===t?i=e:"_value_"===t&&(i="x"===e?"y":"x"),i}(t,r),n=i[e+"AxisID"]||e;o[n]=o[n]||Object.create(null),Y(o[n],[{axis:e},s[n],a[t]])})}),Object.keys(o).forEach(t=>{const e=o[t];Y(e,[qt.scales[e.type],qt.scale])}),o}(t,e)}function Os(t){return(t=t||{}).datasets=t.datasets||[],t.labels=t.labels||[],t}const Cs=new Map,Ts=new Set;function As(t,e){let i=Cs.get(t);return i||(i=e(),Cs.set(t,i),Ts.add(i)),i}const Es=(t,e,i)=>{const s=X(e,i);void 0!==s&&t.add(s)};class Ls{constructor(t){this._config=function(t){return(t=t||{}).data=Os(t.data),Is(t),t}(t),this._scopeCache=new Map,this._resolverCache=new Map}get platform(){return this._config.platform}get type(){return this._config.type}set type(t){this._config.type=t}get data(){return this._config.data}set data(t){this._config.data=Os(t)}get options(){return this._config.options}set options(t){this._config.options=t}get plugins(){return this._config.plugins}update(){const t=this._config;this.clearCache(),Is(t)}clearCache(){this._scopeCache.clear(),this._resolverCache.clear()}datasetScopeKeys(t){return As(t,()=>[[`datasets.${t}`,""]])}datasetAnimationScopeKeys(t,e){return As(`${t}.transition.${e}`,()=>[[`datasets.${t}.transitions.${e}`,`transitions.${e}`],[`datasets.${t}`,""]])}datasetElementScopeKeys(t,e){return As(`${t}-${e}`,()=>[[`datasets.${t}.elements.${e}`,`datasets.${t}`,`elements.${e}`,""]])}pluginScopeKeys(t){const e=t.id;return As(`${this.type}-plugin-${e}`,()=>[[`plugins.${e}`,...t.additionalOptionScopes||[]]])}_cachedScopes(t,e){const i=this._scopeCache;let s=i.get(t);return s&&!e||(s=new Map,i.set(t,s)),s}getOptionScopes(t,e,i){const{options:s,type:n}=this,o=this._cachedScopes(t,i),r=o.get(e);if(r)return r;const a=new Set;e.forEach(e=>{t&&(a.add(t),e.forEach(e=>Es(a,t,e))),e.forEach(t=>Es(a,s,t)),e.forEach(t=>Es(a,Vt[n]||{},t)),e.forEach(t=>Es(a,qt,t)),e.forEach(t=>Es(a,Nt,t))});const l=Array.from(a);return 0===l.length&&l.push(Object.create(null)),Ts.has(e)&&o.set(e,l),l}chartOptionScopes(){const{options:t,type:e}=this;return[t,Vt[e]||{},qt.datasets[e]||{},{type:e},qt,Nt]}resolveNamedOptions(t,e,i,s=[""]){const n={$shared:!0},{resolver:o,subPrefixes:r}=zs(this._resolverCache,t,s);let a=o;(function(t,e){const{isScriptable:i,isIndexable:s}=ve(t);for(const n of e){const e=i(n),o=s(n),r=(o||e)&&t[n];if(e&&(Z(r)||Rs(r))||o&&E(r))return!0}return!1})(o,e)&&(n.$shared=!1,a=ye(o,i=Z(i)?i():i,this.createResolver(t,i,r)));for(const t of e)n[t]=a[t];return n}createResolver(t,e,i=[""],s){const{resolver:n}=zs(this._resolverCache,t,i);return L(e)?ye(n,e,void 0,s):n}}function zs(t,e,i){let s=t.get(e);s||(s=new Map,t.set(e,s));const n=i.join();let o=s.get(n);return o||(o={resolver:be(e,i),subPrefixes:i.filter(t=>!t.toLowerCase().includes("hover"))},s.set(n,o)),o}const Rs=t=>L(t)&&Object.getOwnPropertyNames(t).some(e=>Z(t[e])),Bs=["top","bottom","left","right","chartArea"];function Fs(t,e){return"top"===t||"bottom"===t||-1===Bs.indexOf(t)&&"x"===e}function Hs(t,e){return function(i,s){return i[t]===s[t]?i[e]-s[e]:i[t]-s[t]}}function js(t){const e=t.chart,i=e.options.animation;e.notifyPlugins("afterRender"),F(i&&i.onComplete,[t],e)}function Ws(t){const e=t.chart,i=e.options.animation;F(i&&i.onProgress,[t],e)}function Vs(t){return Be()&&"string"==typeof t?t=document.getElementById(t):t&&t.length&&(t=t[0]),t&&t.canvas&&(t=t.canvas),t}const Ns={},$s=t=>{const e=Vs(t);return Object.values(Ns).filter(t=>t.canvas===e).pop()};function Ys(t,e,i){const s=Object.keys(t);for(const n of s){const s=+n;if(s>=e){const o=t[n];delete t[n],(i>0||s>e)&&(t[s+i]=o)}}}class Us{static defaults=qt;static instances=Ns;static overrides=Vt;static registry=ys;static version="4.5.1";static getChart=$s;static register(...t){ys.add(...t),qs()}static unregister(...t){ys.remove(...t),qs()}constructor(t,e){const i=this.config=new Ls(e),s=Vs(t),n=$s(s);if(n)throw new Error("Canvas is already in use. Chart with ID '"+n.id+"' must be destroyed before the canvas with ID '"+n.canvas.id+"' can be reused.");const o=i.createResolver(i.chartOptionScopes(),this.getContext());this.platform=new(i.platform||function(t){return!Be()||"undefined"!=typeof OffscreenCanvas&&t instanceof OffscreenCanvas?Yi:rs}(s)),this.platform.updateConfig(i);const r=this.platform.acquireContext(s,o.aspectRatio),a=r&&r.canvas,l=a&&a.height,h=a&&a.width;this.id=T(),this.ctx=r,this.canvas=a,this.width=h,this.height=l,this._options=o,this._aspectRatio=this.aspectRatio,this._layers=[],this._metasets=[],this._stacks=void 0,this.boxes=[],this.currentDevicePixelRatio=void 0,this.chartArea=void 0,this._active=[],this._lastEvent=void 0,this._listeners={},this._responsiveListeners=void 0,this._sortedMetasets=[],this.scales={},this._plugins=new vs,this.$proxies={},this._hiddenIndices={},this.attached=!1,this._animationsDisabled=void 0,this.$context=void 0,this._doResize=function(t,e){let i;return function(...s){return e?(clearTimeout(i),i=setTimeout(t,e,s)):t.apply(this,s),e}}(t=>this.update(t),o.resizeDelay||0),this._dataChanges=[],Ns[this.id]=this,r&&a?(hi.listen(this,"complete",js),hi.listen(this,"progress",Ws),this._initialize(),this.attached&&this.update()):console.error("Failed to create chart: can't acquire context from the given item")}get aspectRatio(){const{options:{aspectRatio:t,maintainAspectRatio:e},width:i,height:s,_aspectRatio:n}=this;return A(t)?e&&n?n:s?i/s:null:t}get data(){return this.config.data}set data(t){this.config.data=t}get options(){return this._options}set options(t){this.config.options=t}get registry(){return ys}_initialize(){return this.notifyPlugins("beforeInit"),this.options.responsive?this.resize():Ye(this,this.options.devicePixelRatio),this.bindEvents(),this.notifyPlugins("afterInit"),this}clear(){return Gt(this.canvas,this.ctx),this}stop(){return hi.stop(this),this}resize(t,e){hi.running(this)?this._resizeBeforeDraw={width:t,height:e}:this._resize(t,e)}_resize(t,e){const i=this.options,s=this.canvas,n=i.maintainAspectRatio&&this.aspectRatio,o=this.platform.getMaximumSize(s,t,e,n),r=i.devicePixelRatio||this.platform.getDevicePixelRatio(),a=this.width?"resize":"attach";this.width=o.width,this.height=o.height,this._aspectRatio=this.aspectRatio,Ye(this,r,!0)&&(this.notifyPlugins("resize",{size:o}),F(i.onResize,[this,o],this),this.attached&&this._doResize(a)&&this.render())}ensureScalesHaveIDs(){H(this.options.scales||{},(t,e)=>{t.id=e})}buildOrUpdateScales(){const t=this.options,e=t.scales,i=this.scales,s=Object.keys(i).reduce((t,e)=>(t[e]=!1,t),{});let n=[];e&&(n=n.concat(Object.keys(e).map(t=>{const i=e[t],s=Ds(t,i),n="r"===s,o="x"===s;return{options:i,dposition:n?"chartArea":o?"bottom":"left",dtype:n?"radialLinear":o?"category":"linear"}}))),H(n,e=>{const n=e.options,o=n.id,r=Ds(o,n),a=B(n.type,e.dtype);void 0!==n.position&&Fs(n.position,r)===Fs(e.dposition)||(n.position=e.dposition),s[o]=!0;let l=null;o in i&&i[o].type===a?l=i[o]:(l=new(ys.getScale(a))({id:o,type:a,ctx:this.ctx,chart:this}),i[l.id]=l),l.init(n,t)}),H(s,(t,e)=>{t||delete i[e]}),H(i,t=>{Ni.configure(this,t,t.options),Ni.addBox(this,t)})}_updateMetasets(){const t=this._metasets,e=this.data.datasets.length,i=t.length;if(t.sort((t,e)=>t.index-e.index),i>e){for(let t=e;t<i;++t)this._destroyDatasetMeta(t);t.splice(e,i-e)}this._sortedMetasets=t.slice(0).sort(Hs("order","index"))}_removeUnreferencedMetasets(){const{_metasets:t,data:{datasets:e}}=this;t.length>e.length&&delete this._stacks,t.forEach((t,i)=>{0===e.filter(e=>e===t._dataset).length&&this._destroyDatasetMeta(i)})}buildOrUpdateControllers(){const t=[],e=this.data.datasets;let i,s;for(this._removeUnreferencedMetasets(),i=0,s=e.length;i<s;i++){const s=e[i];let n=this.getDatasetMeta(i);const o=s.type||this.config.type;if(n.type&&n.type!==o&&(this._destroyDatasetMeta(i),n=this.getDatasetMeta(i)),n.type=o,n.indexAxis=s.indexAxis||Ms(o,this.options),n.order=s.order||0,n.index=i,n.label=""+s.label,n.visible=this.isDatasetVisible(i),n.controller)n.controller.updateIndex(i),n.controller.linkScales();else{const e=ys.getController(o),{datasetElementType:s,dataElementType:r}=qt.datasets[o];Object.assign(e,{dataElementType:ys.getElement(r),datasetElementType:s&&ys.getElement(s)}),n.controller=new e(this,i),t.push(n.controller)}}return this._updateMetasets(),t}_resetElements(){H(this.data.datasets,(t,e)=>{this.getDatasetMeta(e).controller.reset()},this)}reset(){this._resetElements(),this.notifyPlugins("reset")}update(t){const e=this.config;e.update();const i=this._options=e.createResolver(e.chartOptionScopes(),this.getContext()),s=this._animationsDisabled=!i.animation;if(this._updateScales(),this._checkEventBindings(),this._updateHiddenIndices(),this._plugins.invalidate(),!1===this.notifyPlugins("beforeUpdate",{mode:t,cancelable:!0}))return;const n=this.buildOrUpdateControllers();this.notifyPlugins("beforeElementsUpdate");let o=0;for(let t=0,e=this.data.datasets.length;t<e;t++){const{controller:e}=this.getDatasetMeta(t),i=!s&&-1===n.indexOf(e);e.buildOrUpdateElements(i),o=Math.max(+e.getMaxOverflow(),o)}o=this._minPadding=i.layout.autoPadding?o:0,this._updateLayout(o),s||H(n,t=>{t.reset()}),this._updateDatasets(t),this.notifyPlugins("afterUpdate",{mode:t}),this._layers.sort(Hs("z","_idx"));const{_active:r,_lastEvent:a}=this;a?this._eventHandler(a,!0):r.length&&this._updateHoverStyles(r,r,!0),this.render()}_updateScales(){H(this.scales,t=>{Ni.removeBox(this,t)}),this.ensureScalesHaveIDs(),this.buildOrUpdateScales()}_checkEventBindings(){const t=this.options,e=new Set(Object.keys(this._listeners)),i=new Set(t.events);Q(e,i)&&!!this._responsiveListeners===t.responsive||(this.unbindEvents(),this.bindEvents())}_updateHiddenIndices(){const{_hiddenIndices:t}=this,e=this._getUniformDataChanges()||[];for(const{method:i,start:s,count:n}of e)Ys(t,s,"_removeElements"===i?-n:n)}_getUniformDataChanges(){const t=this._dataChanges;if(!t||!t.length)return;this._dataChanges=[];const e=this.data.datasets.length,i=e=>new Set(t.filter(t=>t[0]===e).map((t,e)=>e+","+t.splice(1).join(","))),s=i(0);for(let t=1;t<e;t++)if(!Q(s,i(t)))return;return Array.from(s).map(t=>t.split(",")).map(t=>({method:t[1],start:+t[2],count:+t[3]}))}_updateLayout(t){if(!1===this.notifyPlugins("beforeLayout",{cancelable:!0}))return;Ni.update(this,this.width,this.height,t);const e=this.chartArea,i=e.width<=0||e.height<=0;this._layers=[],H(this.boxes,t=>{i&&"chartArea"===t.position||(t.configure&&t.configure(),this._layers.push(...t._layers()))},this),this._layers.forEach((t,e)=>{t._idx=e}),this.notifyPlugins("afterLayout")}_updateDatasets(t){if(!1!==this.notifyPlugins("beforeDatasetsUpdate",{mode:t,cancelable:!0})){for(let t=0,e=this.data.datasets.length;t<e;++t)this.getDatasetMeta(t).controller.configure();for(let e=0,i=this.data.datasets.length;e<i;++e)this._updateDataset(e,Z(t)?t({datasetIndex:e}):t);this.notifyPlugins("afterDatasetsUpdate",{mode:t})}}_updateDataset(t,e){const i=this.getDatasetMeta(t),s={meta:i,index:t,mode:e,cancelable:!0};!1!==this.notifyPlugins("beforeDatasetUpdate",s)&&(i.controller._update(e),s.cancelable=!1,this.notifyPlugins("afterDatasetUpdate",s))}render(){!1!==this.notifyPlugins("beforeRender",{cancelable:!0})&&(hi.has(this)?this.attached&&!hi.running(this)&&hi.start(this):(this.draw(),js({chart:this})))}draw(){let t;if(this._resizeBeforeDraw){const{width:t,height:e}=this._resizeBeforeDraw;this._resizeBeforeDraw=null,this._resize(t,e)}if(this.clear(),this.width<=0||this.height<=0)return;if(!1===this.notifyPlugins("beforeDraw",{cancelable:!0}))return;const e=this._layers;for(t=0;t<e.length&&e[t].z<=0;++t)e[t].draw(this.chartArea);for(this._drawDatasets();t<e.length;++t)e[t].draw(this.chartArea);this.notifyPlugins("afterDraw")}_getSortedDatasetMetas(t){const e=this._sortedMetasets,i=[];let s,n;for(s=0,n=e.length;s<n;++s){const n=e[s];t&&!n.visible||i.push(n)}return i}getSortedVisibleDatasetMetas(){return this._getSortedDatasetMetas(!0)}_drawDatasets(){if(!1===this.notifyPlugins("beforeDatasetsDraw",{cancelable:!0}))return;const t=this.getSortedVisibleDatasetMetas();for(let e=t.length-1;e>=0;--e)this._drawDataset(t[e]);this.notifyPlugins("afterDatasetsDraw")}_drawDataset(t){const e=this.ctx,i={meta:t,index:t.index,cancelable:!0},s=ai(this,t);!1!==this.notifyPlugins("beforeDatasetDraw",i)&&(s&&te(e,s),t.controller.draw(),s&&ee(e),i.cancelable=!1,this.notifyPlugins("afterDatasetDraw",i))}isPointInArea(t){return Jt(t,this.chartArea,this._minPadding)}getElementsAtEventForMode(t,e,i,s){const n=Ti.modes[e];return"function"==typeof n?n(this,t,i,s):[]}getDatasetMeta(t){const e=this.data.datasets[t],i=this._metasets;let s=i.filter(t=>t&&t._dataset===e).pop();return s||(s={type:null,data:[],dataset:null,controller:null,hidden:null,xAxisID:null,yAxisID:null,order:e&&e.order||0,index:t,_dataset:e,_parsed:[],_sorted:!1},i.push(s)),s}getContext(){return this.$context||(this.$context=xe(null,{chart:this,type:"chart"}))}getVisibleDatasetCount(){return this.getSortedVisibleDatasetMetas().length}isDatasetVisible(t){const e=this.data.datasets[t];if(!e)return!1;const i=this.getDatasetMeta(t);return"boolean"==typeof i.hidden?!i.hidden:!e.hidden}setDatasetVisibility(t,e){this.getDatasetMeta(t).hidden=!e}toggleDataVisibility(t){this._hiddenIndices[t]=!this._hiddenIndices[t]}getDataVisibility(t){return!this._hiddenIndices[t]}_updateVisibility(t,e,i){const s=i?"show":"hide",n=this.getDatasetMeta(t),o=n.controller._resolveAnimations(void 0,s);G(e)?(n.data[e].hidden=!i,this.update()):(this.setDatasetVisibility(t,i),o.update(n,{visible:i}),this.update(e=>e.datasetIndex===t?s:void 0))}hide(t,e){this._updateVisibility(t,e,!1)}show(t,e){this._updateVisibility(t,e,!0)}_destroyDatasetMeta(t){const e=this._metasets[t];e&&e.controller&&e.controller._destroy(),delete this._metasets[t]}_stop(){let t,e;for(this.stop(),hi.remove(this),t=0,e=this.data.datasets.length;t<e;++t)this._destroyDatasetMeta(t)}destroy(){this.notifyPlugins("beforeDestroy");const{canvas:t,ctx:e}=this;this._stop(),this.config.clearCache(),t&&(this.unbindEvents(),Gt(t,e),this.platform.releaseContext(e),this.canvas=null,this.ctx=null),delete Ns[this.id],this.notifyPlugins("afterDestroy")}toBase64Image(...t){return this.canvas.toDataURL(...t)}bindEvents(){this.bindUserEvents(),this.options.responsive?this.bindResponsiveEvents():this.attached=!0}bindUserEvents(){const t=this._listeners,e=this.platform,i=(i,s)=>{e.addEventListener(this,i,s),t[i]=s},s=(t,e,i)=>{t.offsetX=e,t.offsetY=i,this._eventHandler(t)};H(this.options.events,t=>i(t,s))}bindResponsiveEvents(){this._responsiveListeners||(this._responsiveListeners={});const t=this._responsiveListeners,e=this.platform,i=(i,s)=>{e.addEventListener(this,i,s),t[i]=s},s=(i,s)=>{t[i]&&(e.removeEventListener(this,i,s),delete t[i])},n=(t,e)=>{this.canvas&&this.resize(t,e)};let o;const r=()=>{s("attach",r),this.attached=!0,this.resize(),i("resize",n),i("detach",o)};o=()=>{this.attached=!1,s("resize",n),this._stop(),this._resize(0,0),i("attach",r)},e.isAttached(this.canvas)?r():o()}unbindEvents(){H(this._listeners,(t,e)=>{this.platform.removeEventListener(this,e,t)}),this._listeners={},H(this._responsiveListeners,(t,e)=>{this.platform.removeEventListener(this,e,t)}),this._responsiveListeners=void 0}updateHoverStyle(t,e,i){const s=i?"set":"remove";let n,o,r,a;for("dataset"===e&&(n=this.getDatasetMeta(t[0].datasetIndex),n.controller["_"+s+"DatasetHoverStyle"]()),r=0,a=t.length;r<a;++r){o=t[r];const e=o&&this.getDatasetMeta(o.datasetIndex).controller;e&&e[s+"HoverStyle"](o.element,o.datasetIndex,o.index)}}getActiveElements(){return this._active||[]}setActiveElements(t){const e=this._active||[],i=t.map(({datasetIndex:t,index:e})=>{const i=this.getDatasetMeta(t);if(!i)throw new Error("No dataset found at index "+t);return{datasetIndex:t,element:i.data[e],index:e}});!j(i,e)&&(this._active=i,this._lastEvent=null,this._updateHoverStyles(i,e))}notifyPlugins(t,e,i){return this._plugins.notify(this,t,e,i)}isPluginEnabled(t){return 1===this._plugins._cache.filter(e=>e.plugin.id===t).length}_updateHoverStyles(t,e,i){const s=this.options.hover,n=(t,e)=>t.filter(t=>!e.some(e=>t.datasetIndex===e.datasetIndex&&t.index===e.index)),o=n(e,t),r=i?t:n(t,e);o.length&&this.updateHoverStyle(o,s.mode,!1),r.length&&s.mode&&this.updateHoverStyle(r,s.mode,!0)}_eventHandler(t,e){const i={event:t,replay:e,cancelable:!0,inChartArea:this.isPointInArea(t)},s=e=>(e.options.events||this.options.events).includes(t.native.type);if(!1===this.notifyPlugins("beforeEvent",i,s))return;const n=this._handleEvent(t,e,i.inChartArea);return i.cancelable=!1,this.notifyPlugins("afterEvent",i,s),(n||i.changed)&&this.render(),this}_handleEvent(t,e,i){const{_active:s=[],options:n}=this,o=e,r=this._getActiveElements(t,s,i,o),a=function(t){return"mouseup"===t.type||"click"===t.type||"contextmenu"===t.type}(t),l=function(t,e,i,s){return i&&"mouseout"!==t.type?s?e:t:null}(t,this._lastEvent,i,a);i&&(this._lastEvent=null,F(n.onHover,[t,r,this],this),a&&F(n.onClick,[t,r,this],this));const h=!j(r,s);return(h||e)&&(this._active=r,this._updateHoverStyles(r,s,e)),this._lastEvent=l,h}_getActiveElements(t,e,i,s){if("mouseout"===t.type)return[];if(!i)return e;const n=this.options.hover;return this.getElementsAtEventForMode(t,n.mode,n,s)}}function qs(){return H(Us.instances,t=>t._plugins.invalidate())}function Xs(t,e,i=e){t.lineCap=B(i.borderCapStyle,e.borderCapStyle),t.setLineDash(B(i.borderDash,e.borderDash)),t.lineDashOffset=B(i.borderDashOffset,e.borderDashOffset),t.lineJoin=B(i.borderJoinStyle,e.borderJoinStyle),t.lineWidth=B(i.borderWidth,e.borderWidth),t.strokeStyle=B(i.borderColor,e.borderColor)}function Ks(t,e,i){t.lineTo(i.x,i.y)}function Gs(t,e,i={}){const s=t.length,{start:n=0,end:o=s-1}=i,{start:r,end:a}=e,l=Math.max(n,r),h=Math.min(o,a),c=n<r&&o<r||n>a&&o>a;return{count:s,start:l,loop:e.loop,ilen:h<l&&!c?s+h-l:h-l}}function Zs(t,e,i,s){const{points:n,options:o}=e,{count:r,start:a,loop:l,ilen:h}=Gs(n,i,s),c=function(t){return t.stepped?ie:t.tension||"monotone"===t.cubicInterpolationMode?se:Ks}(o);let d,u,f,{move:g=!0,reverse:p}=s||{};for(d=0;d<=h;++d)u=n[(a+(p?h-d:d))%r],u.skip||(g?(t.moveTo(u.x,u.y),g=!1):c(t,f,u,p,o.stepped),f=u);return l&&(u=n[(a+(p?h:0))%r],c(t,f,u,p,o.stepped)),!!l}function Qs(t,e,i,s){const n=e.points,{count:o,start:r,ilen:a}=Gs(n,i,s),{move:l=!0,reverse:h}=s||{};let c,d,u,f,g,p,m=0,x=0;const b=t=>(r+(h?a-t:t))%o,y=()=>{f!==g&&(t.lineTo(m,g),t.lineTo(m,f),t.lineTo(m,p))};for(l&&(d=n[b(0)],t.moveTo(d.x,d.y)),c=0;c<=a;++c){if(d=n[b(c)],d.skip)continue;const e=d.x,i=d.y,s=0|e;s===u?(i<f?f=i:i>g&&(g=i),m=(x*m+e)/++x):(y(),t.lineTo(e,i),u=s,x=0,f=g=i),p=i}y()}function Js(t){const e=t.options,i=e.borderDash&&e.borderDash.length;return t._decimated||t._loop||e.tension||"monotone"===e.cubicInterpolationMode||e.stepped||i?Zs:Qs}const tn="function"==typeof Path2D;class en extends as{static id="line";static defaults={borderCapStyle:"butt",borderDash:[],borderDashOffset:0,borderJoinStyle:"miter",borderWidth:3,capBezierPoints:!0,cubicInterpolationMode:"default",fill:!1,spanGaps:!1,stepped:!1,tension:0};static defaultRoutes={backgroundColor:"backgroundColor",borderColor:"borderColor"};static descriptors={_scriptable:!0,_indexable:t=>"borderDash"!==t&&"fill"!==t};constructor(t){super(),this.animated=!0,this.options=void 0,this._chart=void 0,this._loop=void 0,this._fullLoop=void 0,this._path=void 0,this._points=void 0,this._segments=void 0,this._decimated=!1,this._pointsUpdated=!1,this._datasetIndex=void 0,t&&Object.assign(this,t)}updateControlPoints(t,e){const i=this.options;if((i.tension||"monotone"===i.cubicInterpolationMode)&&!i.stepped&&!this._pointsUpdated){const s=i.spanGaps?this._loop:this._fullLoop;Re(this._points,i,t,s,e),this._pointsUpdated=!0}}set points(t){this._points=t,delete this._segments,delete this._path,this._pointsUpdated=!1}get points(){return this._points}get segments(){return this._segments||(this._segments=function(t,e){const i=t.points,s=t.options.spanGaps,n=i.length;if(!n)return[];const o=!!t._loop,{start:r,end:a}=function(t,e,i,s){let n=0,o=e-1;if(i&&!s)for(;n<e&&!t[n].skip;)n++;for(;n<e&&t[n].skip;)n++;for(n%=e,i&&(o+=n);o>n&&t[o%e].skip;)o--;return o%=e,{start:n,end:o}}(i,n,o,s);return function(t,e,i,s){return s&&s.setContext&&i?function(t,e,i,s){const n=t._chart.getContext(),o=ni(t.options),{_datasetIndex:r,options:{spanGaps:a}}=t,l=i.length,h=[];let c=o,d=e[0].start,u=d;function f(t,e,s,n){const o=a?-1:1;if(t!==e){for(t+=l;i[t%l].skip;)t-=o;for(;i[e%l].skip;)e+=o;t%l!==e%l&&(h.push({start:t%l,end:e%l,loop:s,style:n}),c=n,d=e%l)}}for(const t of e){d=a?d:t.start;let e,o=i[d%l];for(u=d+1;u<=t.end;u++){const a=i[u%l];e=ni(s.setContext(xe(n,{type:"segment",p0:o,p1:a,p0DataIndex:(u-1)%l,p1DataIndex:u%l,datasetIndex:r}))),oi(e,c)&&f(d,u-1,t.loop,c),o=a,c=e}d<u-1&&f(d,u-1,t.loop,c)}return h}(t,e,i,s):e}(t,!0===s?[{start:r,end:a,loop:o}]:function(t,e,i,s){const n=t.length,o=[];let r,a=e,l=t[e];for(r=e+1;r<=i;++r){const i=t[r%n];i.skip||i.stop?l.skip||(s=!1,o.push({start:e%n,end:(r-1)%n,loop:s}),e=a=i.stop?r:null):(a=r,l.skip&&(e=r)),l=i}return null!==a&&o.push({start:e%n,end:a%n,loop:s}),o}(i,r,a<r?a+n:a,!!t._fullLoop&&0===r&&a===n-1),i,e)}(this,this.options.segment))}first(){const t=this.segments,e=this.points;return t.length&&e[t[0].start]}last(){const t=this.segments,e=this.points,i=t.length;return i&&e[t[i-1].end]}interpolate(t,e){const i=this.options,s=t[e],n=this.points,o=si(this,{property:e,start:s,end:s});if(!o.length)return;const r=[],a=function(t){return t.stepped?Ke:t.tension||"monotone"===t.cubicInterpolationMode?Ge:Xe}(i);let l,h;for(l=0,h=o.length;l<h;++l){const{start:h,end:c}=o[l],d=n[h],u=n[c];if(d===u){r.push(d);continue}const f=a(d,u,Math.abs((s-d[e])/(u[e]-d[e])),i.stepped);f[e]=t[e],r.push(f)}return 1===r.length?r[0]:r}pathSegment(t,e,i){return Js(this)(t,this,e,i)}path(t,e,i){const s=this.segments,n=Js(this);let o=this._loop;e=e||0,i=i||this.points.length-e;for(const r of s)o&=n(t,this,r,{start:e,end:e+i-1});return!!o}draw(t,e,i,s){const n=this.options||{};(this.points||[]).length&&n.borderWidth&&(t.save(),function(t,e,i,s){tn&&!e.options.segment?function(t,e,i,s){let n=e._path;n||(n=e._path=new Path2D,e.path(n,i,s)&&n.closePath()),Xs(t,e.options),t.stroke(n)}(t,e,i,s):function(t,e,i,s){const{segments:n,options:o}=e,r=Js(e);for(const a of n)Xs(t,o,a.style),t.beginPath(),r(t,e,a,{start:i,end:i+s-1})&&t.closePath(),t.stroke()}(t,e,i,s)}(t,this,i,s),t.restore()),this.animated&&(this._pointsUpdated=!1,this._path=void 0)}}function sn(t,e,i,s){const n=t.options,{[i]:o}=t.getProps([i],s);return Math.abs(e-o)<n.radius+n.hitRadius}function nn(t,e,i,s){if(s)return;let n=e[t],o=i[t];return"angle"===t&&(n=mt(n),o=mt(o)),{property:t,start:n,end:o}}function on(t,e,i){for(;e>t;e--){const t=i[e];if(!isNaN(t.x)&&!isNaN(t.y))break}return e}function rn(t,e,i,s){return t&&e?s(t[i],e[i]):t?t[i]:e?e[i]:0}function an(t,e){let i=[],s=!1;return E(t)?(s=!0,i=t):i=function(t,e){const{x:i=null,y:s=null}=t||{},n=e.points,o=[];return e.segments.forEach(({start:t,end:e})=>{e=on(t,e,n);const r=n[t],a=n[e];null!==s?(o.push({x:r.x,y:s}),o.push({x:a.x,y:s})):null!==i&&(o.push({x:i,y:r.y}),o.push({x:i,y:a.y}))}),o}(t,e),i.length?new en({points:i,options:{tension:0},_loop:s,_fullLoop:s}):null}function ln(t){return t&&!1!==t.fill}function hn(t,e,i){let s=t[e].fill;const n=[e];let o;if(!i)return s;for(;!1!==s&&-1===n.indexOf(s);){if(!z(s))return s;if(o=t[s],!o)return!1;if(o.visible)return s;n.push(s),s=o.fill}return!1}function cn(t,e,i){const s=function(t){const e=t.options,i=e.fill;let s=B(i&&i.target,i);return void 0===s&&(s=!!e.backgroundColor),!1!==s&&null!==s&&(!0===s?"origin":s)}(t);if(L(s))return!isNaN(s.value)&&s;let n=parseFloat(s);return z(n)&&Math.floor(n)===n?function(t,e,i,s){return"-"!==t&&"+"!==t||(i=e+i),!(i===e||i<0||i>=s)&&i}(s[0],e,n,i):["origin","start","end","stack","shape"].indexOf(s)>=0&&s}function dn(t,e,i){const s=[];for(let n=0;n<i.length;n++){const o=i[n],{first:r,last:a,point:l}=un(o,e,"x");if(!(!l||r&&a))if(r)s.unshift(l);else if(t.push(l),!a)break}t.push(...s)}function un(t,e,i){const s=t.interpolate(e,i);if(!s)return{};const n=s[i],o=t.segments,r=t.points;let a=!1,l=!1;for(let t=0;t<o.length;t++){const e=o[t],s=r[e.start][i],h=r[e.end][i];if(yt(n,s,h)){a=n===s,l=n===h;break}}return{first:a,last:l,point:s}}class fn{constructor(t){this.x=t.x,this.y=t.y,this.radius=t.radius}pathSegment(t,e,i){const{x:s,y:n,radius:o}=this;return e=e||{start:0,end:tt},t.arc(s,n,o,e.end,e.start,!0),!i.bounds}interpolate(t){const{x:e,y:i,radius:s}=this,n=t.angle;return{x:e+Math.cos(n)*s,y:i+Math.sin(n)*s,angle:n}}}function gn(t,e,i){const s=function(t){const{chart:e,fill:i,line:s}=t;if(z(i))return function(t,e){const i=t.getDatasetMeta(e);return i&&t.isDatasetVisible(e)?i.dataset:null}(e,i);if("stack"===i)return function(t){const{scale:e,index:i,line:s}=t,n=[],o=s.segments,r=s.points,a=function(t,e){const i=[],s=t.getMatchingVisibleMetas("line");for(let t=0;t<s.length;t++){const n=s[t];if(n.index===e)break;n.hidden||i.unshift(n.dataset)}return i}(e,i);a.push(an({x:null,y:e.bottom},s));for(let t=0;t<o.length;t++){const e=o[t];for(let t=e.start;t<=e.end;t++)dn(n,r[t],a)}return new en({points:n,options:{}})}(t);if("shape"===i)return!0;const n=function(t){return(t.scale||{}).getPointPositionForValue?function(t){const{scale:e,fill:i}=t,s=e.options,n=e.getLabels().length,o=s.reverse?e.max:e.min,r=function(t,e,i){let s;return s="start"===t?i:"end"===t?e.options.reverse?e.min:e.max:L(t)?t.value:e.getBaseValue(),s}(i,e,o),a=[];if(s.grid.circular){const t=e.getPointPositionForValue(0,o);return new fn({x:t.x,y:t.y,radius:e.getDistanceFromCenterForValue(r)})}for(let t=0;t<n;++t)a.push(e.getPointPositionForValue(t,r));return a}(t):function(t){const{scale:e={},fill:i}=t,s=function(t,e){let i=null;return"start"===t?i=e.bottom:"end"===t?i=e.top:L(t)?i=e.getPixelForValue(t.value):e.getBasePixel&&(i=e.getBasePixel()),i}(i,e);if(z(s)){const t=e.isHorizontal();return{x:t?s:null,y:t?null:s}}return null}(t)}(t);return n instanceof fn?n:an(n,s)}(e),{chart:n,index:o,line:r,scale:a,axis:l}=e,h=r.options,c=h.fill,d=h.backgroundColor,{above:u=d,below:f=d}=c||{},g=n.getDatasetMeta(o),p=ai(n,g);s&&r.points.length&&(te(t,i),function(t,e){const{line:i,target:s,above:n,below:o,area:r,scale:a,clip:l}=e,h=i._loop?"angle":e.axis;t.save();let c=o;o!==n&&("x"===h?(pn(t,s,r.top),xn(t,{line:i,target:s,color:n,scale:a,property:h,clip:l}),t.restore(),t.save(),pn(t,s,r.bottom)):"y"===h&&(mn(t,s,r.left),xn(t,{line:i,target:s,color:o,scale:a,property:h,clip:l}),t.restore(),t.save(),mn(t,s,r.right),c=n)),xn(t,{line:i,target:s,color:c,scale:a,property:h,clip:l}),t.restore()}(t,{line:r,target:s,above:u,below:f,area:i,scale:a,axis:l,clip:p}),ee(t))}function pn(t,e,i){const{segments:s,points:n}=e;let o=!0,r=!1;t.beginPath();for(const a of s){const{start:s,end:l}=a,h=n[s],c=n[on(s,l,n)];o?(t.moveTo(h.x,h.y),o=!1):(t.lineTo(h.x,i),t.lineTo(h.x,h.y)),r=!!e.pathSegment(t,a,{move:r}),r?t.closePath():t.lineTo(c.x,i)}t.lineTo(e.first().x,i),t.closePath(),t.clip()}function mn(t,e,i){const{segments:s,points:n}=e;let o=!0,r=!1;t.beginPath();for(const a of s){const{start:s,end:l}=a,h=n[s],c=n[on(s,l,n)];o?(t.moveTo(h.x,h.y),o=!1):(t.lineTo(i,h.y),t.lineTo(h.x,h.y)),r=!!e.pathSegment(t,a,{move:r}),r?t.closePath():t.lineTo(i,c.y)}t.lineTo(i,e.first().y),t.closePath(),t.clip()}function xn(t,e){const{line:i,target:s,property:n,color:o,scale:r,clip:a}=e,l=function(t,e,i){const s=t.segments,n=t.points,o=e.points,r=[];for(const t of s){let{start:s,end:a}=t;a=on(s,a,n);const l=nn(i,n[s],n[a],t.loop);if(!e.segments){r.push({source:t,target:l,start:n[s],end:n[a]});continue}const h=si(e,l);for(const e of h){const s=nn(i,o[e.start],o[e.end],e.loop),a=ii(t,n,s);for(const t of a)r.push({source:t,target:e,start:{[i]:rn(l,s,"start",Math.max)},end:{[i]:rn(l,s,"end",Math.min)}})}}return r}(i,s,n);for(const{source:e,target:h,start:c,end:d}of l){const{style:{backgroundColor:l=o}={}}=e,u=!0!==s;t.save(),t.fillStyle=l,bn(t,r,a,u&&nn(n,c,d)),t.beginPath();const f=!!i.pathSegment(t,e);let g;if(u){f?t.closePath():yn(t,s,d,n);const e=!!s.pathSegment(t,h,{move:f,reverse:!0});g=f&&e,g||yn(t,s,c,n)}t.closePath(),t.fill(g?"evenodd":"nonzero"),t.restore()}}function bn(t,e,i,s){const n=e.chart.chartArea,{property:o,start:r,end:a}=s||{};if("x"===o||"y"===o){let e,s,l,h;"x"===o?(e=r,s=n.top,l=a,h=n.bottom):(e=n.left,s=r,l=n.right,h=a),t.beginPath(),i&&(e=Math.max(e,i.left),l=Math.min(l,i.right),s=Math.max(s,i.top),h=Math.min(h,i.bottom)),t.rect(e,s,l-e,h-s),t.clip()}}function yn(t,e,i,s){const n=e.interpolate(i,s);n&&t.lineTo(n.x,n.y)}var vn={id:"filler",afterDatasetsUpdate(t,e,i){const s=(t.data.datasets||[]).length,n=[];let o,r,a,l;for(r=0;r<s;++r)o=t.getDatasetMeta(r),a=o.dataset,l=null,a&&a.options&&a instanceof en&&(l={visible:t.isDatasetVisible(r),index:r,fill:cn(a,r,s),chart:t,axis:o.controller.options.indexAxis,scale:o.vScale,line:a}),o.$filler=l,n.push(l);for(r=0;r<s;++r)l=n[r],l&&!1!==l.fill&&(l.fill=hn(n,r,i.propagate))},beforeDraw(t,e,i){const s="beforeDraw"===i.drawTime,n=t.getSortedVisibleDatasetMetas(),o=t.chartArea;for(let e=n.length-1;e>=0;--e){const i=n[e].$filler;i&&(i.line.updateControlPoints(o,i.axis),s&&i.fill&&gn(t.ctx,i,o))}},beforeDatasetsDraw(t,e,i){if("beforeDatasetsDraw"!==i.drawTime)return;const s=t.getSortedVisibleDatasetMetas();for(let e=s.length-1;e>=0;--e){const i=s[e].$filler;ln(i)&&gn(t.ctx,i,t.chartArea)}},beforeDatasetDraw(t,e,i){const s=e.meta.$filler;ln(s)&&"beforeDatasetDraw"===i.drawTime&&gn(t.ctx,s,t.chartArea)},defaults:{propagate:!0,drawTime:"beforeDatasetDraw"}};const wn=(t,e)=>{let{boxHeight:i=e,boxWidth:s=e}=t;return t.usePointStyle&&(i=Math.min(i,e),s=t.pointStyleWidth||Math.min(s,e)),{boxWidth:s,boxHeight:i,itemHeight:Math.max(e,i)}};class Mn extends as{constructor(t){super(),this._added=!1,this.legendHitBoxes=[],this._hoveredItem=null,this.doughnutMode=!1,this.chart=t.chart,this.options=t.options,this.ctx=t.ctx,this.legendItems=void 0,this.columnSizes=void 0,this.lineWidths=void 0,this.maxHeight=void 0,this.maxWidth=void 0,this.top=void 0,this.bottom=void 0,this.left=void 0,this.right=void 0,this.height=void 0,this.width=void 0,this._margins=void 0,this.position=void 0,this.weight=void 0,this.fullSize=void 0}update(t,e,i){this.maxWidth=t,this.maxHeight=e,this._margins=i,this.setDimensions(),this.buildLabels(),this.fit()}setDimensions(){this.isHorizontal()?(this.width=this.maxWidth,this.left=this._margins.left,this.right=this.width):(this.height=this.maxHeight,this.top=this._margins.top,this.bottom=this.height)}buildLabels(){const t=this.options.labels||{};let e=F(t.generateLabels,[this.chart],this)||[];t.filter&&(e=e.filter(e=>t.filter(e,this.chart.data))),t.sort&&(e=e.sort((e,i)=>t.sort(e,i,this.chart.data))),this.options.reverse&&e.reverse(),this.legendItems=e}fit(){const{options:t,ctx:e}=this;if(!t.display)return void(this.width=this.height=0);const i=t.labels,s=pe(i.font),n=s.size,o=this._computeTitleHeight(),{boxWidth:r,itemHeight:a}=wn(i,n);let l,h;e.font=s.string,this.isHorizontal()?(l=this.maxWidth,h=this._fitRows(o,n,r,a)+10):(h=this.maxHeight,l=this._fitCols(o,s,r,a)+10),this.width=Math.min(l,t.maxWidth||this.maxWidth),this.height=Math.min(h,t.maxHeight||this.maxHeight)}_fitRows(t,e,i,s){const{ctx:n,maxWidth:o,options:{labels:{padding:r}}}=this,a=this.legendHitBoxes=[],l=this.lineWidths=[0],h=s+r;let c=t;n.textAlign="left",n.textBaseline="middle";let d=-1,u=-h;return this.legendItems.forEach((t,f)=>{const g=i+e/2+n.measureText(t.text).width;(0===f||l[l.length-1]+g+2*r>o)&&(c+=h,l[l.length-(f>0?0:1)]=0,u+=h,d++),a[f]={left:0,top:u,row:d,width:g,height:s},l[l.length-1]+=g+r}),c}_fitCols(t,e,i,s){const{ctx:n,maxHeight:o,options:{labels:{padding:r}}}=this,a=this.legendHitBoxes=[],l=this.columnSizes=[],h=o-t;let c=r,d=0,u=0,f=0,g=0;return this.legendItems.forEach((t,o)=>{const{itemWidth:p,itemHeight:m}=function(t,e,i,s,n){const o=function(t,e,i,s){let n=t.text;return n&&"string"!=typeof n&&(n=n.reduce((t,e)=>t.length>e.length?t:e)),e+i.size/2+s.measureText(n).width}(s,t,e,i),r=function(t,e,i){let s=t;return"string"!=typeof e.text&&(s=kn(e,i)),s}(n,s,e.lineHeight);return{itemWidth:o,itemHeight:r}}(i,e,n,t,s);o>0&&u+m+2*r>h&&(c+=d+r,l.push({width:d,height:u}),f+=d+r,g++,d=u=0),a[o]={left:f,top:u,col:g,width:p,height:m},d=Math.max(d,p),u+=m+r}),c+=d,l.push({width:d,height:u}),c}adjustHitBoxes(){if(!this.options.display)return;const t=this._computeTitleHeight(),{legendHitBoxes:e,options:{align:i,labels:{padding:s},rtl:n}}=this,o=Ze(n,this.left,this.width);if(this.isHorizontal()){let n=0,r=It(i,this.left+s,this.right-this.lineWidths[n]);for(const a of e)n!==a.row&&(n=a.row,r=It(i,this.left+s,this.right-this.lineWidths[n])),a.top+=this.top+t+s,a.left=o.leftForLtr(o.x(r),a.width),r+=a.width+s}else{let n=0,r=It(i,this.top+t+s,this.bottom-this.columnSizes[n].height);for(const a of e)a.col!==n&&(n=a.col,r=It(i,this.top+t+s,this.bottom-this.columnSizes[n].height)),a.top=r,a.left+=this.left+s,a.left=o.leftForLtr(o.x(a.left),a.width),r+=a.height+s}}isHorizontal(){return"top"===this.options.position||"bottom"===this.options.position}draw(){if(this.options.display){const t=this.ctx;te(t,this),this._draw(),ee(t)}}_draw(){const{options:t,columnSizes:e,lineWidths:i,ctx:s}=this,{align:n,labels:o}=t,r=qt.color,a=Ze(t.rtl,this.left,this.width),l=pe(o.font),{padding:h}=o,c=l.size,d=c/2;let u;this.drawTitle(),s.textAlign=a.textAlign("left"),s.textBaseline="middle",s.lineWidth=.5,s.font=l.string;const{boxWidth:f,boxHeight:g,itemHeight:p}=wn(o,c),m=this.isHorizontal(),x=this._computeTitleHeight();u=m?{x:It(n,this.left+h,this.right-i[0]),y:this.top+h+x,line:0}:{x:this.left+h,y:It(n,this.top+x+h,this.bottom-e[0].height),line:0},Qe(this.ctx,t.textDirection);const b=p+h;this.legendItems.forEach((y,v)=>{s.strokeStyle=y.fontColor,s.fillStyle=y.fontColor;const _=s.measureText(y.text).width,w=a.textAlign(y.textAlign||(y.textAlign=o.textAlign)),M=f+d+_;let k=u.x,S=u.y;if(a.setWidth(this.width),m?v>0&&k+M+h>this.right&&(S=u.y+=b,u.line++,k=u.x=It(n,this.left+h,this.right-i[u.line])):v>0&&S+b>this.bottom&&(k=u.x=k+e[u.line].width+h,u.line++,S=u.y=It(n,this.top+x+h,this.bottom-e[u.line].height)),function(t,e,i){if(isNaN(f)||f<=0||isNaN(g)||g<0)return;s.save();const n=B(i.lineWidth,1);if(s.fillStyle=B(i.fillStyle,r),s.lineCap=B(i.lineCap,"butt"),s.lineDashOffset=B(i.lineDashOffset,0),s.lineJoin=B(i.lineJoin,"miter"),s.lineWidth=n,s.strokeStyle=B(i.strokeStyle,r),s.setLineDash(B(i.lineDash,[])),o.usePointStyle){const r={radius:g*Math.SQRT2/2,pointStyle:i.pointStyle,rotation:i.rotation,borderWidth:n},l=a.xPlus(t,f/2);Qt(s,r,l,e+d,o.pointStyleWidth&&f)}else{const o=e+Math.max((c-g)/2,0),r=a.leftForLtr(t,f),l=fe(i.borderRadius);s.beginPath(),Object.values(l).some(t=>0!==t)?ae(s,{x:r,y:o,w:f,h:g,radius:l}):s.rect(r,o,f,g),s.fill(),0!==n&&s.stroke()}s.restore()}(a.x(k),S,y),k=((t,e,i,s)=>t===(s?"left":"right")?i:"center"===t?(e+i)/2:e)(w,k+f+d,m?k+M:this.right,t.rtl),function(t,e,i){re(s,i.text,t,e+p/2,l,{strikethrough:i.hidden,textAlign:a.textAlign(i.textAlign)})}(a.x(k),S,y),m)u.x+=M+h;else if("string"!=typeof y.text){const t=l.lineHeight;u.y+=kn(y,t)+h}else u.y+=b}),Je(this.ctx,t.textDirection)}drawTitle(){const t=this.options,e=t.title,i=pe(e.font),s=ge(e.padding);if(!e.display)return;const n=Ze(t.rtl,this.left,this.width),o=this.ctx,r=e.position,a=i.size/2,l=s.top+a;let h,c=this.left,d=this.width;if(this.isHorizontal())d=Math.max(...this.lineWidths),h=this.top+l,c=It(t.align,c,this.right-d);else{const e=this.columnSizes.reduce((t,e)=>Math.max(t,e.height),0);h=l+It(t.align,this.top,this.bottom-e-t.labels.padding-this._computeTitleHeight())}const u=It(r,c,c+d);o.textAlign=n.textAlign(Pt(r)),o.textBaseline="middle",o.strokeStyle=e.color,o.fillStyle=e.color,o.font=i.string,re(o,e.text,u,h,i)}_computeTitleHeight(){const t=this.options.title,e=pe(t.font),i=ge(t.padding);return t.display?e.lineHeight+i.height:0}_getLegendItemAt(t,e){let i,s,n;if(yt(t,this.left,this.right)&&yt(e,this.top,this.bottom))for(n=this.legendHitBoxes,i=0;i<n.length;++i)if(s=n[i],yt(t,s.left,s.left+s.width)&&yt(e,s.top,s.top+s.height))return this.legendItems[i];return null}handleEvent(t){const e=this.options;if(!function(t,e){return!("mousemove"!==t&&"mouseout"!==t||!e.onHover&&!e.onLeave)||!(!e.onClick||"click"!==t&&"mouseup"!==t)}(t.type,e))return;const i=this._getLegendItemAt(t.x,t.y);if("mousemove"===t.type||"mouseout"===t.type){const o=this._hoveredItem,r=(n=i,null!==(s=o)&&null!==n&&s.datasetIndex===n.datasetIndex&&s.index===n.index);o&&!r&&F(e.onLeave,[t,o,this],this),this._hoveredItem=i,i&&!r&&F(e.onHover,[t,i,this],this)}else i&&F(e.onClick,[t,i,this],this);var s,n}}function kn(t,e){return e*(t.text?t.text.length:0)}var Sn={id:"legend",_element:Mn,start(t,e,i){const s=t.legend=new Mn({ctx:t.ctx,options:i,chart:t});Ni.configure(t,s,i),Ni.addBox(t,s)},stop(t){Ni.removeBox(t,t.legend),delete t.legend},beforeUpdate(t,e,i){const s=t.legend;Ni.configure(t,s,i),s.options=i},afterUpdate(t){const e=t.legend;e.buildLabels(),e.adjustHitBoxes()},afterEvent(t,e){e.replay||t.legend.handleEvent(e.event)},defaults:{display:!0,position:"top",align:"center",fullSize:!0,reverse:!1,weight:1e3,onClick(t,e,i){const s=e.datasetIndex,n=i.chart;n.isDatasetVisible(s)?(n.hide(s),e.hidden=!0):(n.show(s),e.hidden=!1)},onHover:null,onLeave:null,labels:{color:t=>t.chart.options.color,boxWidth:40,padding:10,generateLabels(t){const e=t.data.datasets,{labels:{usePointStyle:i,pointStyle:s,textAlign:n,color:o,useBorderRadius:r,borderRadius:a}}=t.legend.options;return t._getSortedDatasetMetas().map(t=>{const l=t.controller.getStyle(i?0:void 0),h=ge(l.borderWidth);return{text:e[t.index].label,fillStyle:l.backgroundColor,fontColor:o,hidden:!t.visible,lineCap:l.borderCapStyle,lineDash:l.borderDash,lineDashOffset:l.borderDashOffset,lineJoin:l.borderJoinStyle,lineWidth:(h.width+h.height)/4,strokeStyle:l.borderColor,pointStyle:s||l.pointStyle,rotation:l.rotation,textAlign:n||l.textAlign,borderRadius:r&&(a||l.borderRadius),datasetIndex:t.index}},this)}},title:{color:t=>t.chart.options.color,display:!1,position:"center",text:""}},descriptors:{_scriptable:t=>!t.startsWith("on"),labels:{_scriptable:t=>!["generateLabels","filter","sort"].includes(t)}}};new WeakMap;const Dn={average(t){if(!t.length)return!1;let e,i,s=new Set,n=0,o=0;for(e=0,i=t.length;e<i;++e){const i=t[e].element;if(i&&i.hasValue()){const t=i.tooltipPosition();s.add(t.x),n+=t.y,++o}}return 0!==o&&0!==s.size&&{x:[...s].reduce((t,e)=>t+e)/s.size,y:n/o}},nearest(t,e){if(!t.length)return!1;let i,s,n,o=e.x,r=e.y,a=Number.POSITIVE_INFINITY;for(i=0,s=t.length;i<s;++i){const s=t[i].element;if(s&&s.hasValue()){const t=gt(e,s.getCenterPoint());t<a&&(a=t,n=s)}}if(n){const t=n.tooltipPosition();o=t.x,r=t.y}return{x:o,y:r}}};function Pn(t,e){return e&&(E(e)?Array.prototype.push.apply(t,e):t.push(e)),t}function In(t){return("string"==typeof t||t instanceof String)&&t.indexOf("\n")>-1?t.split("\n"):t}function On(t,e){const{element:i,datasetIndex:s,index:n}=e,o=t.getDatasetMeta(s).controller,{label:r,value:a}=o.getLabelAndValue(n);return{chart:t,label:r,parsed:o.getParsed(n),raw:t.data.datasets[s].data[n],formattedValue:a,dataset:o.getDataset(),dataIndex:n,datasetIndex:s,element:i}}function Cn(t,e){const i=t.chart.ctx,{body:s,footer:n,title:o}=t,{boxWidth:r,boxHeight:a}=e,l=pe(e.bodyFont),h=pe(e.titleFont),c=pe(e.footerFont),d=o.length,u=n.length,f=s.length,g=ge(e.padding);let p=g.height,m=0,x=s.reduce((t,e)=>t+e.before.length+e.lines.length+e.after.length,0);x+=t.beforeBody.length+t.afterBody.length,d&&(p+=d*h.lineHeight+(d-1)*e.titleSpacing+e.titleMarginBottom),x&&(p+=f*(e.displayColors?Math.max(a,l.lineHeight):l.lineHeight)+(x-f)*l.lineHeight+(x-1)*e.bodySpacing),u&&(p+=e.footerMarginTop+u*c.lineHeight+(u-1)*e.footerSpacing);let b=0;const y=function(t){m=Math.max(m,i.measureText(t).width+b)};return i.save(),i.font=h.string,H(t.title,y),i.font=l.string,H(t.beforeBody.concat(t.afterBody),y),b=e.displayColors?r+2+e.boxPadding:0,H(s,t=>{H(t.before,y),H(t.lines,y),H(t.after,y)}),b=0,i.font=c.string,H(t.footer,y),i.restore(),m+=g.width,{width:m,height:p}}function Tn(t,e,i,s){const{x:n,width:o}=i,{width:r,chartArea:{left:a,right:l}}=t;let h="center";return"center"===s?h=n<=(a+l)/2?"left":"right":n<=o/2?h="left":n>=r-o/2&&(h="right"),function(t,e,i,s){const{x:n,width:o}=s,r=i.caretSize+i.caretPadding;return"left"===t&&n+o+r>e.width||"right"===t&&n-o-r<0||void 0}(h,t,e,i)&&(h="center"),h}function An(t,e,i){const s=i.yAlign||e.yAlign||function(t,e){const{y:i,height:s}=e;return i<s/2?"top":i>t.height-s/2?"bottom":"center"}(t,i);return{xAlign:i.xAlign||e.xAlign||Tn(t,e,i,s),yAlign:s}}function En(t,e,i,s){const{caretSize:n,caretPadding:o,cornerRadius:r}=t,{xAlign:a,yAlign:l}=i,h=n+o,{topLeft:c,topRight:d,bottomLeft:u,bottomRight:f}=fe(r);let g=function(t,e){let{x:i,width:s}=t;return"right"===e?i-=s:"center"===e&&(i-=s/2),i}(e,a);const p=function(t,e,i){let{y:s,height:n}=t;return"top"===e?s+=i:s-="bottom"===e?n+i:n/2,s}(e,l,h);return"center"===l?"left"===a?g+=h:"right"===a&&(g-=h):"left"===a?g-=Math.max(c,u)+n:"right"===a&&(g+=Math.max(d,f)+n),{x:bt(g,0,s.width-e.width),y:bt(p,0,s.height-e.height)}}function Ln(t,e,i){const s=ge(i.padding);return"center"===e?t.x+t.width/2:"right"===e?t.x+t.width-s.right:t.x+s.left}function zn(t){return Pn([],In(t))}function Rn(t,e){const i=e&&e.dataset&&e.dataset.tooltip&&e.dataset.tooltip.callbacks;return i?t.override(i):t}const Bn={beforeTitle:C,title(t){if(t.length>0){const e=t[0],i=e.chart.data.labels,s=i?i.length:0;if(this&&this.options&&"dataset"===this.options.mode)return e.dataset.label||"";if(e.label)return e.label;if(s>0&&e.dataIndex<s)return i[e.dataIndex]}return""},afterTitle:C,beforeBody:C,beforeLabel:C,label(t){if(this&&this.options&&"dataset"===this.options.mode)return t.label+": "+t.formattedValue||t.formattedValue;let e=t.dataset.label||"";e&&(e+=": ");const i=t.formattedValue;return A(i)||(e+=i),e},labelColor(t){const e=t.chart.getDatasetMeta(t.datasetIndex).controller.getStyle(t.dataIndex);return{borderColor:e.borderColor,backgroundColor:e.backgroundColor,borderWidth:e.borderWidth,borderDash:e.borderDash,borderDashOffset:e.borderDashOffset,borderRadius:0}},labelTextColor(){return this.options.bodyColor},labelPointStyle(t){const e=t.chart.getDatasetMeta(t.datasetIndex).controller.getStyle(t.dataIndex);return{pointStyle:e.pointStyle,rotation:e.rotation}},afterLabel:C,afterBody:C,beforeFooter:C,footer:C,afterFooter:C};function Fn(t,e,i,s){const n=t[e].call(i,s);return void 0===n?Bn[e].call(i,s):n}class Hn extends as{static positioners=Dn;constructor(t){super(),this.opacity=0,this._active=[],this._eventPosition=void 0,this._size=void 0,this._cachedAnimations=void 0,this._tooltipItems=[],this.$animations=void 0,this.$context=void 0,this.chart=t.chart,this.options=t.options,this.dataPoints=void 0,this.title=void 0,this.beforeBody=void 0,this.body=void 0,this.afterBody=void 0,this.footer=void 0,this.xAlign=void 0,this.yAlign=void 0,this.x=void 0,this.y=void 0,this.height=void 0,this.width=void 0,this.caretX=void 0,this.caretY=void 0,this.labelColors=void 0,this.labelPointStyles=void 0,this.labelTextColors=void 0}initialize(t){this.options=t,this._cachedAnimations=void 0,this.$context=void 0}_resolveAnimations(){const t=this._cachedAnimations;if(t)return t;const e=this.chart,i=this.options.setContext(this.getContext()),s=i.enabled&&e.options.animation&&i.animations,n=new fi(this.chart,s);return s._cacheable&&(this._cachedAnimations=Object.freeze(n)),n}getContext(){return this.$context||(this.$context=xe(this.chart.getContext(),{tooltip:this,tooltipItems:this._tooltipItems,type:"tooltip"}))}getTitle(t,e){const{callbacks:i}=e,s=Fn(i,"beforeTitle",this,t),n=Fn(i,"title",this,t),o=Fn(i,"afterTitle",this,t);let r=[];return r=Pn(r,In(s)),r=Pn(r,In(n)),r=Pn(r,In(o)),r}getBeforeBody(t,e){return zn(Fn(e.callbacks,"beforeBody",this,t))}getBody(t,e){const{callbacks:i}=e,s=[];return H(t,t=>{const e={before:[],lines:[],after:[]},n=Rn(i,t);Pn(e.before,In(Fn(n,"beforeLabel",this,t))),Pn(e.lines,Fn(n,"label",this,t)),Pn(e.after,In(Fn(n,"afterLabel",this,t))),s.push(e)}),s}getAfterBody(t,e){return zn(Fn(e.callbacks,"afterBody",this,t))}getFooter(t,e){const{callbacks:i}=e,s=Fn(i,"beforeFooter",this,t),n=Fn(i,"footer",this,t),o=Fn(i,"afterFooter",this,t);let r=[];return r=Pn(r,In(s)),r=Pn(r,In(n)),r=Pn(r,In(o)),r}_createItems(t){const e=this._active,i=this.chart.data,s=[],n=[],o=[];let r,a,l=[];for(r=0,a=e.length;r<a;++r)l.push(On(this.chart,e[r]));return t.filter&&(l=l.filter((e,s,n)=>t.filter(e,s,n,i))),t.itemSort&&(l=l.sort((e,s)=>t.itemSort(e,s,i))),H(l,e=>{const i=Rn(t.callbacks,e);s.push(Fn(i,"labelColor",this,e)),n.push(Fn(i,"labelPointStyle",this,e)),o.push(Fn(i,"labelTextColor",this,e))}),this.labelColors=s,this.labelPointStyles=n,this.labelTextColors=o,this.dataPoints=l,l}update(t,e){const i=this.options.setContext(this.getContext()),s=this._active;let n,o=[];if(s.length){const t=Dn[i.position].call(this,s,this._eventPosition);o=this._createItems(i),this.title=this.getTitle(o,i),this.beforeBody=this.getBeforeBody(o,i),this.body=this.getBody(o,i),this.afterBody=this.getAfterBody(o,i),this.footer=this.getFooter(o,i);const e=this._size=Cn(this,i),r=Object.assign({},t,e),a=An(this.chart,i,r),l=En(i,r,a,this.chart);this.xAlign=a.xAlign,this.yAlign=a.yAlign,n={opacity:1,x:l.x,y:l.y,width:e.width,height:e.height,caretX:t.x,caretY:t.y}}else 0!==this.opacity&&(n={opacity:0});this._tooltipItems=o,this.$context=void 0,n&&this._resolveAnimations().update(this,n),t&&i.external&&i.external.call(this,{chart:this.chart,tooltip:this,replay:e})}drawCaret(t,e,i,s){const n=this.getCaretPosition(t,i,s);e.lineTo(n.x1,n.y1),e.lineTo(n.x2,n.y2),e.lineTo(n.x3,n.y3)}getCaretPosition(t,e,i){const{xAlign:s,yAlign:n}=this,{caretSize:o,cornerRadius:r}=i,{topLeft:a,topRight:l,bottomLeft:h,bottomRight:c}=fe(r),{x:d,y:u}=t,{width:f,height:g}=e;let p,m,x,b,y,v;return"center"===n?(y=u+g/2,"left"===s?(p=d,m=p-o,b=y+o,v=y-o):(p=d+f,m=p+o,b=y-o,v=y+o),x=p):(m="left"===s?d+Math.max(a,h)+o:"right"===s?d+f-Math.max(l,c)-o:this.caretX,"top"===n?(b=u,y=b-o,p=m-o,x=m+o):(b=u+g,y=b+o,p=m+o,x=m-o),v=b),{x1:p,x2:m,x3:x,y1:b,y2:y,y3:v}}drawTitle(t,e,i){const s=this.title,n=s.length;let o,r,a;if(n){const l=Ze(i.rtl,this.x,this.width);for(t.x=Ln(this,i.titleAlign,i),e.textAlign=l.textAlign(i.titleAlign),e.textBaseline="middle",o=pe(i.titleFont),r=i.titleSpacing,e.fillStyle=i.titleColor,e.font=o.string,a=0;a<n;++a)e.fillText(s[a],l.x(t.x),t.y+o.lineHeight/2),t.y+=o.lineHeight+r,a+1===n&&(t.y+=i.titleMarginBottom-r)}}_drawColorBox(t,e,i,s,n){const o=this.labelColors[i],r=this.labelPointStyles[i],{boxHeight:a,boxWidth:l}=n,h=pe(n.bodyFont),c=Ln(this,"left",n),d=s.x(c),u=a<h.lineHeight?(h.lineHeight-a)/2:0,f=e.y+u;if(n.usePointStyle){const e={radius:Math.min(l,a)/2,pointStyle:r.pointStyle,rotation:r.rotation,borderWidth:1},i=s.leftForLtr(d,l)+l/2,h=f+a/2;t.strokeStyle=n.multiKeyBackground,t.fillStyle=n.multiKeyBackground,Zt(t,e,i,h),t.strokeStyle=o.borderColor,t.fillStyle=o.backgroundColor,Zt(t,e,i,h)}else{t.lineWidth=L(o.borderWidth)?Math.max(...Object.values(o.borderWidth)):o.borderWidth||1,t.strokeStyle=o.borderColor,t.setLineDash(o.borderDash||[]),t.lineDashOffset=o.borderDashOffset||0;const e=s.leftForLtr(d,l),i=s.leftForLtr(s.xPlus(d,1),l-2),r=fe(o.borderRadius);Object.values(r).some(t=>0!==t)?(t.beginPath(),t.fillStyle=n.multiKeyBackground,ae(t,{x:e,y:f,w:l,h:a,radius:r}),t.fill(),t.stroke(),t.fillStyle=o.backgroundColor,t.beginPath(),ae(t,{x:i,y:f+1,w:l-2,h:a-2,radius:r}),t.fill()):(t.fillStyle=n.multiKeyBackground,t.fillRect(e,f,l,a),t.strokeRect(e,f,l,a),t.fillStyle=o.backgroundColor,t.fillRect(i,f+1,l-2,a-2))}t.fillStyle=this.labelTextColors[i]}drawBody(t,e,i){const{body:s}=this,{bodySpacing:n,bodyAlign:o,displayColors:r,boxHeight:a,boxWidth:l,boxPadding:h}=i,c=pe(i.bodyFont);let d=c.lineHeight,u=0;const f=Ze(i.rtl,this.x,this.width),g=function(i){e.fillText(i,f.x(t.x+u),t.y+d/2),t.y+=d+n},p=f.textAlign(o);let m,x,b,y,v,_,w;for(e.textAlign=o,e.textBaseline="middle",e.font=c.string,t.x=Ln(this,p,i),e.fillStyle=i.bodyColor,H(this.beforeBody,g),u=r&&"right"!==p?"center"===o?l/2+h:l+2+h:0,y=0,_=s.length;y<_;++y){for(m=s[y],x=this.labelTextColors[y],e.fillStyle=x,H(m.before,g),b=m.lines,r&&b.length&&(this._drawColorBox(e,t,y,f,i),d=Math.max(c.lineHeight,a)),v=0,w=b.length;v<w;++v)g(b[v]),d=c.lineHeight;H(m.after,g)}u=0,d=c.lineHeight,H(this.afterBody,g),t.y-=n}drawFooter(t,e,i){const s=this.footer,n=s.length;let o,r;if(n){const a=Ze(i.rtl,this.x,this.width);for(t.x=Ln(this,i.footerAlign,i),t.y+=i.footerMarginTop,e.textAlign=a.textAlign(i.footerAlign),e.textBaseline="middle",o=pe(i.footerFont),e.fillStyle=i.footerColor,e.font=o.string,r=0;r<n;++r)e.fillText(s[r],a.x(t.x),t.y+o.lineHeight/2),t.y+=o.lineHeight+i.footerSpacing}}drawBackground(t,e,i,s){const{xAlign:n,yAlign:o}=this,{x:r,y:a}=t,{width:l,height:h}=i,{topLeft:c,topRight:d,bottomLeft:u,bottomRight:f}=fe(s.cornerRadius);e.fillStyle=s.backgroundColor,e.strokeStyle=s.borderColor,e.lineWidth=s.borderWidth,e.beginPath(),e.moveTo(r+c,a),"top"===o&&this.drawCaret(t,e,i,s),e.lineTo(r+l-d,a),e.quadraticCurveTo(r+l,a,r+l,a+d),"center"===o&&"right"===n&&this.drawCaret(t,e,i,s),e.lineTo(r+l,a+h-f),e.quadraticCurveTo(r+l,a+h,r+l-f,a+h),"bottom"===o&&this.drawCaret(t,e,i,s),e.lineTo(r+u,a+h),e.quadraticCurveTo(r,a+h,r,a+h-u),"center"===o&&"left"===n&&this.drawCaret(t,e,i,s),e.lineTo(r,a+c),e.quadraticCurveTo(r,a,r+c,a),e.closePath(),e.fill(),s.borderWidth>0&&e.stroke()}_updateAnimationTarget(t){const e=this.chart,i=this.$animations,s=i&&i.x,n=i&&i.y;if(s||n){const i=Dn[t.position].call(this,this._active,this._eventPosition);if(!i)return;const o=this._size=Cn(this,t),r=Object.assign({},i,this._size),a=An(e,t,r),l=En(t,r,a,e);s._to===l.x&&n._to===l.y||(this.xAlign=a.xAlign,this.yAlign=a.yAlign,this.width=o.width,this.height=o.height,this.caretX=i.x,this.caretY=i.y,this._resolveAnimations().update(this,l))}}_willRender(){return!!this.opacity}draw(t){const e=this.options.setContext(this.getContext());let i=this.opacity;if(!i)return;this._updateAnimationTarget(e);const s={width:this.width,height:this.height},n={x:this.x,y:this.y};i=Math.abs(i)<.001?0:i;const o=ge(e.padding),r=this.title.length||this.beforeBody.length||this.body.length||this.afterBody.length||this.footer.length;e.enabled&&r&&(t.save(),t.globalAlpha=i,this.drawBackground(n,t,s,e),Qe(t,e.textDirection),n.y+=o.top,this.drawTitle(n,t,e),this.drawBody(n,t,e),this.drawFooter(n,t,e),Je(t,e.textDirection),t.restore())}getActiveElements(){return this._active||[]}setActiveElements(t,e){const i=this._active,s=t.map(({datasetIndex:t,index:e})=>{const i=this.chart.getDatasetMeta(t);if(!i)throw new Error("Cannot find a dataset at index "+t);return{datasetIndex:t,element:i.data[e],index:e}}),n=!j(i,s),o=this._positionChanged(s,e);(n||o)&&(this._active=s,this._eventPosition=e,this._ignoreReplayEvents=!0,this.update(!0))}handleEvent(t,e,i=!0){if(e&&this._ignoreReplayEvents)return!1;this._ignoreReplayEvents=!1;const s=this.options,n=this._active||[],o=this._getActiveElements(t,n,e,i),r=this._positionChanged(o,t),a=e||!j(o,n)||r;return a&&(this._active=o,(s.enabled||s.external)&&(this._eventPosition={x:t.x,y:t.y},this.update(!0,e))),a}_getActiveElements(t,e,i,s){const n=this.options;if("mouseout"===t.type)return[];if(!s)return e.filter(t=>this.chart.data.datasets[t.datasetIndex]&&void 0!==this.chart.getDatasetMeta(t.datasetIndex).controller.getParsed(t.index));const o=this.chart.getElementsAtEventForMode(t,n.mode,n,i);return n.reverse&&o.reverse(),o}_positionChanged(t,e){const{caretX:i,caretY:s,options:n}=this,o=Dn[n.position].call(this,t,e);return!1!==o&&(i!==o.x||s!==o.y)}}var jn={id:"tooltip",_element:Hn,positioners:Dn,afterInit(t,e,i){i&&(t.tooltip=new Hn({chart:t,options:i}))},beforeUpdate(t,e,i){t.tooltip&&t.tooltip.initialize(i)},reset(t,e,i){t.tooltip&&t.tooltip.initialize(i)},afterDraw(t){const e=t.tooltip;if(e&&e._willRender()){const i={tooltip:e};if(!1===t.notifyPlugins("beforeTooltipDraw",{...i,cancelable:!0}))return;e.draw(t.ctx),t.notifyPlugins("afterTooltipDraw",i)}},afterEvent(t,e){if(t.tooltip){const i=e.replay;t.tooltip.handleEvent(e.event,i,e.inChartArea)&&(e.changed=!0)}},defaults:{enabled:!0,external:null,position:"average",backgroundColor:"rgba(0,0,0,0.8)",titleColor:"#fff",titleFont:{weight:"bold"},titleSpacing:2,titleMarginBottom:6,titleAlign:"left",bodyColor:"#fff",bodySpacing:2,bodyFont:{},bodyAlign:"left",footerColor:"#fff",footerSpacing:2,footerMarginTop:6,footerFont:{weight:"bold"},footerAlign:"left",padding:6,caretPadding:2,caretSize:5,cornerRadius:6,boxHeight:(t,e)=>e.bodyFont.size,boxWidth:(t,e)=>e.bodyFont.size,multiKeyBackground:"#fff",displayColors:!0,boxPadding:0,borderColor:"rgba(0,0,0,0)",borderWidth:0,animation:{duration:400,easing:"easeOutQuart"},animations:{numbers:{type:"number",properties:["x","y","width","height","caretX","caretY"]},opacity:{easing:"linear",duration:200}},callbacks:Bn},defaultRoutes:{bodyFont:"font",footerFont:"font",titleFont:"font"},descriptors:{_scriptable:t=>"filter"!==t&&"itemSort"!==t&&"external"!==t,_indexable:!1,callbacks:{_scriptable:!1,_indexable:!1},animation:{_fallback:!1},animations:{_fallback:"animation"}},additionalOptionScopes:["interaction"]};function Wn(t){const e=this.getLabels();return t>=0&&t<e.length?e[t]:t}function Vn(t,e,{horizontal:i,minRotation:s}){const n=ut(s),o=(i?Math.sin(n):Math.cos(n))||.001,r=.75*e*(""+t).length;return Math.min(e/o,r)}class Nn extends ms{constructor(t){super(t),this.start=void 0,this.end=void 0,this._startValue=void 0,this._endValue=void 0,this._valueRange=0}parse(t,e){return A(t)||("number"==typeof t||t instanceof Number)&&!isFinite(+t)?null:+t}handleTickRangeOptions(){const{beginAtZero:t}=this.options,{minDefined:e,maxDefined:i}=this.getUserBounds();let{min:s,max:n}=this;const o=t=>s=e?s:t,r=t=>n=i?n:t;if(t){const t=lt(s),e=lt(n);t<0&&e<0?r(0):t>0&&e>0&&o(0)}if(s===n){let e=0===n?1:Math.abs(.05*n);r(n+e),t||o(s-e)}this.min=s,this.max=n}getTickLimit(){const t=this.options.ticks;let e,{maxTicksLimit:i,stepSize:s}=t;return s?(e=Math.ceil(this.max/s)-Math.floor(this.min/s)+1,e>1e3&&(console.warn(`scales.${this.id}.ticks.stepSize: ${s} would result generating up to ${e} ticks. Limiting to 1000.`),e=1e3)):(e=this.computeTickLimit(),i=i||11),i&&(e=Math.min(i,e)),e}computeTickLimit(){return Number.POSITIVE_INFINITY}buildTicks(){const t=this.options,e=t.ticks;let i=this.getTickLimit();i=Math.max(2,i);const s=function(t,e){const i=[],{bounds:s,step:n,min:o,max:r,precision:a,count:l,maxTicks:h,maxDigits:c,includeBounds:d}=t,u=n||1,f=h-1,{min:g,max:p}=e,m=!A(o),x=!A(r),b=!A(l),y=(p-g)/(c+1);let v,_,w,M,k=ct((p-g)/f/u)*u;if(k<1e-14&&!m&&!x)return[{value:g},{value:p}];M=Math.ceil(p/k)-Math.floor(g/k),M>f&&(k=ct(M*k/f/u)*u),A(a)||(v=Math.pow(10,a),k=Math.ceil(k*v)/v),"ticks"===s?(_=Math.floor(g/k)*k,w=Math.ceil(p/k)*k):(_=g,w=p),m&&x&&n&&function(t,e){const i=Math.round(t);return i-e<=t&&i+e>=t}((r-o)/n,k/1e3)?(M=Math.round(Math.min((r-o)/k,h)),k=(r-o)/M,_=o,w=r):b?(_=m?o:_,w=x?r:w,M=l-1,k=(w-_)/M):(M=(w-_)/k,M=ht(M,Math.round(M),k/1e3)?Math.round(M):Math.ceil(M));const S=Math.max(ft(k),ft(_));v=Math.pow(10,A(a)?S:a),_=Math.round(_*v)/v,w=Math.round(w*v)/v;let D=0;for(m&&(d&&_!==o?(i.push({value:o}),_<o&&D++,ht(Math.round((_+D*k)*v)/v,o,Vn(o,y,t))&&D++):_<o&&D++);D<M;++D){const t=Math.round((_+D*k)*v)/v;if(x&&t>r)break;i.push({value:t})}return x&&d&&w!==r?i.length&&ht(i[i.length-1].value,r,Vn(r,y,t))?i[i.length-1].value=r:i.push({value:r}):x&&w!==r||i.push({value:w}),i}({maxTicks:i,bounds:t.bounds,min:t.min,max:t.max,precision:e.precision,step:e.stepSize,count:e.count,maxDigits:this._maxDigits(),horizontal:this.isHorizontal(),minRotation:e.minRotation||0,includeBounds:!1!==e.includeBounds},this._range||this);return"ticks"===t.bounds&&function(t,e,i){let s,n,o;for(s=0,n=t.length;s<n;s++)o=t[s][i],isNaN(o)||(e.min=Math.min(e.min,o),e.max=Math.max(e.max,o))}(s,this,"value"),t.reverse?(s.reverse(),this.start=this.max,this.end=this.min):(this.start=this.min,this.end=this.max),s}configure(){const t=this.ticks;let e=this.min,i=this.max;if(super.configure(),this.options.offset&&t.length){const s=(i-e)/Math.max(t.length-1,1)/2;e-=s,i+=s}this._startValue=e,this._endValue=i,this._valueRange=i-e}getLabelForValue(t){return Ht(t,this.chart.options.locale,this.options.ticks.format)}}class $n extends Nn{static id="linear";static defaults={ticks:{callback:Wt.formatters.numeric}};determineDataLimits(){const{min:t,max:e}=this.getMinMax(!0);this.min=z(t)?t:0,this.max=z(e)?e:1,this.handleTickRangeOptions()}computeTickLimit(){const t=this.isHorizontal(),e=t?this.width:this.height,i=ut(this.options.ticks.minRotation),s=(t?Math.sin(i):Math.cos(i))||.001,n=this._resolveTickFontOptions(0);return Math.ceil(e/Math.min(40,n.lineHeight/s))}getPixelForValue(t){return null===t?NaN:this.getPixelForDecimal((t-this._startValue)/this._valueRange)}getValueForPixel(t){return this._startValue+this.getDecimalForPixel(t)*this._valueRange}}function Yn(t){return Yn="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(t){return typeof t}:function(t){return t&&"function"==typeof Symbol&&t.constructor===Symbol&&t!==Symbol.prototype?"symbol":typeof t},Yn(t)}function Un(t){return function(t){if(Array.isArray(t))return qn(t)}(t)||function(t){if("undefined"!=typeof Symbol&&null!=t[Symbol.iterator]||null!=t["@@iterator"])return Array.from(t)}(t)||function(t,e){if(t){if("string"==typeof t)return qn(t,e);var i={}.toString.call(t).slice(8,-1);return"Object"===i&&t.constructor&&(i=t.constructor.name),"Map"===i||"Set"===i?Array.from(t):"Arguments"===i||/^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(i)?qn(t,e):void 0}}(t)||function(){throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.")}()}function qn(t,e){(null==e||e>t.length)&&(e=t.length);for(var i=0,s=Array(e);i<e;i++)s[i]=t[i];return s}function Xn(t,e){var i=Object.keys(t);if(Object.getOwnPropertySymbols){var s=Object.getOwnPropertySymbols(t);e&&(s=s.filter(function(e){return Object.getOwnPropertyDescriptor(t,e).enumerable})),i.push.apply(i,s)}return i}function Kn(t){for(var e=1;e<arguments.length;e++){var i=null!=arguments[e]?arguments[e]:{};e%2?Xn(Object(i),!0).forEach(function(e){Gn(t,e,i[e])}):Object.getOwnPropertyDescriptors?Object.defineProperties(t,Object.getOwnPropertyDescriptors(i)):Xn(Object(i)).forEach(function(e){Object.defineProperty(t,e,Object.getOwnPropertyDescriptor(i,e))})}return t}function Gn(t,e,i){return(e=function(t){var e=function(t){if("object"!=Yn(t)||!t)return t;var e=t[Symbol.toPrimitive];if(void 0!==e){var i=e.call(t,"string");if("object"!=Yn(i))return i;throw new TypeError("@@toPrimitive must return a primitive value.")}return String(t)}(t);return"symbol"==Yn(e)?e:e+""}(e))in t?Object.defineProperty(t,e,{value:i,enumerable:!0,configurable:!0,writable:!0}):t[e]=i,t}Wt.formatters.logarithmic,Wt.formatters.numeric,Us.register(class extends Si{static id="line";static defaults={datasetElementType:"line",dataElementType:"point",showLine:!0,spanGaps:!1};static overrides={scales:{_index_:{type:"category"},_value_:{type:"linear"}}};initialize(){this.enableOptionSharing=!0,this.supportsDecimation=!0,super.initialize()}update(t){const e=this._cachedMeta,{dataset:i,data:s=[],_dataset:n}=e,o=this.chart._animationsDisabled;let{start:r,count:a}=function(t,e,i){const s=e.length;let n=0,o=s;if(t._sorted){const{iScale:r,vScale:a,_parsed:l}=t,h=t.dataset&&t.dataset.options?t.dataset.options.spanGaps:null,c=r.axis,{min:d,max:u,minDefined:f,maxDefined:g}=r.getUserBounds();if(f){if(n=Math.min(_t(l,c,d).lo,i?s:_t(e,c,r.getPixelForValue(d)).lo),h){const t=l.slice(0,n+1).reverse().findIndex(t=>!A(t[a.axis]));n-=Math.max(0,t)}n=bt(n,0,s-1)}if(g){let t=Math.max(_t(l,r.axis,u,!0).hi+1,i?0:_t(e,c,r.getPixelForValue(u),!0).hi+1);if(h){const e=l.slice(t-1).findIndex(t=>!A(t[a.axis]));t+=Math.max(0,e)}o=bt(t,n,s)-n}else o=s-n}return{start:n,count:o}}(e,s,o);this._drawStart=r,this._drawCount=a,function(t){const{xScale:e,yScale:i,_scaleRanges:s}=t,n={xmin:e.min,xmax:e.max,ymin:i.min,ymax:i.max};if(!s)return t._scaleRanges=n,!0;const o=s.xmin!==e.min||s.xmax!==e.max||s.ymin!==i.min||s.ymax!==i.max;return Object.assign(s,n),o}(e)&&(r=0,a=s.length),i._chart=this.chart,i._datasetIndex=this.index,i._decimated=!!n._decimated,i.points=s;const l=this.resolveDatasetElementOptions(t);this.options.showLine||(l.borderWidth=0),l.segment=this.options.segment,this.updateElement(i,void 0,{animated:!o,options:l},t),this.updateElements(s,r,a,t)}updateElements(t,e,i,s){const n="reset"===s,{iScale:o,vScale:r,_stacked:a,_dataset:l}=this._cachedMeta,{sharedOptions:h,includeOptions:c}=this._getSharedOptions(e,s),d=o.axis,u=r.axis,{spanGaps:f,segment:g}=this.options,p=dt(f)?f:Number.POSITIVE_INFINITY,m=this.chart._animationsDisabled||n||"none"===s,x=e+i,b=t.length;let y=e>0&&this.getParsed(e-1);for(let i=0;i<b;++i){const f=t[i],b=m?f:{};if(i<e||i>=x){b.skip=!0;continue}const v=this.getParsed(i),_=A(v[u]),w=b[d]=o.getPixelForValue(v[d],i),M=b[u]=n||_?r.getBasePixel():r.getPixelForValue(a?this.applyStack(r,v,a):v[u],i);b.skip=isNaN(w)||isNaN(M)||_,b.stop=i>0&&Math.abs(v[d]-y[d])>p,g&&(b.parsed=v,b.raw=l.data[i]),c&&(b.options=h||this.resolveDataElementOptions(i,f.active?"active":s)),m||this.updateElement(f,i,b,s),y=v}}getMaxOverflow(){const t=this._cachedMeta,e=t.dataset,i=e.options&&e.options.borderWidth||0,s=t.data||[];if(!s.length)return i;const n=s[0].size(this.resolveDataElementOptions(0)),o=s[s.length-1].size(this.resolveDataElementOptions(s.length-1));return Math.max(i,n,o)/2}draw(){const t=this._cachedMeta;t.dataset.updateControlPoints(this.chart.chartArea,t.iScale.axis),super.draw()}},en,class extends as{static id="point";parsed;skip;stop;static defaults={borderWidth:1,hitRadius:1,hoverBorderWidth:1,hoverRadius:4,pointStyle:"circle",radius:3,rotation:0};static defaultRoutes={backgroundColor:"backgroundColor",borderColor:"borderColor"};constructor(t){super(),this.options=void 0,this.parsed=void 0,this.skip=void 0,this.stop=void 0,t&&Object.assign(this,t)}inRange(t,e,i){const s=this.options,{x:n,y:o}=this.getProps(["x","y"],i);return Math.pow(t-n,2)+Math.pow(e-o,2)<Math.pow(s.hitRadius+s.radius,2)}inXRange(t,e){return sn(this,t,"x",e)}inYRange(t,e){return sn(this,t,"y",e)}getCenterPoint(t){const{x:e,y:i}=this.getProps(["x","y"],t);return{x:e,y:i}}size(t){let e=(t=t||this.options||{}).radius||0;return e=Math.max(e,e&&t.hoverRadius||0),2*(e+(e&&t.borderWidth||0))}draw(t,e){const i=this.options;this.skip||i.radius<.1||!Jt(this,e,this.size(i)/2)||(t.strokeStyle=i.borderColor,t.lineWidth=i.borderWidth,t.fillStyle=i.backgroundColor,Zt(t,i,this.x,this.y))}getRange(){const t=this.options||{};return t.radius+t.hitRadius}},$n,class extends ms{static id="category";static defaults={ticks:{callback:Wn}};constructor(t){super(t),this._startValue=void 0,this._valueRange=0,this._addedLabels=[]}init(t){const e=this._addedLabels;if(e.length){const t=this.getLabels();for(const{index:i,label:s}of e)t[i]===s&&t.splice(i,1);this._addedLabels=[]}super.init(t)}parse(t,e){if(A(t))return null;const i=this.getLabels();return((t,e)=>null===t?null:bt(Math.round(t),0,e))(e=isFinite(e)&&i[e]===t?e:function(t,e,i,s){const n=t.indexOf(e);return-1===n?((t,e,i,s)=>("string"==typeof e?(i=t.push(e)-1,s.unshift({index:i,label:e})):isNaN(e)&&(i=null),i))(t,e,i,s):n!==t.lastIndexOf(e)?i:n}(i,t,B(e,t),this._addedLabels),i.length-1)}determineDataLimits(){const{minDefined:t,maxDefined:e}=this.getUserBounds();let{min:i,max:s}=this.getMinMax(!0);"ticks"===this.options.bounds&&(t||(i=0),e||(s=this.getLabels().length-1)),this.min=i,this.max=s}buildTicks(){const t=this.min,e=this.max,i=this.options.offset,s=[];let n=this.getLabels();n=0===t&&e===n.length-1?n:n.slice(t,e+1),this._valueRange=Math.max(n.length-(i?0:1),1),this._startValue=this.min-(i?.5:0);for(let i=t;i<=e;i++)s.push({value:i});return s}getLabelForValue(t){return Wn.call(this,t)}configure(){super.configure(),this.isHorizontal()||(this._reversePixels=!this._reversePixels)}getPixelForValue(t){return"number"!=typeof t&&(t=this.parse(t)),null===t?NaN:this.getPixelForDecimal((t-this._startValue)/this._valueRange)}getPixelForTick(t){const e=this.ticks;return t<0||t>e.length-1?null:this.getPixelForValue(e[t].value)}getValueForPixel(t){return Math.round(this._startValue+this.getDecimalForPixel(t)*this._valueRange)}getBasePixel(){return this.bottom}},vn,Sn,jn),document.addEventListener("DOMContentLoaded",function(){var t=document.getElementById("account-selector"),e=document.getElementById("period-selector"),i=document.getElementById("date-range-text"),s=document.querySelector(".insights-container"),n=document.getElementById("followers-chart-note"),o=null,r=null,a=!1,l=[];function h(){a=!1,s&&s.classList.remove("is-loading"),document.querySelectorAll(".skeleton").forEach(function(t){t.classList.remove("skeleton")}),document.querySelectorAll(".chart-loading-overlay").forEach(function(t){return t.remove()});var t=document.querySelector(".posts-loading-placeholder");t&&t.remove();var e=document.getElementById("recent-posts");e&&e.classList.remove("is-loading")}function c(t){h();var e=document.querySelector(".insights-error");e&&e.remove();var i=document.createElement("div");i.className="insights-error notice notice-error",i.innerHTML="\n            <p><strong>".concat(wpzoomInsights.i18n.error||"Error",":</strong> ").concat(t,'</p>\n            <button type="button" class="notice-dismiss" aria-label="').concat(wpzoomInsights.i18n.dismiss||"Dismiss",'">\n                <span class="screen-reader-text">').concat(wpzoomInsights.i18n.dismiss||"Dismiss this notice.","</span>\n            </button>\n        ");var n=document.querySelector(".insights-header");n?n.after(i):s&&s.prepend(i);var o=i.querySelector(".notice-dismiss");o&&o.addEventListener("click",function(){i.remove()}),setTimeout(function(){i.parentNode&&(i.classList.add("fade-out"),setTimeout(function(){return i.remove()},300))},1e4)}function d(t){return null==t?"-":(new Intl.NumberFormat).format(t)}function u(t){return null==t?"-":arguments.length>1&&void 0!==arguments[1]&&arguments[1]?(new Intl.NumberFormat).format(t):t>=1e6?(t/1e6).toFixed(1).replace(/\.0$/,"")+"M":t>=1e3?(t/1e3).toFixed(1).replace(/\.0$/,"")+"k":t.toString()}function f(t){return t?new Date(t).toLocaleDateString(void 0,{month:"short",day:"numeric"}):""}function g(t){if(!t)return"";var e=document.createElement("div");return e.textContent=t,e.innerHTML}function p(t,e){if(t){var p=function(t){var e=new Date,i=new Date;switch(t){case"this_month":i=new Date(e.getFullYear(),e.getMonth(),1);break;case"last_month":i=new Date(e.getFullYear(),e.getMonth()-1,1),e.setDate(0);break;default:i.setDate(e.getDate()-parseInt(t))}return{since:i.toISOString().split("T")[0],until:e.toISOString().split("T")[0]}}(e),m=parseInt(e)||30;n&&(n.style.display=m>30?"block":"none"),document.querySelectorAll(".insights-error").forEach(function(t){return t.remove()}),function(){if(!a){a=!0,s&&s.classList.add("is-loading"),document.querySelectorAll(".metric-value").forEach(function(t){t.classList.add("skeleton"),t.setAttribute("data-original",t.textContent),t.textContent=""}),document.querySelectorAll(".metric-change").forEach(function(t){t.classList.add("skeleton"),t.setAttribute("data-original",t.textContent),t.textContent=""}),document.querySelectorAll(".chart-container").forEach(function(t){if(!t.querySelector(".chart-loading-overlay")){var e=document.createElement("div");e.className="chart-loading-overlay",e.innerHTML='<div class="loading-spinner"></div>',t.appendChild(e)}});var t=document.getElementById("recent-posts");if(t&&(t.classList.add("is-loading"),!t.querySelector(".posts-loading-placeholder"))){var e=document.createElement("div");e.className="posts-loading-placeholder",e.innerHTML='\n                    <div class="post-skeleton"></div>\n                    <div class="post-skeleton"></div>\n                    <div class="post-skeleton"></div>\n                ',t.appendChild(e)}}}(),jQuery.ajax({url:wpzoomInsights.ajaxurl,type:"POST",data:{action:"wpzoom_instagram_fetch_insights",nonce:wpzoomInsights.nonce,account_id:t,since_date:p.since,until_date:p.until},success:function(t){h(),t.success&&t.data?(function(t,e){if(i){var s=function(t){return new Date(t).toLocaleDateString(void 0,{year:"numeric",month:"short",day:"numeric"})};i.textContent=wpzoomInsights.i18n.dateRangeFormat.replace("%s",s(t)).replace("%s",s(e))}}(p.since,p.until),function(t){if(t.followers_stats){var e=t.followers_stats,i=document.getElementById("followers-count");i&&(i.textContent=d(e.total))}if(t.new_followers&&t.new_followers.length>0){var s=document.getElementById("new-followers");if(s){var n=t.new_followers[0].value;s.textContent="+"+d(n)}}if(t.lost_followers&&t.lost_followers.length>0){var a=document.getElementById("lost-followers");if(a){var h=t.lost_followers[0].value;a.textContent="-"+d(h)}}if(t.net_followers&&t.net_followers.length>0){var c=document.getElementById("net-followers");if(c){var p=t.net_followers[0].value;c.textContent=(p>=0?"+":"")+d(p),c.classList.remove("positive","negative"),p>0?c.classList.add("positive"):p<0&&c.classList.add("negative")}}if(t.reach&&t.reach.length>0){var m=t.reach.reduce(function(t,e){return t+e.value},0),x=document.getElementById("reach-count");if(x&&(x.textContent=d(m)),t.reach.length>1){var b=Math.floor(t.reach.length/2),y=t.reach.slice(0,b).reduce(function(t,e){return t+e.value},0),v=(k=t.reach.slice(b).reduce(function(t,e){return t+e.value},0),0===(M=y)?k>0?100:0:(k-M)/M*100),_=document.getElementById("reach-change");_&&(_.textContent=null==(w=v)?"-":(w>=0?"+":"")+w.toFixed(1)+"%",function(t,e){var i=document.getElementById("reach-change");i&&(i.classList.remove("positive","negative"),e>0?i.classList.add("positive"):e<0&&i.classList.add("negative"))}(0,v))}}var w,M,k,S,D;if(t.impressions&&t.impressions.length>0){var P=t.impressions.reduce(function(t,e){return t+e.value},0),I=document.getElementById("impressions-count");I&&(I.textContent=d(P));var O=document.getElementById("impressions-change");O&&(O.textContent=wpzoomInsights.i18n.totalPeriod||"Total for period",O.classList.remove("positive","negative"))}if(t.accounts_engaged&&t.accounts_engaged.length>0){var C=t.accounts_engaged[0].value,T=document.getElementById("engagement-count");T&&(T.textContent=d(C));var A=document.getElementById("engagement-change");A&&(A.textContent=wpzoomInsights.i18n.totalPeriod||"Total for period",A.classList.remove("positive","negative"))}if(t.likes&&t.likes.length>0){var E=t.likes.reduce(function(t,e){return t+e.value},0),L=document.getElementById("total-likes-count");L&&(L.textContent=d(E));var z=document.getElementById("total-likes-change");z&&(z.textContent=wpzoomInsights.i18n.totalPeriod||"Total for period",z.classList.remove("positive","negative"))}t.recent_media&&(S=t.recent_media,(D=document.getElementById("recent-posts"))&&(D.innerHTML="",S&&0!==S.length?S.forEach(function(t){var e=document.createElement("div");e.className="recent-post";var i="VIDEO"===t.type||"REEL"===t.type?'\n                <div class="stat">\n                    <span class="label">'.concat(wpzoomInsights.i18n.videoViews||"Video Views",':</span>\n                    <span class="value">').concat(d(t.insights.video_views||0),"</span>\n                </div>\n            "):"";e.innerHTML='\n                <div class="post-thumbnail">\n                    <img src="'.concat(g(t.thumbnail),'" alt="').concat(g(t.caption),'" loading="lazy">\n                    ').concat("VIDEO"===t.type||"REEL"===t.type?'<span class="media-type-badge">VIDEO</span>':"",'\n                </div>\n                <div class="post-content">\n                    <div class="post-caption">').concat(g(t.caption),'</div>\n                    <div class="post-stats">\n                        <div class="stat">\n                            <span class="label">').concat(wpzoomInsights.i18n.impressionsLabel||"Impressions",':</span>\n                            <span class="value">').concat(d(t.insights.impressions||0),'</span>\n                        </div>\n                        <div class="stat">\n                            <span class="label">').concat(wpzoomInsights.i18n.reachLabel||"Reach",':</span>\n                            <span class="value">').concat(d(t.insights.reach||0),'</span>\n                        </div>\n                        <div class="stat">\n                            <span class="label">').concat(wpzoomInsights.i18n.likes||"Likes",':</span>\n                            <span class="value">').concat(d(t.likes||0),'</span>\n                        </div>\n                        <div class="stat">\n                            <span class="label">').concat(wpzoomInsights.i18n.comments||"Comments",':</span>\n                            <span class="value">').concat(d(t.comments||0),'</span>\n                        </div>\n                        <div class="stat">\n                            <span class="label">').concat(wpzoomInsights.i18n.saved||"Saved",':</span>\n                            <span class="value">').concat(d(t.insights.saved||0),"</span>\n                        </div>\n                        ").concat(i,'\n                        <div class="stat">\n                            <span class="label">').concat(wpzoomInsights.i18n.interactions||"Total Interactions",':</span>\n                            <span class="value">').concat(d(t.insights.total_interactions||0),'</span>\n                        </div>\n                    </div>\n                    <div class="post-meta">\n                        <a href="').concat(g(t.url),'" target="_blank" rel="noopener noreferrer" class="view-post">\n                            ').concat(wpzoomInsights.i18n.viewPost||"View Post",'\n                        </a>\n                        <span class="post-date">').concat(f(t.timestamp),"</span>\n                    </div>\n                </div>\n            "),D.appendChild(e)}):D.innerHTML='<p class="no-posts">'.concat(wpzoomInsights.i18n.noPosts||"No recent posts found.","</p>"))),function(t){if(o&&r){if(t.follower_count&&t.follower_count.length>0&&t.followers_stats){var e=t.follower_count.map(function(t){return f(t.end_time)});l=t.follower_count.map(function(t){return t.value});var i=t.followers_stats.period_start||0,s=t.followers_stats.period_end||t.followers_stats.total||0,n=function(t,e,i){var s=0,n=t.map(function(t){return s+=t.value});if(0===n.length)return[];var o=n[n.length-1],r=i-e;if(0===o||o===r)return n.map(function(t,i){return e+(0===o?0:t)});var a=r/o;return n.map(function(t){return Math.round(e+t*a)})}(t.follower_count,i,s),a=function(t){if(!t||0===t.length)return function(t){return u(t)};var e=Math.min.apply(Math,Un(t)),i=Math.max.apply(Math,Un(t)),s=i-e,n=s<.05*i||s<100;return function(t){return u(t,n)}}(n);o.options.scales.y.ticks.callback=a,o.data.labels=e,o.data.datasets[0].data=n,o.update()}else l=[],o.data.labels=[],o.data.datasets[0].data=[],o.update();if(t.reach&&t.reach.length>0){var h=t.reach.map(function(t){return f(t.end_time)}),c=t.reach.map(function(t){return t.value});r.data.labels=h,r.data.datasets[0].data=c,r.update()}else r.data.labels=[],r.data.datasets[0].data=[],r.update()}}(t)}(t.data)):c(t.data||wpzoomInsights.i18n.fetchError||"Failed to fetch insights data.")},error:function(t,e,i){h();var s=wpzoomInsights.i18n.networkError||"Network error occurred. Please try again.";0===t.status?s=wpzoomInsights.i18n.connectionError||"Could not connect to server. Please check your connection.":403===t.status?s=wpzoomInsights.i18n.permissionError||"You do not have permission to access this data.":500===t.status&&(s=wpzoomInsights.i18n.serverError||"Server error occurred. Please try again later."),c(s),console.error("Insights fetch error:",e,i)}})}else c(wpzoomInsights.i18n.noAccount||"No account selected.")}t&&e&&(function(){var t=document.getElementById("followers-chart"),e=document.getElementById("engagement-chart");if(t&&e){var i={responsive:!0,maintainAspectRatio:!1,plugins:{legend:{position:"top"}},scales:{y:{beginAtZero:!0}}};o=new Us(t.getContext("2d"),{type:"line",data:{labels:[],datasets:[{label:wpzoomInsights.i18n.followerGrowth||"Follower growth",data:[],borderColor:"rgb(66, 133, 244)",backgroundColor:"rgba(66, 133, 244, 0.1)",tension:.3,fill:!0,pointRadius:4,pointBackgroundColor:"#fff",pointBorderColor:"rgb(66, 133, 244)",pointBorderWidth:2,pointHoverRadius:6}]},options:Kn(Kn({},i),{},{plugins:Kn(Kn({},i.plugins),{},{legend:{display:!1},tooltip:{callbacks:{label:function(t){var e=t.parsed.y,i=t.dataIndex,s=l[i]||0,n=s>=0?"+":"";return["".concat(wpzoomInsights.i18n.followers||"Followers",": ").concat(d(e)),"".concat(n).concat(s," ").concat(wpzoomInsights.i18n.followersChange||"followers")]}}}}),scales:{y:{beginAtZero:!1,grid:{color:"rgba(0, 0, 0, 0.1)"},ticks:{callback:function(t){return u(t)}}}}})}),r=new Us(e.getContext("2d"),{type:"line",data:{labels:[],datasets:[{label:wpzoomInsights.i18n.reach,data:[],borderColor:"rgb(255, 99, 132)",backgroundColor:"rgba(255, 99, 132, 0.1)",tension:.1,fill:!0}]},options:i})}}(),p(t.value,e.value),t.addEventListener("change",function(){p(this.value,e.value)}),e.addEventListener("change",function(){p(t.value,this.value)}))})})();
+/******/ (() => { // webpackBootstrap
+/******/ 	"use strict";
+/******/ 	var __webpack_modules__ = ({
+
+/***/ "./node_modules/@kurkle/color/dist/color.esm.js"
+/*!******************************************************!*\
+  !*** ./node_modules/@kurkle/color/dist/color.esm.js ***!
+  \******************************************************/
+(__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   Color: () => (/* binding */ Color),
+/* harmony export */   b2n: () => (/* binding */ b2n),
+/* harmony export */   b2p: () => (/* binding */ b2p),
+/* harmony export */   "default": () => (/* binding */ index_esm),
+/* harmony export */   hexParse: () => (/* binding */ hexParse),
+/* harmony export */   hexString: () => (/* binding */ hexString),
+/* harmony export */   hsl2rgb: () => (/* binding */ hsl2rgb),
+/* harmony export */   hslString: () => (/* binding */ hslString),
+/* harmony export */   hsv2rgb: () => (/* binding */ hsv2rgb),
+/* harmony export */   hueParse: () => (/* binding */ hueParse),
+/* harmony export */   hwb2rgb: () => (/* binding */ hwb2rgb),
+/* harmony export */   lim: () => (/* binding */ lim),
+/* harmony export */   n2b: () => (/* binding */ n2b),
+/* harmony export */   n2p: () => (/* binding */ n2p),
+/* harmony export */   nameParse: () => (/* binding */ nameParse),
+/* harmony export */   p2b: () => (/* binding */ p2b),
+/* harmony export */   rgb2hsl: () => (/* binding */ rgb2hsl),
+/* harmony export */   rgbParse: () => (/* binding */ rgbParse),
+/* harmony export */   rgbString: () => (/* binding */ rgbString),
+/* harmony export */   rotate: () => (/* binding */ rotate),
+/* harmony export */   round: () => (/* binding */ round)
+/* harmony export */ });
+/*!
+ * @kurkle/color v0.3.4
+ * https://github.com/kurkle/color#readme
+ * (c) 2024 Jukka Kurkela
+ * Released under the MIT License
+ */
+function round(v) {
+  return v + 0.5 | 0;
+}
+const lim = (v, l, h) => Math.max(Math.min(v, h), l);
+function p2b(v) {
+  return lim(round(v * 2.55), 0, 255);
+}
+function b2p(v) {
+  return lim(round(v / 2.55), 0, 100);
+}
+function n2b(v) {
+  return lim(round(v * 255), 0, 255);
+}
+function b2n(v) {
+  return lim(round(v / 2.55) / 100, 0, 1);
+}
+function n2p(v) {
+  return lim(round(v * 100), 0, 100);
+}
+
+const map$1 = {0: 0, 1: 1, 2: 2, 3: 3, 4: 4, 5: 5, 6: 6, 7: 7, 8: 8, 9: 9, A: 10, B: 11, C: 12, D: 13, E: 14, F: 15, a: 10, b: 11, c: 12, d: 13, e: 14, f: 15};
+const hex = [...'0123456789ABCDEF'];
+const h1 = b => hex[b & 0xF];
+const h2 = b => hex[(b & 0xF0) >> 4] + hex[b & 0xF];
+const eq = b => ((b & 0xF0) >> 4) === (b & 0xF);
+const isShort = v => eq(v.r) && eq(v.g) && eq(v.b) && eq(v.a);
+function hexParse(str) {
+  var len = str.length;
+  var ret;
+  if (str[0] === '#') {
+    if (len === 4 || len === 5) {
+      ret = {
+        r: 255 & map$1[str[1]] * 17,
+        g: 255 & map$1[str[2]] * 17,
+        b: 255 & map$1[str[3]] * 17,
+        a: len === 5 ? map$1[str[4]] * 17 : 255
+      };
+    } else if (len === 7 || len === 9) {
+      ret = {
+        r: map$1[str[1]] << 4 | map$1[str[2]],
+        g: map$1[str[3]] << 4 | map$1[str[4]],
+        b: map$1[str[5]] << 4 | map$1[str[6]],
+        a: len === 9 ? (map$1[str[7]] << 4 | map$1[str[8]]) : 255
+      };
+    }
+  }
+  return ret;
+}
+const alpha = (a, f) => a < 255 ? f(a) : '';
+function hexString(v) {
+  var f = isShort(v) ? h1 : h2;
+  return v
+    ? '#' + f(v.r) + f(v.g) + f(v.b) + alpha(v.a, f)
+    : undefined;
+}
+
+const HUE_RE = /^(hsla?|hwb|hsv)\(\s*([-+.e\d]+)(?:deg)?[\s,]+([-+.e\d]+)%[\s,]+([-+.e\d]+)%(?:[\s,]+([-+.e\d]+)(%)?)?\s*\)$/;
+function hsl2rgbn(h, s, l) {
+  const a = s * Math.min(l, 1 - l);
+  const f = (n, k = (n + h / 30) % 12) => l - a * Math.max(Math.min(k - 3, 9 - k, 1), -1);
+  return [f(0), f(8), f(4)];
+}
+function hsv2rgbn(h, s, v) {
+  const f = (n, k = (n + h / 60) % 6) => v - v * s * Math.max(Math.min(k, 4 - k, 1), 0);
+  return [f(5), f(3), f(1)];
+}
+function hwb2rgbn(h, w, b) {
+  const rgb = hsl2rgbn(h, 1, 0.5);
+  let i;
+  if (w + b > 1) {
+    i = 1 / (w + b);
+    w *= i;
+    b *= i;
+  }
+  for (i = 0; i < 3; i++) {
+    rgb[i] *= 1 - w - b;
+    rgb[i] += w;
+  }
+  return rgb;
+}
+function hueValue(r, g, b, d, max) {
+  if (r === max) {
+    return ((g - b) / d) + (g < b ? 6 : 0);
+  }
+  if (g === max) {
+    return (b - r) / d + 2;
+  }
+  return (r - g) / d + 4;
+}
+function rgb2hsl(v) {
+  const range = 255;
+  const r = v.r / range;
+  const g = v.g / range;
+  const b = v.b / range;
+  const max = Math.max(r, g, b);
+  const min = Math.min(r, g, b);
+  const l = (max + min) / 2;
+  let h, s, d;
+  if (max !== min) {
+    d = max - min;
+    s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+    h = hueValue(r, g, b, d, max);
+    h = h * 60 + 0.5;
+  }
+  return [h | 0, s || 0, l];
+}
+function calln(f, a, b, c) {
+  return (
+    Array.isArray(a)
+      ? f(a[0], a[1], a[2])
+      : f(a, b, c)
+  ).map(n2b);
+}
+function hsl2rgb(h, s, l) {
+  return calln(hsl2rgbn, h, s, l);
+}
+function hwb2rgb(h, w, b) {
+  return calln(hwb2rgbn, h, w, b);
+}
+function hsv2rgb(h, s, v) {
+  return calln(hsv2rgbn, h, s, v);
+}
+function hue(h) {
+  return (h % 360 + 360) % 360;
+}
+function hueParse(str) {
+  const m = HUE_RE.exec(str);
+  let a = 255;
+  let v;
+  if (!m) {
+    return;
+  }
+  if (m[5] !== v) {
+    a = m[6] ? p2b(+m[5]) : n2b(+m[5]);
+  }
+  const h = hue(+m[2]);
+  const p1 = +m[3] / 100;
+  const p2 = +m[4] / 100;
+  if (m[1] === 'hwb') {
+    v = hwb2rgb(h, p1, p2);
+  } else if (m[1] === 'hsv') {
+    v = hsv2rgb(h, p1, p2);
+  } else {
+    v = hsl2rgb(h, p1, p2);
+  }
+  return {
+    r: v[0],
+    g: v[1],
+    b: v[2],
+    a: a
+  };
+}
+function rotate(v, deg) {
+  var h = rgb2hsl(v);
+  h[0] = hue(h[0] + deg);
+  h = hsl2rgb(h);
+  v.r = h[0];
+  v.g = h[1];
+  v.b = h[2];
+}
+function hslString(v) {
+  if (!v) {
+    return;
+  }
+  const a = rgb2hsl(v);
+  const h = a[0];
+  const s = n2p(a[1]);
+  const l = n2p(a[2]);
+  return v.a < 255
+    ? `hsla(${h}, ${s}%, ${l}%, ${b2n(v.a)})`
+    : `hsl(${h}, ${s}%, ${l}%)`;
+}
+
+const map = {
+	x: 'dark',
+	Z: 'light',
+	Y: 're',
+	X: 'blu',
+	W: 'gr',
+	V: 'medium',
+	U: 'slate',
+	A: 'ee',
+	T: 'ol',
+	S: 'or',
+	B: 'ra',
+	C: 'lateg',
+	D: 'ights',
+	R: 'in',
+	Q: 'turquois',
+	E: 'hi',
+	P: 'ro',
+	O: 'al',
+	N: 'le',
+	M: 'de',
+	L: 'yello',
+	F: 'en',
+	K: 'ch',
+	G: 'arks',
+	H: 'ea',
+	I: 'ightg',
+	J: 'wh'
+};
+const names$1 = {
+	OiceXe: 'f0f8ff',
+	antiquewEte: 'faebd7',
+	aqua: 'ffff',
+	aquamarRe: '7fffd4',
+	azuY: 'f0ffff',
+	beige: 'f5f5dc',
+	bisque: 'ffe4c4',
+	black: '0',
+	blanKedOmond: 'ffebcd',
+	Xe: 'ff',
+	XeviTet: '8a2be2',
+	bPwn: 'a52a2a',
+	burlywood: 'deb887',
+	caMtXe: '5f9ea0',
+	KartYuse: '7fff00',
+	KocTate: 'd2691e',
+	cSO: 'ff7f50',
+	cSnflowerXe: '6495ed',
+	cSnsilk: 'fff8dc',
+	crimson: 'dc143c',
+	cyan: 'ffff',
+	xXe: '8b',
+	xcyan: '8b8b',
+	xgTMnPd: 'b8860b',
+	xWay: 'a9a9a9',
+	xgYF: '6400',
+	xgYy: 'a9a9a9',
+	xkhaki: 'bdb76b',
+	xmagFta: '8b008b',
+	xTivegYF: '556b2f',
+	xSange: 'ff8c00',
+	xScEd: '9932cc',
+	xYd: '8b0000',
+	xsOmon: 'e9967a',
+	xsHgYF: '8fbc8f',
+	xUXe: '483d8b',
+	xUWay: '2f4f4f',
+	xUgYy: '2f4f4f',
+	xQe: 'ced1',
+	xviTet: '9400d3',
+	dAppRk: 'ff1493',
+	dApskyXe: 'bfff',
+	dimWay: '696969',
+	dimgYy: '696969',
+	dodgerXe: '1e90ff',
+	fiYbrick: 'b22222',
+	flSOwEte: 'fffaf0',
+	foYstWAn: '228b22',
+	fuKsia: 'ff00ff',
+	gaRsbSo: 'dcdcdc',
+	ghostwEte: 'f8f8ff',
+	gTd: 'ffd700',
+	gTMnPd: 'daa520',
+	Way: '808080',
+	gYF: '8000',
+	gYFLw: 'adff2f',
+	gYy: '808080',
+	honeyMw: 'f0fff0',
+	hotpRk: 'ff69b4',
+	RdianYd: 'cd5c5c',
+	Rdigo: '4b0082',
+	ivSy: 'fffff0',
+	khaki: 'f0e68c',
+	lavFMr: 'e6e6fa',
+	lavFMrXsh: 'fff0f5',
+	lawngYF: '7cfc00',
+	NmoncEffon: 'fffacd',
+	ZXe: 'add8e6',
+	ZcSO: 'f08080',
+	Zcyan: 'e0ffff',
+	ZgTMnPdLw: 'fafad2',
+	ZWay: 'd3d3d3',
+	ZgYF: '90ee90',
+	ZgYy: 'd3d3d3',
+	ZpRk: 'ffb6c1',
+	ZsOmon: 'ffa07a',
+	ZsHgYF: '20b2aa',
+	ZskyXe: '87cefa',
+	ZUWay: '778899',
+	ZUgYy: '778899',
+	ZstAlXe: 'b0c4de',
+	ZLw: 'ffffe0',
+	lime: 'ff00',
+	limegYF: '32cd32',
+	lRF: 'faf0e6',
+	magFta: 'ff00ff',
+	maPon: '800000',
+	VaquamarRe: '66cdaa',
+	VXe: 'cd',
+	VScEd: 'ba55d3',
+	VpurpN: '9370db',
+	VsHgYF: '3cb371',
+	VUXe: '7b68ee',
+	VsprRggYF: 'fa9a',
+	VQe: '48d1cc',
+	VviTetYd: 'c71585',
+	midnightXe: '191970',
+	mRtcYam: 'f5fffa',
+	mistyPse: 'ffe4e1',
+	moccasR: 'ffe4b5',
+	navajowEte: 'ffdead',
+	navy: '80',
+	Tdlace: 'fdf5e6',
+	Tive: '808000',
+	TivedBb: '6b8e23',
+	Sange: 'ffa500',
+	SangeYd: 'ff4500',
+	ScEd: 'da70d6',
+	pOegTMnPd: 'eee8aa',
+	pOegYF: '98fb98',
+	pOeQe: 'afeeee',
+	pOeviTetYd: 'db7093',
+	papayawEp: 'ffefd5',
+	pHKpuff: 'ffdab9',
+	peru: 'cd853f',
+	pRk: 'ffc0cb',
+	plum: 'dda0dd',
+	powMrXe: 'b0e0e6',
+	purpN: '800080',
+	YbeccapurpN: '663399',
+	Yd: 'ff0000',
+	Psybrown: 'bc8f8f',
+	PyOXe: '4169e1',
+	saddNbPwn: '8b4513',
+	sOmon: 'fa8072',
+	sandybPwn: 'f4a460',
+	sHgYF: '2e8b57',
+	sHshell: 'fff5ee',
+	siFna: 'a0522d',
+	silver: 'c0c0c0',
+	skyXe: '87ceeb',
+	UXe: '6a5acd',
+	UWay: '708090',
+	UgYy: '708090',
+	snow: 'fffafa',
+	sprRggYF: 'ff7f',
+	stAlXe: '4682b4',
+	tan: 'd2b48c',
+	teO: '8080',
+	tEstN: 'd8bfd8',
+	tomato: 'ff6347',
+	Qe: '40e0d0',
+	viTet: 'ee82ee',
+	JHt: 'f5deb3',
+	wEte: 'ffffff',
+	wEtesmoke: 'f5f5f5',
+	Lw: 'ffff00',
+	LwgYF: '9acd32'
+};
+function unpack() {
+  const unpacked = {};
+  const keys = Object.keys(names$1);
+  const tkeys = Object.keys(map);
+  let i, j, k, ok, nk;
+  for (i = 0; i < keys.length; i++) {
+    ok = nk = keys[i];
+    for (j = 0; j < tkeys.length; j++) {
+      k = tkeys[j];
+      nk = nk.replace(k, map[k]);
+    }
+    k = parseInt(names$1[ok], 16);
+    unpacked[nk] = [k >> 16 & 0xFF, k >> 8 & 0xFF, k & 0xFF];
+  }
+  return unpacked;
+}
+
+let names;
+function nameParse(str) {
+  if (!names) {
+    names = unpack();
+    names.transparent = [0, 0, 0, 0];
+  }
+  const a = names[str.toLowerCase()];
+  return a && {
+    r: a[0],
+    g: a[1],
+    b: a[2],
+    a: a.length === 4 ? a[3] : 255
+  };
+}
+
+const RGB_RE = /^rgba?\(\s*([-+.\d]+)(%)?[\s,]+([-+.e\d]+)(%)?[\s,]+([-+.e\d]+)(%)?(?:[\s,/]+([-+.e\d]+)(%)?)?\s*\)$/;
+function rgbParse(str) {
+  const m = RGB_RE.exec(str);
+  let a = 255;
+  let r, g, b;
+  if (!m) {
+    return;
+  }
+  if (m[7] !== r) {
+    const v = +m[7];
+    a = m[8] ? p2b(v) : lim(v * 255, 0, 255);
+  }
+  r = +m[1];
+  g = +m[3];
+  b = +m[5];
+  r = 255 & (m[2] ? p2b(r) : lim(r, 0, 255));
+  g = 255 & (m[4] ? p2b(g) : lim(g, 0, 255));
+  b = 255 & (m[6] ? p2b(b) : lim(b, 0, 255));
+  return {
+    r: r,
+    g: g,
+    b: b,
+    a: a
+  };
+}
+function rgbString(v) {
+  return v && (
+    v.a < 255
+      ? `rgba(${v.r}, ${v.g}, ${v.b}, ${b2n(v.a)})`
+      : `rgb(${v.r}, ${v.g}, ${v.b})`
+  );
+}
+
+const to = v => v <= 0.0031308 ? v * 12.92 : Math.pow(v, 1.0 / 2.4) * 1.055 - 0.055;
+const from = v => v <= 0.04045 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
+function interpolate(rgb1, rgb2, t) {
+  const r = from(b2n(rgb1.r));
+  const g = from(b2n(rgb1.g));
+  const b = from(b2n(rgb1.b));
+  return {
+    r: n2b(to(r + t * (from(b2n(rgb2.r)) - r))),
+    g: n2b(to(g + t * (from(b2n(rgb2.g)) - g))),
+    b: n2b(to(b + t * (from(b2n(rgb2.b)) - b))),
+    a: rgb1.a + t * (rgb2.a - rgb1.a)
+  };
+}
+
+function modHSL(v, i, ratio) {
+  if (v) {
+    let tmp = rgb2hsl(v);
+    tmp[i] = Math.max(0, Math.min(tmp[i] + tmp[i] * ratio, i === 0 ? 360 : 1));
+    tmp = hsl2rgb(tmp);
+    v.r = tmp[0];
+    v.g = tmp[1];
+    v.b = tmp[2];
+  }
+}
+function clone(v, proto) {
+  return v ? Object.assign(proto || {}, v) : v;
+}
+function fromObject(input) {
+  var v = {r: 0, g: 0, b: 0, a: 255};
+  if (Array.isArray(input)) {
+    if (input.length >= 3) {
+      v = {r: input[0], g: input[1], b: input[2], a: 255};
+      if (input.length > 3) {
+        v.a = n2b(input[3]);
+      }
+    }
+  } else {
+    v = clone(input, {r: 0, g: 0, b: 0, a: 1});
+    v.a = n2b(v.a);
+  }
+  return v;
+}
+function functionParse(str) {
+  if (str.charAt(0) === 'r') {
+    return rgbParse(str);
+  }
+  return hueParse(str);
+}
+class Color {
+  constructor(input) {
+    if (input instanceof Color) {
+      return input;
+    }
+    const type = typeof input;
+    let v;
+    if (type === 'object') {
+      v = fromObject(input);
+    } else if (type === 'string') {
+      v = hexParse(input) || nameParse(input) || functionParse(input);
+    }
+    this._rgb = v;
+    this._valid = !!v;
+  }
+  get valid() {
+    return this._valid;
+  }
+  get rgb() {
+    var v = clone(this._rgb);
+    if (v) {
+      v.a = b2n(v.a);
+    }
+    return v;
+  }
+  set rgb(obj) {
+    this._rgb = fromObject(obj);
+  }
+  rgbString() {
+    return this._valid ? rgbString(this._rgb) : undefined;
+  }
+  hexString() {
+    return this._valid ? hexString(this._rgb) : undefined;
+  }
+  hslString() {
+    return this._valid ? hslString(this._rgb) : undefined;
+  }
+  mix(color, weight) {
+    if (color) {
+      const c1 = this.rgb;
+      const c2 = color.rgb;
+      let w2;
+      const p = weight === w2 ? 0.5 : weight;
+      const w = 2 * p - 1;
+      const a = c1.a - c2.a;
+      const w1 = ((w * a === -1 ? w : (w + a) / (1 + w * a)) + 1) / 2.0;
+      w2 = 1 - w1;
+      c1.r = 0xFF & w1 * c1.r + w2 * c2.r + 0.5;
+      c1.g = 0xFF & w1 * c1.g + w2 * c2.g + 0.5;
+      c1.b = 0xFF & w1 * c1.b + w2 * c2.b + 0.5;
+      c1.a = p * c1.a + (1 - p) * c2.a;
+      this.rgb = c1;
+    }
+    return this;
+  }
+  interpolate(color, t) {
+    if (color) {
+      this._rgb = interpolate(this._rgb, color._rgb, t);
+    }
+    return this;
+  }
+  clone() {
+    return new Color(this.rgb);
+  }
+  alpha(a) {
+    this._rgb.a = n2b(a);
+    return this;
+  }
+  clearer(ratio) {
+    const rgb = this._rgb;
+    rgb.a *= 1 - ratio;
+    return this;
+  }
+  greyscale() {
+    const rgb = this._rgb;
+    const val = round(rgb.r * 0.3 + rgb.g * 0.59 + rgb.b * 0.11);
+    rgb.r = rgb.g = rgb.b = val;
+    return this;
+  }
+  opaquer(ratio) {
+    const rgb = this._rgb;
+    rgb.a *= 1 + ratio;
+    return this;
+  }
+  negate() {
+    const v = this._rgb;
+    v.r = 255 - v.r;
+    v.g = 255 - v.g;
+    v.b = 255 - v.b;
+    return this;
+  }
+  lighten(ratio) {
+    modHSL(this._rgb, 2, ratio);
+    return this;
+  }
+  darken(ratio) {
+    modHSL(this._rgb, 2, -ratio);
+    return this;
+  }
+  saturate(ratio) {
+    modHSL(this._rgb, 1, ratio);
+    return this;
+  }
+  desaturate(ratio) {
+    modHSL(this._rgb, 1, -ratio);
+    return this;
+  }
+  rotate(deg) {
+    rotate(this._rgb, deg);
+    return this;
+  }
+}
+
+function index_esm(input) {
+  return new Color(input);
+}
+
+
+
+
+/***/ },
+
+/***/ "./node_modules/chart.js/dist/chart.js"
+/*!*********************************************!*\
+  !*** ./node_modules/chart.js/dist/chart.js ***!
+  \*********************************************/
+(__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   Animation: () => (/* binding */ Animation),
+/* harmony export */   Animations: () => (/* binding */ Animations),
+/* harmony export */   ArcElement: () => (/* binding */ ArcElement),
+/* harmony export */   BarController: () => (/* binding */ BarController),
+/* harmony export */   BarElement: () => (/* binding */ BarElement),
+/* harmony export */   BasePlatform: () => (/* binding */ BasePlatform),
+/* harmony export */   BasicPlatform: () => (/* binding */ BasicPlatform),
+/* harmony export */   BubbleController: () => (/* binding */ BubbleController),
+/* harmony export */   CategoryScale: () => (/* binding */ CategoryScale),
+/* harmony export */   Chart: () => (/* binding */ Chart),
+/* harmony export */   Colors: () => (/* binding */ plugin_colors),
+/* harmony export */   DatasetController: () => (/* binding */ DatasetController),
+/* harmony export */   Decimation: () => (/* binding */ plugin_decimation),
+/* harmony export */   DomPlatform: () => (/* binding */ DomPlatform),
+/* harmony export */   DoughnutController: () => (/* binding */ DoughnutController),
+/* harmony export */   Element: () => (/* binding */ Element),
+/* harmony export */   Filler: () => (/* binding */ index),
+/* harmony export */   Interaction: () => (/* binding */ Interaction),
+/* harmony export */   Legend: () => (/* binding */ plugin_legend),
+/* harmony export */   LineController: () => (/* binding */ LineController),
+/* harmony export */   LineElement: () => (/* binding */ LineElement),
+/* harmony export */   LinearScale: () => (/* binding */ LinearScale),
+/* harmony export */   LogarithmicScale: () => (/* binding */ LogarithmicScale),
+/* harmony export */   PieController: () => (/* binding */ PieController),
+/* harmony export */   PointElement: () => (/* binding */ PointElement),
+/* harmony export */   PolarAreaController: () => (/* binding */ PolarAreaController),
+/* harmony export */   RadarController: () => (/* binding */ RadarController),
+/* harmony export */   RadialLinearScale: () => (/* binding */ RadialLinearScale),
+/* harmony export */   Scale: () => (/* binding */ Scale),
+/* harmony export */   ScatterController: () => (/* binding */ ScatterController),
+/* harmony export */   SubTitle: () => (/* binding */ plugin_subtitle),
+/* harmony export */   Ticks: () => (/* reexport safe */ _chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.aM),
+/* harmony export */   TimeScale: () => (/* binding */ TimeScale),
+/* harmony export */   TimeSeriesScale: () => (/* binding */ TimeSeriesScale),
+/* harmony export */   Title: () => (/* binding */ plugin_title),
+/* harmony export */   Tooltip: () => (/* binding */ plugin_tooltip),
+/* harmony export */   _adapters: () => (/* binding */ adapters),
+/* harmony export */   _detectPlatform: () => (/* binding */ _detectPlatform),
+/* harmony export */   animator: () => (/* binding */ animator),
+/* harmony export */   controllers: () => (/* binding */ controllers),
+/* harmony export */   defaults: () => (/* reexport safe */ _chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.d),
+/* harmony export */   elements: () => (/* binding */ elements),
+/* harmony export */   layouts: () => (/* binding */ layouts),
+/* harmony export */   plugins: () => (/* binding */ plugins),
+/* harmony export */   registerables: () => (/* binding */ registerables),
+/* harmony export */   registry: () => (/* binding */ registry),
+/* harmony export */   scales: () => (/* binding */ scales)
+/* harmony export */ });
+/* harmony import */ var _chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./chunks/helpers.dataset.js */ "./node_modules/chart.js/dist/chunks/helpers.dataset.js");
+/*!
+ * Chart.js v4.5.1
+ * https://www.chartjs.org
+ * (c) 2025 Chart.js Contributors
+ * Released under the MIT License
+ */
+
+
+
+class Animator {
+    constructor(){
+        this._request = null;
+        this._charts = new Map();
+        this._running = false;
+        this._lastDate = undefined;
+    }
+ _notify(chart, anims, date, type) {
+        const callbacks = anims.listeners[type];
+        const numSteps = anims.duration;
+        callbacks.forEach((fn)=>fn({
+                chart,
+                initial: anims.initial,
+                numSteps,
+                currentStep: Math.min(date - anims.start, numSteps)
+            }));
+    }
+ _refresh() {
+        if (this._request) {
+            return;
+        }
+        this._running = true;
+        this._request = _chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.r.call(window, ()=>{
+            this._update();
+            this._request = null;
+            if (this._running) {
+                this._refresh();
+            }
+        });
+    }
+ _update(date = Date.now()) {
+        let remaining = 0;
+        this._charts.forEach((anims, chart)=>{
+            if (!anims.running || !anims.items.length) {
+                return;
+            }
+            const items = anims.items;
+            let i = items.length - 1;
+            let draw = false;
+            let item;
+            for(; i >= 0; --i){
+                item = items[i];
+                if (item._active) {
+                    if (item._total > anims.duration) {
+                        anims.duration = item._total;
+                    }
+                    item.tick(date);
+                    draw = true;
+                } else {
+                    items[i] = items[items.length - 1];
+                    items.pop();
+                }
+            }
+            if (draw) {
+                chart.draw();
+                this._notify(chart, anims, date, 'progress');
+            }
+            if (!items.length) {
+                anims.running = false;
+                this._notify(chart, anims, date, 'complete');
+                anims.initial = false;
+            }
+            remaining += items.length;
+        });
+        this._lastDate = date;
+        if (remaining === 0) {
+            this._running = false;
+        }
+    }
+ _getAnims(chart) {
+        const charts = this._charts;
+        let anims = charts.get(chart);
+        if (!anims) {
+            anims = {
+                running: false,
+                initial: true,
+                items: [],
+                listeners: {
+                    complete: [],
+                    progress: []
+                }
+            };
+            charts.set(chart, anims);
+        }
+        return anims;
+    }
+ listen(chart, event, cb) {
+        this._getAnims(chart).listeners[event].push(cb);
+    }
+ add(chart, items) {
+        if (!items || !items.length) {
+            return;
+        }
+        this._getAnims(chart).items.push(...items);
+    }
+ has(chart) {
+        return this._getAnims(chart).items.length > 0;
+    }
+ start(chart) {
+        const anims = this._charts.get(chart);
+        if (!anims) {
+            return;
+        }
+        anims.running = true;
+        anims.start = Date.now();
+        anims.duration = anims.items.reduce((acc, cur)=>Math.max(acc, cur._duration), 0);
+        this._refresh();
+    }
+    running(chart) {
+        if (!this._running) {
+            return false;
+        }
+        const anims = this._charts.get(chart);
+        if (!anims || !anims.running || !anims.items.length) {
+            return false;
+        }
+        return true;
+    }
+ stop(chart) {
+        const anims = this._charts.get(chart);
+        if (!anims || !anims.items.length) {
+            return;
+        }
+        const items = anims.items;
+        let i = items.length - 1;
+        for(; i >= 0; --i){
+            items[i].cancel();
+        }
+        anims.items = [];
+        this._notify(chart, anims, Date.now(), 'complete');
+    }
+ remove(chart) {
+        return this._charts.delete(chart);
+    }
+}
+var animator = /* #__PURE__ */ new Animator();
+
+const transparent = 'transparent';
+const interpolators = {
+    boolean (from, to, factor) {
+        return factor > 0.5 ? to : from;
+    },
+ color (from, to, factor) {
+        const c0 = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.c)(from || transparent);
+        const c1 = c0.valid && (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.c)(to || transparent);
+        return c1 && c1.valid ? c1.mix(c0, factor).hexString() : to;
+    },
+    number (from, to, factor) {
+        return from + (to - from) * factor;
+    }
+};
+class Animation {
+    constructor(cfg, target, prop, to){
+        const currentValue = target[prop];
+        to = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.a)([
+            cfg.to,
+            to,
+            currentValue,
+            cfg.from
+        ]);
+        const from = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.a)([
+            cfg.from,
+            currentValue,
+            to
+        ]);
+        this._active = true;
+        this._fn = cfg.fn || interpolators[cfg.type || typeof from];
+        this._easing = _chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.e[cfg.easing] || _chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.e.linear;
+        this._start = Math.floor(Date.now() + (cfg.delay || 0));
+        this._duration = this._total = Math.floor(cfg.duration);
+        this._loop = !!cfg.loop;
+        this._target = target;
+        this._prop = prop;
+        this._from = from;
+        this._to = to;
+        this._promises = undefined;
+    }
+    active() {
+        return this._active;
+    }
+    update(cfg, to, date) {
+        if (this._active) {
+            this._notify(false);
+            const currentValue = this._target[this._prop];
+            const elapsed = date - this._start;
+            const remain = this._duration - elapsed;
+            this._start = date;
+            this._duration = Math.floor(Math.max(remain, cfg.duration));
+            this._total += elapsed;
+            this._loop = !!cfg.loop;
+            this._to = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.a)([
+                cfg.to,
+                to,
+                currentValue,
+                cfg.from
+            ]);
+            this._from = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.a)([
+                cfg.from,
+                currentValue,
+                to
+            ]);
+        }
+    }
+    cancel() {
+        if (this._active) {
+            this.tick(Date.now());
+            this._active = false;
+            this._notify(false);
+        }
+    }
+    tick(date) {
+        const elapsed = date - this._start;
+        const duration = this._duration;
+        const prop = this._prop;
+        const from = this._from;
+        const loop = this._loop;
+        const to = this._to;
+        let factor;
+        this._active = from !== to && (loop || elapsed < duration);
+        if (!this._active) {
+            this._target[prop] = to;
+            this._notify(true);
+            return;
+        }
+        if (elapsed < 0) {
+            this._target[prop] = from;
+            return;
+        }
+        factor = elapsed / duration % 2;
+        factor = loop && factor > 1 ? 2 - factor : factor;
+        factor = this._easing(Math.min(1, Math.max(0, factor)));
+        this._target[prop] = this._fn(from, to, factor);
+    }
+    wait() {
+        const promises = this._promises || (this._promises = []);
+        return new Promise((res, rej)=>{
+            promises.push({
+                res,
+                rej
+            });
+        });
+    }
+    _notify(resolved) {
+        const method = resolved ? 'res' : 'rej';
+        const promises = this._promises || [];
+        for(let i = 0; i < promises.length; i++){
+            promises[i][method]();
+        }
+    }
+}
+
+class Animations {
+    constructor(chart, config){
+        this._chart = chart;
+        this._properties = new Map();
+        this.configure(config);
+    }
+    configure(config) {
+        if (!(0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.i)(config)) {
+            return;
+        }
+        const animationOptions = Object.keys(_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.d.animation);
+        const animatedProps = this._properties;
+        Object.getOwnPropertyNames(config).forEach((key)=>{
+            const cfg = config[key];
+            if (!(0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.i)(cfg)) {
+                return;
+            }
+            const resolved = {};
+            for (const option of animationOptions){
+                resolved[option] = cfg[option];
+            }
+            ((0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.b)(cfg.properties) && cfg.properties || [
+                key
+            ]).forEach((prop)=>{
+                if (prop === key || !animatedProps.has(prop)) {
+                    animatedProps.set(prop, resolved);
+                }
+            });
+        });
+    }
+ _animateOptions(target, values) {
+        const newOptions = values.options;
+        const options = resolveTargetOptions(target, newOptions);
+        if (!options) {
+            return [];
+        }
+        const animations = this._createAnimations(options, newOptions);
+        if (newOptions.$shared) {
+            awaitAll(target.options.$animations, newOptions).then(()=>{
+                target.options = newOptions;
+            }, ()=>{
+            });
+        }
+        return animations;
+    }
+ _createAnimations(target, values) {
+        const animatedProps = this._properties;
+        const animations = [];
+        const running = target.$animations || (target.$animations = {});
+        const props = Object.keys(values);
+        const date = Date.now();
+        let i;
+        for(i = props.length - 1; i >= 0; --i){
+            const prop = props[i];
+            if (prop.charAt(0) === '$') {
+                continue;
+            }
+            if (prop === 'options') {
+                animations.push(...this._animateOptions(target, values));
+                continue;
+            }
+            const value = values[prop];
+            let animation = running[prop];
+            const cfg = animatedProps.get(prop);
+            if (animation) {
+                if (cfg && animation.active()) {
+                    animation.update(cfg, value, date);
+                    continue;
+                } else {
+                    animation.cancel();
+                }
+            }
+            if (!cfg || !cfg.duration) {
+                target[prop] = value;
+                continue;
+            }
+            running[prop] = animation = new Animation(cfg, target, prop, value);
+            animations.push(animation);
+        }
+        return animations;
+    }
+ update(target, values) {
+        if (this._properties.size === 0) {
+            Object.assign(target, values);
+            return;
+        }
+        const animations = this._createAnimations(target, values);
+        if (animations.length) {
+            animator.add(this._chart, animations);
+            return true;
+        }
+    }
+}
+function awaitAll(animations, properties) {
+    const running = [];
+    const keys = Object.keys(properties);
+    for(let i = 0; i < keys.length; i++){
+        const anim = animations[keys[i]];
+        if (anim && anim.active()) {
+            running.push(anim.wait());
+        }
+    }
+    return Promise.all(running);
+}
+function resolveTargetOptions(target, newOptions) {
+    if (!newOptions) {
+        return;
+    }
+    let options = target.options;
+    if (!options) {
+        target.options = newOptions;
+        return;
+    }
+    if (options.$shared) {
+        target.options = options = Object.assign({}, options, {
+            $shared: false,
+            $animations: {}
+        });
+    }
+    return options;
+}
+
+function scaleClip(scale, allowedOverflow) {
+    const opts = scale && scale.options || {};
+    const reverse = opts.reverse;
+    const min = opts.min === undefined ? allowedOverflow : 0;
+    const max = opts.max === undefined ? allowedOverflow : 0;
+    return {
+        start: reverse ? max : min,
+        end: reverse ? min : max
+    };
+}
+function defaultClip(xScale, yScale, allowedOverflow) {
+    if (allowedOverflow === false) {
+        return false;
+    }
+    const x = scaleClip(xScale, allowedOverflow);
+    const y = scaleClip(yScale, allowedOverflow);
+    return {
+        top: y.end,
+        right: x.end,
+        bottom: y.start,
+        left: x.start
+    };
+}
+function toClip(value) {
+    let t, r, b, l;
+    if ((0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.i)(value)) {
+        t = value.top;
+        r = value.right;
+        b = value.bottom;
+        l = value.left;
+    } else {
+        t = r = b = l = value;
+    }
+    return {
+        top: t,
+        right: r,
+        bottom: b,
+        left: l,
+        disabled: value === false
+    };
+}
+function getSortedDatasetIndices(chart, filterVisible) {
+    const keys = [];
+    const metasets = chart._getSortedDatasetMetas(filterVisible);
+    let i, ilen;
+    for(i = 0, ilen = metasets.length; i < ilen; ++i){
+        keys.push(metasets[i].index);
+    }
+    return keys;
+}
+function applyStack(stack, value, dsIndex, options = {}) {
+    const keys = stack.keys;
+    const singleMode = options.mode === 'single';
+    let i, ilen, datasetIndex, otherValue;
+    if (value === null) {
+        return;
+    }
+    let found = false;
+    for(i = 0, ilen = keys.length; i < ilen; ++i){
+        datasetIndex = +keys[i];
+        if (datasetIndex === dsIndex) {
+            found = true;
+            if (options.all) {
+                continue;
+            }
+            break;
+        }
+        otherValue = stack.values[datasetIndex];
+        if ((0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.g)(otherValue) && (singleMode || value === 0 || (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.s)(value) === (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.s)(otherValue))) {
+            value += otherValue;
+        }
+    }
+    if (!found && !options.all) {
+        return 0;
+    }
+    return value;
+}
+function convertObjectDataToArray(data, meta) {
+    const { iScale , vScale  } = meta;
+    const iAxisKey = iScale.axis === 'x' ? 'x' : 'y';
+    const vAxisKey = vScale.axis === 'x' ? 'x' : 'y';
+    const keys = Object.keys(data);
+    const adata = new Array(keys.length);
+    let i, ilen, key;
+    for(i = 0, ilen = keys.length; i < ilen; ++i){
+        key = keys[i];
+        adata[i] = {
+            [iAxisKey]: key,
+            [vAxisKey]: data[key]
+        };
+    }
+    return adata;
+}
+function isStacked(scale, meta) {
+    const stacked = scale && scale.options.stacked;
+    return stacked || stacked === undefined && meta.stack !== undefined;
+}
+function getStackKey(indexScale, valueScale, meta) {
+    return `${indexScale.id}.${valueScale.id}.${meta.stack || meta.type}`;
+}
+function getUserBounds(scale) {
+    const { min , max , minDefined , maxDefined  } = scale.getUserBounds();
+    return {
+        min: minDefined ? min : Number.NEGATIVE_INFINITY,
+        max: maxDefined ? max : Number.POSITIVE_INFINITY
+    };
+}
+function getOrCreateStack(stacks, stackKey, indexValue) {
+    const subStack = stacks[stackKey] || (stacks[stackKey] = {});
+    return subStack[indexValue] || (subStack[indexValue] = {});
+}
+function getLastIndexInStack(stack, vScale, positive, type) {
+    for (const meta of vScale.getMatchingVisibleMetas(type).reverse()){
+        const value = stack[meta.index];
+        if (positive && value > 0 || !positive && value < 0) {
+            return meta.index;
+        }
+    }
+    return null;
+}
+function updateStacks(controller, parsed) {
+    const { chart , _cachedMeta: meta  } = controller;
+    const stacks = chart._stacks || (chart._stacks = {});
+    const { iScale , vScale , index: datasetIndex  } = meta;
+    const iAxis = iScale.axis;
+    const vAxis = vScale.axis;
+    const key = getStackKey(iScale, vScale, meta);
+    const ilen = parsed.length;
+    let stack;
+    for(let i = 0; i < ilen; ++i){
+        const item = parsed[i];
+        const { [iAxis]: index , [vAxis]: value  } = item;
+        const itemStacks = item._stacks || (item._stacks = {});
+        stack = itemStacks[vAxis] = getOrCreateStack(stacks, key, index);
+        stack[datasetIndex] = value;
+        stack._top = getLastIndexInStack(stack, vScale, true, meta.type);
+        stack._bottom = getLastIndexInStack(stack, vScale, false, meta.type);
+        const visualValues = stack._visualValues || (stack._visualValues = {});
+        visualValues[datasetIndex] = value;
+    }
+}
+function getFirstScaleId(chart, axis) {
+    const scales = chart.scales;
+    return Object.keys(scales).filter((key)=>scales[key].axis === axis).shift();
+}
+function createDatasetContext(parent, index) {
+    return (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.j)(parent, {
+        active: false,
+        dataset: undefined,
+        datasetIndex: index,
+        index,
+        mode: 'default',
+        type: 'dataset'
+    });
+}
+function createDataContext(parent, index, element) {
+    return (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.j)(parent, {
+        active: false,
+        dataIndex: index,
+        parsed: undefined,
+        raw: undefined,
+        element,
+        index,
+        mode: 'default',
+        type: 'data'
+    });
+}
+function clearStacks(meta, items) {
+    const datasetIndex = meta.controller.index;
+    const axis = meta.vScale && meta.vScale.axis;
+    if (!axis) {
+        return;
+    }
+    items = items || meta._parsed;
+    for (const parsed of items){
+        const stacks = parsed._stacks;
+        if (!stacks || stacks[axis] === undefined || stacks[axis][datasetIndex] === undefined) {
+            return;
+        }
+        delete stacks[axis][datasetIndex];
+        if (stacks[axis]._visualValues !== undefined && stacks[axis]._visualValues[datasetIndex] !== undefined) {
+            delete stacks[axis]._visualValues[datasetIndex];
+        }
+    }
+}
+const isDirectUpdateMode = (mode)=>mode === 'reset' || mode === 'none';
+const cloneIfNotShared = (cached, shared)=>shared ? cached : Object.assign({}, cached);
+const createStack = (canStack, meta, chart)=>canStack && !meta.hidden && meta._stacked && {
+        keys: getSortedDatasetIndices(chart, true),
+        values: null
+    };
+class DatasetController {
+ static defaults = {};
+ static datasetElementType = null;
+ static dataElementType = null;
+ constructor(chart, datasetIndex){
+        this.chart = chart;
+        this._ctx = chart.ctx;
+        this.index = datasetIndex;
+        this._cachedDataOpts = {};
+        this._cachedMeta = this.getMeta();
+        this._type = this._cachedMeta.type;
+        this.options = undefined;
+         this._parsing = false;
+        this._data = undefined;
+        this._objectData = undefined;
+        this._sharedOptions = undefined;
+        this._drawStart = undefined;
+        this._drawCount = undefined;
+        this.enableOptionSharing = false;
+        this.supportsDecimation = false;
+        this.$context = undefined;
+        this._syncList = [];
+        this.datasetElementType = new.target.datasetElementType;
+        this.dataElementType = new.target.dataElementType;
+        this.initialize();
+    }
+    initialize() {
+        const meta = this._cachedMeta;
+        this.configure();
+        this.linkScales();
+        meta._stacked = isStacked(meta.vScale, meta);
+        this.addElements();
+        if (this.options.fill && !this.chart.isPluginEnabled('filler')) {
+            console.warn("Tried to use the 'fill' option without the 'Filler' plugin enabled. Please import and register the 'Filler' plugin and make sure it is not disabled in the options");
+        }
+    }
+    updateIndex(datasetIndex) {
+        if (this.index !== datasetIndex) {
+            clearStacks(this._cachedMeta);
+        }
+        this.index = datasetIndex;
+    }
+    linkScales() {
+        const chart = this.chart;
+        const meta = this._cachedMeta;
+        const dataset = this.getDataset();
+        const chooseId = (axis, x, y, r)=>axis === 'x' ? x : axis === 'r' ? r : y;
+        const xid = meta.xAxisID = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.v)(dataset.xAxisID, getFirstScaleId(chart, 'x'));
+        const yid = meta.yAxisID = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.v)(dataset.yAxisID, getFirstScaleId(chart, 'y'));
+        const rid = meta.rAxisID = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.v)(dataset.rAxisID, getFirstScaleId(chart, 'r'));
+        const indexAxis = meta.indexAxis;
+        const iid = meta.iAxisID = chooseId(indexAxis, xid, yid, rid);
+        const vid = meta.vAxisID = chooseId(indexAxis, yid, xid, rid);
+        meta.xScale = this.getScaleForId(xid);
+        meta.yScale = this.getScaleForId(yid);
+        meta.rScale = this.getScaleForId(rid);
+        meta.iScale = this.getScaleForId(iid);
+        meta.vScale = this.getScaleForId(vid);
+    }
+    getDataset() {
+        return this.chart.data.datasets[this.index];
+    }
+    getMeta() {
+        return this.chart.getDatasetMeta(this.index);
+    }
+ getScaleForId(scaleID) {
+        return this.chart.scales[scaleID];
+    }
+ _getOtherScale(scale) {
+        const meta = this._cachedMeta;
+        return scale === meta.iScale ? meta.vScale : meta.iScale;
+    }
+    reset() {
+        this._update('reset');
+    }
+ _destroy() {
+        const meta = this._cachedMeta;
+        if (this._data) {
+            (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.u)(this._data, this);
+        }
+        if (meta._stacked) {
+            clearStacks(meta);
+        }
+    }
+ _dataCheck() {
+        const dataset = this.getDataset();
+        const data = dataset.data || (dataset.data = []);
+        const _data = this._data;
+        if ((0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.i)(data)) {
+            const meta = this._cachedMeta;
+            this._data = convertObjectDataToArray(data, meta);
+        } else if (_data !== data) {
+            if (_data) {
+                (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.u)(_data, this);
+                const meta = this._cachedMeta;
+                clearStacks(meta);
+                meta._parsed = [];
+            }
+            if (data && Object.isExtensible(data)) {
+                (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.l)(data, this);
+            }
+            this._syncList = [];
+            this._data = data;
+        }
+    }
+    addElements() {
+        const meta = this._cachedMeta;
+        this._dataCheck();
+        if (this.datasetElementType) {
+            meta.dataset = new this.datasetElementType();
+        }
+    }
+    buildOrUpdateElements(resetNewElements) {
+        const meta = this._cachedMeta;
+        const dataset = this.getDataset();
+        let stackChanged = false;
+        this._dataCheck();
+        const oldStacked = meta._stacked;
+        meta._stacked = isStacked(meta.vScale, meta);
+        if (meta.stack !== dataset.stack) {
+            stackChanged = true;
+            clearStacks(meta);
+            meta.stack = dataset.stack;
+        }
+        this._resyncElements(resetNewElements);
+        if (stackChanged || oldStacked !== meta._stacked) {
+            updateStacks(this, meta._parsed);
+            meta._stacked = isStacked(meta.vScale, meta);
+        }
+    }
+ configure() {
+        const config = this.chart.config;
+        const scopeKeys = config.datasetScopeKeys(this._type);
+        const scopes = config.getOptionScopes(this.getDataset(), scopeKeys, true);
+        this.options = config.createResolver(scopes, this.getContext());
+        this._parsing = this.options.parsing;
+        this._cachedDataOpts = {};
+    }
+ parse(start, count) {
+        const { _cachedMeta: meta , _data: data  } = this;
+        const { iScale , _stacked  } = meta;
+        const iAxis = iScale.axis;
+        let sorted = start === 0 && count === data.length ? true : meta._sorted;
+        let prev = start > 0 && meta._parsed[start - 1];
+        let i, cur, parsed;
+        if (this._parsing === false) {
+            meta._parsed = data;
+            meta._sorted = true;
+            parsed = data;
+        } else {
+            if ((0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.b)(data[start])) {
+                parsed = this.parseArrayData(meta, data, start, count);
+            } else if ((0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.i)(data[start])) {
+                parsed = this.parseObjectData(meta, data, start, count);
+            } else {
+                parsed = this.parsePrimitiveData(meta, data, start, count);
+            }
+            const isNotInOrderComparedToPrev = ()=>cur[iAxis] === null || prev && cur[iAxis] < prev[iAxis];
+            for(i = 0; i < count; ++i){
+                meta._parsed[i + start] = cur = parsed[i];
+                if (sorted) {
+                    if (isNotInOrderComparedToPrev()) {
+                        sorted = false;
+                    }
+                    prev = cur;
+                }
+            }
+            meta._sorted = sorted;
+        }
+        if (_stacked) {
+            updateStacks(this, parsed);
+        }
+    }
+ parsePrimitiveData(meta, data, start, count) {
+        const { iScale , vScale  } = meta;
+        const iAxis = iScale.axis;
+        const vAxis = vScale.axis;
+        const labels = iScale.getLabels();
+        const singleScale = iScale === vScale;
+        const parsed = new Array(count);
+        let i, ilen, index;
+        for(i = 0, ilen = count; i < ilen; ++i){
+            index = i + start;
+            parsed[i] = {
+                [iAxis]: singleScale || iScale.parse(labels[index], index),
+                [vAxis]: vScale.parse(data[index], index)
+            };
+        }
+        return parsed;
+    }
+ parseArrayData(meta, data, start, count) {
+        const { xScale , yScale  } = meta;
+        const parsed = new Array(count);
+        let i, ilen, index, item;
+        for(i = 0, ilen = count; i < ilen; ++i){
+            index = i + start;
+            item = data[index];
+            parsed[i] = {
+                x: xScale.parse(item[0], index),
+                y: yScale.parse(item[1], index)
+            };
+        }
+        return parsed;
+    }
+ parseObjectData(meta, data, start, count) {
+        const { xScale , yScale  } = meta;
+        const { xAxisKey ='x' , yAxisKey ='y'  } = this._parsing;
+        const parsed = new Array(count);
+        let i, ilen, index, item;
+        for(i = 0, ilen = count; i < ilen; ++i){
+            index = i + start;
+            item = data[index];
+            parsed[i] = {
+                x: xScale.parse((0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.f)(item, xAxisKey), index),
+                y: yScale.parse((0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.f)(item, yAxisKey), index)
+            };
+        }
+        return parsed;
+    }
+ getParsed(index) {
+        return this._cachedMeta._parsed[index];
+    }
+ getDataElement(index) {
+        return this._cachedMeta.data[index];
+    }
+ applyStack(scale, parsed, mode) {
+        const chart = this.chart;
+        const meta = this._cachedMeta;
+        const value = parsed[scale.axis];
+        const stack = {
+            keys: getSortedDatasetIndices(chart, true),
+            values: parsed._stacks[scale.axis]._visualValues
+        };
+        return applyStack(stack, value, meta.index, {
+            mode
+        });
+    }
+ updateRangeFromParsed(range, scale, parsed, stack) {
+        const parsedValue = parsed[scale.axis];
+        let value = parsedValue === null ? NaN : parsedValue;
+        const values = stack && parsed._stacks[scale.axis];
+        if (stack && values) {
+            stack.values = values;
+            value = applyStack(stack, parsedValue, this._cachedMeta.index);
+        }
+        range.min = Math.min(range.min, value);
+        range.max = Math.max(range.max, value);
+    }
+ getMinMax(scale, canStack) {
+        const meta = this._cachedMeta;
+        const _parsed = meta._parsed;
+        const sorted = meta._sorted && scale === meta.iScale;
+        const ilen = _parsed.length;
+        const otherScale = this._getOtherScale(scale);
+        const stack = createStack(canStack, meta, this.chart);
+        const range = {
+            min: Number.POSITIVE_INFINITY,
+            max: Number.NEGATIVE_INFINITY
+        };
+        const { min: otherMin , max: otherMax  } = getUserBounds(otherScale);
+        let i, parsed;
+        function _skip() {
+            parsed = _parsed[i];
+            const otherValue = parsed[otherScale.axis];
+            return !(0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.g)(parsed[scale.axis]) || otherMin > otherValue || otherMax < otherValue;
+        }
+        for(i = 0; i < ilen; ++i){
+            if (_skip()) {
+                continue;
+            }
+            this.updateRangeFromParsed(range, scale, parsed, stack);
+            if (sorted) {
+                break;
+            }
+        }
+        if (sorted) {
+            for(i = ilen - 1; i >= 0; --i){
+                if (_skip()) {
+                    continue;
+                }
+                this.updateRangeFromParsed(range, scale, parsed, stack);
+                break;
+            }
+        }
+        return range;
+    }
+    getAllParsedValues(scale) {
+        const parsed = this._cachedMeta._parsed;
+        const values = [];
+        let i, ilen, value;
+        for(i = 0, ilen = parsed.length; i < ilen; ++i){
+            value = parsed[i][scale.axis];
+            if ((0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.g)(value)) {
+                values.push(value);
+            }
+        }
+        return values;
+    }
+ getMaxOverflow() {
+        return false;
+    }
+ getLabelAndValue(index) {
+        const meta = this._cachedMeta;
+        const iScale = meta.iScale;
+        const vScale = meta.vScale;
+        const parsed = this.getParsed(index);
+        return {
+            label: iScale ? '' + iScale.getLabelForValue(parsed[iScale.axis]) : '',
+            value: vScale ? '' + vScale.getLabelForValue(parsed[vScale.axis]) : ''
+        };
+    }
+ _update(mode) {
+        const meta = this._cachedMeta;
+        this.update(mode || 'default');
+        meta._clip = toClip((0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.v)(this.options.clip, defaultClip(meta.xScale, meta.yScale, this.getMaxOverflow())));
+    }
+ update(mode) {}
+    draw() {
+        const ctx = this._ctx;
+        const chart = this.chart;
+        const meta = this._cachedMeta;
+        const elements = meta.data || [];
+        const area = chart.chartArea;
+        const active = [];
+        const start = this._drawStart || 0;
+        const count = this._drawCount || elements.length - start;
+        const drawActiveElementsOnTop = this.options.drawActiveElementsOnTop;
+        let i;
+        if (meta.dataset) {
+            meta.dataset.draw(ctx, area, start, count);
+        }
+        for(i = start; i < start + count; ++i){
+            const element = elements[i];
+            if (element.hidden) {
+                continue;
+            }
+            if (element.active && drawActiveElementsOnTop) {
+                active.push(element);
+            } else {
+                element.draw(ctx, area);
+            }
+        }
+        for(i = 0; i < active.length; ++i){
+            active[i].draw(ctx, area);
+        }
+    }
+ getStyle(index, active) {
+        const mode = active ? 'active' : 'default';
+        return index === undefined && this._cachedMeta.dataset ? this.resolveDatasetElementOptions(mode) : this.resolveDataElementOptions(index || 0, mode);
+    }
+ getContext(index, active, mode) {
+        const dataset = this.getDataset();
+        let context;
+        if (index >= 0 && index < this._cachedMeta.data.length) {
+            const element = this._cachedMeta.data[index];
+            context = element.$context || (element.$context = createDataContext(this.getContext(), index, element));
+            context.parsed = this.getParsed(index);
+            context.raw = dataset.data[index];
+            context.index = context.dataIndex = index;
+        } else {
+            context = this.$context || (this.$context = createDatasetContext(this.chart.getContext(), this.index));
+            context.dataset = dataset;
+            context.index = context.datasetIndex = this.index;
+        }
+        context.active = !!active;
+        context.mode = mode;
+        return context;
+    }
+ resolveDatasetElementOptions(mode) {
+        return this._resolveElementOptions(this.datasetElementType.id, mode);
+    }
+ resolveDataElementOptions(index, mode) {
+        return this._resolveElementOptions(this.dataElementType.id, mode, index);
+    }
+ _resolveElementOptions(elementType, mode = 'default', index) {
+        const active = mode === 'active';
+        const cache = this._cachedDataOpts;
+        const cacheKey = elementType + '-' + mode;
+        const cached = cache[cacheKey];
+        const sharing = this.enableOptionSharing && (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.h)(index);
+        if (cached) {
+            return cloneIfNotShared(cached, sharing);
+        }
+        const config = this.chart.config;
+        const scopeKeys = config.datasetElementScopeKeys(this._type, elementType);
+        const prefixes = active ? [
+            `${elementType}Hover`,
+            'hover',
+            elementType,
+            ''
+        ] : [
+            elementType,
+            ''
+        ];
+        const scopes = config.getOptionScopes(this.getDataset(), scopeKeys);
+        const names = Object.keys(_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.d.elements[elementType]);
+        const context = ()=>this.getContext(index, active, mode);
+        const values = config.resolveNamedOptions(scopes, names, context, prefixes);
+        if (values.$shared) {
+            values.$shared = sharing;
+            cache[cacheKey] = Object.freeze(cloneIfNotShared(values, sharing));
+        }
+        return values;
+    }
+ _resolveAnimations(index, transition, active) {
+        const chart = this.chart;
+        const cache = this._cachedDataOpts;
+        const cacheKey = `animation-${transition}`;
+        const cached = cache[cacheKey];
+        if (cached) {
+            return cached;
+        }
+        let options;
+        if (chart.options.animation !== false) {
+            const config = this.chart.config;
+            const scopeKeys = config.datasetAnimationScopeKeys(this._type, transition);
+            const scopes = config.getOptionScopes(this.getDataset(), scopeKeys);
+            options = config.createResolver(scopes, this.getContext(index, active, transition));
+        }
+        const animations = new Animations(chart, options && options.animations);
+        if (options && options._cacheable) {
+            cache[cacheKey] = Object.freeze(animations);
+        }
+        return animations;
+    }
+ getSharedOptions(options) {
+        if (!options.$shared) {
+            return;
+        }
+        return this._sharedOptions || (this._sharedOptions = Object.assign({}, options));
+    }
+ includeOptions(mode, sharedOptions) {
+        return !sharedOptions || isDirectUpdateMode(mode) || this.chart._animationsDisabled;
+    }
+ _getSharedOptions(start, mode) {
+        const firstOpts = this.resolveDataElementOptions(start, mode);
+        const previouslySharedOptions = this._sharedOptions;
+        const sharedOptions = this.getSharedOptions(firstOpts);
+        const includeOptions = this.includeOptions(mode, sharedOptions) || sharedOptions !== previouslySharedOptions;
+        this.updateSharedOptions(sharedOptions, mode, firstOpts);
+        return {
+            sharedOptions,
+            includeOptions
+        };
+    }
+ updateElement(element, index, properties, mode) {
+        if (isDirectUpdateMode(mode)) {
+            Object.assign(element, properties);
+        } else {
+            this._resolveAnimations(index, mode).update(element, properties);
+        }
+    }
+ updateSharedOptions(sharedOptions, mode, newOptions) {
+        if (sharedOptions && !isDirectUpdateMode(mode)) {
+            this._resolveAnimations(undefined, mode).update(sharedOptions, newOptions);
+        }
+    }
+ _setStyle(element, index, mode, active) {
+        element.active = active;
+        const options = this.getStyle(index, active);
+        this._resolveAnimations(index, mode, active).update(element, {
+            options: !active && this.getSharedOptions(options) || options
+        });
+    }
+    removeHoverStyle(element, datasetIndex, index) {
+        this._setStyle(element, index, 'active', false);
+    }
+    setHoverStyle(element, datasetIndex, index) {
+        this._setStyle(element, index, 'active', true);
+    }
+ _removeDatasetHoverStyle() {
+        const element = this._cachedMeta.dataset;
+        if (element) {
+            this._setStyle(element, undefined, 'active', false);
+        }
+    }
+ _setDatasetHoverStyle() {
+        const element = this._cachedMeta.dataset;
+        if (element) {
+            this._setStyle(element, undefined, 'active', true);
+        }
+    }
+ _resyncElements(resetNewElements) {
+        const data = this._data;
+        const elements = this._cachedMeta.data;
+        for (const [method, arg1, arg2] of this._syncList){
+            this[method](arg1, arg2);
+        }
+        this._syncList = [];
+        const numMeta = elements.length;
+        const numData = data.length;
+        const count = Math.min(numData, numMeta);
+        if (count) {
+            this.parse(0, count);
+        }
+        if (numData > numMeta) {
+            this._insertElements(numMeta, numData - numMeta, resetNewElements);
+        } else if (numData < numMeta) {
+            this._removeElements(numData, numMeta - numData);
+        }
+    }
+ _insertElements(start, count, resetNewElements = true) {
+        const meta = this._cachedMeta;
+        const data = meta.data;
+        const end = start + count;
+        let i;
+        const move = (arr)=>{
+            arr.length += count;
+            for(i = arr.length - 1; i >= end; i--){
+                arr[i] = arr[i - count];
+            }
+        };
+        move(data);
+        for(i = start; i < end; ++i){
+            data[i] = new this.dataElementType();
+        }
+        if (this._parsing) {
+            move(meta._parsed);
+        }
+        this.parse(start, count);
+        if (resetNewElements) {
+            this.updateElements(data, start, count, 'reset');
+        }
+    }
+    updateElements(element, start, count, mode) {}
+ _removeElements(start, count) {
+        const meta = this._cachedMeta;
+        if (this._parsing) {
+            const removed = meta._parsed.splice(start, count);
+            if (meta._stacked) {
+                clearStacks(meta, removed);
+            }
+        }
+        meta.data.splice(start, count);
+    }
+ _sync(args) {
+        if (this._parsing) {
+            this._syncList.push(args);
+        } else {
+            const [method, arg1, arg2] = args;
+            this[method](arg1, arg2);
+        }
+        this.chart._dataChanges.push([
+            this.index,
+            ...args
+        ]);
+    }
+    _onDataPush() {
+        const count = arguments.length;
+        this._sync([
+            '_insertElements',
+            this.getDataset().data.length - count,
+            count
+        ]);
+    }
+    _onDataPop() {
+        this._sync([
+            '_removeElements',
+            this._cachedMeta.data.length - 1,
+            1
+        ]);
+    }
+    _onDataShift() {
+        this._sync([
+            '_removeElements',
+            0,
+            1
+        ]);
+    }
+    _onDataSplice(start, count) {
+        if (count) {
+            this._sync([
+                '_removeElements',
+                start,
+                count
+            ]);
+        }
+        const newCount = arguments.length - 2;
+        if (newCount) {
+            this._sync([
+                '_insertElements',
+                start,
+                newCount
+            ]);
+        }
+    }
+    _onDataUnshift() {
+        this._sync([
+            '_insertElements',
+            0,
+            arguments.length
+        ]);
+    }
+}
+
+function getAllScaleValues(scale, type) {
+    if (!scale._cache.$bar) {
+        const visibleMetas = scale.getMatchingVisibleMetas(type);
+        let values = [];
+        for(let i = 0, ilen = visibleMetas.length; i < ilen; i++){
+            values = values.concat(visibleMetas[i].controller.getAllParsedValues(scale));
+        }
+        scale._cache.$bar = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__._)(values.sort((a, b)=>a - b));
+    }
+    return scale._cache.$bar;
+}
+ function computeMinSampleSize(meta) {
+    const scale = meta.iScale;
+    const values = getAllScaleValues(scale, meta.type);
+    let min = scale._length;
+    let i, ilen, curr, prev;
+    const updateMinAndPrev = ()=>{
+        if (curr === 32767 || curr === -32768) {
+            return;
+        }
+        if ((0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.h)(prev)) {
+            min = Math.min(min, Math.abs(curr - prev) || min);
+        }
+        prev = curr;
+    };
+    for(i = 0, ilen = values.length; i < ilen; ++i){
+        curr = scale.getPixelForValue(values[i]);
+        updateMinAndPrev();
+    }
+    prev = undefined;
+    for(i = 0, ilen = scale.ticks.length; i < ilen; ++i){
+        curr = scale.getPixelForTick(i);
+        updateMinAndPrev();
+    }
+    return min;
+}
+ function computeFitCategoryTraits(index, ruler, options, stackCount) {
+    const thickness = options.barThickness;
+    let size, ratio;
+    if ((0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.k)(thickness)) {
+        size = ruler.min * options.categoryPercentage;
+        ratio = options.barPercentage;
+    } else {
+        size = thickness * stackCount;
+        ratio = 1;
+    }
+    return {
+        chunk: size / stackCount,
+        ratio,
+        start: ruler.pixels[index] - size / 2
+    };
+}
+ function computeFlexCategoryTraits(index, ruler, options, stackCount) {
+    const pixels = ruler.pixels;
+    const curr = pixels[index];
+    let prev = index > 0 ? pixels[index - 1] : null;
+    let next = index < pixels.length - 1 ? pixels[index + 1] : null;
+    const percent = options.categoryPercentage;
+    if (prev === null) {
+        prev = curr - (next === null ? ruler.end - ruler.start : next - curr);
+    }
+    if (next === null) {
+        next = curr + curr - prev;
+    }
+    const start = curr - (curr - Math.min(prev, next)) / 2 * percent;
+    const size = Math.abs(next - prev) / 2 * percent;
+    return {
+        chunk: size / stackCount,
+        ratio: options.barPercentage,
+        start
+    };
+}
+function parseFloatBar(entry, item, vScale, i) {
+    const startValue = vScale.parse(entry[0], i);
+    const endValue = vScale.parse(entry[1], i);
+    const min = Math.min(startValue, endValue);
+    const max = Math.max(startValue, endValue);
+    let barStart = min;
+    let barEnd = max;
+    if (Math.abs(min) > Math.abs(max)) {
+        barStart = max;
+        barEnd = min;
+    }
+    item[vScale.axis] = barEnd;
+    item._custom = {
+        barStart,
+        barEnd,
+        start: startValue,
+        end: endValue,
+        min,
+        max
+    };
+}
+function parseValue(entry, item, vScale, i) {
+    if ((0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.b)(entry)) {
+        parseFloatBar(entry, item, vScale, i);
+    } else {
+        item[vScale.axis] = vScale.parse(entry, i);
+    }
+    return item;
+}
+function parseArrayOrPrimitive(meta, data, start, count) {
+    const iScale = meta.iScale;
+    const vScale = meta.vScale;
+    const labels = iScale.getLabels();
+    const singleScale = iScale === vScale;
+    const parsed = [];
+    let i, ilen, item, entry;
+    for(i = start, ilen = start + count; i < ilen; ++i){
+        entry = data[i];
+        item = {};
+        item[iScale.axis] = singleScale || iScale.parse(labels[i], i);
+        parsed.push(parseValue(entry, item, vScale, i));
+    }
+    return parsed;
+}
+function isFloatBar(custom) {
+    return custom && custom.barStart !== undefined && custom.barEnd !== undefined;
+}
+function barSign(size, vScale, actualBase) {
+    if (size !== 0) {
+        return (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.s)(size);
+    }
+    return (vScale.isHorizontal() ? 1 : -1) * (vScale.min >= actualBase ? 1 : -1);
+}
+function borderProps(properties) {
+    let reverse, start, end, top, bottom;
+    if (properties.horizontal) {
+        reverse = properties.base > properties.x;
+        start = 'left';
+        end = 'right';
+    } else {
+        reverse = properties.base < properties.y;
+        start = 'bottom';
+        end = 'top';
+    }
+    if (reverse) {
+        top = 'end';
+        bottom = 'start';
+    } else {
+        top = 'start';
+        bottom = 'end';
+    }
+    return {
+        start,
+        end,
+        reverse,
+        top,
+        bottom
+    };
+}
+function setBorderSkipped(properties, options, stack, index) {
+    let edge = options.borderSkipped;
+    const res = {};
+    if (!edge) {
+        properties.borderSkipped = res;
+        return;
+    }
+    if (edge === true) {
+        properties.borderSkipped = {
+            top: true,
+            right: true,
+            bottom: true,
+            left: true
+        };
+        return;
+    }
+    const { start , end , reverse , top , bottom  } = borderProps(properties);
+    if (edge === 'middle' && stack) {
+        properties.enableBorderRadius = true;
+        if ((stack._top || 0) === index) {
+            edge = top;
+        } else if ((stack._bottom || 0) === index) {
+            edge = bottom;
+        } else {
+            res[parseEdge(bottom, start, end, reverse)] = true;
+            edge = top;
+        }
+    }
+    res[parseEdge(edge, start, end, reverse)] = true;
+    properties.borderSkipped = res;
+}
+function parseEdge(edge, a, b, reverse) {
+    if (reverse) {
+        edge = swap(edge, a, b);
+        edge = startEnd(edge, b, a);
+    } else {
+        edge = startEnd(edge, a, b);
+    }
+    return edge;
+}
+function swap(orig, v1, v2) {
+    return orig === v1 ? v2 : orig === v2 ? v1 : orig;
+}
+function startEnd(v, start, end) {
+    return v === 'start' ? start : v === 'end' ? end : v;
+}
+function setInflateAmount(properties, { inflateAmount  }, ratio) {
+    properties.inflateAmount = inflateAmount === 'auto' ? ratio === 1 ? 0.33 : 0 : inflateAmount;
+}
+class BarController extends DatasetController {
+    static id = 'bar';
+ static defaults = {
+        datasetElementType: false,
+        dataElementType: 'bar',
+        categoryPercentage: 0.8,
+        barPercentage: 0.9,
+        grouped: true,
+        animations: {
+            numbers: {
+                type: 'number',
+                properties: [
+                    'x',
+                    'y',
+                    'base',
+                    'width',
+                    'height'
+                ]
+            }
+        }
+    };
+ static overrides = {
+        scales: {
+            _index_: {
+                type: 'category',
+                offset: true,
+                grid: {
+                    offset: true
+                }
+            },
+            _value_: {
+                type: 'linear',
+                beginAtZero: true
+            }
+        }
+    };
+ parsePrimitiveData(meta, data, start, count) {
+        return parseArrayOrPrimitive(meta, data, start, count);
+    }
+ parseArrayData(meta, data, start, count) {
+        return parseArrayOrPrimitive(meta, data, start, count);
+    }
+ parseObjectData(meta, data, start, count) {
+        const { iScale , vScale  } = meta;
+        const { xAxisKey ='x' , yAxisKey ='y'  } = this._parsing;
+        const iAxisKey = iScale.axis === 'x' ? xAxisKey : yAxisKey;
+        const vAxisKey = vScale.axis === 'x' ? xAxisKey : yAxisKey;
+        const parsed = [];
+        let i, ilen, item, obj;
+        for(i = start, ilen = start + count; i < ilen; ++i){
+            obj = data[i];
+            item = {};
+            item[iScale.axis] = iScale.parse((0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.f)(obj, iAxisKey), i);
+            parsed.push(parseValue((0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.f)(obj, vAxisKey), item, vScale, i));
+        }
+        return parsed;
+    }
+ updateRangeFromParsed(range, scale, parsed, stack) {
+        super.updateRangeFromParsed(range, scale, parsed, stack);
+        const custom = parsed._custom;
+        if (custom && scale === this._cachedMeta.vScale) {
+            range.min = Math.min(range.min, custom.min);
+            range.max = Math.max(range.max, custom.max);
+        }
+    }
+ getMaxOverflow() {
+        return 0;
+    }
+ getLabelAndValue(index) {
+        const meta = this._cachedMeta;
+        const { iScale , vScale  } = meta;
+        const parsed = this.getParsed(index);
+        const custom = parsed._custom;
+        const value = isFloatBar(custom) ? '[' + custom.start + ', ' + custom.end + ']' : '' + vScale.getLabelForValue(parsed[vScale.axis]);
+        return {
+            label: '' + iScale.getLabelForValue(parsed[iScale.axis]),
+            value
+        };
+    }
+    initialize() {
+        this.enableOptionSharing = true;
+        super.initialize();
+        const meta = this._cachedMeta;
+        meta.stack = this.getDataset().stack;
+    }
+    update(mode) {
+        const meta = this._cachedMeta;
+        this.updateElements(meta.data, 0, meta.data.length, mode);
+    }
+    updateElements(bars, start, count, mode) {
+        const reset = mode === 'reset';
+        const { index , _cachedMeta: { vScale  }  } = this;
+        const base = vScale.getBasePixel();
+        const horizontal = vScale.isHorizontal();
+        const ruler = this._getRuler();
+        const { sharedOptions , includeOptions  } = this._getSharedOptions(start, mode);
+        for(let i = start; i < start + count; i++){
+            const parsed = this.getParsed(i);
+            const vpixels = reset || (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.k)(parsed[vScale.axis]) ? {
+                base,
+                head: base
+            } : this._calculateBarValuePixels(i);
+            const ipixels = this._calculateBarIndexPixels(i, ruler);
+            const stack = (parsed._stacks || {})[vScale.axis];
+            const properties = {
+                horizontal,
+                base: vpixels.base,
+                enableBorderRadius: !stack || isFloatBar(parsed._custom) || index === stack._top || index === stack._bottom,
+                x: horizontal ? vpixels.head : ipixels.center,
+                y: horizontal ? ipixels.center : vpixels.head,
+                height: horizontal ? ipixels.size : Math.abs(vpixels.size),
+                width: horizontal ? Math.abs(vpixels.size) : ipixels.size
+            };
+            if (includeOptions) {
+                properties.options = sharedOptions || this.resolveDataElementOptions(i, bars[i].active ? 'active' : mode);
+            }
+            const options = properties.options || bars[i].options;
+            setBorderSkipped(properties, options, stack, index);
+            setInflateAmount(properties, options, ruler.ratio);
+            this.updateElement(bars[i], i, properties, mode);
+        }
+    }
+ _getStacks(last, dataIndex) {
+        const { iScale  } = this._cachedMeta;
+        const metasets = iScale.getMatchingVisibleMetas(this._type).filter((meta)=>meta.controller.options.grouped);
+        const stacked = iScale.options.stacked;
+        const stacks = [];
+        const currentParsed = this._cachedMeta.controller.getParsed(dataIndex);
+        const iScaleValue = currentParsed && currentParsed[iScale.axis];
+        const skipNull = (meta)=>{
+            const parsed = meta._parsed.find((item)=>item[iScale.axis] === iScaleValue);
+            const val = parsed && parsed[meta.vScale.axis];
+            if ((0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.k)(val) || isNaN(val)) {
+                return true;
+            }
+        };
+        for (const meta of metasets){
+            if (dataIndex !== undefined && skipNull(meta)) {
+                continue;
+            }
+            if (stacked === false || stacks.indexOf(meta.stack) === -1 || stacked === undefined && meta.stack === undefined) {
+                stacks.push(meta.stack);
+            }
+            if (meta.index === last) {
+                break;
+            }
+        }
+        if (!stacks.length) {
+            stacks.push(undefined);
+        }
+        return stacks;
+    }
+ _getStackCount(index) {
+        return this._getStacks(undefined, index).length;
+    }
+    _getAxisCount() {
+        return this._getAxis().length;
+    }
+    getFirstScaleIdForIndexAxis() {
+        const scales = this.chart.scales;
+        const indexScaleId = this.chart.options.indexAxis;
+        return Object.keys(scales).filter((key)=>scales[key].axis === indexScaleId).shift();
+    }
+    _getAxis() {
+        const axis = {};
+        const firstScaleAxisId = this.getFirstScaleIdForIndexAxis();
+        for (const dataset of this.chart.data.datasets){
+            axis[(0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.v)(this.chart.options.indexAxis === 'x' ? dataset.xAxisID : dataset.yAxisID, firstScaleAxisId)] = true;
+        }
+        return Object.keys(axis);
+    }
+ _getStackIndex(datasetIndex, name, dataIndex) {
+        const stacks = this._getStacks(datasetIndex, dataIndex);
+        const index = name !== undefined ? stacks.indexOf(name) : -1;
+        return index === -1 ? stacks.length - 1 : index;
+    }
+ _getRuler() {
+        const opts = this.options;
+        const meta = this._cachedMeta;
+        const iScale = meta.iScale;
+        const pixels = [];
+        let i, ilen;
+        for(i = 0, ilen = meta.data.length; i < ilen; ++i){
+            pixels.push(iScale.getPixelForValue(this.getParsed(i)[iScale.axis], i));
+        }
+        const barThickness = opts.barThickness;
+        const min = barThickness || computeMinSampleSize(meta);
+        return {
+            min,
+            pixels,
+            start: iScale._startPixel,
+            end: iScale._endPixel,
+            stackCount: this._getStackCount(),
+            scale: iScale,
+            grouped: opts.grouped,
+            ratio: barThickness ? 1 : opts.categoryPercentage * opts.barPercentage
+        };
+    }
+ _calculateBarValuePixels(index) {
+        const { _cachedMeta: { vScale , _stacked , index: datasetIndex  } , options: { base: baseValue , minBarLength  }  } = this;
+        const actualBase = baseValue || 0;
+        const parsed = this.getParsed(index);
+        const custom = parsed._custom;
+        const floating = isFloatBar(custom);
+        let value = parsed[vScale.axis];
+        let start = 0;
+        let length = _stacked ? this.applyStack(vScale, parsed, _stacked) : value;
+        let head, size;
+        if (length !== value) {
+            start = length - value;
+            length = value;
+        }
+        if (floating) {
+            value = custom.barStart;
+            length = custom.barEnd - custom.barStart;
+            if (value !== 0 && (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.s)(value) !== (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.s)(custom.barEnd)) {
+                start = 0;
+            }
+            start += value;
+        }
+        const startValue = !(0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.k)(baseValue) && !floating ? baseValue : start;
+        let base = vScale.getPixelForValue(startValue);
+        if (this.chart.getDataVisibility(index)) {
+            head = vScale.getPixelForValue(start + length);
+        } else {
+            head = base;
+        }
+        size = head - base;
+        if (Math.abs(size) < minBarLength) {
+            size = barSign(size, vScale, actualBase) * minBarLength;
+            if (value === actualBase) {
+                base -= size / 2;
+            }
+            const startPixel = vScale.getPixelForDecimal(0);
+            const endPixel = vScale.getPixelForDecimal(1);
+            const min = Math.min(startPixel, endPixel);
+            const max = Math.max(startPixel, endPixel);
+            base = Math.max(Math.min(base, max), min);
+            head = base + size;
+            if (_stacked && !floating) {
+                parsed._stacks[vScale.axis]._visualValues[datasetIndex] = vScale.getValueForPixel(head) - vScale.getValueForPixel(base);
+            }
+        }
+        if (base === vScale.getPixelForValue(actualBase)) {
+            const halfGrid = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.s)(size) * vScale.getLineWidthForValue(actualBase) / 2;
+            base += halfGrid;
+            size -= halfGrid;
+        }
+        return {
+            size,
+            base,
+            head,
+            center: head + size / 2
+        };
+    }
+ _calculateBarIndexPixels(index, ruler) {
+        const scale = ruler.scale;
+        const options = this.options;
+        const skipNull = options.skipNull;
+        const maxBarThickness = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.v)(options.maxBarThickness, Infinity);
+        let center, size;
+        const axisCount = this._getAxisCount();
+        if (ruler.grouped) {
+            const stackCount = skipNull ? this._getStackCount(index) : ruler.stackCount;
+            const range = options.barThickness === 'flex' ? computeFlexCategoryTraits(index, ruler, options, stackCount * axisCount) : computeFitCategoryTraits(index, ruler, options, stackCount * axisCount);
+            const axisID = this.chart.options.indexAxis === 'x' ? this.getDataset().xAxisID : this.getDataset().yAxisID;
+            const axisNumber = this._getAxis().indexOf((0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.v)(axisID, this.getFirstScaleIdForIndexAxis()));
+            const stackIndex = this._getStackIndex(this.index, this._cachedMeta.stack, skipNull ? index : undefined) + axisNumber;
+            center = range.start + range.chunk * stackIndex + range.chunk / 2;
+            size = Math.min(maxBarThickness, range.chunk * range.ratio);
+        } else {
+            center = scale.getPixelForValue(this.getParsed(index)[scale.axis], index);
+            size = Math.min(maxBarThickness, ruler.min * ruler.ratio);
+        }
+        return {
+            base: center - size / 2,
+            head: center + size / 2,
+            center,
+            size
+        };
+    }
+    draw() {
+        const meta = this._cachedMeta;
+        const vScale = meta.vScale;
+        const rects = meta.data;
+        const ilen = rects.length;
+        let i = 0;
+        for(; i < ilen; ++i){
+            if (this.getParsed(i)[vScale.axis] !== null && !rects[i].hidden) {
+                rects[i].draw(this._ctx);
+            }
+        }
+    }
+}
+
+class BubbleController extends DatasetController {
+    static id = 'bubble';
+ static defaults = {
+        datasetElementType: false,
+        dataElementType: 'point',
+        animations: {
+            numbers: {
+                type: 'number',
+                properties: [
+                    'x',
+                    'y',
+                    'borderWidth',
+                    'radius'
+                ]
+            }
+        }
+    };
+ static overrides = {
+        scales: {
+            x: {
+                type: 'linear'
+            },
+            y: {
+                type: 'linear'
+            }
+        }
+    };
+    initialize() {
+        this.enableOptionSharing = true;
+        super.initialize();
+    }
+ parsePrimitiveData(meta, data, start, count) {
+        const parsed = super.parsePrimitiveData(meta, data, start, count);
+        for(let i = 0; i < parsed.length; i++){
+            parsed[i]._custom = this.resolveDataElementOptions(i + start).radius;
+        }
+        return parsed;
+    }
+ parseArrayData(meta, data, start, count) {
+        const parsed = super.parseArrayData(meta, data, start, count);
+        for(let i = 0; i < parsed.length; i++){
+            const item = data[start + i];
+            parsed[i]._custom = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.v)(item[2], this.resolveDataElementOptions(i + start).radius);
+        }
+        return parsed;
+    }
+ parseObjectData(meta, data, start, count) {
+        const parsed = super.parseObjectData(meta, data, start, count);
+        for(let i = 0; i < parsed.length; i++){
+            const item = data[start + i];
+            parsed[i]._custom = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.v)(item && item.r && +item.r, this.resolveDataElementOptions(i + start).radius);
+        }
+        return parsed;
+    }
+ getMaxOverflow() {
+        const data = this._cachedMeta.data;
+        let max = 0;
+        for(let i = data.length - 1; i >= 0; --i){
+            max = Math.max(max, data[i].size(this.resolveDataElementOptions(i)) / 2);
+        }
+        return max > 0 && max;
+    }
+ getLabelAndValue(index) {
+        const meta = this._cachedMeta;
+        const labels = this.chart.data.labels || [];
+        const { xScale , yScale  } = meta;
+        const parsed = this.getParsed(index);
+        const x = xScale.getLabelForValue(parsed.x);
+        const y = yScale.getLabelForValue(parsed.y);
+        const r = parsed._custom;
+        return {
+            label: labels[index] || '',
+            value: '(' + x + ', ' + y + (r ? ', ' + r : '') + ')'
+        };
+    }
+    update(mode) {
+        const points = this._cachedMeta.data;
+        this.updateElements(points, 0, points.length, mode);
+    }
+    updateElements(points, start, count, mode) {
+        const reset = mode === 'reset';
+        const { iScale , vScale  } = this._cachedMeta;
+        const { sharedOptions , includeOptions  } = this._getSharedOptions(start, mode);
+        const iAxis = iScale.axis;
+        const vAxis = vScale.axis;
+        for(let i = start; i < start + count; i++){
+            const point = points[i];
+            const parsed = !reset && this.getParsed(i);
+            const properties = {};
+            const iPixel = properties[iAxis] = reset ? iScale.getPixelForDecimal(0.5) : iScale.getPixelForValue(parsed[iAxis]);
+            const vPixel = properties[vAxis] = reset ? vScale.getBasePixel() : vScale.getPixelForValue(parsed[vAxis]);
+            properties.skip = isNaN(iPixel) || isNaN(vPixel);
+            if (includeOptions) {
+                properties.options = sharedOptions || this.resolveDataElementOptions(i, point.active ? 'active' : mode);
+                if (reset) {
+                    properties.options.radius = 0;
+                }
+            }
+            this.updateElement(point, i, properties, mode);
+        }
+    }
+ resolveDataElementOptions(index, mode) {
+        const parsed = this.getParsed(index);
+        let values = super.resolveDataElementOptions(index, mode);
+        if (values.$shared) {
+            values = Object.assign({}, values, {
+                $shared: false
+            });
+        }
+        const radius = values.radius;
+        if (mode !== 'active') {
+            values.radius = 0;
+        }
+        values.radius += (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.v)(parsed && parsed._custom, radius);
+        return values;
+    }
+}
+
+function getRatioAndOffset(rotation, circumference, cutout) {
+    let ratioX = 1;
+    let ratioY = 1;
+    let offsetX = 0;
+    let offsetY = 0;
+    if (circumference < _chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.T) {
+        const startAngle = rotation;
+        const endAngle = startAngle + circumference;
+        const startX = Math.cos(startAngle);
+        const startY = Math.sin(startAngle);
+        const endX = Math.cos(endAngle);
+        const endY = Math.sin(endAngle);
+        const calcMax = (angle, a, b)=>(0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.p)(angle, startAngle, endAngle, true) ? 1 : Math.max(a, a * cutout, b, b * cutout);
+        const calcMin = (angle, a, b)=>(0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.p)(angle, startAngle, endAngle, true) ? -1 : Math.min(a, a * cutout, b, b * cutout);
+        const maxX = calcMax(0, startX, endX);
+        const maxY = calcMax(_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.H, startY, endY);
+        const minX = calcMin(_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.P, startX, endX);
+        const minY = calcMin(_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.P + _chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.H, startY, endY);
+        ratioX = (maxX - minX) / 2;
+        ratioY = (maxY - minY) / 2;
+        offsetX = -(maxX + minX) / 2;
+        offsetY = -(maxY + minY) / 2;
+    }
+    return {
+        ratioX,
+        ratioY,
+        offsetX,
+        offsetY
+    };
+}
+class DoughnutController extends DatasetController {
+    static id = 'doughnut';
+ static defaults = {
+        datasetElementType: false,
+        dataElementType: 'arc',
+        animation: {
+            animateRotate: true,
+            animateScale: false
+        },
+        animations: {
+            numbers: {
+                type: 'number',
+                properties: [
+                    'circumference',
+                    'endAngle',
+                    'innerRadius',
+                    'outerRadius',
+                    'startAngle',
+                    'x',
+                    'y',
+                    'offset',
+                    'borderWidth',
+                    'spacing'
+                ]
+            }
+        },
+        cutout: '50%',
+        rotation: 0,
+        circumference: 360,
+        radius: '100%',
+        spacing: 0,
+        indexAxis: 'r'
+    };
+    static descriptors = {
+        _scriptable: (name)=>name !== 'spacing',
+        _indexable: (name)=>name !== 'spacing' && !name.startsWith('borderDash') && !name.startsWith('hoverBorderDash')
+    };
+ static overrides = {
+        aspectRatio: 1,
+        plugins: {
+            legend: {
+                labels: {
+                    generateLabels (chart) {
+                        const data = chart.data;
+                        const { labels: { pointStyle , textAlign , color , useBorderRadius , borderRadius  }  } = chart.legend.options;
+                        if (data.labels.length && data.datasets.length) {
+                            return data.labels.map((label, i)=>{
+                                const meta = chart.getDatasetMeta(0);
+                                const style = meta.controller.getStyle(i);
+                                return {
+                                    text: label,
+                                    fillStyle: style.backgroundColor,
+                                    fontColor: color,
+                                    hidden: !chart.getDataVisibility(i),
+                                    lineDash: style.borderDash,
+                                    lineDashOffset: style.borderDashOffset,
+                                    lineJoin: style.borderJoinStyle,
+                                    lineWidth: style.borderWidth,
+                                    strokeStyle: style.borderColor,
+                                    textAlign: textAlign,
+                                    pointStyle: pointStyle,
+                                    borderRadius: useBorderRadius && (borderRadius || style.borderRadius),
+                                    index: i
+                                };
+                            });
+                        }
+                        return [];
+                    }
+                },
+                onClick (e, legendItem, legend) {
+                    legend.chart.toggleDataVisibility(legendItem.index);
+                    legend.chart.update();
+                }
+            }
+        }
+    };
+    constructor(chart, datasetIndex){
+        super(chart, datasetIndex);
+        this.enableOptionSharing = true;
+        this.innerRadius = undefined;
+        this.outerRadius = undefined;
+        this.offsetX = undefined;
+        this.offsetY = undefined;
+    }
+    linkScales() {}
+ parse(start, count) {
+        const data = this.getDataset().data;
+        const meta = this._cachedMeta;
+        if (this._parsing === false) {
+            meta._parsed = data;
+        } else {
+            let getter = (i)=>+data[i];
+            if ((0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.i)(data[start])) {
+                const { key ='value'  } = this._parsing;
+                getter = (i)=>+(0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.f)(data[i], key);
+            }
+            let i, ilen;
+            for(i = start, ilen = start + count; i < ilen; ++i){
+                meta._parsed[i] = getter(i);
+            }
+        }
+    }
+ _getRotation() {
+        return (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.t)(this.options.rotation - 90);
+    }
+ _getCircumference() {
+        return (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.t)(this.options.circumference);
+    }
+ _getRotationExtents() {
+        let min = _chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.T;
+        let max = -_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.T;
+        for(let i = 0; i < this.chart.data.datasets.length; ++i){
+            if (this.chart.isDatasetVisible(i) && this.chart.getDatasetMeta(i).type === this._type) {
+                const controller = this.chart.getDatasetMeta(i).controller;
+                const rotation = controller._getRotation();
+                const circumference = controller._getCircumference();
+                min = Math.min(min, rotation);
+                max = Math.max(max, rotation + circumference);
+            }
+        }
+        return {
+            rotation: min,
+            circumference: max - min
+        };
+    }
+ update(mode) {
+        const chart = this.chart;
+        const { chartArea  } = chart;
+        const meta = this._cachedMeta;
+        const arcs = meta.data;
+        const spacing = this.getMaxBorderWidth() + this.getMaxOffset(arcs) + this.options.spacing;
+        const maxSize = Math.max((Math.min(chartArea.width, chartArea.height) - spacing) / 2, 0);
+        const cutout = Math.min((0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.m)(this.options.cutout, maxSize), 1);
+        const chartWeight = this._getRingWeight(this.index);
+        const { circumference , rotation  } = this._getRotationExtents();
+        const { ratioX , ratioY , offsetX , offsetY  } = getRatioAndOffset(rotation, circumference, cutout);
+        const maxWidth = (chartArea.width - spacing) / ratioX;
+        const maxHeight = (chartArea.height - spacing) / ratioY;
+        const maxRadius = Math.max(Math.min(maxWidth, maxHeight) / 2, 0);
+        const outerRadius = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.n)(this.options.radius, maxRadius);
+        const innerRadius = Math.max(outerRadius * cutout, 0);
+        const radiusLength = (outerRadius - innerRadius) / this._getVisibleDatasetWeightTotal();
+        this.offsetX = offsetX * outerRadius;
+        this.offsetY = offsetY * outerRadius;
+        meta.total = this.calculateTotal();
+        this.outerRadius = outerRadius - radiusLength * this._getRingWeightOffset(this.index);
+        this.innerRadius = Math.max(this.outerRadius - radiusLength * chartWeight, 0);
+        this.updateElements(arcs, 0, arcs.length, mode);
+    }
+ _circumference(i, reset) {
+        const opts = this.options;
+        const meta = this._cachedMeta;
+        const circumference = this._getCircumference();
+        if (reset && opts.animation.animateRotate || !this.chart.getDataVisibility(i) || meta._parsed[i] === null || meta.data[i].hidden) {
+            return 0;
+        }
+        return this.calculateCircumference(meta._parsed[i] * circumference / _chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.T);
+    }
+    updateElements(arcs, start, count, mode) {
+        const reset = mode === 'reset';
+        const chart = this.chart;
+        const chartArea = chart.chartArea;
+        const opts = chart.options;
+        const animationOpts = opts.animation;
+        const centerX = (chartArea.left + chartArea.right) / 2;
+        const centerY = (chartArea.top + chartArea.bottom) / 2;
+        const animateScale = reset && animationOpts.animateScale;
+        const innerRadius = animateScale ? 0 : this.innerRadius;
+        const outerRadius = animateScale ? 0 : this.outerRadius;
+        const { sharedOptions , includeOptions  } = this._getSharedOptions(start, mode);
+        let startAngle = this._getRotation();
+        let i;
+        for(i = 0; i < start; ++i){
+            startAngle += this._circumference(i, reset);
+        }
+        for(i = start; i < start + count; ++i){
+            const circumference = this._circumference(i, reset);
+            const arc = arcs[i];
+            const properties = {
+                x: centerX + this.offsetX,
+                y: centerY + this.offsetY,
+                startAngle,
+                endAngle: startAngle + circumference,
+                circumference,
+                outerRadius,
+                innerRadius
+            };
+            if (includeOptions) {
+                properties.options = sharedOptions || this.resolveDataElementOptions(i, arc.active ? 'active' : mode);
+            }
+            startAngle += circumference;
+            this.updateElement(arc, i, properties, mode);
+        }
+    }
+    calculateTotal() {
+        const meta = this._cachedMeta;
+        const metaData = meta.data;
+        let total = 0;
+        let i;
+        for(i = 0; i < metaData.length; i++){
+            const value = meta._parsed[i];
+            if (value !== null && !isNaN(value) && this.chart.getDataVisibility(i) && !metaData[i].hidden) {
+                total += Math.abs(value);
+            }
+        }
+        return total;
+    }
+    calculateCircumference(value) {
+        const total = this._cachedMeta.total;
+        if (total > 0 && !isNaN(value)) {
+            return _chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.T * (Math.abs(value) / total);
+        }
+        return 0;
+    }
+    getLabelAndValue(index) {
+        const meta = this._cachedMeta;
+        const chart = this.chart;
+        const labels = chart.data.labels || [];
+        const value = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.o)(meta._parsed[index], chart.options.locale);
+        return {
+            label: labels[index] || '',
+            value
+        };
+    }
+    getMaxBorderWidth(arcs) {
+        let max = 0;
+        const chart = this.chart;
+        let i, ilen, meta, controller, options;
+        if (!arcs) {
+            for(i = 0, ilen = chart.data.datasets.length; i < ilen; ++i){
+                if (chart.isDatasetVisible(i)) {
+                    meta = chart.getDatasetMeta(i);
+                    arcs = meta.data;
+                    controller = meta.controller;
+                    break;
+                }
+            }
+        }
+        if (!arcs) {
+            return 0;
+        }
+        for(i = 0, ilen = arcs.length; i < ilen; ++i){
+            options = controller.resolveDataElementOptions(i);
+            if (options.borderAlign !== 'inner') {
+                max = Math.max(max, options.borderWidth || 0, options.hoverBorderWidth || 0);
+            }
+        }
+        return max;
+    }
+    getMaxOffset(arcs) {
+        let max = 0;
+        for(let i = 0, ilen = arcs.length; i < ilen; ++i){
+            const options = this.resolveDataElementOptions(i);
+            max = Math.max(max, options.offset || 0, options.hoverOffset || 0);
+        }
+        return max;
+    }
+ _getRingWeightOffset(datasetIndex) {
+        let ringWeightOffset = 0;
+        for(let i = 0; i < datasetIndex; ++i){
+            if (this.chart.isDatasetVisible(i)) {
+                ringWeightOffset += this._getRingWeight(i);
+            }
+        }
+        return ringWeightOffset;
+    }
+ _getRingWeight(datasetIndex) {
+        return Math.max((0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.v)(this.chart.data.datasets[datasetIndex].weight, 1), 0);
+    }
+ _getVisibleDatasetWeightTotal() {
+        return this._getRingWeightOffset(this.chart.data.datasets.length) || 1;
+    }
+}
+
+class LineController extends DatasetController {
+    static id = 'line';
+ static defaults = {
+        datasetElementType: 'line',
+        dataElementType: 'point',
+        showLine: true,
+        spanGaps: false
+    };
+ static overrides = {
+        scales: {
+            _index_: {
+                type: 'category'
+            },
+            _value_: {
+                type: 'linear'
+            }
+        }
+    };
+    initialize() {
+        this.enableOptionSharing = true;
+        this.supportsDecimation = true;
+        super.initialize();
+    }
+    update(mode) {
+        const meta = this._cachedMeta;
+        const { dataset: line , data: points = [] , _dataset  } = meta;
+        const animationsDisabled = this.chart._animationsDisabled;
+        let { start , count  } = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.q)(meta, points, animationsDisabled);
+        this._drawStart = start;
+        this._drawCount = count;
+        if ((0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.w)(meta)) {
+            start = 0;
+            count = points.length;
+        }
+        line._chart = this.chart;
+        line._datasetIndex = this.index;
+        line._decimated = !!_dataset._decimated;
+        line.points = points;
+        const options = this.resolveDatasetElementOptions(mode);
+        if (!this.options.showLine) {
+            options.borderWidth = 0;
+        }
+        options.segment = this.options.segment;
+        this.updateElement(line, undefined, {
+            animated: !animationsDisabled,
+            options
+        }, mode);
+        this.updateElements(points, start, count, mode);
+    }
+    updateElements(points, start, count, mode) {
+        const reset = mode === 'reset';
+        const { iScale , vScale , _stacked , _dataset  } = this._cachedMeta;
+        const { sharedOptions , includeOptions  } = this._getSharedOptions(start, mode);
+        const iAxis = iScale.axis;
+        const vAxis = vScale.axis;
+        const { spanGaps , segment  } = this.options;
+        const maxGapLength = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.x)(spanGaps) ? spanGaps : Number.POSITIVE_INFINITY;
+        const directUpdate = this.chart._animationsDisabled || reset || mode === 'none';
+        const end = start + count;
+        const pointsCount = points.length;
+        let prevParsed = start > 0 && this.getParsed(start - 1);
+        for(let i = 0; i < pointsCount; ++i){
+            const point = points[i];
+            const properties = directUpdate ? point : {};
+            if (i < start || i >= end) {
+                properties.skip = true;
+                continue;
+            }
+            const parsed = this.getParsed(i);
+            const nullData = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.k)(parsed[vAxis]);
+            const iPixel = properties[iAxis] = iScale.getPixelForValue(parsed[iAxis], i);
+            const vPixel = properties[vAxis] = reset || nullData ? vScale.getBasePixel() : vScale.getPixelForValue(_stacked ? this.applyStack(vScale, parsed, _stacked) : parsed[vAxis], i);
+            properties.skip = isNaN(iPixel) || isNaN(vPixel) || nullData;
+            properties.stop = i > 0 && Math.abs(parsed[iAxis] - prevParsed[iAxis]) > maxGapLength;
+            if (segment) {
+                properties.parsed = parsed;
+                properties.raw = _dataset.data[i];
+            }
+            if (includeOptions) {
+                properties.options = sharedOptions || this.resolveDataElementOptions(i, point.active ? 'active' : mode);
+            }
+            if (!directUpdate) {
+                this.updateElement(point, i, properties, mode);
+            }
+            prevParsed = parsed;
+        }
+    }
+ getMaxOverflow() {
+        const meta = this._cachedMeta;
+        const dataset = meta.dataset;
+        const border = dataset.options && dataset.options.borderWidth || 0;
+        const data = meta.data || [];
+        if (!data.length) {
+            return border;
+        }
+        const firstPoint = data[0].size(this.resolveDataElementOptions(0));
+        const lastPoint = data[data.length - 1].size(this.resolveDataElementOptions(data.length - 1));
+        return Math.max(border, firstPoint, lastPoint) / 2;
+    }
+    draw() {
+        const meta = this._cachedMeta;
+        meta.dataset.updateControlPoints(this.chart.chartArea, meta.iScale.axis);
+        super.draw();
+    }
+}
+
+class PolarAreaController extends DatasetController {
+    static id = 'polarArea';
+ static defaults = {
+        dataElementType: 'arc',
+        animation: {
+            animateRotate: true,
+            animateScale: true
+        },
+        animations: {
+            numbers: {
+                type: 'number',
+                properties: [
+                    'x',
+                    'y',
+                    'startAngle',
+                    'endAngle',
+                    'innerRadius',
+                    'outerRadius'
+                ]
+            }
+        },
+        indexAxis: 'r',
+        startAngle: 0
+    };
+ static overrides = {
+        aspectRatio: 1,
+        plugins: {
+            legend: {
+                labels: {
+                    generateLabels (chart) {
+                        const data = chart.data;
+                        if (data.labels.length && data.datasets.length) {
+                            const { labels: { pointStyle , color  }  } = chart.legend.options;
+                            return data.labels.map((label, i)=>{
+                                const meta = chart.getDatasetMeta(0);
+                                const style = meta.controller.getStyle(i);
+                                return {
+                                    text: label,
+                                    fillStyle: style.backgroundColor,
+                                    strokeStyle: style.borderColor,
+                                    fontColor: color,
+                                    lineWidth: style.borderWidth,
+                                    pointStyle: pointStyle,
+                                    hidden: !chart.getDataVisibility(i),
+                                    index: i
+                                };
+                            });
+                        }
+                        return [];
+                    }
+                },
+                onClick (e, legendItem, legend) {
+                    legend.chart.toggleDataVisibility(legendItem.index);
+                    legend.chart.update();
+                }
+            }
+        },
+        scales: {
+            r: {
+                type: 'radialLinear',
+                angleLines: {
+                    display: false
+                },
+                beginAtZero: true,
+                grid: {
+                    circular: true
+                },
+                pointLabels: {
+                    display: false
+                },
+                startAngle: 0
+            }
+        }
+    };
+    constructor(chart, datasetIndex){
+        super(chart, datasetIndex);
+        this.innerRadius = undefined;
+        this.outerRadius = undefined;
+    }
+    getLabelAndValue(index) {
+        const meta = this._cachedMeta;
+        const chart = this.chart;
+        const labels = chart.data.labels || [];
+        const value = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.o)(meta._parsed[index].r, chart.options.locale);
+        return {
+            label: labels[index] || '',
+            value
+        };
+    }
+    parseObjectData(meta, data, start, count) {
+        return _chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.y.bind(this)(meta, data, start, count);
+    }
+    update(mode) {
+        const arcs = this._cachedMeta.data;
+        this._updateRadius();
+        this.updateElements(arcs, 0, arcs.length, mode);
+    }
+ getMinMax() {
+        const meta = this._cachedMeta;
+        const range = {
+            min: Number.POSITIVE_INFINITY,
+            max: Number.NEGATIVE_INFINITY
+        };
+        meta.data.forEach((element, index)=>{
+            const parsed = this.getParsed(index).r;
+            if (!isNaN(parsed) && this.chart.getDataVisibility(index)) {
+                if (parsed < range.min) {
+                    range.min = parsed;
+                }
+                if (parsed > range.max) {
+                    range.max = parsed;
+                }
+            }
+        });
+        return range;
+    }
+ _updateRadius() {
+        const chart = this.chart;
+        const chartArea = chart.chartArea;
+        const opts = chart.options;
+        const minSize = Math.min(chartArea.right - chartArea.left, chartArea.bottom - chartArea.top);
+        const outerRadius = Math.max(minSize / 2, 0);
+        const innerRadius = Math.max(opts.cutoutPercentage ? outerRadius / 100 * opts.cutoutPercentage : 1, 0);
+        const radiusLength = (outerRadius - innerRadius) / chart.getVisibleDatasetCount();
+        this.outerRadius = outerRadius - radiusLength * this.index;
+        this.innerRadius = this.outerRadius - radiusLength;
+    }
+    updateElements(arcs, start, count, mode) {
+        const reset = mode === 'reset';
+        const chart = this.chart;
+        const opts = chart.options;
+        const animationOpts = opts.animation;
+        const scale = this._cachedMeta.rScale;
+        const centerX = scale.xCenter;
+        const centerY = scale.yCenter;
+        const datasetStartAngle = scale.getIndexAngle(0) - 0.5 * _chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.P;
+        let angle = datasetStartAngle;
+        let i;
+        const defaultAngle = 360 / this.countVisibleElements();
+        for(i = 0; i < start; ++i){
+            angle += this._computeAngle(i, mode, defaultAngle);
+        }
+        for(i = start; i < start + count; i++){
+            const arc = arcs[i];
+            let startAngle = angle;
+            let endAngle = angle + this._computeAngle(i, mode, defaultAngle);
+            let outerRadius = chart.getDataVisibility(i) ? scale.getDistanceFromCenterForValue(this.getParsed(i).r) : 0;
+            angle = endAngle;
+            if (reset) {
+                if (animationOpts.animateScale) {
+                    outerRadius = 0;
+                }
+                if (animationOpts.animateRotate) {
+                    startAngle = endAngle = datasetStartAngle;
+                }
+            }
+            const properties = {
+                x: centerX,
+                y: centerY,
+                innerRadius: 0,
+                outerRadius,
+                startAngle,
+                endAngle,
+                options: this.resolveDataElementOptions(i, arc.active ? 'active' : mode)
+            };
+            this.updateElement(arc, i, properties, mode);
+        }
+    }
+    countVisibleElements() {
+        const meta = this._cachedMeta;
+        let count = 0;
+        meta.data.forEach((element, index)=>{
+            if (!isNaN(this.getParsed(index).r) && this.chart.getDataVisibility(index)) {
+                count++;
+            }
+        });
+        return count;
+    }
+ _computeAngle(index, mode, defaultAngle) {
+        return this.chart.getDataVisibility(index) ? (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.t)(this.resolveDataElementOptions(index, mode).angle || defaultAngle) : 0;
+    }
+}
+
+class PieController extends DoughnutController {
+    static id = 'pie';
+ static defaults = {
+        cutout: 0,
+        rotation: 0,
+        circumference: 360,
+        radius: '100%'
+    };
+}
+
+class RadarController extends DatasetController {
+    static id = 'radar';
+ static defaults = {
+        datasetElementType: 'line',
+        dataElementType: 'point',
+        indexAxis: 'r',
+        showLine: true,
+        elements: {
+            line: {
+                fill: 'start'
+            }
+        }
+    };
+ static overrides = {
+        aspectRatio: 1,
+        scales: {
+            r: {
+                type: 'radialLinear'
+            }
+        }
+    };
+ getLabelAndValue(index) {
+        const vScale = this._cachedMeta.vScale;
+        const parsed = this.getParsed(index);
+        return {
+            label: vScale.getLabels()[index],
+            value: '' + vScale.getLabelForValue(parsed[vScale.axis])
+        };
+    }
+    parseObjectData(meta, data, start, count) {
+        return _chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.y.bind(this)(meta, data, start, count);
+    }
+    update(mode) {
+        const meta = this._cachedMeta;
+        const line = meta.dataset;
+        const points = meta.data || [];
+        const labels = meta.iScale.getLabels();
+        line.points = points;
+        if (mode !== 'resize') {
+            const options = this.resolveDatasetElementOptions(mode);
+            if (!this.options.showLine) {
+                options.borderWidth = 0;
+            }
+            const properties = {
+                _loop: true,
+                _fullLoop: labels.length === points.length,
+                options
+            };
+            this.updateElement(line, undefined, properties, mode);
+        }
+        this.updateElements(points, 0, points.length, mode);
+    }
+    updateElements(points, start, count, mode) {
+        const scale = this._cachedMeta.rScale;
+        const reset = mode === 'reset';
+        for(let i = start; i < start + count; i++){
+            const point = points[i];
+            const options = this.resolveDataElementOptions(i, point.active ? 'active' : mode);
+            const pointPosition = scale.getPointPositionForValue(i, this.getParsed(i).r);
+            const x = reset ? scale.xCenter : pointPosition.x;
+            const y = reset ? scale.yCenter : pointPosition.y;
+            const properties = {
+                x,
+                y,
+                angle: pointPosition.angle,
+                skip: isNaN(x) || isNaN(y),
+                options
+            };
+            this.updateElement(point, i, properties, mode);
+        }
+    }
+}
+
+class ScatterController extends DatasetController {
+    static id = 'scatter';
+ static defaults = {
+        datasetElementType: false,
+        dataElementType: 'point',
+        showLine: false,
+        fill: false
+    };
+ static overrides = {
+        interaction: {
+            mode: 'point'
+        },
+        scales: {
+            x: {
+                type: 'linear'
+            },
+            y: {
+                type: 'linear'
+            }
+        }
+    };
+ getLabelAndValue(index) {
+        const meta = this._cachedMeta;
+        const labels = this.chart.data.labels || [];
+        const { xScale , yScale  } = meta;
+        const parsed = this.getParsed(index);
+        const x = xScale.getLabelForValue(parsed.x);
+        const y = yScale.getLabelForValue(parsed.y);
+        return {
+            label: labels[index] || '',
+            value: '(' + x + ', ' + y + ')'
+        };
+    }
+    update(mode) {
+        const meta = this._cachedMeta;
+        const { data: points = []  } = meta;
+        const animationsDisabled = this.chart._animationsDisabled;
+        let { start , count  } = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.q)(meta, points, animationsDisabled);
+        this._drawStart = start;
+        this._drawCount = count;
+        if ((0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.w)(meta)) {
+            start = 0;
+            count = points.length;
+        }
+        if (this.options.showLine) {
+            if (!this.datasetElementType) {
+                this.addElements();
+            }
+            const { dataset: line , _dataset  } = meta;
+            line._chart = this.chart;
+            line._datasetIndex = this.index;
+            line._decimated = !!_dataset._decimated;
+            line.points = points;
+            const options = this.resolveDatasetElementOptions(mode);
+            options.segment = this.options.segment;
+            this.updateElement(line, undefined, {
+                animated: !animationsDisabled,
+                options
+            }, mode);
+        } else if (this.datasetElementType) {
+            delete meta.dataset;
+            this.datasetElementType = false;
+        }
+        this.updateElements(points, start, count, mode);
+    }
+    addElements() {
+        const { showLine  } = this.options;
+        if (!this.datasetElementType && showLine) {
+            this.datasetElementType = this.chart.registry.getElement('line');
+        }
+        super.addElements();
+    }
+    updateElements(points, start, count, mode) {
+        const reset = mode === 'reset';
+        const { iScale , vScale , _stacked , _dataset  } = this._cachedMeta;
+        const firstOpts = this.resolveDataElementOptions(start, mode);
+        const sharedOptions = this.getSharedOptions(firstOpts);
+        const includeOptions = this.includeOptions(mode, sharedOptions);
+        const iAxis = iScale.axis;
+        const vAxis = vScale.axis;
+        const { spanGaps , segment  } = this.options;
+        const maxGapLength = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.x)(spanGaps) ? spanGaps : Number.POSITIVE_INFINITY;
+        const directUpdate = this.chart._animationsDisabled || reset || mode === 'none';
+        let prevParsed = start > 0 && this.getParsed(start - 1);
+        for(let i = start; i < start + count; ++i){
+            const point = points[i];
+            const parsed = this.getParsed(i);
+            const properties = directUpdate ? point : {};
+            const nullData = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.k)(parsed[vAxis]);
+            const iPixel = properties[iAxis] = iScale.getPixelForValue(parsed[iAxis], i);
+            const vPixel = properties[vAxis] = reset || nullData ? vScale.getBasePixel() : vScale.getPixelForValue(_stacked ? this.applyStack(vScale, parsed, _stacked) : parsed[vAxis], i);
+            properties.skip = isNaN(iPixel) || isNaN(vPixel) || nullData;
+            properties.stop = i > 0 && Math.abs(parsed[iAxis] - prevParsed[iAxis]) > maxGapLength;
+            if (segment) {
+                properties.parsed = parsed;
+                properties.raw = _dataset.data[i];
+            }
+            if (includeOptions) {
+                properties.options = sharedOptions || this.resolveDataElementOptions(i, point.active ? 'active' : mode);
+            }
+            if (!directUpdate) {
+                this.updateElement(point, i, properties, mode);
+            }
+            prevParsed = parsed;
+        }
+        this.updateSharedOptions(sharedOptions, mode, firstOpts);
+    }
+ getMaxOverflow() {
+        const meta = this._cachedMeta;
+        const data = meta.data || [];
+        if (!this.options.showLine) {
+            let max = 0;
+            for(let i = data.length - 1; i >= 0; --i){
+                max = Math.max(max, data[i].size(this.resolveDataElementOptions(i)) / 2);
+            }
+            return max > 0 && max;
+        }
+        const dataset = meta.dataset;
+        const border = dataset.options && dataset.options.borderWidth || 0;
+        if (!data.length) {
+            return border;
+        }
+        const firstPoint = data[0].size(this.resolveDataElementOptions(0));
+        const lastPoint = data[data.length - 1].size(this.resolveDataElementOptions(data.length - 1));
+        return Math.max(border, firstPoint, lastPoint) / 2;
+    }
+}
+
+var controllers = /*#__PURE__*/Object.freeze({
+__proto__: null,
+BarController: BarController,
+BubbleController: BubbleController,
+DoughnutController: DoughnutController,
+LineController: LineController,
+PieController: PieController,
+PolarAreaController: PolarAreaController,
+RadarController: RadarController,
+ScatterController: ScatterController
+});
+
+/**
+ * @namespace Chart._adapters
+ * @since 2.8.0
+ * @private
+ */ function abstract() {
+    throw new Error('This method is not implemented: Check that a complete date adapter is provided.');
+}
+/**
+ * Date adapter (current used by the time scale)
+ * @namespace Chart._adapters._date
+ * @memberof Chart._adapters
+ * @private
+ */ class DateAdapterBase {
+    /**
+   * Override default date adapter methods.
+   * Accepts type parameter to define options type.
+   * @example
+   * Chart._adapters._date.override<{myAdapterOption: string}>({
+   *   init() {
+   *     console.log(this.options.myAdapterOption);
+   *   }
+   * })
+   */ static override(members) {
+        Object.assign(DateAdapterBase.prototype, members);
+    }
+    options;
+    constructor(options){
+        this.options = options || {};
+    }
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    init() {}
+    formats() {
+        return abstract();
+    }
+    parse() {
+        return abstract();
+    }
+    format() {
+        return abstract();
+    }
+    add() {
+        return abstract();
+    }
+    diff() {
+        return abstract();
+    }
+    startOf() {
+        return abstract();
+    }
+    endOf() {
+        return abstract();
+    }
+}
+var adapters = {
+    _date: DateAdapterBase
+};
+
+function binarySearch(metaset, axis, value, intersect) {
+    const { controller , data , _sorted  } = metaset;
+    const iScale = controller._cachedMeta.iScale;
+    const spanGaps = metaset.dataset ? metaset.dataset.options ? metaset.dataset.options.spanGaps : null : null;
+    if (iScale && axis === iScale.axis && axis !== 'r' && _sorted && data.length) {
+        const lookupMethod = iScale._reversePixels ? _chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.A : _chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.B;
+        if (!intersect) {
+            const result = lookupMethod(data, axis, value);
+            if (spanGaps) {
+                const { vScale  } = controller._cachedMeta;
+                const { _parsed  } = metaset;
+                const distanceToDefinedLo = _parsed.slice(0, result.lo + 1).reverse().findIndex((point)=>!(0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.k)(point[vScale.axis]));
+                result.lo -= Math.max(0, distanceToDefinedLo);
+                const distanceToDefinedHi = _parsed.slice(result.hi).findIndex((point)=>!(0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.k)(point[vScale.axis]));
+                result.hi += Math.max(0, distanceToDefinedHi);
+            }
+            return result;
+        } else if (controller._sharedOptions) {
+            const el = data[0];
+            const range = typeof el.getRange === 'function' && el.getRange(axis);
+            if (range) {
+                const start = lookupMethod(data, axis, value - range);
+                const end = lookupMethod(data, axis, value + range);
+                return {
+                    lo: start.lo,
+                    hi: end.hi
+                };
+            }
+        }
+    }
+    return {
+        lo: 0,
+        hi: data.length - 1
+    };
+}
+ function evaluateInteractionItems(chart, axis, position, handler, intersect) {
+    const metasets = chart.getSortedVisibleDatasetMetas();
+    const value = position[axis];
+    for(let i = 0, ilen = metasets.length; i < ilen; ++i){
+        const { index , data  } = metasets[i];
+        const { lo , hi  } = binarySearch(metasets[i], axis, value, intersect);
+        for(let j = lo; j <= hi; ++j){
+            const element = data[j];
+            if (!element.skip) {
+                handler(element, index, j);
+            }
+        }
+    }
+}
+ function getDistanceMetricForAxis(axis) {
+    const useX = axis.indexOf('x') !== -1;
+    const useY = axis.indexOf('y') !== -1;
+    return function(pt1, pt2) {
+        const deltaX = useX ? Math.abs(pt1.x - pt2.x) : 0;
+        const deltaY = useY ? Math.abs(pt1.y - pt2.y) : 0;
+        return Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2));
+    };
+}
+ function getIntersectItems(chart, position, axis, useFinalPosition, includeInvisible) {
+    const items = [];
+    if (!includeInvisible && !chart.isPointInArea(position)) {
+        return items;
+    }
+    const evaluationFunc = function(element, datasetIndex, index) {
+        if (!includeInvisible && !(0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.C)(element, chart.chartArea, 0)) {
+            return;
+        }
+        if (element.inRange(position.x, position.y, useFinalPosition)) {
+            items.push({
+                element,
+                datasetIndex,
+                index
+            });
+        }
+    };
+    evaluateInteractionItems(chart, axis, position, evaluationFunc, true);
+    return items;
+}
+ function getNearestRadialItems(chart, position, axis, useFinalPosition) {
+    let items = [];
+    function evaluationFunc(element, datasetIndex, index) {
+        const { startAngle , endAngle  } = element.getProps([
+            'startAngle',
+            'endAngle'
+        ], useFinalPosition);
+        const { angle  } = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.D)(element, {
+            x: position.x,
+            y: position.y
+        });
+        if ((0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.p)(angle, startAngle, endAngle)) {
+            items.push({
+                element,
+                datasetIndex,
+                index
+            });
+        }
+    }
+    evaluateInteractionItems(chart, axis, position, evaluationFunc);
+    return items;
+}
+ function getNearestCartesianItems(chart, position, axis, intersect, useFinalPosition, includeInvisible) {
+    let items = [];
+    const distanceMetric = getDistanceMetricForAxis(axis);
+    let minDistance = Number.POSITIVE_INFINITY;
+    function evaluationFunc(element, datasetIndex, index) {
+        const inRange = element.inRange(position.x, position.y, useFinalPosition);
+        if (intersect && !inRange) {
+            return;
+        }
+        const center = element.getCenterPoint(useFinalPosition);
+        const pointInArea = !!includeInvisible || chart.isPointInArea(center);
+        if (!pointInArea && !inRange) {
+            return;
+        }
+        const distance = distanceMetric(position, center);
+        if (distance < minDistance) {
+            items = [
+                {
+                    element,
+                    datasetIndex,
+                    index
+                }
+            ];
+            minDistance = distance;
+        } else if (distance === minDistance) {
+            items.push({
+                element,
+                datasetIndex,
+                index
+            });
+        }
+    }
+    evaluateInteractionItems(chart, axis, position, evaluationFunc);
+    return items;
+}
+ function getNearestItems(chart, position, axis, intersect, useFinalPosition, includeInvisible) {
+    if (!includeInvisible && !chart.isPointInArea(position)) {
+        return [];
+    }
+    return axis === 'r' && !intersect ? getNearestRadialItems(chart, position, axis, useFinalPosition) : getNearestCartesianItems(chart, position, axis, intersect, useFinalPosition, includeInvisible);
+}
+ function getAxisItems(chart, position, axis, intersect, useFinalPosition) {
+    const items = [];
+    const rangeMethod = axis === 'x' ? 'inXRange' : 'inYRange';
+    let intersectsItem = false;
+    evaluateInteractionItems(chart, axis, position, (element, datasetIndex, index)=>{
+        if (element[rangeMethod] && element[rangeMethod](position[axis], useFinalPosition)) {
+            items.push({
+                element,
+                datasetIndex,
+                index
+            });
+            intersectsItem = intersectsItem || element.inRange(position.x, position.y, useFinalPosition);
+        }
+    });
+    if (intersect && !intersectsItem) {
+        return [];
+    }
+    return items;
+}
+ var Interaction = {
+    evaluateInteractionItems,
+    modes: {
+ index (chart, e, options, useFinalPosition) {
+            const position = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.z)(e, chart);
+            const axis = options.axis || 'x';
+            const includeInvisible = options.includeInvisible || false;
+            const items = options.intersect ? getIntersectItems(chart, position, axis, useFinalPosition, includeInvisible) : getNearestItems(chart, position, axis, false, useFinalPosition, includeInvisible);
+            const elements = [];
+            if (!items.length) {
+                return [];
+            }
+            chart.getSortedVisibleDatasetMetas().forEach((meta)=>{
+                const index = items[0].index;
+                const element = meta.data[index];
+                if (element && !element.skip) {
+                    elements.push({
+                        element,
+                        datasetIndex: meta.index,
+                        index
+                    });
+                }
+            });
+            return elements;
+        },
+ dataset (chart, e, options, useFinalPosition) {
+            const position = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.z)(e, chart);
+            const axis = options.axis || 'xy';
+            const includeInvisible = options.includeInvisible || false;
+            let items = options.intersect ? getIntersectItems(chart, position, axis, useFinalPosition, includeInvisible) : getNearestItems(chart, position, axis, false, useFinalPosition, includeInvisible);
+            if (items.length > 0) {
+                const datasetIndex = items[0].datasetIndex;
+                const data = chart.getDatasetMeta(datasetIndex).data;
+                items = [];
+                for(let i = 0; i < data.length; ++i){
+                    items.push({
+                        element: data[i],
+                        datasetIndex,
+                        index: i
+                    });
+                }
+            }
+            return items;
+        },
+ point (chart, e, options, useFinalPosition) {
+            const position = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.z)(e, chart);
+            const axis = options.axis || 'xy';
+            const includeInvisible = options.includeInvisible || false;
+            return getIntersectItems(chart, position, axis, useFinalPosition, includeInvisible);
+        },
+ nearest (chart, e, options, useFinalPosition) {
+            const position = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.z)(e, chart);
+            const axis = options.axis || 'xy';
+            const includeInvisible = options.includeInvisible || false;
+            return getNearestItems(chart, position, axis, options.intersect, useFinalPosition, includeInvisible);
+        },
+ x (chart, e, options, useFinalPosition) {
+            const position = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.z)(e, chart);
+            return getAxisItems(chart, position, 'x', options.intersect, useFinalPosition);
+        },
+ y (chart, e, options, useFinalPosition) {
+            const position = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.z)(e, chart);
+            return getAxisItems(chart, position, 'y', options.intersect, useFinalPosition);
+        }
+    }
+};
+
+const STATIC_POSITIONS = [
+    'left',
+    'top',
+    'right',
+    'bottom'
+];
+function filterByPosition(array, position) {
+    return array.filter((v)=>v.pos === position);
+}
+function filterDynamicPositionByAxis(array, axis) {
+    return array.filter((v)=>STATIC_POSITIONS.indexOf(v.pos) === -1 && v.box.axis === axis);
+}
+function sortByWeight(array, reverse) {
+    return array.sort((a, b)=>{
+        const v0 = reverse ? b : a;
+        const v1 = reverse ? a : b;
+        return v0.weight === v1.weight ? v0.index - v1.index : v0.weight - v1.weight;
+    });
+}
+function wrapBoxes(boxes) {
+    const layoutBoxes = [];
+    let i, ilen, box, pos, stack, stackWeight;
+    for(i = 0, ilen = (boxes || []).length; i < ilen; ++i){
+        box = boxes[i];
+        ({ position: pos , options: { stack , stackWeight =1  }  } = box);
+        layoutBoxes.push({
+            index: i,
+            box,
+            pos,
+            horizontal: box.isHorizontal(),
+            weight: box.weight,
+            stack: stack && pos + stack,
+            stackWeight
+        });
+    }
+    return layoutBoxes;
+}
+function buildStacks(layouts) {
+    const stacks = {};
+    for (const wrap of layouts){
+        const { stack , pos , stackWeight  } = wrap;
+        if (!stack || !STATIC_POSITIONS.includes(pos)) {
+            continue;
+        }
+        const _stack = stacks[stack] || (stacks[stack] = {
+            count: 0,
+            placed: 0,
+            weight: 0,
+            size: 0
+        });
+        _stack.count++;
+        _stack.weight += stackWeight;
+    }
+    return stacks;
+}
+ function setLayoutDims(layouts, params) {
+    const stacks = buildStacks(layouts);
+    const { vBoxMaxWidth , hBoxMaxHeight  } = params;
+    let i, ilen, layout;
+    for(i = 0, ilen = layouts.length; i < ilen; ++i){
+        layout = layouts[i];
+        const { fullSize  } = layout.box;
+        const stack = stacks[layout.stack];
+        const factor = stack && layout.stackWeight / stack.weight;
+        if (layout.horizontal) {
+            layout.width = factor ? factor * vBoxMaxWidth : fullSize && params.availableWidth;
+            layout.height = hBoxMaxHeight;
+        } else {
+            layout.width = vBoxMaxWidth;
+            layout.height = factor ? factor * hBoxMaxHeight : fullSize && params.availableHeight;
+        }
+    }
+    return stacks;
+}
+function buildLayoutBoxes(boxes) {
+    const layoutBoxes = wrapBoxes(boxes);
+    const fullSize = sortByWeight(layoutBoxes.filter((wrap)=>wrap.box.fullSize), true);
+    const left = sortByWeight(filterByPosition(layoutBoxes, 'left'), true);
+    const right = sortByWeight(filterByPosition(layoutBoxes, 'right'));
+    const top = sortByWeight(filterByPosition(layoutBoxes, 'top'), true);
+    const bottom = sortByWeight(filterByPosition(layoutBoxes, 'bottom'));
+    const centerHorizontal = filterDynamicPositionByAxis(layoutBoxes, 'x');
+    const centerVertical = filterDynamicPositionByAxis(layoutBoxes, 'y');
+    return {
+        fullSize,
+        leftAndTop: left.concat(top),
+        rightAndBottom: right.concat(centerVertical).concat(bottom).concat(centerHorizontal),
+        chartArea: filterByPosition(layoutBoxes, 'chartArea'),
+        vertical: left.concat(right).concat(centerVertical),
+        horizontal: top.concat(bottom).concat(centerHorizontal)
+    };
+}
+function getCombinedMax(maxPadding, chartArea, a, b) {
+    return Math.max(maxPadding[a], chartArea[a]) + Math.max(maxPadding[b], chartArea[b]);
+}
+function updateMaxPadding(maxPadding, boxPadding) {
+    maxPadding.top = Math.max(maxPadding.top, boxPadding.top);
+    maxPadding.left = Math.max(maxPadding.left, boxPadding.left);
+    maxPadding.bottom = Math.max(maxPadding.bottom, boxPadding.bottom);
+    maxPadding.right = Math.max(maxPadding.right, boxPadding.right);
+}
+function updateDims(chartArea, params, layout, stacks) {
+    const { pos , box  } = layout;
+    const maxPadding = chartArea.maxPadding;
+    if (!(0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.i)(pos)) {
+        if (layout.size) {
+            chartArea[pos] -= layout.size;
+        }
+        const stack = stacks[layout.stack] || {
+            size: 0,
+            count: 1
+        };
+        stack.size = Math.max(stack.size, layout.horizontal ? box.height : box.width);
+        layout.size = stack.size / stack.count;
+        chartArea[pos] += layout.size;
+    }
+    if (box.getPadding) {
+        updateMaxPadding(maxPadding, box.getPadding());
+    }
+    const newWidth = Math.max(0, params.outerWidth - getCombinedMax(maxPadding, chartArea, 'left', 'right'));
+    const newHeight = Math.max(0, params.outerHeight - getCombinedMax(maxPadding, chartArea, 'top', 'bottom'));
+    const widthChanged = newWidth !== chartArea.w;
+    const heightChanged = newHeight !== chartArea.h;
+    chartArea.w = newWidth;
+    chartArea.h = newHeight;
+    return layout.horizontal ? {
+        same: widthChanged,
+        other: heightChanged
+    } : {
+        same: heightChanged,
+        other: widthChanged
+    };
+}
+function handleMaxPadding(chartArea) {
+    const maxPadding = chartArea.maxPadding;
+    function updatePos(pos) {
+        const change = Math.max(maxPadding[pos] - chartArea[pos], 0);
+        chartArea[pos] += change;
+        return change;
+    }
+    chartArea.y += updatePos('top');
+    chartArea.x += updatePos('left');
+    updatePos('right');
+    updatePos('bottom');
+}
+function getMargins(horizontal, chartArea) {
+    const maxPadding = chartArea.maxPadding;
+    function marginForPositions(positions) {
+        const margin = {
+            left: 0,
+            top: 0,
+            right: 0,
+            bottom: 0
+        };
+        positions.forEach((pos)=>{
+            margin[pos] = Math.max(chartArea[pos], maxPadding[pos]);
+        });
+        return margin;
+    }
+    return horizontal ? marginForPositions([
+        'left',
+        'right'
+    ]) : marginForPositions([
+        'top',
+        'bottom'
+    ]);
+}
+function fitBoxes(boxes, chartArea, params, stacks) {
+    const refitBoxes = [];
+    let i, ilen, layout, box, refit, changed;
+    for(i = 0, ilen = boxes.length, refit = 0; i < ilen; ++i){
+        layout = boxes[i];
+        box = layout.box;
+        box.update(layout.width || chartArea.w, layout.height || chartArea.h, getMargins(layout.horizontal, chartArea));
+        const { same , other  } = updateDims(chartArea, params, layout, stacks);
+        refit |= same && refitBoxes.length;
+        changed = changed || other;
+        if (!box.fullSize) {
+            refitBoxes.push(layout);
+        }
+    }
+    return refit && fitBoxes(refitBoxes, chartArea, params, stacks) || changed;
+}
+function setBoxDims(box, left, top, width, height) {
+    box.top = top;
+    box.left = left;
+    box.right = left + width;
+    box.bottom = top + height;
+    box.width = width;
+    box.height = height;
+}
+function placeBoxes(boxes, chartArea, params, stacks) {
+    const userPadding = params.padding;
+    let { x , y  } = chartArea;
+    for (const layout of boxes){
+        const box = layout.box;
+        const stack = stacks[layout.stack] || {
+            count: 1,
+            placed: 0,
+            weight: 1
+        };
+        const weight = layout.stackWeight / stack.weight || 1;
+        if (layout.horizontal) {
+            const width = chartArea.w * weight;
+            const height = stack.size || box.height;
+            if ((0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.h)(stack.start)) {
+                y = stack.start;
+            }
+            if (box.fullSize) {
+                setBoxDims(box, userPadding.left, y, params.outerWidth - userPadding.right - userPadding.left, height);
+            } else {
+                setBoxDims(box, chartArea.left + stack.placed, y, width, height);
+            }
+            stack.start = y;
+            stack.placed += width;
+            y = box.bottom;
+        } else {
+            const height = chartArea.h * weight;
+            const width = stack.size || box.width;
+            if ((0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.h)(stack.start)) {
+                x = stack.start;
+            }
+            if (box.fullSize) {
+                setBoxDims(box, x, userPadding.top, width, params.outerHeight - userPadding.bottom - userPadding.top);
+            } else {
+                setBoxDims(box, x, chartArea.top + stack.placed, width, height);
+            }
+            stack.start = x;
+            stack.placed += height;
+            x = box.right;
+        }
+    }
+    chartArea.x = x;
+    chartArea.y = y;
+}
+var layouts = {
+ addBox (chart, item) {
+        if (!chart.boxes) {
+            chart.boxes = [];
+        }
+        item.fullSize = item.fullSize || false;
+        item.position = item.position || 'top';
+        item.weight = item.weight || 0;
+        item._layers = item._layers || function() {
+            return [
+                {
+                    z: 0,
+                    draw (chartArea) {
+                        item.draw(chartArea);
+                    }
+                }
+            ];
+        };
+        chart.boxes.push(item);
+    },
+ removeBox (chart, layoutItem) {
+        const index = chart.boxes ? chart.boxes.indexOf(layoutItem) : -1;
+        if (index !== -1) {
+            chart.boxes.splice(index, 1);
+        }
+    },
+ configure (chart, item, options) {
+        item.fullSize = options.fullSize;
+        item.position = options.position;
+        item.weight = options.weight;
+    },
+ update (chart, width, height, minPadding) {
+        if (!chart) {
+            return;
+        }
+        const padding = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.E)(chart.options.layout.padding);
+        const availableWidth = Math.max(width - padding.width, 0);
+        const availableHeight = Math.max(height - padding.height, 0);
+        const boxes = buildLayoutBoxes(chart.boxes);
+        const verticalBoxes = boxes.vertical;
+        const horizontalBoxes = boxes.horizontal;
+        (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.F)(chart.boxes, (box)=>{
+            if (typeof box.beforeLayout === 'function') {
+                box.beforeLayout();
+            }
+        });
+        const visibleVerticalBoxCount = verticalBoxes.reduce((total, wrap)=>wrap.box.options && wrap.box.options.display === false ? total : total + 1, 0) || 1;
+        const params = Object.freeze({
+            outerWidth: width,
+            outerHeight: height,
+            padding,
+            availableWidth,
+            availableHeight,
+            vBoxMaxWidth: availableWidth / 2 / visibleVerticalBoxCount,
+            hBoxMaxHeight: availableHeight / 2
+        });
+        const maxPadding = Object.assign({}, padding);
+        updateMaxPadding(maxPadding, (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.E)(minPadding));
+        const chartArea = Object.assign({
+            maxPadding,
+            w: availableWidth,
+            h: availableHeight,
+            x: padding.left,
+            y: padding.top
+        }, padding);
+        const stacks = setLayoutDims(verticalBoxes.concat(horizontalBoxes), params);
+        fitBoxes(boxes.fullSize, chartArea, params, stacks);
+        fitBoxes(verticalBoxes, chartArea, params, stacks);
+        if (fitBoxes(horizontalBoxes, chartArea, params, stacks)) {
+            fitBoxes(verticalBoxes, chartArea, params, stacks);
+        }
+        handleMaxPadding(chartArea);
+        placeBoxes(boxes.leftAndTop, chartArea, params, stacks);
+        chartArea.x += chartArea.w;
+        chartArea.y += chartArea.h;
+        placeBoxes(boxes.rightAndBottom, chartArea, params, stacks);
+        chart.chartArea = {
+            left: chartArea.left,
+            top: chartArea.top,
+            right: chartArea.left + chartArea.w,
+            bottom: chartArea.top + chartArea.h,
+            height: chartArea.h,
+            width: chartArea.w
+        };
+        (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.F)(boxes.chartArea, (layout)=>{
+            const box = layout.box;
+            Object.assign(box, chart.chartArea);
+            box.update(chartArea.w, chartArea.h, {
+                left: 0,
+                top: 0,
+                right: 0,
+                bottom: 0
+            });
+        });
+    }
+};
+
+class BasePlatform {
+ acquireContext(canvas, aspectRatio) {}
+ releaseContext(context) {
+        return false;
+    }
+ addEventListener(chart, type, listener) {}
+ removeEventListener(chart, type, listener) {}
+ getDevicePixelRatio() {
+        return 1;
+    }
+ getMaximumSize(element, width, height, aspectRatio) {
+        width = Math.max(0, width || element.width);
+        height = height || element.height;
+        return {
+            width,
+            height: Math.max(0, aspectRatio ? Math.floor(width / aspectRatio) : height)
+        };
+    }
+ isAttached(canvas) {
+        return true;
+    }
+ updateConfig(config) {
+    }
+}
+
+class BasicPlatform extends BasePlatform {
+    acquireContext(item) {
+        return item && item.getContext && item.getContext('2d') || null;
+    }
+    updateConfig(config) {
+        config.options.animation = false;
+    }
+}
+
+const EXPANDO_KEY = '$chartjs';
+ const EVENT_TYPES = {
+    touchstart: 'mousedown',
+    touchmove: 'mousemove',
+    touchend: 'mouseup',
+    pointerenter: 'mouseenter',
+    pointerdown: 'mousedown',
+    pointermove: 'mousemove',
+    pointerup: 'mouseup',
+    pointerleave: 'mouseout',
+    pointerout: 'mouseout'
+};
+const isNullOrEmpty = (value)=>value === null || value === '';
+ function initCanvas(canvas, aspectRatio) {
+    const style = canvas.style;
+    const renderHeight = canvas.getAttribute('height');
+    const renderWidth = canvas.getAttribute('width');
+    canvas[EXPANDO_KEY] = {
+        initial: {
+            height: renderHeight,
+            width: renderWidth,
+            style: {
+                display: style.display,
+                height: style.height,
+                width: style.width
+            }
+        }
+    };
+    style.display = style.display || 'block';
+    style.boxSizing = style.boxSizing || 'border-box';
+    if (isNullOrEmpty(renderWidth)) {
+        const displayWidth = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.J)(canvas, 'width');
+        if (displayWidth !== undefined) {
+            canvas.width = displayWidth;
+        }
+    }
+    if (isNullOrEmpty(renderHeight)) {
+        if (canvas.style.height === '') {
+            canvas.height = canvas.width / (aspectRatio || 2);
+        } else {
+            const displayHeight = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.J)(canvas, 'height');
+            if (displayHeight !== undefined) {
+                canvas.height = displayHeight;
+            }
+        }
+    }
+    return canvas;
+}
+const eventListenerOptions = _chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.K ? {
+    passive: true
+} : false;
+function addListener(node, type, listener) {
+    if (node) {
+        node.addEventListener(type, listener, eventListenerOptions);
+    }
+}
+function removeListener(chart, type, listener) {
+    if (chart && chart.canvas) {
+        chart.canvas.removeEventListener(type, listener, eventListenerOptions);
+    }
+}
+function fromNativeEvent(event, chart) {
+    const type = EVENT_TYPES[event.type] || event.type;
+    const { x , y  } = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.z)(event, chart);
+    return {
+        type,
+        chart,
+        native: event,
+        x: x !== undefined ? x : null,
+        y: y !== undefined ? y : null
+    };
+}
+function nodeListContains(nodeList, canvas) {
+    for (const node of nodeList){
+        if (node === canvas || node.contains(canvas)) {
+            return true;
+        }
+    }
+}
+function createAttachObserver(chart, type, listener) {
+    const canvas = chart.canvas;
+    const observer = new MutationObserver((entries)=>{
+        let trigger = false;
+        for (const entry of entries){
+            trigger = trigger || nodeListContains(entry.addedNodes, canvas);
+            trigger = trigger && !nodeListContains(entry.removedNodes, canvas);
+        }
+        if (trigger) {
+            listener();
+        }
+    });
+    observer.observe(document, {
+        childList: true,
+        subtree: true
+    });
+    return observer;
+}
+function createDetachObserver(chart, type, listener) {
+    const canvas = chart.canvas;
+    const observer = new MutationObserver((entries)=>{
+        let trigger = false;
+        for (const entry of entries){
+            trigger = trigger || nodeListContains(entry.removedNodes, canvas);
+            trigger = trigger && !nodeListContains(entry.addedNodes, canvas);
+        }
+        if (trigger) {
+            listener();
+        }
+    });
+    observer.observe(document, {
+        childList: true,
+        subtree: true
+    });
+    return observer;
+}
+const drpListeningCharts = new Map();
+let oldDevicePixelRatio = 0;
+function onWindowResize() {
+    const dpr = window.devicePixelRatio;
+    if (dpr === oldDevicePixelRatio) {
+        return;
+    }
+    oldDevicePixelRatio = dpr;
+    drpListeningCharts.forEach((resize, chart)=>{
+        if (chart.currentDevicePixelRatio !== dpr) {
+            resize();
+        }
+    });
+}
+function listenDevicePixelRatioChanges(chart, resize) {
+    if (!drpListeningCharts.size) {
+        window.addEventListener('resize', onWindowResize);
+    }
+    drpListeningCharts.set(chart, resize);
+}
+function unlistenDevicePixelRatioChanges(chart) {
+    drpListeningCharts.delete(chart);
+    if (!drpListeningCharts.size) {
+        window.removeEventListener('resize', onWindowResize);
+    }
+}
+function createResizeObserver(chart, type, listener) {
+    const canvas = chart.canvas;
+    const container = canvas && (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.I)(canvas);
+    if (!container) {
+        return;
+    }
+    const resize = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.L)((width, height)=>{
+        const w = container.clientWidth;
+        listener(width, height);
+        if (w < container.clientWidth) {
+            listener();
+        }
+    }, window);
+    const observer = new ResizeObserver((entries)=>{
+        const entry = entries[0];
+        const width = entry.contentRect.width;
+        const height = entry.contentRect.height;
+        if (width === 0 && height === 0) {
+            return;
+        }
+        resize(width, height);
+    });
+    observer.observe(container);
+    listenDevicePixelRatioChanges(chart, resize);
+    return observer;
+}
+function releaseObserver(chart, type, observer) {
+    if (observer) {
+        observer.disconnect();
+    }
+    if (type === 'resize') {
+        unlistenDevicePixelRatioChanges(chart);
+    }
+}
+function createProxyAndListen(chart, type, listener) {
+    const canvas = chart.canvas;
+    const proxy = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.L)((event)=>{
+        if (chart.ctx !== null) {
+            listener(fromNativeEvent(event, chart));
+        }
+    }, chart);
+    addListener(canvas, type, proxy);
+    return proxy;
+}
+ class DomPlatform extends BasePlatform {
+ acquireContext(canvas, aspectRatio) {
+        const context = canvas && canvas.getContext && canvas.getContext('2d');
+        if (context && context.canvas === canvas) {
+            initCanvas(canvas, aspectRatio);
+            return context;
+        }
+        return null;
+    }
+ releaseContext(context) {
+        const canvas = context.canvas;
+        if (!canvas[EXPANDO_KEY]) {
+            return false;
+        }
+        const initial = canvas[EXPANDO_KEY].initial;
+        [
+            'height',
+            'width'
+        ].forEach((prop)=>{
+            const value = initial[prop];
+            if ((0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.k)(value)) {
+                canvas.removeAttribute(prop);
+            } else {
+                canvas.setAttribute(prop, value);
+            }
+        });
+        const style = initial.style || {};
+        Object.keys(style).forEach((key)=>{
+            canvas.style[key] = style[key];
+        });
+        canvas.width = canvas.width;
+        delete canvas[EXPANDO_KEY];
+        return true;
+    }
+ addEventListener(chart, type, listener) {
+        this.removeEventListener(chart, type);
+        const proxies = chart.$proxies || (chart.$proxies = {});
+        const handlers = {
+            attach: createAttachObserver,
+            detach: createDetachObserver,
+            resize: createResizeObserver
+        };
+        const handler = handlers[type] || createProxyAndListen;
+        proxies[type] = handler(chart, type, listener);
+    }
+ removeEventListener(chart, type) {
+        const proxies = chart.$proxies || (chart.$proxies = {});
+        const proxy = proxies[type];
+        if (!proxy) {
+            return;
+        }
+        const handlers = {
+            attach: releaseObserver,
+            detach: releaseObserver,
+            resize: releaseObserver
+        };
+        const handler = handlers[type] || removeListener;
+        handler(chart, type, proxy);
+        proxies[type] = undefined;
+    }
+    getDevicePixelRatio() {
+        return window.devicePixelRatio;
+    }
+ getMaximumSize(canvas, width, height, aspectRatio) {
+        return (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.G)(canvas, width, height, aspectRatio);
+    }
+ isAttached(canvas) {
+        const container = canvas && (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.I)(canvas);
+        return !!(container && container.isConnected);
+    }
+}
+
+function _detectPlatform(canvas) {
+    if (!(0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.M)() || typeof OffscreenCanvas !== 'undefined' && canvas instanceof OffscreenCanvas) {
+        return BasicPlatform;
+    }
+    return DomPlatform;
+}
+
+class Element {
+    static defaults = {};
+    static defaultRoutes = undefined;
+    x;
+    y;
+    active = false;
+    options;
+    $animations;
+    tooltipPosition(useFinalPosition) {
+        const { x , y  } = this.getProps([
+            'x',
+            'y'
+        ], useFinalPosition);
+        return {
+            x,
+            y
+        };
+    }
+    hasValue() {
+        return (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.x)(this.x) && (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.x)(this.y);
+    }
+    getProps(props, final) {
+        const anims = this.$animations;
+        if (!final || !anims) {
+            // let's not create an object, if not needed
+            return this;
+        }
+        const ret = {};
+        props.forEach((prop)=>{
+            ret[prop] = anims[prop] && anims[prop].active() ? anims[prop]._to : this[prop];
+        });
+        return ret;
+    }
+}
+
+function autoSkip(scale, ticks) {
+    const tickOpts = scale.options.ticks;
+    const determinedMaxTicks = determineMaxTicks(scale);
+    const ticksLimit = Math.min(tickOpts.maxTicksLimit || determinedMaxTicks, determinedMaxTicks);
+    const majorIndices = tickOpts.major.enabled ? getMajorIndices(ticks) : [];
+    const numMajorIndices = majorIndices.length;
+    const first = majorIndices[0];
+    const last = majorIndices[numMajorIndices - 1];
+    const newTicks = [];
+    if (numMajorIndices > ticksLimit) {
+        skipMajors(ticks, newTicks, majorIndices, numMajorIndices / ticksLimit);
+        return newTicks;
+    }
+    const spacing = calculateSpacing(majorIndices, ticks, ticksLimit);
+    if (numMajorIndices > 0) {
+        let i, ilen;
+        const avgMajorSpacing = numMajorIndices > 1 ? Math.round((last - first) / (numMajorIndices - 1)) : null;
+        skip(ticks, newTicks, spacing, (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.k)(avgMajorSpacing) ? 0 : first - avgMajorSpacing, first);
+        for(i = 0, ilen = numMajorIndices - 1; i < ilen; i++){
+            skip(ticks, newTicks, spacing, majorIndices[i], majorIndices[i + 1]);
+        }
+        skip(ticks, newTicks, spacing, last, (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.k)(avgMajorSpacing) ? ticks.length : last + avgMajorSpacing);
+        return newTicks;
+    }
+    skip(ticks, newTicks, spacing);
+    return newTicks;
+}
+function determineMaxTicks(scale) {
+    const offset = scale.options.offset;
+    const tickLength = scale._tickSize();
+    const maxScale = scale._length / tickLength + (offset ? 0 : 1);
+    const maxChart = scale._maxLength / tickLength;
+    return Math.floor(Math.min(maxScale, maxChart));
+}
+ function calculateSpacing(majorIndices, ticks, ticksLimit) {
+    const evenMajorSpacing = getEvenSpacing(majorIndices);
+    const spacing = ticks.length / ticksLimit;
+    if (!evenMajorSpacing) {
+        return Math.max(spacing, 1);
+    }
+    const factors = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.N)(evenMajorSpacing);
+    for(let i = 0, ilen = factors.length - 1; i < ilen; i++){
+        const factor = factors[i];
+        if (factor > spacing) {
+            return factor;
+        }
+    }
+    return Math.max(spacing, 1);
+}
+ function getMajorIndices(ticks) {
+    const result = [];
+    let i, ilen;
+    for(i = 0, ilen = ticks.length; i < ilen; i++){
+        if (ticks[i].major) {
+            result.push(i);
+        }
+    }
+    return result;
+}
+ function skipMajors(ticks, newTicks, majorIndices, spacing) {
+    let count = 0;
+    let next = majorIndices[0];
+    let i;
+    spacing = Math.ceil(spacing);
+    for(i = 0; i < ticks.length; i++){
+        if (i === next) {
+            newTicks.push(ticks[i]);
+            count++;
+            next = majorIndices[count * spacing];
+        }
+    }
+}
+ function skip(ticks, newTicks, spacing, majorStart, majorEnd) {
+    const start = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.v)(majorStart, 0);
+    const end = Math.min((0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.v)(majorEnd, ticks.length), ticks.length);
+    let count = 0;
+    let length, i, next;
+    spacing = Math.ceil(spacing);
+    if (majorEnd) {
+        length = majorEnd - majorStart;
+        spacing = length / Math.floor(length / spacing);
+    }
+    next = start;
+    while(next < 0){
+        count++;
+        next = Math.round(start + count * spacing);
+    }
+    for(i = Math.max(start, 0); i < end; i++){
+        if (i === next) {
+            newTicks.push(ticks[i]);
+            count++;
+            next = Math.round(start + count * spacing);
+        }
+    }
+}
+ function getEvenSpacing(arr) {
+    const len = arr.length;
+    let i, diff;
+    if (len < 2) {
+        return false;
+    }
+    for(diff = arr[0], i = 1; i < len; ++i){
+        if (arr[i] - arr[i - 1] !== diff) {
+            return false;
+        }
+    }
+    return diff;
+}
+
+const reverseAlign = (align)=>align === 'left' ? 'right' : align === 'right' ? 'left' : align;
+const offsetFromEdge = (scale, edge, offset)=>edge === 'top' || edge === 'left' ? scale[edge] + offset : scale[edge] - offset;
+const getTicksLimit = (ticksLength, maxTicksLimit)=>Math.min(maxTicksLimit || ticksLength, ticksLength);
+ function sample(arr, numItems) {
+    const result = [];
+    const increment = arr.length / numItems;
+    const len = arr.length;
+    let i = 0;
+    for(; i < len; i += increment){
+        result.push(arr[Math.floor(i)]);
+    }
+    return result;
+}
+ function getPixelForGridLine(scale, index, offsetGridLines) {
+    const length = scale.ticks.length;
+    const validIndex = Math.min(index, length - 1);
+    const start = scale._startPixel;
+    const end = scale._endPixel;
+    const epsilon = 1e-6;
+    let lineValue = scale.getPixelForTick(validIndex);
+    let offset;
+    if (offsetGridLines) {
+        if (length === 1) {
+            offset = Math.max(lineValue - start, end - lineValue);
+        } else if (index === 0) {
+            offset = (scale.getPixelForTick(1) - lineValue) / 2;
+        } else {
+            offset = (lineValue - scale.getPixelForTick(validIndex - 1)) / 2;
+        }
+        lineValue += validIndex < index ? offset : -offset;
+        if (lineValue < start - epsilon || lineValue > end + epsilon) {
+            return;
+        }
+    }
+    return lineValue;
+}
+ function garbageCollect(caches, length) {
+    (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.F)(caches, (cache)=>{
+        const gc = cache.gc;
+        const gcLen = gc.length / 2;
+        let i;
+        if (gcLen > length) {
+            for(i = 0; i < gcLen; ++i){
+                delete cache.data[gc[i]];
+            }
+            gc.splice(0, gcLen);
+        }
+    });
+}
+ function getTickMarkLength(options) {
+    return options.drawTicks ? options.tickLength : 0;
+}
+ function getTitleHeight(options, fallback) {
+    if (!options.display) {
+        return 0;
+    }
+    const font = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.a0)(options.font, fallback);
+    const padding = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.E)(options.padding);
+    const lines = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.b)(options.text) ? options.text.length : 1;
+    return lines * font.lineHeight + padding.height;
+}
+function createScaleContext(parent, scale) {
+    return (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.j)(parent, {
+        scale,
+        type: 'scale'
+    });
+}
+function createTickContext(parent, index, tick) {
+    return (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.j)(parent, {
+        tick,
+        index,
+        type: 'tick'
+    });
+}
+function titleAlign(align, position, reverse) {
+     let ret = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.a1)(align);
+    if (reverse && position !== 'right' || !reverse && position === 'right') {
+        ret = reverseAlign(ret);
+    }
+    return ret;
+}
+function titleArgs(scale, offset, position, align) {
+    const { top , left , bottom , right , chart  } = scale;
+    const { chartArea , scales  } = chart;
+    let rotation = 0;
+    let maxWidth, titleX, titleY;
+    const height = bottom - top;
+    const width = right - left;
+    if (scale.isHorizontal()) {
+        titleX = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.a2)(align, left, right);
+        if ((0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.i)(position)) {
+            const positionAxisID = Object.keys(position)[0];
+            const value = position[positionAxisID];
+            titleY = scales[positionAxisID].getPixelForValue(value) + height - offset;
+        } else if (position === 'center') {
+            titleY = (chartArea.bottom + chartArea.top) / 2 + height - offset;
+        } else {
+            titleY = offsetFromEdge(scale, position, offset);
+        }
+        maxWidth = right - left;
+    } else {
+        if ((0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.i)(position)) {
+            const positionAxisID = Object.keys(position)[0];
+            const value = position[positionAxisID];
+            titleX = scales[positionAxisID].getPixelForValue(value) - width + offset;
+        } else if (position === 'center') {
+            titleX = (chartArea.left + chartArea.right) / 2 - width + offset;
+        } else {
+            titleX = offsetFromEdge(scale, position, offset);
+        }
+        titleY = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.a2)(align, bottom, top);
+        rotation = position === 'left' ? -_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.H : _chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.H;
+    }
+    return {
+        titleX,
+        titleY,
+        maxWidth,
+        rotation
+    };
+}
+class Scale extends Element {
+    constructor(cfg){
+        super();
+         this.id = cfg.id;
+         this.type = cfg.type;
+         this.options = undefined;
+         this.ctx = cfg.ctx;
+         this.chart = cfg.chart;
+         this.top = undefined;
+         this.bottom = undefined;
+         this.left = undefined;
+         this.right = undefined;
+         this.width = undefined;
+         this.height = undefined;
+        this._margins = {
+            left: 0,
+            right: 0,
+            top: 0,
+            bottom: 0
+        };
+         this.maxWidth = undefined;
+         this.maxHeight = undefined;
+         this.paddingTop = undefined;
+         this.paddingBottom = undefined;
+         this.paddingLeft = undefined;
+         this.paddingRight = undefined;
+         this.axis = undefined;
+         this.labelRotation = undefined;
+        this.min = undefined;
+        this.max = undefined;
+        this._range = undefined;
+         this.ticks = [];
+         this._gridLineItems = null;
+         this._labelItems = null;
+         this._labelSizes = null;
+        this._length = 0;
+        this._maxLength = 0;
+        this._longestTextCache = {};
+         this._startPixel = undefined;
+         this._endPixel = undefined;
+        this._reversePixels = false;
+        this._userMax = undefined;
+        this._userMin = undefined;
+        this._suggestedMax = undefined;
+        this._suggestedMin = undefined;
+        this._ticksLength = 0;
+        this._borderValue = 0;
+        this._cache = {};
+        this._dataLimitsCached = false;
+        this.$context = undefined;
+    }
+ init(options) {
+        this.options = options.setContext(this.getContext());
+        this.axis = options.axis;
+        this._userMin = this.parse(options.min);
+        this._userMax = this.parse(options.max);
+        this._suggestedMin = this.parse(options.suggestedMin);
+        this._suggestedMax = this.parse(options.suggestedMax);
+    }
+ parse(raw, index) {
+        return raw;
+    }
+ getUserBounds() {
+        let { _userMin , _userMax , _suggestedMin , _suggestedMax  } = this;
+        _userMin = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.O)(_userMin, Number.POSITIVE_INFINITY);
+        _userMax = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.O)(_userMax, Number.NEGATIVE_INFINITY);
+        _suggestedMin = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.O)(_suggestedMin, Number.POSITIVE_INFINITY);
+        _suggestedMax = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.O)(_suggestedMax, Number.NEGATIVE_INFINITY);
+        return {
+            min: (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.O)(_userMin, _suggestedMin),
+            max: (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.O)(_userMax, _suggestedMax),
+            minDefined: (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.g)(_userMin),
+            maxDefined: (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.g)(_userMax)
+        };
+    }
+ getMinMax(canStack) {
+        let { min , max , minDefined , maxDefined  } = this.getUserBounds();
+        let range;
+        if (minDefined && maxDefined) {
+            return {
+                min,
+                max
+            };
+        }
+        const metas = this.getMatchingVisibleMetas();
+        for(let i = 0, ilen = metas.length; i < ilen; ++i){
+            range = metas[i].controller.getMinMax(this, canStack);
+            if (!minDefined) {
+                min = Math.min(min, range.min);
+            }
+            if (!maxDefined) {
+                max = Math.max(max, range.max);
+            }
+        }
+        min = maxDefined && min > max ? max : min;
+        max = minDefined && min > max ? min : max;
+        return {
+            min: (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.O)(min, (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.O)(max, min)),
+            max: (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.O)(max, (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.O)(min, max))
+        };
+    }
+ getPadding() {
+        return {
+            left: this.paddingLeft || 0,
+            top: this.paddingTop || 0,
+            right: this.paddingRight || 0,
+            bottom: this.paddingBottom || 0
+        };
+    }
+ getTicks() {
+        return this.ticks;
+    }
+ getLabels() {
+        const data = this.chart.data;
+        return this.options.labels || (this.isHorizontal() ? data.xLabels : data.yLabels) || data.labels || [];
+    }
+ getLabelItems(chartArea = this.chart.chartArea) {
+        const items = this._labelItems || (this._labelItems = this._computeLabelItems(chartArea));
+        return items;
+    }
+    beforeLayout() {
+        this._cache = {};
+        this._dataLimitsCached = false;
+    }
+    beforeUpdate() {
+        (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.Q)(this.options.beforeUpdate, [
+            this
+        ]);
+    }
+ update(maxWidth, maxHeight, margins) {
+        const { beginAtZero , grace , ticks: tickOpts  } = this.options;
+        const sampleSize = tickOpts.sampleSize;
+        this.beforeUpdate();
+        this.maxWidth = maxWidth;
+        this.maxHeight = maxHeight;
+        this._margins = margins = Object.assign({
+            left: 0,
+            right: 0,
+            top: 0,
+            bottom: 0
+        }, margins);
+        this.ticks = null;
+        this._labelSizes = null;
+        this._gridLineItems = null;
+        this._labelItems = null;
+        this.beforeSetDimensions();
+        this.setDimensions();
+        this.afterSetDimensions();
+        this._maxLength = this.isHorizontal() ? this.width + margins.left + margins.right : this.height + margins.top + margins.bottom;
+        if (!this._dataLimitsCached) {
+            this.beforeDataLimits();
+            this.determineDataLimits();
+            this.afterDataLimits();
+            this._range = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.R)(this, grace, beginAtZero);
+            this._dataLimitsCached = true;
+        }
+        this.beforeBuildTicks();
+        this.ticks = this.buildTicks() || [];
+        this.afterBuildTicks();
+        const samplingEnabled = sampleSize < this.ticks.length;
+        this._convertTicksToLabels(samplingEnabled ? sample(this.ticks, sampleSize) : this.ticks);
+        this.configure();
+        this.beforeCalculateLabelRotation();
+        this.calculateLabelRotation();
+        this.afterCalculateLabelRotation();
+        if (tickOpts.display && (tickOpts.autoSkip || tickOpts.source === 'auto')) {
+            this.ticks = autoSkip(this, this.ticks);
+            this._labelSizes = null;
+            this.afterAutoSkip();
+        }
+        if (samplingEnabled) {
+            this._convertTicksToLabels(this.ticks);
+        }
+        this.beforeFit();
+        this.fit();
+        this.afterFit();
+        this.afterUpdate();
+    }
+ configure() {
+        let reversePixels = this.options.reverse;
+        let startPixel, endPixel;
+        if (this.isHorizontal()) {
+            startPixel = this.left;
+            endPixel = this.right;
+        } else {
+            startPixel = this.top;
+            endPixel = this.bottom;
+            reversePixels = !reversePixels;
+        }
+        this._startPixel = startPixel;
+        this._endPixel = endPixel;
+        this._reversePixels = reversePixels;
+        this._length = endPixel - startPixel;
+        this._alignToPixels = this.options.alignToPixels;
+    }
+    afterUpdate() {
+        (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.Q)(this.options.afterUpdate, [
+            this
+        ]);
+    }
+    beforeSetDimensions() {
+        (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.Q)(this.options.beforeSetDimensions, [
+            this
+        ]);
+    }
+    setDimensions() {
+        if (this.isHorizontal()) {
+            this.width = this.maxWidth;
+            this.left = 0;
+            this.right = this.width;
+        } else {
+            this.height = this.maxHeight;
+            this.top = 0;
+            this.bottom = this.height;
+        }
+        this.paddingLeft = 0;
+        this.paddingTop = 0;
+        this.paddingRight = 0;
+        this.paddingBottom = 0;
+    }
+    afterSetDimensions() {
+        (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.Q)(this.options.afterSetDimensions, [
+            this
+        ]);
+    }
+    _callHooks(name) {
+        this.chart.notifyPlugins(name, this.getContext());
+        (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.Q)(this.options[name], [
+            this
+        ]);
+    }
+    beforeDataLimits() {
+        this._callHooks('beforeDataLimits');
+    }
+    determineDataLimits() {}
+    afterDataLimits() {
+        this._callHooks('afterDataLimits');
+    }
+    beforeBuildTicks() {
+        this._callHooks('beforeBuildTicks');
+    }
+ buildTicks() {
+        return [];
+    }
+    afterBuildTicks() {
+        this._callHooks('afterBuildTicks');
+    }
+    beforeTickToLabelConversion() {
+        (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.Q)(this.options.beforeTickToLabelConversion, [
+            this
+        ]);
+    }
+ generateTickLabels(ticks) {
+        const tickOpts = this.options.ticks;
+        let i, ilen, tick;
+        for(i = 0, ilen = ticks.length; i < ilen; i++){
+            tick = ticks[i];
+            tick.label = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.Q)(tickOpts.callback, [
+                tick.value,
+                i,
+                ticks
+            ], this);
+        }
+    }
+    afterTickToLabelConversion() {
+        (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.Q)(this.options.afterTickToLabelConversion, [
+            this
+        ]);
+    }
+    beforeCalculateLabelRotation() {
+        (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.Q)(this.options.beforeCalculateLabelRotation, [
+            this
+        ]);
+    }
+    calculateLabelRotation() {
+        const options = this.options;
+        const tickOpts = options.ticks;
+        const numTicks = getTicksLimit(this.ticks.length, options.ticks.maxTicksLimit);
+        const minRotation = tickOpts.minRotation || 0;
+        const maxRotation = tickOpts.maxRotation;
+        let labelRotation = minRotation;
+        let tickWidth, maxHeight, maxLabelDiagonal;
+        if (!this._isVisible() || !tickOpts.display || minRotation >= maxRotation || numTicks <= 1 || !this.isHorizontal()) {
+            this.labelRotation = minRotation;
+            return;
+        }
+        const labelSizes = this._getLabelSizes();
+        const maxLabelWidth = labelSizes.widest.width;
+        const maxLabelHeight = labelSizes.highest.height;
+        const maxWidth = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.S)(this.chart.width - maxLabelWidth, 0, this.maxWidth);
+        tickWidth = options.offset ? this.maxWidth / numTicks : maxWidth / (numTicks - 1);
+        if (maxLabelWidth + 6 > tickWidth) {
+            tickWidth = maxWidth / (numTicks - (options.offset ? 0.5 : 1));
+            maxHeight = this.maxHeight - getTickMarkLength(options.grid) - tickOpts.padding - getTitleHeight(options.title, this.chart.options.font);
+            maxLabelDiagonal = Math.sqrt(maxLabelWidth * maxLabelWidth + maxLabelHeight * maxLabelHeight);
+            labelRotation = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.U)(Math.min(Math.asin((0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.S)((labelSizes.highest.height + 6) / tickWidth, -1, 1)), Math.asin((0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.S)(maxHeight / maxLabelDiagonal, -1, 1)) - Math.asin((0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.S)(maxLabelHeight / maxLabelDiagonal, -1, 1))));
+            labelRotation = Math.max(minRotation, Math.min(maxRotation, labelRotation));
+        }
+        this.labelRotation = labelRotation;
+    }
+    afterCalculateLabelRotation() {
+        (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.Q)(this.options.afterCalculateLabelRotation, [
+            this
+        ]);
+    }
+    afterAutoSkip() {}
+    beforeFit() {
+        (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.Q)(this.options.beforeFit, [
+            this
+        ]);
+    }
+    fit() {
+        const minSize = {
+            width: 0,
+            height: 0
+        };
+        const { chart , options: { ticks: tickOpts , title: titleOpts , grid: gridOpts  }  } = this;
+        const display = this._isVisible();
+        const isHorizontal = this.isHorizontal();
+        if (display) {
+            const titleHeight = getTitleHeight(titleOpts, chart.options.font);
+            if (isHorizontal) {
+                minSize.width = this.maxWidth;
+                minSize.height = getTickMarkLength(gridOpts) + titleHeight;
+            } else {
+                minSize.height = this.maxHeight;
+                minSize.width = getTickMarkLength(gridOpts) + titleHeight;
+            }
+            if (tickOpts.display && this.ticks.length) {
+                const { first , last , widest , highest  } = this._getLabelSizes();
+                const tickPadding = tickOpts.padding * 2;
+                const angleRadians = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.t)(this.labelRotation);
+                const cos = Math.cos(angleRadians);
+                const sin = Math.sin(angleRadians);
+                if (isHorizontal) {
+                    const labelHeight = tickOpts.mirror ? 0 : sin * widest.width + cos * highest.height;
+                    minSize.height = Math.min(this.maxHeight, minSize.height + labelHeight + tickPadding);
+                } else {
+                    const labelWidth = tickOpts.mirror ? 0 : cos * widest.width + sin * highest.height;
+                    minSize.width = Math.min(this.maxWidth, minSize.width + labelWidth + tickPadding);
+                }
+                this._calculatePadding(first, last, sin, cos);
+            }
+        }
+        this._handleMargins();
+        if (isHorizontal) {
+            this.width = this._length = chart.width - this._margins.left - this._margins.right;
+            this.height = minSize.height;
+        } else {
+            this.width = minSize.width;
+            this.height = this._length = chart.height - this._margins.top - this._margins.bottom;
+        }
+    }
+    _calculatePadding(first, last, sin, cos) {
+        const { ticks: { align , padding  } , position  } = this.options;
+        const isRotated = this.labelRotation !== 0;
+        const labelsBelowTicks = position !== 'top' && this.axis === 'x';
+        if (this.isHorizontal()) {
+            const offsetLeft = this.getPixelForTick(0) - this.left;
+            const offsetRight = this.right - this.getPixelForTick(this.ticks.length - 1);
+            let paddingLeft = 0;
+            let paddingRight = 0;
+            if (isRotated) {
+                if (labelsBelowTicks) {
+                    paddingLeft = cos * first.width;
+                    paddingRight = sin * last.height;
+                } else {
+                    paddingLeft = sin * first.height;
+                    paddingRight = cos * last.width;
+                }
+            } else if (align === 'start') {
+                paddingRight = last.width;
+            } else if (align === 'end') {
+                paddingLeft = first.width;
+            } else if (align !== 'inner') {
+                paddingLeft = first.width / 2;
+                paddingRight = last.width / 2;
+            }
+            this.paddingLeft = Math.max((paddingLeft - offsetLeft + padding) * this.width / (this.width - offsetLeft), 0);
+            this.paddingRight = Math.max((paddingRight - offsetRight + padding) * this.width / (this.width - offsetRight), 0);
+        } else {
+            let paddingTop = last.height / 2;
+            let paddingBottom = first.height / 2;
+            if (align === 'start') {
+                paddingTop = 0;
+                paddingBottom = first.height;
+            } else if (align === 'end') {
+                paddingTop = last.height;
+                paddingBottom = 0;
+            }
+            this.paddingTop = paddingTop + padding;
+            this.paddingBottom = paddingBottom + padding;
+        }
+    }
+ _handleMargins() {
+        if (this._margins) {
+            this._margins.left = Math.max(this.paddingLeft, this._margins.left);
+            this._margins.top = Math.max(this.paddingTop, this._margins.top);
+            this._margins.right = Math.max(this.paddingRight, this._margins.right);
+            this._margins.bottom = Math.max(this.paddingBottom, this._margins.bottom);
+        }
+    }
+    afterFit() {
+        (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.Q)(this.options.afterFit, [
+            this
+        ]);
+    }
+ isHorizontal() {
+        const { axis , position  } = this.options;
+        return position === 'top' || position === 'bottom' || axis === 'x';
+    }
+ isFullSize() {
+        return this.options.fullSize;
+    }
+ _convertTicksToLabels(ticks) {
+        this.beforeTickToLabelConversion();
+        this.generateTickLabels(ticks);
+        let i, ilen;
+        for(i = 0, ilen = ticks.length; i < ilen; i++){
+            if ((0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.k)(ticks[i].label)) {
+                ticks.splice(i, 1);
+                ilen--;
+                i--;
+            }
+        }
+        this.afterTickToLabelConversion();
+    }
+ _getLabelSizes() {
+        let labelSizes = this._labelSizes;
+        if (!labelSizes) {
+            const sampleSize = this.options.ticks.sampleSize;
+            let ticks = this.ticks;
+            if (sampleSize < ticks.length) {
+                ticks = sample(ticks, sampleSize);
+            }
+            this._labelSizes = labelSizes = this._computeLabelSizes(ticks, ticks.length, this.options.ticks.maxTicksLimit);
+        }
+        return labelSizes;
+    }
+ _computeLabelSizes(ticks, length, maxTicksLimit) {
+        const { ctx , _longestTextCache: caches  } = this;
+        const widths = [];
+        const heights = [];
+        const increment = Math.floor(length / getTicksLimit(length, maxTicksLimit));
+        let widestLabelSize = 0;
+        let highestLabelSize = 0;
+        let i, j, jlen, label, tickFont, fontString, cache, lineHeight, width, height, nestedLabel;
+        for(i = 0; i < length; i += increment){
+            label = ticks[i].label;
+            tickFont = this._resolveTickFontOptions(i);
+            ctx.font = fontString = tickFont.string;
+            cache = caches[fontString] = caches[fontString] || {
+                data: {},
+                gc: []
+            };
+            lineHeight = tickFont.lineHeight;
+            width = height = 0;
+            if (!(0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.k)(label) && !(0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.b)(label)) {
+                width = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.V)(ctx, cache.data, cache.gc, width, label);
+                height = lineHeight;
+            } else if ((0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.b)(label)) {
+                for(j = 0, jlen = label.length; j < jlen; ++j){
+                    nestedLabel =  label[j];
+                    if (!(0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.k)(nestedLabel) && !(0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.b)(nestedLabel)) {
+                        width = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.V)(ctx, cache.data, cache.gc, width, nestedLabel);
+                        height += lineHeight;
+                    }
+                }
+            }
+            widths.push(width);
+            heights.push(height);
+            widestLabelSize = Math.max(width, widestLabelSize);
+            highestLabelSize = Math.max(height, highestLabelSize);
+        }
+        garbageCollect(caches, length);
+        const widest = widths.indexOf(widestLabelSize);
+        const highest = heights.indexOf(highestLabelSize);
+        const valueAt = (idx)=>({
+                width: widths[idx] || 0,
+                height: heights[idx] || 0
+            });
+        return {
+            first: valueAt(0),
+            last: valueAt(length - 1),
+            widest: valueAt(widest),
+            highest: valueAt(highest),
+            widths,
+            heights
+        };
+    }
+ getLabelForValue(value) {
+        return value;
+    }
+ getPixelForValue(value, index) {
+        return NaN;
+    }
+ getValueForPixel(pixel) {}
+ getPixelForTick(index) {
+        const ticks = this.ticks;
+        if (index < 0 || index > ticks.length - 1) {
+            return null;
+        }
+        return this.getPixelForValue(ticks[index].value);
+    }
+ getPixelForDecimal(decimal) {
+        if (this._reversePixels) {
+            decimal = 1 - decimal;
+        }
+        const pixel = this._startPixel + decimal * this._length;
+        return (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.W)(this._alignToPixels ? (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.X)(this.chart, pixel, 0) : pixel);
+    }
+ getDecimalForPixel(pixel) {
+        const decimal = (pixel - this._startPixel) / this._length;
+        return this._reversePixels ? 1 - decimal : decimal;
+    }
+ getBasePixel() {
+        return this.getPixelForValue(this.getBaseValue());
+    }
+ getBaseValue() {
+        const { min , max  } = this;
+        return min < 0 && max < 0 ? max : min > 0 && max > 0 ? min : 0;
+    }
+ getContext(index) {
+        const ticks = this.ticks || [];
+        if (index >= 0 && index < ticks.length) {
+            const tick = ticks[index];
+            return tick.$context || (tick.$context = createTickContext(this.getContext(), index, tick));
+        }
+        return this.$context || (this.$context = createScaleContext(this.chart.getContext(), this));
+    }
+ _tickSize() {
+        const optionTicks = this.options.ticks;
+        const rot = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.t)(this.labelRotation);
+        const cos = Math.abs(Math.cos(rot));
+        const sin = Math.abs(Math.sin(rot));
+        const labelSizes = this._getLabelSizes();
+        const padding = optionTicks.autoSkipPadding || 0;
+        const w = labelSizes ? labelSizes.widest.width + padding : 0;
+        const h = labelSizes ? labelSizes.highest.height + padding : 0;
+        return this.isHorizontal() ? h * cos > w * sin ? w / cos : h / sin : h * sin < w * cos ? h / cos : w / sin;
+    }
+ _isVisible() {
+        const display = this.options.display;
+        if (display !== 'auto') {
+            return !!display;
+        }
+        return this.getMatchingVisibleMetas().length > 0;
+    }
+ _computeGridLineItems(chartArea) {
+        const axis = this.axis;
+        const chart = this.chart;
+        const options = this.options;
+        const { grid , position , border  } = options;
+        const offset = grid.offset;
+        const isHorizontal = this.isHorizontal();
+        const ticks = this.ticks;
+        const ticksLength = ticks.length + (offset ? 1 : 0);
+        const tl = getTickMarkLength(grid);
+        const items = [];
+        const borderOpts = border.setContext(this.getContext());
+        const axisWidth = borderOpts.display ? borderOpts.width : 0;
+        const axisHalfWidth = axisWidth / 2;
+        const alignBorderValue = function(pixel) {
+            return (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.X)(chart, pixel, axisWidth);
+        };
+        let borderValue, i, lineValue, alignedLineValue;
+        let tx1, ty1, tx2, ty2, x1, y1, x2, y2;
+        if (position === 'top') {
+            borderValue = alignBorderValue(this.bottom);
+            ty1 = this.bottom - tl;
+            ty2 = borderValue - axisHalfWidth;
+            y1 = alignBorderValue(chartArea.top) + axisHalfWidth;
+            y2 = chartArea.bottom;
+        } else if (position === 'bottom') {
+            borderValue = alignBorderValue(this.top);
+            y1 = chartArea.top;
+            y2 = alignBorderValue(chartArea.bottom) - axisHalfWidth;
+            ty1 = borderValue + axisHalfWidth;
+            ty2 = this.top + tl;
+        } else if (position === 'left') {
+            borderValue = alignBorderValue(this.right);
+            tx1 = this.right - tl;
+            tx2 = borderValue - axisHalfWidth;
+            x1 = alignBorderValue(chartArea.left) + axisHalfWidth;
+            x2 = chartArea.right;
+        } else if (position === 'right') {
+            borderValue = alignBorderValue(this.left);
+            x1 = chartArea.left;
+            x2 = alignBorderValue(chartArea.right) - axisHalfWidth;
+            tx1 = borderValue + axisHalfWidth;
+            tx2 = this.left + tl;
+        } else if (axis === 'x') {
+            if (position === 'center') {
+                borderValue = alignBorderValue((chartArea.top + chartArea.bottom) / 2 + 0.5);
+            } else if ((0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.i)(position)) {
+                const positionAxisID = Object.keys(position)[0];
+                const value = position[positionAxisID];
+                borderValue = alignBorderValue(this.chart.scales[positionAxisID].getPixelForValue(value));
+            }
+            y1 = chartArea.top;
+            y2 = chartArea.bottom;
+            ty1 = borderValue + axisHalfWidth;
+            ty2 = ty1 + tl;
+        } else if (axis === 'y') {
+            if (position === 'center') {
+                borderValue = alignBorderValue((chartArea.left + chartArea.right) / 2);
+            } else if ((0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.i)(position)) {
+                const positionAxisID = Object.keys(position)[0];
+                const value = position[positionAxisID];
+                borderValue = alignBorderValue(this.chart.scales[positionAxisID].getPixelForValue(value));
+            }
+            tx1 = borderValue - axisHalfWidth;
+            tx2 = tx1 - tl;
+            x1 = chartArea.left;
+            x2 = chartArea.right;
+        }
+        const limit = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.v)(options.ticks.maxTicksLimit, ticksLength);
+        const step = Math.max(1, Math.ceil(ticksLength / limit));
+        for(i = 0; i < ticksLength; i += step){
+            const context = this.getContext(i);
+            const optsAtIndex = grid.setContext(context);
+            const optsAtIndexBorder = border.setContext(context);
+            const lineWidth = optsAtIndex.lineWidth;
+            const lineColor = optsAtIndex.color;
+            const borderDash = optsAtIndexBorder.dash || [];
+            const borderDashOffset = optsAtIndexBorder.dashOffset;
+            const tickWidth = optsAtIndex.tickWidth;
+            const tickColor = optsAtIndex.tickColor;
+            const tickBorderDash = optsAtIndex.tickBorderDash || [];
+            const tickBorderDashOffset = optsAtIndex.tickBorderDashOffset;
+            lineValue = getPixelForGridLine(this, i, offset);
+            if (lineValue === undefined) {
+                continue;
+            }
+            alignedLineValue = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.X)(chart, lineValue, lineWidth);
+            if (isHorizontal) {
+                tx1 = tx2 = x1 = x2 = alignedLineValue;
+            } else {
+                ty1 = ty2 = y1 = y2 = alignedLineValue;
+            }
+            items.push({
+                tx1,
+                ty1,
+                tx2,
+                ty2,
+                x1,
+                y1,
+                x2,
+                y2,
+                width: lineWidth,
+                color: lineColor,
+                borderDash,
+                borderDashOffset,
+                tickWidth,
+                tickColor,
+                tickBorderDash,
+                tickBorderDashOffset
+            });
+        }
+        this._ticksLength = ticksLength;
+        this._borderValue = borderValue;
+        return items;
+    }
+ _computeLabelItems(chartArea) {
+        const axis = this.axis;
+        const options = this.options;
+        const { position , ticks: optionTicks  } = options;
+        const isHorizontal = this.isHorizontal();
+        const ticks = this.ticks;
+        const { align , crossAlign , padding , mirror  } = optionTicks;
+        const tl = getTickMarkLength(options.grid);
+        const tickAndPadding = tl + padding;
+        const hTickAndPadding = mirror ? -padding : tickAndPadding;
+        const rotation = -(0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.t)(this.labelRotation);
+        const items = [];
+        let i, ilen, tick, label, x, y, textAlign, pixel, font, lineHeight, lineCount, textOffset;
+        let textBaseline = 'middle';
+        if (position === 'top') {
+            y = this.bottom - hTickAndPadding;
+            textAlign = this._getXAxisLabelAlignment();
+        } else if (position === 'bottom') {
+            y = this.top + hTickAndPadding;
+            textAlign = this._getXAxisLabelAlignment();
+        } else if (position === 'left') {
+            const ret = this._getYAxisLabelAlignment(tl);
+            textAlign = ret.textAlign;
+            x = ret.x;
+        } else if (position === 'right') {
+            const ret = this._getYAxisLabelAlignment(tl);
+            textAlign = ret.textAlign;
+            x = ret.x;
+        } else if (axis === 'x') {
+            if (position === 'center') {
+                y = (chartArea.top + chartArea.bottom) / 2 + tickAndPadding;
+            } else if ((0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.i)(position)) {
+                const positionAxisID = Object.keys(position)[0];
+                const value = position[positionAxisID];
+                y = this.chart.scales[positionAxisID].getPixelForValue(value) + tickAndPadding;
+            }
+            textAlign = this._getXAxisLabelAlignment();
+        } else if (axis === 'y') {
+            if (position === 'center') {
+                x = (chartArea.left + chartArea.right) / 2 - tickAndPadding;
+            } else if ((0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.i)(position)) {
+                const positionAxisID = Object.keys(position)[0];
+                const value = position[positionAxisID];
+                x = this.chart.scales[positionAxisID].getPixelForValue(value);
+            }
+            textAlign = this._getYAxisLabelAlignment(tl).textAlign;
+        }
+        if (axis === 'y') {
+            if (align === 'start') {
+                textBaseline = 'top';
+            } else if (align === 'end') {
+                textBaseline = 'bottom';
+            }
+        }
+        const labelSizes = this._getLabelSizes();
+        for(i = 0, ilen = ticks.length; i < ilen; ++i){
+            tick = ticks[i];
+            label = tick.label;
+            const optsAtIndex = optionTicks.setContext(this.getContext(i));
+            pixel = this.getPixelForTick(i) + optionTicks.labelOffset;
+            font = this._resolveTickFontOptions(i);
+            lineHeight = font.lineHeight;
+            lineCount = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.b)(label) ? label.length : 1;
+            const halfCount = lineCount / 2;
+            const color = optsAtIndex.color;
+            const strokeColor = optsAtIndex.textStrokeColor;
+            const strokeWidth = optsAtIndex.textStrokeWidth;
+            let tickTextAlign = textAlign;
+            if (isHorizontal) {
+                x = pixel;
+                if (textAlign === 'inner') {
+                    if (i === ilen - 1) {
+                        tickTextAlign = !this.options.reverse ? 'right' : 'left';
+                    } else if (i === 0) {
+                        tickTextAlign = !this.options.reverse ? 'left' : 'right';
+                    } else {
+                        tickTextAlign = 'center';
+                    }
+                }
+                if (position === 'top') {
+                    if (crossAlign === 'near' || rotation !== 0) {
+                        textOffset = -lineCount * lineHeight + lineHeight / 2;
+                    } else if (crossAlign === 'center') {
+                        textOffset = -labelSizes.highest.height / 2 - halfCount * lineHeight + lineHeight;
+                    } else {
+                        textOffset = -labelSizes.highest.height + lineHeight / 2;
+                    }
+                } else {
+                    if (crossAlign === 'near' || rotation !== 0) {
+                        textOffset = lineHeight / 2;
+                    } else if (crossAlign === 'center') {
+                        textOffset = labelSizes.highest.height / 2 - halfCount * lineHeight;
+                    } else {
+                        textOffset = labelSizes.highest.height - lineCount * lineHeight;
+                    }
+                }
+                if (mirror) {
+                    textOffset *= -1;
+                }
+                if (rotation !== 0 && !optsAtIndex.showLabelBackdrop) {
+                    x += lineHeight / 2 * Math.sin(rotation);
+                }
+            } else {
+                y = pixel;
+                textOffset = (1 - lineCount) * lineHeight / 2;
+            }
+            let backdrop;
+            if (optsAtIndex.showLabelBackdrop) {
+                const labelPadding = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.E)(optsAtIndex.backdropPadding);
+                const height = labelSizes.heights[i];
+                const width = labelSizes.widths[i];
+                let top = textOffset - labelPadding.top;
+                let left = 0 - labelPadding.left;
+                switch(textBaseline){
+                    case 'middle':
+                        top -= height / 2;
+                        break;
+                    case 'bottom':
+                        top -= height;
+                        break;
+                }
+                switch(textAlign){
+                    case 'center':
+                        left -= width / 2;
+                        break;
+                    case 'right':
+                        left -= width;
+                        break;
+                    case 'inner':
+                        if (i === ilen - 1) {
+                            left -= width;
+                        } else if (i > 0) {
+                            left -= width / 2;
+                        }
+                        break;
+                }
+                backdrop = {
+                    left,
+                    top,
+                    width: width + labelPadding.width,
+                    height: height + labelPadding.height,
+                    color: optsAtIndex.backdropColor
+                };
+            }
+            items.push({
+                label,
+                font,
+                textOffset,
+                options: {
+                    rotation,
+                    color,
+                    strokeColor,
+                    strokeWidth,
+                    textAlign: tickTextAlign,
+                    textBaseline,
+                    translation: [
+                        x,
+                        y
+                    ],
+                    backdrop
+                }
+            });
+        }
+        return items;
+    }
+    _getXAxisLabelAlignment() {
+        const { position , ticks  } = this.options;
+        const rotation = -(0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.t)(this.labelRotation);
+        if (rotation) {
+            return position === 'top' ? 'left' : 'right';
+        }
+        let align = 'center';
+        if (ticks.align === 'start') {
+            align = 'left';
+        } else if (ticks.align === 'end') {
+            align = 'right';
+        } else if (ticks.align === 'inner') {
+            align = 'inner';
+        }
+        return align;
+    }
+    _getYAxisLabelAlignment(tl) {
+        const { position , ticks: { crossAlign , mirror , padding  }  } = this.options;
+        const labelSizes = this._getLabelSizes();
+        const tickAndPadding = tl + padding;
+        const widest = labelSizes.widest.width;
+        let textAlign;
+        let x;
+        if (position === 'left') {
+            if (mirror) {
+                x = this.right + padding;
+                if (crossAlign === 'near') {
+                    textAlign = 'left';
+                } else if (crossAlign === 'center') {
+                    textAlign = 'center';
+                    x += widest / 2;
+                } else {
+                    textAlign = 'right';
+                    x += widest;
+                }
+            } else {
+                x = this.right - tickAndPadding;
+                if (crossAlign === 'near') {
+                    textAlign = 'right';
+                } else if (crossAlign === 'center') {
+                    textAlign = 'center';
+                    x -= widest / 2;
+                } else {
+                    textAlign = 'left';
+                    x = this.left;
+                }
+            }
+        } else if (position === 'right') {
+            if (mirror) {
+                x = this.left + padding;
+                if (crossAlign === 'near') {
+                    textAlign = 'right';
+                } else if (crossAlign === 'center') {
+                    textAlign = 'center';
+                    x -= widest / 2;
+                } else {
+                    textAlign = 'left';
+                    x -= widest;
+                }
+            } else {
+                x = this.left + tickAndPadding;
+                if (crossAlign === 'near') {
+                    textAlign = 'left';
+                } else if (crossAlign === 'center') {
+                    textAlign = 'center';
+                    x += widest / 2;
+                } else {
+                    textAlign = 'right';
+                    x = this.right;
+                }
+            }
+        } else {
+            textAlign = 'right';
+        }
+        return {
+            textAlign,
+            x
+        };
+    }
+ _computeLabelArea() {
+        if (this.options.ticks.mirror) {
+            return;
+        }
+        const chart = this.chart;
+        const position = this.options.position;
+        if (position === 'left' || position === 'right') {
+            return {
+                top: 0,
+                left: this.left,
+                bottom: chart.height,
+                right: this.right
+            };
+        }
+        if (position === 'top' || position === 'bottom') {
+            return {
+                top: this.top,
+                left: 0,
+                bottom: this.bottom,
+                right: chart.width
+            };
+        }
+    }
+ drawBackground() {
+        const { ctx , options: { backgroundColor  } , left , top , width , height  } = this;
+        if (backgroundColor) {
+            ctx.save();
+            ctx.fillStyle = backgroundColor;
+            ctx.fillRect(left, top, width, height);
+            ctx.restore();
+        }
+    }
+    getLineWidthForValue(value) {
+        const grid = this.options.grid;
+        if (!this._isVisible() || !grid.display) {
+            return 0;
+        }
+        const ticks = this.ticks;
+        const index = ticks.findIndex((t)=>t.value === value);
+        if (index >= 0) {
+            const opts = grid.setContext(this.getContext(index));
+            return opts.lineWidth;
+        }
+        return 0;
+    }
+ drawGrid(chartArea) {
+        const grid = this.options.grid;
+        const ctx = this.ctx;
+        const items = this._gridLineItems || (this._gridLineItems = this._computeGridLineItems(chartArea));
+        let i, ilen;
+        const drawLine = (p1, p2, style)=>{
+            if (!style.width || !style.color) {
+                return;
+            }
+            ctx.save();
+            ctx.lineWidth = style.width;
+            ctx.strokeStyle = style.color;
+            ctx.setLineDash(style.borderDash || []);
+            ctx.lineDashOffset = style.borderDashOffset;
+            ctx.beginPath();
+            ctx.moveTo(p1.x, p1.y);
+            ctx.lineTo(p2.x, p2.y);
+            ctx.stroke();
+            ctx.restore();
+        };
+        if (grid.display) {
+            for(i = 0, ilen = items.length; i < ilen; ++i){
+                const item = items[i];
+                if (grid.drawOnChartArea) {
+                    drawLine({
+                        x: item.x1,
+                        y: item.y1
+                    }, {
+                        x: item.x2,
+                        y: item.y2
+                    }, item);
+                }
+                if (grid.drawTicks) {
+                    drawLine({
+                        x: item.tx1,
+                        y: item.ty1
+                    }, {
+                        x: item.tx2,
+                        y: item.ty2
+                    }, {
+                        color: item.tickColor,
+                        width: item.tickWidth,
+                        borderDash: item.tickBorderDash,
+                        borderDashOffset: item.tickBorderDashOffset
+                    });
+                }
+            }
+        }
+    }
+ drawBorder() {
+        const { chart , ctx , options: { border , grid  }  } = this;
+        const borderOpts = border.setContext(this.getContext());
+        const axisWidth = border.display ? borderOpts.width : 0;
+        if (!axisWidth) {
+            return;
+        }
+        const lastLineWidth = grid.setContext(this.getContext(0)).lineWidth;
+        const borderValue = this._borderValue;
+        let x1, x2, y1, y2;
+        if (this.isHorizontal()) {
+            x1 = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.X)(chart, this.left, axisWidth) - axisWidth / 2;
+            x2 = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.X)(chart, this.right, lastLineWidth) + lastLineWidth / 2;
+            y1 = y2 = borderValue;
+        } else {
+            y1 = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.X)(chart, this.top, axisWidth) - axisWidth / 2;
+            y2 = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.X)(chart, this.bottom, lastLineWidth) + lastLineWidth / 2;
+            x1 = x2 = borderValue;
+        }
+        ctx.save();
+        ctx.lineWidth = borderOpts.width;
+        ctx.strokeStyle = borderOpts.color;
+        ctx.beginPath();
+        ctx.moveTo(x1, y1);
+        ctx.lineTo(x2, y2);
+        ctx.stroke();
+        ctx.restore();
+    }
+ drawLabels(chartArea) {
+        const optionTicks = this.options.ticks;
+        if (!optionTicks.display) {
+            return;
+        }
+        const ctx = this.ctx;
+        const area = this._computeLabelArea();
+        if (area) {
+            (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.Y)(ctx, area);
+        }
+        const items = this.getLabelItems(chartArea);
+        for (const item of items){
+            const renderTextOptions = item.options;
+            const tickFont = item.font;
+            const label = item.label;
+            const y = item.textOffset;
+            (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.Z)(ctx, label, 0, y, tickFont, renderTextOptions);
+        }
+        if (area) {
+            (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.$)(ctx);
+        }
+    }
+ drawTitle() {
+        const { ctx , options: { position , title , reverse  }  } = this;
+        if (!title.display) {
+            return;
+        }
+        const font = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.a0)(title.font);
+        const padding = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.E)(title.padding);
+        const align = title.align;
+        let offset = font.lineHeight / 2;
+        if (position === 'bottom' || position === 'center' || (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.i)(position)) {
+            offset += padding.bottom;
+            if ((0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.b)(title.text)) {
+                offset += font.lineHeight * (title.text.length - 1);
+            }
+        } else {
+            offset += padding.top;
+        }
+        const { titleX , titleY , maxWidth , rotation  } = titleArgs(this, offset, position, align);
+        (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.Z)(ctx, title.text, 0, 0, font, {
+            color: title.color,
+            maxWidth,
+            rotation,
+            textAlign: titleAlign(align, position, reverse),
+            textBaseline: 'middle',
+            translation: [
+                titleX,
+                titleY
+            ]
+        });
+    }
+    draw(chartArea) {
+        if (!this._isVisible()) {
+            return;
+        }
+        this.drawBackground();
+        this.drawGrid(chartArea);
+        this.drawBorder();
+        this.drawTitle();
+        this.drawLabels(chartArea);
+    }
+ _layers() {
+        const opts = this.options;
+        const tz = opts.ticks && opts.ticks.z || 0;
+        const gz = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.v)(opts.grid && opts.grid.z, -1);
+        const bz = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.v)(opts.border && opts.border.z, 0);
+        if (!this._isVisible() || this.draw !== Scale.prototype.draw) {
+            return [
+                {
+                    z: tz,
+                    draw: (chartArea)=>{
+                        this.draw(chartArea);
+                    }
+                }
+            ];
+        }
+        return [
+            {
+                z: gz,
+                draw: (chartArea)=>{
+                    this.drawBackground();
+                    this.drawGrid(chartArea);
+                    this.drawTitle();
+                }
+            },
+            {
+                z: bz,
+                draw: ()=>{
+                    this.drawBorder();
+                }
+            },
+            {
+                z: tz,
+                draw: (chartArea)=>{
+                    this.drawLabels(chartArea);
+                }
+            }
+        ];
+    }
+ getMatchingVisibleMetas(type) {
+        const metas = this.chart.getSortedVisibleDatasetMetas();
+        const axisID = this.axis + 'AxisID';
+        const result = [];
+        let i, ilen;
+        for(i = 0, ilen = metas.length; i < ilen; ++i){
+            const meta = metas[i];
+            if (meta[axisID] === this.id && (!type || meta.type === type)) {
+                result.push(meta);
+            }
+        }
+        return result;
+    }
+ _resolveTickFontOptions(index) {
+        const opts = this.options.ticks.setContext(this.getContext(index));
+        return (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.a0)(opts.font);
+    }
+ _maxDigits() {
+        const fontSize = this._resolveTickFontOptions(0).lineHeight;
+        return (this.isHorizontal() ? this.width : this.height) / fontSize;
+    }
+}
+
+class TypedRegistry {
+    constructor(type, scope, override){
+        this.type = type;
+        this.scope = scope;
+        this.override = override;
+        this.items = Object.create(null);
+    }
+    isForType(type) {
+        return Object.prototype.isPrototypeOf.call(this.type.prototype, type.prototype);
+    }
+ register(item) {
+        const proto = Object.getPrototypeOf(item);
+        let parentScope;
+        if (isIChartComponent(proto)) {
+            parentScope = this.register(proto);
+        }
+        const items = this.items;
+        const id = item.id;
+        const scope = this.scope + '.' + id;
+        if (!id) {
+            throw new Error('class does not have id: ' + item);
+        }
+        if (id in items) {
+            return scope;
+        }
+        items[id] = item;
+        registerDefaults(item, scope, parentScope);
+        if (this.override) {
+            _chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.d.override(item.id, item.overrides);
+        }
+        return scope;
+    }
+ get(id) {
+        return this.items[id];
+    }
+ unregister(item) {
+        const items = this.items;
+        const id = item.id;
+        const scope = this.scope;
+        if (id in items) {
+            delete items[id];
+        }
+        if (scope && id in _chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.d[scope]) {
+            delete _chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.d[scope][id];
+            if (this.override) {
+                delete _chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.a3[id];
+            }
+        }
+    }
+}
+function registerDefaults(item, scope, parentScope) {
+    const itemDefaults = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.a4)(Object.create(null), [
+        parentScope ? _chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.d.get(parentScope) : {},
+        _chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.d.get(scope),
+        item.defaults
+    ]);
+    _chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.d.set(scope, itemDefaults);
+    if (item.defaultRoutes) {
+        routeDefaults(scope, item.defaultRoutes);
+    }
+    if (item.descriptors) {
+        _chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.d.describe(scope, item.descriptors);
+    }
+}
+function routeDefaults(scope, routes) {
+    Object.keys(routes).forEach((property)=>{
+        const propertyParts = property.split('.');
+        const sourceName = propertyParts.pop();
+        const sourceScope = [
+            scope
+        ].concat(propertyParts).join('.');
+        const parts = routes[property].split('.');
+        const targetName = parts.pop();
+        const targetScope = parts.join('.');
+        _chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.d.route(sourceScope, sourceName, targetScope, targetName);
+    });
+}
+function isIChartComponent(proto) {
+    return 'id' in proto && 'defaults' in proto;
+}
+
+class Registry {
+    constructor(){
+        this.controllers = new TypedRegistry(DatasetController, 'datasets', true);
+        this.elements = new TypedRegistry(Element, 'elements');
+        this.plugins = new TypedRegistry(Object, 'plugins');
+        this.scales = new TypedRegistry(Scale, 'scales');
+        this._typedRegistries = [
+            this.controllers,
+            this.scales,
+            this.elements
+        ];
+    }
+ add(...args) {
+        this._each('register', args);
+    }
+    remove(...args) {
+        this._each('unregister', args);
+    }
+ addControllers(...args) {
+        this._each('register', args, this.controllers);
+    }
+ addElements(...args) {
+        this._each('register', args, this.elements);
+    }
+ addPlugins(...args) {
+        this._each('register', args, this.plugins);
+    }
+ addScales(...args) {
+        this._each('register', args, this.scales);
+    }
+ getController(id) {
+        return this._get(id, this.controllers, 'controller');
+    }
+ getElement(id) {
+        return this._get(id, this.elements, 'element');
+    }
+ getPlugin(id) {
+        return this._get(id, this.plugins, 'plugin');
+    }
+ getScale(id) {
+        return this._get(id, this.scales, 'scale');
+    }
+ removeControllers(...args) {
+        this._each('unregister', args, this.controllers);
+    }
+ removeElements(...args) {
+        this._each('unregister', args, this.elements);
+    }
+ removePlugins(...args) {
+        this._each('unregister', args, this.plugins);
+    }
+ removeScales(...args) {
+        this._each('unregister', args, this.scales);
+    }
+ _each(method, args, typedRegistry) {
+        [
+            ...args
+        ].forEach((arg)=>{
+            const reg = typedRegistry || this._getRegistryForType(arg);
+            if (typedRegistry || reg.isForType(arg) || reg === this.plugins && arg.id) {
+                this._exec(method, reg, arg);
+            } else {
+                (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.F)(arg, (item)=>{
+                    const itemReg = typedRegistry || this._getRegistryForType(item);
+                    this._exec(method, itemReg, item);
+                });
+            }
+        });
+    }
+ _exec(method, registry, component) {
+        const camelMethod = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.a5)(method);
+        (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.Q)(component['before' + camelMethod], [], component);
+        registry[method](component);
+        (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.Q)(component['after' + camelMethod], [], component);
+    }
+ _getRegistryForType(type) {
+        for(let i = 0; i < this._typedRegistries.length; i++){
+            const reg = this._typedRegistries[i];
+            if (reg.isForType(type)) {
+                return reg;
+            }
+        }
+        return this.plugins;
+    }
+ _get(id, typedRegistry, type) {
+        const item = typedRegistry.get(id);
+        if (item === undefined) {
+            throw new Error('"' + id + '" is not a registered ' + type + '.');
+        }
+        return item;
+    }
+}
+var registry = /* #__PURE__ */ new Registry();
+
+class PluginService {
+    constructor(){
+        this._init = undefined;
+    }
+ notify(chart, hook, args, filter) {
+        if (hook === 'beforeInit') {
+            this._init = this._createDescriptors(chart, true);
+            this._notify(this._init, chart, 'install');
+        }
+        if (this._init === undefined) {
+            return;
+        }
+        const descriptors = filter ? this._descriptors(chart).filter(filter) : this._descriptors(chart);
+        const result = this._notify(descriptors, chart, hook, args);
+        if (hook === 'afterDestroy') {
+            this._notify(descriptors, chart, 'stop');
+            this._notify(this._init, chart, 'uninstall');
+            this._init = undefined;
+        }
+        return result;
+    }
+ _notify(descriptors, chart, hook, args) {
+        args = args || {};
+        for (const descriptor of descriptors){
+            const plugin = descriptor.plugin;
+            const method = plugin[hook];
+            const params = [
+                chart,
+                args,
+                descriptor.options
+            ];
+            if ((0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.Q)(method, params, plugin) === false && args.cancelable) {
+                return false;
+            }
+        }
+        return true;
+    }
+    invalidate() {
+        if (!(0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.k)(this._cache)) {
+            this._oldCache = this._cache;
+            this._cache = undefined;
+        }
+    }
+ _descriptors(chart) {
+        if (this._cache) {
+            return this._cache;
+        }
+        const descriptors = this._cache = this._createDescriptors(chart);
+        this._notifyStateChanges(chart);
+        return descriptors;
+    }
+    _createDescriptors(chart, all) {
+        const config = chart && chart.config;
+        const options = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.v)(config.options && config.options.plugins, {});
+        const plugins = allPlugins(config);
+        return options === false && !all ? [] : createDescriptors(chart, plugins, options, all);
+    }
+ _notifyStateChanges(chart) {
+        const previousDescriptors = this._oldCache || [];
+        const descriptors = this._cache;
+        const diff = (a, b)=>a.filter((x)=>!b.some((y)=>x.plugin.id === y.plugin.id));
+        this._notify(diff(previousDescriptors, descriptors), chart, 'stop');
+        this._notify(diff(descriptors, previousDescriptors), chart, 'start');
+    }
+}
+ function allPlugins(config) {
+    const localIds = {};
+    const plugins = [];
+    const keys = Object.keys(registry.plugins.items);
+    for(let i = 0; i < keys.length; i++){
+        plugins.push(registry.getPlugin(keys[i]));
+    }
+    const local = config.plugins || [];
+    for(let i = 0; i < local.length; i++){
+        const plugin = local[i];
+        if (plugins.indexOf(plugin) === -1) {
+            plugins.push(plugin);
+            localIds[plugin.id] = true;
+        }
+    }
+    return {
+        plugins,
+        localIds
+    };
+}
+function getOpts(options, all) {
+    if (!all && options === false) {
+        return null;
+    }
+    if (options === true) {
+        return {};
+    }
+    return options;
+}
+function createDescriptors(chart, { plugins , localIds  }, options, all) {
+    const result = [];
+    const context = chart.getContext();
+    for (const plugin of plugins){
+        const id = plugin.id;
+        const opts = getOpts(options[id], all);
+        if (opts === null) {
+            continue;
+        }
+        result.push({
+            plugin,
+            options: pluginOpts(chart.config, {
+                plugin,
+                local: localIds[id]
+            }, opts, context)
+        });
+    }
+    return result;
+}
+function pluginOpts(config, { plugin , local  }, opts, context) {
+    const keys = config.pluginScopeKeys(plugin);
+    const scopes = config.getOptionScopes(opts, keys);
+    if (local && plugin.defaults) {
+        scopes.push(plugin.defaults);
+    }
+    return config.createResolver(scopes, context, [
+        ''
+    ], {
+        scriptable: false,
+        indexable: false,
+        allKeys: true
+    });
+}
+
+function getIndexAxis(type, options) {
+    const datasetDefaults = _chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.d.datasets[type] || {};
+    const datasetOptions = (options.datasets || {})[type] || {};
+    return datasetOptions.indexAxis || options.indexAxis || datasetDefaults.indexAxis || 'x';
+}
+function getAxisFromDefaultScaleID(id, indexAxis) {
+    let axis = id;
+    if (id === '_index_') {
+        axis = indexAxis;
+    } else if (id === '_value_') {
+        axis = indexAxis === 'x' ? 'y' : 'x';
+    }
+    return axis;
+}
+function getDefaultScaleIDFromAxis(axis, indexAxis) {
+    return axis === indexAxis ? '_index_' : '_value_';
+}
+function idMatchesAxis(id) {
+    if (id === 'x' || id === 'y' || id === 'r') {
+        return id;
+    }
+}
+function axisFromPosition(position) {
+    if (position === 'top' || position === 'bottom') {
+        return 'x';
+    }
+    if (position === 'left' || position === 'right') {
+        return 'y';
+    }
+}
+function determineAxis(id, ...scaleOptions) {
+    if (idMatchesAxis(id)) {
+        return id;
+    }
+    for (const opts of scaleOptions){
+        const axis = opts.axis || axisFromPosition(opts.position) || id.length > 1 && idMatchesAxis(id[0].toLowerCase());
+        if (axis) {
+            return axis;
+        }
+    }
+    throw new Error(`Cannot determine type of '${id}' axis. Please provide 'axis' or 'position' option.`);
+}
+function getAxisFromDataset(id, axis, dataset) {
+    if (dataset[axis + 'AxisID'] === id) {
+        return {
+            axis
+        };
+    }
+}
+function retrieveAxisFromDatasets(id, config) {
+    if (config.data && config.data.datasets) {
+        const boundDs = config.data.datasets.filter((d)=>d.xAxisID === id || d.yAxisID === id);
+        if (boundDs.length) {
+            return getAxisFromDataset(id, 'x', boundDs[0]) || getAxisFromDataset(id, 'y', boundDs[0]);
+        }
+    }
+    return {};
+}
+function mergeScaleConfig(config, options) {
+    const chartDefaults = _chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.a3[config.type] || {
+        scales: {}
+    };
+    const configScales = options.scales || {};
+    const chartIndexAxis = getIndexAxis(config.type, options);
+    const scales = Object.create(null);
+    Object.keys(configScales).forEach((id)=>{
+        const scaleConf = configScales[id];
+        if (!(0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.i)(scaleConf)) {
+            return console.error(`Invalid scale configuration for scale: ${id}`);
+        }
+        if (scaleConf._proxy) {
+            return console.warn(`Ignoring resolver passed as options for scale: ${id}`);
+        }
+        const axis = determineAxis(id, scaleConf, retrieveAxisFromDatasets(id, config), _chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.d.scales[scaleConf.type]);
+        const defaultId = getDefaultScaleIDFromAxis(axis, chartIndexAxis);
+        const defaultScaleOptions = chartDefaults.scales || {};
+        scales[id] = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.ab)(Object.create(null), [
+            {
+                axis
+            },
+            scaleConf,
+            defaultScaleOptions[axis],
+            defaultScaleOptions[defaultId]
+        ]);
+    });
+    config.data.datasets.forEach((dataset)=>{
+        const type = dataset.type || config.type;
+        const indexAxis = dataset.indexAxis || getIndexAxis(type, options);
+        const datasetDefaults = _chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.a3[type] || {};
+        const defaultScaleOptions = datasetDefaults.scales || {};
+        Object.keys(defaultScaleOptions).forEach((defaultID)=>{
+            const axis = getAxisFromDefaultScaleID(defaultID, indexAxis);
+            const id = dataset[axis + 'AxisID'] || axis;
+            scales[id] = scales[id] || Object.create(null);
+            (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.ab)(scales[id], [
+                {
+                    axis
+                },
+                configScales[id],
+                defaultScaleOptions[defaultID]
+            ]);
+        });
+    });
+    Object.keys(scales).forEach((key)=>{
+        const scale = scales[key];
+        (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.ab)(scale, [
+            _chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.d.scales[scale.type],
+            _chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.d.scale
+        ]);
+    });
+    return scales;
+}
+function initOptions(config) {
+    const options = config.options || (config.options = {});
+    options.plugins = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.v)(options.plugins, {});
+    options.scales = mergeScaleConfig(config, options);
+}
+function initData(data) {
+    data = data || {};
+    data.datasets = data.datasets || [];
+    data.labels = data.labels || [];
+    return data;
+}
+function initConfig(config) {
+    config = config || {};
+    config.data = initData(config.data);
+    initOptions(config);
+    return config;
+}
+const keyCache = new Map();
+const keysCached = new Set();
+function cachedKeys(cacheKey, generate) {
+    let keys = keyCache.get(cacheKey);
+    if (!keys) {
+        keys = generate();
+        keyCache.set(cacheKey, keys);
+        keysCached.add(keys);
+    }
+    return keys;
+}
+const addIfFound = (set, obj, key)=>{
+    const opts = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.f)(obj, key);
+    if (opts !== undefined) {
+        set.add(opts);
+    }
+};
+class Config {
+    constructor(config){
+        this._config = initConfig(config);
+        this._scopeCache = new Map();
+        this._resolverCache = new Map();
+    }
+    get platform() {
+        return this._config.platform;
+    }
+    get type() {
+        return this._config.type;
+    }
+    set type(type) {
+        this._config.type = type;
+    }
+    get data() {
+        return this._config.data;
+    }
+    set data(data) {
+        this._config.data = initData(data);
+    }
+    get options() {
+        return this._config.options;
+    }
+    set options(options) {
+        this._config.options = options;
+    }
+    get plugins() {
+        return this._config.plugins;
+    }
+    update() {
+        const config = this._config;
+        this.clearCache();
+        initOptions(config);
+    }
+    clearCache() {
+        this._scopeCache.clear();
+        this._resolverCache.clear();
+    }
+ datasetScopeKeys(datasetType) {
+        return cachedKeys(datasetType, ()=>[
+                [
+                    `datasets.${datasetType}`,
+                    ''
+                ]
+            ]);
+    }
+ datasetAnimationScopeKeys(datasetType, transition) {
+        return cachedKeys(`${datasetType}.transition.${transition}`, ()=>[
+                [
+                    `datasets.${datasetType}.transitions.${transition}`,
+                    `transitions.${transition}`
+                ],
+                [
+                    `datasets.${datasetType}`,
+                    ''
+                ]
+            ]);
+    }
+ datasetElementScopeKeys(datasetType, elementType) {
+        return cachedKeys(`${datasetType}-${elementType}`, ()=>[
+                [
+                    `datasets.${datasetType}.elements.${elementType}`,
+                    `datasets.${datasetType}`,
+                    `elements.${elementType}`,
+                    ''
+                ]
+            ]);
+    }
+ pluginScopeKeys(plugin) {
+        const id = plugin.id;
+        const type = this.type;
+        return cachedKeys(`${type}-plugin-${id}`, ()=>[
+                [
+                    `plugins.${id}`,
+                    ...plugin.additionalOptionScopes || []
+                ]
+            ]);
+    }
+ _cachedScopes(mainScope, resetCache) {
+        const _scopeCache = this._scopeCache;
+        let cache = _scopeCache.get(mainScope);
+        if (!cache || resetCache) {
+            cache = new Map();
+            _scopeCache.set(mainScope, cache);
+        }
+        return cache;
+    }
+ getOptionScopes(mainScope, keyLists, resetCache) {
+        const { options , type  } = this;
+        const cache = this._cachedScopes(mainScope, resetCache);
+        const cached = cache.get(keyLists);
+        if (cached) {
+            return cached;
+        }
+        const scopes = new Set();
+        keyLists.forEach((keys)=>{
+            if (mainScope) {
+                scopes.add(mainScope);
+                keys.forEach((key)=>addIfFound(scopes, mainScope, key));
+            }
+            keys.forEach((key)=>addIfFound(scopes, options, key));
+            keys.forEach((key)=>addIfFound(scopes, _chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.a3[type] || {}, key));
+            keys.forEach((key)=>addIfFound(scopes, _chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.d, key));
+            keys.forEach((key)=>addIfFound(scopes, _chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.a6, key));
+        });
+        const array = Array.from(scopes);
+        if (array.length === 0) {
+            array.push(Object.create(null));
+        }
+        if (keysCached.has(keyLists)) {
+            cache.set(keyLists, array);
+        }
+        return array;
+    }
+ chartOptionScopes() {
+        const { options , type  } = this;
+        return [
+            options,
+            _chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.a3[type] || {},
+            _chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.d.datasets[type] || {},
+            {
+                type
+            },
+            _chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.d,
+            _chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.a6
+        ];
+    }
+ resolveNamedOptions(scopes, names, context, prefixes = [
+        ''
+    ]) {
+        const result = {
+            $shared: true
+        };
+        const { resolver , subPrefixes  } = getResolver(this._resolverCache, scopes, prefixes);
+        let options = resolver;
+        if (needContext(resolver, names)) {
+            result.$shared = false;
+            context = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.a7)(context) ? context() : context;
+            const subResolver = this.createResolver(scopes, context, subPrefixes);
+            options = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.a8)(resolver, context, subResolver);
+        }
+        for (const prop of names){
+            result[prop] = options[prop];
+        }
+        return result;
+    }
+ createResolver(scopes, context, prefixes = [
+        ''
+    ], descriptorDefaults) {
+        const { resolver  } = getResolver(this._resolverCache, scopes, prefixes);
+        return (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.i)(context) ? (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.a8)(resolver, context, undefined, descriptorDefaults) : resolver;
+    }
+}
+function getResolver(resolverCache, scopes, prefixes) {
+    let cache = resolverCache.get(scopes);
+    if (!cache) {
+        cache = new Map();
+        resolverCache.set(scopes, cache);
+    }
+    const cacheKey = prefixes.join();
+    let cached = cache.get(cacheKey);
+    if (!cached) {
+        const resolver = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.a9)(scopes, prefixes);
+        cached = {
+            resolver,
+            subPrefixes: prefixes.filter((p)=>!p.toLowerCase().includes('hover'))
+        };
+        cache.set(cacheKey, cached);
+    }
+    return cached;
+}
+const hasFunction = (value)=>(0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.i)(value) && Object.getOwnPropertyNames(value).some((key)=>(0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.a7)(value[key]));
+function needContext(proxy, names) {
+    const { isScriptable , isIndexable  } = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.aa)(proxy);
+    for (const prop of names){
+        const scriptable = isScriptable(prop);
+        const indexable = isIndexable(prop);
+        const value = (indexable || scriptable) && proxy[prop];
+        if (scriptable && ((0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.a7)(value) || hasFunction(value)) || indexable && (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.b)(value)) {
+            return true;
+        }
+    }
+    return false;
+}
+
+var version = "4.5.1";
+
+const KNOWN_POSITIONS = [
+    'top',
+    'bottom',
+    'left',
+    'right',
+    'chartArea'
+];
+function positionIsHorizontal(position, axis) {
+    return position === 'top' || position === 'bottom' || KNOWN_POSITIONS.indexOf(position) === -1 && axis === 'x';
+}
+function compare2Level(l1, l2) {
+    return function(a, b) {
+        return a[l1] === b[l1] ? a[l2] - b[l2] : a[l1] - b[l1];
+    };
+}
+function onAnimationsComplete(context) {
+    const chart = context.chart;
+    const animationOptions = chart.options.animation;
+    chart.notifyPlugins('afterRender');
+    (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.Q)(animationOptions && animationOptions.onComplete, [
+        context
+    ], chart);
+}
+function onAnimationProgress(context) {
+    const chart = context.chart;
+    const animationOptions = chart.options.animation;
+    (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.Q)(animationOptions && animationOptions.onProgress, [
+        context
+    ], chart);
+}
+ function getCanvas(item) {
+    if ((0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.M)() && typeof item === 'string') {
+        item = document.getElementById(item);
+    } else if (item && item.length) {
+        item = item[0];
+    }
+    if (item && item.canvas) {
+        item = item.canvas;
+    }
+    return item;
+}
+const instances = {};
+const getChart = (key)=>{
+    const canvas = getCanvas(key);
+    return Object.values(instances).filter((c)=>c.canvas === canvas).pop();
+};
+function moveNumericKeys(obj, start, move) {
+    const keys = Object.keys(obj);
+    for (const key of keys){
+        const intKey = +key;
+        if (intKey >= start) {
+            const value = obj[key];
+            delete obj[key];
+            if (move > 0 || intKey > start) {
+                obj[intKey + move] = value;
+            }
+        }
+    }
+}
+ function determineLastEvent(e, lastEvent, inChartArea, isClick) {
+    if (!inChartArea || e.type === 'mouseout') {
+        return null;
+    }
+    if (isClick) {
+        return lastEvent;
+    }
+    return e;
+}
+class Chart {
+    static defaults = _chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.d;
+    static instances = instances;
+    static overrides = _chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.a3;
+    static registry = registry;
+    static version = version;
+    static getChart = getChart;
+    static register(...items) {
+        registry.add(...items);
+        invalidatePlugins();
+    }
+    static unregister(...items) {
+        registry.remove(...items);
+        invalidatePlugins();
+    }
+    constructor(item, userConfig){
+        const config = this.config = new Config(userConfig);
+        const initialCanvas = getCanvas(item);
+        const existingChart = getChart(initialCanvas);
+        if (existingChart) {
+            throw new Error('Canvas is already in use. Chart with ID \'' + existingChart.id + '\'' + ' must be destroyed before the canvas with ID \'' + existingChart.canvas.id + '\' can be reused.');
+        }
+        const options = config.createResolver(config.chartOptionScopes(), this.getContext());
+        this.platform = new (config.platform || _detectPlatform(initialCanvas))();
+        this.platform.updateConfig(config);
+        const context = this.platform.acquireContext(initialCanvas, options.aspectRatio);
+        const canvas = context && context.canvas;
+        const height = canvas && canvas.height;
+        const width = canvas && canvas.width;
+        this.id = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.ac)();
+        this.ctx = context;
+        this.canvas = canvas;
+        this.width = width;
+        this.height = height;
+        this._options = options;
+        this._aspectRatio = this.aspectRatio;
+        this._layers = [];
+        this._metasets = [];
+        this._stacks = undefined;
+        this.boxes = [];
+        this.currentDevicePixelRatio = undefined;
+        this.chartArea = undefined;
+        this._active = [];
+        this._lastEvent = undefined;
+        this._listeners = {};
+         this._responsiveListeners = undefined;
+        this._sortedMetasets = [];
+        this.scales = {};
+        this._plugins = new PluginService();
+        this.$proxies = {};
+        this._hiddenIndices = {};
+        this.attached = false;
+        this._animationsDisabled = undefined;
+        this.$context = undefined;
+        this._doResize = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.ad)((mode)=>this.update(mode), options.resizeDelay || 0);
+        this._dataChanges = [];
+        instances[this.id] = this;
+        if (!context || !canvas) {
+            console.error("Failed to create chart: can't acquire context from the given item");
+            return;
+        }
+        animator.listen(this, 'complete', onAnimationsComplete);
+        animator.listen(this, 'progress', onAnimationProgress);
+        this._initialize();
+        if (this.attached) {
+            this.update();
+        }
+    }
+    get aspectRatio() {
+        const { options: { aspectRatio , maintainAspectRatio  } , width , height , _aspectRatio  } = this;
+        if (!(0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.k)(aspectRatio)) {
+            return aspectRatio;
+        }
+        if (maintainAspectRatio && _aspectRatio) {
+            return _aspectRatio;
+        }
+        return height ? width / height : null;
+    }
+    get data() {
+        return this.config.data;
+    }
+    set data(data) {
+        this.config.data = data;
+    }
+    get options() {
+        return this._options;
+    }
+    set options(options) {
+        this.config.options = options;
+    }
+    get registry() {
+        return registry;
+    }
+ _initialize() {
+        this.notifyPlugins('beforeInit');
+        if (this.options.responsive) {
+            this.resize();
+        } else {
+            (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.ae)(this, this.options.devicePixelRatio);
+        }
+        this.bindEvents();
+        this.notifyPlugins('afterInit');
+        return this;
+    }
+    clear() {
+        (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.af)(this.canvas, this.ctx);
+        return this;
+    }
+    stop() {
+        animator.stop(this);
+        return this;
+    }
+ resize(width, height) {
+        if (!animator.running(this)) {
+            this._resize(width, height);
+        } else {
+            this._resizeBeforeDraw = {
+                width,
+                height
+            };
+        }
+    }
+    _resize(width, height) {
+        const options = this.options;
+        const canvas = this.canvas;
+        const aspectRatio = options.maintainAspectRatio && this.aspectRatio;
+        const newSize = this.platform.getMaximumSize(canvas, width, height, aspectRatio);
+        const newRatio = options.devicePixelRatio || this.platform.getDevicePixelRatio();
+        const mode = this.width ? 'resize' : 'attach';
+        this.width = newSize.width;
+        this.height = newSize.height;
+        this._aspectRatio = this.aspectRatio;
+        if (!(0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.ae)(this, newRatio, true)) {
+            return;
+        }
+        this.notifyPlugins('resize', {
+            size: newSize
+        });
+        (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.Q)(options.onResize, [
+            this,
+            newSize
+        ], this);
+        if (this.attached) {
+            if (this._doResize(mode)) {
+                this.render();
+            }
+        }
+    }
+    ensureScalesHaveIDs() {
+        const options = this.options;
+        const scalesOptions = options.scales || {};
+        (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.F)(scalesOptions, (axisOptions, axisID)=>{
+            axisOptions.id = axisID;
+        });
+    }
+ buildOrUpdateScales() {
+        const options = this.options;
+        const scaleOpts = options.scales;
+        const scales = this.scales;
+        const updated = Object.keys(scales).reduce((obj, id)=>{
+            obj[id] = false;
+            return obj;
+        }, {});
+        let items = [];
+        if (scaleOpts) {
+            items = items.concat(Object.keys(scaleOpts).map((id)=>{
+                const scaleOptions = scaleOpts[id];
+                const axis = determineAxis(id, scaleOptions);
+                const isRadial = axis === 'r';
+                const isHorizontal = axis === 'x';
+                return {
+                    options: scaleOptions,
+                    dposition: isRadial ? 'chartArea' : isHorizontal ? 'bottom' : 'left',
+                    dtype: isRadial ? 'radialLinear' : isHorizontal ? 'category' : 'linear'
+                };
+            }));
+        }
+        (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.F)(items, (item)=>{
+            const scaleOptions = item.options;
+            const id = scaleOptions.id;
+            const axis = determineAxis(id, scaleOptions);
+            const scaleType = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.v)(scaleOptions.type, item.dtype);
+            if (scaleOptions.position === undefined || positionIsHorizontal(scaleOptions.position, axis) !== positionIsHorizontal(item.dposition)) {
+                scaleOptions.position = item.dposition;
+            }
+            updated[id] = true;
+            let scale = null;
+            if (id in scales && scales[id].type === scaleType) {
+                scale = scales[id];
+            } else {
+                const scaleClass = registry.getScale(scaleType);
+                scale = new scaleClass({
+                    id,
+                    type: scaleType,
+                    ctx: this.ctx,
+                    chart: this
+                });
+                scales[scale.id] = scale;
+            }
+            scale.init(scaleOptions, options);
+        });
+        (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.F)(updated, (hasUpdated, id)=>{
+            if (!hasUpdated) {
+                delete scales[id];
+            }
+        });
+        (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.F)(scales, (scale)=>{
+            layouts.configure(this, scale, scale.options);
+            layouts.addBox(this, scale);
+        });
+    }
+ _updateMetasets() {
+        const metasets = this._metasets;
+        const numData = this.data.datasets.length;
+        const numMeta = metasets.length;
+        metasets.sort((a, b)=>a.index - b.index);
+        if (numMeta > numData) {
+            for(let i = numData; i < numMeta; ++i){
+                this._destroyDatasetMeta(i);
+            }
+            metasets.splice(numData, numMeta - numData);
+        }
+        this._sortedMetasets = metasets.slice(0).sort(compare2Level('order', 'index'));
+    }
+ _removeUnreferencedMetasets() {
+        const { _metasets: metasets , data: { datasets  }  } = this;
+        if (metasets.length > datasets.length) {
+            delete this._stacks;
+        }
+        metasets.forEach((meta, index)=>{
+            if (datasets.filter((x)=>x === meta._dataset).length === 0) {
+                this._destroyDatasetMeta(index);
+            }
+        });
+    }
+    buildOrUpdateControllers() {
+        const newControllers = [];
+        const datasets = this.data.datasets;
+        let i, ilen;
+        this._removeUnreferencedMetasets();
+        for(i = 0, ilen = datasets.length; i < ilen; i++){
+            const dataset = datasets[i];
+            let meta = this.getDatasetMeta(i);
+            const type = dataset.type || this.config.type;
+            if (meta.type && meta.type !== type) {
+                this._destroyDatasetMeta(i);
+                meta = this.getDatasetMeta(i);
+            }
+            meta.type = type;
+            meta.indexAxis = dataset.indexAxis || getIndexAxis(type, this.options);
+            meta.order = dataset.order || 0;
+            meta.index = i;
+            meta.label = '' + dataset.label;
+            meta.visible = this.isDatasetVisible(i);
+            if (meta.controller) {
+                meta.controller.updateIndex(i);
+                meta.controller.linkScales();
+            } else {
+                const ControllerClass = registry.getController(type);
+                const { datasetElementType , dataElementType  } = _chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.d.datasets[type];
+                Object.assign(ControllerClass, {
+                    dataElementType: registry.getElement(dataElementType),
+                    datasetElementType: datasetElementType && registry.getElement(datasetElementType)
+                });
+                meta.controller = new ControllerClass(this, i);
+                newControllers.push(meta.controller);
+            }
+        }
+        this._updateMetasets();
+        return newControllers;
+    }
+ _resetElements() {
+        (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.F)(this.data.datasets, (dataset, datasetIndex)=>{
+            this.getDatasetMeta(datasetIndex).controller.reset();
+        }, this);
+    }
+ reset() {
+        this._resetElements();
+        this.notifyPlugins('reset');
+    }
+    update(mode) {
+        const config = this.config;
+        config.update();
+        const options = this._options = config.createResolver(config.chartOptionScopes(), this.getContext());
+        const animsDisabled = this._animationsDisabled = !options.animation;
+        this._updateScales();
+        this._checkEventBindings();
+        this._updateHiddenIndices();
+        this._plugins.invalidate();
+        if (this.notifyPlugins('beforeUpdate', {
+            mode,
+            cancelable: true
+        }) === false) {
+            return;
+        }
+        const newControllers = this.buildOrUpdateControllers();
+        this.notifyPlugins('beforeElementsUpdate');
+        let minPadding = 0;
+        for(let i = 0, ilen = this.data.datasets.length; i < ilen; i++){
+            const { controller  } = this.getDatasetMeta(i);
+            const reset = !animsDisabled && newControllers.indexOf(controller) === -1;
+            controller.buildOrUpdateElements(reset);
+            minPadding = Math.max(+controller.getMaxOverflow(), minPadding);
+        }
+        minPadding = this._minPadding = options.layout.autoPadding ? minPadding : 0;
+        this._updateLayout(minPadding);
+        if (!animsDisabled) {
+            (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.F)(newControllers, (controller)=>{
+                controller.reset();
+            });
+        }
+        this._updateDatasets(mode);
+        this.notifyPlugins('afterUpdate', {
+            mode
+        });
+        this._layers.sort(compare2Level('z', '_idx'));
+        const { _active , _lastEvent  } = this;
+        if (_lastEvent) {
+            this._eventHandler(_lastEvent, true);
+        } else if (_active.length) {
+            this._updateHoverStyles(_active, _active, true);
+        }
+        this.render();
+    }
+ _updateScales() {
+        (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.F)(this.scales, (scale)=>{
+            layouts.removeBox(this, scale);
+        });
+        this.ensureScalesHaveIDs();
+        this.buildOrUpdateScales();
+    }
+ _checkEventBindings() {
+        const options = this.options;
+        const existingEvents = new Set(Object.keys(this._listeners));
+        const newEvents = new Set(options.events);
+        if (!(0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.ag)(existingEvents, newEvents) || !!this._responsiveListeners !== options.responsive) {
+            this.unbindEvents();
+            this.bindEvents();
+        }
+    }
+ _updateHiddenIndices() {
+        const { _hiddenIndices  } = this;
+        const changes = this._getUniformDataChanges() || [];
+        for (const { method , start , count  } of changes){
+            const move = method === '_removeElements' ? -count : count;
+            moveNumericKeys(_hiddenIndices, start, move);
+        }
+    }
+ _getUniformDataChanges() {
+        const _dataChanges = this._dataChanges;
+        if (!_dataChanges || !_dataChanges.length) {
+            return;
+        }
+        this._dataChanges = [];
+        const datasetCount = this.data.datasets.length;
+        const makeSet = (idx)=>new Set(_dataChanges.filter((c)=>c[0] === idx).map((c, i)=>i + ',' + c.splice(1).join(',')));
+        const changeSet = makeSet(0);
+        for(let i = 1; i < datasetCount; i++){
+            if (!(0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.ag)(changeSet, makeSet(i))) {
+                return;
+            }
+        }
+        return Array.from(changeSet).map((c)=>c.split(',')).map((a)=>({
+                method: a[1],
+                start: +a[2],
+                count: +a[3]
+            }));
+    }
+ _updateLayout(minPadding) {
+        if (this.notifyPlugins('beforeLayout', {
+            cancelable: true
+        }) === false) {
+            return;
+        }
+        layouts.update(this, this.width, this.height, minPadding);
+        const area = this.chartArea;
+        const noArea = area.width <= 0 || area.height <= 0;
+        this._layers = [];
+        (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.F)(this.boxes, (box)=>{
+            if (noArea && box.position === 'chartArea') {
+                return;
+            }
+            if (box.configure) {
+                box.configure();
+            }
+            this._layers.push(...box._layers());
+        }, this);
+        this._layers.forEach((item, index)=>{
+            item._idx = index;
+        });
+        this.notifyPlugins('afterLayout');
+    }
+ _updateDatasets(mode) {
+        if (this.notifyPlugins('beforeDatasetsUpdate', {
+            mode,
+            cancelable: true
+        }) === false) {
+            return;
+        }
+        for(let i = 0, ilen = this.data.datasets.length; i < ilen; ++i){
+            this.getDatasetMeta(i).controller.configure();
+        }
+        for(let i = 0, ilen = this.data.datasets.length; i < ilen; ++i){
+            this._updateDataset(i, (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.a7)(mode) ? mode({
+                datasetIndex: i
+            }) : mode);
+        }
+        this.notifyPlugins('afterDatasetsUpdate', {
+            mode
+        });
+    }
+ _updateDataset(index, mode) {
+        const meta = this.getDatasetMeta(index);
+        const args = {
+            meta,
+            index,
+            mode,
+            cancelable: true
+        };
+        if (this.notifyPlugins('beforeDatasetUpdate', args) === false) {
+            return;
+        }
+        meta.controller._update(mode);
+        args.cancelable = false;
+        this.notifyPlugins('afterDatasetUpdate', args);
+    }
+    render() {
+        if (this.notifyPlugins('beforeRender', {
+            cancelable: true
+        }) === false) {
+            return;
+        }
+        if (animator.has(this)) {
+            if (this.attached && !animator.running(this)) {
+                animator.start(this);
+            }
+        } else {
+            this.draw();
+            onAnimationsComplete({
+                chart: this
+            });
+        }
+    }
+    draw() {
+        let i;
+        if (this._resizeBeforeDraw) {
+            const { width , height  } = this._resizeBeforeDraw;
+            this._resizeBeforeDraw = null;
+            this._resize(width, height);
+        }
+        this.clear();
+        if (this.width <= 0 || this.height <= 0) {
+            return;
+        }
+        if (this.notifyPlugins('beforeDraw', {
+            cancelable: true
+        }) === false) {
+            return;
+        }
+        const layers = this._layers;
+        for(i = 0; i < layers.length && layers[i].z <= 0; ++i){
+            layers[i].draw(this.chartArea);
+        }
+        this._drawDatasets();
+        for(; i < layers.length; ++i){
+            layers[i].draw(this.chartArea);
+        }
+        this.notifyPlugins('afterDraw');
+    }
+ _getSortedDatasetMetas(filterVisible) {
+        const metasets = this._sortedMetasets;
+        const result = [];
+        let i, ilen;
+        for(i = 0, ilen = metasets.length; i < ilen; ++i){
+            const meta = metasets[i];
+            if (!filterVisible || meta.visible) {
+                result.push(meta);
+            }
+        }
+        return result;
+    }
+ getSortedVisibleDatasetMetas() {
+        return this._getSortedDatasetMetas(true);
+    }
+ _drawDatasets() {
+        if (this.notifyPlugins('beforeDatasetsDraw', {
+            cancelable: true
+        }) === false) {
+            return;
+        }
+        const metasets = this.getSortedVisibleDatasetMetas();
+        for(let i = metasets.length - 1; i >= 0; --i){
+            this._drawDataset(metasets[i]);
+        }
+        this.notifyPlugins('afterDatasetsDraw');
+    }
+ _drawDataset(meta) {
+        const ctx = this.ctx;
+        const args = {
+            meta,
+            index: meta.index,
+            cancelable: true
+        };
+        const clip = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.ah)(this, meta);
+        if (this.notifyPlugins('beforeDatasetDraw', args) === false) {
+            return;
+        }
+        if (clip) {
+            (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.Y)(ctx, clip);
+        }
+        meta.controller.draw();
+        if (clip) {
+            (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.$)(ctx);
+        }
+        args.cancelable = false;
+        this.notifyPlugins('afterDatasetDraw', args);
+    }
+ isPointInArea(point) {
+        return (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.C)(point, this.chartArea, this._minPadding);
+    }
+    getElementsAtEventForMode(e, mode, options, useFinalPosition) {
+        const method = Interaction.modes[mode];
+        if (typeof method === 'function') {
+            return method(this, e, options, useFinalPosition);
+        }
+        return [];
+    }
+    getDatasetMeta(datasetIndex) {
+        const dataset = this.data.datasets[datasetIndex];
+        const metasets = this._metasets;
+        let meta = metasets.filter((x)=>x && x._dataset === dataset).pop();
+        if (!meta) {
+            meta = {
+                type: null,
+                data: [],
+                dataset: null,
+                controller: null,
+                hidden: null,
+                xAxisID: null,
+                yAxisID: null,
+                order: dataset && dataset.order || 0,
+                index: datasetIndex,
+                _dataset: dataset,
+                _parsed: [],
+                _sorted: false
+            };
+            metasets.push(meta);
+        }
+        return meta;
+    }
+    getContext() {
+        return this.$context || (this.$context = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.j)(null, {
+            chart: this,
+            type: 'chart'
+        }));
+    }
+    getVisibleDatasetCount() {
+        return this.getSortedVisibleDatasetMetas().length;
+    }
+    isDatasetVisible(datasetIndex) {
+        const dataset = this.data.datasets[datasetIndex];
+        if (!dataset) {
+            return false;
+        }
+        const meta = this.getDatasetMeta(datasetIndex);
+        return typeof meta.hidden === 'boolean' ? !meta.hidden : !dataset.hidden;
+    }
+    setDatasetVisibility(datasetIndex, visible) {
+        const meta = this.getDatasetMeta(datasetIndex);
+        meta.hidden = !visible;
+    }
+    toggleDataVisibility(index) {
+        this._hiddenIndices[index] = !this._hiddenIndices[index];
+    }
+    getDataVisibility(index) {
+        return !this._hiddenIndices[index];
+    }
+ _updateVisibility(datasetIndex, dataIndex, visible) {
+        const mode = visible ? 'show' : 'hide';
+        const meta = this.getDatasetMeta(datasetIndex);
+        const anims = meta.controller._resolveAnimations(undefined, mode);
+        if ((0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.h)(dataIndex)) {
+            meta.data[dataIndex].hidden = !visible;
+            this.update();
+        } else {
+            this.setDatasetVisibility(datasetIndex, visible);
+            anims.update(meta, {
+                visible
+            });
+            this.update((ctx)=>ctx.datasetIndex === datasetIndex ? mode : undefined);
+        }
+    }
+    hide(datasetIndex, dataIndex) {
+        this._updateVisibility(datasetIndex, dataIndex, false);
+    }
+    show(datasetIndex, dataIndex) {
+        this._updateVisibility(datasetIndex, dataIndex, true);
+    }
+ _destroyDatasetMeta(datasetIndex) {
+        const meta = this._metasets[datasetIndex];
+        if (meta && meta.controller) {
+            meta.controller._destroy();
+        }
+        delete this._metasets[datasetIndex];
+    }
+    _stop() {
+        let i, ilen;
+        this.stop();
+        animator.remove(this);
+        for(i = 0, ilen = this.data.datasets.length; i < ilen; ++i){
+            this._destroyDatasetMeta(i);
+        }
+    }
+    destroy() {
+        this.notifyPlugins('beforeDestroy');
+        const { canvas , ctx  } = this;
+        this._stop();
+        this.config.clearCache();
+        if (canvas) {
+            this.unbindEvents();
+            (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.af)(canvas, ctx);
+            this.platform.releaseContext(ctx);
+            this.canvas = null;
+            this.ctx = null;
+        }
+        delete instances[this.id];
+        this.notifyPlugins('afterDestroy');
+    }
+    toBase64Image(...args) {
+        return this.canvas.toDataURL(...args);
+    }
+ bindEvents() {
+        this.bindUserEvents();
+        if (this.options.responsive) {
+            this.bindResponsiveEvents();
+        } else {
+            this.attached = true;
+        }
+    }
+ bindUserEvents() {
+        const listeners = this._listeners;
+        const platform = this.platform;
+        const _add = (type, listener)=>{
+            platform.addEventListener(this, type, listener);
+            listeners[type] = listener;
+        };
+        const listener = (e, x, y)=>{
+            e.offsetX = x;
+            e.offsetY = y;
+            this._eventHandler(e);
+        };
+        (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.F)(this.options.events, (type)=>_add(type, listener));
+    }
+ bindResponsiveEvents() {
+        if (!this._responsiveListeners) {
+            this._responsiveListeners = {};
+        }
+        const listeners = this._responsiveListeners;
+        const platform = this.platform;
+        const _add = (type, listener)=>{
+            platform.addEventListener(this, type, listener);
+            listeners[type] = listener;
+        };
+        const _remove = (type, listener)=>{
+            if (listeners[type]) {
+                platform.removeEventListener(this, type, listener);
+                delete listeners[type];
+            }
+        };
+        const listener = (width, height)=>{
+            if (this.canvas) {
+                this.resize(width, height);
+            }
+        };
+        let detached;
+        const attached = ()=>{
+            _remove('attach', attached);
+            this.attached = true;
+            this.resize();
+            _add('resize', listener);
+            _add('detach', detached);
+        };
+        detached = ()=>{
+            this.attached = false;
+            _remove('resize', listener);
+            this._stop();
+            this._resize(0, 0);
+            _add('attach', attached);
+        };
+        if (platform.isAttached(this.canvas)) {
+            attached();
+        } else {
+            detached();
+        }
+    }
+ unbindEvents() {
+        (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.F)(this._listeners, (listener, type)=>{
+            this.platform.removeEventListener(this, type, listener);
+        });
+        this._listeners = {};
+        (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.F)(this._responsiveListeners, (listener, type)=>{
+            this.platform.removeEventListener(this, type, listener);
+        });
+        this._responsiveListeners = undefined;
+    }
+    updateHoverStyle(items, mode, enabled) {
+        const prefix = enabled ? 'set' : 'remove';
+        let meta, item, i, ilen;
+        if (mode === 'dataset') {
+            meta = this.getDatasetMeta(items[0].datasetIndex);
+            meta.controller['_' + prefix + 'DatasetHoverStyle']();
+        }
+        for(i = 0, ilen = items.length; i < ilen; ++i){
+            item = items[i];
+            const controller = item && this.getDatasetMeta(item.datasetIndex).controller;
+            if (controller) {
+                controller[prefix + 'HoverStyle'](item.element, item.datasetIndex, item.index);
+            }
+        }
+    }
+ getActiveElements() {
+        return this._active || [];
+    }
+ setActiveElements(activeElements) {
+        const lastActive = this._active || [];
+        const active = activeElements.map(({ datasetIndex , index  })=>{
+            const meta = this.getDatasetMeta(datasetIndex);
+            if (!meta) {
+                throw new Error('No dataset found at index ' + datasetIndex);
+            }
+            return {
+                datasetIndex,
+                element: meta.data[index],
+                index
+            };
+        });
+        const changed = !(0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.ai)(active, lastActive);
+        if (changed) {
+            this._active = active;
+            this._lastEvent = null;
+            this._updateHoverStyles(active, lastActive);
+        }
+    }
+ notifyPlugins(hook, args, filter) {
+        return this._plugins.notify(this, hook, args, filter);
+    }
+ isPluginEnabled(pluginId) {
+        return this._plugins._cache.filter((p)=>p.plugin.id === pluginId).length === 1;
+    }
+ _updateHoverStyles(active, lastActive, replay) {
+        const hoverOptions = this.options.hover;
+        const diff = (a, b)=>a.filter((x)=>!b.some((y)=>x.datasetIndex === y.datasetIndex && x.index === y.index));
+        const deactivated = diff(lastActive, active);
+        const activated = replay ? active : diff(active, lastActive);
+        if (deactivated.length) {
+            this.updateHoverStyle(deactivated, hoverOptions.mode, false);
+        }
+        if (activated.length && hoverOptions.mode) {
+            this.updateHoverStyle(activated, hoverOptions.mode, true);
+        }
+    }
+ _eventHandler(e, replay) {
+        const args = {
+            event: e,
+            replay,
+            cancelable: true,
+            inChartArea: this.isPointInArea(e)
+        };
+        const eventFilter = (plugin)=>(plugin.options.events || this.options.events).includes(e.native.type);
+        if (this.notifyPlugins('beforeEvent', args, eventFilter) === false) {
+            return;
+        }
+        const changed = this._handleEvent(e, replay, args.inChartArea);
+        args.cancelable = false;
+        this.notifyPlugins('afterEvent', args, eventFilter);
+        if (changed || args.changed) {
+            this.render();
+        }
+        return this;
+    }
+ _handleEvent(e, replay, inChartArea) {
+        const { _active: lastActive = [] , options  } = this;
+        const useFinalPosition = replay;
+        const active = this._getActiveElements(e, lastActive, inChartArea, useFinalPosition);
+        const isClick = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.aj)(e);
+        const lastEvent = determineLastEvent(e, this._lastEvent, inChartArea, isClick);
+        if (inChartArea) {
+            this._lastEvent = null;
+            (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.Q)(options.onHover, [
+                e,
+                active,
+                this
+            ], this);
+            if (isClick) {
+                (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.Q)(options.onClick, [
+                    e,
+                    active,
+                    this
+                ], this);
+            }
+        }
+        const changed = !(0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.ai)(active, lastActive);
+        if (changed || replay) {
+            this._active = active;
+            this._updateHoverStyles(active, lastActive, replay);
+        }
+        this._lastEvent = lastEvent;
+        return changed;
+    }
+ _getActiveElements(e, lastActive, inChartArea, useFinalPosition) {
+        if (e.type === 'mouseout') {
+            return [];
+        }
+        if (!inChartArea) {
+            return lastActive;
+        }
+        const hoverOptions = this.options.hover;
+        return this.getElementsAtEventForMode(e, hoverOptions.mode, hoverOptions, useFinalPosition);
+    }
+}
+function invalidatePlugins() {
+    return (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.F)(Chart.instances, (chart)=>chart._plugins.invalidate());
+}
+
+function clipSelf(ctx, element, endAngle) {
+    const { startAngle , x , y , outerRadius , innerRadius , options  } = element;
+    const { borderWidth , borderJoinStyle  } = options;
+    const outerAngleClip = Math.min(borderWidth / outerRadius, (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.al)(startAngle - endAngle));
+    ctx.beginPath();
+    ctx.arc(x, y, outerRadius - borderWidth / 2, startAngle + outerAngleClip / 2, endAngle - outerAngleClip / 2);
+    if (innerRadius > 0) {
+        const innerAngleClip = Math.min(borderWidth / innerRadius, (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.al)(startAngle - endAngle));
+        ctx.arc(x, y, innerRadius + borderWidth / 2, endAngle - innerAngleClip / 2, startAngle + innerAngleClip / 2, true);
+    } else {
+        const clipWidth = Math.min(borderWidth / 2, outerRadius * (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.al)(startAngle - endAngle));
+        if (borderJoinStyle === 'round') {
+            ctx.arc(x, y, clipWidth, endAngle - _chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.P / 2, startAngle + _chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.P / 2, true);
+        } else if (borderJoinStyle === 'bevel') {
+            const r = 2 * clipWidth * clipWidth;
+            const endX = -r * Math.cos(endAngle + _chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.P / 2) + x;
+            const endY = -r * Math.sin(endAngle + _chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.P / 2) + y;
+            const startX = r * Math.cos(startAngle + _chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.P / 2) + x;
+            const startY = r * Math.sin(startAngle + _chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.P / 2) + y;
+            ctx.lineTo(endX, endY);
+            ctx.lineTo(startX, startY);
+        }
+    }
+    ctx.closePath();
+    ctx.moveTo(0, 0);
+    ctx.rect(0, 0, ctx.canvas.width, ctx.canvas.height);
+    ctx.clip('evenodd');
+}
+function clipArc(ctx, element, endAngle) {
+    const { startAngle , pixelMargin , x , y , outerRadius , innerRadius  } = element;
+    let angleMargin = pixelMargin / outerRadius;
+    // Draw an inner border by clipping the arc and drawing a double-width border
+    // Enlarge the clipping arc by 0.33 pixels to eliminate glitches between borders
+    ctx.beginPath();
+    ctx.arc(x, y, outerRadius, startAngle - angleMargin, endAngle + angleMargin);
+    if (innerRadius > pixelMargin) {
+        angleMargin = pixelMargin / innerRadius;
+        ctx.arc(x, y, innerRadius, endAngle + angleMargin, startAngle - angleMargin, true);
+    } else {
+        ctx.arc(x, y, pixelMargin, endAngle + _chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.H, startAngle - _chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.H);
+    }
+    ctx.closePath();
+    ctx.clip();
+}
+function toRadiusCorners(value) {
+    return (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.am)(value, [
+        'outerStart',
+        'outerEnd',
+        'innerStart',
+        'innerEnd'
+    ]);
+}
+/**
+ * Parse border radius from the provided options
+ */ function parseBorderRadius$1(arc, innerRadius, outerRadius, angleDelta) {
+    const o = toRadiusCorners(arc.options.borderRadius);
+    const halfThickness = (outerRadius - innerRadius) / 2;
+    const innerLimit = Math.min(halfThickness, angleDelta * innerRadius / 2);
+    // Outer limits are complicated. We want to compute the available angular distance at
+    // a radius of outerRadius - borderRadius because for small angular distances, this term limits.
+    // We compute at r = outerRadius - borderRadius because this circle defines the center of the border corners.
+    //
+    // If the borderRadius is large, that value can become negative.
+    // This causes the outer borders to lose their radius entirely, which is rather unexpected. To solve that, if borderRadius > outerRadius
+    // we know that the thickness term will dominate and compute the limits at that point
+    const computeOuterLimit = (val)=>{
+        const outerArcLimit = (outerRadius - Math.min(halfThickness, val)) * angleDelta / 2;
+        return (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.S)(val, 0, Math.min(halfThickness, outerArcLimit));
+    };
+    return {
+        outerStart: computeOuterLimit(o.outerStart),
+        outerEnd: computeOuterLimit(o.outerEnd),
+        innerStart: (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.S)(o.innerStart, 0, innerLimit),
+        innerEnd: (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.S)(o.innerEnd, 0, innerLimit)
+    };
+}
+/**
+ * Convert (r, 𝜃) to (x, y)
+ */ function rThetaToXY(r, theta, x, y) {
+    return {
+        x: x + r * Math.cos(theta),
+        y: y + r * Math.sin(theta)
+    };
+}
+/**
+ * Path the arc, respecting border radius by separating into left and right halves.
+ *
+ *   Start      End
+ *
+ *    1--->a--->2    Outer
+ *   /           \
+ *   8           3
+ *   |           |
+ *   |           |
+ *   7           4
+ *   \           /
+ *    6<---b<---5    Inner
+ */ function pathArc(ctx, element, offset, spacing, end, circular) {
+    const { x , y , startAngle: start , pixelMargin , innerRadius: innerR  } = element;
+    const outerRadius = Math.max(element.outerRadius + spacing + offset - pixelMargin, 0);
+    const innerRadius = innerR > 0 ? innerR + spacing + offset + pixelMargin : 0;
+    let spacingOffset = 0;
+    const alpha = end - start;
+    if (spacing) {
+        // When spacing is present, it is the same for all items
+        // So we adjust the start and end angle of the arc such that
+        // the distance is the same as it would be without the spacing
+        const noSpacingInnerRadius = innerR > 0 ? innerR - spacing : 0;
+        const noSpacingOuterRadius = outerRadius > 0 ? outerRadius - spacing : 0;
+        const avNogSpacingRadius = (noSpacingInnerRadius + noSpacingOuterRadius) / 2;
+        const adjustedAngle = avNogSpacingRadius !== 0 ? alpha * avNogSpacingRadius / (avNogSpacingRadius + spacing) : alpha;
+        spacingOffset = (alpha - adjustedAngle) / 2;
+    }
+    const beta = Math.max(0.001, alpha * outerRadius - offset / _chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.P) / outerRadius;
+    const angleOffset = (alpha - beta) / 2;
+    const startAngle = start + angleOffset + spacingOffset;
+    const endAngle = end - angleOffset - spacingOffset;
+    const { outerStart , outerEnd , innerStart , innerEnd  } = parseBorderRadius$1(element, innerRadius, outerRadius, endAngle - startAngle);
+    const outerStartAdjustedRadius = outerRadius - outerStart;
+    const outerEndAdjustedRadius = outerRadius - outerEnd;
+    const outerStartAdjustedAngle = startAngle + outerStart / outerStartAdjustedRadius;
+    const outerEndAdjustedAngle = endAngle - outerEnd / outerEndAdjustedRadius;
+    const innerStartAdjustedRadius = innerRadius + innerStart;
+    const innerEndAdjustedRadius = innerRadius + innerEnd;
+    const innerStartAdjustedAngle = startAngle + innerStart / innerStartAdjustedRadius;
+    const innerEndAdjustedAngle = endAngle - innerEnd / innerEndAdjustedRadius;
+    ctx.beginPath();
+    if (circular) {
+        // The first arc segments from point 1 to point a to point 2
+        const outerMidAdjustedAngle = (outerStartAdjustedAngle + outerEndAdjustedAngle) / 2;
+        ctx.arc(x, y, outerRadius, outerStartAdjustedAngle, outerMidAdjustedAngle);
+        ctx.arc(x, y, outerRadius, outerMidAdjustedAngle, outerEndAdjustedAngle);
+        // The corner segment from point 2 to point 3
+        if (outerEnd > 0) {
+            const pCenter = rThetaToXY(outerEndAdjustedRadius, outerEndAdjustedAngle, x, y);
+            ctx.arc(pCenter.x, pCenter.y, outerEnd, outerEndAdjustedAngle, endAngle + _chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.H);
+        }
+        // The line from point 3 to point 4
+        const p4 = rThetaToXY(innerEndAdjustedRadius, endAngle, x, y);
+        ctx.lineTo(p4.x, p4.y);
+        // The corner segment from point 4 to point 5
+        if (innerEnd > 0) {
+            const pCenter = rThetaToXY(innerEndAdjustedRadius, innerEndAdjustedAngle, x, y);
+            ctx.arc(pCenter.x, pCenter.y, innerEnd, endAngle + _chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.H, innerEndAdjustedAngle + Math.PI);
+        }
+        // The inner arc from point 5 to point b to point 6
+        const innerMidAdjustedAngle = (endAngle - innerEnd / innerRadius + (startAngle + innerStart / innerRadius)) / 2;
+        ctx.arc(x, y, innerRadius, endAngle - innerEnd / innerRadius, innerMidAdjustedAngle, true);
+        ctx.arc(x, y, innerRadius, innerMidAdjustedAngle, startAngle + innerStart / innerRadius, true);
+        // The corner segment from point 6 to point 7
+        if (innerStart > 0) {
+            const pCenter = rThetaToXY(innerStartAdjustedRadius, innerStartAdjustedAngle, x, y);
+            ctx.arc(pCenter.x, pCenter.y, innerStart, innerStartAdjustedAngle + Math.PI, startAngle - _chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.H);
+        }
+        // The line from point 7 to point 8
+        const p8 = rThetaToXY(outerStartAdjustedRadius, startAngle, x, y);
+        ctx.lineTo(p8.x, p8.y);
+        // The corner segment from point 8 to point 1
+        if (outerStart > 0) {
+            const pCenter = rThetaToXY(outerStartAdjustedRadius, outerStartAdjustedAngle, x, y);
+            ctx.arc(pCenter.x, pCenter.y, outerStart, startAngle - _chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.H, outerStartAdjustedAngle);
+        }
+    } else {
+        ctx.moveTo(x, y);
+        const outerStartX = Math.cos(outerStartAdjustedAngle) * outerRadius + x;
+        const outerStartY = Math.sin(outerStartAdjustedAngle) * outerRadius + y;
+        ctx.lineTo(outerStartX, outerStartY);
+        const outerEndX = Math.cos(outerEndAdjustedAngle) * outerRadius + x;
+        const outerEndY = Math.sin(outerEndAdjustedAngle) * outerRadius + y;
+        ctx.lineTo(outerEndX, outerEndY);
+    }
+    ctx.closePath();
+}
+function drawArc(ctx, element, offset, spacing, circular) {
+    const { fullCircles , startAngle , circumference  } = element;
+    let endAngle = element.endAngle;
+    if (fullCircles) {
+        pathArc(ctx, element, offset, spacing, endAngle, circular);
+        for(let i = 0; i < fullCircles; ++i){
+            ctx.fill();
+        }
+        if (!isNaN(circumference)) {
+            endAngle = startAngle + (circumference % _chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.T || _chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.T);
+        }
+    }
+    pathArc(ctx, element, offset, spacing, endAngle, circular);
+    ctx.fill();
+    return endAngle;
+}
+function drawBorder(ctx, element, offset, spacing, circular) {
+    const { fullCircles , startAngle , circumference , options  } = element;
+    const { borderWidth , borderJoinStyle , borderDash , borderDashOffset , borderRadius  } = options;
+    const inner = options.borderAlign === 'inner';
+    if (!borderWidth) {
+        return;
+    }
+    ctx.setLineDash(borderDash || []);
+    ctx.lineDashOffset = borderDashOffset;
+    if (inner) {
+        ctx.lineWidth = borderWidth * 2;
+        ctx.lineJoin = borderJoinStyle || 'round';
+    } else {
+        ctx.lineWidth = borderWidth;
+        ctx.lineJoin = borderJoinStyle || 'bevel';
+    }
+    let endAngle = element.endAngle;
+    if (fullCircles) {
+        pathArc(ctx, element, offset, spacing, endAngle, circular);
+        for(let i = 0; i < fullCircles; ++i){
+            ctx.stroke();
+        }
+        if (!isNaN(circumference)) {
+            endAngle = startAngle + (circumference % _chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.T || _chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.T);
+        }
+    }
+    if (inner) {
+        clipArc(ctx, element, endAngle);
+    }
+    if (options.selfJoin && endAngle - startAngle >= _chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.P && borderRadius === 0 && borderJoinStyle !== 'miter') {
+        clipSelf(ctx, element, endAngle);
+    }
+    if (!fullCircles) {
+        pathArc(ctx, element, offset, spacing, endAngle, circular);
+        ctx.stroke();
+    }
+}
+class ArcElement extends Element {
+    static id = 'arc';
+    static defaults = {
+        borderAlign: 'center',
+        borderColor: '#fff',
+        borderDash: [],
+        borderDashOffset: 0,
+        borderJoinStyle: undefined,
+        borderRadius: 0,
+        borderWidth: 2,
+        offset: 0,
+        spacing: 0,
+        angle: undefined,
+        circular: true,
+        selfJoin: false
+    };
+    static defaultRoutes = {
+        backgroundColor: 'backgroundColor'
+    };
+    static descriptors = {
+        _scriptable: true,
+        _indexable: (name)=>name !== 'borderDash'
+    };
+    circumference;
+    endAngle;
+    fullCircles;
+    innerRadius;
+    outerRadius;
+    pixelMargin;
+    startAngle;
+    constructor(cfg){
+        super();
+        this.options = undefined;
+        this.circumference = undefined;
+        this.startAngle = undefined;
+        this.endAngle = undefined;
+        this.innerRadius = undefined;
+        this.outerRadius = undefined;
+        this.pixelMargin = 0;
+        this.fullCircles = 0;
+        if (cfg) {
+            Object.assign(this, cfg);
+        }
+    }
+    inRange(chartX, chartY, useFinalPosition) {
+        const point = this.getProps([
+            'x',
+            'y'
+        ], useFinalPosition);
+        const { angle , distance  } = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.D)(point, {
+            x: chartX,
+            y: chartY
+        });
+        const { startAngle , endAngle , innerRadius , outerRadius , circumference  } = this.getProps([
+            'startAngle',
+            'endAngle',
+            'innerRadius',
+            'outerRadius',
+            'circumference'
+        ], useFinalPosition);
+        const rAdjust = (this.options.spacing + this.options.borderWidth) / 2;
+        const _circumference = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.v)(circumference, endAngle - startAngle);
+        const nonZeroBetween = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.p)(angle, startAngle, endAngle) && startAngle !== endAngle;
+        const betweenAngles = _circumference >= _chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.T || nonZeroBetween;
+        const withinRadius = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.ak)(distance, innerRadius + rAdjust, outerRadius + rAdjust);
+        return betweenAngles && withinRadius;
+    }
+    getCenterPoint(useFinalPosition) {
+        const { x , y , startAngle , endAngle , innerRadius , outerRadius  } = this.getProps([
+            'x',
+            'y',
+            'startAngle',
+            'endAngle',
+            'innerRadius',
+            'outerRadius'
+        ], useFinalPosition);
+        const { offset , spacing  } = this.options;
+        const halfAngle = (startAngle + endAngle) / 2;
+        const halfRadius = (innerRadius + outerRadius + spacing + offset) / 2;
+        return {
+            x: x + Math.cos(halfAngle) * halfRadius,
+            y: y + Math.sin(halfAngle) * halfRadius
+        };
+    }
+    tooltipPosition(useFinalPosition) {
+        return this.getCenterPoint(useFinalPosition);
+    }
+    draw(ctx) {
+        const { options , circumference  } = this;
+        const offset = (options.offset || 0) / 4;
+        const spacing = (options.spacing || 0) / 2;
+        const circular = options.circular;
+        this.pixelMargin = options.borderAlign === 'inner' ? 0.33 : 0;
+        this.fullCircles = circumference > _chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.T ? Math.floor(circumference / _chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.T) : 0;
+        if (circumference === 0 || this.innerRadius < 0 || this.outerRadius < 0) {
+            return;
+        }
+        ctx.save();
+        const halfAngle = (this.startAngle + this.endAngle) / 2;
+        ctx.translate(Math.cos(halfAngle) * offset, Math.sin(halfAngle) * offset);
+        const fix = 1 - Math.sin(Math.min(_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.P, circumference || 0));
+        const radiusOffset = offset * fix;
+        ctx.fillStyle = options.backgroundColor;
+        ctx.strokeStyle = options.borderColor;
+        drawArc(ctx, this, radiusOffset, spacing, circular);
+        drawBorder(ctx, this, radiusOffset, spacing, circular);
+        ctx.restore();
+    }
+}
+
+function setStyle(ctx, options, style = options) {
+    ctx.lineCap = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.v)(style.borderCapStyle, options.borderCapStyle);
+    ctx.setLineDash((0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.v)(style.borderDash, options.borderDash));
+    ctx.lineDashOffset = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.v)(style.borderDashOffset, options.borderDashOffset);
+    ctx.lineJoin = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.v)(style.borderJoinStyle, options.borderJoinStyle);
+    ctx.lineWidth = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.v)(style.borderWidth, options.borderWidth);
+    ctx.strokeStyle = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.v)(style.borderColor, options.borderColor);
+}
+function lineTo(ctx, previous, target) {
+    ctx.lineTo(target.x, target.y);
+}
+ function getLineMethod(options) {
+    if (options.stepped) {
+        return _chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.at;
+    }
+    if (options.tension || options.cubicInterpolationMode === 'monotone') {
+        return _chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.au;
+    }
+    return lineTo;
+}
+function pathVars(points, segment, params = {}) {
+    const count = points.length;
+    const { start: paramsStart = 0 , end: paramsEnd = count - 1  } = params;
+    const { start: segmentStart , end: segmentEnd  } = segment;
+    const start = Math.max(paramsStart, segmentStart);
+    const end = Math.min(paramsEnd, segmentEnd);
+    const outside = paramsStart < segmentStart && paramsEnd < segmentStart || paramsStart > segmentEnd && paramsEnd > segmentEnd;
+    return {
+        count,
+        start,
+        loop: segment.loop,
+        ilen: end < start && !outside ? count + end - start : end - start
+    };
+}
+ function pathSegment(ctx, line, segment, params) {
+    const { points , options  } = line;
+    const { count , start , loop , ilen  } = pathVars(points, segment, params);
+    const lineMethod = getLineMethod(options);
+    let { move =true , reverse  } = params || {};
+    let i, point, prev;
+    for(i = 0; i <= ilen; ++i){
+        point = points[(start + (reverse ? ilen - i : i)) % count];
+        if (point.skip) {
+            continue;
+        } else if (move) {
+            ctx.moveTo(point.x, point.y);
+            move = false;
+        } else {
+            lineMethod(ctx, prev, point, reverse, options.stepped);
+        }
+        prev = point;
+    }
+    if (loop) {
+        point = points[(start + (reverse ? ilen : 0)) % count];
+        lineMethod(ctx, prev, point, reverse, options.stepped);
+    }
+    return !!loop;
+}
+ function fastPathSegment(ctx, line, segment, params) {
+    const points = line.points;
+    const { count , start , ilen  } = pathVars(points, segment, params);
+    const { move =true , reverse  } = params || {};
+    let avgX = 0;
+    let countX = 0;
+    let i, point, prevX, minY, maxY, lastY;
+    const pointIndex = (index)=>(start + (reverse ? ilen - index : index)) % count;
+    const drawX = ()=>{
+        if (minY !== maxY) {
+            ctx.lineTo(avgX, maxY);
+            ctx.lineTo(avgX, minY);
+            ctx.lineTo(avgX, lastY);
+        }
+    };
+    if (move) {
+        point = points[pointIndex(0)];
+        ctx.moveTo(point.x, point.y);
+    }
+    for(i = 0; i <= ilen; ++i){
+        point = points[pointIndex(i)];
+        if (point.skip) {
+            continue;
+        }
+        const x = point.x;
+        const y = point.y;
+        const truncX = x | 0;
+        if (truncX === prevX) {
+            if (y < minY) {
+                minY = y;
+            } else if (y > maxY) {
+                maxY = y;
+            }
+            avgX = (countX * avgX + x) / ++countX;
+        } else {
+            drawX();
+            ctx.lineTo(x, y);
+            prevX = truncX;
+            countX = 0;
+            minY = maxY = y;
+        }
+        lastY = y;
+    }
+    drawX();
+}
+ function _getSegmentMethod(line) {
+    const opts = line.options;
+    const borderDash = opts.borderDash && opts.borderDash.length;
+    const useFastPath = !line._decimated && !line._loop && !opts.tension && opts.cubicInterpolationMode !== 'monotone' && !opts.stepped && !borderDash;
+    return useFastPath ? fastPathSegment : pathSegment;
+}
+ function _getInterpolationMethod(options) {
+    if (options.stepped) {
+        return _chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.aq;
+    }
+    if (options.tension || options.cubicInterpolationMode === 'monotone') {
+        return _chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.ar;
+    }
+    return _chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.as;
+}
+function strokePathWithCache(ctx, line, start, count) {
+    let path = line._path;
+    if (!path) {
+        path = line._path = new Path2D();
+        if (line.path(path, start, count)) {
+            path.closePath();
+        }
+    }
+    setStyle(ctx, line.options);
+    ctx.stroke(path);
+}
+function strokePathDirect(ctx, line, start, count) {
+    const { segments , options  } = line;
+    const segmentMethod = _getSegmentMethod(line);
+    for (const segment of segments){
+        setStyle(ctx, options, segment.style);
+        ctx.beginPath();
+        if (segmentMethod(ctx, line, segment, {
+            start,
+            end: start + count - 1
+        })) {
+            ctx.closePath();
+        }
+        ctx.stroke();
+    }
+}
+const usePath2D = typeof Path2D === 'function';
+function draw(ctx, line, start, count) {
+    if (usePath2D && !line.options.segment) {
+        strokePathWithCache(ctx, line, start, count);
+    } else {
+        strokePathDirect(ctx, line, start, count);
+    }
+}
+class LineElement extends Element {
+    static id = 'line';
+ static defaults = {
+        borderCapStyle: 'butt',
+        borderDash: [],
+        borderDashOffset: 0,
+        borderJoinStyle: 'miter',
+        borderWidth: 3,
+        capBezierPoints: true,
+        cubicInterpolationMode: 'default',
+        fill: false,
+        spanGaps: false,
+        stepped: false,
+        tension: 0
+    };
+ static defaultRoutes = {
+        backgroundColor: 'backgroundColor',
+        borderColor: 'borderColor'
+    };
+    static descriptors = {
+        _scriptable: true,
+        _indexable: (name)=>name !== 'borderDash' && name !== 'fill'
+    };
+    constructor(cfg){
+        super();
+        this.animated = true;
+        this.options = undefined;
+        this._chart = undefined;
+        this._loop = undefined;
+        this._fullLoop = undefined;
+        this._path = undefined;
+        this._points = undefined;
+        this._segments = undefined;
+        this._decimated = false;
+        this._pointsUpdated = false;
+        this._datasetIndex = undefined;
+        if (cfg) {
+            Object.assign(this, cfg);
+        }
+    }
+    updateControlPoints(chartArea, indexAxis) {
+        const options = this.options;
+        if ((options.tension || options.cubicInterpolationMode === 'monotone') && !options.stepped && !this._pointsUpdated) {
+            const loop = options.spanGaps ? this._loop : this._fullLoop;
+            (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.an)(this._points, options, chartArea, loop, indexAxis);
+            this._pointsUpdated = true;
+        }
+    }
+    set points(points) {
+        this._points = points;
+        delete this._segments;
+        delete this._path;
+        this._pointsUpdated = false;
+    }
+    get points() {
+        return this._points;
+    }
+    get segments() {
+        return this._segments || (this._segments = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.ao)(this, this.options.segment));
+    }
+ first() {
+        const segments = this.segments;
+        const points = this.points;
+        return segments.length && points[segments[0].start];
+    }
+ last() {
+        const segments = this.segments;
+        const points = this.points;
+        const count = segments.length;
+        return count && points[segments[count - 1].end];
+    }
+ interpolate(point, property) {
+        const options = this.options;
+        const value = point[property];
+        const points = this.points;
+        const segments = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.ap)(this, {
+            property,
+            start: value,
+            end: value
+        });
+        if (!segments.length) {
+            return;
+        }
+        const result = [];
+        const _interpolate = _getInterpolationMethod(options);
+        let i, ilen;
+        for(i = 0, ilen = segments.length; i < ilen; ++i){
+            const { start , end  } = segments[i];
+            const p1 = points[start];
+            const p2 = points[end];
+            if (p1 === p2) {
+                result.push(p1);
+                continue;
+            }
+            const t = Math.abs((value - p1[property]) / (p2[property] - p1[property]));
+            const interpolated = _interpolate(p1, p2, t, options.stepped);
+            interpolated[property] = point[property];
+            result.push(interpolated);
+        }
+        return result.length === 1 ? result[0] : result;
+    }
+ pathSegment(ctx, segment, params) {
+        const segmentMethod = _getSegmentMethod(this);
+        return segmentMethod(ctx, this, segment, params);
+    }
+ path(ctx, start, count) {
+        const segments = this.segments;
+        const segmentMethod = _getSegmentMethod(this);
+        let loop = this._loop;
+        start = start || 0;
+        count = count || this.points.length - start;
+        for (const segment of segments){
+            loop &= segmentMethod(ctx, this, segment, {
+                start,
+                end: start + count - 1
+            });
+        }
+        return !!loop;
+    }
+ draw(ctx, chartArea, start, count) {
+        const options = this.options || {};
+        const points = this.points || [];
+        if (points.length && options.borderWidth) {
+            ctx.save();
+            draw(ctx, this, start, count);
+            ctx.restore();
+        }
+        if (this.animated) {
+            this._pointsUpdated = false;
+            this._path = undefined;
+        }
+    }
+}
+
+function inRange$1(el, pos, axis, useFinalPosition) {
+    const options = el.options;
+    const { [axis]: value  } = el.getProps([
+        axis
+    ], useFinalPosition);
+    return Math.abs(pos - value) < options.radius + options.hitRadius;
+}
+class PointElement extends Element {
+    static id = 'point';
+    parsed;
+    skip;
+    stop;
+    /**
+   * @type {any}
+   */ static defaults = {
+        borderWidth: 1,
+        hitRadius: 1,
+        hoverBorderWidth: 1,
+        hoverRadius: 4,
+        pointStyle: 'circle',
+        radius: 3,
+        rotation: 0
+    };
+    /**
+   * @type {any}
+   */ static defaultRoutes = {
+        backgroundColor: 'backgroundColor',
+        borderColor: 'borderColor'
+    };
+    constructor(cfg){
+        super();
+        this.options = undefined;
+        this.parsed = undefined;
+        this.skip = undefined;
+        this.stop = undefined;
+        if (cfg) {
+            Object.assign(this, cfg);
+        }
+    }
+    inRange(mouseX, mouseY, useFinalPosition) {
+        const options = this.options;
+        const { x , y  } = this.getProps([
+            'x',
+            'y'
+        ], useFinalPosition);
+        return Math.pow(mouseX - x, 2) + Math.pow(mouseY - y, 2) < Math.pow(options.hitRadius + options.radius, 2);
+    }
+    inXRange(mouseX, useFinalPosition) {
+        return inRange$1(this, mouseX, 'x', useFinalPosition);
+    }
+    inYRange(mouseY, useFinalPosition) {
+        return inRange$1(this, mouseY, 'y', useFinalPosition);
+    }
+    getCenterPoint(useFinalPosition) {
+        const { x , y  } = this.getProps([
+            'x',
+            'y'
+        ], useFinalPosition);
+        return {
+            x,
+            y
+        };
+    }
+    size(options) {
+        options = options || this.options || {};
+        let radius = options.radius || 0;
+        radius = Math.max(radius, radius && options.hoverRadius || 0);
+        const borderWidth = radius && options.borderWidth || 0;
+        return (radius + borderWidth) * 2;
+    }
+    draw(ctx, area) {
+        const options = this.options;
+        if (this.skip || options.radius < 0.1 || !(0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.C)(this, area, this.size(options) / 2)) {
+            return;
+        }
+        ctx.strokeStyle = options.borderColor;
+        ctx.lineWidth = options.borderWidth;
+        ctx.fillStyle = options.backgroundColor;
+        (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.av)(ctx, options, this.x, this.y);
+    }
+    getRange() {
+        const options = this.options || {};
+        // @ts-expect-error Fallbacks should never be hit in practice
+        return options.radius + options.hitRadius;
+    }
+}
+
+function getBarBounds(bar, useFinalPosition) {
+    const { x , y , base , width , height  } =  bar.getProps([
+        'x',
+        'y',
+        'base',
+        'width',
+        'height'
+    ], useFinalPosition);
+    let left, right, top, bottom, half;
+    if (bar.horizontal) {
+        half = height / 2;
+        left = Math.min(x, base);
+        right = Math.max(x, base);
+        top = y - half;
+        bottom = y + half;
+    } else {
+        half = width / 2;
+        left = x - half;
+        right = x + half;
+        top = Math.min(y, base);
+        bottom = Math.max(y, base);
+    }
+    return {
+        left,
+        top,
+        right,
+        bottom
+    };
+}
+function skipOrLimit(skip, value, min, max) {
+    return skip ? 0 : (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.S)(value, min, max);
+}
+function parseBorderWidth(bar, maxW, maxH) {
+    const value = bar.options.borderWidth;
+    const skip = bar.borderSkipped;
+    const o = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.ax)(value);
+    return {
+        t: skipOrLimit(skip.top, o.top, 0, maxH),
+        r: skipOrLimit(skip.right, o.right, 0, maxW),
+        b: skipOrLimit(skip.bottom, o.bottom, 0, maxH),
+        l: skipOrLimit(skip.left, o.left, 0, maxW)
+    };
+}
+function parseBorderRadius(bar, maxW, maxH) {
+    const { enableBorderRadius  } = bar.getProps([
+        'enableBorderRadius'
+    ]);
+    const value = bar.options.borderRadius;
+    const o = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.ay)(value);
+    const maxR = Math.min(maxW, maxH);
+    const skip = bar.borderSkipped;
+    const enableBorder = enableBorderRadius || (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.i)(value);
+    return {
+        topLeft: skipOrLimit(!enableBorder || skip.top || skip.left, o.topLeft, 0, maxR),
+        topRight: skipOrLimit(!enableBorder || skip.top || skip.right, o.topRight, 0, maxR),
+        bottomLeft: skipOrLimit(!enableBorder || skip.bottom || skip.left, o.bottomLeft, 0, maxR),
+        bottomRight: skipOrLimit(!enableBorder || skip.bottom || skip.right, o.bottomRight, 0, maxR)
+    };
+}
+function boundingRects(bar) {
+    const bounds = getBarBounds(bar);
+    const width = bounds.right - bounds.left;
+    const height = bounds.bottom - bounds.top;
+    const border = parseBorderWidth(bar, width / 2, height / 2);
+    const radius = parseBorderRadius(bar, width / 2, height / 2);
+    return {
+        outer: {
+            x: bounds.left,
+            y: bounds.top,
+            w: width,
+            h: height,
+            radius
+        },
+        inner: {
+            x: bounds.left + border.l,
+            y: bounds.top + border.t,
+            w: width - border.l - border.r,
+            h: height - border.t - border.b,
+            radius: {
+                topLeft: Math.max(0, radius.topLeft - Math.max(border.t, border.l)),
+                topRight: Math.max(0, radius.topRight - Math.max(border.t, border.r)),
+                bottomLeft: Math.max(0, radius.bottomLeft - Math.max(border.b, border.l)),
+                bottomRight: Math.max(0, radius.bottomRight - Math.max(border.b, border.r))
+            }
+        }
+    };
+}
+function inRange(bar, x, y, useFinalPosition) {
+    const skipX = x === null;
+    const skipY = y === null;
+    const skipBoth = skipX && skipY;
+    const bounds = bar && !skipBoth && getBarBounds(bar, useFinalPosition);
+    return bounds && (skipX || (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.ak)(x, bounds.left, bounds.right)) && (skipY || (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.ak)(y, bounds.top, bounds.bottom));
+}
+function hasRadius(radius) {
+    return radius.topLeft || radius.topRight || radius.bottomLeft || radius.bottomRight;
+}
+ function addNormalRectPath(ctx, rect) {
+    ctx.rect(rect.x, rect.y, rect.w, rect.h);
+}
+function inflateRect(rect, amount, refRect = {}) {
+    const x = rect.x !== refRect.x ? -amount : 0;
+    const y = rect.y !== refRect.y ? -amount : 0;
+    const w = (rect.x + rect.w !== refRect.x + refRect.w ? amount : 0) - x;
+    const h = (rect.y + rect.h !== refRect.y + refRect.h ? amount : 0) - y;
+    return {
+        x: rect.x + x,
+        y: rect.y + y,
+        w: rect.w + w,
+        h: rect.h + h,
+        radius: rect.radius
+    };
+}
+class BarElement extends Element {
+    static id = 'bar';
+ static defaults = {
+        borderSkipped: 'start',
+        borderWidth: 0,
+        borderRadius: 0,
+        inflateAmount: 'auto',
+        pointStyle: undefined
+    };
+ static defaultRoutes = {
+        backgroundColor: 'backgroundColor',
+        borderColor: 'borderColor'
+    };
+    constructor(cfg){
+        super();
+        this.options = undefined;
+        this.horizontal = undefined;
+        this.base = undefined;
+        this.width = undefined;
+        this.height = undefined;
+        this.inflateAmount = undefined;
+        if (cfg) {
+            Object.assign(this, cfg);
+        }
+    }
+    draw(ctx) {
+        const { inflateAmount , options: { borderColor , backgroundColor  }  } = this;
+        const { inner , outer  } = boundingRects(this);
+        const addRectPath = hasRadius(outer.radius) ? _chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.aw : addNormalRectPath;
+        ctx.save();
+        if (outer.w !== inner.w || outer.h !== inner.h) {
+            ctx.beginPath();
+            addRectPath(ctx, inflateRect(outer, inflateAmount, inner));
+            ctx.clip();
+            addRectPath(ctx, inflateRect(inner, -inflateAmount, outer));
+            ctx.fillStyle = borderColor;
+            ctx.fill('evenodd');
+        }
+        ctx.beginPath();
+        addRectPath(ctx, inflateRect(inner, inflateAmount));
+        ctx.fillStyle = backgroundColor;
+        ctx.fill();
+        ctx.restore();
+    }
+    inRange(mouseX, mouseY, useFinalPosition) {
+        return inRange(this, mouseX, mouseY, useFinalPosition);
+    }
+    inXRange(mouseX, useFinalPosition) {
+        return inRange(this, mouseX, null, useFinalPosition);
+    }
+    inYRange(mouseY, useFinalPosition) {
+        return inRange(this, null, mouseY, useFinalPosition);
+    }
+    getCenterPoint(useFinalPosition) {
+        const { x , y , base , horizontal  } =  this.getProps([
+            'x',
+            'y',
+            'base',
+            'horizontal'
+        ], useFinalPosition);
+        return {
+            x: horizontal ? (x + base) / 2 : x,
+            y: horizontal ? y : (y + base) / 2
+        };
+    }
+    getRange(axis) {
+        return axis === 'x' ? this.width / 2 : this.height / 2;
+    }
+}
+
+var elements = /*#__PURE__*/Object.freeze({
+__proto__: null,
+ArcElement: ArcElement,
+BarElement: BarElement,
+LineElement: LineElement,
+PointElement: PointElement
+});
+
+const BORDER_COLORS = [
+    'rgb(54, 162, 235)',
+    'rgb(255, 99, 132)',
+    'rgb(255, 159, 64)',
+    'rgb(255, 205, 86)',
+    'rgb(75, 192, 192)',
+    'rgb(153, 102, 255)',
+    'rgb(201, 203, 207)' // grey
+];
+// Border colors with 50% transparency
+const BACKGROUND_COLORS = /* #__PURE__ */ BORDER_COLORS.map((color)=>color.replace('rgb(', 'rgba(').replace(')', ', 0.5)'));
+function getBorderColor(i) {
+    return BORDER_COLORS[i % BORDER_COLORS.length];
+}
+function getBackgroundColor(i) {
+    return BACKGROUND_COLORS[i % BACKGROUND_COLORS.length];
+}
+function colorizeDefaultDataset(dataset, i) {
+    dataset.borderColor = getBorderColor(i);
+    dataset.backgroundColor = getBackgroundColor(i);
+    return ++i;
+}
+function colorizeDoughnutDataset(dataset, i) {
+    dataset.backgroundColor = dataset.data.map(()=>getBorderColor(i++));
+    return i;
+}
+function colorizePolarAreaDataset(dataset, i) {
+    dataset.backgroundColor = dataset.data.map(()=>getBackgroundColor(i++));
+    return i;
+}
+function getColorizer(chart) {
+    let i = 0;
+    return (dataset, datasetIndex)=>{
+        const controller = chart.getDatasetMeta(datasetIndex).controller;
+        if (controller instanceof DoughnutController) {
+            i = colorizeDoughnutDataset(dataset, i);
+        } else if (controller instanceof PolarAreaController) {
+            i = colorizePolarAreaDataset(dataset, i);
+        } else if (controller) {
+            i = colorizeDefaultDataset(dataset, i);
+        }
+    };
+}
+function containsColorsDefinitions(descriptors) {
+    let k;
+    for(k in descriptors){
+        if (descriptors[k].borderColor || descriptors[k].backgroundColor) {
+            return true;
+        }
+    }
+    return false;
+}
+function containsColorsDefinition(descriptor) {
+    return descriptor && (descriptor.borderColor || descriptor.backgroundColor);
+}
+function containsDefaultColorsDefenitions() {
+    return _chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.d.borderColor !== 'rgba(0,0,0,0.1)' || _chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.d.backgroundColor !== 'rgba(0,0,0,0.1)';
+}
+var plugin_colors = {
+    id: 'colors',
+    defaults: {
+        enabled: true,
+        forceOverride: false
+    },
+    beforeLayout (chart, _args, options) {
+        if (!options.enabled) {
+            return;
+        }
+        const { data: { datasets  } , options: chartOptions  } = chart.config;
+        const { elements  } = chartOptions;
+        const containsColorDefenition = containsColorsDefinitions(datasets) || containsColorsDefinition(chartOptions) || elements && containsColorsDefinitions(elements) || containsDefaultColorsDefenitions();
+        if (!options.forceOverride && containsColorDefenition) {
+            return;
+        }
+        const colorizer = getColorizer(chart);
+        datasets.forEach(colorizer);
+    }
+};
+
+function lttbDecimation(data, start, count, availableWidth, options) {
+ const samples = options.samples || availableWidth;
+    if (samples >= count) {
+        return data.slice(start, start + count);
+    }
+    const decimated = [];
+    const bucketWidth = (count - 2) / (samples - 2);
+    let sampledIndex = 0;
+    const endIndex = start + count - 1;
+    let a = start;
+    let i, maxAreaPoint, maxArea, area, nextA;
+    decimated[sampledIndex++] = data[a];
+    for(i = 0; i < samples - 2; i++){
+        let avgX = 0;
+        let avgY = 0;
+        let j;
+        const avgRangeStart = Math.floor((i + 1) * bucketWidth) + 1 + start;
+        const avgRangeEnd = Math.min(Math.floor((i + 2) * bucketWidth) + 1, count) + start;
+        const avgRangeLength = avgRangeEnd - avgRangeStart;
+        for(j = avgRangeStart; j < avgRangeEnd; j++){
+            avgX += data[j].x;
+            avgY += data[j].y;
+        }
+        avgX /= avgRangeLength;
+        avgY /= avgRangeLength;
+        const rangeOffs = Math.floor(i * bucketWidth) + 1 + start;
+        const rangeTo = Math.min(Math.floor((i + 1) * bucketWidth) + 1, count) + start;
+        const { x: pointAx , y: pointAy  } = data[a];
+        maxArea = area = -1;
+        for(j = rangeOffs; j < rangeTo; j++){
+            area = 0.5 * Math.abs((pointAx - avgX) * (data[j].y - pointAy) - (pointAx - data[j].x) * (avgY - pointAy));
+            if (area > maxArea) {
+                maxArea = area;
+                maxAreaPoint = data[j];
+                nextA = j;
+            }
+        }
+        decimated[sampledIndex++] = maxAreaPoint;
+        a = nextA;
+    }
+    decimated[sampledIndex++] = data[endIndex];
+    return decimated;
+}
+function minMaxDecimation(data, start, count, availableWidth) {
+    let avgX = 0;
+    let countX = 0;
+    let i, point, x, y, prevX, minIndex, maxIndex, startIndex, minY, maxY;
+    const decimated = [];
+    const endIndex = start + count - 1;
+    const xMin = data[start].x;
+    const xMax = data[endIndex].x;
+    const dx = xMax - xMin;
+    for(i = start; i < start + count; ++i){
+        point = data[i];
+        x = (point.x - xMin) / dx * availableWidth;
+        y = point.y;
+        const truncX = x | 0;
+        if (truncX === prevX) {
+            if (y < minY) {
+                minY = y;
+                minIndex = i;
+            } else if (y > maxY) {
+                maxY = y;
+                maxIndex = i;
+            }
+            avgX = (countX * avgX + point.x) / ++countX;
+        } else {
+            const lastIndex = i - 1;
+            if (!(0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.k)(minIndex) && !(0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.k)(maxIndex)) {
+                const intermediateIndex1 = Math.min(minIndex, maxIndex);
+                const intermediateIndex2 = Math.max(minIndex, maxIndex);
+                if (intermediateIndex1 !== startIndex && intermediateIndex1 !== lastIndex) {
+                    decimated.push({
+                        ...data[intermediateIndex1],
+                        x: avgX
+                    });
+                }
+                if (intermediateIndex2 !== startIndex && intermediateIndex2 !== lastIndex) {
+                    decimated.push({
+                        ...data[intermediateIndex2],
+                        x: avgX
+                    });
+                }
+            }
+            if (i > 0 && lastIndex !== startIndex) {
+                decimated.push(data[lastIndex]);
+            }
+            decimated.push(point);
+            prevX = truncX;
+            countX = 0;
+            minY = maxY = y;
+            minIndex = maxIndex = startIndex = i;
+        }
+    }
+    return decimated;
+}
+function cleanDecimatedDataset(dataset) {
+    if (dataset._decimated) {
+        const data = dataset._data;
+        delete dataset._decimated;
+        delete dataset._data;
+        Object.defineProperty(dataset, 'data', {
+            configurable: true,
+            enumerable: true,
+            writable: true,
+            value: data
+        });
+    }
+}
+function cleanDecimatedData(chart) {
+    chart.data.datasets.forEach((dataset)=>{
+        cleanDecimatedDataset(dataset);
+    });
+}
+function getStartAndCountOfVisiblePointsSimplified(meta, points) {
+    const pointCount = points.length;
+    let start = 0;
+    let count;
+    const { iScale  } = meta;
+    const { min , max , minDefined , maxDefined  } = iScale.getUserBounds();
+    if (minDefined) {
+        start = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.S)((0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.B)(points, iScale.axis, min).lo, 0, pointCount - 1);
+    }
+    if (maxDefined) {
+        count = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.S)((0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.B)(points, iScale.axis, max).hi + 1, start, pointCount) - start;
+    } else {
+        count = pointCount - start;
+    }
+    return {
+        start,
+        count
+    };
+}
+var plugin_decimation = {
+    id: 'decimation',
+    defaults: {
+        algorithm: 'min-max',
+        enabled: false
+    },
+    beforeElementsUpdate: (chart, args, options)=>{
+        if (!options.enabled) {
+            cleanDecimatedData(chart);
+            return;
+        }
+        const availableWidth = chart.width;
+        chart.data.datasets.forEach((dataset, datasetIndex)=>{
+            const { _data , indexAxis  } = dataset;
+            const meta = chart.getDatasetMeta(datasetIndex);
+            const data = _data || dataset.data;
+            if ((0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.a)([
+                indexAxis,
+                chart.options.indexAxis
+            ]) === 'y') {
+                return;
+            }
+            if (!meta.controller.supportsDecimation) {
+                return;
+            }
+            const xAxis = chart.scales[meta.xAxisID];
+            if (xAxis.type !== 'linear' && xAxis.type !== 'time') {
+                return;
+            }
+            if (chart.options.parsing) {
+                return;
+            }
+            let { start , count  } = getStartAndCountOfVisiblePointsSimplified(meta, data);
+            const threshold = options.threshold || 4 * availableWidth;
+            if (count <= threshold) {
+                cleanDecimatedDataset(dataset);
+                return;
+            }
+            if ((0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.k)(_data)) {
+                dataset._data = data;
+                delete dataset.data;
+                Object.defineProperty(dataset, 'data', {
+                    configurable: true,
+                    enumerable: true,
+                    get: function() {
+                        return this._decimated;
+                    },
+                    set: function(d) {
+                        this._data = d;
+                    }
+                });
+            }
+            let decimated;
+            switch(options.algorithm){
+                case 'lttb':
+                    decimated = lttbDecimation(data, start, count, availableWidth, options);
+                    break;
+                case 'min-max':
+                    decimated = minMaxDecimation(data, start, count, availableWidth);
+                    break;
+                default:
+                    throw new Error(`Unsupported decimation algorithm '${options.algorithm}'`);
+            }
+            dataset._decimated = decimated;
+        });
+    },
+    destroy (chart) {
+        cleanDecimatedData(chart);
+    }
+};
+
+function _segments(line, target, property) {
+    const segments = line.segments;
+    const points = line.points;
+    const tpoints = target.points;
+    const parts = [];
+    for (const segment of segments){
+        let { start , end  } = segment;
+        end = _findSegmentEnd(start, end, points);
+        const bounds = _getBounds(property, points[start], points[end], segment.loop);
+        if (!target.segments) {
+            parts.push({
+                source: segment,
+                target: bounds,
+                start: points[start],
+                end: points[end]
+            });
+            continue;
+        }
+        const targetSegments = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.ap)(target, bounds);
+        for (const tgt of targetSegments){
+            const subBounds = _getBounds(property, tpoints[tgt.start], tpoints[tgt.end], tgt.loop);
+            const fillSources = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.az)(segment, points, subBounds);
+            for (const fillSource of fillSources){
+                parts.push({
+                    source: fillSource,
+                    target: tgt,
+                    start: {
+                        [property]: _getEdge(bounds, subBounds, 'start', Math.max)
+                    },
+                    end: {
+                        [property]: _getEdge(bounds, subBounds, 'end', Math.min)
+                    }
+                });
+            }
+        }
+    }
+    return parts;
+}
+function _getBounds(property, first, last, loop) {
+    if (loop) {
+        return;
+    }
+    let start = first[property];
+    let end = last[property];
+    if (property === 'angle') {
+        start = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.al)(start);
+        end = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.al)(end);
+    }
+    return {
+        property,
+        start,
+        end
+    };
+}
+function _pointsFromSegments(boundary, line) {
+    const { x =null , y =null  } = boundary || {};
+    const linePoints = line.points;
+    const points = [];
+    line.segments.forEach(({ start , end  })=>{
+        end = _findSegmentEnd(start, end, linePoints);
+        const first = linePoints[start];
+        const last = linePoints[end];
+        if (y !== null) {
+            points.push({
+                x: first.x,
+                y
+            });
+            points.push({
+                x: last.x,
+                y
+            });
+        } else if (x !== null) {
+            points.push({
+                x,
+                y: first.y
+            });
+            points.push({
+                x,
+                y: last.y
+            });
+        }
+    });
+    return points;
+}
+function _findSegmentEnd(start, end, points) {
+    for(; end > start; end--){
+        const point = points[end];
+        if (!isNaN(point.x) && !isNaN(point.y)) {
+            break;
+        }
+    }
+    return end;
+}
+function _getEdge(a, b, prop, fn) {
+    if (a && b) {
+        return fn(a[prop], b[prop]);
+    }
+    return a ? a[prop] : b ? b[prop] : 0;
+}
+
+function _createBoundaryLine(boundary, line) {
+    let points = [];
+    let _loop = false;
+    if ((0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.b)(boundary)) {
+        _loop = true;
+        points = boundary;
+    } else {
+        points = _pointsFromSegments(boundary, line);
+    }
+    return points.length ? new LineElement({
+        points,
+        options: {
+            tension: 0
+        },
+        _loop,
+        _fullLoop: _loop
+    }) : null;
+}
+function _shouldApplyFill(source) {
+    return source && source.fill !== false;
+}
+
+function _resolveTarget(sources, index, propagate) {
+    const source = sources[index];
+    let fill = source.fill;
+    const visited = [
+        index
+    ];
+    let target;
+    if (!propagate) {
+        return fill;
+    }
+    while(fill !== false && visited.indexOf(fill) === -1){
+        if (!(0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.g)(fill)) {
+            return fill;
+        }
+        target = sources[fill];
+        if (!target) {
+            return false;
+        }
+        if (target.visible) {
+            return fill;
+        }
+        visited.push(fill);
+        fill = target.fill;
+    }
+    return false;
+}
+ function _decodeFill(line, index, count) {
+     const fill = parseFillOption(line);
+    if ((0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.i)(fill)) {
+        return isNaN(fill.value) ? false : fill;
+    }
+    let target = parseFloat(fill);
+    if ((0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.g)(target) && Math.floor(target) === target) {
+        return decodeTargetIndex(fill[0], index, target, count);
+    }
+    return [
+        'origin',
+        'start',
+        'end',
+        'stack',
+        'shape'
+    ].indexOf(fill) >= 0 && fill;
+}
+function decodeTargetIndex(firstCh, index, target, count) {
+    if (firstCh === '-' || firstCh === '+') {
+        target = index + target;
+    }
+    if (target === index || target < 0 || target >= count) {
+        return false;
+    }
+    return target;
+}
+ function _getTargetPixel(fill, scale) {
+    let pixel = null;
+    if (fill === 'start') {
+        pixel = scale.bottom;
+    } else if (fill === 'end') {
+        pixel = scale.top;
+    } else if ((0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.i)(fill)) {
+        pixel = scale.getPixelForValue(fill.value);
+    } else if (scale.getBasePixel) {
+        pixel = scale.getBasePixel();
+    }
+    return pixel;
+}
+ function _getTargetValue(fill, scale, startValue) {
+    let value;
+    if (fill === 'start') {
+        value = startValue;
+    } else if (fill === 'end') {
+        value = scale.options.reverse ? scale.min : scale.max;
+    } else if ((0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.i)(fill)) {
+        value = fill.value;
+    } else {
+        value = scale.getBaseValue();
+    }
+    return value;
+}
+ function parseFillOption(line) {
+    const options = line.options;
+    const fillOption = options.fill;
+    let fill = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.v)(fillOption && fillOption.target, fillOption);
+    if (fill === undefined) {
+        fill = !!options.backgroundColor;
+    }
+    if (fill === false || fill === null) {
+        return false;
+    }
+    if (fill === true) {
+        return 'origin';
+    }
+    return fill;
+}
+
+function _buildStackLine(source) {
+    const { scale , index , line  } = source;
+    const points = [];
+    const segments = line.segments;
+    const sourcePoints = line.points;
+    const linesBelow = getLinesBelow(scale, index);
+    linesBelow.push(_createBoundaryLine({
+        x: null,
+        y: scale.bottom
+    }, line));
+    for(let i = 0; i < segments.length; i++){
+        const segment = segments[i];
+        for(let j = segment.start; j <= segment.end; j++){
+            addPointsBelow(points, sourcePoints[j], linesBelow);
+        }
+    }
+    return new LineElement({
+        points,
+        options: {}
+    });
+}
+ function getLinesBelow(scale, index) {
+    const below = [];
+    const metas = scale.getMatchingVisibleMetas('line');
+    for(let i = 0; i < metas.length; i++){
+        const meta = metas[i];
+        if (meta.index === index) {
+            break;
+        }
+        if (!meta.hidden) {
+            below.unshift(meta.dataset);
+        }
+    }
+    return below;
+}
+ function addPointsBelow(points, sourcePoint, linesBelow) {
+    const postponed = [];
+    for(let j = 0; j < linesBelow.length; j++){
+        const line = linesBelow[j];
+        const { first , last , point  } = findPoint(line, sourcePoint, 'x');
+        if (!point || first && last) {
+            continue;
+        }
+        if (first) {
+            postponed.unshift(point);
+        } else {
+            points.push(point);
+            if (!last) {
+                break;
+            }
+        }
+    }
+    points.push(...postponed);
+}
+ function findPoint(line, sourcePoint, property) {
+    const point = line.interpolate(sourcePoint, property);
+    if (!point) {
+        return {};
+    }
+    const pointValue = point[property];
+    const segments = line.segments;
+    const linePoints = line.points;
+    let first = false;
+    let last = false;
+    for(let i = 0; i < segments.length; i++){
+        const segment = segments[i];
+        const firstValue = linePoints[segment.start][property];
+        const lastValue = linePoints[segment.end][property];
+        if ((0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.ak)(pointValue, firstValue, lastValue)) {
+            first = pointValue === firstValue;
+            last = pointValue === lastValue;
+            break;
+        }
+    }
+    return {
+        first,
+        last,
+        point
+    };
+}
+
+class simpleArc {
+    constructor(opts){
+        this.x = opts.x;
+        this.y = opts.y;
+        this.radius = opts.radius;
+    }
+    pathSegment(ctx, bounds, opts) {
+        const { x , y , radius  } = this;
+        bounds = bounds || {
+            start: 0,
+            end: _chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.T
+        };
+        ctx.arc(x, y, radius, bounds.end, bounds.start, true);
+        return !opts.bounds;
+    }
+    interpolate(point) {
+        const { x , y , radius  } = this;
+        const angle = point.angle;
+        return {
+            x: x + Math.cos(angle) * radius,
+            y: y + Math.sin(angle) * radius,
+            angle
+        };
+    }
+}
+
+function _getTarget(source) {
+    const { chart , fill , line  } = source;
+    if ((0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.g)(fill)) {
+        return getLineByIndex(chart, fill);
+    }
+    if (fill === 'stack') {
+        return _buildStackLine(source);
+    }
+    if (fill === 'shape') {
+        return true;
+    }
+    const boundary = computeBoundary(source);
+    if (boundary instanceof simpleArc) {
+        return boundary;
+    }
+    return _createBoundaryLine(boundary, line);
+}
+ function getLineByIndex(chart, index) {
+    const meta = chart.getDatasetMeta(index);
+    const visible = meta && chart.isDatasetVisible(index);
+    return visible ? meta.dataset : null;
+}
+function computeBoundary(source) {
+    const scale = source.scale || {};
+    if (scale.getPointPositionForValue) {
+        return computeCircularBoundary(source);
+    }
+    return computeLinearBoundary(source);
+}
+function computeLinearBoundary(source) {
+    const { scale ={} , fill  } = source;
+    const pixel = _getTargetPixel(fill, scale);
+    if ((0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.g)(pixel)) {
+        const horizontal = scale.isHorizontal();
+        return {
+            x: horizontal ? pixel : null,
+            y: horizontal ? null : pixel
+        };
+    }
+    return null;
+}
+function computeCircularBoundary(source) {
+    const { scale , fill  } = source;
+    const options = scale.options;
+    const length = scale.getLabels().length;
+    const start = options.reverse ? scale.max : scale.min;
+    const value = _getTargetValue(fill, scale, start);
+    const target = [];
+    if (options.grid.circular) {
+        const center = scale.getPointPositionForValue(0, start);
+        return new simpleArc({
+            x: center.x,
+            y: center.y,
+            radius: scale.getDistanceFromCenterForValue(value)
+        });
+    }
+    for(let i = 0; i < length; ++i){
+        target.push(scale.getPointPositionForValue(i, value));
+    }
+    return target;
+}
+
+function _drawfill(ctx, source, area) {
+    const target = _getTarget(source);
+    const { chart , index , line , scale , axis  } = source;
+    const lineOpts = line.options;
+    const fillOption = lineOpts.fill;
+    const color = lineOpts.backgroundColor;
+    const { above =color , below =color  } = fillOption || {};
+    const meta = chart.getDatasetMeta(index);
+    const clip = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.ah)(chart, meta);
+    if (target && line.points.length) {
+        (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.Y)(ctx, area);
+        doFill(ctx, {
+            line,
+            target,
+            above,
+            below,
+            area,
+            scale,
+            axis,
+            clip
+        });
+        (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.$)(ctx);
+    }
+}
+function doFill(ctx, cfg) {
+    const { line , target , above , below , area , scale , clip  } = cfg;
+    const property = line._loop ? 'angle' : cfg.axis;
+    ctx.save();
+    let fillColor = below;
+    if (below !== above) {
+        if (property === 'x') {
+            clipVertical(ctx, target, area.top);
+            fill(ctx, {
+                line,
+                target,
+                color: above,
+                scale,
+                property,
+                clip
+            });
+            ctx.restore();
+            ctx.save();
+            clipVertical(ctx, target, area.bottom);
+        } else if (property === 'y') {
+            clipHorizontal(ctx, target, area.left);
+            fill(ctx, {
+                line,
+                target,
+                color: below,
+                scale,
+                property,
+                clip
+            });
+            ctx.restore();
+            ctx.save();
+            clipHorizontal(ctx, target, area.right);
+            fillColor = above;
+        }
+    }
+    fill(ctx, {
+        line,
+        target,
+        color: fillColor,
+        scale,
+        property,
+        clip
+    });
+    ctx.restore();
+}
+function clipVertical(ctx, target, clipY) {
+    const { segments , points  } = target;
+    let first = true;
+    let lineLoop = false;
+    ctx.beginPath();
+    for (const segment of segments){
+        const { start , end  } = segment;
+        const firstPoint = points[start];
+        const lastPoint = points[_findSegmentEnd(start, end, points)];
+        if (first) {
+            ctx.moveTo(firstPoint.x, firstPoint.y);
+            first = false;
+        } else {
+            ctx.lineTo(firstPoint.x, clipY);
+            ctx.lineTo(firstPoint.x, firstPoint.y);
+        }
+        lineLoop = !!target.pathSegment(ctx, segment, {
+            move: lineLoop
+        });
+        if (lineLoop) {
+            ctx.closePath();
+        } else {
+            ctx.lineTo(lastPoint.x, clipY);
+        }
+    }
+    ctx.lineTo(target.first().x, clipY);
+    ctx.closePath();
+    ctx.clip();
+}
+function clipHorizontal(ctx, target, clipX) {
+    const { segments , points  } = target;
+    let first = true;
+    let lineLoop = false;
+    ctx.beginPath();
+    for (const segment of segments){
+        const { start , end  } = segment;
+        const firstPoint = points[start];
+        const lastPoint = points[_findSegmentEnd(start, end, points)];
+        if (first) {
+            ctx.moveTo(firstPoint.x, firstPoint.y);
+            first = false;
+        } else {
+            ctx.lineTo(clipX, firstPoint.y);
+            ctx.lineTo(firstPoint.x, firstPoint.y);
+        }
+        lineLoop = !!target.pathSegment(ctx, segment, {
+            move: lineLoop
+        });
+        if (lineLoop) {
+            ctx.closePath();
+        } else {
+            ctx.lineTo(clipX, lastPoint.y);
+        }
+    }
+    ctx.lineTo(clipX, target.first().y);
+    ctx.closePath();
+    ctx.clip();
+}
+function fill(ctx, cfg) {
+    const { line , target , property , color , scale , clip  } = cfg;
+    const segments = _segments(line, target, property);
+    for (const { source: src , target: tgt , start , end  } of segments){
+        const { style: { backgroundColor =color  } = {}  } = src;
+        const notShape = target !== true;
+        ctx.save();
+        ctx.fillStyle = backgroundColor;
+        clipBounds(ctx, scale, clip, notShape && _getBounds(property, start, end));
+        ctx.beginPath();
+        const lineLoop = !!line.pathSegment(ctx, src);
+        let loop;
+        if (notShape) {
+            if (lineLoop) {
+                ctx.closePath();
+            } else {
+                interpolatedLineTo(ctx, target, end, property);
+            }
+            const targetLoop = !!target.pathSegment(ctx, tgt, {
+                move: lineLoop,
+                reverse: true
+            });
+            loop = lineLoop && targetLoop;
+            if (!loop) {
+                interpolatedLineTo(ctx, target, start, property);
+            }
+        }
+        ctx.closePath();
+        ctx.fill(loop ? 'evenodd' : 'nonzero');
+        ctx.restore();
+    }
+}
+function clipBounds(ctx, scale, clip, bounds) {
+    const chartArea = scale.chart.chartArea;
+    const { property , start , end  } = bounds || {};
+    if (property === 'x' || property === 'y') {
+        let left, top, right, bottom;
+        if (property === 'x') {
+            left = start;
+            top = chartArea.top;
+            right = end;
+            bottom = chartArea.bottom;
+        } else {
+            left = chartArea.left;
+            top = start;
+            right = chartArea.right;
+            bottom = end;
+        }
+        ctx.beginPath();
+        if (clip) {
+            left = Math.max(left, clip.left);
+            right = Math.min(right, clip.right);
+            top = Math.max(top, clip.top);
+            bottom = Math.min(bottom, clip.bottom);
+        }
+        ctx.rect(left, top, right - left, bottom - top);
+        ctx.clip();
+    }
+}
+function interpolatedLineTo(ctx, target, point, property) {
+    const interpolatedPoint = target.interpolate(point, property);
+    if (interpolatedPoint) {
+        ctx.lineTo(interpolatedPoint.x, interpolatedPoint.y);
+    }
+}
+
+var index = {
+    id: 'filler',
+    afterDatasetsUpdate (chart, _args, options) {
+        const count = (chart.data.datasets || []).length;
+        const sources = [];
+        let meta, i, line, source;
+        for(i = 0; i < count; ++i){
+            meta = chart.getDatasetMeta(i);
+            line = meta.dataset;
+            source = null;
+            if (line && line.options && line instanceof LineElement) {
+                source = {
+                    visible: chart.isDatasetVisible(i),
+                    index: i,
+                    fill: _decodeFill(line, i, count),
+                    chart,
+                    axis: meta.controller.options.indexAxis,
+                    scale: meta.vScale,
+                    line
+                };
+            }
+            meta.$filler = source;
+            sources.push(source);
+        }
+        for(i = 0; i < count; ++i){
+            source = sources[i];
+            if (!source || source.fill === false) {
+                continue;
+            }
+            source.fill = _resolveTarget(sources, i, options.propagate);
+        }
+    },
+    beforeDraw (chart, _args, options) {
+        const draw = options.drawTime === 'beforeDraw';
+        const metasets = chart.getSortedVisibleDatasetMetas();
+        const area = chart.chartArea;
+        for(let i = metasets.length - 1; i >= 0; --i){
+            const source = metasets[i].$filler;
+            if (!source) {
+                continue;
+            }
+            source.line.updateControlPoints(area, source.axis);
+            if (draw && source.fill) {
+                _drawfill(chart.ctx, source, area);
+            }
+        }
+    },
+    beforeDatasetsDraw (chart, _args, options) {
+        if (options.drawTime !== 'beforeDatasetsDraw') {
+            return;
+        }
+        const metasets = chart.getSortedVisibleDatasetMetas();
+        for(let i = metasets.length - 1; i >= 0; --i){
+            const source = metasets[i].$filler;
+            if (_shouldApplyFill(source)) {
+                _drawfill(chart.ctx, source, chart.chartArea);
+            }
+        }
+    },
+    beforeDatasetDraw (chart, args, options) {
+        const source = args.meta.$filler;
+        if (!_shouldApplyFill(source) || options.drawTime !== 'beforeDatasetDraw') {
+            return;
+        }
+        _drawfill(chart.ctx, source, chart.chartArea);
+    },
+    defaults: {
+        propagate: true,
+        drawTime: 'beforeDatasetDraw'
+    }
+};
+
+const getBoxSize = (labelOpts, fontSize)=>{
+    let { boxHeight =fontSize , boxWidth =fontSize  } = labelOpts;
+    if (labelOpts.usePointStyle) {
+        boxHeight = Math.min(boxHeight, fontSize);
+        boxWidth = labelOpts.pointStyleWidth || Math.min(boxWidth, fontSize);
+    }
+    return {
+        boxWidth,
+        boxHeight,
+        itemHeight: Math.max(fontSize, boxHeight)
+    };
+};
+const itemsEqual = (a, b)=>a !== null && b !== null && a.datasetIndex === b.datasetIndex && a.index === b.index;
+class Legend extends Element {
+ constructor(config){
+        super();
+        this._added = false;
+        this.legendHitBoxes = [];
+ this._hoveredItem = null;
+        this.doughnutMode = false;
+        this.chart = config.chart;
+        this.options = config.options;
+        this.ctx = config.ctx;
+        this.legendItems = undefined;
+        this.columnSizes = undefined;
+        this.lineWidths = undefined;
+        this.maxHeight = undefined;
+        this.maxWidth = undefined;
+        this.top = undefined;
+        this.bottom = undefined;
+        this.left = undefined;
+        this.right = undefined;
+        this.height = undefined;
+        this.width = undefined;
+        this._margins = undefined;
+        this.position = undefined;
+        this.weight = undefined;
+        this.fullSize = undefined;
+    }
+    update(maxWidth, maxHeight, margins) {
+        this.maxWidth = maxWidth;
+        this.maxHeight = maxHeight;
+        this._margins = margins;
+        this.setDimensions();
+        this.buildLabels();
+        this.fit();
+    }
+    setDimensions() {
+        if (this.isHorizontal()) {
+            this.width = this.maxWidth;
+            this.left = this._margins.left;
+            this.right = this.width;
+        } else {
+            this.height = this.maxHeight;
+            this.top = this._margins.top;
+            this.bottom = this.height;
+        }
+    }
+    buildLabels() {
+        const labelOpts = this.options.labels || {};
+        let legendItems = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.Q)(labelOpts.generateLabels, [
+            this.chart
+        ], this) || [];
+        if (labelOpts.filter) {
+            legendItems = legendItems.filter((item)=>labelOpts.filter(item, this.chart.data));
+        }
+        if (labelOpts.sort) {
+            legendItems = legendItems.sort((a, b)=>labelOpts.sort(a, b, this.chart.data));
+        }
+        if (this.options.reverse) {
+            legendItems.reverse();
+        }
+        this.legendItems = legendItems;
+    }
+    fit() {
+        const { options , ctx  } = this;
+        if (!options.display) {
+            this.width = this.height = 0;
+            return;
+        }
+        const labelOpts = options.labels;
+        const labelFont = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.a0)(labelOpts.font);
+        const fontSize = labelFont.size;
+        const titleHeight = this._computeTitleHeight();
+        const { boxWidth , itemHeight  } = getBoxSize(labelOpts, fontSize);
+        let width, height;
+        ctx.font = labelFont.string;
+        if (this.isHorizontal()) {
+            width = this.maxWidth;
+            height = this._fitRows(titleHeight, fontSize, boxWidth, itemHeight) + 10;
+        } else {
+            height = this.maxHeight;
+            width = this._fitCols(titleHeight, labelFont, boxWidth, itemHeight) + 10;
+        }
+        this.width = Math.min(width, options.maxWidth || this.maxWidth);
+        this.height = Math.min(height, options.maxHeight || this.maxHeight);
+    }
+ _fitRows(titleHeight, fontSize, boxWidth, itemHeight) {
+        const { ctx , maxWidth , options: { labels: { padding  }  }  } = this;
+        const hitboxes = this.legendHitBoxes = [];
+        const lineWidths = this.lineWidths = [
+            0
+        ];
+        const lineHeight = itemHeight + padding;
+        let totalHeight = titleHeight;
+        ctx.textAlign = 'left';
+        ctx.textBaseline = 'middle';
+        let row = -1;
+        let top = -lineHeight;
+        this.legendItems.forEach((legendItem, i)=>{
+            const itemWidth = boxWidth + fontSize / 2 + ctx.measureText(legendItem.text).width;
+            if (i === 0 || lineWidths[lineWidths.length - 1] + itemWidth + 2 * padding > maxWidth) {
+                totalHeight += lineHeight;
+                lineWidths[lineWidths.length - (i > 0 ? 0 : 1)] = 0;
+                top += lineHeight;
+                row++;
+            }
+            hitboxes[i] = {
+                left: 0,
+                top,
+                row,
+                width: itemWidth,
+                height: itemHeight
+            };
+            lineWidths[lineWidths.length - 1] += itemWidth + padding;
+        });
+        return totalHeight;
+    }
+    _fitCols(titleHeight, labelFont, boxWidth, _itemHeight) {
+        const { ctx , maxHeight , options: { labels: { padding  }  }  } = this;
+        const hitboxes = this.legendHitBoxes = [];
+        const columnSizes = this.columnSizes = [];
+        const heightLimit = maxHeight - titleHeight;
+        let totalWidth = padding;
+        let currentColWidth = 0;
+        let currentColHeight = 0;
+        let left = 0;
+        let col = 0;
+        this.legendItems.forEach((legendItem, i)=>{
+            const { itemWidth , itemHeight  } = calculateItemSize(boxWidth, labelFont, ctx, legendItem, _itemHeight);
+            if (i > 0 && currentColHeight + itemHeight + 2 * padding > heightLimit) {
+                totalWidth += currentColWidth + padding;
+                columnSizes.push({
+                    width: currentColWidth,
+                    height: currentColHeight
+                });
+                left += currentColWidth + padding;
+                col++;
+                currentColWidth = currentColHeight = 0;
+            }
+            hitboxes[i] = {
+                left,
+                top: currentColHeight,
+                col,
+                width: itemWidth,
+                height: itemHeight
+            };
+            currentColWidth = Math.max(currentColWidth, itemWidth);
+            currentColHeight += itemHeight + padding;
+        });
+        totalWidth += currentColWidth;
+        columnSizes.push({
+            width: currentColWidth,
+            height: currentColHeight
+        });
+        return totalWidth;
+    }
+    adjustHitBoxes() {
+        if (!this.options.display) {
+            return;
+        }
+        const titleHeight = this._computeTitleHeight();
+        const { legendHitBoxes: hitboxes , options: { align , labels: { padding  } , rtl  }  } = this;
+        const rtlHelper = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.aA)(rtl, this.left, this.width);
+        if (this.isHorizontal()) {
+            let row = 0;
+            let left = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.a2)(align, this.left + padding, this.right - this.lineWidths[row]);
+            for (const hitbox of hitboxes){
+                if (row !== hitbox.row) {
+                    row = hitbox.row;
+                    left = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.a2)(align, this.left + padding, this.right - this.lineWidths[row]);
+                }
+                hitbox.top += this.top + titleHeight + padding;
+                hitbox.left = rtlHelper.leftForLtr(rtlHelper.x(left), hitbox.width);
+                left += hitbox.width + padding;
+            }
+        } else {
+            let col = 0;
+            let top = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.a2)(align, this.top + titleHeight + padding, this.bottom - this.columnSizes[col].height);
+            for (const hitbox of hitboxes){
+                if (hitbox.col !== col) {
+                    col = hitbox.col;
+                    top = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.a2)(align, this.top + titleHeight + padding, this.bottom - this.columnSizes[col].height);
+                }
+                hitbox.top = top;
+                hitbox.left += this.left + padding;
+                hitbox.left = rtlHelper.leftForLtr(rtlHelper.x(hitbox.left), hitbox.width);
+                top += hitbox.height + padding;
+            }
+        }
+    }
+    isHorizontal() {
+        return this.options.position === 'top' || this.options.position === 'bottom';
+    }
+    draw() {
+        if (this.options.display) {
+            const ctx = this.ctx;
+            (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.Y)(ctx, this);
+            this._draw();
+            (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.$)(ctx);
+        }
+    }
+ _draw() {
+        const { options: opts , columnSizes , lineWidths , ctx  } = this;
+        const { align , labels: labelOpts  } = opts;
+        const defaultColor = _chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.d.color;
+        const rtlHelper = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.aA)(opts.rtl, this.left, this.width);
+        const labelFont = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.a0)(labelOpts.font);
+        const { padding  } = labelOpts;
+        const fontSize = labelFont.size;
+        const halfFontSize = fontSize / 2;
+        let cursor;
+        this.drawTitle();
+        ctx.textAlign = rtlHelper.textAlign('left');
+        ctx.textBaseline = 'middle';
+        ctx.lineWidth = 0.5;
+        ctx.font = labelFont.string;
+        const { boxWidth , boxHeight , itemHeight  } = getBoxSize(labelOpts, fontSize);
+        const drawLegendBox = function(x, y, legendItem) {
+            if (isNaN(boxWidth) || boxWidth <= 0 || isNaN(boxHeight) || boxHeight < 0) {
+                return;
+            }
+            ctx.save();
+            const lineWidth = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.v)(legendItem.lineWidth, 1);
+            ctx.fillStyle = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.v)(legendItem.fillStyle, defaultColor);
+            ctx.lineCap = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.v)(legendItem.lineCap, 'butt');
+            ctx.lineDashOffset = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.v)(legendItem.lineDashOffset, 0);
+            ctx.lineJoin = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.v)(legendItem.lineJoin, 'miter');
+            ctx.lineWidth = lineWidth;
+            ctx.strokeStyle = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.v)(legendItem.strokeStyle, defaultColor);
+            ctx.setLineDash((0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.v)(legendItem.lineDash, []));
+            if (labelOpts.usePointStyle) {
+                const drawOptions = {
+                    radius: boxHeight * Math.SQRT2 / 2,
+                    pointStyle: legendItem.pointStyle,
+                    rotation: legendItem.rotation,
+                    borderWidth: lineWidth
+                };
+                const centerX = rtlHelper.xPlus(x, boxWidth / 2);
+                const centerY = y + halfFontSize;
+                (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.aE)(ctx, drawOptions, centerX, centerY, labelOpts.pointStyleWidth && boxWidth);
+            } else {
+                const yBoxTop = y + Math.max((fontSize - boxHeight) / 2, 0);
+                const xBoxLeft = rtlHelper.leftForLtr(x, boxWidth);
+                const borderRadius = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.ay)(legendItem.borderRadius);
+                ctx.beginPath();
+                if (Object.values(borderRadius).some((v)=>v !== 0)) {
+                    (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.aw)(ctx, {
+                        x: xBoxLeft,
+                        y: yBoxTop,
+                        w: boxWidth,
+                        h: boxHeight,
+                        radius: borderRadius
+                    });
+                } else {
+                    ctx.rect(xBoxLeft, yBoxTop, boxWidth, boxHeight);
+                }
+                ctx.fill();
+                if (lineWidth !== 0) {
+                    ctx.stroke();
+                }
+            }
+            ctx.restore();
+        };
+        const fillText = function(x, y, legendItem) {
+            (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.Z)(ctx, legendItem.text, x, y + itemHeight / 2, labelFont, {
+                strikethrough: legendItem.hidden,
+                textAlign: rtlHelper.textAlign(legendItem.textAlign)
+            });
+        };
+        const isHorizontal = this.isHorizontal();
+        const titleHeight = this._computeTitleHeight();
+        if (isHorizontal) {
+            cursor = {
+                x: (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.a2)(align, this.left + padding, this.right - lineWidths[0]),
+                y: this.top + padding + titleHeight,
+                line: 0
+            };
+        } else {
+            cursor = {
+                x: this.left + padding,
+                y: (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.a2)(align, this.top + titleHeight + padding, this.bottom - columnSizes[0].height),
+                line: 0
+            };
+        }
+        (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.aB)(this.ctx, opts.textDirection);
+        const lineHeight = itemHeight + padding;
+        this.legendItems.forEach((legendItem, i)=>{
+            ctx.strokeStyle = legendItem.fontColor;
+            ctx.fillStyle = legendItem.fontColor;
+            const textWidth = ctx.measureText(legendItem.text).width;
+            const textAlign = rtlHelper.textAlign(legendItem.textAlign || (legendItem.textAlign = labelOpts.textAlign));
+            const width = boxWidth + halfFontSize + textWidth;
+            let x = cursor.x;
+            let y = cursor.y;
+            rtlHelper.setWidth(this.width);
+            if (isHorizontal) {
+                if (i > 0 && x + width + padding > this.right) {
+                    y = cursor.y += lineHeight;
+                    cursor.line++;
+                    x = cursor.x = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.a2)(align, this.left + padding, this.right - lineWidths[cursor.line]);
+                }
+            } else if (i > 0 && y + lineHeight > this.bottom) {
+                x = cursor.x = x + columnSizes[cursor.line].width + padding;
+                cursor.line++;
+                y = cursor.y = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.a2)(align, this.top + titleHeight + padding, this.bottom - columnSizes[cursor.line].height);
+            }
+            const realX = rtlHelper.x(x);
+            drawLegendBox(realX, y, legendItem);
+            x = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.aC)(textAlign, x + boxWidth + halfFontSize, isHorizontal ? x + width : this.right, opts.rtl);
+            fillText(rtlHelper.x(x), y, legendItem);
+            if (isHorizontal) {
+                cursor.x += width + padding;
+            } else if (typeof legendItem.text !== 'string') {
+                const fontLineHeight = labelFont.lineHeight;
+                cursor.y += calculateLegendItemHeight(legendItem, fontLineHeight) + padding;
+            } else {
+                cursor.y += lineHeight;
+            }
+        });
+        (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.aD)(this.ctx, opts.textDirection);
+    }
+ drawTitle() {
+        const opts = this.options;
+        const titleOpts = opts.title;
+        const titleFont = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.a0)(titleOpts.font);
+        const titlePadding = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.E)(titleOpts.padding);
+        if (!titleOpts.display) {
+            return;
+        }
+        const rtlHelper = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.aA)(opts.rtl, this.left, this.width);
+        const ctx = this.ctx;
+        const position = titleOpts.position;
+        const halfFontSize = titleFont.size / 2;
+        const topPaddingPlusHalfFontSize = titlePadding.top + halfFontSize;
+        let y;
+        let left = this.left;
+        let maxWidth = this.width;
+        if (this.isHorizontal()) {
+            maxWidth = Math.max(...this.lineWidths);
+            y = this.top + topPaddingPlusHalfFontSize;
+            left = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.a2)(opts.align, left, this.right - maxWidth);
+        } else {
+            const maxHeight = this.columnSizes.reduce((acc, size)=>Math.max(acc, size.height), 0);
+            y = topPaddingPlusHalfFontSize + (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.a2)(opts.align, this.top, this.bottom - maxHeight - opts.labels.padding - this._computeTitleHeight());
+        }
+        const x = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.a2)(position, left, left + maxWidth);
+        ctx.textAlign = rtlHelper.textAlign((0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.a1)(position));
+        ctx.textBaseline = 'middle';
+        ctx.strokeStyle = titleOpts.color;
+        ctx.fillStyle = titleOpts.color;
+        ctx.font = titleFont.string;
+        (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.Z)(ctx, titleOpts.text, x, y, titleFont);
+    }
+ _computeTitleHeight() {
+        const titleOpts = this.options.title;
+        const titleFont = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.a0)(titleOpts.font);
+        const titlePadding = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.E)(titleOpts.padding);
+        return titleOpts.display ? titleFont.lineHeight + titlePadding.height : 0;
+    }
+ _getLegendItemAt(x, y) {
+        let i, hitBox, lh;
+        if ((0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.ak)(x, this.left, this.right) && (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.ak)(y, this.top, this.bottom)) {
+            lh = this.legendHitBoxes;
+            for(i = 0; i < lh.length; ++i){
+                hitBox = lh[i];
+                if ((0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.ak)(x, hitBox.left, hitBox.left + hitBox.width) && (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.ak)(y, hitBox.top, hitBox.top + hitBox.height)) {
+                    return this.legendItems[i];
+                }
+            }
+        }
+        return null;
+    }
+ handleEvent(e) {
+        const opts = this.options;
+        if (!isListened(e.type, opts)) {
+            return;
+        }
+        const hoveredItem = this._getLegendItemAt(e.x, e.y);
+        if (e.type === 'mousemove' || e.type === 'mouseout') {
+            const previous = this._hoveredItem;
+            const sameItem = itemsEqual(previous, hoveredItem);
+            if (previous && !sameItem) {
+                (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.Q)(opts.onLeave, [
+                    e,
+                    previous,
+                    this
+                ], this);
+            }
+            this._hoveredItem = hoveredItem;
+            if (hoveredItem && !sameItem) {
+                (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.Q)(opts.onHover, [
+                    e,
+                    hoveredItem,
+                    this
+                ], this);
+            }
+        } else if (hoveredItem) {
+            (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.Q)(opts.onClick, [
+                e,
+                hoveredItem,
+                this
+            ], this);
+        }
+    }
+}
+function calculateItemSize(boxWidth, labelFont, ctx, legendItem, _itemHeight) {
+    const itemWidth = calculateItemWidth(legendItem, boxWidth, labelFont, ctx);
+    const itemHeight = calculateItemHeight(_itemHeight, legendItem, labelFont.lineHeight);
+    return {
+        itemWidth,
+        itemHeight
+    };
+}
+function calculateItemWidth(legendItem, boxWidth, labelFont, ctx) {
+    let legendItemText = legendItem.text;
+    if (legendItemText && typeof legendItemText !== 'string') {
+        legendItemText = legendItemText.reduce((a, b)=>a.length > b.length ? a : b);
+    }
+    return boxWidth + labelFont.size / 2 + ctx.measureText(legendItemText).width;
+}
+function calculateItemHeight(_itemHeight, legendItem, fontLineHeight) {
+    let itemHeight = _itemHeight;
+    if (typeof legendItem.text !== 'string') {
+        itemHeight = calculateLegendItemHeight(legendItem, fontLineHeight);
+    }
+    return itemHeight;
+}
+function calculateLegendItemHeight(legendItem, fontLineHeight) {
+    const labelHeight = legendItem.text ? legendItem.text.length : 0;
+    return fontLineHeight * labelHeight;
+}
+function isListened(type, opts) {
+    if ((type === 'mousemove' || type === 'mouseout') && (opts.onHover || opts.onLeave)) {
+        return true;
+    }
+    if (opts.onClick && (type === 'click' || type === 'mouseup')) {
+        return true;
+    }
+    return false;
+}
+var plugin_legend = {
+    id: 'legend',
+ _element: Legend,
+    start (chart, _args, options) {
+        const legend = chart.legend = new Legend({
+            ctx: chart.ctx,
+            options,
+            chart
+        });
+        layouts.configure(chart, legend, options);
+        layouts.addBox(chart, legend);
+    },
+    stop (chart) {
+        layouts.removeBox(chart, chart.legend);
+        delete chart.legend;
+    },
+    beforeUpdate (chart, _args, options) {
+        const legend = chart.legend;
+        layouts.configure(chart, legend, options);
+        legend.options = options;
+    },
+    afterUpdate (chart) {
+        const legend = chart.legend;
+        legend.buildLabels();
+        legend.adjustHitBoxes();
+    },
+    afterEvent (chart, args) {
+        if (!args.replay) {
+            chart.legend.handleEvent(args.event);
+        }
+    },
+    defaults: {
+        display: true,
+        position: 'top',
+        align: 'center',
+        fullSize: true,
+        reverse: false,
+        weight: 1000,
+        onClick (e, legendItem, legend) {
+            const index = legendItem.datasetIndex;
+            const ci = legend.chart;
+            if (ci.isDatasetVisible(index)) {
+                ci.hide(index);
+                legendItem.hidden = true;
+            } else {
+                ci.show(index);
+                legendItem.hidden = false;
+            }
+        },
+        onHover: null,
+        onLeave: null,
+        labels: {
+            color: (ctx)=>ctx.chart.options.color,
+            boxWidth: 40,
+            padding: 10,
+            generateLabels (chart) {
+                const datasets = chart.data.datasets;
+                const { labels: { usePointStyle , pointStyle , textAlign , color , useBorderRadius , borderRadius  }  } = chart.legend.options;
+                return chart._getSortedDatasetMetas().map((meta)=>{
+                    const style = meta.controller.getStyle(usePointStyle ? 0 : undefined);
+                    const borderWidth = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.E)(style.borderWidth);
+                    return {
+                        text: datasets[meta.index].label,
+                        fillStyle: style.backgroundColor,
+                        fontColor: color,
+                        hidden: !meta.visible,
+                        lineCap: style.borderCapStyle,
+                        lineDash: style.borderDash,
+                        lineDashOffset: style.borderDashOffset,
+                        lineJoin: style.borderJoinStyle,
+                        lineWidth: (borderWidth.width + borderWidth.height) / 4,
+                        strokeStyle: style.borderColor,
+                        pointStyle: pointStyle || style.pointStyle,
+                        rotation: style.rotation,
+                        textAlign: textAlign || style.textAlign,
+                        borderRadius: useBorderRadius && (borderRadius || style.borderRadius),
+                        datasetIndex: meta.index
+                    };
+                }, this);
+            }
+        },
+        title: {
+            color: (ctx)=>ctx.chart.options.color,
+            display: false,
+            position: 'center',
+            text: ''
+        }
+    },
+    descriptors: {
+        _scriptable: (name)=>!name.startsWith('on'),
+        labels: {
+            _scriptable: (name)=>![
+                    'generateLabels',
+                    'filter',
+                    'sort'
+                ].includes(name)
+        }
+    }
+};
+
+class Title extends Element {
+ constructor(config){
+        super();
+        this.chart = config.chart;
+        this.options = config.options;
+        this.ctx = config.ctx;
+        this._padding = undefined;
+        this.top = undefined;
+        this.bottom = undefined;
+        this.left = undefined;
+        this.right = undefined;
+        this.width = undefined;
+        this.height = undefined;
+        this.position = undefined;
+        this.weight = undefined;
+        this.fullSize = undefined;
+    }
+    update(maxWidth, maxHeight) {
+        const opts = this.options;
+        this.left = 0;
+        this.top = 0;
+        if (!opts.display) {
+            this.width = this.height = this.right = this.bottom = 0;
+            return;
+        }
+        this.width = this.right = maxWidth;
+        this.height = this.bottom = maxHeight;
+        const lineCount = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.b)(opts.text) ? opts.text.length : 1;
+        this._padding = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.E)(opts.padding);
+        const textSize = lineCount * (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.a0)(opts.font).lineHeight + this._padding.height;
+        if (this.isHorizontal()) {
+            this.height = textSize;
+        } else {
+            this.width = textSize;
+        }
+    }
+    isHorizontal() {
+        const pos = this.options.position;
+        return pos === 'top' || pos === 'bottom';
+    }
+    _drawArgs(offset) {
+        const { top , left , bottom , right , options  } = this;
+        const align = options.align;
+        let rotation = 0;
+        let maxWidth, titleX, titleY;
+        if (this.isHorizontal()) {
+            titleX = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.a2)(align, left, right);
+            titleY = top + offset;
+            maxWidth = right - left;
+        } else {
+            if (options.position === 'left') {
+                titleX = left + offset;
+                titleY = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.a2)(align, bottom, top);
+                rotation = _chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.P * -0.5;
+            } else {
+                titleX = right - offset;
+                titleY = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.a2)(align, top, bottom);
+                rotation = _chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.P * 0.5;
+            }
+            maxWidth = bottom - top;
+        }
+        return {
+            titleX,
+            titleY,
+            maxWidth,
+            rotation
+        };
+    }
+    draw() {
+        const ctx = this.ctx;
+        const opts = this.options;
+        if (!opts.display) {
+            return;
+        }
+        const fontOpts = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.a0)(opts.font);
+        const lineHeight = fontOpts.lineHeight;
+        const offset = lineHeight / 2 + this._padding.top;
+        const { titleX , titleY , maxWidth , rotation  } = this._drawArgs(offset);
+        (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.Z)(ctx, opts.text, 0, 0, fontOpts, {
+            color: opts.color,
+            maxWidth,
+            rotation,
+            textAlign: (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.a1)(opts.align),
+            textBaseline: 'middle',
+            translation: [
+                titleX,
+                titleY
+            ]
+        });
+    }
+}
+function createTitle(chart, titleOpts) {
+    const title = new Title({
+        ctx: chart.ctx,
+        options: titleOpts,
+        chart
+    });
+    layouts.configure(chart, title, titleOpts);
+    layouts.addBox(chart, title);
+    chart.titleBlock = title;
+}
+var plugin_title = {
+    id: 'title',
+ _element: Title,
+    start (chart, _args, options) {
+        createTitle(chart, options);
+    },
+    stop (chart) {
+        const titleBlock = chart.titleBlock;
+        layouts.removeBox(chart, titleBlock);
+        delete chart.titleBlock;
+    },
+    beforeUpdate (chart, _args, options) {
+        const title = chart.titleBlock;
+        layouts.configure(chart, title, options);
+        title.options = options;
+    },
+    defaults: {
+        align: 'center',
+        display: false,
+        font: {
+            weight: 'bold'
+        },
+        fullSize: true,
+        padding: 10,
+        position: 'top',
+        text: '',
+        weight: 2000
+    },
+    defaultRoutes: {
+        color: 'color'
+    },
+    descriptors: {
+        _scriptable: true,
+        _indexable: false
+    }
+};
+
+const map = new WeakMap();
+var plugin_subtitle = {
+    id: 'subtitle',
+    start (chart, _args, options) {
+        const title = new Title({
+            ctx: chart.ctx,
+            options,
+            chart
+        });
+        layouts.configure(chart, title, options);
+        layouts.addBox(chart, title);
+        map.set(chart, title);
+    },
+    stop (chart) {
+        layouts.removeBox(chart, map.get(chart));
+        map.delete(chart);
+    },
+    beforeUpdate (chart, _args, options) {
+        const title = map.get(chart);
+        layouts.configure(chart, title, options);
+        title.options = options;
+    },
+    defaults: {
+        align: 'center',
+        display: false,
+        font: {
+            weight: 'normal'
+        },
+        fullSize: true,
+        padding: 0,
+        position: 'top',
+        text: '',
+        weight: 1500
+    },
+    defaultRoutes: {
+        color: 'color'
+    },
+    descriptors: {
+        _scriptable: true,
+        _indexable: false
+    }
+};
+
+const positioners = {
+ average (items) {
+        if (!items.length) {
+            return false;
+        }
+        let i, len;
+        let xSet = new Set();
+        let y = 0;
+        let count = 0;
+        for(i = 0, len = items.length; i < len; ++i){
+            const el = items[i].element;
+            if (el && el.hasValue()) {
+                const pos = el.tooltipPosition();
+                xSet.add(pos.x);
+                y += pos.y;
+                ++count;
+            }
+        }
+        if (count === 0 || xSet.size === 0) {
+            return false;
+        }
+        const xAverage = [
+            ...xSet
+        ].reduce((a, b)=>a + b) / xSet.size;
+        return {
+            x: xAverage,
+            y: y / count
+        };
+    },
+ nearest (items, eventPosition) {
+        if (!items.length) {
+            return false;
+        }
+        let x = eventPosition.x;
+        let y = eventPosition.y;
+        let minDistance = Number.POSITIVE_INFINITY;
+        let i, len, nearestElement;
+        for(i = 0, len = items.length; i < len; ++i){
+            const el = items[i].element;
+            if (el && el.hasValue()) {
+                const center = el.getCenterPoint();
+                const d = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.aF)(eventPosition, center);
+                if (d < minDistance) {
+                    minDistance = d;
+                    nearestElement = el;
+                }
+            }
+        }
+        if (nearestElement) {
+            const tp = nearestElement.tooltipPosition();
+            x = tp.x;
+            y = tp.y;
+        }
+        return {
+            x,
+            y
+        };
+    }
+};
+function pushOrConcat(base, toPush) {
+    if (toPush) {
+        if ((0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.b)(toPush)) {
+            Array.prototype.push.apply(base, toPush);
+        } else {
+            base.push(toPush);
+        }
+    }
+    return base;
+}
+ function splitNewlines(str) {
+    if ((typeof str === 'string' || str instanceof String) && str.indexOf('\n') > -1) {
+        return str.split('\n');
+    }
+    return str;
+}
+ function createTooltipItem(chart, item) {
+    const { element , datasetIndex , index  } = item;
+    const controller = chart.getDatasetMeta(datasetIndex).controller;
+    const { label , value  } = controller.getLabelAndValue(index);
+    return {
+        chart,
+        label,
+        parsed: controller.getParsed(index),
+        raw: chart.data.datasets[datasetIndex].data[index],
+        formattedValue: value,
+        dataset: controller.getDataset(),
+        dataIndex: index,
+        datasetIndex,
+        element
+    };
+}
+ function getTooltipSize(tooltip, options) {
+    const ctx = tooltip.chart.ctx;
+    const { body , footer , title  } = tooltip;
+    const { boxWidth , boxHeight  } = options;
+    const bodyFont = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.a0)(options.bodyFont);
+    const titleFont = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.a0)(options.titleFont);
+    const footerFont = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.a0)(options.footerFont);
+    const titleLineCount = title.length;
+    const footerLineCount = footer.length;
+    const bodyLineItemCount = body.length;
+    const padding = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.E)(options.padding);
+    let height = padding.height;
+    let width = 0;
+    let combinedBodyLength = body.reduce((count, bodyItem)=>count + bodyItem.before.length + bodyItem.lines.length + bodyItem.after.length, 0);
+    combinedBodyLength += tooltip.beforeBody.length + tooltip.afterBody.length;
+    if (titleLineCount) {
+        height += titleLineCount * titleFont.lineHeight + (titleLineCount - 1) * options.titleSpacing + options.titleMarginBottom;
+    }
+    if (combinedBodyLength) {
+        const bodyLineHeight = options.displayColors ? Math.max(boxHeight, bodyFont.lineHeight) : bodyFont.lineHeight;
+        height += bodyLineItemCount * bodyLineHeight + (combinedBodyLength - bodyLineItemCount) * bodyFont.lineHeight + (combinedBodyLength - 1) * options.bodySpacing;
+    }
+    if (footerLineCount) {
+        height += options.footerMarginTop + footerLineCount * footerFont.lineHeight + (footerLineCount - 1) * options.footerSpacing;
+    }
+    let widthPadding = 0;
+    const maxLineWidth = function(line) {
+        width = Math.max(width, ctx.measureText(line).width + widthPadding);
+    };
+    ctx.save();
+    ctx.font = titleFont.string;
+    (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.F)(tooltip.title, maxLineWidth);
+    ctx.font = bodyFont.string;
+    (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.F)(tooltip.beforeBody.concat(tooltip.afterBody), maxLineWidth);
+    widthPadding = options.displayColors ? boxWidth + 2 + options.boxPadding : 0;
+    (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.F)(body, (bodyItem)=>{
+        (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.F)(bodyItem.before, maxLineWidth);
+        (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.F)(bodyItem.lines, maxLineWidth);
+        (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.F)(bodyItem.after, maxLineWidth);
+    });
+    widthPadding = 0;
+    ctx.font = footerFont.string;
+    (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.F)(tooltip.footer, maxLineWidth);
+    ctx.restore();
+    width += padding.width;
+    return {
+        width,
+        height
+    };
+}
+function determineYAlign(chart, size) {
+    const { y , height  } = size;
+    if (y < height / 2) {
+        return 'top';
+    } else if (y > chart.height - height / 2) {
+        return 'bottom';
+    }
+    return 'center';
+}
+function doesNotFitWithAlign(xAlign, chart, options, size) {
+    const { x , width  } = size;
+    const caret = options.caretSize + options.caretPadding;
+    if (xAlign === 'left' && x + width + caret > chart.width) {
+        return true;
+    }
+    if (xAlign === 'right' && x - width - caret < 0) {
+        return true;
+    }
+}
+function determineXAlign(chart, options, size, yAlign) {
+    const { x , width  } = size;
+    const { width: chartWidth , chartArea: { left , right  }  } = chart;
+    let xAlign = 'center';
+    if (yAlign === 'center') {
+        xAlign = x <= (left + right) / 2 ? 'left' : 'right';
+    } else if (x <= width / 2) {
+        xAlign = 'left';
+    } else if (x >= chartWidth - width / 2) {
+        xAlign = 'right';
+    }
+    if (doesNotFitWithAlign(xAlign, chart, options, size)) {
+        xAlign = 'center';
+    }
+    return xAlign;
+}
+ function determineAlignment(chart, options, size) {
+    const yAlign = size.yAlign || options.yAlign || determineYAlign(chart, size);
+    return {
+        xAlign: size.xAlign || options.xAlign || determineXAlign(chart, options, size, yAlign),
+        yAlign
+    };
+}
+function alignX(size, xAlign) {
+    let { x , width  } = size;
+    if (xAlign === 'right') {
+        x -= width;
+    } else if (xAlign === 'center') {
+        x -= width / 2;
+    }
+    return x;
+}
+function alignY(size, yAlign, paddingAndSize) {
+    let { y , height  } = size;
+    if (yAlign === 'top') {
+        y += paddingAndSize;
+    } else if (yAlign === 'bottom') {
+        y -= height + paddingAndSize;
+    } else {
+        y -= height / 2;
+    }
+    return y;
+}
+ function getBackgroundPoint(options, size, alignment, chart) {
+    const { caretSize , caretPadding , cornerRadius  } = options;
+    const { xAlign , yAlign  } = alignment;
+    const paddingAndSize = caretSize + caretPadding;
+    const { topLeft , topRight , bottomLeft , bottomRight  } = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.ay)(cornerRadius);
+    let x = alignX(size, xAlign);
+    const y = alignY(size, yAlign, paddingAndSize);
+    if (yAlign === 'center') {
+        if (xAlign === 'left') {
+            x += paddingAndSize;
+        } else if (xAlign === 'right') {
+            x -= paddingAndSize;
+        }
+    } else if (xAlign === 'left') {
+        x -= Math.max(topLeft, bottomLeft) + caretSize;
+    } else if (xAlign === 'right') {
+        x += Math.max(topRight, bottomRight) + caretSize;
+    }
+    return {
+        x: (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.S)(x, 0, chart.width - size.width),
+        y: (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.S)(y, 0, chart.height - size.height)
+    };
+}
+function getAlignedX(tooltip, align, options) {
+    const padding = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.E)(options.padding);
+    return align === 'center' ? tooltip.x + tooltip.width / 2 : align === 'right' ? tooltip.x + tooltip.width - padding.right : tooltip.x + padding.left;
+}
+ function getBeforeAfterBodyLines(callback) {
+    return pushOrConcat([], splitNewlines(callback));
+}
+function createTooltipContext(parent, tooltip, tooltipItems) {
+    return (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.j)(parent, {
+        tooltip,
+        tooltipItems,
+        type: 'tooltip'
+    });
+}
+function overrideCallbacks(callbacks, context) {
+    const override = context && context.dataset && context.dataset.tooltip && context.dataset.tooltip.callbacks;
+    return override ? callbacks.override(override) : callbacks;
+}
+const defaultCallbacks = {
+    beforeTitle: _chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.aG,
+    title (tooltipItems) {
+        if (tooltipItems.length > 0) {
+            const item = tooltipItems[0];
+            const labels = item.chart.data.labels;
+            const labelCount = labels ? labels.length : 0;
+            if (this && this.options && this.options.mode === 'dataset') {
+                return item.dataset.label || '';
+            } else if (item.label) {
+                return item.label;
+            } else if (labelCount > 0 && item.dataIndex < labelCount) {
+                return labels[item.dataIndex];
+            }
+        }
+        return '';
+    },
+    afterTitle: _chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.aG,
+    beforeBody: _chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.aG,
+    beforeLabel: _chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.aG,
+    label (tooltipItem) {
+        if (this && this.options && this.options.mode === 'dataset') {
+            return tooltipItem.label + ': ' + tooltipItem.formattedValue || tooltipItem.formattedValue;
+        }
+        let label = tooltipItem.dataset.label || '';
+        if (label) {
+            label += ': ';
+        }
+        const value = tooltipItem.formattedValue;
+        if (!(0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.k)(value)) {
+            label += value;
+        }
+        return label;
+    },
+    labelColor (tooltipItem) {
+        const meta = tooltipItem.chart.getDatasetMeta(tooltipItem.datasetIndex);
+        const options = meta.controller.getStyle(tooltipItem.dataIndex);
+        return {
+            borderColor: options.borderColor,
+            backgroundColor: options.backgroundColor,
+            borderWidth: options.borderWidth,
+            borderDash: options.borderDash,
+            borderDashOffset: options.borderDashOffset,
+            borderRadius: 0
+        };
+    },
+    labelTextColor () {
+        return this.options.bodyColor;
+    },
+    labelPointStyle (tooltipItem) {
+        const meta = tooltipItem.chart.getDatasetMeta(tooltipItem.datasetIndex);
+        const options = meta.controller.getStyle(tooltipItem.dataIndex);
+        return {
+            pointStyle: options.pointStyle,
+            rotation: options.rotation
+        };
+    },
+    afterLabel: _chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.aG,
+    afterBody: _chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.aG,
+    beforeFooter: _chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.aG,
+    footer: _chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.aG,
+    afterFooter: _chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.aG
+};
+ function invokeCallbackWithFallback(callbacks, name, ctx, arg) {
+    const result = callbacks[name].call(ctx, arg);
+    if (typeof result === 'undefined') {
+        return defaultCallbacks[name].call(ctx, arg);
+    }
+    return result;
+}
+class Tooltip extends Element {
+ static positioners = positioners;
+    constructor(config){
+        super();
+        this.opacity = 0;
+        this._active = [];
+        this._eventPosition = undefined;
+        this._size = undefined;
+        this._cachedAnimations = undefined;
+        this._tooltipItems = [];
+        this.$animations = undefined;
+        this.$context = undefined;
+        this.chart = config.chart;
+        this.options = config.options;
+        this.dataPoints = undefined;
+        this.title = undefined;
+        this.beforeBody = undefined;
+        this.body = undefined;
+        this.afterBody = undefined;
+        this.footer = undefined;
+        this.xAlign = undefined;
+        this.yAlign = undefined;
+        this.x = undefined;
+        this.y = undefined;
+        this.height = undefined;
+        this.width = undefined;
+        this.caretX = undefined;
+        this.caretY = undefined;
+        this.labelColors = undefined;
+        this.labelPointStyles = undefined;
+        this.labelTextColors = undefined;
+    }
+    initialize(options) {
+        this.options = options;
+        this._cachedAnimations = undefined;
+        this.$context = undefined;
+    }
+ _resolveAnimations() {
+        const cached = this._cachedAnimations;
+        if (cached) {
+            return cached;
+        }
+        const chart = this.chart;
+        const options = this.options.setContext(this.getContext());
+        const opts = options.enabled && chart.options.animation && options.animations;
+        const animations = new Animations(this.chart, opts);
+        if (opts._cacheable) {
+            this._cachedAnimations = Object.freeze(animations);
+        }
+        return animations;
+    }
+ getContext() {
+        return this.$context || (this.$context = createTooltipContext(this.chart.getContext(), this, this._tooltipItems));
+    }
+    getTitle(context, options) {
+        const { callbacks  } = options;
+        const beforeTitle = invokeCallbackWithFallback(callbacks, 'beforeTitle', this, context);
+        const title = invokeCallbackWithFallback(callbacks, 'title', this, context);
+        const afterTitle = invokeCallbackWithFallback(callbacks, 'afterTitle', this, context);
+        let lines = [];
+        lines = pushOrConcat(lines, splitNewlines(beforeTitle));
+        lines = pushOrConcat(lines, splitNewlines(title));
+        lines = pushOrConcat(lines, splitNewlines(afterTitle));
+        return lines;
+    }
+    getBeforeBody(tooltipItems, options) {
+        return getBeforeAfterBodyLines(invokeCallbackWithFallback(options.callbacks, 'beforeBody', this, tooltipItems));
+    }
+    getBody(tooltipItems, options) {
+        const { callbacks  } = options;
+        const bodyItems = [];
+        (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.F)(tooltipItems, (context)=>{
+            const bodyItem = {
+                before: [],
+                lines: [],
+                after: []
+            };
+            const scoped = overrideCallbacks(callbacks, context);
+            pushOrConcat(bodyItem.before, splitNewlines(invokeCallbackWithFallback(scoped, 'beforeLabel', this, context)));
+            pushOrConcat(bodyItem.lines, invokeCallbackWithFallback(scoped, 'label', this, context));
+            pushOrConcat(bodyItem.after, splitNewlines(invokeCallbackWithFallback(scoped, 'afterLabel', this, context)));
+            bodyItems.push(bodyItem);
+        });
+        return bodyItems;
+    }
+    getAfterBody(tooltipItems, options) {
+        return getBeforeAfterBodyLines(invokeCallbackWithFallback(options.callbacks, 'afterBody', this, tooltipItems));
+    }
+    getFooter(tooltipItems, options) {
+        const { callbacks  } = options;
+        const beforeFooter = invokeCallbackWithFallback(callbacks, 'beforeFooter', this, tooltipItems);
+        const footer = invokeCallbackWithFallback(callbacks, 'footer', this, tooltipItems);
+        const afterFooter = invokeCallbackWithFallback(callbacks, 'afterFooter', this, tooltipItems);
+        let lines = [];
+        lines = pushOrConcat(lines, splitNewlines(beforeFooter));
+        lines = pushOrConcat(lines, splitNewlines(footer));
+        lines = pushOrConcat(lines, splitNewlines(afterFooter));
+        return lines;
+    }
+ _createItems(options) {
+        const active = this._active;
+        const data = this.chart.data;
+        const labelColors = [];
+        const labelPointStyles = [];
+        const labelTextColors = [];
+        let tooltipItems = [];
+        let i, len;
+        for(i = 0, len = active.length; i < len; ++i){
+            tooltipItems.push(createTooltipItem(this.chart, active[i]));
+        }
+        if (options.filter) {
+            tooltipItems = tooltipItems.filter((element, index, array)=>options.filter(element, index, array, data));
+        }
+        if (options.itemSort) {
+            tooltipItems = tooltipItems.sort((a, b)=>options.itemSort(a, b, data));
+        }
+        (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.F)(tooltipItems, (context)=>{
+            const scoped = overrideCallbacks(options.callbacks, context);
+            labelColors.push(invokeCallbackWithFallback(scoped, 'labelColor', this, context));
+            labelPointStyles.push(invokeCallbackWithFallback(scoped, 'labelPointStyle', this, context));
+            labelTextColors.push(invokeCallbackWithFallback(scoped, 'labelTextColor', this, context));
+        });
+        this.labelColors = labelColors;
+        this.labelPointStyles = labelPointStyles;
+        this.labelTextColors = labelTextColors;
+        this.dataPoints = tooltipItems;
+        return tooltipItems;
+    }
+    update(changed, replay) {
+        const options = this.options.setContext(this.getContext());
+        const active = this._active;
+        let properties;
+        let tooltipItems = [];
+        if (!active.length) {
+            if (this.opacity !== 0) {
+                properties = {
+                    opacity: 0
+                };
+            }
+        } else {
+            const position = positioners[options.position].call(this, active, this._eventPosition);
+            tooltipItems = this._createItems(options);
+            this.title = this.getTitle(tooltipItems, options);
+            this.beforeBody = this.getBeforeBody(tooltipItems, options);
+            this.body = this.getBody(tooltipItems, options);
+            this.afterBody = this.getAfterBody(tooltipItems, options);
+            this.footer = this.getFooter(tooltipItems, options);
+            const size = this._size = getTooltipSize(this, options);
+            const positionAndSize = Object.assign({}, position, size);
+            const alignment = determineAlignment(this.chart, options, positionAndSize);
+            const backgroundPoint = getBackgroundPoint(options, positionAndSize, alignment, this.chart);
+            this.xAlign = alignment.xAlign;
+            this.yAlign = alignment.yAlign;
+            properties = {
+                opacity: 1,
+                x: backgroundPoint.x,
+                y: backgroundPoint.y,
+                width: size.width,
+                height: size.height,
+                caretX: position.x,
+                caretY: position.y
+            };
+        }
+        this._tooltipItems = tooltipItems;
+        this.$context = undefined;
+        if (properties) {
+            this._resolveAnimations().update(this, properties);
+        }
+        if (changed && options.external) {
+            options.external.call(this, {
+                chart: this.chart,
+                tooltip: this,
+                replay
+            });
+        }
+    }
+    drawCaret(tooltipPoint, ctx, size, options) {
+        const caretPosition = this.getCaretPosition(tooltipPoint, size, options);
+        ctx.lineTo(caretPosition.x1, caretPosition.y1);
+        ctx.lineTo(caretPosition.x2, caretPosition.y2);
+        ctx.lineTo(caretPosition.x3, caretPosition.y3);
+    }
+    getCaretPosition(tooltipPoint, size, options) {
+        const { xAlign , yAlign  } = this;
+        const { caretSize , cornerRadius  } = options;
+        const { topLeft , topRight , bottomLeft , bottomRight  } = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.ay)(cornerRadius);
+        const { x: ptX , y: ptY  } = tooltipPoint;
+        const { width , height  } = size;
+        let x1, x2, x3, y1, y2, y3;
+        if (yAlign === 'center') {
+            y2 = ptY + height / 2;
+            if (xAlign === 'left') {
+                x1 = ptX;
+                x2 = x1 - caretSize;
+                y1 = y2 + caretSize;
+                y3 = y2 - caretSize;
+            } else {
+                x1 = ptX + width;
+                x2 = x1 + caretSize;
+                y1 = y2 - caretSize;
+                y3 = y2 + caretSize;
+            }
+            x3 = x1;
+        } else {
+            if (xAlign === 'left') {
+                x2 = ptX + Math.max(topLeft, bottomLeft) + caretSize;
+            } else if (xAlign === 'right') {
+                x2 = ptX + width - Math.max(topRight, bottomRight) - caretSize;
+            } else {
+                x2 = this.caretX;
+            }
+            if (yAlign === 'top') {
+                y1 = ptY;
+                y2 = y1 - caretSize;
+                x1 = x2 - caretSize;
+                x3 = x2 + caretSize;
+            } else {
+                y1 = ptY + height;
+                y2 = y1 + caretSize;
+                x1 = x2 + caretSize;
+                x3 = x2 - caretSize;
+            }
+            y3 = y1;
+        }
+        return {
+            x1,
+            x2,
+            x3,
+            y1,
+            y2,
+            y3
+        };
+    }
+    drawTitle(pt, ctx, options) {
+        const title = this.title;
+        const length = title.length;
+        let titleFont, titleSpacing, i;
+        if (length) {
+            const rtlHelper = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.aA)(options.rtl, this.x, this.width);
+            pt.x = getAlignedX(this, options.titleAlign, options);
+            ctx.textAlign = rtlHelper.textAlign(options.titleAlign);
+            ctx.textBaseline = 'middle';
+            titleFont = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.a0)(options.titleFont);
+            titleSpacing = options.titleSpacing;
+            ctx.fillStyle = options.titleColor;
+            ctx.font = titleFont.string;
+            for(i = 0; i < length; ++i){
+                ctx.fillText(title[i], rtlHelper.x(pt.x), pt.y + titleFont.lineHeight / 2);
+                pt.y += titleFont.lineHeight + titleSpacing;
+                if (i + 1 === length) {
+                    pt.y += options.titleMarginBottom - titleSpacing;
+                }
+            }
+        }
+    }
+ _drawColorBox(ctx, pt, i, rtlHelper, options) {
+        const labelColor = this.labelColors[i];
+        const labelPointStyle = this.labelPointStyles[i];
+        const { boxHeight , boxWidth  } = options;
+        const bodyFont = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.a0)(options.bodyFont);
+        const colorX = getAlignedX(this, 'left', options);
+        const rtlColorX = rtlHelper.x(colorX);
+        const yOffSet = boxHeight < bodyFont.lineHeight ? (bodyFont.lineHeight - boxHeight) / 2 : 0;
+        const colorY = pt.y + yOffSet;
+        if (options.usePointStyle) {
+            const drawOptions = {
+                radius: Math.min(boxWidth, boxHeight) / 2,
+                pointStyle: labelPointStyle.pointStyle,
+                rotation: labelPointStyle.rotation,
+                borderWidth: 1
+            };
+            const centerX = rtlHelper.leftForLtr(rtlColorX, boxWidth) + boxWidth / 2;
+            const centerY = colorY + boxHeight / 2;
+            ctx.strokeStyle = options.multiKeyBackground;
+            ctx.fillStyle = options.multiKeyBackground;
+            (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.av)(ctx, drawOptions, centerX, centerY);
+            ctx.strokeStyle = labelColor.borderColor;
+            ctx.fillStyle = labelColor.backgroundColor;
+            (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.av)(ctx, drawOptions, centerX, centerY);
+        } else {
+            ctx.lineWidth = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.i)(labelColor.borderWidth) ? Math.max(...Object.values(labelColor.borderWidth)) : labelColor.borderWidth || 1;
+            ctx.strokeStyle = labelColor.borderColor;
+            ctx.setLineDash(labelColor.borderDash || []);
+            ctx.lineDashOffset = labelColor.borderDashOffset || 0;
+            const outerX = rtlHelper.leftForLtr(rtlColorX, boxWidth);
+            const innerX = rtlHelper.leftForLtr(rtlHelper.xPlus(rtlColorX, 1), boxWidth - 2);
+            const borderRadius = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.ay)(labelColor.borderRadius);
+            if (Object.values(borderRadius).some((v)=>v !== 0)) {
+                ctx.beginPath();
+                ctx.fillStyle = options.multiKeyBackground;
+                (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.aw)(ctx, {
+                    x: outerX,
+                    y: colorY,
+                    w: boxWidth,
+                    h: boxHeight,
+                    radius: borderRadius
+                });
+                ctx.fill();
+                ctx.stroke();
+                ctx.fillStyle = labelColor.backgroundColor;
+                ctx.beginPath();
+                (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.aw)(ctx, {
+                    x: innerX,
+                    y: colorY + 1,
+                    w: boxWidth - 2,
+                    h: boxHeight - 2,
+                    radius: borderRadius
+                });
+                ctx.fill();
+            } else {
+                ctx.fillStyle = options.multiKeyBackground;
+                ctx.fillRect(outerX, colorY, boxWidth, boxHeight);
+                ctx.strokeRect(outerX, colorY, boxWidth, boxHeight);
+                ctx.fillStyle = labelColor.backgroundColor;
+                ctx.fillRect(innerX, colorY + 1, boxWidth - 2, boxHeight - 2);
+            }
+        }
+        ctx.fillStyle = this.labelTextColors[i];
+    }
+    drawBody(pt, ctx, options) {
+        const { body  } = this;
+        const { bodySpacing , bodyAlign , displayColors , boxHeight , boxWidth , boxPadding  } = options;
+        const bodyFont = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.a0)(options.bodyFont);
+        let bodyLineHeight = bodyFont.lineHeight;
+        let xLinePadding = 0;
+        const rtlHelper = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.aA)(options.rtl, this.x, this.width);
+        const fillLineOfText = function(line) {
+            ctx.fillText(line, rtlHelper.x(pt.x + xLinePadding), pt.y + bodyLineHeight / 2);
+            pt.y += bodyLineHeight + bodySpacing;
+        };
+        const bodyAlignForCalculation = rtlHelper.textAlign(bodyAlign);
+        let bodyItem, textColor, lines, i, j, ilen, jlen;
+        ctx.textAlign = bodyAlign;
+        ctx.textBaseline = 'middle';
+        ctx.font = bodyFont.string;
+        pt.x = getAlignedX(this, bodyAlignForCalculation, options);
+        ctx.fillStyle = options.bodyColor;
+        (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.F)(this.beforeBody, fillLineOfText);
+        xLinePadding = displayColors && bodyAlignForCalculation !== 'right' ? bodyAlign === 'center' ? boxWidth / 2 + boxPadding : boxWidth + 2 + boxPadding : 0;
+        for(i = 0, ilen = body.length; i < ilen; ++i){
+            bodyItem = body[i];
+            textColor = this.labelTextColors[i];
+            ctx.fillStyle = textColor;
+            (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.F)(bodyItem.before, fillLineOfText);
+            lines = bodyItem.lines;
+            if (displayColors && lines.length) {
+                this._drawColorBox(ctx, pt, i, rtlHelper, options);
+                bodyLineHeight = Math.max(bodyFont.lineHeight, boxHeight);
+            }
+            for(j = 0, jlen = lines.length; j < jlen; ++j){
+                fillLineOfText(lines[j]);
+                bodyLineHeight = bodyFont.lineHeight;
+            }
+            (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.F)(bodyItem.after, fillLineOfText);
+        }
+        xLinePadding = 0;
+        bodyLineHeight = bodyFont.lineHeight;
+        (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.F)(this.afterBody, fillLineOfText);
+        pt.y -= bodySpacing;
+    }
+    drawFooter(pt, ctx, options) {
+        const footer = this.footer;
+        const length = footer.length;
+        let footerFont, i;
+        if (length) {
+            const rtlHelper = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.aA)(options.rtl, this.x, this.width);
+            pt.x = getAlignedX(this, options.footerAlign, options);
+            pt.y += options.footerMarginTop;
+            ctx.textAlign = rtlHelper.textAlign(options.footerAlign);
+            ctx.textBaseline = 'middle';
+            footerFont = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.a0)(options.footerFont);
+            ctx.fillStyle = options.footerColor;
+            ctx.font = footerFont.string;
+            for(i = 0; i < length; ++i){
+                ctx.fillText(footer[i], rtlHelper.x(pt.x), pt.y + footerFont.lineHeight / 2);
+                pt.y += footerFont.lineHeight + options.footerSpacing;
+            }
+        }
+    }
+    drawBackground(pt, ctx, tooltipSize, options) {
+        const { xAlign , yAlign  } = this;
+        const { x , y  } = pt;
+        const { width , height  } = tooltipSize;
+        const { topLeft , topRight , bottomLeft , bottomRight  } = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.ay)(options.cornerRadius);
+        ctx.fillStyle = options.backgroundColor;
+        ctx.strokeStyle = options.borderColor;
+        ctx.lineWidth = options.borderWidth;
+        ctx.beginPath();
+        ctx.moveTo(x + topLeft, y);
+        if (yAlign === 'top') {
+            this.drawCaret(pt, ctx, tooltipSize, options);
+        }
+        ctx.lineTo(x + width - topRight, y);
+        ctx.quadraticCurveTo(x + width, y, x + width, y + topRight);
+        if (yAlign === 'center' && xAlign === 'right') {
+            this.drawCaret(pt, ctx, tooltipSize, options);
+        }
+        ctx.lineTo(x + width, y + height - bottomRight);
+        ctx.quadraticCurveTo(x + width, y + height, x + width - bottomRight, y + height);
+        if (yAlign === 'bottom') {
+            this.drawCaret(pt, ctx, tooltipSize, options);
+        }
+        ctx.lineTo(x + bottomLeft, y + height);
+        ctx.quadraticCurveTo(x, y + height, x, y + height - bottomLeft);
+        if (yAlign === 'center' && xAlign === 'left') {
+            this.drawCaret(pt, ctx, tooltipSize, options);
+        }
+        ctx.lineTo(x, y + topLeft);
+        ctx.quadraticCurveTo(x, y, x + topLeft, y);
+        ctx.closePath();
+        ctx.fill();
+        if (options.borderWidth > 0) {
+            ctx.stroke();
+        }
+    }
+ _updateAnimationTarget(options) {
+        const chart = this.chart;
+        const anims = this.$animations;
+        const animX = anims && anims.x;
+        const animY = anims && anims.y;
+        if (animX || animY) {
+            const position = positioners[options.position].call(this, this._active, this._eventPosition);
+            if (!position) {
+                return;
+            }
+            const size = this._size = getTooltipSize(this, options);
+            const positionAndSize = Object.assign({}, position, this._size);
+            const alignment = determineAlignment(chart, options, positionAndSize);
+            const point = getBackgroundPoint(options, positionAndSize, alignment, chart);
+            if (animX._to !== point.x || animY._to !== point.y) {
+                this.xAlign = alignment.xAlign;
+                this.yAlign = alignment.yAlign;
+                this.width = size.width;
+                this.height = size.height;
+                this.caretX = position.x;
+                this.caretY = position.y;
+                this._resolveAnimations().update(this, point);
+            }
+        }
+    }
+ _willRender() {
+        return !!this.opacity;
+    }
+    draw(ctx) {
+        const options = this.options.setContext(this.getContext());
+        let opacity = this.opacity;
+        if (!opacity) {
+            return;
+        }
+        this._updateAnimationTarget(options);
+        const tooltipSize = {
+            width: this.width,
+            height: this.height
+        };
+        const pt = {
+            x: this.x,
+            y: this.y
+        };
+        opacity = Math.abs(opacity) < 1e-3 ? 0 : opacity;
+        const padding = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.E)(options.padding);
+        const hasTooltipContent = this.title.length || this.beforeBody.length || this.body.length || this.afterBody.length || this.footer.length;
+        if (options.enabled && hasTooltipContent) {
+            ctx.save();
+            ctx.globalAlpha = opacity;
+            this.drawBackground(pt, ctx, tooltipSize, options);
+            (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.aB)(ctx, options.textDirection);
+            pt.y += padding.top;
+            this.drawTitle(pt, ctx, options);
+            this.drawBody(pt, ctx, options);
+            this.drawFooter(pt, ctx, options);
+            (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.aD)(ctx, options.textDirection);
+            ctx.restore();
+        }
+    }
+ getActiveElements() {
+        return this._active || [];
+    }
+ setActiveElements(activeElements, eventPosition) {
+        const lastActive = this._active;
+        const active = activeElements.map(({ datasetIndex , index  })=>{
+            const meta = this.chart.getDatasetMeta(datasetIndex);
+            if (!meta) {
+                throw new Error('Cannot find a dataset at index ' + datasetIndex);
+            }
+            return {
+                datasetIndex,
+                element: meta.data[index],
+                index
+            };
+        });
+        const changed = !(0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.ai)(lastActive, active);
+        const positionChanged = this._positionChanged(active, eventPosition);
+        if (changed || positionChanged) {
+            this._active = active;
+            this._eventPosition = eventPosition;
+            this._ignoreReplayEvents = true;
+            this.update(true);
+        }
+    }
+ handleEvent(e, replay, inChartArea = true) {
+        if (replay && this._ignoreReplayEvents) {
+            return false;
+        }
+        this._ignoreReplayEvents = false;
+        const options = this.options;
+        const lastActive = this._active || [];
+        const active = this._getActiveElements(e, lastActive, replay, inChartArea);
+        const positionChanged = this._positionChanged(active, e);
+        const changed = replay || !(0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.ai)(active, lastActive) || positionChanged;
+        if (changed) {
+            this._active = active;
+            if (options.enabled || options.external) {
+                this._eventPosition = {
+                    x: e.x,
+                    y: e.y
+                };
+                this.update(true, replay);
+            }
+        }
+        return changed;
+    }
+ _getActiveElements(e, lastActive, replay, inChartArea) {
+        const options = this.options;
+        if (e.type === 'mouseout') {
+            return [];
+        }
+        if (!inChartArea) {
+            return lastActive.filter((i)=>this.chart.data.datasets[i.datasetIndex] && this.chart.getDatasetMeta(i.datasetIndex).controller.getParsed(i.index) !== undefined);
+        }
+        const active = this.chart.getElementsAtEventForMode(e, options.mode, options, replay);
+        if (options.reverse) {
+            active.reverse();
+        }
+        return active;
+    }
+ _positionChanged(active, e) {
+        const { caretX , caretY , options  } = this;
+        const position = positioners[options.position].call(this, active, e);
+        return position !== false && (caretX !== position.x || caretY !== position.y);
+    }
+}
+var plugin_tooltip = {
+    id: 'tooltip',
+    _element: Tooltip,
+    positioners,
+    afterInit (chart, _args, options) {
+        if (options) {
+            chart.tooltip = new Tooltip({
+                chart,
+                options
+            });
+        }
+    },
+    beforeUpdate (chart, _args, options) {
+        if (chart.tooltip) {
+            chart.tooltip.initialize(options);
+        }
+    },
+    reset (chart, _args, options) {
+        if (chart.tooltip) {
+            chart.tooltip.initialize(options);
+        }
+    },
+    afterDraw (chart) {
+        const tooltip = chart.tooltip;
+        if (tooltip && tooltip._willRender()) {
+            const args = {
+                tooltip
+            };
+            if (chart.notifyPlugins('beforeTooltipDraw', {
+                ...args,
+                cancelable: true
+            }) === false) {
+                return;
+            }
+            tooltip.draw(chart.ctx);
+            chart.notifyPlugins('afterTooltipDraw', args);
+        }
+    },
+    afterEvent (chart, args) {
+        if (chart.tooltip) {
+            const useFinalPosition = args.replay;
+            if (chart.tooltip.handleEvent(args.event, useFinalPosition, args.inChartArea)) {
+                args.changed = true;
+            }
+        }
+    },
+    defaults: {
+        enabled: true,
+        external: null,
+        position: 'average',
+        backgroundColor: 'rgba(0,0,0,0.8)',
+        titleColor: '#fff',
+        titleFont: {
+            weight: 'bold'
+        },
+        titleSpacing: 2,
+        titleMarginBottom: 6,
+        titleAlign: 'left',
+        bodyColor: '#fff',
+        bodySpacing: 2,
+        bodyFont: {},
+        bodyAlign: 'left',
+        footerColor: '#fff',
+        footerSpacing: 2,
+        footerMarginTop: 6,
+        footerFont: {
+            weight: 'bold'
+        },
+        footerAlign: 'left',
+        padding: 6,
+        caretPadding: 2,
+        caretSize: 5,
+        cornerRadius: 6,
+        boxHeight: (ctx, opts)=>opts.bodyFont.size,
+        boxWidth: (ctx, opts)=>opts.bodyFont.size,
+        multiKeyBackground: '#fff',
+        displayColors: true,
+        boxPadding: 0,
+        borderColor: 'rgba(0,0,0,0)',
+        borderWidth: 0,
+        animation: {
+            duration: 400,
+            easing: 'easeOutQuart'
+        },
+        animations: {
+            numbers: {
+                type: 'number',
+                properties: [
+                    'x',
+                    'y',
+                    'width',
+                    'height',
+                    'caretX',
+                    'caretY'
+                ]
+            },
+            opacity: {
+                easing: 'linear',
+                duration: 200
+            }
+        },
+        callbacks: defaultCallbacks
+    },
+    defaultRoutes: {
+        bodyFont: 'font',
+        footerFont: 'font',
+        titleFont: 'font'
+    },
+    descriptors: {
+        _scriptable: (name)=>name !== 'filter' && name !== 'itemSort' && name !== 'external',
+        _indexable: false,
+        callbacks: {
+            _scriptable: false,
+            _indexable: false
+        },
+        animation: {
+            _fallback: false
+        },
+        animations: {
+            _fallback: 'animation'
+        }
+    },
+    additionalOptionScopes: [
+        'interaction'
+    ]
+};
+
+var plugins = /*#__PURE__*/Object.freeze({
+__proto__: null,
+Colors: plugin_colors,
+Decimation: plugin_decimation,
+Filler: index,
+Legend: plugin_legend,
+SubTitle: plugin_subtitle,
+Title: plugin_title,
+Tooltip: plugin_tooltip
+});
+
+const addIfString = (labels, raw, index, addedLabels)=>{
+    if (typeof raw === 'string') {
+        index = labels.push(raw) - 1;
+        addedLabels.unshift({
+            index,
+            label: raw
+        });
+    } else if (isNaN(raw)) {
+        index = null;
+    }
+    return index;
+};
+function findOrAddLabel(labels, raw, index, addedLabels) {
+    const first = labels.indexOf(raw);
+    if (first === -1) {
+        return addIfString(labels, raw, index, addedLabels);
+    }
+    const last = labels.lastIndexOf(raw);
+    return first !== last ? index : first;
+}
+const validIndex = (index, max)=>index === null ? null : (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.S)(Math.round(index), 0, max);
+function _getLabelForValue(value) {
+    const labels = this.getLabels();
+    if (value >= 0 && value < labels.length) {
+        return labels[value];
+    }
+    return value;
+}
+class CategoryScale extends Scale {
+    static id = 'category';
+ static defaults = {
+        ticks: {
+            callback: _getLabelForValue
+        }
+    };
+    constructor(cfg){
+        super(cfg);
+         this._startValue = undefined;
+        this._valueRange = 0;
+        this._addedLabels = [];
+    }
+    init(scaleOptions) {
+        const added = this._addedLabels;
+        if (added.length) {
+            const labels = this.getLabels();
+            for (const { index , label  } of added){
+                if (labels[index] === label) {
+                    labels.splice(index, 1);
+                }
+            }
+            this._addedLabels = [];
+        }
+        super.init(scaleOptions);
+    }
+    parse(raw, index) {
+        if ((0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.k)(raw)) {
+            return null;
+        }
+        const labels = this.getLabels();
+        index = isFinite(index) && labels[index] === raw ? index : findOrAddLabel(labels, raw, (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.v)(index, raw), this._addedLabels);
+        return validIndex(index, labels.length - 1);
+    }
+    determineDataLimits() {
+        const { minDefined , maxDefined  } = this.getUserBounds();
+        let { min , max  } = this.getMinMax(true);
+        if (this.options.bounds === 'ticks') {
+            if (!minDefined) {
+                min = 0;
+            }
+            if (!maxDefined) {
+                max = this.getLabels().length - 1;
+            }
+        }
+        this.min = min;
+        this.max = max;
+    }
+    buildTicks() {
+        const min = this.min;
+        const max = this.max;
+        const offset = this.options.offset;
+        const ticks = [];
+        let labels = this.getLabels();
+        labels = min === 0 && max === labels.length - 1 ? labels : labels.slice(min, max + 1);
+        this._valueRange = Math.max(labels.length - (offset ? 0 : 1), 1);
+        this._startValue = this.min - (offset ? 0.5 : 0);
+        for(let value = min; value <= max; value++){
+            ticks.push({
+                value
+            });
+        }
+        return ticks;
+    }
+    getLabelForValue(value) {
+        return _getLabelForValue.call(this, value);
+    }
+ configure() {
+        super.configure();
+        if (!this.isHorizontal()) {
+            this._reversePixels = !this._reversePixels;
+        }
+    }
+    getPixelForValue(value) {
+        if (typeof value !== 'number') {
+            value = this.parse(value);
+        }
+        return value === null ? NaN : this.getPixelForDecimal((value - this._startValue) / this._valueRange);
+    }
+    getPixelForTick(index) {
+        const ticks = this.ticks;
+        if (index < 0 || index > ticks.length - 1) {
+            return null;
+        }
+        return this.getPixelForValue(ticks[index].value);
+    }
+    getValueForPixel(pixel) {
+        return Math.round(this._startValue + this.getDecimalForPixel(pixel) * this._valueRange);
+    }
+    getBasePixel() {
+        return this.bottom;
+    }
+}
+
+function generateTicks$1(generationOptions, dataRange) {
+    const ticks = [];
+    const MIN_SPACING = 1e-14;
+    const { bounds , step , min , max , precision , count , maxTicks , maxDigits , includeBounds  } = generationOptions;
+    const unit = step || 1;
+    const maxSpaces = maxTicks - 1;
+    const { min: rmin , max: rmax  } = dataRange;
+    const minDefined = !(0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.k)(min);
+    const maxDefined = !(0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.k)(max);
+    const countDefined = !(0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.k)(count);
+    const minSpacing = (rmax - rmin) / (maxDigits + 1);
+    let spacing = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.aI)((rmax - rmin) / maxSpaces / unit) * unit;
+    let factor, niceMin, niceMax, numSpaces;
+    if (spacing < MIN_SPACING && !minDefined && !maxDefined) {
+        return [
+            {
+                value: rmin
+            },
+            {
+                value: rmax
+            }
+        ];
+    }
+    numSpaces = Math.ceil(rmax / spacing) - Math.floor(rmin / spacing);
+    if (numSpaces > maxSpaces) {
+        spacing = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.aI)(numSpaces * spacing / maxSpaces / unit) * unit;
+    }
+    if (!(0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.k)(precision)) {
+        factor = Math.pow(10, precision);
+        spacing = Math.ceil(spacing * factor) / factor;
+    }
+    if (bounds === 'ticks') {
+        niceMin = Math.floor(rmin / spacing) * spacing;
+        niceMax = Math.ceil(rmax / spacing) * spacing;
+    } else {
+        niceMin = rmin;
+        niceMax = rmax;
+    }
+    if (minDefined && maxDefined && step && (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.aJ)((max - min) / step, spacing / 1000)) {
+        numSpaces = Math.round(Math.min((max - min) / spacing, maxTicks));
+        spacing = (max - min) / numSpaces;
+        niceMin = min;
+        niceMax = max;
+    } else if (countDefined) {
+        niceMin = minDefined ? min : niceMin;
+        niceMax = maxDefined ? max : niceMax;
+        numSpaces = count - 1;
+        spacing = (niceMax - niceMin) / numSpaces;
+    } else {
+        numSpaces = (niceMax - niceMin) / spacing;
+        if ((0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.aK)(numSpaces, Math.round(numSpaces), spacing / 1000)) {
+            numSpaces = Math.round(numSpaces);
+        } else {
+            numSpaces = Math.ceil(numSpaces);
+        }
+    }
+    const decimalPlaces = Math.max((0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.aL)(spacing), (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.aL)(niceMin));
+    factor = Math.pow(10, (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.k)(precision) ? decimalPlaces : precision);
+    niceMin = Math.round(niceMin * factor) / factor;
+    niceMax = Math.round(niceMax * factor) / factor;
+    let j = 0;
+    if (minDefined) {
+        if (includeBounds && niceMin !== min) {
+            ticks.push({
+                value: min
+            });
+            if (niceMin < min) {
+                j++;
+            }
+            if ((0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.aK)(Math.round((niceMin + j * spacing) * factor) / factor, min, relativeLabelSize(min, minSpacing, generationOptions))) {
+                j++;
+            }
+        } else if (niceMin < min) {
+            j++;
+        }
+    }
+    for(; j < numSpaces; ++j){
+        const tickValue = Math.round((niceMin + j * spacing) * factor) / factor;
+        if (maxDefined && tickValue > max) {
+            break;
+        }
+        ticks.push({
+            value: tickValue
+        });
+    }
+    if (maxDefined && includeBounds && niceMax !== max) {
+        if (ticks.length && (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.aK)(ticks[ticks.length - 1].value, max, relativeLabelSize(max, minSpacing, generationOptions))) {
+            ticks[ticks.length - 1].value = max;
+        } else {
+            ticks.push({
+                value: max
+            });
+        }
+    } else if (!maxDefined || niceMax === max) {
+        ticks.push({
+            value: niceMax
+        });
+    }
+    return ticks;
+}
+function relativeLabelSize(value, minSpacing, { horizontal , minRotation  }) {
+    const rad = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.t)(minRotation);
+    const ratio = (horizontal ? Math.sin(rad) : Math.cos(rad)) || 0.001;
+    const length = 0.75 * minSpacing * ('' + value).length;
+    return Math.min(minSpacing / ratio, length);
+}
+class LinearScaleBase extends Scale {
+    constructor(cfg){
+        super(cfg);
+         this.start = undefined;
+         this.end = undefined;
+         this._startValue = undefined;
+         this._endValue = undefined;
+        this._valueRange = 0;
+    }
+    parse(raw, index) {
+        if ((0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.k)(raw)) {
+            return null;
+        }
+        if ((typeof raw === 'number' || raw instanceof Number) && !isFinite(+raw)) {
+            return null;
+        }
+        return +raw;
+    }
+    handleTickRangeOptions() {
+        const { beginAtZero  } = this.options;
+        const { minDefined , maxDefined  } = this.getUserBounds();
+        let { min , max  } = this;
+        const setMin = (v)=>min = minDefined ? min : v;
+        const setMax = (v)=>max = maxDefined ? max : v;
+        if (beginAtZero) {
+            const minSign = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.s)(min);
+            const maxSign = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.s)(max);
+            if (minSign < 0 && maxSign < 0) {
+                setMax(0);
+            } else if (minSign > 0 && maxSign > 0) {
+                setMin(0);
+            }
+        }
+        if (min === max) {
+            let offset = max === 0 ? 1 : Math.abs(max * 0.05);
+            setMax(max + offset);
+            if (!beginAtZero) {
+                setMin(min - offset);
+            }
+        }
+        this.min = min;
+        this.max = max;
+    }
+    getTickLimit() {
+        const tickOpts = this.options.ticks;
+        let { maxTicksLimit , stepSize  } = tickOpts;
+        let maxTicks;
+        if (stepSize) {
+            maxTicks = Math.ceil(this.max / stepSize) - Math.floor(this.min / stepSize) + 1;
+            if (maxTicks > 1000) {
+                console.warn(`scales.${this.id}.ticks.stepSize: ${stepSize} would result generating up to ${maxTicks} ticks. Limiting to 1000.`);
+                maxTicks = 1000;
+            }
+        } else {
+            maxTicks = this.computeTickLimit();
+            maxTicksLimit = maxTicksLimit || 11;
+        }
+        if (maxTicksLimit) {
+            maxTicks = Math.min(maxTicksLimit, maxTicks);
+        }
+        return maxTicks;
+    }
+ computeTickLimit() {
+        return Number.POSITIVE_INFINITY;
+    }
+    buildTicks() {
+        const opts = this.options;
+        const tickOpts = opts.ticks;
+        let maxTicks = this.getTickLimit();
+        maxTicks = Math.max(2, maxTicks);
+        const numericGeneratorOptions = {
+            maxTicks,
+            bounds: opts.bounds,
+            min: opts.min,
+            max: opts.max,
+            precision: tickOpts.precision,
+            step: tickOpts.stepSize,
+            count: tickOpts.count,
+            maxDigits: this._maxDigits(),
+            horizontal: this.isHorizontal(),
+            minRotation: tickOpts.minRotation || 0,
+            includeBounds: tickOpts.includeBounds !== false
+        };
+        const dataRange = this._range || this;
+        const ticks = generateTicks$1(numericGeneratorOptions, dataRange);
+        if (opts.bounds === 'ticks') {
+            (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.aH)(ticks, this, 'value');
+        }
+        if (opts.reverse) {
+            ticks.reverse();
+            this.start = this.max;
+            this.end = this.min;
+        } else {
+            this.start = this.min;
+            this.end = this.max;
+        }
+        return ticks;
+    }
+ configure() {
+        const ticks = this.ticks;
+        let start = this.min;
+        let end = this.max;
+        super.configure();
+        if (this.options.offset && ticks.length) {
+            const offset = (end - start) / Math.max(ticks.length - 1, 1) / 2;
+            start -= offset;
+            end += offset;
+        }
+        this._startValue = start;
+        this._endValue = end;
+        this._valueRange = end - start;
+    }
+    getLabelForValue(value) {
+        return (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.o)(value, this.chart.options.locale, this.options.ticks.format);
+    }
+}
+
+class LinearScale extends LinearScaleBase {
+    static id = 'linear';
+ static defaults = {
+        ticks: {
+            callback: _chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.aM.formatters.numeric
+        }
+    };
+    determineDataLimits() {
+        const { min , max  } = this.getMinMax(true);
+        this.min = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.g)(min) ? min : 0;
+        this.max = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.g)(max) ? max : 1;
+        this.handleTickRangeOptions();
+    }
+ computeTickLimit() {
+        const horizontal = this.isHorizontal();
+        const length = horizontal ? this.width : this.height;
+        const minRotation = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.t)(this.options.ticks.minRotation);
+        const ratio = (horizontal ? Math.sin(minRotation) : Math.cos(minRotation)) || 0.001;
+        const tickFont = this._resolveTickFontOptions(0);
+        return Math.ceil(length / Math.min(40, tickFont.lineHeight / ratio));
+    }
+    getPixelForValue(value) {
+        return value === null ? NaN : this.getPixelForDecimal((value - this._startValue) / this._valueRange);
+    }
+    getValueForPixel(pixel) {
+        return this._startValue + this.getDecimalForPixel(pixel) * this._valueRange;
+    }
+}
+
+const log10Floor = (v)=>Math.floor((0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.aN)(v));
+const changeExponent = (v, m)=>Math.pow(10, log10Floor(v) + m);
+function isMajor(tickVal) {
+    const remain = tickVal / Math.pow(10, log10Floor(tickVal));
+    return remain === 1;
+}
+function steps(min, max, rangeExp) {
+    const rangeStep = Math.pow(10, rangeExp);
+    const start = Math.floor(min / rangeStep);
+    const end = Math.ceil(max / rangeStep);
+    return end - start;
+}
+function startExp(min, max) {
+    const range = max - min;
+    let rangeExp = log10Floor(range);
+    while(steps(min, max, rangeExp) > 10){
+        rangeExp++;
+    }
+    while(steps(min, max, rangeExp) < 10){
+        rangeExp--;
+    }
+    return Math.min(rangeExp, log10Floor(min));
+}
+ function generateTicks(generationOptions, { min , max  }) {
+    min = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.O)(generationOptions.min, min);
+    const ticks = [];
+    const minExp = log10Floor(min);
+    let exp = startExp(min, max);
+    let precision = exp < 0 ? Math.pow(10, Math.abs(exp)) : 1;
+    const stepSize = Math.pow(10, exp);
+    const base = minExp > exp ? Math.pow(10, minExp) : 0;
+    const start = Math.round((min - base) * precision) / precision;
+    const offset = Math.floor((min - base) / stepSize / 10) * stepSize * 10;
+    let significand = Math.floor((start - offset) / Math.pow(10, exp));
+    let value = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.O)(generationOptions.min, Math.round((base + offset + significand * Math.pow(10, exp)) * precision) / precision);
+    while(value < max){
+        ticks.push({
+            value,
+            major: isMajor(value),
+            significand
+        });
+        if (significand >= 10) {
+            significand = significand < 15 ? 15 : 20;
+        } else {
+            significand++;
+        }
+        if (significand >= 20) {
+            exp++;
+            significand = 2;
+            precision = exp >= 0 ? 1 : precision;
+        }
+        value = Math.round((base + offset + significand * Math.pow(10, exp)) * precision) / precision;
+    }
+    const lastTick = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.O)(generationOptions.max, value);
+    ticks.push({
+        value: lastTick,
+        major: isMajor(lastTick),
+        significand
+    });
+    return ticks;
+}
+class LogarithmicScale extends Scale {
+    static id = 'logarithmic';
+ static defaults = {
+        ticks: {
+            callback: _chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.aM.formatters.logarithmic,
+            major: {
+                enabled: true
+            }
+        }
+    };
+    constructor(cfg){
+        super(cfg);
+         this.start = undefined;
+         this.end = undefined;
+         this._startValue = undefined;
+        this._valueRange = 0;
+    }
+    parse(raw, index) {
+        const value = LinearScaleBase.prototype.parse.apply(this, [
+            raw,
+            index
+        ]);
+        if (value === 0) {
+            this._zero = true;
+            return undefined;
+        }
+        return (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.g)(value) && value > 0 ? value : null;
+    }
+    determineDataLimits() {
+        const { min , max  } = this.getMinMax(true);
+        this.min = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.g)(min) ? Math.max(0, min) : null;
+        this.max = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.g)(max) ? Math.max(0, max) : null;
+        if (this.options.beginAtZero) {
+            this._zero = true;
+        }
+        if (this._zero && this.min !== this._suggestedMin && !(0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.g)(this._userMin)) {
+            this.min = min === changeExponent(this.min, 0) ? changeExponent(this.min, -1) : changeExponent(this.min, 0);
+        }
+        this.handleTickRangeOptions();
+    }
+    handleTickRangeOptions() {
+        const { minDefined , maxDefined  } = this.getUserBounds();
+        let min = this.min;
+        let max = this.max;
+        const setMin = (v)=>min = minDefined ? min : v;
+        const setMax = (v)=>max = maxDefined ? max : v;
+        if (min === max) {
+            if (min <= 0) {
+                setMin(1);
+                setMax(10);
+            } else {
+                setMin(changeExponent(min, -1));
+                setMax(changeExponent(max, +1));
+            }
+        }
+        if (min <= 0) {
+            setMin(changeExponent(max, -1));
+        }
+        if (max <= 0) {
+            setMax(changeExponent(min, +1));
+        }
+        this.min = min;
+        this.max = max;
+    }
+    buildTicks() {
+        const opts = this.options;
+        const generationOptions = {
+            min: this._userMin,
+            max: this._userMax
+        };
+        const ticks = generateTicks(generationOptions, this);
+        if (opts.bounds === 'ticks') {
+            (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.aH)(ticks, this, 'value');
+        }
+        if (opts.reverse) {
+            ticks.reverse();
+            this.start = this.max;
+            this.end = this.min;
+        } else {
+            this.start = this.min;
+            this.end = this.max;
+        }
+        return ticks;
+    }
+ getLabelForValue(value) {
+        return value === undefined ? '0' : (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.o)(value, this.chart.options.locale, this.options.ticks.format);
+    }
+ configure() {
+        const start = this.min;
+        super.configure();
+        this._startValue = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.aN)(start);
+        this._valueRange = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.aN)(this.max) - (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.aN)(start);
+    }
+    getPixelForValue(value) {
+        if (value === undefined || value === 0) {
+            value = this.min;
+        }
+        if (value === null || isNaN(value)) {
+            return NaN;
+        }
+        return this.getPixelForDecimal(value === this.min ? 0 : ((0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.aN)(value) - this._startValue) / this._valueRange);
+    }
+    getValueForPixel(pixel) {
+        const decimal = this.getDecimalForPixel(pixel);
+        return Math.pow(10, this._startValue + decimal * this._valueRange);
+    }
+}
+
+function getTickBackdropHeight(opts) {
+    const tickOpts = opts.ticks;
+    if (tickOpts.display && opts.display) {
+        const padding = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.E)(tickOpts.backdropPadding);
+        return (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.v)(tickOpts.font && tickOpts.font.size, _chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.d.font.size) + padding.height;
+    }
+    return 0;
+}
+function measureLabelSize(ctx, font, label) {
+    label = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.b)(label) ? label : [
+        label
+    ];
+    return {
+        w: (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.aO)(ctx, font.string, label),
+        h: label.length * font.lineHeight
+    };
+}
+function determineLimits(angle, pos, size, min, max) {
+    if (angle === min || angle === max) {
+        return {
+            start: pos - size / 2,
+            end: pos + size / 2
+        };
+    } else if (angle < min || angle > max) {
+        return {
+            start: pos - size,
+            end: pos
+        };
+    }
+    return {
+        start: pos,
+        end: pos + size
+    };
+}
+ function fitWithPointLabels(scale) {
+    const orig = {
+        l: scale.left + scale._padding.left,
+        r: scale.right - scale._padding.right,
+        t: scale.top + scale._padding.top,
+        b: scale.bottom - scale._padding.bottom
+    };
+    const limits = Object.assign({}, orig);
+    const labelSizes = [];
+    const padding = [];
+    const valueCount = scale._pointLabels.length;
+    const pointLabelOpts = scale.options.pointLabels;
+    const additionalAngle = pointLabelOpts.centerPointLabels ? _chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.P / valueCount : 0;
+    for(let i = 0; i < valueCount; i++){
+        const opts = pointLabelOpts.setContext(scale.getPointLabelContext(i));
+        padding[i] = opts.padding;
+        const pointPosition = scale.getPointPosition(i, scale.drawingArea + padding[i], additionalAngle);
+        const plFont = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.a0)(opts.font);
+        const textSize = measureLabelSize(scale.ctx, plFont, scale._pointLabels[i]);
+        labelSizes[i] = textSize;
+        const angleRadians = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.al)(scale.getIndexAngle(i) + additionalAngle);
+        const angle = Math.round((0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.U)(angleRadians));
+        const hLimits = determineLimits(angle, pointPosition.x, textSize.w, 0, 180);
+        const vLimits = determineLimits(angle, pointPosition.y, textSize.h, 90, 270);
+        updateLimits(limits, orig, angleRadians, hLimits, vLimits);
+    }
+    scale.setCenterPoint(orig.l - limits.l, limits.r - orig.r, orig.t - limits.t, limits.b - orig.b);
+    scale._pointLabelItems = buildPointLabelItems(scale, labelSizes, padding);
+}
+function updateLimits(limits, orig, angle, hLimits, vLimits) {
+    const sin = Math.abs(Math.sin(angle));
+    const cos = Math.abs(Math.cos(angle));
+    let x = 0;
+    let y = 0;
+    if (hLimits.start < orig.l) {
+        x = (orig.l - hLimits.start) / sin;
+        limits.l = Math.min(limits.l, orig.l - x);
+    } else if (hLimits.end > orig.r) {
+        x = (hLimits.end - orig.r) / sin;
+        limits.r = Math.max(limits.r, orig.r + x);
+    }
+    if (vLimits.start < orig.t) {
+        y = (orig.t - vLimits.start) / cos;
+        limits.t = Math.min(limits.t, orig.t - y);
+    } else if (vLimits.end > orig.b) {
+        y = (vLimits.end - orig.b) / cos;
+        limits.b = Math.max(limits.b, orig.b + y);
+    }
+}
+function createPointLabelItem(scale, index, itemOpts) {
+    const outerDistance = scale.drawingArea;
+    const { extra , additionalAngle , padding , size  } = itemOpts;
+    const pointLabelPosition = scale.getPointPosition(index, outerDistance + extra + padding, additionalAngle);
+    const angle = Math.round((0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.U)((0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.al)(pointLabelPosition.angle + _chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.H)));
+    const y = yForAngle(pointLabelPosition.y, size.h, angle);
+    const textAlign = getTextAlignForAngle(angle);
+    const left = leftForTextAlign(pointLabelPosition.x, size.w, textAlign);
+    return {
+        visible: true,
+        x: pointLabelPosition.x,
+        y,
+        textAlign,
+        left,
+        top: y,
+        right: left + size.w,
+        bottom: y + size.h
+    };
+}
+function isNotOverlapped(item, area) {
+    if (!area) {
+        return true;
+    }
+    const { left , top , right , bottom  } = item;
+    const apexesInArea = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.C)({
+        x: left,
+        y: top
+    }, area) || (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.C)({
+        x: left,
+        y: bottom
+    }, area) || (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.C)({
+        x: right,
+        y: top
+    }, area) || (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.C)({
+        x: right,
+        y: bottom
+    }, area);
+    return !apexesInArea;
+}
+function buildPointLabelItems(scale, labelSizes, padding) {
+    const items = [];
+    const valueCount = scale._pointLabels.length;
+    const opts = scale.options;
+    const { centerPointLabels , display  } = opts.pointLabels;
+    const itemOpts = {
+        extra: getTickBackdropHeight(opts) / 2,
+        additionalAngle: centerPointLabels ? _chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.P / valueCount : 0
+    };
+    let area;
+    for(let i = 0; i < valueCount; i++){
+        itemOpts.padding = padding[i];
+        itemOpts.size = labelSizes[i];
+        const item = createPointLabelItem(scale, i, itemOpts);
+        items.push(item);
+        if (display === 'auto') {
+            item.visible = isNotOverlapped(item, area);
+            if (item.visible) {
+                area = item;
+            }
+        }
+    }
+    return items;
+}
+function getTextAlignForAngle(angle) {
+    if (angle === 0 || angle === 180) {
+        return 'center';
+    } else if (angle < 180) {
+        return 'left';
+    }
+    return 'right';
+}
+function leftForTextAlign(x, w, align) {
+    if (align === 'right') {
+        x -= w;
+    } else if (align === 'center') {
+        x -= w / 2;
+    }
+    return x;
+}
+function yForAngle(y, h, angle) {
+    if (angle === 90 || angle === 270) {
+        y -= h / 2;
+    } else if (angle > 270 || angle < 90) {
+        y -= h;
+    }
+    return y;
+}
+function drawPointLabelBox(ctx, opts, item) {
+    const { left , top , right , bottom  } = item;
+    const { backdropColor  } = opts;
+    if (!(0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.k)(backdropColor)) {
+        const borderRadius = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.ay)(opts.borderRadius);
+        const padding = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.E)(opts.backdropPadding);
+        ctx.fillStyle = backdropColor;
+        const backdropLeft = left - padding.left;
+        const backdropTop = top - padding.top;
+        const backdropWidth = right - left + padding.width;
+        const backdropHeight = bottom - top + padding.height;
+        if (Object.values(borderRadius).some((v)=>v !== 0)) {
+            ctx.beginPath();
+            (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.aw)(ctx, {
+                x: backdropLeft,
+                y: backdropTop,
+                w: backdropWidth,
+                h: backdropHeight,
+                radius: borderRadius
+            });
+            ctx.fill();
+        } else {
+            ctx.fillRect(backdropLeft, backdropTop, backdropWidth, backdropHeight);
+        }
+    }
+}
+function drawPointLabels(scale, labelCount) {
+    const { ctx , options: { pointLabels  }  } = scale;
+    for(let i = labelCount - 1; i >= 0; i--){
+        const item = scale._pointLabelItems[i];
+        if (!item.visible) {
+            continue;
+        }
+        const optsAtIndex = pointLabels.setContext(scale.getPointLabelContext(i));
+        drawPointLabelBox(ctx, optsAtIndex, item);
+        const plFont = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.a0)(optsAtIndex.font);
+        const { x , y , textAlign  } = item;
+        (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.Z)(ctx, scale._pointLabels[i], x, y + plFont.lineHeight / 2, plFont, {
+            color: optsAtIndex.color,
+            textAlign: textAlign,
+            textBaseline: 'middle'
+        });
+    }
+}
+function pathRadiusLine(scale, radius, circular, labelCount) {
+    const { ctx  } = scale;
+    if (circular) {
+        ctx.arc(scale.xCenter, scale.yCenter, radius, 0, _chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.T);
+    } else {
+        let pointPosition = scale.getPointPosition(0, radius);
+        ctx.moveTo(pointPosition.x, pointPosition.y);
+        for(let i = 1; i < labelCount; i++){
+            pointPosition = scale.getPointPosition(i, radius);
+            ctx.lineTo(pointPosition.x, pointPosition.y);
+        }
+    }
+}
+function drawRadiusLine(scale, gridLineOpts, radius, labelCount, borderOpts) {
+    const ctx = scale.ctx;
+    const circular = gridLineOpts.circular;
+    const { color , lineWidth  } = gridLineOpts;
+    if (!circular && !labelCount || !color || !lineWidth || radius < 0) {
+        return;
+    }
+    ctx.save();
+    ctx.strokeStyle = color;
+    ctx.lineWidth = lineWidth;
+    ctx.setLineDash(borderOpts.dash || []);
+    ctx.lineDashOffset = borderOpts.dashOffset;
+    ctx.beginPath();
+    pathRadiusLine(scale, radius, circular, labelCount);
+    ctx.closePath();
+    ctx.stroke();
+    ctx.restore();
+}
+function createPointLabelContext(parent, index, label) {
+    return (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.j)(parent, {
+        label,
+        index,
+        type: 'pointLabel'
+    });
+}
+class RadialLinearScale extends LinearScaleBase {
+    static id = 'radialLinear';
+ static defaults = {
+        display: true,
+        animate: true,
+        position: 'chartArea',
+        angleLines: {
+            display: true,
+            lineWidth: 1,
+            borderDash: [],
+            borderDashOffset: 0.0
+        },
+        grid: {
+            circular: false
+        },
+        startAngle: 0,
+        ticks: {
+            showLabelBackdrop: true,
+            callback: _chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.aM.formatters.numeric
+        },
+        pointLabels: {
+            backdropColor: undefined,
+            backdropPadding: 2,
+            display: true,
+            font: {
+                size: 10
+            },
+            callback (label) {
+                return label;
+            },
+            padding: 5,
+            centerPointLabels: false
+        }
+    };
+    static defaultRoutes = {
+        'angleLines.color': 'borderColor',
+        'pointLabels.color': 'color',
+        'ticks.color': 'color'
+    };
+    static descriptors = {
+        angleLines: {
+            _fallback: 'grid'
+        }
+    };
+    constructor(cfg){
+        super(cfg);
+         this.xCenter = undefined;
+         this.yCenter = undefined;
+         this.drawingArea = undefined;
+         this._pointLabels = [];
+        this._pointLabelItems = [];
+    }
+    setDimensions() {
+        const padding = this._padding = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.E)(getTickBackdropHeight(this.options) / 2);
+        const w = this.width = this.maxWidth - padding.width;
+        const h = this.height = this.maxHeight - padding.height;
+        this.xCenter = Math.floor(this.left + w / 2 + padding.left);
+        this.yCenter = Math.floor(this.top + h / 2 + padding.top);
+        this.drawingArea = Math.floor(Math.min(w, h) / 2);
+    }
+    determineDataLimits() {
+        const { min , max  } = this.getMinMax(false);
+        this.min = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.g)(min) && !isNaN(min) ? min : 0;
+        this.max = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.g)(max) && !isNaN(max) ? max : 0;
+        this.handleTickRangeOptions();
+    }
+ computeTickLimit() {
+        return Math.ceil(this.drawingArea / getTickBackdropHeight(this.options));
+    }
+    generateTickLabels(ticks) {
+        LinearScaleBase.prototype.generateTickLabels.call(this, ticks);
+        this._pointLabels = this.getLabels().map((value, index)=>{
+            const label = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.Q)(this.options.pointLabels.callback, [
+                value,
+                index
+            ], this);
+            return label || label === 0 ? label : '';
+        }).filter((v, i)=>this.chart.getDataVisibility(i));
+    }
+    fit() {
+        const opts = this.options;
+        if (opts.display && opts.pointLabels.display) {
+            fitWithPointLabels(this);
+        } else {
+            this.setCenterPoint(0, 0, 0, 0);
+        }
+    }
+    setCenterPoint(leftMovement, rightMovement, topMovement, bottomMovement) {
+        this.xCenter += Math.floor((leftMovement - rightMovement) / 2);
+        this.yCenter += Math.floor((topMovement - bottomMovement) / 2);
+        this.drawingArea -= Math.min(this.drawingArea / 2, Math.max(leftMovement, rightMovement, topMovement, bottomMovement));
+    }
+    getIndexAngle(index) {
+        const angleMultiplier = _chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.T / (this._pointLabels.length || 1);
+        const startAngle = this.options.startAngle || 0;
+        return (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.al)(index * angleMultiplier + (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.t)(startAngle));
+    }
+    getDistanceFromCenterForValue(value) {
+        if ((0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.k)(value)) {
+            return NaN;
+        }
+        const scalingFactor = this.drawingArea / (this.max - this.min);
+        if (this.options.reverse) {
+            return (this.max - value) * scalingFactor;
+        }
+        return (value - this.min) * scalingFactor;
+    }
+    getValueForDistanceFromCenter(distance) {
+        if ((0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.k)(distance)) {
+            return NaN;
+        }
+        const scaledDistance = distance / (this.drawingArea / (this.max - this.min));
+        return this.options.reverse ? this.max - scaledDistance : this.min + scaledDistance;
+    }
+    getPointLabelContext(index) {
+        const pointLabels = this._pointLabels || [];
+        if (index >= 0 && index < pointLabels.length) {
+            const pointLabel = pointLabels[index];
+            return createPointLabelContext(this.getContext(), index, pointLabel);
+        }
+    }
+    getPointPosition(index, distanceFromCenter, additionalAngle = 0) {
+        const angle = this.getIndexAngle(index) - _chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.H + additionalAngle;
+        return {
+            x: Math.cos(angle) * distanceFromCenter + this.xCenter,
+            y: Math.sin(angle) * distanceFromCenter + this.yCenter,
+            angle
+        };
+    }
+    getPointPositionForValue(index, value) {
+        return this.getPointPosition(index, this.getDistanceFromCenterForValue(value));
+    }
+    getBasePosition(index) {
+        return this.getPointPositionForValue(index || 0, this.getBaseValue());
+    }
+    getPointLabelPosition(index) {
+        const { left , top , right , bottom  } = this._pointLabelItems[index];
+        return {
+            left,
+            top,
+            right,
+            bottom
+        };
+    }
+ drawBackground() {
+        const { backgroundColor , grid: { circular  }  } = this.options;
+        if (backgroundColor) {
+            const ctx = this.ctx;
+            ctx.save();
+            ctx.beginPath();
+            pathRadiusLine(this, this.getDistanceFromCenterForValue(this._endValue), circular, this._pointLabels.length);
+            ctx.closePath();
+            ctx.fillStyle = backgroundColor;
+            ctx.fill();
+            ctx.restore();
+        }
+    }
+ drawGrid() {
+        const ctx = this.ctx;
+        const opts = this.options;
+        const { angleLines , grid , border  } = opts;
+        const labelCount = this._pointLabels.length;
+        let i, offset, position;
+        if (opts.pointLabels.display) {
+            drawPointLabels(this, labelCount);
+        }
+        if (grid.display) {
+            this.ticks.forEach((tick, index)=>{
+                if (index !== 0 || index === 0 && this.min < 0) {
+                    offset = this.getDistanceFromCenterForValue(tick.value);
+                    const context = this.getContext(index);
+                    const optsAtIndex = grid.setContext(context);
+                    const optsAtIndexBorder = border.setContext(context);
+                    drawRadiusLine(this, optsAtIndex, offset, labelCount, optsAtIndexBorder);
+                }
+            });
+        }
+        if (angleLines.display) {
+            ctx.save();
+            for(i = labelCount - 1; i >= 0; i--){
+                const optsAtIndex = angleLines.setContext(this.getPointLabelContext(i));
+                const { color , lineWidth  } = optsAtIndex;
+                if (!lineWidth || !color) {
+                    continue;
+                }
+                ctx.lineWidth = lineWidth;
+                ctx.strokeStyle = color;
+                ctx.setLineDash(optsAtIndex.borderDash);
+                ctx.lineDashOffset = optsAtIndex.borderDashOffset;
+                offset = this.getDistanceFromCenterForValue(opts.reverse ? this.min : this.max);
+                position = this.getPointPosition(i, offset);
+                ctx.beginPath();
+                ctx.moveTo(this.xCenter, this.yCenter);
+                ctx.lineTo(position.x, position.y);
+                ctx.stroke();
+            }
+            ctx.restore();
+        }
+    }
+ drawBorder() {}
+ drawLabels() {
+        const ctx = this.ctx;
+        const opts = this.options;
+        const tickOpts = opts.ticks;
+        if (!tickOpts.display) {
+            return;
+        }
+        const startAngle = this.getIndexAngle(0);
+        let offset, width;
+        ctx.save();
+        ctx.translate(this.xCenter, this.yCenter);
+        ctx.rotate(startAngle);
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        this.ticks.forEach((tick, index)=>{
+            if (index === 0 && this.min >= 0 && !opts.reverse) {
+                return;
+            }
+            const optsAtIndex = tickOpts.setContext(this.getContext(index));
+            const tickFont = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.a0)(optsAtIndex.font);
+            offset = this.getDistanceFromCenterForValue(this.ticks[index].value);
+            if (optsAtIndex.showLabelBackdrop) {
+                ctx.font = tickFont.string;
+                width = ctx.measureText(tick.label).width;
+                ctx.fillStyle = optsAtIndex.backdropColor;
+                const padding = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.E)(optsAtIndex.backdropPadding);
+                ctx.fillRect(-width / 2 - padding.left, -offset - tickFont.size / 2 - padding.top, width + padding.width, tickFont.size + padding.height);
+            }
+            (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.Z)(ctx, tick.label, 0, -offset, tickFont, {
+                color: optsAtIndex.color,
+                strokeColor: optsAtIndex.textStrokeColor,
+                strokeWidth: optsAtIndex.textStrokeWidth
+            });
+        });
+        ctx.restore();
+    }
+ drawTitle() {}
+}
+
+const INTERVALS = {
+    millisecond: {
+        common: true,
+        size: 1,
+        steps: 1000
+    },
+    second: {
+        common: true,
+        size: 1000,
+        steps: 60
+    },
+    minute: {
+        common: true,
+        size: 60000,
+        steps: 60
+    },
+    hour: {
+        common: true,
+        size: 3600000,
+        steps: 24
+    },
+    day: {
+        common: true,
+        size: 86400000,
+        steps: 30
+    },
+    week: {
+        common: false,
+        size: 604800000,
+        steps: 4
+    },
+    month: {
+        common: true,
+        size: 2.628e9,
+        steps: 12
+    },
+    quarter: {
+        common: false,
+        size: 7.884e9,
+        steps: 4
+    },
+    year: {
+        common: true,
+        size: 3.154e10
+    }
+};
+ const UNITS =  /* #__PURE__ */ Object.keys(INTERVALS);
+ function sorter(a, b) {
+    return a - b;
+}
+ function parse(scale, input) {
+    if ((0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.k)(input)) {
+        return null;
+    }
+    const adapter = scale._adapter;
+    const { parser , round , isoWeekday  } = scale._parseOpts;
+    let value = input;
+    if (typeof parser === 'function') {
+        value = parser(value);
+    }
+    if (!(0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.g)(value)) {
+        value = typeof parser === 'string' ? adapter.parse(value, parser) : adapter.parse(value);
+    }
+    if (value === null) {
+        return null;
+    }
+    if (round) {
+        value = round === 'week' && ((0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.x)(isoWeekday) || isoWeekday === true) ? adapter.startOf(value, 'isoWeek', isoWeekday) : adapter.startOf(value, round);
+    }
+    return +value;
+}
+ function determineUnitForAutoTicks(minUnit, min, max, capacity) {
+    const ilen = UNITS.length;
+    for(let i = UNITS.indexOf(minUnit); i < ilen - 1; ++i){
+        const interval = INTERVALS[UNITS[i]];
+        const factor = interval.steps ? interval.steps : Number.MAX_SAFE_INTEGER;
+        if (interval.common && Math.ceil((max - min) / (factor * interval.size)) <= capacity) {
+            return UNITS[i];
+        }
+    }
+    return UNITS[ilen - 1];
+}
+ function determineUnitForFormatting(scale, numTicks, minUnit, min, max) {
+    for(let i = UNITS.length - 1; i >= UNITS.indexOf(minUnit); i--){
+        const unit = UNITS[i];
+        if (INTERVALS[unit].common && scale._adapter.diff(max, min, unit) >= numTicks - 1) {
+            return unit;
+        }
+    }
+    return UNITS[minUnit ? UNITS.indexOf(minUnit) : 0];
+}
+ function determineMajorUnit(unit) {
+    for(let i = UNITS.indexOf(unit) + 1, ilen = UNITS.length; i < ilen; ++i){
+        if (INTERVALS[UNITS[i]].common) {
+            return UNITS[i];
+        }
+    }
+}
+ function addTick(ticks, time, timestamps) {
+    if (!timestamps) {
+        ticks[time] = true;
+    } else if (timestamps.length) {
+        const { lo , hi  } = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.aQ)(timestamps, time);
+        const timestamp = timestamps[lo] >= time ? timestamps[lo] : timestamps[hi];
+        ticks[timestamp] = true;
+    }
+}
+ function setMajorTicks(scale, ticks, map, majorUnit) {
+    const adapter = scale._adapter;
+    const first = +adapter.startOf(ticks[0].value, majorUnit);
+    const last = ticks[ticks.length - 1].value;
+    let major, index;
+    for(major = first; major <= last; major = +adapter.add(major, 1, majorUnit)){
+        index = map[major];
+        if (index >= 0) {
+            ticks[index].major = true;
+        }
+    }
+    return ticks;
+}
+ function ticksFromTimestamps(scale, values, majorUnit) {
+    const ticks = [];
+     const map = {};
+    const ilen = values.length;
+    let i, value;
+    for(i = 0; i < ilen; ++i){
+        value = values[i];
+        map[value] = i;
+        ticks.push({
+            value,
+            major: false
+        });
+    }
+    return ilen === 0 || !majorUnit ? ticks : setMajorTicks(scale, ticks, map, majorUnit);
+}
+class TimeScale extends Scale {
+    static id = 'time';
+ static defaults = {
+ bounds: 'data',
+        adapters: {},
+        time: {
+            parser: false,
+            unit: false,
+            round: false,
+            isoWeekday: false,
+            minUnit: 'millisecond',
+            displayFormats: {}
+        },
+        ticks: {
+ source: 'auto',
+            callback: false,
+            major: {
+                enabled: false
+            }
+        }
+    };
+ constructor(props){
+        super(props);
+         this._cache = {
+            data: [],
+            labels: [],
+            all: []
+        };
+         this._unit = 'day';
+         this._majorUnit = undefined;
+        this._offsets = {};
+        this._normalized = false;
+        this._parseOpts = undefined;
+    }
+    init(scaleOpts, opts = {}) {
+        const time = scaleOpts.time || (scaleOpts.time = {});
+         const adapter = this._adapter = new adapters._date(scaleOpts.adapters.date);
+        adapter.init(opts);
+        (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.ab)(time.displayFormats, adapter.formats());
+        this._parseOpts = {
+            parser: time.parser,
+            round: time.round,
+            isoWeekday: time.isoWeekday
+        };
+        super.init(scaleOpts);
+        this._normalized = opts.normalized;
+    }
+ parse(raw, index) {
+        if (raw === undefined) {
+            return null;
+        }
+        return parse(this, raw);
+    }
+    beforeLayout() {
+        super.beforeLayout();
+        this._cache = {
+            data: [],
+            labels: [],
+            all: []
+        };
+    }
+    determineDataLimits() {
+        const options = this.options;
+        const adapter = this._adapter;
+        const unit = options.time.unit || 'day';
+        let { min , max , minDefined , maxDefined  } = this.getUserBounds();
+ function _applyBounds(bounds) {
+            if (!minDefined && !isNaN(bounds.min)) {
+                min = Math.min(min, bounds.min);
+            }
+            if (!maxDefined && !isNaN(bounds.max)) {
+                max = Math.max(max, bounds.max);
+            }
+        }
+        if (!minDefined || !maxDefined) {
+            _applyBounds(this._getLabelBounds());
+            if (options.bounds !== 'ticks' || options.ticks.source !== 'labels') {
+                _applyBounds(this.getMinMax(false));
+            }
+        }
+        min = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.g)(min) && !isNaN(min) ? min : +adapter.startOf(Date.now(), unit);
+        max = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.g)(max) && !isNaN(max) ? max : +adapter.endOf(Date.now(), unit) + 1;
+        this.min = Math.min(min, max - 1);
+        this.max = Math.max(min + 1, max);
+    }
+ _getLabelBounds() {
+        const arr = this.getLabelTimestamps();
+        let min = Number.POSITIVE_INFINITY;
+        let max = Number.NEGATIVE_INFINITY;
+        if (arr.length) {
+            min = arr[0];
+            max = arr[arr.length - 1];
+        }
+        return {
+            min,
+            max
+        };
+    }
+ buildTicks() {
+        const options = this.options;
+        const timeOpts = options.time;
+        const tickOpts = options.ticks;
+        const timestamps = tickOpts.source === 'labels' ? this.getLabelTimestamps() : this._generate();
+        if (options.bounds === 'ticks' && timestamps.length) {
+            this.min = this._userMin || timestamps[0];
+            this.max = this._userMax || timestamps[timestamps.length - 1];
+        }
+        const min = this.min;
+        const max = this.max;
+        const ticks = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.aP)(timestamps, min, max);
+        this._unit = timeOpts.unit || (tickOpts.autoSkip ? determineUnitForAutoTicks(timeOpts.minUnit, this.min, this.max, this._getLabelCapacity(min)) : determineUnitForFormatting(this, ticks.length, timeOpts.minUnit, this.min, this.max));
+        this._majorUnit = !tickOpts.major.enabled || this._unit === 'year' ? undefined : determineMajorUnit(this._unit);
+        this.initOffsets(timestamps);
+        if (options.reverse) {
+            ticks.reverse();
+        }
+        return ticksFromTimestamps(this, ticks, this._majorUnit);
+    }
+    afterAutoSkip() {
+        if (this.options.offsetAfterAutoskip) {
+            this.initOffsets(this.ticks.map((tick)=>+tick.value));
+        }
+    }
+ initOffsets(timestamps = []) {
+        let start = 0;
+        let end = 0;
+        let first, last;
+        if (this.options.offset && timestamps.length) {
+            first = this.getDecimalForValue(timestamps[0]);
+            if (timestamps.length === 1) {
+                start = 1 - first;
+            } else {
+                start = (this.getDecimalForValue(timestamps[1]) - first) / 2;
+            }
+            last = this.getDecimalForValue(timestamps[timestamps.length - 1]);
+            if (timestamps.length === 1) {
+                end = last;
+            } else {
+                end = (last - this.getDecimalForValue(timestamps[timestamps.length - 2])) / 2;
+            }
+        }
+        const limit = timestamps.length < 3 ? 0.5 : 0.25;
+        start = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.S)(start, 0, limit);
+        end = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.S)(end, 0, limit);
+        this._offsets = {
+            start,
+            end,
+            factor: 1 / (start + 1 + end)
+        };
+    }
+ _generate() {
+        const adapter = this._adapter;
+        const min = this.min;
+        const max = this.max;
+        const options = this.options;
+        const timeOpts = options.time;
+        const minor = timeOpts.unit || determineUnitForAutoTicks(timeOpts.minUnit, min, max, this._getLabelCapacity(min));
+        const stepSize = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.v)(options.ticks.stepSize, 1);
+        const weekday = minor === 'week' ? timeOpts.isoWeekday : false;
+        const hasWeekday = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.x)(weekday) || weekday === true;
+        const ticks = {};
+        let first = min;
+        let time, count;
+        if (hasWeekday) {
+            first = +adapter.startOf(first, 'isoWeek', weekday);
+        }
+        first = +adapter.startOf(first, hasWeekday ? 'day' : minor);
+        if (adapter.diff(max, min, minor) > 100000 * stepSize) {
+            throw new Error(min + ' and ' + max + ' are too far apart with stepSize of ' + stepSize + ' ' + minor);
+        }
+        const timestamps = options.ticks.source === 'data' && this.getDataTimestamps();
+        for(time = first, count = 0; time < max; time = +adapter.add(time, stepSize, minor), count++){
+            addTick(ticks, time, timestamps);
+        }
+        if (time === max || options.bounds === 'ticks' || count === 1) {
+            addTick(ticks, time, timestamps);
+        }
+        return Object.keys(ticks).sort(sorter).map((x)=>+x);
+    }
+ getLabelForValue(value) {
+        const adapter = this._adapter;
+        const timeOpts = this.options.time;
+        if (timeOpts.tooltipFormat) {
+            return adapter.format(value, timeOpts.tooltipFormat);
+        }
+        return adapter.format(value, timeOpts.displayFormats.datetime);
+    }
+ format(value, format) {
+        const options = this.options;
+        const formats = options.time.displayFormats;
+        const unit = this._unit;
+        const fmt = format || formats[unit];
+        return this._adapter.format(value, fmt);
+    }
+ _tickFormatFunction(time, index, ticks, format) {
+        const options = this.options;
+        const formatter = options.ticks.callback;
+        if (formatter) {
+            return (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.Q)(formatter, [
+                time,
+                index,
+                ticks
+            ], this);
+        }
+        const formats = options.time.displayFormats;
+        const unit = this._unit;
+        const majorUnit = this._majorUnit;
+        const minorFormat = unit && formats[unit];
+        const majorFormat = majorUnit && formats[majorUnit];
+        const tick = ticks[index];
+        const major = majorUnit && majorFormat && tick && tick.major;
+        return this._adapter.format(time, format || (major ? majorFormat : minorFormat));
+    }
+ generateTickLabels(ticks) {
+        let i, ilen, tick;
+        for(i = 0, ilen = ticks.length; i < ilen; ++i){
+            tick = ticks[i];
+            tick.label = this._tickFormatFunction(tick.value, i, ticks);
+        }
+    }
+ getDecimalForValue(value) {
+        return value === null ? NaN : (value - this.min) / (this.max - this.min);
+    }
+ getPixelForValue(value) {
+        const offsets = this._offsets;
+        const pos = this.getDecimalForValue(value);
+        return this.getPixelForDecimal((offsets.start + pos) * offsets.factor);
+    }
+ getValueForPixel(pixel) {
+        const offsets = this._offsets;
+        const pos = this.getDecimalForPixel(pixel) / offsets.factor - offsets.end;
+        return this.min + pos * (this.max - this.min);
+    }
+ _getLabelSize(label) {
+        const ticksOpts = this.options.ticks;
+        const tickLabelWidth = this.ctx.measureText(label).width;
+        const angle = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.t)(this.isHorizontal() ? ticksOpts.maxRotation : ticksOpts.minRotation);
+        const cosRotation = Math.cos(angle);
+        const sinRotation = Math.sin(angle);
+        const tickFontSize = this._resolveTickFontOptions(0).size;
+        return {
+            w: tickLabelWidth * cosRotation + tickFontSize * sinRotation,
+            h: tickLabelWidth * sinRotation + tickFontSize * cosRotation
+        };
+    }
+ _getLabelCapacity(exampleTime) {
+        const timeOpts = this.options.time;
+        const displayFormats = timeOpts.displayFormats;
+        const format = displayFormats[timeOpts.unit] || displayFormats.millisecond;
+        const exampleLabel = this._tickFormatFunction(exampleTime, 0, ticksFromTimestamps(this, [
+            exampleTime
+        ], this._majorUnit), format);
+        const size = this._getLabelSize(exampleLabel);
+        const capacity = Math.floor(this.isHorizontal() ? this.width / size.w : this.height / size.h) - 1;
+        return capacity > 0 ? capacity : 1;
+    }
+ getDataTimestamps() {
+        let timestamps = this._cache.data || [];
+        let i, ilen;
+        if (timestamps.length) {
+            return timestamps;
+        }
+        const metas = this.getMatchingVisibleMetas();
+        if (this._normalized && metas.length) {
+            return this._cache.data = metas[0].controller.getAllParsedValues(this);
+        }
+        for(i = 0, ilen = metas.length; i < ilen; ++i){
+            timestamps = timestamps.concat(metas[i].controller.getAllParsedValues(this));
+        }
+        return this._cache.data = this.normalize(timestamps);
+    }
+ getLabelTimestamps() {
+        const timestamps = this._cache.labels || [];
+        let i, ilen;
+        if (timestamps.length) {
+            return timestamps;
+        }
+        const labels = this.getLabels();
+        for(i = 0, ilen = labels.length; i < ilen; ++i){
+            timestamps.push(parse(this, labels[i]));
+        }
+        return this._cache.labels = this._normalized ? timestamps : this.normalize(timestamps);
+    }
+ normalize(values) {
+        return (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__._)(values.sort(sorter));
+    }
+}
+
+function interpolate(table, val, reverse) {
+    let lo = 0;
+    let hi = table.length - 1;
+    let prevSource, nextSource, prevTarget, nextTarget;
+    if (reverse) {
+        if (val >= table[lo].pos && val <= table[hi].pos) {
+            ({ lo , hi  } = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.B)(table, 'pos', val));
+        }
+        ({ pos: prevSource , time: prevTarget  } = table[lo]);
+        ({ pos: nextSource , time: nextTarget  } = table[hi]);
+    } else {
+        if (val >= table[lo].time && val <= table[hi].time) {
+            ({ lo , hi  } = (0,_chunks_helpers_dataset_js__WEBPACK_IMPORTED_MODULE_0__.B)(table, 'time', val));
+        }
+        ({ time: prevSource , pos: prevTarget  } = table[lo]);
+        ({ time: nextSource , pos: nextTarget  } = table[hi]);
+    }
+    const span = nextSource - prevSource;
+    return span ? prevTarget + (nextTarget - prevTarget) * (val - prevSource) / span : prevTarget;
+}
+class TimeSeriesScale extends TimeScale {
+    static id = 'timeseries';
+ static defaults = TimeScale.defaults;
+ constructor(props){
+        super(props);
+         this._table = [];
+         this._minPos = undefined;
+         this._tableRange = undefined;
+    }
+ initOffsets() {
+        const timestamps = this._getTimestampsForTable();
+        const table = this._table = this.buildLookupTable(timestamps);
+        this._minPos = interpolate(table, this.min);
+        this._tableRange = interpolate(table, this.max) - this._minPos;
+        super.initOffsets(timestamps);
+    }
+ buildLookupTable(timestamps) {
+        const { min , max  } = this;
+        const items = [];
+        const table = [];
+        let i, ilen, prev, curr, next;
+        for(i = 0, ilen = timestamps.length; i < ilen; ++i){
+            curr = timestamps[i];
+            if (curr >= min && curr <= max) {
+                items.push(curr);
+            }
+        }
+        if (items.length < 2) {
+            return [
+                {
+                    time: min,
+                    pos: 0
+                },
+                {
+                    time: max,
+                    pos: 1
+                }
+            ];
+        }
+        for(i = 0, ilen = items.length; i < ilen; ++i){
+            next = items[i + 1];
+            prev = items[i - 1];
+            curr = items[i];
+            if (Math.round((next + prev) / 2) !== curr) {
+                table.push({
+                    time: curr,
+                    pos: i / (ilen - 1)
+                });
+            }
+        }
+        return table;
+    }
+ _generate() {
+        const min = this.min;
+        const max = this.max;
+        let timestamps = super.getDataTimestamps();
+        if (!timestamps.includes(min) || !timestamps.length) {
+            timestamps.splice(0, 0, min);
+        }
+        if (!timestamps.includes(max) || timestamps.length === 1) {
+            timestamps.push(max);
+        }
+        return timestamps.sort((a, b)=>a - b);
+    }
+ _getTimestampsForTable() {
+        let timestamps = this._cache.all || [];
+        if (timestamps.length) {
+            return timestamps;
+        }
+        const data = this.getDataTimestamps();
+        const label = this.getLabelTimestamps();
+        if (data.length && label.length) {
+            timestamps = this.normalize(data.concat(label));
+        } else {
+            timestamps = data.length ? data : label;
+        }
+        timestamps = this._cache.all = timestamps;
+        return timestamps;
+    }
+ getDecimalForValue(value) {
+        return (interpolate(this._table, value) - this._minPos) / this._tableRange;
+    }
+ getValueForPixel(pixel) {
+        const offsets = this._offsets;
+        const decimal = this.getDecimalForPixel(pixel) / offsets.factor - offsets.end;
+        return interpolate(this._table, decimal * this._tableRange + this._minPos, true);
+    }
+}
+
+var scales = /*#__PURE__*/Object.freeze({
+__proto__: null,
+CategoryScale: CategoryScale,
+LinearScale: LinearScale,
+LogarithmicScale: LogarithmicScale,
+RadialLinearScale: RadialLinearScale,
+TimeScale: TimeScale,
+TimeSeriesScale: TimeSeriesScale
+});
+
+const registerables = [
+    controllers,
+    elements,
+    plugins,
+    scales
+];
+
+
+//# sourceMappingURL=chart.js.map
+
+
+/***/ },
+
+/***/ "./node_modules/chart.js/dist/chunks/helpers.dataset.js"
+/*!**************************************************************!*\
+  !*** ./node_modules/chart.js/dist/chunks/helpers.dataset.js ***!
+  \**************************************************************/
+(__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   $: () => (/* binding */ unclipArea),
+/* harmony export */   A: () => (/* binding */ _rlookupByKey),
+/* harmony export */   B: () => (/* binding */ _lookupByKey),
+/* harmony export */   C: () => (/* binding */ _isPointInArea),
+/* harmony export */   D: () => (/* binding */ getAngleFromPoint),
+/* harmony export */   E: () => (/* binding */ toPadding),
+/* harmony export */   F: () => (/* binding */ each),
+/* harmony export */   G: () => (/* binding */ getMaximumSize),
+/* harmony export */   H: () => (/* binding */ HALF_PI),
+/* harmony export */   I: () => (/* binding */ _getParentNode),
+/* harmony export */   J: () => (/* binding */ readUsedSize),
+/* harmony export */   K: () => (/* binding */ supportsEventListenerOptions),
+/* harmony export */   L: () => (/* binding */ throttled),
+/* harmony export */   M: () => (/* binding */ _isDomSupported),
+/* harmony export */   N: () => (/* binding */ _factorize),
+/* harmony export */   O: () => (/* binding */ finiteOrDefault),
+/* harmony export */   P: () => (/* binding */ PI),
+/* harmony export */   Q: () => (/* binding */ callback),
+/* harmony export */   R: () => (/* binding */ _addGrace),
+/* harmony export */   S: () => (/* binding */ _limitValue),
+/* harmony export */   T: () => (/* binding */ TAU),
+/* harmony export */   U: () => (/* binding */ toDegrees),
+/* harmony export */   V: () => (/* binding */ _measureText),
+/* harmony export */   W: () => (/* binding */ _int16Range),
+/* harmony export */   X: () => (/* binding */ _alignPixel),
+/* harmony export */   Y: () => (/* binding */ clipArea),
+/* harmony export */   Z: () => (/* binding */ renderText),
+/* harmony export */   _: () => (/* binding */ _arrayUnique),
+/* harmony export */   a: () => (/* binding */ resolve),
+/* harmony export */   a$: () => (/* binding */ getStyle),
+/* harmony export */   a0: () => (/* binding */ toFont),
+/* harmony export */   a1: () => (/* binding */ _toLeftRightCenter),
+/* harmony export */   a2: () => (/* binding */ _alignStartEnd),
+/* harmony export */   a3: () => (/* binding */ overrides),
+/* harmony export */   a4: () => (/* binding */ merge),
+/* harmony export */   a5: () => (/* binding */ _capitalize),
+/* harmony export */   a6: () => (/* binding */ descriptors),
+/* harmony export */   a7: () => (/* binding */ isFunction),
+/* harmony export */   a8: () => (/* binding */ _attachContext),
+/* harmony export */   a9: () => (/* binding */ _createResolver),
+/* harmony export */   aA: () => (/* binding */ getRtlAdapter),
+/* harmony export */   aB: () => (/* binding */ overrideTextDirection),
+/* harmony export */   aC: () => (/* binding */ _textX),
+/* harmony export */   aD: () => (/* binding */ restoreTextDirection),
+/* harmony export */   aE: () => (/* binding */ drawPointLegend),
+/* harmony export */   aF: () => (/* binding */ distanceBetweenPoints),
+/* harmony export */   aG: () => (/* binding */ noop),
+/* harmony export */   aH: () => (/* binding */ _setMinAndMaxByKey),
+/* harmony export */   aI: () => (/* binding */ niceNum),
+/* harmony export */   aJ: () => (/* binding */ almostWhole),
+/* harmony export */   aK: () => (/* binding */ almostEquals),
+/* harmony export */   aL: () => (/* binding */ _decimalPlaces),
+/* harmony export */   aM: () => (/* binding */ Ticks),
+/* harmony export */   aN: () => (/* binding */ log10),
+/* harmony export */   aO: () => (/* binding */ _longestText),
+/* harmony export */   aP: () => (/* binding */ _filterBetween),
+/* harmony export */   aQ: () => (/* binding */ _lookup),
+/* harmony export */   aR: () => (/* binding */ isPatternOrGradient),
+/* harmony export */   aS: () => (/* binding */ getHoverColor),
+/* harmony export */   aT: () => (/* binding */ clone),
+/* harmony export */   aU: () => (/* binding */ _merger),
+/* harmony export */   aV: () => (/* binding */ _mergerIf),
+/* harmony export */   aW: () => (/* binding */ _deprecated),
+/* harmony export */   aX: () => (/* binding */ _splitKey),
+/* harmony export */   aY: () => (/* binding */ toFontString),
+/* harmony export */   aZ: () => (/* binding */ splineCurve),
+/* harmony export */   a_: () => (/* binding */ splineCurveMonotone),
+/* harmony export */   aa: () => (/* binding */ _descriptors),
+/* harmony export */   ab: () => (/* binding */ mergeIf),
+/* harmony export */   ac: () => (/* binding */ uid),
+/* harmony export */   ad: () => (/* binding */ debounce),
+/* harmony export */   ae: () => (/* binding */ retinaScale),
+/* harmony export */   af: () => (/* binding */ clearCanvas),
+/* harmony export */   ag: () => (/* binding */ setsEqual),
+/* harmony export */   ah: () => (/* binding */ getDatasetClipArea),
+/* harmony export */   ai: () => (/* binding */ _elementsEqual),
+/* harmony export */   aj: () => (/* binding */ _isClickEvent),
+/* harmony export */   ak: () => (/* binding */ _isBetween),
+/* harmony export */   al: () => (/* binding */ _normalizeAngle),
+/* harmony export */   am: () => (/* binding */ _readValueToProps),
+/* harmony export */   an: () => (/* binding */ _updateBezierControlPoints),
+/* harmony export */   ao: () => (/* binding */ _computeSegments),
+/* harmony export */   ap: () => (/* binding */ _boundSegments),
+/* harmony export */   aq: () => (/* binding */ _steppedInterpolation),
+/* harmony export */   ar: () => (/* binding */ _bezierInterpolation),
+/* harmony export */   as: () => (/* binding */ _pointInLine),
+/* harmony export */   at: () => (/* binding */ _steppedLineTo),
+/* harmony export */   au: () => (/* binding */ _bezierCurveTo),
+/* harmony export */   av: () => (/* binding */ drawPoint),
+/* harmony export */   aw: () => (/* binding */ addRoundedRectPath),
+/* harmony export */   ax: () => (/* binding */ toTRBL),
+/* harmony export */   ay: () => (/* binding */ toTRBLCorners),
+/* harmony export */   az: () => (/* binding */ _boundSegment),
+/* harmony export */   b: () => (/* binding */ isArray),
+/* harmony export */   b0: () => (/* binding */ fontString),
+/* harmony export */   b1: () => (/* binding */ toLineHeight),
+/* harmony export */   b2: () => (/* binding */ PITAU),
+/* harmony export */   b3: () => (/* binding */ INFINITY),
+/* harmony export */   b4: () => (/* binding */ RAD_PER_DEG),
+/* harmony export */   b5: () => (/* binding */ QUARTER_PI),
+/* harmony export */   b6: () => (/* binding */ TWO_THIRDS_PI),
+/* harmony export */   b7: () => (/* binding */ _angleDiff),
+/* harmony export */   c: () => (/* binding */ color),
+/* harmony export */   d: () => (/* binding */ defaults),
+/* harmony export */   e: () => (/* binding */ effects),
+/* harmony export */   f: () => (/* binding */ resolveObjectKey),
+/* harmony export */   g: () => (/* binding */ isNumberFinite),
+/* harmony export */   h: () => (/* binding */ defined),
+/* harmony export */   i: () => (/* binding */ isObject),
+/* harmony export */   j: () => (/* binding */ createContext),
+/* harmony export */   k: () => (/* binding */ isNullOrUndef),
+/* harmony export */   l: () => (/* binding */ listenArrayEvents),
+/* harmony export */   m: () => (/* binding */ toPercentage),
+/* harmony export */   n: () => (/* binding */ toDimension),
+/* harmony export */   o: () => (/* binding */ formatNumber),
+/* harmony export */   p: () => (/* binding */ _angleBetween),
+/* harmony export */   q: () => (/* binding */ _getStartAndCountOfVisiblePoints),
+/* harmony export */   r: () => (/* binding */ requestAnimFrame),
+/* harmony export */   s: () => (/* binding */ sign),
+/* harmony export */   t: () => (/* binding */ toRadians),
+/* harmony export */   u: () => (/* binding */ unlistenArrayEvents),
+/* harmony export */   v: () => (/* binding */ valueOrDefault),
+/* harmony export */   w: () => (/* binding */ _scaleRangesChanged),
+/* harmony export */   x: () => (/* binding */ isNumber),
+/* harmony export */   y: () => (/* binding */ _parseObjectDataRadialScale),
+/* harmony export */   z: () => (/* binding */ getRelativePosition)
+/* harmony export */ });
+/* harmony import */ var _kurkle_color__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @kurkle/color */ "./node_modules/@kurkle/color/dist/color.esm.js");
+/*!
+ * Chart.js v4.5.1
+ * https://www.chartjs.org
+ * (c) 2025 Chart.js Contributors
+ * Released under the MIT License
+ */
+
+
+/**
+ * @namespace Chart.helpers
+ */ /**
+ * An empty function that can be used, for example, for optional callback.
+ */ function noop() {
+/* noop */ }
+/**
+ * Returns a unique id, sequentially generated from a global variable.
+ */ const uid = (()=>{
+    let id = 0;
+    return ()=>id++;
+})();
+/**
+ * Returns true if `value` is neither null nor undefined, else returns false.
+ * @param value - The value to test.
+ * @since 2.7.0
+ */ function isNullOrUndef(value) {
+    return value === null || value === undefined;
+}
+/**
+ * Returns true if `value` is an array (including typed arrays), else returns false.
+ * @param value - The value to test.
+ * @function
+ */ function isArray(value) {
+    if (Array.isArray && Array.isArray(value)) {
+        return true;
+    }
+    const type = Object.prototype.toString.call(value);
+    if (type.slice(0, 7) === '[object' && type.slice(-6) === 'Array]') {
+        return true;
+    }
+    return false;
+}
+/**
+ * Returns true if `value` is an object (excluding null), else returns false.
+ * @param value - The value to test.
+ * @since 2.7.0
+ */ function isObject(value) {
+    return value !== null && Object.prototype.toString.call(value) === '[object Object]';
+}
+/**
+ * Returns true if `value` is a finite number, else returns false
+ * @param value  - The value to test.
+ */ function isNumberFinite(value) {
+    return (typeof value === 'number' || value instanceof Number) && isFinite(+value);
+}
+/**
+ * Returns `value` if finite, else returns `defaultValue`.
+ * @param value - The value to return if defined.
+ * @param defaultValue - The value to return if `value` is not finite.
+ */ function finiteOrDefault(value, defaultValue) {
+    return isNumberFinite(value) ? value : defaultValue;
+}
+/**
+ * Returns `value` if defined, else returns `defaultValue`.
+ * @param value - The value to return if defined.
+ * @param defaultValue - The value to return if `value` is undefined.
+ */ function valueOrDefault(value, defaultValue) {
+    return typeof value === 'undefined' ? defaultValue : value;
+}
+const toPercentage = (value, dimension)=>typeof value === 'string' && value.endsWith('%') ? parseFloat(value) / 100 : +value / dimension;
+const toDimension = (value, dimension)=>typeof value === 'string' && value.endsWith('%') ? parseFloat(value) / 100 * dimension : +value;
+/**
+ * Calls `fn` with the given `args` in the scope defined by `thisArg` and returns the
+ * value returned by `fn`. If `fn` is not a function, this method returns undefined.
+ * @param fn - The function to call.
+ * @param args - The arguments with which `fn` should be called.
+ * @param [thisArg] - The value of `this` provided for the call to `fn`.
+ */ function callback(fn, args, thisArg) {
+    if (fn && typeof fn.call === 'function') {
+        return fn.apply(thisArg, args);
+    }
+}
+function each(loopable, fn, thisArg, reverse) {
+    let i, len, keys;
+    if (isArray(loopable)) {
+        len = loopable.length;
+        if (reverse) {
+            for(i = len - 1; i >= 0; i--){
+                fn.call(thisArg, loopable[i], i);
+            }
+        } else {
+            for(i = 0; i < len; i++){
+                fn.call(thisArg, loopable[i], i);
+            }
+        }
+    } else if (isObject(loopable)) {
+        keys = Object.keys(loopable);
+        len = keys.length;
+        for(i = 0; i < len; i++){
+            fn.call(thisArg, loopable[keys[i]], keys[i]);
+        }
+    }
+}
+/**
+ * Returns true if the `a0` and `a1` arrays have the same content, else returns false.
+ * @param a0 - The array to compare
+ * @param a1 - The array to compare
+ * @private
+ */ function _elementsEqual(a0, a1) {
+    let i, ilen, v0, v1;
+    if (!a0 || !a1 || a0.length !== a1.length) {
+        return false;
+    }
+    for(i = 0, ilen = a0.length; i < ilen; ++i){
+        v0 = a0[i];
+        v1 = a1[i];
+        if (v0.datasetIndex !== v1.datasetIndex || v0.index !== v1.index) {
+            return false;
+        }
+    }
+    return true;
+}
+/**
+ * Returns a deep copy of `source` without keeping references on objects and arrays.
+ * @param source - The value to clone.
+ */ function clone(source) {
+    if (isArray(source)) {
+        return source.map(clone);
+    }
+    if (isObject(source)) {
+        const target = Object.create(null);
+        const keys = Object.keys(source);
+        const klen = keys.length;
+        let k = 0;
+        for(; k < klen; ++k){
+            target[keys[k]] = clone(source[keys[k]]);
+        }
+        return target;
+    }
+    return source;
+}
+function isValidKey(key) {
+    return [
+        '__proto__',
+        'prototype',
+        'constructor'
+    ].indexOf(key) === -1;
+}
+/**
+ * The default merger when Chart.helpers.merge is called without merger option.
+ * Note(SB): also used by mergeConfig and mergeScaleConfig as fallback.
+ * @private
+ */ function _merger(key, target, source, options) {
+    if (!isValidKey(key)) {
+        return;
+    }
+    const tval = target[key];
+    const sval = source[key];
+    if (isObject(tval) && isObject(sval)) {
+        // eslint-disable-next-line @typescript-eslint/no-use-before-define
+        merge(tval, sval, options);
+    } else {
+        target[key] = clone(sval);
+    }
+}
+function merge(target, source, options) {
+    const sources = isArray(source) ? source : [
+        source
+    ];
+    const ilen = sources.length;
+    if (!isObject(target)) {
+        return target;
+    }
+    options = options || {};
+    const merger = options.merger || _merger;
+    let current;
+    for(let i = 0; i < ilen; ++i){
+        current = sources[i];
+        if (!isObject(current)) {
+            continue;
+        }
+        const keys = Object.keys(current);
+        for(let k = 0, klen = keys.length; k < klen; ++k){
+            merger(keys[k], target, current, options);
+        }
+    }
+    return target;
+}
+function mergeIf(target, source) {
+    // eslint-disable-next-line @typescript-eslint/no-use-before-define
+    return merge(target, source, {
+        merger: _mergerIf
+    });
+}
+/**
+ * Merges source[key] in target[key] only if target[key] is undefined.
+ * @private
+ */ function _mergerIf(key, target, source) {
+    if (!isValidKey(key)) {
+        return;
+    }
+    const tval = target[key];
+    const sval = source[key];
+    if (isObject(tval) && isObject(sval)) {
+        mergeIf(tval, sval);
+    } else if (!Object.prototype.hasOwnProperty.call(target, key)) {
+        target[key] = clone(sval);
+    }
+}
+/**
+ * @private
+ */ function _deprecated(scope, value, previous, current) {
+    if (value !== undefined) {
+        console.warn(scope + ': "' + previous + '" is deprecated. Please use "' + current + '" instead');
+    }
+}
+// resolveObjectKey resolver cache
+const keyResolvers = {
+    // Chart.helpers.core resolveObjectKey should resolve empty key to root object
+    '': (v)=>v,
+    // default resolvers
+    x: (o)=>o.x,
+    y: (o)=>o.y
+};
+/**
+ * @private
+ */ function _splitKey(key) {
+    const parts = key.split('.');
+    const keys = [];
+    let tmp = '';
+    for (const part of parts){
+        tmp += part;
+        if (tmp.endsWith('\\')) {
+            tmp = tmp.slice(0, -1) + '.';
+        } else {
+            keys.push(tmp);
+            tmp = '';
+        }
+    }
+    return keys;
+}
+function _getKeyResolver(key) {
+    const keys = _splitKey(key);
+    return (obj)=>{
+        for (const k of keys){
+            if (k === '') {
+                break;
+            }
+            obj = obj && obj[k];
+        }
+        return obj;
+    };
+}
+function resolveObjectKey(obj, key) {
+    const resolver = keyResolvers[key] || (keyResolvers[key] = _getKeyResolver(key));
+    return resolver(obj);
+}
+/**
+ * @private
+ */ function _capitalize(str) {
+    return str.charAt(0).toUpperCase() + str.slice(1);
+}
+const defined = (value)=>typeof value !== 'undefined';
+const isFunction = (value)=>typeof value === 'function';
+// Adapted from https://stackoverflow.com/questions/31128855/comparing-ecma6-sets-for-equality#31129384
+const setsEqual = (a, b)=>{
+    if (a.size !== b.size) {
+        return false;
+    }
+    for (const item of a){
+        if (!b.has(item)) {
+            return false;
+        }
+    }
+    return true;
+};
+/**
+ * @param e - The event
+ * @private
+ */ function _isClickEvent(e) {
+    return e.type === 'mouseup' || e.type === 'click' || e.type === 'contextmenu';
+}
+
+/**
+ * @alias Chart.helpers.math
+ * @namespace
+ */ const PI = Math.PI;
+const TAU = 2 * PI;
+const PITAU = TAU + PI;
+const INFINITY = Number.POSITIVE_INFINITY;
+const RAD_PER_DEG = PI / 180;
+const HALF_PI = PI / 2;
+const QUARTER_PI = PI / 4;
+const TWO_THIRDS_PI = PI * 2 / 3;
+const log10 = Math.log10;
+const sign = Math.sign;
+function almostEquals(x, y, epsilon) {
+    return Math.abs(x - y) < epsilon;
+}
+/**
+ * Implementation of the nice number algorithm used in determining where axis labels will go
+ */ function niceNum(range) {
+    const roundedRange = Math.round(range);
+    range = almostEquals(range, roundedRange, range / 1000) ? roundedRange : range;
+    const niceRange = Math.pow(10, Math.floor(log10(range)));
+    const fraction = range / niceRange;
+    const niceFraction = fraction <= 1 ? 1 : fraction <= 2 ? 2 : fraction <= 5 ? 5 : 10;
+    return niceFraction * niceRange;
+}
+/**
+ * Returns an array of factors sorted from 1 to sqrt(value)
+ * @private
+ */ function _factorize(value) {
+    const result = [];
+    const sqrt = Math.sqrt(value);
+    let i;
+    for(i = 1; i < sqrt; i++){
+        if (value % i === 0) {
+            result.push(i);
+            result.push(value / i);
+        }
+    }
+    if (sqrt === (sqrt | 0)) {
+        result.push(sqrt);
+    }
+    result.sort((a, b)=>a - b).pop();
+    return result;
+}
+/**
+ * Verifies that attempting to coerce n to string or number won't throw a TypeError.
+ */ function isNonPrimitive(n) {
+    return typeof n === 'symbol' || typeof n === 'object' && n !== null && !(Symbol.toPrimitive in n || 'toString' in n || 'valueOf' in n);
+}
+function isNumber(n) {
+    return !isNonPrimitive(n) && !isNaN(parseFloat(n)) && isFinite(n);
+}
+function almostWhole(x, epsilon) {
+    const rounded = Math.round(x);
+    return rounded - epsilon <= x && rounded + epsilon >= x;
+}
+/**
+ * @private
+ */ function _setMinAndMaxByKey(array, target, property) {
+    let i, ilen, value;
+    for(i = 0, ilen = array.length; i < ilen; i++){
+        value = array[i][property];
+        if (!isNaN(value)) {
+            target.min = Math.min(target.min, value);
+            target.max = Math.max(target.max, value);
+        }
+    }
+}
+function toRadians(degrees) {
+    return degrees * (PI / 180);
+}
+function toDegrees(radians) {
+    return radians * (180 / PI);
+}
+/**
+ * Returns the number of decimal places
+ * i.e. the number of digits after the decimal point, of the value of this Number.
+ * @param x - A number.
+ * @returns The number of decimal places.
+ * @private
+ */ function _decimalPlaces(x) {
+    if (!isNumberFinite(x)) {
+        return;
+    }
+    let e = 1;
+    let p = 0;
+    while(Math.round(x * e) / e !== x){
+        e *= 10;
+        p++;
+    }
+    return p;
+}
+// Gets the angle from vertical upright to the point about a centre.
+function getAngleFromPoint(centrePoint, anglePoint) {
+    const distanceFromXCenter = anglePoint.x - centrePoint.x;
+    const distanceFromYCenter = anglePoint.y - centrePoint.y;
+    const radialDistanceFromCenter = Math.sqrt(distanceFromXCenter * distanceFromXCenter + distanceFromYCenter * distanceFromYCenter);
+    let angle = Math.atan2(distanceFromYCenter, distanceFromXCenter);
+    if (angle < -0.5 * PI) {
+        angle += TAU; // make sure the returned angle is in the range of (-PI/2, 3PI/2]
+    }
+    return {
+        angle,
+        distance: radialDistanceFromCenter
+    };
+}
+function distanceBetweenPoints(pt1, pt2) {
+    return Math.sqrt(Math.pow(pt2.x - pt1.x, 2) + Math.pow(pt2.y - pt1.y, 2));
+}
+/**
+ * Shortest distance between angles, in either direction.
+ * @private
+ */ function _angleDiff(a, b) {
+    return (a - b + PITAU) % TAU - PI;
+}
+/**
+ * Normalize angle to be between 0 and 2*PI
+ * @private
+ */ function _normalizeAngle(a) {
+    return (a % TAU + TAU) % TAU;
+}
+/**
+ * @private
+ */ function _angleBetween(angle, start, end, sameAngleIsFullCircle) {
+    const a = _normalizeAngle(angle);
+    const s = _normalizeAngle(start);
+    const e = _normalizeAngle(end);
+    const angleToStart = _normalizeAngle(s - a);
+    const angleToEnd = _normalizeAngle(e - a);
+    const startToAngle = _normalizeAngle(a - s);
+    const endToAngle = _normalizeAngle(a - e);
+    return a === s || a === e || sameAngleIsFullCircle && s === e || angleToStart > angleToEnd && startToAngle < endToAngle;
+}
+/**
+ * Limit `value` between `min` and `max`
+ * @param value
+ * @param min
+ * @param max
+ * @private
+ */ function _limitValue(value, min, max) {
+    return Math.max(min, Math.min(max, value));
+}
+/**
+ * @param {number} value
+ * @private
+ */ function _int16Range(value) {
+    return _limitValue(value, -32768, 32767);
+}
+/**
+ * @param value
+ * @param start
+ * @param end
+ * @param [epsilon]
+ * @private
+ */ function _isBetween(value, start, end, epsilon = 1e-6) {
+    return value >= Math.min(start, end) - epsilon && value <= Math.max(start, end) + epsilon;
+}
+
+function _lookup(table, value, cmp) {
+    cmp = cmp || ((index)=>table[index] < value);
+    let hi = table.length - 1;
+    let lo = 0;
+    let mid;
+    while(hi - lo > 1){
+        mid = lo + hi >> 1;
+        if (cmp(mid)) {
+            lo = mid;
+        } else {
+            hi = mid;
+        }
+    }
+    return {
+        lo,
+        hi
+    };
+}
+/**
+ * Binary search
+ * @param table - the table search. must be sorted!
+ * @param key - property name for the value in each entry
+ * @param value - value to find
+ * @param last - lookup last index
+ * @private
+ */ const _lookupByKey = (table, key, value, last)=>_lookup(table, value, last ? (index)=>{
+        const ti = table[index][key];
+        return ti < value || ti === value && table[index + 1][key] === value;
+    } : (index)=>table[index][key] < value);
+/**
+ * Reverse binary search
+ * @param table - the table search. must be sorted!
+ * @param key - property name for the value in each entry
+ * @param value - value to find
+ * @private
+ */ const _rlookupByKey = (table, key, value)=>_lookup(table, value, (index)=>table[index][key] >= value);
+/**
+ * Return subset of `values` between `min` and `max` inclusive.
+ * Values are assumed to be in sorted order.
+ * @param values - sorted array of values
+ * @param min - min value
+ * @param max - max value
+ */ function _filterBetween(values, min, max) {
+    let start = 0;
+    let end = values.length;
+    while(start < end && values[start] < min){
+        start++;
+    }
+    while(end > start && values[end - 1] > max){
+        end--;
+    }
+    return start > 0 || end < values.length ? values.slice(start, end) : values;
+}
+const arrayEvents = [
+    'push',
+    'pop',
+    'shift',
+    'splice',
+    'unshift'
+];
+function listenArrayEvents(array, listener) {
+    if (array._chartjs) {
+        array._chartjs.listeners.push(listener);
+        return;
+    }
+    Object.defineProperty(array, '_chartjs', {
+        configurable: true,
+        enumerable: false,
+        value: {
+            listeners: [
+                listener
+            ]
+        }
+    });
+    arrayEvents.forEach((key)=>{
+        const method = '_onData' + _capitalize(key);
+        const base = array[key];
+        Object.defineProperty(array, key, {
+            configurable: true,
+            enumerable: false,
+            value (...args) {
+                const res = base.apply(this, args);
+                array._chartjs.listeners.forEach((object)=>{
+                    if (typeof object[method] === 'function') {
+                        object[method](...args);
+                    }
+                });
+                return res;
+            }
+        });
+    });
+}
+function unlistenArrayEvents(array, listener) {
+    const stub = array._chartjs;
+    if (!stub) {
+        return;
+    }
+    const listeners = stub.listeners;
+    const index = listeners.indexOf(listener);
+    if (index !== -1) {
+        listeners.splice(index, 1);
+    }
+    if (listeners.length > 0) {
+        return;
+    }
+    arrayEvents.forEach((key)=>{
+        delete array[key];
+    });
+    delete array._chartjs;
+}
+/**
+ * @param items
+ */ function _arrayUnique(items) {
+    const set = new Set(items);
+    if (set.size === items.length) {
+        return items;
+    }
+    return Array.from(set);
+}
+
+function fontString(pixelSize, fontStyle, fontFamily) {
+    return fontStyle + ' ' + pixelSize + 'px ' + fontFamily;
+}
+/**
+* Request animation polyfill
+*/ const requestAnimFrame = function() {
+    if (typeof window === 'undefined') {
+        return function(callback) {
+            return callback();
+        };
+    }
+    return window.requestAnimationFrame;
+}();
+/**
+ * Throttles calling `fn` once per animation frame
+ * Latest arguments are used on the actual call
+ */ function throttled(fn, thisArg) {
+    let argsToUse = [];
+    let ticking = false;
+    return function(...args) {
+        // Save the args for use later
+        argsToUse = args;
+        if (!ticking) {
+            ticking = true;
+            requestAnimFrame.call(window, ()=>{
+                ticking = false;
+                fn.apply(thisArg, argsToUse);
+            });
+        }
+    };
+}
+/**
+ * Debounces calling `fn` for `delay` ms
+ */ function debounce(fn, delay) {
+    let timeout;
+    return function(...args) {
+        if (delay) {
+            clearTimeout(timeout);
+            timeout = setTimeout(fn, delay, args);
+        } else {
+            fn.apply(this, args);
+        }
+        return delay;
+    };
+}
+/**
+ * Converts 'start' to 'left', 'end' to 'right' and others to 'center'
+ * @private
+ */ const _toLeftRightCenter = (align)=>align === 'start' ? 'left' : align === 'end' ? 'right' : 'center';
+/**
+ * Returns `start`, `end` or `(start + end) / 2` depending on `align`. Defaults to `center`
+ * @private
+ */ const _alignStartEnd = (align, start, end)=>align === 'start' ? start : align === 'end' ? end : (start + end) / 2;
+/**
+ * Returns `left`, `right` or `(left + right) / 2` depending on `align`. Defaults to `left`
+ * @private
+ */ const _textX = (align, left, right, rtl)=>{
+    const check = rtl ? 'left' : 'right';
+    return align === check ? right : align === 'center' ? (left + right) / 2 : left;
+};
+/**
+ * Return start and count of visible points.
+ * @private
+ */ function _getStartAndCountOfVisiblePoints(meta, points, animationsDisabled) {
+    const pointCount = points.length;
+    let start = 0;
+    let count = pointCount;
+    if (meta._sorted) {
+        const { iScale , vScale , _parsed  } = meta;
+        const spanGaps = meta.dataset ? meta.dataset.options ? meta.dataset.options.spanGaps : null : null;
+        const axis = iScale.axis;
+        const { min , max , minDefined , maxDefined  } = iScale.getUserBounds();
+        if (minDefined) {
+            start = Math.min(// @ts-expect-error Need to type _parsed
+            _lookupByKey(_parsed, axis, min).lo, // @ts-expect-error Need to fix types on _lookupByKey
+            animationsDisabled ? pointCount : _lookupByKey(points, axis, iScale.getPixelForValue(min)).lo);
+            if (spanGaps) {
+                const distanceToDefinedLo = _parsed.slice(0, start + 1).reverse().findIndex((point)=>!isNullOrUndef(point[vScale.axis]));
+                start -= Math.max(0, distanceToDefinedLo);
+            }
+            start = _limitValue(start, 0, pointCount - 1);
+        }
+        if (maxDefined) {
+            let end = Math.max(// @ts-expect-error Need to type _parsed
+            _lookupByKey(_parsed, iScale.axis, max, true).hi + 1, // @ts-expect-error Need to fix types on _lookupByKey
+            animationsDisabled ? 0 : _lookupByKey(points, axis, iScale.getPixelForValue(max), true).hi + 1);
+            if (spanGaps) {
+                const distanceToDefinedHi = _parsed.slice(end - 1).findIndex((point)=>!isNullOrUndef(point[vScale.axis]));
+                end += Math.max(0, distanceToDefinedHi);
+            }
+            count = _limitValue(end, start, pointCount) - start;
+        } else {
+            count = pointCount - start;
+        }
+    }
+    return {
+        start,
+        count
+    };
+}
+/**
+ * Checks if the scale ranges have changed.
+ * @param {object} meta - dataset meta.
+ * @returns {boolean}
+ * @private
+ */ function _scaleRangesChanged(meta) {
+    const { xScale , yScale , _scaleRanges  } = meta;
+    const newRanges = {
+        xmin: xScale.min,
+        xmax: xScale.max,
+        ymin: yScale.min,
+        ymax: yScale.max
+    };
+    if (!_scaleRanges) {
+        meta._scaleRanges = newRanges;
+        return true;
+    }
+    const changed = _scaleRanges.xmin !== xScale.min || _scaleRanges.xmax !== xScale.max || _scaleRanges.ymin !== yScale.min || _scaleRanges.ymax !== yScale.max;
+    Object.assign(_scaleRanges, newRanges);
+    return changed;
+}
+
+const atEdge = (t)=>t === 0 || t === 1;
+const elasticIn = (t, s, p)=>-(Math.pow(2, 10 * (t -= 1)) * Math.sin((t - s) * TAU / p));
+const elasticOut = (t, s, p)=>Math.pow(2, -10 * t) * Math.sin((t - s) * TAU / p) + 1;
+/**
+ * Easing functions adapted from Robert Penner's easing equations.
+ * @namespace Chart.helpers.easing.effects
+ * @see http://www.robertpenner.com/easing/
+ */ const effects = {
+    linear: (t)=>t,
+    easeInQuad: (t)=>t * t,
+    easeOutQuad: (t)=>-t * (t - 2),
+    easeInOutQuad: (t)=>(t /= 0.5) < 1 ? 0.5 * t * t : -0.5 * (--t * (t - 2) - 1),
+    easeInCubic: (t)=>t * t * t,
+    easeOutCubic: (t)=>(t -= 1) * t * t + 1,
+    easeInOutCubic: (t)=>(t /= 0.5) < 1 ? 0.5 * t * t * t : 0.5 * ((t -= 2) * t * t + 2),
+    easeInQuart: (t)=>t * t * t * t,
+    easeOutQuart: (t)=>-((t -= 1) * t * t * t - 1),
+    easeInOutQuart: (t)=>(t /= 0.5) < 1 ? 0.5 * t * t * t * t : -0.5 * ((t -= 2) * t * t * t - 2),
+    easeInQuint: (t)=>t * t * t * t * t,
+    easeOutQuint: (t)=>(t -= 1) * t * t * t * t + 1,
+    easeInOutQuint: (t)=>(t /= 0.5) < 1 ? 0.5 * t * t * t * t * t : 0.5 * ((t -= 2) * t * t * t * t + 2),
+    easeInSine: (t)=>-Math.cos(t * HALF_PI) + 1,
+    easeOutSine: (t)=>Math.sin(t * HALF_PI),
+    easeInOutSine: (t)=>-0.5 * (Math.cos(PI * t) - 1),
+    easeInExpo: (t)=>t === 0 ? 0 : Math.pow(2, 10 * (t - 1)),
+    easeOutExpo: (t)=>t === 1 ? 1 : -Math.pow(2, -10 * t) + 1,
+    easeInOutExpo: (t)=>atEdge(t) ? t : t < 0.5 ? 0.5 * Math.pow(2, 10 * (t * 2 - 1)) : 0.5 * (-Math.pow(2, -10 * (t * 2 - 1)) + 2),
+    easeInCirc: (t)=>t >= 1 ? t : -(Math.sqrt(1 - t * t) - 1),
+    easeOutCirc: (t)=>Math.sqrt(1 - (t -= 1) * t),
+    easeInOutCirc: (t)=>(t /= 0.5) < 1 ? -0.5 * (Math.sqrt(1 - t * t) - 1) : 0.5 * (Math.sqrt(1 - (t -= 2) * t) + 1),
+    easeInElastic: (t)=>atEdge(t) ? t : elasticIn(t, 0.075, 0.3),
+    easeOutElastic: (t)=>atEdge(t) ? t : elasticOut(t, 0.075, 0.3),
+    easeInOutElastic (t) {
+        const s = 0.1125;
+        const p = 0.45;
+        return atEdge(t) ? t : t < 0.5 ? 0.5 * elasticIn(t * 2, s, p) : 0.5 + 0.5 * elasticOut(t * 2 - 1, s, p);
+    },
+    easeInBack (t) {
+        const s = 1.70158;
+        return t * t * ((s + 1) * t - s);
+    },
+    easeOutBack (t) {
+        const s = 1.70158;
+        return (t -= 1) * t * ((s + 1) * t + s) + 1;
+    },
+    easeInOutBack (t) {
+        let s = 1.70158;
+        if ((t /= 0.5) < 1) {
+            return 0.5 * (t * t * (((s *= 1.525) + 1) * t - s));
+        }
+        return 0.5 * ((t -= 2) * t * (((s *= 1.525) + 1) * t + s) + 2);
+    },
+    easeInBounce: (t)=>1 - effects.easeOutBounce(1 - t),
+    easeOutBounce (t) {
+        const m = 7.5625;
+        const d = 2.75;
+        if (t < 1 / d) {
+            return m * t * t;
+        }
+        if (t < 2 / d) {
+            return m * (t -= 1.5 / d) * t + 0.75;
+        }
+        if (t < 2.5 / d) {
+            return m * (t -= 2.25 / d) * t + 0.9375;
+        }
+        return m * (t -= 2.625 / d) * t + 0.984375;
+    },
+    easeInOutBounce: (t)=>t < 0.5 ? effects.easeInBounce(t * 2) * 0.5 : effects.easeOutBounce(t * 2 - 1) * 0.5 + 0.5
+};
+
+function isPatternOrGradient(value) {
+    if (value && typeof value === 'object') {
+        const type = value.toString();
+        return type === '[object CanvasPattern]' || type === '[object CanvasGradient]';
+    }
+    return false;
+}
+function color(value) {
+    return isPatternOrGradient(value) ? value : new _kurkle_color__WEBPACK_IMPORTED_MODULE_0__.Color(value);
+}
+function getHoverColor(value) {
+    return isPatternOrGradient(value) ? value : new _kurkle_color__WEBPACK_IMPORTED_MODULE_0__.Color(value).saturate(0.5).darken(0.1).hexString();
+}
+
+const numbers = [
+    'x',
+    'y',
+    'borderWidth',
+    'radius',
+    'tension'
+];
+const colors = [
+    'color',
+    'borderColor',
+    'backgroundColor'
+];
+function applyAnimationsDefaults(defaults) {
+    defaults.set('animation', {
+        delay: undefined,
+        duration: 1000,
+        easing: 'easeOutQuart',
+        fn: undefined,
+        from: undefined,
+        loop: undefined,
+        to: undefined,
+        type: undefined
+    });
+    defaults.describe('animation', {
+        _fallback: false,
+        _indexable: false,
+        _scriptable: (name)=>name !== 'onProgress' && name !== 'onComplete' && name !== 'fn'
+    });
+    defaults.set('animations', {
+        colors: {
+            type: 'color',
+            properties: colors
+        },
+        numbers: {
+            type: 'number',
+            properties: numbers
+        }
+    });
+    defaults.describe('animations', {
+        _fallback: 'animation'
+    });
+    defaults.set('transitions', {
+        active: {
+            animation: {
+                duration: 400
+            }
+        },
+        resize: {
+            animation: {
+                duration: 0
+            }
+        },
+        show: {
+            animations: {
+                colors: {
+                    from: 'transparent'
+                },
+                visible: {
+                    type: 'boolean',
+                    duration: 0
+                }
+            }
+        },
+        hide: {
+            animations: {
+                colors: {
+                    to: 'transparent'
+                },
+                visible: {
+                    type: 'boolean',
+                    easing: 'linear',
+                    fn: (v)=>v | 0
+                }
+            }
+        }
+    });
+}
+
+function applyLayoutsDefaults(defaults) {
+    defaults.set('layout', {
+        autoPadding: true,
+        padding: {
+            top: 0,
+            right: 0,
+            bottom: 0,
+            left: 0
+        }
+    });
+}
+
+const intlCache = new Map();
+function getNumberFormat(locale, options) {
+    options = options || {};
+    const cacheKey = locale + JSON.stringify(options);
+    let formatter = intlCache.get(cacheKey);
+    if (!formatter) {
+        formatter = new Intl.NumberFormat(locale, options);
+        intlCache.set(cacheKey, formatter);
+    }
+    return formatter;
+}
+function formatNumber(num, locale, options) {
+    return getNumberFormat(locale, options).format(num);
+}
+
+const formatters = {
+ values (value) {
+        return isArray(value) ?  value : '' + value;
+    },
+ numeric (tickValue, index, ticks) {
+        if (tickValue === 0) {
+            return '0';
+        }
+        const locale = this.chart.options.locale;
+        let notation;
+        let delta = tickValue;
+        if (ticks.length > 1) {
+            const maxTick = Math.max(Math.abs(ticks[0].value), Math.abs(ticks[ticks.length - 1].value));
+            if (maxTick < 1e-4 || maxTick > 1e+15) {
+                notation = 'scientific';
+            }
+            delta = calculateDelta(tickValue, ticks);
+        }
+        const logDelta = log10(Math.abs(delta));
+        const numDecimal = isNaN(logDelta) ? 1 : Math.max(Math.min(-1 * Math.floor(logDelta), 20), 0);
+        const options = {
+            notation,
+            minimumFractionDigits: numDecimal,
+            maximumFractionDigits: numDecimal
+        };
+        Object.assign(options, this.options.ticks.format);
+        return formatNumber(tickValue, locale, options);
+    },
+ logarithmic (tickValue, index, ticks) {
+        if (tickValue === 0) {
+            return '0';
+        }
+        const remain = ticks[index].significand || tickValue / Math.pow(10, Math.floor(log10(tickValue)));
+        if ([
+            1,
+            2,
+            3,
+            5,
+            10,
+            15
+        ].includes(remain) || index > 0.8 * ticks.length) {
+            return formatters.numeric.call(this, tickValue, index, ticks);
+        }
+        return '';
+    }
+};
+function calculateDelta(tickValue, ticks) {
+    let delta = ticks.length > 3 ? ticks[2].value - ticks[1].value : ticks[1].value - ticks[0].value;
+    if (Math.abs(delta) >= 1 && tickValue !== Math.floor(tickValue)) {
+        delta = tickValue - Math.floor(tickValue);
+    }
+    return delta;
+}
+ var Ticks = {
+    formatters
+};
+
+function applyScaleDefaults(defaults) {
+    defaults.set('scale', {
+        display: true,
+        offset: false,
+        reverse: false,
+        beginAtZero: false,
+ bounds: 'ticks',
+        clip: true,
+ grace: 0,
+        grid: {
+            display: true,
+            lineWidth: 1,
+            drawOnChartArea: true,
+            drawTicks: true,
+            tickLength: 8,
+            tickWidth: (_ctx, options)=>options.lineWidth,
+            tickColor: (_ctx, options)=>options.color,
+            offset: false
+        },
+        border: {
+            display: true,
+            dash: [],
+            dashOffset: 0.0,
+            width: 1
+        },
+        title: {
+            display: false,
+            text: '',
+            padding: {
+                top: 4,
+                bottom: 4
+            }
+        },
+        ticks: {
+            minRotation: 0,
+            maxRotation: 50,
+            mirror: false,
+            textStrokeWidth: 0,
+            textStrokeColor: '',
+            padding: 3,
+            display: true,
+            autoSkip: true,
+            autoSkipPadding: 3,
+            labelOffset: 0,
+            callback: Ticks.formatters.values,
+            minor: {},
+            major: {},
+            align: 'center',
+            crossAlign: 'near',
+            showLabelBackdrop: false,
+            backdropColor: 'rgba(255, 255, 255, 0.75)',
+            backdropPadding: 2
+        }
+    });
+    defaults.route('scale.ticks', 'color', '', 'color');
+    defaults.route('scale.grid', 'color', '', 'borderColor');
+    defaults.route('scale.border', 'color', '', 'borderColor');
+    defaults.route('scale.title', 'color', '', 'color');
+    defaults.describe('scale', {
+        _fallback: false,
+        _scriptable: (name)=>!name.startsWith('before') && !name.startsWith('after') && name !== 'callback' && name !== 'parser',
+        _indexable: (name)=>name !== 'borderDash' && name !== 'tickBorderDash' && name !== 'dash'
+    });
+    defaults.describe('scales', {
+        _fallback: 'scale'
+    });
+    defaults.describe('scale.ticks', {
+        _scriptable: (name)=>name !== 'backdropPadding' && name !== 'callback',
+        _indexable: (name)=>name !== 'backdropPadding'
+    });
+}
+
+const overrides = Object.create(null);
+const descriptors = Object.create(null);
+ function getScope$1(node, key) {
+    if (!key) {
+        return node;
+    }
+    const keys = key.split('.');
+    for(let i = 0, n = keys.length; i < n; ++i){
+        const k = keys[i];
+        node = node[k] || (node[k] = Object.create(null));
+    }
+    return node;
+}
+function set(root, scope, values) {
+    if (typeof scope === 'string') {
+        return merge(getScope$1(root, scope), values);
+    }
+    return merge(getScope$1(root, ''), scope);
+}
+ class Defaults {
+    constructor(_descriptors, _appliers){
+        this.animation = undefined;
+        this.backgroundColor = 'rgba(0,0,0,0.1)';
+        this.borderColor = 'rgba(0,0,0,0.1)';
+        this.color = '#666';
+        this.datasets = {};
+        this.devicePixelRatio = (context)=>context.chart.platform.getDevicePixelRatio();
+        this.elements = {};
+        this.events = [
+            'mousemove',
+            'mouseout',
+            'click',
+            'touchstart',
+            'touchmove'
+        ];
+        this.font = {
+            family: "'Helvetica Neue', 'Helvetica', 'Arial', sans-serif",
+            size: 12,
+            style: 'normal',
+            lineHeight: 1.2,
+            weight: null
+        };
+        this.hover = {};
+        this.hoverBackgroundColor = (ctx, options)=>getHoverColor(options.backgroundColor);
+        this.hoverBorderColor = (ctx, options)=>getHoverColor(options.borderColor);
+        this.hoverColor = (ctx, options)=>getHoverColor(options.color);
+        this.indexAxis = 'x';
+        this.interaction = {
+            mode: 'nearest',
+            intersect: true,
+            includeInvisible: false
+        };
+        this.maintainAspectRatio = true;
+        this.onHover = null;
+        this.onClick = null;
+        this.parsing = true;
+        this.plugins = {};
+        this.responsive = true;
+        this.scale = undefined;
+        this.scales = {};
+        this.showLine = true;
+        this.drawActiveElementsOnTop = true;
+        this.describe(_descriptors);
+        this.apply(_appliers);
+    }
+ set(scope, values) {
+        return set(this, scope, values);
+    }
+ get(scope) {
+        return getScope$1(this, scope);
+    }
+ describe(scope, values) {
+        return set(descriptors, scope, values);
+    }
+    override(scope, values) {
+        return set(overrides, scope, values);
+    }
+ route(scope, name, targetScope, targetName) {
+        const scopeObject = getScope$1(this, scope);
+        const targetScopeObject = getScope$1(this, targetScope);
+        const privateName = '_' + name;
+        Object.defineProperties(scopeObject, {
+            [privateName]: {
+                value: scopeObject[name],
+                writable: true
+            },
+            [name]: {
+                enumerable: true,
+                get () {
+                    const local = this[privateName];
+                    const target = targetScopeObject[targetName];
+                    if (isObject(local)) {
+                        return Object.assign({}, target, local);
+                    }
+                    return valueOrDefault(local, target);
+                },
+                set (value) {
+                    this[privateName] = value;
+                }
+            }
+        });
+    }
+    apply(appliers) {
+        appliers.forEach((apply)=>apply(this));
+    }
+}
+var defaults = /* #__PURE__ */ new Defaults({
+    _scriptable: (name)=>!name.startsWith('on'),
+    _indexable: (name)=>name !== 'events',
+    hover: {
+        _fallback: 'interaction'
+    },
+    interaction: {
+        _scriptable: false,
+        _indexable: false
+    }
+}, [
+    applyAnimationsDefaults,
+    applyLayoutsDefaults,
+    applyScaleDefaults
+]);
+
+/**
+ * Converts the given font object into a CSS font string.
+ * @param font - A font object.
+ * @return The CSS font string. See https://developer.mozilla.org/en-US/docs/Web/CSS/font
+ * @private
+ */ function toFontString(font) {
+    if (!font || isNullOrUndef(font.size) || isNullOrUndef(font.family)) {
+        return null;
+    }
+    return (font.style ? font.style + ' ' : '') + (font.weight ? font.weight + ' ' : '') + font.size + 'px ' + font.family;
+}
+/**
+ * @private
+ */ function _measureText(ctx, data, gc, longest, string) {
+    let textWidth = data[string];
+    if (!textWidth) {
+        textWidth = data[string] = ctx.measureText(string).width;
+        gc.push(string);
+    }
+    if (textWidth > longest) {
+        longest = textWidth;
+    }
+    return longest;
+}
+/**
+ * @private
+ */ // eslint-disable-next-line complexity
+function _longestText(ctx, font, arrayOfThings, cache) {
+    cache = cache || {};
+    let data = cache.data = cache.data || {};
+    let gc = cache.garbageCollect = cache.garbageCollect || [];
+    if (cache.font !== font) {
+        data = cache.data = {};
+        gc = cache.garbageCollect = [];
+        cache.font = font;
+    }
+    ctx.save();
+    ctx.font = font;
+    let longest = 0;
+    const ilen = arrayOfThings.length;
+    let i, j, jlen, thing, nestedThing;
+    for(i = 0; i < ilen; i++){
+        thing = arrayOfThings[i];
+        // Undefined strings and arrays should not be measured
+        if (thing !== undefined && thing !== null && !isArray(thing)) {
+            longest = _measureText(ctx, data, gc, longest, thing);
+        } else if (isArray(thing)) {
+            // if it is an array lets measure each element
+            // to do maybe simplify this function a bit so we can do this more recursively?
+            for(j = 0, jlen = thing.length; j < jlen; j++){
+                nestedThing = thing[j];
+                // Undefined strings and arrays should not be measured
+                if (nestedThing !== undefined && nestedThing !== null && !isArray(nestedThing)) {
+                    longest = _measureText(ctx, data, gc, longest, nestedThing);
+                }
+            }
+        }
+    }
+    ctx.restore();
+    const gcLen = gc.length / 2;
+    if (gcLen > arrayOfThings.length) {
+        for(i = 0; i < gcLen; i++){
+            delete data[gc[i]];
+        }
+        gc.splice(0, gcLen);
+    }
+    return longest;
+}
+/**
+ * Returns the aligned pixel value to avoid anti-aliasing blur
+ * @param chart - The chart instance.
+ * @param pixel - A pixel value.
+ * @param width - The width of the element.
+ * @returns The aligned pixel value.
+ * @private
+ */ function _alignPixel(chart, pixel, width) {
+    const devicePixelRatio = chart.currentDevicePixelRatio;
+    const halfWidth = width !== 0 ? Math.max(width / 2, 0.5) : 0;
+    return Math.round((pixel - halfWidth) * devicePixelRatio) / devicePixelRatio + halfWidth;
+}
+/**
+ * Clears the entire canvas.
+ */ function clearCanvas(canvas, ctx) {
+    if (!ctx && !canvas) {
+        return;
+    }
+    ctx = ctx || canvas.getContext('2d');
+    ctx.save();
+    // canvas.width and canvas.height do not consider the canvas transform,
+    // while clearRect does
+    ctx.resetTransform();
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.restore();
+}
+function drawPoint(ctx, options, x, y) {
+    // eslint-disable-next-line @typescript-eslint/no-use-before-define
+    drawPointLegend(ctx, options, x, y, null);
+}
+// eslint-disable-next-line complexity
+function drawPointLegend(ctx, options, x, y, w) {
+    let type, xOffset, yOffset, size, cornerRadius, width, xOffsetW, yOffsetW;
+    const style = options.pointStyle;
+    const rotation = options.rotation;
+    const radius = options.radius;
+    let rad = (rotation || 0) * RAD_PER_DEG;
+    if (style && typeof style === 'object') {
+        type = style.toString();
+        if (type === '[object HTMLImageElement]' || type === '[object HTMLCanvasElement]') {
+            ctx.save();
+            ctx.translate(x, y);
+            ctx.rotate(rad);
+            ctx.drawImage(style, -style.width / 2, -style.height / 2, style.width, style.height);
+            ctx.restore();
+            return;
+        }
+    }
+    if (isNaN(radius) || radius <= 0) {
+        return;
+    }
+    ctx.beginPath();
+    switch(style){
+        // Default includes circle
+        default:
+            if (w) {
+                ctx.ellipse(x, y, w / 2, radius, 0, 0, TAU);
+            } else {
+                ctx.arc(x, y, radius, 0, TAU);
+            }
+            ctx.closePath();
+            break;
+        case 'triangle':
+            width = w ? w / 2 : radius;
+            ctx.moveTo(x + Math.sin(rad) * width, y - Math.cos(rad) * radius);
+            rad += TWO_THIRDS_PI;
+            ctx.lineTo(x + Math.sin(rad) * width, y - Math.cos(rad) * radius);
+            rad += TWO_THIRDS_PI;
+            ctx.lineTo(x + Math.sin(rad) * width, y - Math.cos(rad) * radius);
+            ctx.closePath();
+            break;
+        case 'rectRounded':
+            // NOTE: the rounded rect implementation changed to use `arc` instead of
+            // `quadraticCurveTo` since it generates better results when rect is
+            // almost a circle. 0.516 (instead of 0.5) produces results with visually
+            // closer proportion to the previous impl and it is inscribed in the
+            // circle with `radius`. For more details, see the following PRs:
+            // https://github.com/chartjs/Chart.js/issues/5597
+            // https://github.com/chartjs/Chart.js/issues/5858
+            cornerRadius = radius * 0.516;
+            size = radius - cornerRadius;
+            xOffset = Math.cos(rad + QUARTER_PI) * size;
+            xOffsetW = Math.cos(rad + QUARTER_PI) * (w ? w / 2 - cornerRadius : size);
+            yOffset = Math.sin(rad + QUARTER_PI) * size;
+            yOffsetW = Math.sin(rad + QUARTER_PI) * (w ? w / 2 - cornerRadius : size);
+            ctx.arc(x - xOffsetW, y - yOffset, cornerRadius, rad - PI, rad - HALF_PI);
+            ctx.arc(x + yOffsetW, y - xOffset, cornerRadius, rad - HALF_PI, rad);
+            ctx.arc(x + xOffsetW, y + yOffset, cornerRadius, rad, rad + HALF_PI);
+            ctx.arc(x - yOffsetW, y + xOffset, cornerRadius, rad + HALF_PI, rad + PI);
+            ctx.closePath();
+            break;
+        case 'rect':
+            if (!rotation) {
+                size = Math.SQRT1_2 * radius;
+                width = w ? w / 2 : size;
+                ctx.rect(x - width, y - size, 2 * width, 2 * size);
+                break;
+            }
+            rad += QUARTER_PI;
+        /* falls through */ case 'rectRot':
+            xOffsetW = Math.cos(rad) * (w ? w / 2 : radius);
+            xOffset = Math.cos(rad) * radius;
+            yOffset = Math.sin(rad) * radius;
+            yOffsetW = Math.sin(rad) * (w ? w / 2 : radius);
+            ctx.moveTo(x - xOffsetW, y - yOffset);
+            ctx.lineTo(x + yOffsetW, y - xOffset);
+            ctx.lineTo(x + xOffsetW, y + yOffset);
+            ctx.lineTo(x - yOffsetW, y + xOffset);
+            ctx.closePath();
+            break;
+        case 'crossRot':
+            rad += QUARTER_PI;
+        /* falls through */ case 'cross':
+            xOffsetW = Math.cos(rad) * (w ? w / 2 : radius);
+            xOffset = Math.cos(rad) * radius;
+            yOffset = Math.sin(rad) * radius;
+            yOffsetW = Math.sin(rad) * (w ? w / 2 : radius);
+            ctx.moveTo(x - xOffsetW, y - yOffset);
+            ctx.lineTo(x + xOffsetW, y + yOffset);
+            ctx.moveTo(x + yOffsetW, y - xOffset);
+            ctx.lineTo(x - yOffsetW, y + xOffset);
+            break;
+        case 'star':
+            xOffsetW = Math.cos(rad) * (w ? w / 2 : radius);
+            xOffset = Math.cos(rad) * radius;
+            yOffset = Math.sin(rad) * radius;
+            yOffsetW = Math.sin(rad) * (w ? w / 2 : radius);
+            ctx.moveTo(x - xOffsetW, y - yOffset);
+            ctx.lineTo(x + xOffsetW, y + yOffset);
+            ctx.moveTo(x + yOffsetW, y - xOffset);
+            ctx.lineTo(x - yOffsetW, y + xOffset);
+            rad += QUARTER_PI;
+            xOffsetW = Math.cos(rad) * (w ? w / 2 : radius);
+            xOffset = Math.cos(rad) * radius;
+            yOffset = Math.sin(rad) * radius;
+            yOffsetW = Math.sin(rad) * (w ? w / 2 : radius);
+            ctx.moveTo(x - xOffsetW, y - yOffset);
+            ctx.lineTo(x + xOffsetW, y + yOffset);
+            ctx.moveTo(x + yOffsetW, y - xOffset);
+            ctx.lineTo(x - yOffsetW, y + xOffset);
+            break;
+        case 'line':
+            xOffset = w ? w / 2 : Math.cos(rad) * radius;
+            yOffset = Math.sin(rad) * radius;
+            ctx.moveTo(x - xOffset, y - yOffset);
+            ctx.lineTo(x + xOffset, y + yOffset);
+            break;
+        case 'dash':
+            ctx.moveTo(x, y);
+            ctx.lineTo(x + Math.cos(rad) * (w ? w / 2 : radius), y + Math.sin(rad) * radius);
+            break;
+        case false:
+            ctx.closePath();
+            break;
+    }
+    ctx.fill();
+    if (options.borderWidth > 0) {
+        ctx.stroke();
+    }
+}
+/**
+ * Returns true if the point is inside the rectangle
+ * @param point - The point to test
+ * @param area - The rectangle
+ * @param margin - allowed margin
+ * @private
+ */ function _isPointInArea(point, area, margin) {
+    margin = margin || 0.5; // margin - default is to match rounded decimals
+    return !area || point && point.x > area.left - margin && point.x < area.right + margin && point.y > area.top - margin && point.y < area.bottom + margin;
+}
+function clipArea(ctx, area) {
+    ctx.save();
+    ctx.beginPath();
+    ctx.rect(area.left, area.top, area.right - area.left, area.bottom - area.top);
+    ctx.clip();
+}
+function unclipArea(ctx) {
+    ctx.restore();
+}
+/**
+ * @private
+ */ function _steppedLineTo(ctx, previous, target, flip, mode) {
+    if (!previous) {
+        return ctx.lineTo(target.x, target.y);
+    }
+    if (mode === 'middle') {
+        const midpoint = (previous.x + target.x) / 2.0;
+        ctx.lineTo(midpoint, previous.y);
+        ctx.lineTo(midpoint, target.y);
+    } else if (mode === 'after' !== !!flip) {
+        ctx.lineTo(previous.x, target.y);
+    } else {
+        ctx.lineTo(target.x, previous.y);
+    }
+    ctx.lineTo(target.x, target.y);
+}
+/**
+ * @private
+ */ function _bezierCurveTo(ctx, previous, target, flip) {
+    if (!previous) {
+        return ctx.lineTo(target.x, target.y);
+    }
+    ctx.bezierCurveTo(flip ? previous.cp1x : previous.cp2x, flip ? previous.cp1y : previous.cp2y, flip ? target.cp2x : target.cp1x, flip ? target.cp2y : target.cp1y, target.x, target.y);
+}
+function setRenderOpts(ctx, opts) {
+    if (opts.translation) {
+        ctx.translate(opts.translation[0], opts.translation[1]);
+    }
+    if (!isNullOrUndef(opts.rotation)) {
+        ctx.rotate(opts.rotation);
+    }
+    if (opts.color) {
+        ctx.fillStyle = opts.color;
+    }
+    if (opts.textAlign) {
+        ctx.textAlign = opts.textAlign;
+    }
+    if (opts.textBaseline) {
+        ctx.textBaseline = opts.textBaseline;
+    }
+}
+function decorateText(ctx, x, y, line, opts) {
+    if (opts.strikethrough || opts.underline) {
+        /**
+     * Now that IE11 support has been dropped, we can use more
+     * of the TextMetrics object. The actual bounding boxes
+     * are unflagged in Chrome, Firefox, Edge, and Safari so they
+     * can be safely used.
+     * See https://developer.mozilla.org/en-US/docs/Web/API/TextMetrics#Browser_compatibility
+     */ const metrics = ctx.measureText(line);
+        const left = x - metrics.actualBoundingBoxLeft;
+        const right = x + metrics.actualBoundingBoxRight;
+        const top = y - metrics.actualBoundingBoxAscent;
+        const bottom = y + metrics.actualBoundingBoxDescent;
+        const yDecoration = opts.strikethrough ? (top + bottom) / 2 : bottom;
+        ctx.strokeStyle = ctx.fillStyle;
+        ctx.beginPath();
+        ctx.lineWidth = opts.decorationWidth || 2;
+        ctx.moveTo(left, yDecoration);
+        ctx.lineTo(right, yDecoration);
+        ctx.stroke();
+    }
+}
+function drawBackdrop(ctx, opts) {
+    const oldColor = ctx.fillStyle;
+    ctx.fillStyle = opts.color;
+    ctx.fillRect(opts.left, opts.top, opts.width, opts.height);
+    ctx.fillStyle = oldColor;
+}
+/**
+ * Render text onto the canvas
+ */ function renderText(ctx, text, x, y, font, opts = {}) {
+    const lines = isArray(text) ? text : [
+        text
+    ];
+    const stroke = opts.strokeWidth > 0 && opts.strokeColor !== '';
+    let i, line;
+    ctx.save();
+    ctx.font = font.string;
+    setRenderOpts(ctx, opts);
+    for(i = 0; i < lines.length; ++i){
+        line = lines[i];
+        if (opts.backdrop) {
+            drawBackdrop(ctx, opts.backdrop);
+        }
+        if (stroke) {
+            if (opts.strokeColor) {
+                ctx.strokeStyle = opts.strokeColor;
+            }
+            if (!isNullOrUndef(opts.strokeWidth)) {
+                ctx.lineWidth = opts.strokeWidth;
+            }
+            ctx.strokeText(line, x, y, opts.maxWidth);
+        }
+        ctx.fillText(line, x, y, opts.maxWidth);
+        decorateText(ctx, x, y, line, opts);
+        y += Number(font.lineHeight);
+    }
+    ctx.restore();
+}
+/**
+ * Add a path of a rectangle with rounded corners to the current sub-path
+ * @param ctx - Context
+ * @param rect - Bounding rect
+ */ function addRoundedRectPath(ctx, rect) {
+    const { x , y , w , h , radius  } = rect;
+    // top left arc
+    ctx.arc(x + radius.topLeft, y + radius.topLeft, radius.topLeft, 1.5 * PI, PI, true);
+    // line from top left to bottom left
+    ctx.lineTo(x, y + h - radius.bottomLeft);
+    // bottom left arc
+    ctx.arc(x + radius.bottomLeft, y + h - radius.bottomLeft, radius.bottomLeft, PI, HALF_PI, true);
+    // line from bottom left to bottom right
+    ctx.lineTo(x + w - radius.bottomRight, y + h);
+    // bottom right arc
+    ctx.arc(x + w - radius.bottomRight, y + h - radius.bottomRight, radius.bottomRight, HALF_PI, 0, true);
+    // line from bottom right to top right
+    ctx.lineTo(x + w, y + radius.topRight);
+    // top right arc
+    ctx.arc(x + w - radius.topRight, y + radius.topRight, radius.topRight, 0, -HALF_PI, true);
+    // line from top right to top left
+    ctx.lineTo(x + radius.topLeft, y);
+}
+
+const LINE_HEIGHT = /^(normal|(\d+(?:\.\d+)?)(px|em|%)?)$/;
+const FONT_STYLE = /^(normal|italic|initial|inherit|unset|(oblique( -?[0-9]?[0-9]deg)?))$/;
+/**
+ * @alias Chart.helpers.options
+ * @namespace
+ */ /**
+ * Converts the given line height `value` in pixels for a specific font `size`.
+ * @param value - The lineHeight to parse (eg. 1.6, '14px', '75%', '1.6em').
+ * @param size - The font size (in pixels) used to resolve relative `value`.
+ * @returns The effective line height in pixels (size * 1.2 if value is invalid).
+ * @see https://developer.mozilla.org/en-US/docs/Web/CSS/line-height
+ * @since 2.7.0
+ */ function toLineHeight(value, size) {
+    const matches = ('' + value).match(LINE_HEIGHT);
+    if (!matches || matches[1] === 'normal') {
+        return size * 1.2;
+    }
+    value = +matches[2];
+    switch(matches[3]){
+        case 'px':
+            return value;
+        case '%':
+            value /= 100;
+            break;
+    }
+    return size * value;
+}
+const numberOrZero = (v)=>+v || 0;
+function _readValueToProps(value, props) {
+    const ret = {};
+    const objProps = isObject(props);
+    const keys = objProps ? Object.keys(props) : props;
+    const read = isObject(value) ? objProps ? (prop)=>valueOrDefault(value[prop], value[props[prop]]) : (prop)=>value[prop] : ()=>value;
+    for (const prop of keys){
+        ret[prop] = numberOrZero(read(prop));
+    }
+    return ret;
+}
+/**
+ * Converts the given value into a TRBL object.
+ * @param value - If a number, set the value to all TRBL component,
+ *  else, if an object, use defined properties and sets undefined ones to 0.
+ *  x / y are shorthands for same value for left/right and top/bottom.
+ * @returns The padding values (top, right, bottom, left)
+ * @since 3.0.0
+ */ function toTRBL(value) {
+    return _readValueToProps(value, {
+        top: 'y',
+        right: 'x',
+        bottom: 'y',
+        left: 'x'
+    });
+}
+/**
+ * Converts the given value into a TRBL corners object (similar with css border-radius).
+ * @param value - If a number, set the value to all TRBL corner components,
+ *  else, if an object, use defined properties and sets undefined ones to 0.
+ * @returns The TRBL corner values (topLeft, topRight, bottomLeft, bottomRight)
+ * @since 3.0.0
+ */ function toTRBLCorners(value) {
+    return _readValueToProps(value, [
+        'topLeft',
+        'topRight',
+        'bottomLeft',
+        'bottomRight'
+    ]);
+}
+/**
+ * Converts the given value into a padding object with pre-computed width/height.
+ * @param value - If a number, set the value to all TRBL component,
+ *  else, if an object, use defined properties and sets undefined ones to 0.
+ *  x / y are shorthands for same value for left/right and top/bottom.
+ * @returns The padding values (top, right, bottom, left, width, height)
+ * @since 2.7.0
+ */ function toPadding(value) {
+    const obj = toTRBL(value);
+    obj.width = obj.left + obj.right;
+    obj.height = obj.top + obj.bottom;
+    return obj;
+}
+/**
+ * Parses font options and returns the font object.
+ * @param options - A object that contains font options to be parsed.
+ * @param fallback - A object that contains fallback font options.
+ * @return The font object.
+ * @private
+ */ function toFont(options, fallback) {
+    options = options || {};
+    fallback = fallback || defaults.font;
+    let size = valueOrDefault(options.size, fallback.size);
+    if (typeof size === 'string') {
+        size = parseInt(size, 10);
+    }
+    let style = valueOrDefault(options.style, fallback.style);
+    if (style && !('' + style).match(FONT_STYLE)) {
+        console.warn('Invalid font style specified: "' + style + '"');
+        style = undefined;
+    }
+    const font = {
+        family: valueOrDefault(options.family, fallback.family),
+        lineHeight: toLineHeight(valueOrDefault(options.lineHeight, fallback.lineHeight), size),
+        size,
+        style,
+        weight: valueOrDefault(options.weight, fallback.weight),
+        string: ''
+    };
+    font.string = toFontString(font);
+    return font;
+}
+/**
+ * Evaluates the given `inputs` sequentially and returns the first defined value.
+ * @param inputs - An array of values, falling back to the last value.
+ * @param context - If defined and the current value is a function, the value
+ * is called with `context` as first argument and the result becomes the new input.
+ * @param index - If defined and the current value is an array, the value
+ * at `index` become the new input.
+ * @param info - object to return information about resolution in
+ * @param info.cacheable - Will be set to `false` if option is not cacheable.
+ * @since 2.7.0
+ */ function resolve(inputs, context, index, info) {
+    let cacheable = true;
+    let i, ilen, value;
+    for(i = 0, ilen = inputs.length; i < ilen; ++i){
+        value = inputs[i];
+        if (value === undefined) {
+            continue;
+        }
+        if (context !== undefined && typeof value === 'function') {
+            value = value(context);
+            cacheable = false;
+        }
+        if (index !== undefined && isArray(value)) {
+            value = value[index % value.length];
+            cacheable = false;
+        }
+        if (value !== undefined) {
+            if (info && !cacheable) {
+                info.cacheable = false;
+            }
+            return value;
+        }
+    }
+}
+/**
+ * @param minmax
+ * @param grace
+ * @param beginAtZero
+ * @private
+ */ function _addGrace(minmax, grace, beginAtZero) {
+    const { min , max  } = minmax;
+    const change = toDimension(grace, (max - min) / 2);
+    const keepZero = (value, add)=>beginAtZero && value === 0 ? 0 : value + add;
+    return {
+        min: keepZero(min, -Math.abs(change)),
+        max: keepZero(max, change)
+    };
+}
+function createContext(parentContext, context) {
+    return Object.assign(Object.create(parentContext), context);
+}
+
+/**
+ * Creates a Proxy for resolving raw values for options.
+ * @param scopes - The option scopes to look for values, in resolution order
+ * @param prefixes - The prefixes for values, in resolution order.
+ * @param rootScopes - The root option scopes
+ * @param fallback - Parent scopes fallback
+ * @param getTarget - callback for getting the target for changed values
+ * @returns Proxy
+ * @private
+ */ function _createResolver(scopes, prefixes = [
+    ''
+], rootScopes, fallback, getTarget = ()=>scopes[0]) {
+    const finalRootScopes = rootScopes || scopes;
+    if (typeof fallback === 'undefined') {
+        fallback = _resolve('_fallback', scopes);
+    }
+    const cache = {
+        [Symbol.toStringTag]: 'Object',
+        _cacheable: true,
+        _scopes: scopes,
+        _rootScopes: finalRootScopes,
+        _fallback: fallback,
+        _getTarget: getTarget,
+        override: (scope)=>_createResolver([
+                scope,
+                ...scopes
+            ], prefixes, finalRootScopes, fallback)
+    };
+    return new Proxy(cache, {
+        /**
+     * A trap for the delete operator.
+     */ deleteProperty (target, prop) {
+            delete target[prop]; // remove from cache
+            delete target._keys; // remove cached keys
+            delete scopes[0][prop]; // remove from top level scope
+            return true;
+        },
+        /**
+     * A trap for getting property values.
+     */ get (target, prop) {
+            return _cached(target, prop, ()=>_resolveWithPrefixes(prop, prefixes, scopes, target));
+        },
+        /**
+     * A trap for Object.getOwnPropertyDescriptor.
+     * Also used by Object.hasOwnProperty.
+     */ getOwnPropertyDescriptor (target, prop) {
+            return Reflect.getOwnPropertyDescriptor(target._scopes[0], prop);
+        },
+        /**
+     * A trap for Object.getPrototypeOf.
+     */ getPrototypeOf () {
+            return Reflect.getPrototypeOf(scopes[0]);
+        },
+        /**
+     * A trap for the in operator.
+     */ has (target, prop) {
+            return getKeysFromAllScopes(target).includes(prop);
+        },
+        /**
+     * A trap for Object.getOwnPropertyNames and Object.getOwnPropertySymbols.
+     */ ownKeys (target) {
+            return getKeysFromAllScopes(target);
+        },
+        /**
+     * A trap for setting property values.
+     */ set (target, prop, value) {
+            const storage = target._storage || (target._storage = getTarget());
+            target[prop] = storage[prop] = value; // set to top level scope + cache
+            delete target._keys; // remove cached keys
+            return true;
+        }
+    });
+}
+/**
+ * Returns an Proxy for resolving option values with context.
+ * @param proxy - The Proxy returned by `_createResolver`
+ * @param context - Context object for scriptable/indexable options
+ * @param subProxy - The proxy provided for scriptable options
+ * @param descriptorDefaults - Defaults for descriptors
+ * @private
+ */ function _attachContext(proxy, context, subProxy, descriptorDefaults) {
+    const cache = {
+        _cacheable: false,
+        _proxy: proxy,
+        _context: context,
+        _subProxy: subProxy,
+        _stack: new Set(),
+        _descriptors: _descriptors(proxy, descriptorDefaults),
+        setContext: (ctx)=>_attachContext(proxy, ctx, subProxy, descriptorDefaults),
+        override: (scope)=>_attachContext(proxy.override(scope), context, subProxy, descriptorDefaults)
+    };
+    return new Proxy(cache, {
+        /**
+     * A trap for the delete operator.
+     */ deleteProperty (target, prop) {
+            delete target[prop]; // remove from cache
+            delete proxy[prop]; // remove from proxy
+            return true;
+        },
+        /**
+     * A trap for getting property values.
+     */ get (target, prop, receiver) {
+            return _cached(target, prop, ()=>_resolveWithContext(target, prop, receiver));
+        },
+        /**
+     * A trap for Object.getOwnPropertyDescriptor.
+     * Also used by Object.hasOwnProperty.
+     */ getOwnPropertyDescriptor (target, prop) {
+            return target._descriptors.allKeys ? Reflect.has(proxy, prop) ? {
+                enumerable: true,
+                configurable: true
+            } : undefined : Reflect.getOwnPropertyDescriptor(proxy, prop);
+        },
+        /**
+     * A trap for Object.getPrototypeOf.
+     */ getPrototypeOf () {
+            return Reflect.getPrototypeOf(proxy);
+        },
+        /**
+     * A trap for the in operator.
+     */ has (target, prop) {
+            return Reflect.has(proxy, prop);
+        },
+        /**
+     * A trap for Object.getOwnPropertyNames and Object.getOwnPropertySymbols.
+     */ ownKeys () {
+            return Reflect.ownKeys(proxy);
+        },
+        /**
+     * A trap for setting property values.
+     */ set (target, prop, value) {
+            proxy[prop] = value; // set to proxy
+            delete target[prop]; // remove from cache
+            return true;
+        }
+    });
+}
+/**
+ * @private
+ */ function _descriptors(proxy, defaults = {
+    scriptable: true,
+    indexable: true
+}) {
+    const { _scriptable =defaults.scriptable , _indexable =defaults.indexable , _allKeys =defaults.allKeys  } = proxy;
+    return {
+        allKeys: _allKeys,
+        scriptable: _scriptable,
+        indexable: _indexable,
+        isScriptable: isFunction(_scriptable) ? _scriptable : ()=>_scriptable,
+        isIndexable: isFunction(_indexable) ? _indexable : ()=>_indexable
+    };
+}
+const readKey = (prefix, name)=>prefix ? prefix + _capitalize(name) : name;
+const needsSubResolver = (prop, value)=>isObject(value) && prop !== 'adapters' && (Object.getPrototypeOf(value) === null || value.constructor === Object);
+function _cached(target, prop, resolve) {
+    if (Object.prototype.hasOwnProperty.call(target, prop) || prop === 'constructor') {
+        return target[prop];
+    }
+    const value = resolve();
+    // cache the resolved value
+    target[prop] = value;
+    return value;
+}
+function _resolveWithContext(target, prop, receiver) {
+    const { _proxy , _context , _subProxy , _descriptors: descriptors  } = target;
+    let value = _proxy[prop]; // resolve from proxy
+    // resolve with context
+    if (isFunction(value) && descriptors.isScriptable(prop)) {
+        value = _resolveScriptable(prop, value, target, receiver);
+    }
+    if (isArray(value) && value.length) {
+        value = _resolveArray(prop, value, target, descriptors.isIndexable);
+    }
+    if (needsSubResolver(prop, value)) {
+        // if the resolved value is an object, create a sub resolver for it
+        value = _attachContext(value, _context, _subProxy && _subProxy[prop], descriptors);
+    }
+    return value;
+}
+function _resolveScriptable(prop, getValue, target, receiver) {
+    const { _proxy , _context , _subProxy , _stack  } = target;
+    if (_stack.has(prop)) {
+        throw new Error('Recursion detected: ' + Array.from(_stack).join('->') + '->' + prop);
+    }
+    _stack.add(prop);
+    let value = getValue(_context, _subProxy || receiver);
+    _stack.delete(prop);
+    if (needsSubResolver(prop, value)) {
+        // When scriptable option returns an object, create a resolver on that.
+        value = createSubResolver(_proxy._scopes, _proxy, prop, value);
+    }
+    return value;
+}
+function _resolveArray(prop, value, target, isIndexable) {
+    const { _proxy , _context , _subProxy , _descriptors: descriptors  } = target;
+    if (typeof _context.index !== 'undefined' && isIndexable(prop)) {
+        return value[_context.index % value.length];
+    } else if (isObject(value[0])) {
+        // Array of objects, return array or resolvers
+        const arr = value;
+        const scopes = _proxy._scopes.filter((s)=>s !== arr);
+        value = [];
+        for (const item of arr){
+            const resolver = createSubResolver(scopes, _proxy, prop, item);
+            value.push(_attachContext(resolver, _context, _subProxy && _subProxy[prop], descriptors));
+        }
+    }
+    return value;
+}
+function resolveFallback(fallback, prop, value) {
+    return isFunction(fallback) ? fallback(prop, value) : fallback;
+}
+const getScope = (key, parent)=>key === true ? parent : typeof key === 'string' ? resolveObjectKey(parent, key) : undefined;
+function addScopes(set, parentScopes, key, parentFallback, value) {
+    for (const parent of parentScopes){
+        const scope = getScope(key, parent);
+        if (scope) {
+            set.add(scope);
+            const fallback = resolveFallback(scope._fallback, key, value);
+            if (typeof fallback !== 'undefined' && fallback !== key && fallback !== parentFallback) {
+                // When we reach the descriptor that defines a new _fallback, return that.
+                // The fallback will resume to that new scope.
+                return fallback;
+            }
+        } else if (scope === false && typeof parentFallback !== 'undefined' && key !== parentFallback) {
+            // Fallback to `false` results to `false`, when falling back to different key.
+            // For example `interaction` from `hover` or `plugins.tooltip` and `animation` from `animations`
+            return null;
+        }
+    }
+    return false;
+}
+function createSubResolver(parentScopes, resolver, prop, value) {
+    const rootScopes = resolver._rootScopes;
+    const fallback = resolveFallback(resolver._fallback, prop, value);
+    const allScopes = [
+        ...parentScopes,
+        ...rootScopes
+    ];
+    const set = new Set();
+    set.add(value);
+    let key = addScopesFromKey(set, allScopes, prop, fallback || prop, value);
+    if (key === null) {
+        return false;
+    }
+    if (typeof fallback !== 'undefined' && fallback !== prop) {
+        key = addScopesFromKey(set, allScopes, fallback, key, value);
+        if (key === null) {
+            return false;
+        }
+    }
+    return _createResolver(Array.from(set), [
+        ''
+    ], rootScopes, fallback, ()=>subGetTarget(resolver, prop, value));
+}
+function addScopesFromKey(set, allScopes, key, fallback, item) {
+    while(key){
+        key = addScopes(set, allScopes, key, fallback, item);
+    }
+    return key;
+}
+function subGetTarget(resolver, prop, value) {
+    const parent = resolver._getTarget();
+    if (!(prop in parent)) {
+        parent[prop] = {};
+    }
+    const target = parent[prop];
+    if (isArray(target) && isObject(value)) {
+        // For array of objects, the object is used to store updated values
+        return value;
+    }
+    return target || {};
+}
+function _resolveWithPrefixes(prop, prefixes, scopes, proxy) {
+    let value;
+    for (const prefix of prefixes){
+        value = _resolve(readKey(prefix, prop), scopes);
+        if (typeof value !== 'undefined') {
+            return needsSubResolver(prop, value) ? createSubResolver(scopes, proxy, prop, value) : value;
+        }
+    }
+}
+function _resolve(key, scopes) {
+    for (const scope of scopes){
+        if (!scope) {
+            continue;
+        }
+        const value = scope[key];
+        if (typeof value !== 'undefined') {
+            return value;
+        }
+    }
+}
+function getKeysFromAllScopes(target) {
+    let keys = target._keys;
+    if (!keys) {
+        keys = target._keys = resolveKeysFromAllScopes(target._scopes);
+    }
+    return keys;
+}
+function resolveKeysFromAllScopes(scopes) {
+    const set = new Set();
+    for (const scope of scopes){
+        for (const key of Object.keys(scope).filter((k)=>!k.startsWith('_'))){
+            set.add(key);
+        }
+    }
+    return Array.from(set);
+}
+function _parseObjectDataRadialScale(meta, data, start, count) {
+    const { iScale  } = meta;
+    const { key ='r'  } = this._parsing;
+    const parsed = new Array(count);
+    let i, ilen, index, item;
+    for(i = 0, ilen = count; i < ilen; ++i){
+        index = i + start;
+        item = data[index];
+        parsed[i] = {
+            r: iScale.parse(resolveObjectKey(item, key), index)
+        };
+    }
+    return parsed;
+}
+
+const EPSILON = Number.EPSILON || 1e-14;
+const getPoint = (points, i)=>i < points.length && !points[i].skip && points[i];
+const getValueAxis = (indexAxis)=>indexAxis === 'x' ? 'y' : 'x';
+function splineCurve(firstPoint, middlePoint, afterPoint, t) {
+    // Props to Rob Spencer at scaled innovation for his post on splining between points
+    // http://scaledinnovation.com/analytics/splines/aboutSplines.html
+    // This function must also respect "skipped" points
+    const previous = firstPoint.skip ? middlePoint : firstPoint;
+    const current = middlePoint;
+    const next = afterPoint.skip ? middlePoint : afterPoint;
+    const d01 = distanceBetweenPoints(current, previous);
+    const d12 = distanceBetweenPoints(next, current);
+    let s01 = d01 / (d01 + d12);
+    let s12 = d12 / (d01 + d12);
+    // If all points are the same, s01 & s02 will be inf
+    s01 = isNaN(s01) ? 0 : s01;
+    s12 = isNaN(s12) ? 0 : s12;
+    const fa = t * s01; // scaling factor for triangle Ta
+    const fb = t * s12;
+    return {
+        previous: {
+            x: current.x - fa * (next.x - previous.x),
+            y: current.y - fa * (next.y - previous.y)
+        },
+        next: {
+            x: current.x + fb * (next.x - previous.x),
+            y: current.y + fb * (next.y - previous.y)
+        }
+    };
+}
+/**
+ * Adjust tangents to ensure monotonic properties
+ */ function monotoneAdjust(points, deltaK, mK) {
+    const pointsLen = points.length;
+    let alphaK, betaK, tauK, squaredMagnitude, pointCurrent;
+    let pointAfter = getPoint(points, 0);
+    for(let i = 0; i < pointsLen - 1; ++i){
+        pointCurrent = pointAfter;
+        pointAfter = getPoint(points, i + 1);
+        if (!pointCurrent || !pointAfter) {
+            continue;
+        }
+        if (almostEquals(deltaK[i], 0, EPSILON)) {
+            mK[i] = mK[i + 1] = 0;
+            continue;
+        }
+        alphaK = mK[i] / deltaK[i];
+        betaK = mK[i + 1] / deltaK[i];
+        squaredMagnitude = Math.pow(alphaK, 2) + Math.pow(betaK, 2);
+        if (squaredMagnitude <= 9) {
+            continue;
+        }
+        tauK = 3 / Math.sqrt(squaredMagnitude);
+        mK[i] = alphaK * tauK * deltaK[i];
+        mK[i + 1] = betaK * tauK * deltaK[i];
+    }
+}
+function monotoneCompute(points, mK, indexAxis = 'x') {
+    const valueAxis = getValueAxis(indexAxis);
+    const pointsLen = points.length;
+    let delta, pointBefore, pointCurrent;
+    let pointAfter = getPoint(points, 0);
+    for(let i = 0; i < pointsLen; ++i){
+        pointBefore = pointCurrent;
+        pointCurrent = pointAfter;
+        pointAfter = getPoint(points, i + 1);
+        if (!pointCurrent) {
+            continue;
+        }
+        const iPixel = pointCurrent[indexAxis];
+        const vPixel = pointCurrent[valueAxis];
+        if (pointBefore) {
+            delta = (iPixel - pointBefore[indexAxis]) / 3;
+            pointCurrent[`cp1${indexAxis}`] = iPixel - delta;
+            pointCurrent[`cp1${valueAxis}`] = vPixel - delta * mK[i];
+        }
+        if (pointAfter) {
+            delta = (pointAfter[indexAxis] - iPixel) / 3;
+            pointCurrent[`cp2${indexAxis}`] = iPixel + delta;
+            pointCurrent[`cp2${valueAxis}`] = vPixel + delta * mK[i];
+        }
+    }
+}
+/**
+ * This function calculates Bézier control points in a similar way than |splineCurve|,
+ * but preserves monotonicity of the provided data and ensures no local extremums are added
+ * between the dataset discrete points due to the interpolation.
+ * See : https://en.wikipedia.org/wiki/Monotone_cubic_interpolation
+ */ function splineCurveMonotone(points, indexAxis = 'x') {
+    const valueAxis = getValueAxis(indexAxis);
+    const pointsLen = points.length;
+    const deltaK = Array(pointsLen).fill(0);
+    const mK = Array(pointsLen);
+    // Calculate slopes (deltaK) and initialize tangents (mK)
+    let i, pointBefore, pointCurrent;
+    let pointAfter = getPoint(points, 0);
+    for(i = 0; i < pointsLen; ++i){
+        pointBefore = pointCurrent;
+        pointCurrent = pointAfter;
+        pointAfter = getPoint(points, i + 1);
+        if (!pointCurrent) {
+            continue;
+        }
+        if (pointAfter) {
+            const slopeDelta = pointAfter[indexAxis] - pointCurrent[indexAxis];
+            // In the case of two points that appear at the same x pixel, slopeDeltaX is 0
+            deltaK[i] = slopeDelta !== 0 ? (pointAfter[valueAxis] - pointCurrent[valueAxis]) / slopeDelta : 0;
+        }
+        mK[i] = !pointBefore ? deltaK[i] : !pointAfter ? deltaK[i - 1] : sign(deltaK[i - 1]) !== sign(deltaK[i]) ? 0 : (deltaK[i - 1] + deltaK[i]) / 2;
+    }
+    monotoneAdjust(points, deltaK, mK);
+    monotoneCompute(points, mK, indexAxis);
+}
+function capControlPoint(pt, min, max) {
+    return Math.max(Math.min(pt, max), min);
+}
+function capBezierPoints(points, area) {
+    let i, ilen, point, inArea, inAreaPrev;
+    let inAreaNext = _isPointInArea(points[0], area);
+    for(i = 0, ilen = points.length; i < ilen; ++i){
+        inAreaPrev = inArea;
+        inArea = inAreaNext;
+        inAreaNext = i < ilen - 1 && _isPointInArea(points[i + 1], area);
+        if (!inArea) {
+            continue;
+        }
+        point = points[i];
+        if (inAreaPrev) {
+            point.cp1x = capControlPoint(point.cp1x, area.left, area.right);
+            point.cp1y = capControlPoint(point.cp1y, area.top, area.bottom);
+        }
+        if (inAreaNext) {
+            point.cp2x = capControlPoint(point.cp2x, area.left, area.right);
+            point.cp2y = capControlPoint(point.cp2y, area.top, area.bottom);
+        }
+    }
+}
+/**
+ * @private
+ */ function _updateBezierControlPoints(points, options, area, loop, indexAxis) {
+    let i, ilen, point, controlPoints;
+    // Only consider points that are drawn in case the spanGaps option is used
+    if (options.spanGaps) {
+        points = points.filter((pt)=>!pt.skip);
+    }
+    if (options.cubicInterpolationMode === 'monotone') {
+        splineCurveMonotone(points, indexAxis);
+    } else {
+        let prev = loop ? points[points.length - 1] : points[0];
+        for(i = 0, ilen = points.length; i < ilen; ++i){
+            point = points[i];
+            controlPoints = splineCurve(prev, point, points[Math.min(i + 1, ilen - (loop ? 0 : 1)) % ilen], options.tension);
+            point.cp1x = controlPoints.previous.x;
+            point.cp1y = controlPoints.previous.y;
+            point.cp2x = controlPoints.next.x;
+            point.cp2y = controlPoints.next.y;
+            prev = point;
+        }
+    }
+    if (options.capBezierPoints) {
+        capBezierPoints(points, area);
+    }
+}
+
+/**
+ * @private
+ */ function _isDomSupported() {
+    return typeof window !== 'undefined' && typeof document !== 'undefined';
+}
+/**
+ * @private
+ */ function _getParentNode(domNode) {
+    let parent = domNode.parentNode;
+    if (parent && parent.toString() === '[object ShadowRoot]') {
+        parent = parent.host;
+    }
+    return parent;
+}
+/**
+ * convert max-width/max-height values that may be percentages into a number
+ * @private
+ */ function parseMaxStyle(styleValue, node, parentProperty) {
+    let valueInPixels;
+    if (typeof styleValue === 'string') {
+        valueInPixels = parseInt(styleValue, 10);
+        if (styleValue.indexOf('%') !== -1) {
+            // percentage * size in dimension
+            valueInPixels = valueInPixels / 100 * node.parentNode[parentProperty];
+        }
+    } else {
+        valueInPixels = styleValue;
+    }
+    return valueInPixels;
+}
+const getComputedStyle = (element)=>element.ownerDocument.defaultView.getComputedStyle(element, null);
+function getStyle(el, property) {
+    return getComputedStyle(el).getPropertyValue(property);
+}
+const positions = [
+    'top',
+    'right',
+    'bottom',
+    'left'
+];
+function getPositionedStyle(styles, style, suffix) {
+    const result = {};
+    suffix = suffix ? '-' + suffix : '';
+    for(let i = 0; i < 4; i++){
+        const pos = positions[i];
+        result[pos] = parseFloat(styles[style + '-' + pos + suffix]) || 0;
+    }
+    result.width = result.left + result.right;
+    result.height = result.top + result.bottom;
+    return result;
+}
+const useOffsetPos = (x, y, target)=>(x > 0 || y > 0) && (!target || !target.shadowRoot);
+/**
+ * @param e
+ * @param canvas
+ * @returns Canvas position
+ */ function getCanvasPosition(e, canvas) {
+    const touches = e.touches;
+    const source = touches && touches.length ? touches[0] : e;
+    const { offsetX , offsetY  } = source;
+    let box = false;
+    let x, y;
+    if (useOffsetPos(offsetX, offsetY, e.target)) {
+        x = offsetX;
+        y = offsetY;
+    } else {
+        const rect = canvas.getBoundingClientRect();
+        x = source.clientX - rect.left;
+        y = source.clientY - rect.top;
+        box = true;
+    }
+    return {
+        x,
+        y,
+        box
+    };
+}
+/**
+ * Gets an event's x, y coordinates, relative to the chart area
+ * @param event
+ * @param chart
+ * @returns x and y coordinates of the event
+ */ function getRelativePosition(event, chart) {
+    if ('native' in event) {
+        return event;
+    }
+    const { canvas , currentDevicePixelRatio  } = chart;
+    const style = getComputedStyle(canvas);
+    const borderBox = style.boxSizing === 'border-box';
+    const paddings = getPositionedStyle(style, 'padding');
+    const borders = getPositionedStyle(style, 'border', 'width');
+    const { x , y , box  } = getCanvasPosition(event, canvas);
+    const xOffset = paddings.left + (box && borders.left);
+    const yOffset = paddings.top + (box && borders.top);
+    let { width , height  } = chart;
+    if (borderBox) {
+        width -= paddings.width + borders.width;
+        height -= paddings.height + borders.height;
+    }
+    return {
+        x: Math.round((x - xOffset) / width * canvas.width / currentDevicePixelRatio),
+        y: Math.round((y - yOffset) / height * canvas.height / currentDevicePixelRatio)
+    };
+}
+function getContainerSize(canvas, width, height) {
+    let maxWidth, maxHeight;
+    if (width === undefined || height === undefined) {
+        const container = canvas && _getParentNode(canvas);
+        if (!container) {
+            width = canvas.clientWidth;
+            height = canvas.clientHeight;
+        } else {
+            const rect = container.getBoundingClientRect(); // this is the border box of the container
+            const containerStyle = getComputedStyle(container);
+            const containerBorder = getPositionedStyle(containerStyle, 'border', 'width');
+            const containerPadding = getPositionedStyle(containerStyle, 'padding');
+            width = rect.width - containerPadding.width - containerBorder.width;
+            height = rect.height - containerPadding.height - containerBorder.height;
+            maxWidth = parseMaxStyle(containerStyle.maxWidth, container, 'clientWidth');
+            maxHeight = parseMaxStyle(containerStyle.maxHeight, container, 'clientHeight');
+        }
+    }
+    return {
+        width,
+        height,
+        maxWidth: maxWidth || INFINITY,
+        maxHeight: maxHeight || INFINITY
+    };
+}
+const round1 = (v)=>Math.round(v * 10) / 10;
+// eslint-disable-next-line complexity
+function getMaximumSize(canvas, bbWidth, bbHeight, aspectRatio) {
+    const style = getComputedStyle(canvas);
+    const margins = getPositionedStyle(style, 'margin');
+    const maxWidth = parseMaxStyle(style.maxWidth, canvas, 'clientWidth') || INFINITY;
+    const maxHeight = parseMaxStyle(style.maxHeight, canvas, 'clientHeight') || INFINITY;
+    const containerSize = getContainerSize(canvas, bbWidth, bbHeight);
+    let { width , height  } = containerSize;
+    if (style.boxSizing === 'content-box') {
+        const borders = getPositionedStyle(style, 'border', 'width');
+        const paddings = getPositionedStyle(style, 'padding');
+        width -= paddings.width + borders.width;
+        height -= paddings.height + borders.height;
+    }
+    width = Math.max(0, width - margins.width);
+    height = Math.max(0, aspectRatio ? width / aspectRatio : height - margins.height);
+    width = round1(Math.min(width, maxWidth, containerSize.maxWidth));
+    height = round1(Math.min(height, maxHeight, containerSize.maxHeight));
+    if (width && !height) {
+        // https://github.com/chartjs/Chart.js/issues/4659
+        // If the canvas has width, but no height, default to aspectRatio of 2 (canvas default)
+        height = round1(width / 2);
+    }
+    const maintainHeight = bbWidth !== undefined || bbHeight !== undefined;
+    if (maintainHeight && aspectRatio && containerSize.height && height > containerSize.height) {
+        height = containerSize.height;
+        width = round1(Math.floor(height * aspectRatio));
+    }
+    return {
+        width,
+        height
+    };
+}
+/**
+ * @param chart
+ * @param forceRatio
+ * @param forceStyle
+ * @returns True if the canvas context size or transformation has changed.
+ */ function retinaScale(chart, forceRatio, forceStyle) {
+    const pixelRatio = forceRatio || 1;
+    const deviceHeight = round1(chart.height * pixelRatio);
+    const deviceWidth = round1(chart.width * pixelRatio);
+    chart.height = round1(chart.height);
+    chart.width = round1(chart.width);
+    const canvas = chart.canvas;
+    // If no style has been set on the canvas, the render size is used as display size,
+    // making the chart visually bigger, so let's enforce it to the "correct" values.
+    // See https://github.com/chartjs/Chart.js/issues/3575
+    if (canvas.style && (forceStyle || !canvas.style.height && !canvas.style.width)) {
+        canvas.style.height = `${chart.height}px`;
+        canvas.style.width = `${chart.width}px`;
+    }
+    if (chart.currentDevicePixelRatio !== pixelRatio || canvas.height !== deviceHeight || canvas.width !== deviceWidth) {
+        chart.currentDevicePixelRatio = pixelRatio;
+        canvas.height = deviceHeight;
+        canvas.width = deviceWidth;
+        chart.ctx.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
+        return true;
+    }
+    return false;
+}
+/**
+ * Detects support for options object argument in addEventListener.
+ * https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener#Safely_detecting_option_support
+ * @private
+ */ const supportsEventListenerOptions = function() {
+    let passiveSupported = false;
+    try {
+        const options = {
+            get passive () {
+                passiveSupported = true;
+                return false;
+            }
+        };
+        if (_isDomSupported()) {
+            window.addEventListener('test', null, options);
+            window.removeEventListener('test', null, options);
+        }
+    } catch (e) {
+    // continue regardless of error
+    }
+    return passiveSupported;
+}();
+/**
+ * The "used" size is the final value of a dimension property after all calculations have
+ * been performed. This method uses the computed style of `element` but returns undefined
+ * if the computed style is not expressed in pixels. That can happen in some cases where
+ * `element` has a size relative to its parent and this last one is not yet displayed,
+ * for example because of `display: none` on a parent node.
+ * @see https://developer.mozilla.org/en-US/docs/Web/CSS/used_value
+ * @returns Size in pixels or undefined if unknown.
+ */ function readUsedSize(element, property) {
+    const value = getStyle(element, property);
+    const matches = value && value.match(/^(\d+)(\.\d+)?px$/);
+    return matches ? +matches[1] : undefined;
+}
+
+/**
+ * @private
+ */ function _pointInLine(p1, p2, t, mode) {
+    return {
+        x: p1.x + t * (p2.x - p1.x),
+        y: p1.y + t * (p2.y - p1.y)
+    };
+}
+/**
+ * @private
+ */ function _steppedInterpolation(p1, p2, t, mode) {
+    return {
+        x: p1.x + t * (p2.x - p1.x),
+        y: mode === 'middle' ? t < 0.5 ? p1.y : p2.y : mode === 'after' ? t < 1 ? p1.y : p2.y : t > 0 ? p2.y : p1.y
+    };
+}
+/**
+ * @private
+ */ function _bezierInterpolation(p1, p2, t, mode) {
+    const cp1 = {
+        x: p1.cp2x,
+        y: p1.cp2y
+    };
+    const cp2 = {
+        x: p2.cp1x,
+        y: p2.cp1y
+    };
+    const a = _pointInLine(p1, cp1, t);
+    const b = _pointInLine(cp1, cp2, t);
+    const c = _pointInLine(cp2, p2, t);
+    const d = _pointInLine(a, b, t);
+    const e = _pointInLine(b, c, t);
+    return _pointInLine(d, e, t);
+}
+
+const getRightToLeftAdapter = function(rectX, width) {
+    return {
+        x (x) {
+            return rectX + rectX + width - x;
+        },
+        setWidth (w) {
+            width = w;
+        },
+        textAlign (align) {
+            if (align === 'center') {
+                return align;
+            }
+            return align === 'right' ? 'left' : 'right';
+        },
+        xPlus (x, value) {
+            return x - value;
+        },
+        leftForLtr (x, itemWidth) {
+            return x - itemWidth;
+        }
+    };
+};
+const getLeftToRightAdapter = function() {
+    return {
+        x (x) {
+            return x;
+        },
+        setWidth (w) {},
+        textAlign (align) {
+            return align;
+        },
+        xPlus (x, value) {
+            return x + value;
+        },
+        leftForLtr (x, _itemWidth) {
+            return x;
+        }
+    };
+};
+function getRtlAdapter(rtl, rectX, width) {
+    return rtl ? getRightToLeftAdapter(rectX, width) : getLeftToRightAdapter();
+}
+function overrideTextDirection(ctx, direction) {
+    let style, original;
+    if (direction === 'ltr' || direction === 'rtl') {
+        style = ctx.canvas.style;
+        original = [
+            style.getPropertyValue('direction'),
+            style.getPropertyPriority('direction')
+        ];
+        style.setProperty('direction', direction, 'important');
+        ctx.prevTextDirection = original;
+    }
+}
+function restoreTextDirection(ctx, original) {
+    if (original !== undefined) {
+        delete ctx.prevTextDirection;
+        ctx.canvas.style.setProperty('direction', original[0], original[1]);
+    }
+}
+
+function propertyFn(property) {
+    if (property === 'angle') {
+        return {
+            between: _angleBetween,
+            compare: _angleDiff,
+            normalize: _normalizeAngle
+        };
+    }
+    return {
+        between: _isBetween,
+        compare: (a, b)=>a - b,
+        normalize: (x)=>x
+    };
+}
+function normalizeSegment({ start , end , count , loop , style  }) {
+    return {
+        start: start % count,
+        end: end % count,
+        loop: loop && (end - start + 1) % count === 0,
+        style
+    };
+}
+function getSegment(segment, points, bounds) {
+    const { property , start: startBound , end: endBound  } = bounds;
+    const { between , normalize  } = propertyFn(property);
+    const count = points.length;
+    let { start , end , loop  } = segment;
+    let i, ilen;
+    if (loop) {
+        start += count;
+        end += count;
+        for(i = 0, ilen = count; i < ilen; ++i){
+            if (!between(normalize(points[start % count][property]), startBound, endBound)) {
+                break;
+            }
+            start--;
+            end--;
+        }
+        start %= count;
+        end %= count;
+    }
+    if (end < start) {
+        end += count;
+    }
+    return {
+        start,
+        end,
+        loop,
+        style: segment.style
+    };
+}
+ function _boundSegment(segment, points, bounds) {
+    if (!bounds) {
+        return [
+            segment
+        ];
+    }
+    const { property , start: startBound , end: endBound  } = bounds;
+    const count = points.length;
+    const { compare , between , normalize  } = propertyFn(property);
+    const { start , end , loop , style  } = getSegment(segment, points, bounds);
+    const result = [];
+    let inside = false;
+    let subStart = null;
+    let value, point, prevValue;
+    const startIsBefore = ()=>between(startBound, prevValue, value) && compare(startBound, prevValue) !== 0;
+    const endIsBefore = ()=>compare(endBound, value) === 0 || between(endBound, prevValue, value);
+    const shouldStart = ()=>inside || startIsBefore();
+    const shouldStop = ()=>!inside || endIsBefore();
+    for(let i = start, prev = start; i <= end; ++i){
+        point = points[i % count];
+        if (point.skip) {
+            continue;
+        }
+        value = normalize(point[property]);
+        if (value === prevValue) {
+            continue;
+        }
+        inside = between(value, startBound, endBound);
+        if (subStart === null && shouldStart()) {
+            subStart = compare(value, startBound) === 0 ? i : prev;
+        }
+        if (subStart !== null && shouldStop()) {
+            result.push(normalizeSegment({
+                start: subStart,
+                end: i,
+                loop,
+                count,
+                style
+            }));
+            subStart = null;
+        }
+        prev = i;
+        prevValue = value;
+    }
+    if (subStart !== null) {
+        result.push(normalizeSegment({
+            start: subStart,
+            end,
+            loop,
+            count,
+            style
+        }));
+    }
+    return result;
+}
+ function _boundSegments(line, bounds) {
+    const result = [];
+    const segments = line.segments;
+    for(let i = 0; i < segments.length; i++){
+        const sub = _boundSegment(segments[i], line.points, bounds);
+        if (sub.length) {
+            result.push(...sub);
+        }
+    }
+    return result;
+}
+ function findStartAndEnd(points, count, loop, spanGaps) {
+    let start = 0;
+    let end = count - 1;
+    if (loop && !spanGaps) {
+        while(start < count && !points[start].skip){
+            start++;
+        }
+    }
+    while(start < count && points[start].skip){
+        start++;
+    }
+    start %= count;
+    if (loop) {
+        end += start;
+    }
+    while(end > start && points[end % count].skip){
+        end--;
+    }
+    end %= count;
+    return {
+        start,
+        end
+    };
+}
+ function solidSegments(points, start, max, loop) {
+    const count = points.length;
+    const result = [];
+    let last = start;
+    let prev = points[start];
+    let end;
+    for(end = start + 1; end <= max; ++end){
+        const cur = points[end % count];
+        if (cur.skip || cur.stop) {
+            if (!prev.skip) {
+                loop = false;
+                result.push({
+                    start: start % count,
+                    end: (end - 1) % count,
+                    loop
+                });
+                start = last = cur.stop ? end : null;
+            }
+        } else {
+            last = end;
+            if (prev.skip) {
+                start = end;
+            }
+        }
+        prev = cur;
+    }
+    if (last !== null) {
+        result.push({
+            start: start % count,
+            end: last % count,
+            loop
+        });
+    }
+    return result;
+}
+ function _computeSegments(line, segmentOptions) {
+    const points = line.points;
+    const spanGaps = line.options.spanGaps;
+    const count = points.length;
+    if (!count) {
+        return [];
+    }
+    const loop = !!line._loop;
+    const { start , end  } = findStartAndEnd(points, count, loop, spanGaps);
+    if (spanGaps === true) {
+        return splitByStyles(line, [
+            {
+                start,
+                end,
+                loop
+            }
+        ], points, segmentOptions);
+    }
+    const max = end < start ? end + count : end;
+    const completeLoop = !!line._fullLoop && start === 0 && end === count - 1;
+    return splitByStyles(line, solidSegments(points, start, max, completeLoop), points, segmentOptions);
+}
+ function splitByStyles(line, segments, points, segmentOptions) {
+    if (!segmentOptions || !segmentOptions.setContext || !points) {
+        return segments;
+    }
+    return doSplitByStyles(line, segments, points, segmentOptions);
+}
+ function doSplitByStyles(line, segments, points, segmentOptions) {
+    const chartContext = line._chart.getContext();
+    const baseStyle = readStyle(line.options);
+    const { _datasetIndex: datasetIndex , options: { spanGaps  }  } = line;
+    const count = points.length;
+    const result = [];
+    let prevStyle = baseStyle;
+    let start = segments[0].start;
+    let i = start;
+    function addStyle(s, e, l, st) {
+        const dir = spanGaps ? -1 : 1;
+        if (s === e) {
+            return;
+        }
+        s += count;
+        while(points[s % count].skip){
+            s -= dir;
+        }
+        while(points[e % count].skip){
+            e += dir;
+        }
+        if (s % count !== e % count) {
+            result.push({
+                start: s % count,
+                end: e % count,
+                loop: l,
+                style: st
+            });
+            prevStyle = st;
+            start = e % count;
+        }
+    }
+    for (const segment of segments){
+        start = spanGaps ? start : segment.start;
+        let prev = points[start % count];
+        let style;
+        for(i = start + 1; i <= segment.end; i++){
+            const pt = points[i % count];
+            style = readStyle(segmentOptions.setContext(createContext(chartContext, {
+                type: 'segment',
+                p0: prev,
+                p1: pt,
+                p0DataIndex: (i - 1) % count,
+                p1DataIndex: i % count,
+                datasetIndex
+            })));
+            if (styleChanged(style, prevStyle)) {
+                addStyle(start, i - 1, segment.loop, prevStyle);
+            }
+            prev = pt;
+            prevStyle = style;
+        }
+        if (start < i - 1) {
+            addStyle(start, i - 1, segment.loop, prevStyle);
+        }
+    }
+    return result;
+}
+function readStyle(options) {
+    return {
+        backgroundColor: options.backgroundColor,
+        borderCapStyle: options.borderCapStyle,
+        borderDash: options.borderDash,
+        borderDashOffset: options.borderDashOffset,
+        borderJoinStyle: options.borderJoinStyle,
+        borderWidth: options.borderWidth,
+        borderColor: options.borderColor
+    };
+}
+function styleChanged(style, prevStyle) {
+    if (!prevStyle) {
+        return false;
+    }
+    const cache = [];
+    const replacer = function(key, value) {
+        if (!isPatternOrGradient(value)) {
+            return value;
+        }
+        if (!cache.includes(value)) {
+            cache.push(value);
+        }
+        return cache.indexOf(value);
+    };
+    return JSON.stringify(style, replacer) !== JSON.stringify(prevStyle, replacer);
+}
+
+function getSizeForArea(scale, chartArea, field) {
+    return scale.options.clip ? scale[field] : chartArea[field];
+}
+function getDatasetArea(meta, chartArea) {
+    const { xScale , yScale  } = meta;
+    if (xScale && yScale) {
+        return {
+            left: getSizeForArea(xScale, chartArea, 'left'),
+            right: getSizeForArea(xScale, chartArea, 'right'),
+            top: getSizeForArea(yScale, chartArea, 'top'),
+            bottom: getSizeForArea(yScale, chartArea, 'bottom')
+        };
+    }
+    return chartArea;
+}
+function getDatasetClipArea(chart, meta) {
+    const clip = meta._clip;
+    if (clip.disabled) {
+        return false;
+    }
+    const area = getDatasetArea(meta, chart.chartArea);
+    return {
+        left: clip.left === false ? 0 : area.left - (clip.left === true ? 0 : clip.left),
+        right: clip.right === false ? chart.width : area.right + (clip.right === true ? 0 : clip.right),
+        top: clip.top === false ? 0 : area.top - (clip.top === true ? 0 : clip.top),
+        bottom: clip.bottom === false ? chart.height : area.bottom + (clip.bottom === true ? 0 : clip.bottom)
+    };
+}
+
+
+//# sourceMappingURL=helpers.dataset.js.map
+
+
+/***/ }
+
+/******/ 	});
+/************************************************************************/
+/******/ 	// The module cache
+/******/ 	var __webpack_module_cache__ = {};
+/******/ 	
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/ 		// Check if module is in cache
+/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
+/******/ 		if (cachedModule !== undefined) {
+/******/ 			return cachedModule.exports;
+/******/ 		}
+/******/ 		// Check if module exists (development only)
+/******/ 		if (__webpack_modules__[moduleId] === undefined) {
+/******/ 			var e = new Error("Cannot find module '" + moduleId + "'");
+/******/ 			e.code = 'MODULE_NOT_FOUND';
+/******/ 			throw e;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = __webpack_module_cache__[moduleId] = {
+/******/ 			// no module.id needed
+/******/ 			// no module.loaded needed
+/******/ 			exports: {}
+/******/ 		};
+/******/ 	
+/******/ 		// Execute the module function
+/******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
+/******/ 	
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/ 	
+/************************************************************************/
+/******/ 	/* webpack/runtime/define property getters */
+/******/ 	(() => {
+/******/ 		// define getter functions for harmony exports
+/******/ 		__webpack_require__.d = (exports, definition) => {
+/******/ 			for(var key in definition) {
+/******/ 				if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
+/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
+/******/ 				}
+/******/ 			}
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/hasOwnProperty shorthand */
+/******/ 	(() => {
+/******/ 		__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/make namespace object */
+/******/ 	(() => {
+/******/ 		// define __esModule on exports
+/******/ 		__webpack_require__.r = (exports) => {
+/******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 			}
+/******/ 			Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/************************************************************************/
+var __webpack_exports__ = {};
+// This entry needs to be wrapped in an IIFE because it needs to be isolated against other modules in the chunk.
+(() => {
+/*!*****************************************!*\
+  !*** ./src/scripts/backend/insights.js ***!
+  \*****************************************/
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var chart_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! chart.js */ "./node_modules/chart.js/dist/chart.js");
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+function _toConsumableArray(r) { return _arrayWithoutHoles(r) || _iterableToArray(r) || _unsupportedIterableToArray(r) || _nonIterableSpread(); }
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return _arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0; } }
+function _iterableToArray(r) { if ("undefined" != typeof Symbol && null != r[Symbol.iterator] || null != r["@@iterator"]) return Array.from(r); }
+function _arrayWithoutHoles(r) { if (Array.isArray(r)) return _arrayLikeToArray(r); }
+function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length); for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e]; return n; }
+function ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
+function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { _defineProperty(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
+function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
+function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
+function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
+/**
+ * Instagram Insights Admin Page
+ *
+ * Handles the UI interactions for the Instagram Insights dashboard
+ * including chart rendering, data fetching, and metric displays.
+ *
+ * @package suspended
+ * @since 2.0.0
+ */
+
+
+
+// Register Chart.js components
+chart_js__WEBPACK_IMPORTED_MODULE_0__.Chart.register(chart_js__WEBPACK_IMPORTED_MODULE_0__.LineController, chart_js__WEBPACK_IMPORTED_MODULE_0__.LineElement, chart_js__WEBPACK_IMPORTED_MODULE_0__.PointElement, chart_js__WEBPACK_IMPORTED_MODULE_0__.LinearScale, chart_js__WEBPACK_IMPORTED_MODULE_0__.CategoryScale, chart_js__WEBPACK_IMPORTED_MODULE_0__.Filler, chart_js__WEBPACK_IMPORTED_MODULE_0__.Legend, chart_js__WEBPACK_IMPORTED_MODULE_0__.Tooltip);
+document.addEventListener('DOMContentLoaded', function () {
+  var accountSelector = document.getElementById('account-selector');
+  var periodSelector = document.getElementById('period-selector');
+  var dateRangeText = document.getElementById('date-range-text');
+  var insightsContainer = document.querySelector('.insights-container');
+  var followersChartNote = document.getElementById('followers-chart-note');
+  var followersChart = null;
+  var engagementChart = null;
+  var isLoading = false;
+  var dailyFollowerChanges = []; // Store daily changes for tooltip display
+
+  /**
+   * Show loading state on the page
+   */
+  function showLoading() {
+    if (isLoading) return;
+    isLoading = true;
+
+    // Add loading class to container
+    if (insightsContainer) {
+      insightsContainer.classList.add('is-loading');
+    }
+
+    // Show skeleton loaders on metric cards
+    var metricValues = document.querySelectorAll('.metric-value');
+    metricValues.forEach(function (el) {
+      el.classList.add('skeleton');
+      el.setAttribute('data-original', el.textContent);
+      el.textContent = '';
+    });
+    var metricChanges = document.querySelectorAll('.metric-change');
+    metricChanges.forEach(function (el) {
+      el.classList.add('skeleton');
+      el.setAttribute('data-original', el.textContent);
+      el.textContent = '';
+    });
+
+    // Show loading overlay on charts
+    var chartContainers = document.querySelectorAll('.chart-container');
+    chartContainers.forEach(function (container) {
+      if (!container.querySelector('.chart-loading-overlay')) {
+        var overlay = document.createElement('div');
+        overlay.className = 'chart-loading-overlay';
+        overlay.innerHTML = '<div class="loading-spinner"></div>';
+        container.appendChild(overlay);
+      }
+    });
+
+    // Show loading state on recent posts
+    var recentPosts = document.getElementById('recent-posts');
+    if (recentPosts) {
+      recentPosts.classList.add('is-loading');
+      if (!recentPosts.querySelector('.posts-loading-placeholder')) {
+        var placeholder = document.createElement('div');
+        placeholder.className = 'posts-loading-placeholder';
+        placeholder.innerHTML = "\n                    <div class=\"post-skeleton\"></div>\n                    <div class=\"post-skeleton\"></div>\n                    <div class=\"post-skeleton\"></div>\n                ";
+        recentPosts.appendChild(placeholder);
+      }
+    }
+  }
+
+  /**
+   * Hide loading state
+   */
+  function hideLoading() {
+    isLoading = false;
+    if (insightsContainer) {
+      insightsContainer.classList.remove('is-loading');
+    }
+
+    // Remove skeleton class from metrics
+    var skeletons = document.querySelectorAll('.skeleton');
+    skeletons.forEach(function (el) {
+      el.classList.remove('skeleton');
+    });
+
+    // Remove chart loading overlays
+    var overlays = document.querySelectorAll('.chart-loading-overlay');
+    overlays.forEach(function (el) {
+      return el.remove();
+    });
+
+    // Remove posts loading placeholder
+    var placeholder = document.querySelector('.posts-loading-placeholder');
+    if (placeholder) {
+      placeholder.remove();
+    }
+    var recentPosts = document.getElementById('recent-posts');
+    if (recentPosts) {
+      recentPosts.classList.remove('is-loading');
+    }
+  }
+
+  /**
+   * Show error message
+   * @param {string} message - Error message to display
+   */
+  function showError(message) {
+    hideLoading();
+
+    // Remove any existing error messages
+    var existingError = document.querySelector('.insights-error');
+    if (existingError) {
+      existingError.remove();
+    }
+
+    // Create error message element
+    var errorDiv = document.createElement('div');
+    errorDiv.className = 'insights-error notice notice-error';
+    errorDiv.innerHTML = "\n            <p><strong>".concat(wpzoomInsights.i18n.error || 'Error', ":</strong> ").concat(message, "</p>\n            <button type=\"button\" class=\"notice-dismiss\" aria-label=\"").concat(wpzoomInsights.i18n.dismiss || 'Dismiss', "\">\n                <span class=\"screen-reader-text\">").concat(wpzoomInsights.i18n.dismiss || 'Dismiss this notice.', "</span>\n            </button>\n        ");
+
+    // Insert after the header
+    var header = document.querySelector('.insights-header');
+    if (header) {
+      header.after(errorDiv);
+    } else if (insightsContainer) {
+      insightsContainer.prepend(errorDiv);
+    }
+
+    // Handle dismiss button
+    var dismissBtn = errorDiv.querySelector('.notice-dismiss');
+    if (dismissBtn) {
+      dismissBtn.addEventListener('click', function () {
+        errorDiv.remove();
+      });
+    }
+
+    // Auto-dismiss after 10 seconds
+    setTimeout(function () {
+      if (errorDiv.parentNode) {
+        errorDiv.classList.add('fade-out');
+        setTimeout(function () {
+          return errorDiv.remove();
+        }, 300);
+      }
+    }, 10000);
+  }
+
+  /**
+   * Clear any error messages
+   */
+  function clearErrors() {
+    var errors = document.querySelectorAll('.insights-error');
+    errors.forEach(function (el) {
+      return el.remove();
+    });
+  }
+
+  /**
+   * Initialize Charts
+   */
+  function initCharts() {
+    var followersCtx = document.getElementById('followers-chart');
+    var engagementCtx = document.getElementById('engagement-chart');
+    if (!followersCtx || !engagementCtx) {
+      return;
+    }
+
+    // Common chart options
+    var chartOptions = {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          position: 'top'
+        }
+      },
+      scales: {
+        y: {
+          beginAtZero: true
+        }
+      }
+    };
+
+    // Initialize Follower Growth Chart
+    // Shows actual follower count over time (like Instagram's native chart)
+    followersChart = new chart_js__WEBPACK_IMPORTED_MODULE_0__.Chart(followersCtx.getContext('2d'), {
+      type: 'line',
+      data: {
+        labels: [],
+        datasets: [{
+          label: wpzoomInsights.i18n.followerGrowth || 'Follower growth',
+          data: [],
+          borderColor: 'rgb(66, 133, 244)',
+          backgroundColor: 'rgba(66, 133, 244, 0.1)',
+          tension: 0.3,
+          fill: true,
+          pointRadius: 4,
+          pointBackgroundColor: '#fff',
+          pointBorderColor: 'rgb(66, 133, 244)',
+          pointBorderWidth: 2,
+          pointHoverRadius: 6
+        }]
+      },
+      options: _objectSpread(_objectSpread({}, chartOptions), {}, {
+        plugins: _objectSpread(_objectSpread({}, chartOptions.plugins), {}, {
+          legend: {
+            display: false
+          },
+          tooltip: {
+            callbacks: {
+              label: function label(context) {
+                var total = context.parsed.y;
+                var index = context.dataIndex;
+                var dailyChange = dailyFollowerChanges[index] || 0;
+                var changePrefix = dailyChange >= 0 ? '+' : '';
+                return ["".concat(wpzoomInsights.i18n.followers || 'Followers', ": ").concat(formatNumber(total)), "".concat(changePrefix).concat(dailyChange, " ").concat(wpzoomInsights.i18n.followersChange || 'followers')];
+              }
+            }
+          }
+        }),
+        scales: {
+          y: {
+            beginAtZero: false,
+            grid: {
+              color: 'rgba(0, 0, 0, 0.1)'
+            },
+            ticks: {
+              callback: function callback(value) {
+                return formatCompactNumber(value);
+              }
+            }
+          }
+        }
+      })
+    });
+
+    // Initialize Reach Chart (formerly Engagement Chart)
+    // Note: 'views' metric doesn't support time_series, so we only show reach
+    engagementChart = new chart_js__WEBPACK_IMPORTED_MODULE_0__.Chart(engagementCtx.getContext('2d'), {
+      type: 'line',
+      data: {
+        labels: [],
+        datasets: [{
+          label: wpzoomInsights.i18n.reach,
+          data: [],
+          borderColor: 'rgb(255, 99, 132)',
+          backgroundColor: 'rgba(255, 99, 132, 0.1)',
+          tension: 0.1,
+          fill: true
+        }]
+      },
+      options: chartOptions
+    });
+  }
+
+  /**
+   * Calculate date range based on period selection
+   * @param {string} period - Period value (7, 14, 30, 90, this_month, last_month)
+   * @returns {Object} Object with since and until dates
+   */
+  function getDateRange(period) {
+    var endDate = new Date();
+    var startDate = new Date();
+    switch (period) {
+      case 'this_month':
+        startDate = new Date(endDate.getFullYear(), endDate.getMonth(), 1);
+        break;
+      case 'last_month':
+        startDate = new Date(endDate.getFullYear(), endDate.getMonth() - 1, 1);
+        endDate.setDate(0); // Last day of previous month
+        break;
+      default:
+        startDate.setDate(endDate.getDate() - parseInt(period));
+    }
+    return {
+      since: startDate.toISOString().split('T')[0],
+      until: endDate.toISOString().split('T')[0]
+    };
+  }
+
+  /**
+   * Update the date range display text
+   * @param {string} since - Start date
+   * @param {string} until - End date
+   */
+  function updateDateRangeDisplay(since, until) {
+    if (!dateRangeText) return;
+    var formatDate = function formatDate(dateStr) {
+      var date = new Date(dateStr);
+      return date.toLocaleDateString(undefined, {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric'
+      });
+    };
+    dateRangeText.textContent = wpzoomInsights.i18n.dateRangeFormat.replace('%s', formatDate(since)).replace('%s', formatDate(until));
+  }
+
+  /**
+   * Update metrics display with data
+   * @param {Object} data - Insights data from API
+   */
+  function updateMetrics(data) {
+    // Update follower stats
+    if (data.followers_stats) {
+      var stats = data.followers_stats;
+
+      // Display total followers
+      var followersCount = document.getElementById('followers-count');
+      if (followersCount) {
+        followersCount.textContent = formatNumber(stats.total);
+      }
+    }
+
+    // Update new/lost/net followers breakdown
+    if (data.new_followers && data.new_followers.length > 0) {
+      var newFollowersEl = document.getElementById('new-followers');
+      if (newFollowersEl) {
+        var newValue = data.new_followers[0].value;
+        newFollowersEl.textContent = '+' + formatNumber(newValue);
+      }
+    }
+    if (data.lost_followers && data.lost_followers.length > 0) {
+      var lostFollowersEl = document.getElementById('lost-followers');
+      if (lostFollowersEl) {
+        var lostValue = data.lost_followers[0].value;
+        lostFollowersEl.textContent = '-' + formatNumber(lostValue);
+      }
+    }
+    if (data.net_followers && data.net_followers.length > 0) {
+      var netFollowersEl = document.getElementById('net-followers');
+      if (netFollowersEl) {
+        var netValue = data.net_followers[0].value;
+        netFollowersEl.textContent = (netValue >= 0 ? '+' : '') + formatNumber(netValue);
+        netFollowersEl.classList.remove('positive', 'negative');
+        if (netValue > 0) {
+          netFollowersEl.classList.add('positive');
+        } else if (netValue < 0) {
+          netFollowersEl.classList.add('negative');
+        }
+      }
+    }
+
+    // Update reach
+    if (data.reach && data.reach.length > 0) {
+      var totalReach = data.reach.reduce(function (sum, item) {
+        return sum + item.value;
+      }, 0);
+      var reachCount = document.getElementById('reach-count');
+      if (reachCount) {
+        reachCount.textContent = formatNumber(totalReach);
+      }
+
+      // Calculate trend
+      if (data.reach.length > 1) {
+        var midpoint = Math.floor(data.reach.length / 2);
+        var firstHalf = data.reach.slice(0, midpoint).reduce(function (sum, item) {
+          return sum + item.value;
+        }, 0);
+        var secondHalf = data.reach.slice(midpoint).reduce(function (sum, item) {
+          return sum + item.value;
+        }, 0);
+        var reachChange = calculateChange(firstHalf, secondHalf);
+        var reachChangeEl = document.getElementById('reach-change');
+        if (reachChangeEl) {
+          reachChangeEl.textContent = formatChange(reachChange);
+          updateChangeClass('reach-change', reachChange);
+        }
+      }
+    }
+
+    // Update views (formerly impressions)
+    // Note: views metric only returns total_value, not time_series
+    if (data.impressions && data.impressions.length > 0) {
+      var totalViews = data.impressions.reduce(function (sum, item) {
+        return sum + item.value;
+      }, 0);
+      var impressionsCount = document.getElementById('impressions-count');
+      if (impressionsCount) {
+        impressionsCount.textContent = formatNumber(totalViews);
+      }
+      var impressionsChangeEl = document.getElementById('impressions-change');
+      if (impressionsChangeEl) {
+        impressionsChangeEl.textContent = wpzoomInsights.i18n.totalPeriod || 'Total for period';
+        impressionsChangeEl.classList.remove('positive', 'negative');
+      }
+    }
+
+    // Update engagement (accounts_engaged)
+    if (data.accounts_engaged && data.accounts_engaged.length > 0) {
+      var engagementValue = data.accounts_engaged[0].value;
+      var engagementCount = document.getElementById('engagement-count');
+      if (engagementCount) {
+        engagementCount.textContent = formatNumber(engagementValue);
+      }
+      var engagementChange = document.getElementById('engagement-change');
+      if (engagementChange) {
+        engagementChange.textContent = wpzoomInsights.i18n.totalPeriod || 'Total for period';
+        engagementChange.classList.remove('positive', 'negative');
+      }
+    }
+
+    // Update total likes
+    if (data.likes && data.likes.length > 0) {
+      var totalLikes = data.likes.reduce(function (sum, item) {
+        return sum + item.value;
+      }, 0);
+      var likesCount = document.getElementById('total-likes-count');
+      if (likesCount) {
+        likesCount.textContent = formatNumber(totalLikes);
+      }
+      var likesChange = document.getElementById('total-likes-change');
+      if (likesChange) {
+        likesChange.textContent = wpzoomInsights.i18n.totalPeriod || 'Total for period';
+        likesChange.classList.remove('positive', 'negative');
+      }
+    }
+
+    // Update recent media
+    if (data.recent_media) {
+      updateRecentMedia(data.recent_media);
+    }
+
+    // Update charts
+    updateCharts(data);
+  }
+
+  /**
+   * Update recent media posts display
+   * @param {Array} media - Array of media items
+   */
+  function updateRecentMedia(media) {
+    var container = document.getElementById('recent-posts');
+    if (!container) return;
+    container.innerHTML = '';
+    if (!media || media.length === 0) {
+      container.innerHTML = "<p class=\"no-posts\">".concat(wpzoomInsights.i18n.noPosts || 'No recent posts found.', "</p>");
+      return;
+    }
+    media.forEach(function (post) {
+      var postElement = document.createElement('div');
+      postElement.className = 'recent-post';
+
+      // Prepare video-specific stats
+      var videoStats = post.type === 'VIDEO' || post.type === 'REEL' ? "\n                <div class=\"stat\">\n                    <span class=\"label\">".concat(wpzoomInsights.i18n.videoViews || 'Video Views', ":</span>\n                    <span class=\"value\">").concat(formatNumber(post.insights.video_views || 0), "</span>\n                </div>\n            ") : '';
+      postElement.innerHTML = "\n                <div class=\"post-thumbnail\">\n                    <img src=\"".concat(escapeHtml(post.thumbnail), "\" alt=\"").concat(escapeHtml(post.caption), "\" loading=\"lazy\">\n                    ").concat(post.type === 'VIDEO' || post.type === 'REEL' ? '<span class="media-type-badge">VIDEO</span>' : '', "\n                </div>\n                <div class=\"post-content\">\n                    <div class=\"post-caption\">").concat(escapeHtml(post.caption), "</div>\n                    <div class=\"post-stats\">\n                        <div class=\"stat\">\n                            <span class=\"label\">").concat(wpzoomInsights.i18n.impressionsLabel || 'Impressions', ":</span>\n                            <span class=\"value\">").concat(formatNumber(post.insights.impressions || 0), "</span>\n                        </div>\n                        <div class=\"stat\">\n                            <span class=\"label\">").concat(wpzoomInsights.i18n.reachLabel || 'Reach', ":</span>\n                            <span class=\"value\">").concat(formatNumber(post.insights.reach || 0), "</span>\n                        </div>\n                        <div class=\"stat\">\n                            <span class=\"label\">").concat(wpzoomInsights.i18n.likes || 'Likes', ":</span>\n                            <span class=\"value\">").concat(formatNumber(post.likes || 0), "</span>\n                        </div>\n                        <div class=\"stat\">\n                            <span class=\"label\">").concat(wpzoomInsights.i18n.comments || 'Comments', ":</span>\n                            <span class=\"value\">").concat(formatNumber(post.comments || 0), "</span>\n                        </div>\n                        <div class=\"stat\">\n                            <span class=\"label\">").concat(wpzoomInsights.i18n.saved || 'Saved', ":</span>\n                            <span class=\"value\">").concat(formatNumber(post.insights.saved || 0), "</span>\n                        </div>\n                        ").concat(videoStats, "\n                        <div class=\"stat\">\n                            <span class=\"label\">").concat(wpzoomInsights.i18n.interactions || 'Total Interactions', ":</span>\n                            <span class=\"value\">").concat(formatNumber(post.insights.total_interactions || 0), "</span>\n                        </div>\n                    </div>\n                    <div class=\"post-meta\">\n                        <a href=\"").concat(escapeHtml(post.url), "\" target=\"_blank\" rel=\"noopener noreferrer\" class=\"view-post\">\n                            ").concat(wpzoomInsights.i18n.viewPost || 'View Post', "\n                        </a>\n                        <span class=\"post-date\">").concat(formatDate(post.timestamp), "</span>\n                    </div>\n                </div>\n            ");
+      container.appendChild(postElement);
+    });
+  }
+
+  /**
+   * Calculate cumulative follower counts from daily changes
+   * The API returns daily change values which may only track gains.
+   * We scale the cumulative values to match the actual period_start and period_end.
+   * @param {Array} dailyChanges - Array of {end_time, value} with daily change values
+   * @param {number} periodStart - The actual follower count at the start of the period
+   * @param {number} periodEnd - The actual follower count at the end of the period (current total)
+   * @returns {Array} Array of cumulative follower counts scaled to actual values
+   */
+  function calculateCumulativeFollowers(dailyChanges, periodStart, periodEnd) {
+    // First, calculate raw cumulative values from daily changes
+    var rawCumulative = 0;
+    var rawValues = dailyChanges.map(function (item) {
+      rawCumulative += item.value;
+      return rawCumulative;
+    });
+
+    // If no changes or single day, return flat line at current total
+    if (rawValues.length === 0) {
+      return [];
+    }
+    var rawTotal = rawValues[rawValues.length - 1];
+    var actualChange = periodEnd - periodStart;
+
+    // If raw total is 0 or matches actual change, no scaling needed
+    if (rawTotal === 0 || rawTotal === actualChange) {
+      return rawValues.map(function (val, index) {
+        return periodStart + (rawTotal === 0 ? 0 : val);
+      });
+    }
+
+    // Scale the values proportionally so they match actual start and end
+    // This preserves the shape of daily fluctuations while ensuring accuracy
+    var scaleFactor = actualChange / rawTotal;
+    return rawValues.map(function (val) {
+      return Math.round(periodStart + val * scaleFactor);
+    });
+  }
+
+  /**
+   * Update chart data
+   * @param {Object} data - Insights data
+   */
+  function updateCharts(data) {
+    if (!followersChart || !engagementChart) return;
+
+    // Update Follower Growth Chart
+    // The API returns daily changes, so we calculate cumulative counts
+    if (data.follower_count && data.follower_count.length > 0 && data.followers_stats) {
+      var labels = data.follower_count.map(function (item) {
+        return formatDate(item.end_time);
+      });
+
+      // Store daily changes for tooltip display
+      dailyFollowerChanges = data.follower_count.map(function (item) {
+        return item.value;
+      });
+
+      // Calculate cumulative follower counts scaled to actual period_start and period_end
+      var periodStart = data.followers_stats.period_start || 0;
+      var periodEnd = data.followers_stats.period_end || data.followers_stats.total || 0;
+      var cumulativeData = calculateCumulativeFollowers(data.follower_count, periodStart, periodEnd);
+
+      // Update tick formatter based on data range
+      var smartFormatter = createSmartTickFormatter(cumulativeData);
+      followersChart.options.scales.y.ticks.callback = smartFormatter;
+      followersChart.data.labels = labels;
+      followersChart.data.datasets[0].data = cumulativeData;
+      followersChart.update();
+    } else {
+      // Clear the chart when no data is available (e.g., switching to account without insights)
+      dailyFollowerChanges = [];
+      followersChart.data.labels = [];
+      followersChart.data.datasets[0].data = [];
+      followersChart.update();
+    }
+
+    // Update Reach Chart
+    // Note: 'views' metric doesn't support time_series, so we only show reach
+    if (data.reach && data.reach.length > 0) {
+      var dates = data.reach.map(function (item) {
+        return formatDate(item.end_time);
+      });
+      var reachData = data.reach.map(function (item) {
+        return item.value;
+      });
+      engagementChart.data.labels = dates;
+      engagementChart.data.datasets[0].data = reachData;
+      engagementChart.update();
+    } else {
+      // Clear the reach chart when no data is available
+      engagementChart.data.labels = [];
+      engagementChart.data.datasets[0].data = [];
+      engagementChart.update();
+    }
+  }
+
+  // Helper functions
+
+  /**
+   * Format a number with locale-specific formatting
+   * @param {number} num - Number to format
+   * @returns {string} Formatted number
+   */
+  function formatNumber(num) {
+    if (num === null || num === undefined) return '-';
+    return new Intl.NumberFormat().format(num);
+  }
+
+  /**
+   * Format a number in compact notation (1k, 2.5k, 1M, etc.)
+   * @param {number} num - Number to format
+   * @param {boolean} forceExact - If true, show exact number without compact notation
+   * @returns {string} Formatted compact number
+   */
+  function formatCompactNumber(num) {
+    var forceExact = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+    if (num === null || num === undefined) return '-';
+    if (forceExact) {
+      return new Intl.NumberFormat().format(num);
+    }
+    if (num >= 1000000) {
+      return (num / 1000000).toFixed(1).replace(/\.0$/, '') + 'M';
+    }
+    if (num >= 1000) {
+      return (num / 1000).toFixed(1).replace(/\.0$/, '') + 'k';
+    }
+    return num.toString();
+  }
+
+  /**
+   * Create a smart tick formatter that uses exact numbers when range is small
+   * @param {Array} data - The chart data array
+   * @returns {function} Tick callback function
+   */
+  function createSmartTickFormatter(data) {
+    if (!data || data.length === 0) {
+      return function (value) {
+        return formatCompactNumber(value);
+      };
+    }
+    var min = Math.min.apply(Math, _toConsumableArray(data));
+    var max = Math.max.apply(Math, _toConsumableArray(data));
+    var range = max - min;
+
+    // If the range is less than 5% of the max value, use exact numbers
+    // This prevents all ticks showing as "2k" when values are 1990-2010
+    var useExact = range < max * 0.05 || range < 100;
+    return function (value) {
+      return formatCompactNumber(value, useExact);
+    };
+  }
+
+  /**
+   * Format a change percentage
+   * @param {number} change - Change value
+   * @returns {string} Formatted change string
+   */
+  function formatChange(change) {
+    if (change === null || change === undefined) return '-';
+    return (change >= 0 ? '+' : '') + change.toFixed(1) + '%';
+  }
+
+  /**
+   * Calculate percentage change between two values
+   * @param {number} previous - Previous value
+   * @param {number} current - Current value
+   * @returns {number} Percentage change
+   */
+  function calculateChange(previous, current) {
+    if (previous === 0) return current > 0 ? 100 : 0;
+    return (current - previous) / previous * 100;
+  }
+
+  /**
+   * Format a date string
+   * @param {string} dateString - ISO date string
+   * @returns {string} Formatted date
+   */
+  function formatDate(dateString) {
+    if (!dateString) return '';
+    return new Date(dateString).toLocaleDateString(undefined, {
+      month: 'short',
+      day: 'numeric'
+    });
+  }
+
+  /**
+   * Escape HTML to prevent XSS
+   * @param {string} text - Text to escape
+   * @returns {string} Escaped text
+   */
+  function escapeHtml(text) {
+    if (!text) return '';
+    var div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+  }
+
+  /**
+   * Update CSS class based on positive/negative change
+   * @param {string} elementId - Element ID
+   * @param {number} change - Change value
+   */
+  function updateChangeClass(elementId, change) {
+    var element = document.getElementById(elementId);
+    if (!element) return;
+    element.classList.remove('positive', 'negative');
+    if (change > 0) {
+      element.classList.add('positive');
+    } else if (change < 0) {
+      element.classList.add('negative');
+    }
+  }
+
+  /**
+   * Fetch insights data from the server
+   * @param {string} accountId - Account ID
+   * @param {string} period - Period value
+   */
+  function fetchInsights(accountId, period) {
+    if (!accountId) {
+      showError(wpzoomInsights.i18n.noAccount || 'No account selected.');
+      return;
+    }
+    var dateRange = getDateRange(period);
+
+    // Show/hide the follower chart note based on period
+    // Instagram API limits follower_count data to last 30 days
+    var periodDays = parseInt(period) || 30;
+    if (followersChartNote) {
+      followersChartNote.style.display = periodDays > 30 ? 'block' : 'none';
+    }
+    clearErrors();
+    showLoading();
+    jQuery.ajax({
+      url: wpzoomInsights.ajaxurl,
+      type: 'POST',
+      data: {
+        action: 'wpzoom_instagram_fetch_insights',
+        nonce: wpzoomInsights.nonce,
+        account_id: accountId,
+        since_date: dateRange.since,
+        until_date: dateRange.until
+      },
+      success: function success(response) {
+        hideLoading();
+        if (response.success && response.data) {
+          updateDateRangeDisplay(dateRange.since, dateRange.until);
+          updateMetrics(response.data);
+        } else {
+          var errorMessage = response.data || wpzoomInsights.i18n.fetchError || 'Failed to fetch insights data.';
+          showError(errorMessage);
+        }
+      },
+      error: function error(xhr, status, _error) {
+        hideLoading();
+        var errorMessage = wpzoomInsights.i18n.networkError || 'Network error occurred. Please try again.';
+        if (xhr.status === 0) {
+          errorMessage = wpzoomInsights.i18n.connectionError || 'Could not connect to server. Please check your connection.';
+        } else if (xhr.status === 403) {
+          errorMessage = wpzoomInsights.i18n.permissionError || 'You do not have permission to access this data.';
+        } else if (xhr.status === 500) {
+          errorMessage = wpzoomInsights.i18n.serverError || 'Server error occurred. Please try again later.';
+        }
+        showError(errorMessage);
+        console.error('Insights fetch error:', status, _error);
+      }
+    });
+  }
+
+  // Initialize everything
+  if (accountSelector && periodSelector) {
+    initCharts();
+
+    // Initial fetch
+    fetchInsights(accountSelector.value, periodSelector.value);
+
+    // Event listeners
+    accountSelector.addEventListener('change', function () {
+      fetchInsights(this.value, periodSelector.value);
+    });
+    periodSelector.addEventListener('change', function () {
+      fetchInsights(accountSelector.value, this.value);
+    });
+  }
+});
+})();
+
+/******/ })()
+;
+//# sourceMappingURL=insights.js.map
