@@ -57,6 +57,7 @@ class WPZOOM_Instagram_Insights {
 
         add_action( 'admin_menu', array( $this, 'add_insights_submenu' ), 20 );
         add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_insights_scripts' ) );
+        add_action( 'admin_head', array( $this, 'add_menu_badge_styles' ) );
         add_action( 'wp_ajax_wpzoom_instagram_fetch_insights', array( $this, 'fetch_insights_data' ) );
         add_action( 'wp_ajax_wpzoom_instagram_load_more_posts', array( $this, 'load_more_posts' ) );
     }
@@ -65,14 +66,44 @@ class WPZOOM_Instagram_Insights {
      * Add Insights submenu page
      */
     public function add_insights_submenu() {
+        $menu_title = sprintf(
+            '%s <span class="wpz-insta-menu-badge">%s</span>',
+            __( 'Insights', 'instagram-widget-by-wpzoom' ),
+            __( 'NEW', 'instagram-widget-by-wpzoom' )
+        );
+
         add_submenu_page(
             'edit.php?post_type=wpz-insta_feed',
             __( 'Insights', 'instagram-widget-by-wpzoom' ),
-            __( 'Insights', 'instagram-widget-by-wpzoom' ),
+            $menu_title,
             'manage_options',
             'wpzoom-instagram-insights',
             array( $this, 'render_insights_page' )
         );
+    }
+
+    /**
+     * Add inline styles for the menu badge
+     */
+    public function add_menu_badge_styles() {
+        ?>
+        <style>
+            .wpz-insta-menu-badge {
+                display: inline-block;
+                background: linear-gradient(135deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+                color: #fff;
+                font-size: 9px;
+                font-weight: 600;
+                line-height: 1;
+                padding: 3px 5px;
+                border-radius: 3px;
+                margin-left: 5px;
+                vertical-align: middle;
+                text-transform: uppercase;
+                letter-spacing: 0.3px;
+            }
+        </style>
+        <?php
     }
 
     /**
