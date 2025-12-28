@@ -3362,7 +3362,7 @@ class WPZOOM_Instagram_Widget_Settings {
 
 					<!--// Connect Bussines Account-->
 					<div class="account-option account-option_business">
-						<h4 class="account-option-title"><span class="dashicons dashicons-facebook-alt"></span> <?php esc_html_e( 'Connect via Facebook Page', 'instagram-widget-by-wpzoom' ); ?></h4>
+						<h4 class="account-option-title"><span class="dashicons dashicons-facebook-alt"></span> <?php esc_html_e( 'Connect via Facebook Page', 'instagram-widget-by-wpzoom' ); ?> <span class="recommended-badge"><?php esc_html_e( 'Recommended', 'instagram-widget-by-wpzoom' ); ?></span></h4>
 
 						<ul class="account-option-checklist">
 							<li><?php _e( 'Works with Instagram Creator or Business accounts ', 'instagram-widget-by-wpzoom' ); ?></li>

@@ -2425,6 +2425,20 @@
 							font-weight: 600;
 							line-height: 19px;
 							margin: 0 0 16px;
+
+							.recommended-badge {
+								display: inline-block;
+								font-size: 10px;
+								font-weight: 600;
+								text-transform: uppercase;
+								letter-spacing: 0.5px;
+								background: #22BB66;
+								color: #fff;
+								padding: 3px 8px;
+								border-radius: 3px;
+								margin-left: 8px;
+								vertical-align: middle;
+							}
 						}
 
 						.account-option-checklist {
