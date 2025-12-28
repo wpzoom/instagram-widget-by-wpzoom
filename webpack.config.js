@@ -81,10 +81,12 @@ module.exports = {
 		'scripts/backend/index': path.resolve( process.cwd(), 'src/scripts/backend/index.js' ),
 		'scripts/backend/block': path.resolve( process.cwd(), 'src/scripts/backend/block.js' ),
 		'scripts/backend/cron-dismiss': path.resolve( process.cwd(), 'src/scripts/backend/cron-dismiss.js' ),
+		'scripts/backend/insights': path.resolve( process.cwd(), 'src/scripts/backend/insights.js' ),
 		'scripts/frontend/preview': path.resolve( process.cwd(), 'src/scripts/frontend/preview.js' ),
 		'styles/frontend/index': path.resolve( process.cwd(), 'src/styles/frontend/index.scss' ),
 		'styles/frontend/preview': path.resolve( process.cwd(), 'src/styles/frontend/preview.scss' ),
-		'styles/backend/index': path.resolve( process.cwd(), 'src/styles/backend/index.scss' )
+		'styles/backend/index': path.resolve( process.cwd(), 'src/styles/backend/index.scss' ),
+		'styles/backend/insights': path.resolve( process.cwd(), 'src/styles/backend/insights.scss' )
 	},
 
 	output: {

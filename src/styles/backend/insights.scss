@@ -1,18 +1,152 @@
+/**
+ * Instagram Insights Admin Page Styles
+ *
+ * @package suspended
+ * @since 2.0.0
+ */
+
+// Variables
+$color-positive: #28a745;
+$color-negative: #dc3545;
+$color-primary: #2271b1;
+$color-primary-hover: #135e96;
+$color-border: #ddd;
+$color-text: #1d2327;
+$color-text-light: #666;
+$color-background: #fff;
+$color-background-alt: #f8f9fa;
+$color-skeleton: #e0e0e0;
+$border-radius: 8px;
+$box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+
+// Animations
+@keyframes skeleton-pulse {
+    0% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.4;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes fade-out {
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+    }
+}
+
 .wpzoom-instagram-insights {
     padding: 20px;
 
-    .insights-container {
-        margin-top: 20px;
+    // Loading state
+    &.is-loading {
+        pointer-events: none;
     }
 
-    .account-selector {
-        margin-bottom: 30px;
-        
-        select {
-            min-width: 200px;
+    .insights-container {
+        margin-top: 20px;
+
+        &.is-loading {
+            .metric-card,
+            .chart-container,
+            .recent-posts-section {
+                position: relative;
+            }
         }
     }
 
+    // Error notice
+    .insights-error {
+        margin: 15px 0;
+        padding: 12px 15px;
+        position: relative;
+
+        &.fade-out {
+            animation: fade-out 0.3s ease-out forwards;
+        }
+
+        p {
+            margin: 0;
+            padding-right: 30px;
+        }
+
+        .notice-dismiss {
+            position: absolute;
+            top: 50%;
+            right: 10px;
+            transform: translateY(-50%);
+            padding: 0;
+            background: none;
+            border: none;
+            cursor: pointer;
+
+            &:before {
+                content: '\f153';
+                font: normal 16px/1 dashicons;
+                color: #787c82;
+            }
+
+            &:hover:before {
+                color: #d63638;
+            }
+        }
+    }
+
+    // Header with selectors
+    .insights-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        flex-wrap: wrap;
+        gap: 15px;
+    }
+
+    .account-selector,
+    .period-selector {
+        select {
+            min-width: 200px;
+            padding: 8px 12px;
+            border-radius: 4px;
+            border: 1px solid $color-border;
+            font-size: 14px;
+            background-color: $color-background;
+
+            &:focus {
+                border-color: $color-primary;
+                box-shadow: 0 0 0 1px $color-primary;
+                outline: none;
+            }
+        }
+    }
+
+    // Date range display
+    .date-range-display {
+        background: #f0f0f1;
+        padding: 10px 15px;
+        border-radius: 4px;
+        margin-bottom: 20px;
+        text-align: center;
+        font-size: 14px;
+        color: #50575e;
+    }
+
+    // Metric cards grid
     .insights-metrics {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -20,64 +154,77 @@
         margin-bottom: 30px;
     }
 
+    // Individual metric card
     .metric-card {
-        background: #fff;
-        border-radius: 8px;
+        background: $color-background;
+        border-radius: $border-radius;
         padding: 20px;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        box-shadow: $box-shadow;
 
         h3 {
             margin: 0 0 10px 0;
             font-size: 14px;
-            color: #666;
+            color: $color-text-light;
+            font-weight: 500;
         }
 
         .metric-value {
-            font-size: 24px;
-            font-weight: bold;
-            margin-bottom: 5px;
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: $color-text;
+            min-height: 34px;
+
+            &.skeleton {
+                background: $color-skeleton;
+                border-radius: 4px;
+                animation: skeleton-pulse 1.5s ease-in-out infinite;
+                width: 80%;
+                height: 34px;
+            }
         }
 
         .metric-change {
             font-size: 14px;
-            color: #666;
+            color: $color-text-light;
+            min-height: 21px;
+
+            &.skeleton {
+                background: $color-skeleton;
+                border-radius: 4px;
+                animation: skeleton-pulse 1.5s ease-in-out infinite;
+                width: 60%;
+                height: 21px;
+            }
 
             &.positive {
-                color: #28a745;
+                color: $color-positive;
+
+                &:before {
+                    content: "\2191 "; // Up arrow
+                }
             }
 
             &.negative {
-                color: #dc3545;
+                color: $color-negative;
+
+                &:before {
+                    content: "\2193 "; // Down arrow
+                }
             }
         }
 
+        // Followers card specific styles
         &.followers {
             .metric-change {
-                font-size: 14px;
                 font-weight: 500;
                 margin-top: 8px;
                 line-height: 1.4;
-
-                &.positive {
-                    color: #28a745;
-                    &:before {
-                        content: "↑";
-                        margin-right: 4px;
-                    }
-                }
-
-                &.negative {
-                    color: #dc3545;
-                    &:before {
-                        content: "↓";
-                        margin-right: 4px;
-                    }
-                }
             }
 
             .metric-period {
                 font-size: 12px;
-                color: #666;
+                color: $color-text-light;
                 margin-top: 8px;
                 line-height: 1.4;
                 font-style: italic;
@@ -85,6 +232,7 @@
         }
     }
 
+    // Charts section
     .insights-charts {
         display: grid;
         grid-template-columns: 1fr;
@@ -97,51 +245,55 @@
     }
 
     .chart-container {
-        background: #fff;
-        border-radius: 8px;
+        background: $color-background;
+        border-radius: $border-radius;
         padding: 20px;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        box-shadow: $box-shadow;
         height: 400px;
-    }
+        position: relative;
 
-    .insights-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 20px;
-    }
-
-    .account-selector,
-    .period-selector {
-        select {
-            min-width: 200px;
-            padding: 8px;
-            border-radius: 4px;
-            border: 1px solid #ddd;
+        canvas {
+            max-height: 100%;
         }
     }
 
-    .date-range-display {
-        background: #f0f0f1;
-        padding: 10px 15px;
-        border-radius: 4px;
-        margin-bottom: 20px;
-        text-align: center;
-        font-size: 14px;
-        color: #50575e;
+    // Chart loading overlay
+    .chart-loading-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(255, 255, 255, 0.9);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: $border-radius;
+        z-index: 10;
     }
 
+    // Loading spinner
+    .loading-spinner {
+        width: 40px;
+        height: 40px;
+        border: 3px solid #f3f3f3;
+        border-top: 3px solid $color-primary;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+    }
+
+    // Recent posts section
     .recent-posts-section {
         margin-top: 40px;
-        background: #fff;
+        background: $color-background;
         padding: 20px;
-        border-radius: 8px;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        border-radius: $border-radius;
+        box-shadow: $box-shadow;
 
         h2 {
             margin: 0 0 20px 0;
             font-size: 18px;
-            color: #1d2327;
+            color: $color-text;
         }
     }
 
@@ -149,18 +301,47 @@
         display: flex;
         flex-direction: column;
         gap: 20px;
+
+        &.is-loading {
+            .recent-post {
+                display: none;
+            }
+        }
+
+        .no-posts {
+            color: $color-text-light;
+            font-style: italic;
+            padding: 20px;
+            text-align: center;
+        }
     }
 
+    // Posts loading placeholder
+    .posts-loading-placeholder {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .post-skeleton {
+        background: $color-skeleton;
+        border-radius: $border-radius;
+        height: 200px;
+        animation: skeleton-pulse 1.5s ease-in-out infinite;
+    }
+
+    // Individual post card
     .recent-post {
-        background: #f8f9fa;
-        border-radius: 8px;
+        background: $color-background-alt;
+        border-radius: $border-radius;
         overflow: hidden;
-        transition: transform 0.2s;
+        transition: transform 0.2s, box-shadow 0.2s;
         display: flex;
         align-items: flex-start;
 
         &:hover {
             transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         }
 
         .post-thumbnail {
@@ -168,11 +349,25 @@
             height: 200px;
             background: #eee;
             position: relative;
-            
+            overflow: hidden;
+
             img {
                 width: 100%;
                 height: 100%;
                 object-fit: cover;
+            }
+
+            .media-type-badge {
+                position: absolute;
+                top: 10px;
+                left: 10px;
+                background: rgba(0, 0, 0, 0.7);
+                color: #fff;
+                padding: 4px 8px;
+                border-radius: 4px;
+                font-size: 10px;
+                font-weight: 600;
+                text-transform: uppercase;
             }
         }
 
@@ -184,33 +379,34 @@
         .post-caption {
             margin-bottom: 15px;
             font-size: 14px;
-            color: #1d2327;
+            color: $color-text;
+            line-height: 1.5;
         }
 
         .post-stats {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
             gap: 12px;
 
             .stat {
-                background: #fff;
-                padding: 8px;
+                background: $color-background;
+                padding: 10px;
                 border-radius: 4px;
-                box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+                box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
 
                 .label {
                     display: block;
                     font-size: 11px;
-                    color: #666;
+                    color: $color-text-light;
                     margin-bottom: 4px;
                     text-transform: uppercase;
                     letter-spacing: 0.5px;
                 }
 
                 .value {
-                    font-size: 15px;
+                    font-size: 16px;
                     font-weight: 600;
-                    color: #1d2327;
+                    color: $color-text;
                 }
             }
         }
@@ -225,27 +421,35 @@
 
             .view-post {
                 text-decoration: none;
-                color: #2271b1;
+                color: $color-primary;
                 font-size: 13px;
-                
+                font-weight: 500;
+
                 &:hover {
-                    color: #135e96;
+                    color: $color-primary-hover;
+                    text-decoration: underline;
                 }
             }
 
             .post-date {
                 font-size: 12px;
-                color: #666;
+                color: $color-text-light;
             }
         }
 
+        // Responsive
         @media (max-width: 768px) {
             flex-direction: column;
 
             .post-thumbnail {
                 flex: 0 0 auto;
                 width: 100%;
+                height: 250px;
+            }
+
+            .post-stats {
+                grid-template-columns: repeat(2, 1fr);
             }
         }
     }
-} 
+}

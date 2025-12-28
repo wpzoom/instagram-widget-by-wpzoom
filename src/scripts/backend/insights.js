@@ -1,19 +1,210 @@
+/**
+ * Instagram Insights Admin Page
+ *
+ * Handles the UI interactions for the Instagram Insights dashboard
+ * including chart rendering, data fetching, and metric displays.
+ *
+ * @package suspended
+ * @since 2.0.0
+ */
+
+import {
+    Chart,
+    LineController,
+    LineElement,
+    PointElement,
+    LinearScale,
+    CategoryScale,
+    Filler,
+    Legend,
+    Tooltip
+} from 'chart.js';
+
+// Register Chart.js components
+Chart.register(
+    LineController,
+    LineElement,
+    PointElement,
+    LinearScale,
+    CategoryScale,
+    Filler,
+    Legend,
+    Tooltip
+);
+
 document.addEventListener('DOMContentLoaded', function() {
     const accountSelector = document.getElementById('account-selector');
     const periodSelector = document.getElementById('period-selector');
     const dateRangeText = document.getElementById('date-range-text');
+    const insightsContainer = document.querySelector('.insights-container');
+
     let followersChart = null;
     let engagementChart = null;
+    let isLoading = false;
 
-    // Initialize Charts
+    /**
+     * Show loading state on the page
+     */
+    function showLoading() {
+        if (isLoading) return;
+        isLoading = true;
+
+        // Add loading class to container
+        if (insightsContainer) {
+            insightsContainer.classList.add('is-loading');
+        }
+
+        // Show skeleton loaders on metric cards
+        const metricValues = document.querySelectorAll('.metric-value');
+        metricValues.forEach(el => {
+            el.classList.add('skeleton');
+            el.setAttribute('data-original', el.textContent);
+            el.textContent = '';
+        });
+
+        const metricChanges = document.querySelectorAll('.metric-change');
+        metricChanges.forEach(el => {
+            el.classList.add('skeleton');
+            el.setAttribute('data-original', el.textContent);
+            el.textContent = '';
+        });
+
+        // Show loading overlay on charts
+        const chartContainers = document.querySelectorAll('.chart-container');
+        chartContainers.forEach(container => {
+            if (!container.querySelector('.chart-loading-overlay')) {
+                const overlay = document.createElement('div');
+                overlay.className = 'chart-loading-overlay';
+                overlay.innerHTML = '<div class="loading-spinner"></div>';
+                container.appendChild(overlay);
+            }
+        });
+
+        // Show loading state on recent posts
+        const recentPosts = document.getElementById('recent-posts');
+        if (recentPosts) {
+            recentPosts.classList.add('is-loading');
+            if (!recentPosts.querySelector('.posts-loading-placeholder')) {
+                const placeholder = document.createElement('div');
+                placeholder.className = 'posts-loading-placeholder';
+                placeholder.innerHTML = `
+                    <div class="post-skeleton"></div>
+                    <div class="post-skeleton"></div>
+                    <div class="post-skeleton"></div>
+                `;
+                recentPosts.appendChild(placeholder);
+            }
+        }
+    }
+
+    /**
+     * Hide loading state
+     */
+    function hideLoading() {
+        isLoading = false;
+
+        if (insightsContainer) {
+            insightsContainer.classList.remove('is-loading');
+        }
+
+        // Remove skeleton class from metrics
+        const skeletons = document.querySelectorAll('.skeleton');
+        skeletons.forEach(el => {
+            el.classList.remove('skeleton');
+        });
+
+        // Remove chart loading overlays
+        const overlays = document.querySelectorAll('.chart-loading-overlay');
+        overlays.forEach(el => el.remove());
+
+        // Remove posts loading placeholder
+        const placeholder = document.querySelector('.posts-loading-placeholder');
+        if (placeholder) {
+            placeholder.remove();
+        }
+
+        const recentPosts = document.getElementById('recent-posts');
+        if (recentPosts) {
+            recentPosts.classList.remove('is-loading');
+        }
+    }
+
+    /**
+     * Show error message
+     * @param {string} message - Error message to display
+     */
+    function showError(message) {
+        hideLoading();
+
+        // Remove any existing error messages
+        const existingError = document.querySelector('.insights-error');
+        if (existingError) {
+            existingError.remove();
+        }
+
+        // Create error message element
+        const errorDiv = document.createElement('div');
+        errorDiv.className = 'insights-error notice notice-error';
+        errorDiv.innerHTML = `
+            <p><strong>${wpzoomInsights.i18n.error || 'Error'}:</strong> ${message}</p>
+            <button type="button" class="notice-dismiss" aria-label="${wpzoomInsights.i18n.dismiss || 'Dismiss'}">
+                <span class="screen-reader-text">${wpzoomInsights.i18n.dismiss || 'Dismiss this notice.'}</span>
+            </button>
+        `;
+
+        // Insert after the header
+        const header = document.querySelector('.insights-header');
+        if (header) {
+            header.after(errorDiv);
+        } else if (insightsContainer) {
+            insightsContainer.prepend(errorDiv);
+        }
+
+        // Handle dismiss button
+        const dismissBtn = errorDiv.querySelector('.notice-dismiss');
+        if (dismissBtn) {
+            dismissBtn.addEventListener('click', function() {
+                errorDiv.remove();
+            });
+        }
+
+        // Auto-dismiss after 10 seconds
+        setTimeout(() => {
+            if (errorDiv.parentNode) {
+                errorDiv.classList.add('fade-out');
+                setTimeout(() => errorDiv.remove(), 300);
+            }
+        }, 10000);
+    }
+
+    /**
+     * Clear any error messages
+     */
+    function clearErrors() {
+        const errors = document.querySelectorAll('.insights-error');
+        errors.forEach(el => el.remove());
+    }
+
+    /**
+     * Initialize Charts
+     */
     function initCharts() {
-        const followersCtx = document.getElementById('followers-chart').getContext('2d');
-        const engagementCtx = document.getElementById('engagement-chart').getContext('2d');
+        const followersCtx = document.getElementById('followers-chart');
+        const engagementCtx = document.getElementById('engagement-chart');
+
+        if (!followersCtx || !engagementCtx) {
+            return;
+        }
 
         // Common chart options
         const chartOptions = {
             responsive: true,
             maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'top',
+                }
+            },
             scales: {
                 y: {
                     beginAtZero: true
@@ -22,7 +213,7 @@ document.addEventListener('DOMContentLoaded', function() {
         };
 
         // Initialize Followers Chart
-        followersChart = new Chart(followersCtx, {
+        followersChart = new Chart(followersCtx.getContext('2d'), {
             type: 'line',
             data: {
                 labels: [],
@@ -30,14 +221,16 @@ document.addEventListener('DOMContentLoaded', function() {
                     label: wpzoomInsights.i18n.followers,
                     data: [],
                     borderColor: 'rgb(75, 192, 192)',
-                    tension: 0.1
+                    backgroundColor: 'rgba(75, 192, 192, 0.1)',
+                    tension: 0.1,
+                    fill: true
                 }]
             },
             options: chartOptions
         });
 
         // Initialize Engagement Chart
-        engagementChart = new Chart(engagementCtx, {
+        engagementChart = new Chart(engagementCtx.getContext('2d'), {
             type: 'line',
             data: {
                 labels: [],
@@ -46,13 +239,17 @@ document.addEventListener('DOMContentLoaded', function() {
                         label: wpzoomInsights.i18n.reach,
                         data: [],
                         borderColor: 'rgb(255, 99, 132)',
-                        tension: 0.1
+                        backgroundColor: 'rgba(255, 99, 132, 0.1)',
+                        tension: 0.1,
+                        fill: true
                     },
                     {
                         label: wpzoomInsights.i18n.impressions,
                         data: [],
                         borderColor: 'rgb(54, 162, 235)',
-                        tension: 0.1
+                        backgroundColor: 'rgba(54, 162, 235, 0.1)',
+                        tension: 0.1,
+                        fill: true
                     }
                 ]
             },
@@ -60,6 +257,11 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    /**
+     * Calculate date range based on period selection
+     * @param {string} period - Period value (7, 14, 30, 90, this_month, last_month)
+     * @returns {Object} Object with since and until dates
+     */
     function getDateRange(period) {
         const endDate = new Date();
         let startDate = new Date();
@@ -82,7 +284,14 @@ document.addEventListener('DOMContentLoaded', function() {
         };
     }
 
+    /**
+     * Update the date range display text
+     * @param {string} since - Start date
+     * @param {string} until - End date
+     */
     function updateDateRangeDisplay(since, until) {
+        if (!dateRangeText) return;
+
         const formatDate = (dateStr) => {
             const date = new Date(dateStr);
             return date.toLocaleDateString(undefined, {
@@ -97,70 +306,129 @@ document.addEventListener('DOMContentLoaded', function() {
             .replace('%s', formatDate(until));
     }
 
-    // Update metrics display
+    /**
+     * Update metrics display with data
+     * @param {Object} data - Insights data from API
+     */
     function updateMetrics(data) {
         // Update follower stats
         if (data.followers_stats) {
             const stats = data.followers_stats;
-            
+
             // Display total followers
-            document.getElementById('followers-count').textContent = formatNumber(stats.total);
-            
+            const followersCount = document.getElementById('followers-count');
+            if (followersCount) {
+                followersCount.textContent = formatNumber(stats.total);
+            }
+
             // Display followers change
-            const changeText = formatNumber(Math.abs(stats.change)) + ' followers ' + 
-                (stats.change >= 0 ? 'gained' : 'lost');
-            
-            const percentageText = ' (' + 
-                (stats.change >= 0 ? '+' : '-') + 
+            const changeText = formatNumber(Math.abs(stats.change)) + ' ' +
+                (wpzoomInsights.i18n.followersChange || 'followers') + ' ' +
+                (stats.change >= 0 ? (wpzoomInsights.i18n.gained || 'gained') : (wpzoomInsights.i18n.lost || 'lost'));
+
+            const percentageText = ' (' +
+                (stats.change >= 0 ? '+' : '-') +
                 Math.abs(stats.change_percentage).toFixed(1) + '%)';
-            
-            document.getElementById('followers-change').textContent = changeText + percentageText;
-            updateChangeClass('followers-change', stats.change);
-            
+
+            const followersChange = document.getElementById('followers-change');
+            if (followersChange) {
+                followersChange.textContent = changeText + percentageText;
+                updateChangeClass('followers-change', stats.change);
+            }
+
             // Update period info
-            document.getElementById('followers-period').textContent = 
-                'Started with ' + formatNumber(stats.period_start) + 
-                ' followers, ended with ' + formatNumber(stats.period_end);
+            const followersPeriod = document.getElementById('followers-period');
+            if (followersPeriod) {
+                followersPeriod.textContent =
+                    (wpzoomInsights.i18n.startedWith || 'Started with') + ' ' +
+                    formatNumber(stats.period_start) + ' ' +
+                    (wpzoomInsights.i18n.endedWith || ', ended with') + ' ' +
+                    formatNumber(stats.period_end);
+            }
         }
 
         // Update reach
-        if (data.reach) {
-            const latestReach = data.reach[data.reach.length - 1].value;
-            document.getElementById('reach-count').textContent = formatNumber(latestReach);
-            
-            const previousReach = data.reach[0].value;
-            const reachChange = calculateChange(previousReach, latestReach);
-            document.getElementById('reach-change').textContent = formatChange(reachChange);
-            updateChangeClass('reach-change', reachChange);
+        if (data.reach && data.reach.length > 0) {
+            const totalReach = data.reach.reduce((sum, item) => sum + item.value, 0);
+            const reachCount = document.getElementById('reach-count');
+            if (reachCount) {
+                reachCount.textContent = formatNumber(totalReach);
+            }
+
+            // Calculate trend
+            if (data.reach.length > 1) {
+                const midpoint = Math.floor(data.reach.length / 2);
+                const firstHalf = data.reach.slice(0, midpoint).reduce((sum, item) => sum + item.value, 0);
+                const secondHalf = data.reach.slice(midpoint).reduce((sum, item) => sum + item.value, 0);
+                const reachChange = calculateChange(firstHalf, secondHalf);
+
+                const reachChangeEl = document.getElementById('reach-change');
+                if (reachChangeEl) {
+                    reachChangeEl.textContent = formatChange(reachChange);
+                    updateChangeClass('reach-change', reachChange);
+                }
+            }
         }
 
         // Update impressions
-        if (data.impressions) {
-            const latestImpressions = data.impressions[data.impressions.length - 1].value;
-            document.getElementById('impressions-count').textContent = formatNumber(latestImpressions);
-            
-            const previousImpressions = data.impressions[0].value;
-            const impressionsChange = calculateChange(previousImpressions, latestImpressions);
-            document.getElementById('impressions-change').textContent = formatChange(impressionsChange);
-            updateChangeClass('impressions-change', impressionsChange);
+        if (data.impressions && data.impressions.length > 0) {
+            const totalImpressions = data.impressions.reduce((sum, item) => sum + item.value, 0);
+            const impressionsCount = document.getElementById('impressions-count');
+            if (impressionsCount) {
+                impressionsCount.textContent = formatNumber(totalImpressions);
+            }
+
+            // Calculate trend
+            if (data.impressions.length > 1) {
+                const midpoint = Math.floor(data.impressions.length / 2);
+                const firstHalf = data.impressions.slice(0, midpoint).reduce((sum, item) => sum + item.value, 0);
+                const secondHalf = data.impressions.slice(midpoint).reduce((sum, item) => sum + item.value, 0);
+                const impressionsChange = calculateChange(firstHalf, secondHalf);
+
+                const impressionsChangeEl = document.getElementById('impressions-change');
+                if (impressionsChangeEl) {
+                    impressionsChangeEl.textContent = formatChange(impressionsChange);
+                    updateChangeClass('impressions-change', impressionsChange);
+                }
+            }
         }
 
         // Update engagement (accounts_engaged)
-        if (data.accounts_engaged) {
-            const engagementValue = data.accounts_engaged[0].value; // Using first value since it's a total
-            document.getElementById('engagement-count').textContent = formatNumber(engagementValue);
-            document.getElementById('engagement-change').textContent = '-'; // No change calculation for total value
+        if (data.accounts_engaged && data.accounts_engaged.length > 0) {
+            const engagementValue = data.accounts_engaged[0].value;
+            const engagementCount = document.getElementById('engagement-count');
+            if (engagementCount) {
+                engagementCount.textContent = formatNumber(engagementValue);
+            }
+
+            const engagementChange = document.getElementById('engagement-change');
+            if (engagementChange) {
+                engagementChange.textContent = wpzoomInsights.i18n.totalPeriod || 'Total for period';
+                engagementChange.classList.remove('positive', 'negative');
+            }
         }
 
-        // Update profile metrics
-        if (data.profile_views) {
-            const latestViews = data.profile_views[data.profile_views.length - 1].value;
-            document.getElementById('profile-views-count').textContent = formatNumber(latestViews);
-            
-            const previousViews = data.profile_views[0].value;
-            const viewsChange = calculateChange(previousViews, latestViews);
-            document.getElementById('profile-views-change').textContent = formatChange(viewsChange);
-            updateChangeClass('profile-views-change', viewsChange);
+        // Update profile views
+        if (data.profile_views && data.profile_views.length > 0) {
+            const totalViews = data.profile_views.reduce((sum, item) => sum + item.value, 0);
+            const profileViewsCount = document.getElementById('profile-views-count');
+            if (profileViewsCount) {
+                profileViewsCount.textContent = formatNumber(totalViews);
+            }
+
+            // Calculate trend
+            if (data.profile_views.length > 1) {
+                const midpoint = Math.floor(data.profile_views.length / 2);
+                const firstHalf = data.profile_views.slice(0, midpoint).reduce((sum, item) => sum + item.value, 0);
+                const secondHalf = data.profile_views.slice(midpoint).reduce((sum, item) => sum + item.value, 0);
+                const viewsChange = calculateChange(firstHalf, secondHalf);
+
+                const viewsChangeEl = document.getElementById('profile-views-change');
+                if (viewsChangeEl) {
+                    viewsChangeEl.textContent = formatChange(viewsChange);
+                    updateChangeClass('profile-views-change', viewsChange);
+                }
+            }
         }
 
         // Update recent media
@@ -172,120 +440,203 @@ document.addEventListener('DOMContentLoaded', function() {
         updateCharts(data);
     }
 
+    /**
+     * Update recent media posts display
+     * @param {Array} media - Array of media items
+     */
     function updateRecentMedia(media) {
         const container = document.getElementById('recent-posts');
+        if (!container) return;
+
         container.innerHTML = '';
+
+        if (!media || media.length === 0) {
+            container.innerHTML = `<p class="no-posts">${wpzoomInsights.i18n.noPosts || 'No recent posts found.'}</p>`;
+            return;
+        }
 
         media.forEach(post => {
             const postElement = document.createElement('div');
             postElement.className = 'recent-post';
-            
+
             // Prepare video-specific stats
-            const videoStats = post.type === 'VIDEO' || post.type === 'REEL' ? `
+            const videoStats = (post.type === 'VIDEO' || post.type === 'REEL') ? `
                 <div class="stat">
-                    <span class="label">Video Views:</span>
+                    <span class="label">${wpzoomInsights.i18n.videoViews || 'Video Views'}:</span>
                     <span class="value">${formatNumber(post.insights.video_views || 0)}</span>
-                </div>
-                <div class="stat">
-                    <span class="label">Plays:</span>
-                    <span class="value">${formatNumber(post.insights.plays || 0)}</span>
                 </div>
             ` : '';
 
             postElement.innerHTML = `
                 <div class="post-thumbnail">
-                    <img src="${post.thumbnail}" alt="${post.caption}">
+                    <img src="${escapeHtml(post.thumbnail)}" alt="${escapeHtml(post.caption)}" loading="lazy">
+                    ${post.type === 'VIDEO' || post.type === 'REEL' ? '<span class="media-type-badge">VIDEO</span>' : ''}
                 </div>
                 <div class="post-content">
-                    <div class="post-caption">${post.caption}</div>
+                    <div class="post-caption">${escapeHtml(post.caption)}</div>
                     <div class="post-stats">
                         <div class="stat">
-                            <span class="label">Impressions:</span>
+                            <span class="label">${wpzoomInsights.i18n.impressionsLabel || 'Impressions'}:</span>
                             <span class="value">${formatNumber(post.insights.impressions || 0)}</span>
                         </div>
                         <div class="stat">
-                            <span class="label">Reach:</span>
+                            <span class="label">${wpzoomInsights.i18n.reachLabel || 'Reach'}:</span>
                             <span class="value">${formatNumber(post.insights.reach || 0)}</span>
                         </div>
                         <div class="stat">
-                            <span class="label">Likes:</span>
+                            <span class="label">${wpzoomInsights.i18n.likes || 'Likes'}:</span>
                             <span class="value">${formatNumber(post.likes || 0)}</span>
                         </div>
                         <div class="stat">
-                            <span class="label">Comments:</span>
+                            <span class="label">${wpzoomInsights.i18n.comments || 'Comments'}:</span>
                             <span class="value">${formatNumber(post.comments || 0)}</span>
                         </div>
                         <div class="stat">
-                            <span class="label">Saved:</span>
+                            <span class="label">${wpzoomInsights.i18n.saved || 'Saved'}:</span>
                             <span class="value">${formatNumber(post.insights.saved || 0)}</span>
                         </div>
                         ${videoStats}
                         <div class="stat">
-                            <span class="label">Total Interactions:</span>
+                            <span class="label">${wpzoomInsights.i18n.interactions || 'Total Interactions'}:</span>
                             <span class="value">${formatNumber(post.insights.total_interactions || 0)}</span>
                         </div>
                     </div>
                     <div class="post-meta">
-                        <a href="${post.url}" target="_blank" class="view-post">View Post</a>
+                        <a href="${escapeHtml(post.url)}" target="_blank" rel="noopener noreferrer" class="view-post">
+                            ${wpzoomInsights.i18n.viewPost || 'View Post'}
+                        </a>
                         <span class="post-date">${formatDate(post.timestamp)}</span>
                     </div>
                 </div>
             `;
-            
+
             container.appendChild(postElement);
         });
     }
 
-    // Update chart data
+    /**
+     * Update chart data
+     * @param {Object} data - Insights data
+     */
     function updateCharts(data) {
-        if (!data.reach || !data.impressions) return;
+        if (!followersChart || !engagementChart) return;
 
-        const dates = data.reach.map(item => formatDate(item.end_time));
-        const reachData = data.reach.map(item => item.value);
-        const impressionsData = data.impressions.map(item => item.value);
-        
         // Update Followers Chart if we have follower data
-        if (data.follower_count) {
-            followersChart.data.labels = dates;
+        if (data.follower_count && data.follower_count.length > 0) {
+            followersChart.data.labels = data.follower_count.map(item => formatDate(item.end_time));
             followersChart.data.datasets[0].data = data.follower_count.map(item => item.value);
             followersChart.update();
         }
 
-        // Update Engagement Chart
-        engagementChart.data.labels = dates;
-        engagementChart.data.datasets[0].data = reachData;
-        engagementChart.data.datasets[1].data = impressionsData;
-        engagementChart.update();
+        // Update Engagement Chart with reach and impressions
+        if (data.reach && data.reach.length > 0) {
+            const dates = data.reach.map(item => formatDate(item.end_time));
+            const reachData = data.reach.map(item => item.value);
+
+            engagementChart.data.labels = dates;
+            engagementChart.data.datasets[0].data = reachData;
+
+            // Add impressions if available
+            if (data.impressions && data.impressions.length > 0) {
+                const impressionsData = data.impressions.map(item => item.value);
+                engagementChart.data.datasets[1].data = impressionsData;
+            }
+
+            engagementChart.update();
+        }
     }
 
     // Helper functions
+
+    /**
+     * Format a number with locale-specific formatting
+     * @param {number} num - Number to format
+     * @returns {string} Formatted number
+     */
     function formatNumber(num) {
+        if (num === null || num === undefined) return '-';
         return new Intl.NumberFormat().format(num);
     }
 
+    /**
+     * Format a change percentage
+     * @param {number} change - Change value
+     * @returns {string} Formatted change string
+     */
     function formatChange(change) {
+        if (change === null || change === undefined) return '-';
         return (change >= 0 ? '+' : '') + change.toFixed(1) + '%';
     }
 
+    /**
+     * Calculate percentage change between two values
+     * @param {number} previous - Previous value
+     * @param {number} current - Current value
+     * @returns {number} Percentage change
+     */
     function calculateChange(previous, current) {
-        if (previous === 0) return 0;
+        if (previous === 0) return current > 0 ? 100 : 0;
         return ((current - previous) / previous) * 100;
     }
 
+    /**
+     * Format a date string
+     * @param {string} dateString - ISO date string
+     * @returns {string} Formatted date
+     */
     function formatDate(dateString) {
-        return new Date(dateString).toLocaleDateString();
+        if (!dateString) return '';
+        return new Date(dateString).toLocaleDateString(undefined, {
+            month: 'short',
+            day: 'numeric'
+        });
     }
 
+    /**
+     * Escape HTML to prevent XSS
+     * @param {string} text - Text to escape
+     * @returns {string} Escaped text
+     */
+    function escapeHtml(text) {
+        if (!text) return '';
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+
+    /**
+     * Update CSS class based on positive/negative change
+     * @param {string} elementId - Element ID
+     * @param {number} change - Change value
+     */
     function updateChangeClass(elementId, change) {
         const element = document.getElementById(elementId);
+        if (!element) return;
+
         element.classList.remove('positive', 'negative');
-        element.classList.add(change >= 0 ? 'positive' : 'negative');
+        if (change > 0) {
+            element.classList.add('positive');
+        } else if (change < 0) {
+            element.classList.add('negative');
+        }
     }
 
-    // Update fetchInsights to include date range
+    /**
+     * Fetch insights data from the server
+     * @param {string} accountId - Account ID
+     * @param {string} period - Period value
+     */
     function fetchInsights(accountId, period) {
+        if (!accountId) {
+            showError(wpzoomInsights.i18n.noAccount || 'No account selected.');
+            return;
+        }
+
         const dateRange = getDateRange(period);
-        
+
+        clearErrors();
+        showLoading();
+
         jQuery.ajax({
             url: wpzoomInsights.ajaxurl,
             type: 'POST',
@@ -297,13 +648,31 @@ document.addEventListener('DOMContentLoaded', function() {
                 until_date: dateRange.until
             },
             success: function(response) {
+                hideLoading();
+
                 if (response.success && response.data) {
                     updateDateRangeDisplay(dateRange.since, dateRange.until);
                     updateMetrics(response.data);
+                } else {
+                    const errorMessage = response.data || wpzoomInsights.i18n.fetchError || 'Failed to fetch insights data.';
+                    showError(errorMessage);
                 }
             },
             error: function(xhr, status, error) {
-                console.error('Error fetching insights:', error);
+                hideLoading();
+
+                let errorMessage = wpzoomInsights.i18n.networkError || 'Network error occurred. Please try again.';
+
+                if (xhr.status === 0) {
+                    errorMessage = wpzoomInsights.i18n.connectionError || 'Could not connect to server. Please check your connection.';
+                } else if (xhr.status === 403) {
+                    errorMessage = wpzoomInsights.i18n.permissionError || 'You do not have permission to access this data.';
+                } else if (xhr.status === 500) {
+                    errorMessage = wpzoomInsights.i18n.serverError || 'Server error occurred. Please try again later.';
+                }
+
+                showError(errorMessage);
+                console.error('Insights fetch error:', status, error);
             }
         });
     }
@@ -311,7 +680,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initialize everything
     if (accountSelector && periodSelector) {
         initCharts();
-        
+
         // Initial fetch
         fetchInsights(accountSelector.value, periodSelector.value);
 
@@ -324,4 +693,4 @@ document.addEventListener('DOMContentLoaded', function() {
             fetchInsights(accountSelector.value, this.value);
         });
     }
-}); 
+});
