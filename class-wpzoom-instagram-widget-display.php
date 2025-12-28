@@ -505,6 +505,9 @@ class Wpzoom_Instagram_Widget_Display {
 										'items'       => array(),
 									);
 
+									// Reverse order so oldest stories appear first (like Instagram)
+									$stories = array_reverse( $stories );
+
 									foreach ( $stories as $story ) {
 										$is_video = isset( $story->media_type ) && 'VIDEO' === $story->media_type;
 										$stories_data['items'][] = array(
