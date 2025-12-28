@@ -3444,6 +3444,7 @@ class WPZOOM_Instagram_Widget_Settings {
                             <li><?php _e( 'Display user info in the header', 'instagram-widget-by-wpzoom' ); ?></li>
                             <li><strong><?php _e( '[PRO] Display Follower Count', 'instagram-widget-by-wpzoom' ); ?></strong></li>
                             <li><strong><?php _e( '[PRO] Display Instagram Stories', 'instagram-widget-by-wpzoom' ); ?></strong></li>
+                            <li><strong><?php _e( '[PRO] Instagram Insights & Analytics', 'instagram-widget-by-wpzoom' ); ?></strong></li>
 							<li class="no-feature"><?php _e( 'Display hashtag feeds <small><em>Coming Soon</em></small>', 'instagram-widget-by-wpzoom' ); ?></li>
                             <li class="no-feature"><?php _e( 'Display feeds with your mention <small><em>Coming Soon</em></small>', 'instagram-widget-by-wpzoom' ); ?></li>
 						</ul>
@@ -3466,6 +3467,7 @@ class WPZOOM_Instagram_Widget_Settings {
                             <li><strong><?php _e( 'Does not require a Facebook page', 'instagram-widget-by-wpzoom' ); ?></strong></li>
                             <li class="x-feature"><?php _e( '[PRO] Display Follower Count', 'instagram-widget-by-wpzoom' ); ?></li>
                             <li class="x-feature"><?php _e( '[PRO] Display Instagram Stories', 'instagram-widget-by-wpzoom' ); ?></li>
+                            <li class="x-feature"><?php _e( '[PRO] Instagram Insights & Analytics', 'instagram-widget-by-wpzoom' ); ?></li>
                         </ul>
 
                         <note><?php esc_html_e( 'If the connection fails, please generate a new API token manually and enter it in the field Instagram API Access Token at the bottom of this page.', 'instagram-widget-by-wpzoom' ); ?></note><br/>
