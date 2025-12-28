@@ -210,14 +210,7 @@ class WPZOOM_Instagram_Insights {
             if ($connection_type === 'facebook_graph_api' && $account_type === 'business') {
                 $instagram_account_id = get_post_meta($account->ID, '_wpz-insta_page_id', true);
                 $token = get_post_meta($account->ID, '_wpz-insta_token', true);
-                
-                // Debug information
-                error_log('Account ID: ' . $account->ID);
-                error_log('Connection Type: ' . $connection_type);
-                error_log('Account Type: ' . $account_type);
-                error_log('Instagram Account ID: ' . $instagram_account_id);
-                error_log('Has Token: ' . (!empty($token) ? 'yes' : 'no'));
-                
+
                 return !empty($instagram_account_id) && !empty($token);
             }
             
