@@ -37,6 +37,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const periodSelector = document.getElementById('period-selector');
     const dateRangeText = document.getElementById('date-range-text');
     const insightsContainer = document.querySelector('.insights-container');
+    const followersChartNote = document.getElementById('followers-chart-note');
 
     let followersChart = null;
     let engagementChart = null;
@@ -543,16 +544,41 @@ document.addEventListener('DOMContentLoaded', function() {
 
     /**
      * Calculate cumulative follower counts from daily changes
-     * The API returns daily change values, so we need to calculate running totals
+     * The API returns daily change values which may only track gains.
+     * We scale the cumulative values to match the actual period_start and period_end.
      * @param {Array} dailyChanges - Array of {end_time, value} with daily change values
-     * @param {number} startingCount - The follower count at the start of the period
-     * @returns {Array} Array of cumulative follower counts
+     * @param {number} periodStart - The actual follower count at the start of the period
+     * @param {number} periodEnd - The actual follower count at the end of the period (current total)
+     * @returns {Array} Array of cumulative follower counts scaled to actual values
      */
-    function calculateCumulativeFollowers(dailyChanges, startingCount) {
-        let cumulative = startingCount;
-        return dailyChanges.map(item => {
-            cumulative += item.value;
-            return cumulative;
+    function calculateCumulativeFollowers(dailyChanges, periodStart, periodEnd) {
+        // First, calculate raw cumulative values from daily changes
+        let rawCumulative = 0;
+        const rawValues = dailyChanges.map(item => {
+            rawCumulative += item.value;
+            return rawCumulative;
+        });
+
+        // If no changes or single day, return flat line at current total
+        if (rawValues.length === 0) {
+            return [];
+        }
+
+        const rawTotal = rawValues[rawValues.length - 1];
+        const actualChange = periodEnd - periodStart;
+
+        // If raw total is 0 or matches actual change, no scaling needed
+        if (rawTotal === 0 || rawTotal === actualChange) {
+            return rawValues.map((val, index) => {
+                return periodStart + (rawTotal === 0 ? 0 : val);
+            });
+        }
+
+        // Scale the values proportionally so they match actual start and end
+        // This preserves the shape of daily fluctuations while ensuring accuracy
+        const scaleFactor = actualChange / rawTotal;
+        return rawValues.map(val => {
+            return Math.round(periodStart + (val * scaleFactor));
         });
     }
 
@@ -571,9 +597,10 @@ document.addEventListener('DOMContentLoaded', function() {
             // Store daily changes for tooltip display
             dailyFollowerChanges = data.follower_count.map(item => item.value);
 
-            // Calculate cumulative follower counts starting from period_start
-            const startingCount = data.followers_stats.period_start || 0;
-            const cumulativeData = calculateCumulativeFollowers(data.follower_count, startingCount);
+            // Calculate cumulative follower counts scaled to actual period_start and period_end
+            const periodStart = data.followers_stats.period_start || 0;
+            const periodEnd = data.followers_stats.period_end || data.followers_stats.total || 0;
+            const cumulativeData = calculateCumulativeFollowers(data.follower_count, periodStart, periodEnd);
 
             // Update tick formatter based on data range
             const smartFormatter = createSmartTickFormatter(cumulativeData);
@@ -581,6 +608,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
             followersChart.data.labels = labels;
             followersChart.data.datasets[0].data = cumulativeData;
+            followersChart.update();
+        } else {
+            // Clear the chart when no data is available (e.g., switching to account without insights)
+            dailyFollowerChanges = [];
+            followersChart.data.labels = [];
+            followersChart.data.datasets[0].data = [];
             followersChart.update();
         }
 
@@ -592,6 +625,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
             engagementChart.data.labels = dates;
             engagementChart.data.datasets[0].data = reachData;
+            engagementChart.update();
+        } else {
+            // Clear the reach chart when no data is available
+            engagementChart.data.labels = [];
+            engagementChart.data.datasets[0].data = [];
             engagementChart.update();
         }
     }
@@ -726,6 +764,13 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         const dateRange = getDateRange(period);
+
+        // Show/hide the follower chart note based on period
+        // Instagram API limits follower_count data to last 30 days
+        const periodDays = parseInt(period) || 30;
+        if (followersChartNote) {
+            followersChartNote.style.display = periodDays > 30 ? 'block' : 'none';
+        }
 
         clearErrors();
         showLoading();

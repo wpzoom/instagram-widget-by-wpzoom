@@ -152,21 +152,34 @@ class Instagram_Feed_Pro {
 
         $merged_data = $this->merge_metric_data( $all_chunks_data );
 
+        // Add profile metrics FIRST (we need net_followers for accurate chart calculation)
+        $profile_metrics = $this->get_profile_metrics( $instagram_account_id, $access_token, $since_date, $until_date );
+        if ( ! empty( $profile_metrics ) ) {
+            $merged_data = array_merge( $merged_data, $profile_metrics );
+        }
+
         // Process followers data
         if ( $current_followers !== null ) {
-            // Get the change in followers over the period
+            // Use net_followers from follows_and_unfollows breakdown (most accurate)
+            // This accounts for both new followers AND unfollows
             $follower_change = 0;
+            if ( ! empty( $merged_data['net_followers'][0]['value'] ) ) {
+                $follower_change = (int) $merged_data['net_followers'][0]['value'];
+            } elseif ( ! empty( $merged_data['follower_count'] ) ) {
+                // Fallback: sum daily follower_count values (less accurate, may not include unfollows)
+                foreach ( $merged_data['follower_count'] as $day ) {
+                    $follower_change += (int) $day['value'];
+                }
+            }
+
+            // Sort follower_count data by date for chart display
             if ( ! empty( $merged_data['follower_count'] ) ) {
                 usort( $merged_data['follower_count'], function( $a, $b ) {
                     return strtotime( $a['end_time'] ) - strtotime( $b['end_time'] );
                 });
-
-                $first_day_count = $merged_data['follower_count'][0]['value'];
-                $last_day_count = end( $merged_data['follower_count'] )['value'];
-                $follower_change = $last_day_count - $first_day_count;
             }
 
-            // Calculate the starting followers by subtracting the change from current total
+            // Calculate the starting followers by subtracting net change from current total
             $period_start_followers = $current_followers - $follower_change;
 
             $merged_data['followers_stats'] = array(
@@ -177,12 +190,6 @@ class Instagram_Feed_Pro {
                 'period_start' => $period_start_followers,
                 'period_end' => $current_followers
             );
-        }
-
-        // Add profile metrics
-        $profile_metrics = $this->get_profile_metrics( $instagram_account_id, $access_token, $since_date, $until_date );
-        if ( ! empty( $profile_metrics ) ) {
-            $merged_data = array_merge( $merged_data, $profile_metrics );
         }
 
         // Add recent media insights

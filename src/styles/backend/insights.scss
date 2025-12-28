@@ -283,8 +283,22 @@ $box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
         height: 400px;
         position: relative;
 
+        .chart-title {
+            margin: 0 0 5px 0;
+            font-size: 14px;
+            font-weight: 600;
+            color: $color-text;
+        }
+
+        .chart-note {
+            margin: 0 0 10px 0;
+            font-size: 12px;
+            color: $color-text-light;
+            font-style: italic;
+        }
+
         canvas {
-            max-height: 100%;
+            max-height: calc(100% - 40px);
         }
     }
 

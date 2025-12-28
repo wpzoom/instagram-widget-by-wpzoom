@@ -265,9 +265,12 @@ class WPZOOM_Instagram_Insights {
 
                     <div class="insights-charts">
                         <div class="chart-container">
+                            <h3 class="chart-title"><?php esc_html_e( 'Follower Growth', 'instagram-widget-by-wpzoom' ); ?></h3>
+                            <p class="chart-note" id="followers-chart-note" style="display: none;"><?php esc_html_e( 'Note: Instagram limits follower data to the last 30 days.', 'instagram-widget-by-wpzoom' ); ?></p>
                             <canvas id="followers-chart" aria-label="<?php esc_attr_e( 'Follower Growth Chart', 'instagram-widget-by-wpzoom' ); ?>" role="img"></canvas>
                         </div>
                         <div class="chart-container">
+                            <h3 class="chart-title"><?php esc_html_e( 'Reach', 'instagram-widget-by-wpzoom' ); ?></h3>
                             <canvas id="engagement-chart" aria-label="<?php esc_attr_e( 'Reach Chart', 'instagram-widget-by-wpzoom' ); ?>" role="img"></canvas>
                         </div>
                     </div>
