@@ -264,7 +264,13 @@ document.addEventListener('DOMContentLoaded', function() {
                             color: 'rgba(0, 0, 0, 0.1)'
                         },
                         ticks: {
+                            // Only show integer values (no decimals like 1988.5)
+                            precision: 0,
                             callback: function(value) {
+                                // Skip non-integer values
+                                if (value !== Math.floor(value)) {
+                                    return null;
+                                }
                                 return formatCompactNumber(value);
                             }
                         }

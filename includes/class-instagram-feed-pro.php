@@ -52,26 +52,100 @@ class Instagram_Feed_Pro {
     /**
      * Merge metric data from multiple date chunks
      *
+     * For time_series metrics (like follower_count, reach): concatenate all data points
+     * For total_value metrics (like accounts_engaged, views, likes): sum the values
+     *
      * @param array $chunks_data Array of chunk data
      * @return array Merged and sorted data
      */
     private function merge_metric_data( $chunks_data ) {
         $merged = array();
 
+        // Metrics that return total_value (single value per chunk) - these need to be summed
+        $total_value_metrics = array(
+            'accounts_engaged',
+            'views',
+            'impressions',
+            'profile_views',
+            'profile_links_taps',
+            'likes',
+            'shares',
+        );
+
         foreach ( $chunks_data as $chunk ) {
             foreach ( $chunk as $metric_name => $metric_data ) {
                 if ( ! isset( $merged[ $metric_name ] ) ) {
                     $merged[ $metric_name ] = array();
                 }
-                $merged[ $metric_name ] = array_merge( $merged[ $metric_name ], $metric_data );
+
+                // Check if this is a total_value metric that should be summed
+                if ( in_array( $metric_name, $total_value_metrics, true ) ) {
+                    // Sum the values across chunks
+                    $chunk_value = 0;
+                    foreach ( $metric_data as $item ) {
+                        $chunk_value += (int) ( $item['value'] ?? 0 );
+                    }
+
+                    if ( empty( $merged[ $metric_name ] ) ) {
+                        // First chunk - initialize with the value
+                        $merged[ $metric_name ] = array( array(
+                            'end_time' => gmdate( 'Y-m-d\TH:i:s+0000' ),
+                            'value'    => $chunk_value,
+                        ) );
+                    } else {
+                        // Subsequent chunks - add to existing value
+                        $merged[ $metric_name ][0]['value'] += $chunk_value;
+                    }
+                } else {
+                    // Time series metrics - concatenate all data points
+                    $merged[ $metric_name ] = array_merge( $merged[ $metric_name ], $metric_data );
+                }
             }
         }
 
-        // Sort data by date for each metric
+        // Sort time series data by date for each metric
         foreach ( $merged as $metric_name => &$metric_data ) {
-            usort( $metric_data, function( $a, $b ) {
-                return strtotime( $a['end_time'] ) - strtotime( $b['end_time'] );
-            });
+            // Only sort if it's not a total_value metric (those have single items)
+            if ( ! in_array( $metric_name, $total_value_metrics, true ) && count( $metric_data ) > 1 ) {
+                usort( $metric_data, function( $a, $b ) {
+                    return strtotime( $a['end_time'] ) - strtotime( $b['end_time'] );
+                });
+            }
+        }
+
+        return $merged;
+    }
+
+    /**
+     * Merge profile metrics from multiple date chunks
+     *
+     * All profile metrics are total_value type and need to be summed across chunks.
+     *
+     * @param array $chunks_data Array of profile metric chunks
+     * @return array Merged profile metrics with summed values
+     */
+    private function merge_profile_metrics( $chunks_data ) {
+        $merged = array();
+
+        foreach ( $chunks_data as $chunk ) {
+            foreach ( $chunk as $metric_name => $metric_data ) {
+                // Get the value from the first (and usually only) item in the array
+                $chunk_value = 0;
+                if ( ! empty( $metric_data[0]['value'] ) ) {
+                    $chunk_value = (int) $metric_data[0]['value'];
+                }
+
+                if ( ! isset( $merged[ $metric_name ] ) ) {
+                    // First chunk - initialize with the structure
+                    $merged[ $metric_name ] = array( array(
+                        'end_time' => $metric_data[0]['end_time'] ?? gmdate( 'Y-m-d\TH:i:s+0000' ),
+                        'value'    => $chunk_value,
+                    ) );
+                } else {
+                    // Subsequent chunks - add to existing value
+                    $merged[ $metric_name ][0]['value'] += $chunk_value;
+                }
+            }
         }
 
         return $merged;
@@ -153,8 +227,23 @@ class Instagram_Feed_Pro {
         $merged_data = $this->merge_metric_data( $all_chunks_data );
 
         // Add profile metrics FIRST (we need net_followers for accurate chart calculation)
-        $profile_metrics = $this->get_profile_metrics( $instagram_account_id, $access_token, $since_date, $until_date );
-        if ( ! empty( $profile_metrics ) ) {
+        // Profile metrics also need to be fetched in chunks for longer periods
+        $all_profile_chunks = array();
+        foreach ( $date_chunks as $chunk ) {
+            $chunk_profile_metrics = $this->get_profile_metrics(
+                $instagram_account_id,
+                $access_token,
+                $chunk['since'],
+                $chunk['until']
+            );
+            if ( ! empty( $chunk_profile_metrics ) ) {
+                $all_profile_chunks[] = $chunk_profile_metrics;
+            }
+        }
+
+        // Merge profile metrics, summing the total_value metrics
+        if ( ! empty( $all_profile_chunks ) ) {
+            $profile_metrics = $this->merge_profile_metrics( $all_profile_chunks );
             $merged_data = array_merge( $merged_data, $profile_metrics );
         }
 
