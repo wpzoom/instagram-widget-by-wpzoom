@@ -1272,6 +1272,17 @@ a.ig-b-v-24:hover {
 }
 
 
+#zuck-modal-content .story-viewer .head .right .close,
+#zuck-modal-content .story-viewer .head .back {
+    color: #fff !important;
+    text-decoration: none;
+}
+
+#zuck-modal-content .story-viewer .head .right .close:hover,
+#zuck-modal-content .story-viewer .head .back:hover {
+    opacity: .7;
+}
+
 
 
 @keyframes show {
@@ -1299,6 +1310,29 @@ a.ig-b-v-24:hover {
     }
 
 }
+
+@media screen and (max-width: 1024px) {
+
+    #zuck-modal-content .story-viewer .head .right {
+        min-width: 150px;
+        text-align: right;
+    }
+
+    #zuck-modal-content .story-viewer .head .right .time {
+        display: inline-block !important;
+    }
+
+    #zuck-modal .story-viewer .head .right .wpz-insta-mute-btn svg {
+        width: 24px !important;
+        height: 24px !important;
+    }
+
+    #zuck-modal .story-viewer .head .right .wpz-insta-mute-btn {
+        align-items: center !important;
+    }
+
+}
+
 
 @media screen and (max-width: 860px) {
 
@@ -1405,215 +1439,3 @@ a.ig-b-v-24:hover {
     }
 }
 
-
-
-// Instagram Stories Popup - Magnific Popup container
-.wpz-insta-stories-popup-container {
-    .mfp-content {
-        max-width: 400px;
-        height: 80vh;
-        max-height: 800px;
-        margin: 0 auto;
-        background: #000;
-        border-radius: 8px;
-        overflow: hidden;
-
-        // Responsive: smaller screens
-        @media (max-width: 480px) {
-            max-width: 100%;
-            width: 100%;
-            height: 100vh;
-            max-height: none;
-            border-radius: 0;
-        }
-    }
-
-    .wpz-insta-stories-popup {
-        display: block !important;
-        height: 100%;
-        position: relative;
-        background: #000;
-    }
-
-    .wpz-insta-stories-popup-wrapper {
-        height: 100%;
-        width: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .wpz-insta-story-item {
-        height: 100%;
-        width: 100%;
-        display: none;
-        position: relative;
-        cursor: pointer;
-
-        &.active {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        img, video {
-            max-height: 100%;
-            max-width: 100%;
-            width: auto;
-            height: auto;
-            object-fit: contain;
-            user-select: none;
-            -webkit-user-drag: none;
-        }
-
-        .wpz-insta-story-meta {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            padding: 20px;
-            color: #fff;
-            background: linear-gradient(transparent, rgba(0,0,0,0.7));
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-
-            .wpz-insta-story-time {
-                opacity: 0.8;
-                font-size: 12px;
-            }
-
-            .wpz-insta-story-link {
-                color: #fff;
-                text-decoration: none;
-                font-weight: 600;
-                font-size: 12px;
-
-                &:hover {
-                    text-decoration: underline;
-                }
-            }
-        }
-    }
-
-    .wpz-insta-stories-close {
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        color: #fff;
-        font-size: 32px;
-        font-weight: 300;
-        opacity: 0.8;
-        cursor: pointer;
-        z-index: 10;
-        background: none;
-        border: none;
-        padding: 0;
-        width: 40px;
-        height: 40px;
-        line-height: 1;
-
-        &:hover,
-        &:focus {
-            opacity: 1;
-            outline: none;
-        }
-
-        @media (max-width: 480px) {
-            top: 10px;
-            right: 10px;
-        }
-    }
-
-    // Progress bar at top of stories
-    .story-progress-bar {
-        position: absolute;
-        top: 10px;
-        left: 10px;
-        right: 10px;
-        height: 2px;
-        background: rgba(255, 255, 255, 0.3);
-        display: flex;
-        gap: 2px;
-        z-index: 12;
-        border-radius: 2px;
-        overflow: hidden;
-
-        @media (max-width: 480px) {
-            top: 8px;
-            left: 8px;
-            right: 8px;
-        }
-
-        .progress-segment {
-            height: 100%;
-            position: relative;
-            background: rgba(255, 255, 255, 0.3);
-            flex: 1;
-
-            .progress {
-                position: absolute;
-                left: 0;
-                top: 0;
-                height: 100%;
-                width: 0;
-                background: #fff;
-                transform-origin: left;
-                will-change: width;
-                transition: width 5s linear;
-            }
-
-            &.completed .progress {
-                width: 100%;
-                transition: none;
-            }
-
-            &.video .progress {
-                transition: width 0.1s linear;
-            }
-        }
-    }
-
-    // Paused state indicator - visible pause icon
-    &.is-paused .wpz-insta-stories-popup::after {
-        content: '';
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        width: 80px;
-        height: 80px;
-        background: rgba(0, 0, 0, 0.6);
-        border-radius: 50%;
-        pointer-events: none;
-        z-index: 100;
-    }
-
-    // Pause icon (two vertical bars)
-    &.is-paused .wpz-insta-stories-popup::before {
-        content: '';
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        width: 24px;
-        height: 30px;
-        z-index: 101;
-        pointer-events: none;
-        // Two vertical bars using gradient
-        background:
-            linear-gradient(to right,
-                #fff 0%, #fff 35%,
-                transparent 35%, transparent 65%,
-                #fff 65%, #fff 100%
-            );
-        border-radius: 2px;
-    }
-
-    // Paused state - pause progress animation
-    .wpz-insta-stories-popup.is-paused {
-        .progress-segment.active .progress {
-            animation-play-state: paused;
-        }
-    }
-}

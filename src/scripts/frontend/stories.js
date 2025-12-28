@@ -80,6 +80,35 @@ import 'zuck.js/skins/snapgram';
 				height: 100dvh !important;
 				min-height: -webkit-fill-available !important;
 			}
+
+			/* Custom mute/unmute button styling */
+			#zuck-modal .story-viewer .head .right .wpz-insta-mute-btn {
+				display: inline-flex;
+				align-items: flex-start;
+				justify-content: center;
+				width: 42px;
+				height: 42px;
+				background: none;
+				border: none;
+				border-radius: 50%;
+				cursor: pointer;
+				padding: 0;
+				margin-right: 8px;
+				vertical-align: middle;
+				transition: background 0.2s ease;
+			}
+			#zuck-modal .story-viewer .head .right .wpz-insta-mute-btn:hover {
+				background: rgba(0, 0, 0, 0.5);
+			}
+			#zuck-modal .story-viewer .head .right .wpz-insta-mute-btn svg {
+				width: 30px;
+				height: 30px;
+				fill: #fff;
+			}
+			/* Hide the default Zuck.js mute tip since we have our own button */
+			#zuck-modal .story-viewer .tip.muted {
+				display: none !important;
+			}
 		`;
 		document.head.appendChild( style );
 
@@ -116,6 +145,123 @@ import 'zuck.js/skins/snapgram';
 		}
 	}
 
+	/**
+	 * SVG icons for mute/unmute button
+	 */
+	const muteIconSVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/></svg>`;
+	const unmuteIconSVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>`;
+
+	/**
+	 * Update the mute button icon based on current state
+	 */
+	function updateMuteButtonIcon() {
+		const $muteBtn = $( '#zuck-modal .wpz-insta-mute-btn' );
+		if ( $muteBtn.length ) {
+			$muteBtn.html( isGloballyMuted ? muteIconSVG : unmuteIconSVG );
+			$muteBtn.attr( 'aria-label', isGloballyMuted ? 'Unmute' : 'Mute' );
+		}
+	}
+
+	/**
+	 * Apply mute state to all videos in the modal
+	 */
+	function applyMuteState() {
+		const $videos = $( '#zuck-modal video' );
+		$videos.each( function() {
+			this.muted = isGloballyMuted;
+			if ( ! isGloballyMuted ) {
+				this.volume = 1.0;
+			}
+
+			// Set up handlers if not already done
+			if ( ! this.wpzMuteHandlersSet ) {
+				this.wpzMuteHandlersSet = true;
+				setupVideoMuteHandlers( this );
+			}
+		} );
+
+		// Update the story viewer muted class
+		const $storyViewer = $( '#zuck-modal .story-viewer.viewing' );
+		if ( isGloballyMuted ) {
+			$storyViewer.addClass( 'muted' );
+		} else {
+			$storyViewer.removeClass( 'muted' );
+		}
+
+		updateMuteButtonIcon();
+	}
+
+	/**
+	 * Toggle mute state
+	 */
+	function toggleMute( e ) {
+		if ( e ) {
+			e.preventDefault();
+			e.stopPropagation();
+		}
+		isGloballyMuted = ! isGloballyMuted;
+		applyMuteState();
+	}
+
+	/**
+	 * Inject mute button into the story viewer header
+	 */
+	function injectMuteButton() {
+		const $modal = $( '#zuck-modal' );
+		if ( ! $modal.length ) {
+			return;
+		}
+
+		// Check if button already exists
+		if ( $modal.find( '.wpz-insta-mute-btn' ).length ) {
+			updateMuteButtonIcon();
+			return;
+		}
+
+		// Find the header right section and inject the button before the close button
+		const $headerRight = $modal.find( '.story-viewer .head .right' );
+		if ( $headerRight.length ) {
+			const $closeBtn = $headerRight.find( '.close' );
+			const $muteBtn = $( '<button>' )
+				.addClass( 'wpz-insta-mute-btn' )
+				.attr( 'type', 'button' )
+				.attr( 'aria-label', isGloballyMuted ? 'Unmute' : 'Mute' )
+				.html( isGloballyMuted ? muteIconSVG : unmuteIconSVG )
+				.on( 'click', toggleMute );
+
+			if ( $closeBtn.length ) {
+				$closeBtn.before( $muteBtn );
+			} else {
+				$headerRight.append( $muteBtn );
+			}
+		}
+	}
+
+	/**
+	 * Setup video element to enforce mute state
+	 */
+	function setupVideoMuteHandlers( video ) {
+		// Force initial mute state
+		video.muted = isGloballyMuted;
+		if ( ! isGloballyMuted ) {
+			video.volume = 1.0;
+		}
+
+		// Listen for play events to enforce mute state
+		video.addEventListener( 'play', function() {
+			if ( isGloballyMuted && ! this.muted ) {
+				this.muted = true;
+			}
+		} );
+
+		// Listen for volumechange to enforce mute state
+		video.addEventListener( 'volumechange', function() {
+			if ( isGloballyMuted && ! this.muted ) {
+				this.muted = true;
+			}
+		} );
+	}
+
 	// Inject modal styles immediately
 	injectModalStyles();
 
@@ -130,6 +276,9 @@ import 'zuck.js/skins/snapgram';
 
 	// Track if touch handlers are set up
 	let touchHandlersInitialized = false;
+
+	// Track global mute state (muted by default, like Instagram)
+	let isGloballyMuted = true;
 
 	/**
 	 * Setup touch handlers:
@@ -392,9 +541,17 @@ import 'zuck.js/skins/snapgram';
 						}
 
 						callback();
+
+						// After callback (which renders the modal), inject mute button and apply mute state
+						// Use setTimeout to ensure DOM is ready
+						setTimeout( function() {
+							injectMuteButton();
+							applyMuteState();
+						}, 100 );
 					},
 					onView: function( storyId ) {
-						// Story viewed - nothing special needed
+						// Story viewed - apply mute state when navigating between items
+						setTimeout( applyMuteState, 50 );
 					},
 					onEnd: function( storyId, callback ) {
 						// All stories viewed - close the modal
@@ -426,6 +583,9 @@ import 'zuck.js/skins/snapgram';
 					onNavigateItem: function( storyId, nextStoryId, callback ) {
 						// IMPORTANT: Must call callback for navigation to work
 						callback();
+
+						// Apply mute state when navigating to next item
+						setTimeout( applyMuteState, 50 );
 					},
 				},
 			} );
