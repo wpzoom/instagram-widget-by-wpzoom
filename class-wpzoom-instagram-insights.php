@@ -178,18 +178,20 @@ class WPZOOM_Instagram_Insights {
             <?php if ( empty( $accounts ) ) : ?>
                 <div class="notice notice-warning">
                     <p>
-                        <?php esc_html_e( 'No Instagram Business accounts found. Insights are only available for Business accounts.', 'instagram-widget-by-wpzoom' ); ?>
+                        <strong><?php esc_html_e( 'No accounts connected via Facebook found.', 'instagram-widget-by-wpzoom' ); ?></strong>
+                    </p>
+                    <p>
+                        <?php esc_html_e( 'Instagram Insights are only available for Business or Creator accounts that are connected via Facebook.', 'instagram-widget-by-wpzoom' ); ?>
+                        <?php esc_html_e( 'Accounts connected directly via Instagram do not have access to Insights data.', 'instagram-widget-by-wpzoom' ); ?>
                     </p>
                     <p>
                         <?php esc_html_e( 'To use Insights:', 'instagram-widget-by-wpzoom' ); ?>
                         <ol>
-                            <li><?php esc_html_e( 'Convert your Instagram account to a Business account', 'instagram-widget-by-wpzoom' ); ?></li>
-                            <li><?php esc_html_e( 'Go to Instagram Users and reconnect your account', 'instagram-widget-by-wpzoom' ); ?></li>
-                            <li><?php esc_html_e( 'Make sure to use the "Connect Business Account" option', 'instagram-widget-by-wpzoom' ); ?></li>
+                            <li><?php esc_html_e( 'Make sure your Instagram account is a Business or Creator account', 'instagram-widget-by-wpzoom' ); ?></li>
+                            <li><?php esc_html_e( 'Connect your Instagram account to a Facebook Page', 'instagram-widget-by-wpzoom' ); ?></li>
+                            <li><?php esc_html_e( 'Go to Instagram Users and use the "Connect with Facebook" button', 'instagram-widget-by-wpzoom' ); ?></li>
                         </ol>
-                        <a href="https://www.wpzoom.com/documentation/instagram-widget/how-to-convert-instagram-account-to-business-account/" target="_blank" rel="noopener noreferrer" class="button button-secondary">
-                            <?php esc_html_e( 'Learn How to Convert to Business Account', 'instagram-widget-by-wpzoom' ); ?>
-                        </a>
+
                         <a href="<?php echo esc_url( admin_url( 'edit.php?post_type=wpz-insta_user' ) ); ?>" class="button button-primary">
                             <?php esc_html_e( 'Go to Instagram Users', 'instagram-widget-by-wpzoom' ); ?>
                         </a>
