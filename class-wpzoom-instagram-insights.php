@@ -58,6 +58,7 @@ class WPZOOM_Instagram_Insights {
         add_action( 'admin_menu', array( $this, 'add_insights_submenu' ), 20 );
         add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_insights_scripts' ) );
         add_action( 'wp_ajax_wpzoom_instagram_fetch_insights', array( $this, 'fetch_insights_data' ) );
+        add_action( 'wp_ajax_wpzoom_instagram_load_more_posts', array( $this, 'load_more_posts' ) );
     }
 
     /**
@@ -152,6 +153,9 @@ class WPZOOM_Instagram_Insights {
                 'interactions' => __( 'Total Interactions', 'instagram-widget-by-wpzoom' ),
                 'viewPost' => __( 'View Post', 'instagram-widget-by-wpzoom' ),
                 'noPosts' => __( 'No recent posts found.', 'instagram-widget-by-wpzoom' ),
+                'loadMore' => __( 'Load More Posts', 'instagram-widget-by-wpzoom' ),
+                'loading' => __( 'Loading...', 'instagram-widget-by-wpzoom' ),
+                'noMorePosts' => __( 'No more posts to load.', 'instagram-widget-by-wpzoom' ),
 
                 // Error messages
                 'error' => __( 'Error', 'instagram-widget-by-wpzoom' ),
@@ -365,6 +369,46 @@ class WPZOOM_Instagram_Insights {
         }
 
         wp_send_json_success( $data );
+    }
+
+    /**
+     * AJAX handler for loading more posts with pagination
+     */
+    public function load_more_posts() {
+        check_ajax_referer( 'wpzoom_instagram_insights', 'nonce' );
+
+        if ( ! current_user_can( 'manage_options' ) ) {
+            wp_send_json_error( __( 'You do not have permission to access this data.', 'instagram-widget-by-wpzoom' ) );
+        }
+
+        $account_id = isset( $_POST['account_id'] ) ? absint( $_POST['account_id'] ) : 0;
+        $cursor = isset( $_POST['cursor'] ) ? sanitize_text_field( $_POST['cursor'] ) : '';
+
+        if ( empty( $account_id ) ) {
+            wp_send_json_error( __( 'Invalid account ID.', 'instagram-widget-by-wpzoom' ) );
+        }
+
+        if ( empty( $cursor ) ) {
+            wp_send_json_error( __( 'No cursor provided.', 'instagram-widget-by-wpzoom' ) );
+        }
+
+        $instagram_account_id = get_post_meta( $account_id, '_wpz-insta_page_id', true );
+        $token = get_post_meta( $account_id, '_wpz-insta_token', true );
+
+        if ( empty( $instagram_account_id ) || empty( $token ) ) {
+            wp_send_json_error( __( 'Account not properly configured.', 'instagram-widget-by-wpzoom' ) );
+        }
+
+        $media_data = $this->feed_pro->get_media_insights( $instagram_account_id, $token, $cursor, 10 );
+
+        if ( empty( $media_data['items'] ) ) {
+            wp_send_json_error( __( 'No more posts found.', 'instagram-widget-by-wpzoom' ) );
+        }
+
+        wp_send_json_success( array(
+            'posts'       => $media_data['items'],
+            'next_cursor' => $media_data['next_cursor'],
+        ) );
     }
 }
 

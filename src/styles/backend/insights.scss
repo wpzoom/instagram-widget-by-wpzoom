@@ -497,4 +497,28 @@ $box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
             }
         }
     }
+
+    // Load More button wrapper
+    .load-more-wrapper {
+        margin-top: 20px;
+        text-align: center;
+
+        .load-more-button {
+            min-width: 200px;
+            padding: 10px 24px;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+
+            &:disabled {
+                opacity: 0.7;
+                cursor: not-allowed;
+            }
+
+            &:hover:not(:disabled) {
+                transform: translateY(-1px);
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+            }
+        }
+    }
 }

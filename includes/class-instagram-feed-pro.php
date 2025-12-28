@@ -283,8 +283,9 @@ class Instagram_Feed_Pro {
 
         // Add recent media insights
         $media_insights = $this->get_media_insights( $instagram_account_id, $access_token );
-        if ( ! empty( $media_insights ) ) {
-            $merged_data['recent_media'] = $media_insights;
+        if ( ! empty( $media_insights['items'] ) ) {
+            $merged_data['recent_media'] = $media_insights['items'];
+            $merged_data['media_next_cursor'] = $media_insights['next_cursor'];
         }
 
         // Cache the result
@@ -455,34 +456,55 @@ class Instagram_Feed_Pro {
      *
      * @param string $instagram_account_id Instagram business account ID
      * @param string $access_token Access token
-     * @return array Array of media items with insights
+     * @param string $after Optional cursor for pagination
+     * @param int    $limit Number of posts to fetch (default 10)
+     * @return array Array with 'items' (media items with insights) and 'next_cursor' for pagination
      */
-    private function get_media_insights( $instagram_account_id, $access_token ) {
-        // Check cache first
-        $cache_key = 'wpz_insta_media_insights_' . md5( $instagram_account_id );
-        $cached_data = get_transient( $cache_key );
-        if ( false !== $cached_data ) {
-            return $cached_data;
+    public function get_media_insights( $instagram_account_id, $access_token, $after = '', $limit = 10 ) {
+        // Only use cache for initial load (no pagination cursor)
+        if ( empty( $after ) ) {
+            $cache_key = 'wpz_insta_media_insights_' . md5( $instagram_account_id );
+            $cached_data = get_transient( $cache_key );
+            if ( false !== $cached_data ) {
+                return $cached_data;
+            }
         }
 
         $params = array(
             'fields' => 'id,media_type,media_url,permalink,thumbnail_url,timestamp,caption,like_count,comments_count',
-            'limit' => 10,
+            'limit' => $limit,
             'access_token' => $access_token
         );
+
+        // Add pagination cursor if provided
+        if ( ! empty( $after ) ) {
+            $params['after'] = $after;
+        }
 
         $url = "https://graph.facebook.com/v21.0/{$instagram_account_id}/media?" . http_build_query( $params );
 
         $response = wp_remote_get( $url );
         $media_items = array();
+        $next_cursor = '';
 
         if ( is_wp_error( $response ) || 200 !== wp_remote_retrieve_response_code( $response ) ) {
-            return $media_items;
+            return array(
+                'items'       => $media_items,
+                'next_cursor' => $next_cursor,
+            );
         }
 
         $data = json_decode( wp_remote_retrieve_body( $response ), true );
         if ( empty( $data['data'] ) ) {
-            return $media_items;
+            return array(
+                'items'       => $media_items,
+                'next_cursor' => $next_cursor,
+            );
+        }
+
+        // Extract pagination cursor for next page
+        if ( ! empty( $data['paging']['cursors']['after'] ) ) {
+            $next_cursor = $data['paging']['cursors']['after'];
         }
 
         foreach ( $data['data'] as $media ) {
@@ -572,12 +594,17 @@ class Instagram_Feed_Pro {
             );
         }
 
-        // Cache the result
-        if ( ! empty( $media_items ) ) {
-            set_transient( $cache_key, $media_items, self::MEDIA_CACHE_TTL );
+        $result = array(
+            'items'       => $media_items,
+            'next_cursor' => $next_cursor,
+        );
+
+        // Cache the result for initial load only
+        if ( empty( $after ) && ! empty( $media_items ) ) {
+            set_transient( $cache_key, $result, self::MEDIA_CACHE_TTL );
         }
 
-        return $media_items;
+        return $result;
     }
 
     /**

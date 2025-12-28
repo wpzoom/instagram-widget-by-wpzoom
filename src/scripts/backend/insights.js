@@ -42,7 +42,9 @@ document.addEventListener('DOMContentLoaded', function() {
     let followersChart = null;
     let engagementChart = null;
     let isLoading = false;
+    let isLoadingMore = false;
     let dailyFollowerChanges = []; // Store daily changes for tooltip display
+    let currentMediaCursor = ''; // Store the pagination cursor for Load More
 
     /**
      * Show loading state on the page
@@ -465,9 +467,9 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
 
-        // Update recent media
+        // Update recent media with pagination cursor
         if (data.recent_media) {
-            updateRecentMedia(data.recent_media);
+            updateRecentMedia(data.recent_media, data.media_next_cursor || '');
         }
 
         // Update charts
@@ -475,14 +477,81 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     /**
+     * Create HTML for a single post element
+     * @param {Object} post - Post data
+     * @returns {HTMLElement} Post element
+     */
+    function createPostElement(post) {
+        const postElement = document.createElement('div');
+        postElement.className = 'recent-post';
+
+        // Prepare video-specific stats
+        const videoStats = (post.type === 'VIDEO' || post.type === 'REEL') ? `
+            <div class="stat">
+                <span class="label">${wpzoomInsights.i18n.videoViews || 'Video Views'}:</span>
+                <span class="value">${formatNumber(post.insights.video_views || 0)}</span>
+            </div>
+        ` : '';
+
+        postElement.innerHTML = `
+            <div class="post-thumbnail">
+                <img src="${escapeHtml(post.thumbnail)}" alt="${escapeHtml(post.caption)}" loading="lazy">
+                ${post.type === 'VIDEO' || post.type === 'REEL' ? '<span class="media-type-badge">VIDEO</span>' : ''}
+            </div>
+            <div class="post-content">
+                <div class="post-caption">${escapeHtml(post.caption)}</div>
+                <div class="post-stats">
+                    <div class="stat">
+                        <span class="label">${wpzoomInsights.i18n.impressionsLabel || 'Impressions'}:</span>
+                        <span class="value">${formatNumber(post.insights.impressions || 0)}</span>
+                    </div>
+                    <div class="stat">
+                        <span class="label">${wpzoomInsights.i18n.reachLabel || 'Reach'}:</span>
+                        <span class="value">${formatNumber(post.insights.reach || 0)}</span>
+                    </div>
+                    <div class="stat">
+                        <span class="label">${wpzoomInsights.i18n.likes || 'Likes'}:</span>
+                        <span class="value">${formatNumber(post.likes || 0)}</span>
+                    </div>
+                    <div class="stat">
+                        <span class="label">${wpzoomInsights.i18n.comments || 'Comments'}:</span>
+                        <span class="value">${formatNumber(post.comments || 0)}</span>
+                    </div>
+                    <div class="stat">
+                        <span class="label">${wpzoomInsights.i18n.saved || 'Saved'}:</span>
+                        <span class="value">${formatNumber(post.insights.saved || 0)}</span>
+                    </div>
+                    ${videoStats}
+                    <div class="stat">
+                        <span class="label">${wpzoomInsights.i18n.interactions || 'Total Interactions'}:</span>
+                        <span class="value">${formatNumber(post.insights.total_interactions || 0)}</span>
+                    </div>
+                </div>
+                <div class="post-meta">
+                    <a href="${escapeHtml(post.url)}" target="_blank" rel="noopener noreferrer" class="view-post">
+                        ${wpzoomInsights.i18n.viewPost || 'View Post'}
+                    </a>
+                    <span class="post-date">${formatDate(post.timestamp)}</span>
+                </div>
+            </div>
+        `;
+
+        return postElement;
+    }
+
+    /**
      * Update recent media posts display
      * @param {Array} media - Array of media items
+     * @param {string} nextCursor - Pagination cursor for next page
      */
-    function updateRecentMedia(media) {
+    function updateRecentMedia(media, nextCursor = '') {
         const container = document.getElementById('recent-posts');
         if (!container) return;
 
         container.innerHTML = '';
+
+        // Store the cursor for Load More
+        currentMediaCursor = nextCursor;
 
         if (!media || media.length === 0) {
             container.innerHTML = `<p class="no-posts">${wpzoomInsights.i18n.noPosts || 'No recent posts found.'}</p>`;
@@ -490,61 +559,111 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         media.forEach(post => {
-            const postElement = document.createElement('div');
-            postElement.className = 'recent-post';
+            container.appendChild(createPostElement(post));
+        });
 
-            // Prepare video-specific stats
-            const videoStats = (post.type === 'VIDEO' || post.type === 'REEL') ? `
-                <div class="stat">
-                    <span class="label">${wpzoomInsights.i18n.videoViews || 'Video Views'}:</span>
-                    <span class="value">${formatNumber(post.insights.video_views || 0)}</span>
-                </div>
-            ` : '';
+        // Add Load More button if there are more posts
+        updateLoadMoreButton(container);
+    }
 
-            postElement.innerHTML = `
-                <div class="post-thumbnail">
-                    <img src="${escapeHtml(post.thumbnail)}" alt="${escapeHtml(post.caption)}" loading="lazy">
-                    ${post.type === 'VIDEO' || post.type === 'REEL' ? '<span class="media-type-badge">VIDEO</span>' : ''}
-                </div>
-                <div class="post-content">
-                    <div class="post-caption">${escapeHtml(post.caption)}</div>
-                    <div class="post-stats">
-                        <div class="stat">
-                            <span class="label">${wpzoomInsights.i18n.impressionsLabel || 'Impressions'}:</span>
-                            <span class="value">${formatNumber(post.insights.impressions || 0)}</span>
-                        </div>
-                        <div class="stat">
-                            <span class="label">${wpzoomInsights.i18n.reachLabel || 'Reach'}:</span>
-                            <span class="value">${formatNumber(post.insights.reach || 0)}</span>
-                        </div>
-                        <div class="stat">
-                            <span class="label">${wpzoomInsights.i18n.likes || 'Likes'}:</span>
-                            <span class="value">${formatNumber(post.likes || 0)}</span>
-                        </div>
-                        <div class="stat">
-                            <span class="label">${wpzoomInsights.i18n.comments || 'Comments'}:</span>
-                            <span class="value">${formatNumber(post.comments || 0)}</span>
-                        </div>
-                        <div class="stat">
-                            <span class="label">${wpzoomInsights.i18n.saved || 'Saved'}:</span>
-                            <span class="value">${formatNumber(post.insights.saved || 0)}</span>
-                        </div>
-                        ${videoStats}
-                        <div class="stat">
-                            <span class="label">${wpzoomInsights.i18n.interactions || 'Total Interactions'}:</span>
-                            <span class="value">${formatNumber(post.insights.total_interactions || 0)}</span>
-                        </div>
-                    </div>
-                    <div class="post-meta">
-                        <a href="${escapeHtml(post.url)}" target="_blank" rel="noopener noreferrer" class="view-post">
-                            ${wpzoomInsights.i18n.viewPost || 'View Post'}
-                        </a>
-                        <span class="post-date">${formatDate(post.timestamp)}</span>
-                    </div>
-                </div>
-            `;
+    /**
+     * Update or create the Load More button
+     * @param {HTMLElement} container - The posts container
+     */
+    function updateLoadMoreButton(container) {
+        // Remove existing Load More wrapper if present
+        const existingWrapper = container.parentElement.querySelector('.load-more-wrapper');
+        if (existingWrapper) {
+            existingWrapper.remove();
+        }
 
-            container.appendChild(postElement);
+        // Only add button if there's a cursor for more posts
+        if (!currentMediaCursor) {
+            return;
+        }
+
+        const wrapper = document.createElement('div');
+        wrapper.className = 'load-more-wrapper';
+        wrapper.innerHTML = `
+            <button type="button" class="button button-primary load-more-button">
+                ${wpzoomInsights.i18n.loadMore || 'Load More Posts'}
+            </button>
+        `;
+
+        // Insert after the posts container
+        container.parentElement.appendChild(wrapper);
+
+        // Attach click handler
+        const button = wrapper.querySelector('.load-more-button');
+        button.addEventListener('click', handleLoadMore);
+    }
+
+    /**
+     * Handle Load More button click
+     */
+    function handleLoadMore() {
+        if (isLoadingMore || !currentMediaCursor) return;
+
+        const button = document.querySelector('.load-more-button');
+        if (!button) return;
+
+        isLoadingMore = true;
+        const originalText = button.textContent;
+        button.textContent = wpzoomInsights.i18n.loading || 'Loading...';
+        button.disabled = true;
+
+        jQuery.ajax({
+            url: wpzoomInsights.ajaxurl,
+            type: 'POST',
+            data: {
+                action: 'wpzoom_instagram_load_more_posts',
+                nonce: wpzoomInsights.nonce,
+                account_id: accountSelector.value,
+                cursor: currentMediaCursor
+            },
+            success: function(response) {
+                isLoadingMore = false;
+
+                if (response.success && response.data) {
+                    // Update cursor for next load
+                    currentMediaCursor = response.data.next_cursor || '';
+
+                    // Append new posts
+                    const container = document.getElementById('recent-posts');
+                    if (container && response.data.posts) {
+                        response.data.posts.forEach(post => {
+                            container.appendChild(createPostElement(post));
+                        });
+                    }
+
+                    // Update Load More button
+                    if (currentMediaCursor) {
+                        button.textContent = originalText;
+                        button.disabled = false;
+                    } else {
+                        // No more posts, remove the button
+                        const wrapper = document.querySelector('.load-more-wrapper');
+                        if (wrapper) {
+                            wrapper.remove();
+                        }
+                    }
+                } else {
+                    button.textContent = wpzoomInsights.i18n.noMorePosts || 'No more posts to load.';
+                    button.disabled = true;
+                    setTimeout(() => {
+                        const wrapper = document.querySelector('.load-more-wrapper');
+                        if (wrapper) {
+                            wrapper.remove();
+                        }
+                    }, 2000);
+                }
+            },
+            error: function() {
+                isLoadingMore = false;
+                button.textContent = originalText;
+                button.disabled = false;
+                showError(wpzoomInsights.i18n.networkError || 'Network error occurred. Please try again.');
+            }
         });
     }
 
