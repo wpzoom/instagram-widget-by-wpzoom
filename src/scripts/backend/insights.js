@@ -313,30 +313,36 @@ document.addEventListener('DOMContentLoaded', function() {
             if (followersCount) {
                 followersCount.textContent = formatNumber(stats.total);
             }
+        }
 
-            // Display followers change
-            const changeText = formatNumber(Math.abs(stats.change)) + ' ' +
-                (wpzoomInsights.i18n.followersChange || 'followers') + ' ' +
-                (stats.change >= 0 ? (wpzoomInsights.i18n.gained || 'gained') : (wpzoomInsights.i18n.lost || 'lost'));
-
-            const percentageText = ' (' +
-                (stats.change >= 0 ? '+' : '-') +
-                Math.abs(stats.change_percentage).toFixed(1) + '%)';
-
-            const followersChange = document.getElementById('followers-change');
-            if (followersChange) {
-                followersChange.textContent = changeText + percentageText;
-                updateChangeClass('followers-change', stats.change);
+        // Update new/lost/net followers breakdown
+        if (data.new_followers && data.new_followers.length > 0) {
+            const newFollowersEl = document.getElementById('new-followers');
+            if (newFollowersEl) {
+                const newValue = data.new_followers[0].value;
+                newFollowersEl.textContent = '+' + formatNumber(newValue);
             }
+        }
 
-            // Update period info
-            const followersPeriod = document.getElementById('followers-period');
-            if (followersPeriod) {
-                followersPeriod.textContent =
-                    (wpzoomInsights.i18n.startedWith || 'Started with') + ' ' +
-                    formatNumber(stats.period_start) + ' ' +
-                    (wpzoomInsights.i18n.endedWith || ', ended with') + ' ' +
-                    formatNumber(stats.period_end);
+        if (data.lost_followers && data.lost_followers.length > 0) {
+            const lostFollowersEl = document.getElementById('lost-followers');
+            if (lostFollowersEl) {
+                const lostValue = data.lost_followers[0].value;
+                lostFollowersEl.textContent = '-' + formatNumber(lostValue);
+            }
+        }
+
+        if (data.net_followers && data.net_followers.length > 0) {
+            const netFollowersEl = document.getElementById('net-followers');
+            if (netFollowersEl) {
+                const netValue = data.net_followers[0].value;
+                netFollowersEl.textContent = (netValue >= 0 ? '+' : '') + formatNumber(netValue);
+                netFollowersEl.classList.remove('positive', 'negative');
+                if (netValue > 0) {
+                    netFollowersEl.classList.add('positive');
+                } else if (netValue < 0) {
+                    netFollowersEl.classList.add('negative');
+                }
             }
         }
 

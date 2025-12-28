@@ -501,7 +501,7 @@ class Instagram_Feed_Pro {
         $since_timestamp   = strtotime( $since_date );
         $until_timestamp   = strtotime( $until_date );
 
-        // Get follows_and_unfollows with breakdown
+        // Get follows_and_unfollows with breakdown by follow_type
         $follows_params = array(
             'metric'       => 'follows_and_unfollows',
             'period'       => 'day',
@@ -520,15 +520,47 @@ class Instagram_Feed_Pro {
             if ( ! empty( $follows_data['data'] ) ) {
                 foreach ( $follows_data['data'] as $metric ) {
                     if ( isset( $metric['total_value'] ) ) {
+                        // Total follows + unfollows
                         $profile_data['follows_and_unfollows'] = array( array(
                             'end_time' => gmdate( 'Y-m-d\TH:i:s+0000' ),
                             'value'    => $metric['total_value']['value'] ?? 0,
                         ) );
 
-                        // Parse breakdown for follows vs unfollows
+                        // Parse breakdown for follows vs unfollows (FOLLOWER = new, NON_FOLLOWER = lost)
+                        $new_followers  = 0;
+                        $lost_followers = 0;
+
                         if ( ! empty( $metric['total_value']['breakdowns'] ) ) {
-                            $profile_data['follows_breakdown'] = $metric['total_value']['breakdowns'];
+                            foreach ( $metric['total_value']['breakdowns'] as $breakdown ) {
+                                if ( ! empty( $breakdown['results'] ) ) {
+                                    foreach ( $breakdown['results'] as $result ) {
+                                        $dimension = $result['dimension_values'][0] ?? '';
+                                        $value     = $result['value'] ?? 0;
+
+                                        if ( 'FOLLOWER' === $dimension ) {
+                                            $new_followers = $value;
+                                        } elseif ( 'NON_FOLLOWER' === $dimension ) {
+                                            $lost_followers = $value;
+                                        }
+                                    }
+                                }
+                            }
                         }
+
+                        // Store separate values for new and lost followers
+                        $profile_data['new_followers'] = array( array(
+                            'end_time' => gmdate( 'Y-m-d\TH:i:s+0000' ),
+                            'value'    => $new_followers,
+                        ) );
+                        $profile_data['lost_followers'] = array( array(
+                            'end_time' => gmdate( 'Y-m-d\TH:i:s+0000' ),
+                            'value'    => $lost_followers,
+                        ) );
+                        // Net change (new - lost)
+                        $profile_data['net_followers'] = array( array(
+                            'end_time' => gmdate( 'Y-m-d\TH:i:s+0000' ),
+                            'value'    => $new_followers - $lost_followers,
+                        ) );
                     }
                 }
             }

@@ -216,18 +216,49 @@ $box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 
         // Followers card specific styles
         &.followers {
-            .metric-change {
-                font-weight: 500;
-                margin-top: 8px;
-                line-height: 1.4;
-            }
+            .followers-breakdown {
+                display: flex;
+                gap: 16px;
+                margin-top: 12px;
+                padding-top: 12px;
+                border-top: 1px solid $color-border;
 
-            .metric-period {
-                font-size: 12px;
-                color: $color-text-light;
-                margin-top: 8px;
-                line-height: 1.4;
-                font-style: italic;
+                .breakdown-item {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    flex: 1;
+
+                    .breakdown-label {
+                        font-size: 11px;
+                        color: $color-text-light;
+                        text-transform: uppercase;
+                        letter-spacing: 0.5px;
+                        margin-bottom: 4px;
+                    }
+
+                    .breakdown-value {
+                        font-size: 16px;
+                        font-weight: 600;
+                        color: $color-text;
+
+                        &.positive {
+                            color: $color-positive;
+                        }
+
+                        &.negative {
+                            color: $color-negative;
+                        }
+                    }
+
+                    &.new .breakdown-value {
+                        color: $color-positive;
+                    }
+
+                    &.lost .breakdown-value {
+                        color: $color-negative;
+                    }
+                }
             }
         }
     }

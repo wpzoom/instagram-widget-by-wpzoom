@@ -221,8 +221,20 @@ class WPZOOM_Instagram_Insights {
                         <div class="metric-card followers">
                             <h3><?php esc_html_e( 'Total Followers', 'instagram-widget-by-wpzoom' ); ?></h3>
                             <div class="metric-value" id="followers-count">-</div>
-                            <div class="metric-change" id="followers-change">-</div>
-                            <div class="metric-period" id="followers-period"></div>
+                            <div class="followers-breakdown">
+                                <div class="breakdown-item new">
+                                    <span class="breakdown-label"><?php esc_html_e( 'New', 'instagram-widget-by-wpzoom' ); ?></span>
+                                    <span class="breakdown-value" id="new-followers">-</span>
+                                </div>
+                                <div class="breakdown-item lost">
+                                    <span class="breakdown-label"><?php esc_html_e( 'Lost', 'instagram-widget-by-wpzoom' ); ?></span>
+                                    <span class="breakdown-value" id="lost-followers">-</span>
+                                </div>
+                                <div class="breakdown-item net">
+                                    <span class="breakdown-label"><?php esc_html_e( 'Net', 'instagram-widget-by-wpzoom' ); ?></span>
+                                    <span class="breakdown-value" id="net-followers">-</span>
+                                </div>
+                            </div>
                         </div>
 
                         <div class="metric-card reach">
