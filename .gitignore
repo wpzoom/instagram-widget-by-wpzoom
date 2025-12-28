@@ -9,3 +9,4 @@ node_modules/
 *.zip
 *.map
 .sass-cache
+CLAUDE.md

@@ -1,1 +1,1 @@
-(()=>{"use strict";document.body.addEventListener("load",(function(t){"IMG"==t.target.tagName&&t.target.closest(".zoom-instagram-widget__item")&&"function"==typeof window.parent.wpzInstaUpdatePreviewHeight&&window.parent.wpzInstaUpdatePreviewHeight()}),!0)})();
+(()=>{"use strict";document.body.addEventListener("load",function(t){"IMG"==t.target.tagName&&t.target.closest(".zoom-instagram-widget__item")&&"function"==typeof window.parent.wpzInstaUpdatePreviewHeight&&window.parent.wpzInstaUpdatePreviewHeight()},!0)})();

@@ -1,0 +1,9 @@
+
+
+#elementor-panel-categories {
+    display: flex;
+    flex-direction: column;
+}
+#elementor-panel-category-wpzoom-elementor-instagram {
+    order: -1;
+}

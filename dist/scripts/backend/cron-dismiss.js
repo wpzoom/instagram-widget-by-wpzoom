@@ -1,1 +1,1 @@
-(()=>{"use strict";jQuery((function(t){t(".wpz-insta-cron-notice .notice-dismiss").on("click",(function(){var i=t(this).closest(".notice");t.post(ajaxurl,{action:"wpz-insta_dismiss-cron-notice",nonce:i.attr("data-nonce"),user_id:i.attr("data-user-id")})}))}))})();
+(()=>{"use strict";jQuery(function(t){t(".wpz-insta-cron-notice .notice-dismiss").on("click",function(){var i=t(this).closest(".notice");t.post(ajaxurl,{action:"wpz-insta_dismiss-cron-notice",nonce:i.attr("data-nonce"),user_id:i.attr("data-user-id")})})})})();
