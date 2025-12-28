@@ -432,6 +432,7 @@ class WPZOOM_Instagram_Widget_Settings {
 						'instagram_page_wpzoom-instagram-users',
 						'wpz-insta_feed_page_wpz-insta_settings',
 						'wpz-insta_feed_page_wpzoom-instagram-support',
+						'wpz-insta_feed_page_wpzoom-instagram-insights',
 						'settings_page_wpz-insta-connect',
 						'wpz-insta_feed_page_wpz-insta-connect',
 					)
@@ -2257,7 +2258,7 @@ class WPZOOM_Instagram_Widget_Settings {
         $pro_toggle = apply_filters( 'wpz-insta_admin-pro-options-toggle', true );
 
 
-		if ( 'toplevel_page_wpzoom-instagram' == $current_screen->id || 'wpz-insta_feed' == $current_screen->post_type || 'wpz-insta_user' == $current_screen->post_type || 'instagram_page_wpzoom-instagram-users' == $current_screen->id || 'wpz-insta_feed_page_wpz-insta_settings' == $current_screen->id || 'wpz-insta_feed_page_wpzoom-instagram-support' == $current_screen->id || 'settings_page_wpz-insta-connect' == $current_screen->id ) {
+		if ( 'toplevel_page_wpzoom-instagram' == $current_screen->id || 'wpz-insta_feed' == $current_screen->post_type || 'wpz-insta_user' == $current_screen->post_type || 'instagram_page_wpzoom-instagram-users' == $current_screen->id || 'wpz-insta_feed_page_wpz-insta_settings' == $current_screen->id || 'wpz-insta_feed_page_wpzoom-instagram-support' == $current_screen->id || 'wpz-insta_feed_page_wpzoom-instagram-insights' == $current_screen->id || 'settings_page_wpz-insta-connect' == $current_screen->id ) {
 			?>
 			<footer class="wpz-insta_settings-footer">
 				<div class="wpz-insta_settings-footer-wrap">
@@ -3443,6 +3444,7 @@ class WPZOOM_Instagram_Widget_Settings {
                             <li><?php _e( 'Display user info in the header', 'instagram-widget-by-wpzoom' ); ?></li>
                             <li><strong><?php _e( '[PRO] Display Follower Count', 'instagram-widget-by-wpzoom' ); ?></strong></li>
                             <li><strong><?php _e( '[PRO] Display Instagram Stories', 'instagram-widget-by-wpzoom' ); ?></strong></li>
+                            <li><strong><?php _e( '[PRO] Instagram Insights & Analytics', 'instagram-widget-by-wpzoom' ); ?></strong></li>
 							<li class="no-feature"><?php _e( 'Display hashtag feeds <small><em>Coming Soon</em></small>', 'instagram-widget-by-wpzoom' ); ?></li>
                             <li class="no-feature"><?php _e( 'Display feeds with your mention <small><em>Coming Soon</em></small>', 'instagram-widget-by-wpzoom' ); ?></li>
 						</ul>
@@ -3465,6 +3467,7 @@ class WPZOOM_Instagram_Widget_Settings {
                             <li><strong><?php _e( 'Does not require a Facebook page', 'instagram-widget-by-wpzoom' ); ?></strong></li>
                             <li class="x-feature"><?php _e( '[PRO] Display Follower Count', 'instagram-widget-by-wpzoom' ); ?></li>
                             <li class="x-feature"><?php _e( '[PRO] Display Instagram Stories', 'instagram-widget-by-wpzoom' ); ?></li>
+                            <li class="x-feature"><?php _e( '[PRO] Instagram Insights & Analytics', 'instagram-widget-by-wpzoom' ); ?></li>
                         </ul>
 
                         <note><?php esc_html_e( 'If the connection fails, please generate a new API token manually and enter it in the field Instagram API Access Token at the bottom of this page.', 'instagram-widget-by-wpzoom' ); ?></note><br/>

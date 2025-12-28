@@ -6,7 +6,7 @@ const postcssConfig = require( './postcss.config' );
 const MiniCssExtractPlugin = require( 'mini-css-extract-plugin' );
 const RemoveEmptyScriptsPlugin = require( 'webpack-remove-empty-scripts' );
 const RtlCssPlugin = require( 'rtlcss-webpack-plugin' );
-const nodeSassGlobImporter = require( 'node-sass-glob-importer' );
+// node-sass-glob-importer removed - incompatible with modern sass-loader
 const CopyPlugin = require( 'copy-webpack-plugin' );
 const fs = require( 'fs' );
 
@@ -81,10 +81,12 @@ module.exports = {
 		'scripts/backend/index': path.resolve( process.cwd(), 'src/scripts/backend/index.js' ),
 		'scripts/backend/block': path.resolve( process.cwd(), 'src/scripts/backend/block.js' ),
 		'scripts/backend/cron-dismiss': path.resolve( process.cwd(), 'src/scripts/backend/cron-dismiss.js' ),
+		'scripts/backend/insights': path.resolve( process.cwd(), 'src/scripts/backend/insights.js' ),
 		'scripts/frontend/preview': path.resolve( process.cwd(), 'src/scripts/frontend/preview.js' ),
 		'styles/frontend/index': path.resolve( process.cwd(), 'src/styles/frontend/index.scss' ),
 		'styles/frontend/preview': path.resolve( process.cwd(), 'src/styles/frontend/preview.scss' ),
-		'styles/backend/index': path.resolve( process.cwd(), 'src/styles/backend/index.scss' )
+		'styles/backend/index': path.resolve( process.cwd(), 'src/styles/backend/index.scss' ),
+		'styles/backend/insights': path.resolve( process.cwd(), 'src/styles/backend/insights.scss' )
 	},
 
 	output: {
@@ -130,9 +132,6 @@ module.exports = {
 						loader: require.resolve( 'sass-loader' ),
 						options: {
 							sourceMap: ! isProduction,
-							sassOptions: {
-								importer: nodeSassGlobImporter(),
-							},
 						},
 					},
 				],
