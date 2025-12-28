@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: WPZOOM Instagram Widget 1.7.7\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/instagram-widget-"
 "by-wpzoom\n"
-"POT-Creation-Date: 2025-12-27 08:44+0000\n"
+"POT-Creation-Date: 2025-12-28 14:25+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -26,7 +26,7 @@ msgstr ""
 "X-Textdomain-Support: yes\n"
 "X-Generator: Loco https://localise.biz/"
 
-#: class-wpzoom-instagram-widget-display.php:637
+#: class-wpzoom-instagram-widget-display.php:640
 msgid " [PRO only]"
 msgstr ""
 
@@ -46,22 +46,26 @@ msgstr ""
 msgid " Show <strong>overlay with Instagram icon</strong> on hover"
 msgstr ""
 
-#: class-wpzoom-instagram-widget-display.php:833
+#: class-wpzoom-instagram-widget-display.php:836
 #, php-format
 msgctxt "%2$s = human-readable time difference"
 msgid "%1$s ago"
 msgstr ""
 
-#: class-wpzoom-instagram-widget-display.php:977
+#: class-wpzoom-instagram-widget-display.php:980
 #: class-wpzoom-instagram-widget.php:499
 #, php-format
 msgid "%s ago"
 msgstr ""
 
 #. %s: username
-#: class-wpzoom-instagram-widget-display.php:525
+#: class-wpzoom-instagram-widget-display.php:528
 #, php-format
 msgid "%s has stories available. Click to view."
+msgstr ""
+
+#: class-wpzoom-instagram-insights.php:183
+msgid ", ended with"
 msgstr ""
 
 #: class-wpzoom-instagram-general-settings.php:247
@@ -122,10 +126,32 @@ msgid ""
 "<strong>expired</strong>. Please check"
 msgstr ""
 
-#: class-wpzoom-instagram-widget-display.php:1008
+#: class-wpzoom-instagram-widget-display.php:1011
 msgid ""
 "[Admin-only Notice] Instagram Widget misconfigured or your Access Token "
 "<strong>expired</strong>. Please check"
+msgstr ""
+
+#: class-wpzoom-instagram-insights.php:410
+#: class-wpzoom-instagram-insights.php:447
+msgid "Account not properly configured."
+msgstr ""
+
+#: class-wpzoom-instagram-insights.php:237
+msgid ""
+"Accounts connected directly via Instagram do not have access to Insights "
+"data."
+msgstr ""
+
+#: class-wpzoom-instagram-insights.php:173
+#: class-wpzoom-instagram-insights.php:316
+#: class-wpzoom-instagram-insights.php:562
+msgid "Accounts Engaged"
+msgstr ""
+
+#: class-wpzoom-instagram-insights.php:304
+#: class-wpzoom-instagram-insights.php:550
+msgid "Accounts Reached"
 msgstr ""
 
 #: class-wpzoom-instagram-assets.php:304
@@ -143,7 +169,7 @@ msgstr ""
 msgid "An email will be sent before the Access Token expires"
 msgstr ""
 
-#: class-wpzoom-instagram-widget-display.php:1011
+#: class-wpzoom-instagram-widget-display.php:1014
 #: class-wpzoom-instagram-widget.php:169
 msgid "and reconnect your account."
 msgstr ""
@@ -160,12 +186,31 @@ msgstr ""
 msgid "By Default Algorithm"
 msgstr ""
 
-#: instagram-widget-by-wpzoom.php:61
+#: class-wpzoom-instagram-insights.php:192
+#: class-wpzoom-instagram-insights.php:641
+msgid "Comments"
+msgstr ""
+
+#: instagram-widget-by-wpzoom.php:73
 msgid "connect"
+msgstr ""
+
+#: class-wpzoom-instagram-insights.php:243
+msgid "Connect your Instagram account to a Facebook Page"
+msgstr ""
+
+#: class-wpzoom-instagram-insights.php:208
+msgid "Could not connect to server. Please check your connection."
 msgstr ""
 
 #: class-wpzoom-instagram-image-uploader.php:147
 msgid "Could not retrieve image url with provided media id"
+msgstr ""
+
+#: class-wpzoom-instagram-insights.php:176
+#: class-wpzoom-instagram-insights.php:526
+#, php-format
+msgid "Data for %s - %s"
 msgstr ""
 
 #: class-wpzoom-instagram-assets.php:313
@@ -180,12 +225,20 @@ msgstr ""
 msgid "Delete all Instagram Images from the Media Library"
 msgstr ""
 
+#: class-wpzoom-instagram-insights.php:514
+msgid "Demo Account"
+msgstr ""
+
 #: class-wpzoom-instagram-widget.php:625
 msgid "Desired Image width in pixels:"
 msgstr ""
 
 #: class-wpzoom-instagram-widget.php:618
 msgid "Desired number of Images per row:"
+msgstr ""
+
+#: class-wpzoom-instagram-insights.php:204
+msgid "Dismiss this notice."
 msgstr ""
 
 #: class-wpzoom-instagram-widget.php:26
@@ -208,6 +261,24 @@ msgstr ""
 msgid "Enable Insecure API Requests"
 msgstr ""
 
+#: class-wpzoom-instagram-insights.php:495
+msgid "Engagement metrics and trends"
+msgstr ""
+
+#: class-wpzoom-instagram-insights.php:203
+msgid "Error"
+msgstr ""
+
+#: class-wpzoom-instagram-insights.php:206
+msgid "Failed to fetch insights data. Please try again."
+msgstr ""
+
+#: class-wpzoom-instagram-insights.php:416
+msgid ""
+"Failed to fetch insights data. The Instagram API may be temporarily "
+"unavailable."
+msgstr ""
+
 #: class-wpzoom-instagram-widget.php:665
 msgid ""
 "Fields above do not influence directly widget appearance. Final number of "
@@ -215,17 +286,39 @@ msgid ""
 " This ensures your photos look beautiful on all devices."
 msgstr ""
 
-#: class-wpzoom-instagram-widget-display.php:966
+#: class-wpzoom-instagram-widget-display.php:969
 #: class-wpzoom-instagram-widget.php:212 class-wpzoom-instagram-widget.php:486
 msgid "Follow"
 msgstr ""
 
-#: class-wpzoom-instagram-widget-display.php:572
+#: class-wpzoom-instagram-insights.php:330
+#: class-wpzoom-instagram-insights.php:576
+msgid "Follower Growth"
+msgstr ""
+
+#: class-wpzoom-instagram-insights.php:169
+msgid "Follower growth"
+msgstr ""
+
+#: class-wpzoom-instagram-insights.php:332
+msgid "Follower Growth Chart"
+msgstr ""
+
+#: class-wpzoom-instagram-insights.php:493
+msgid "Follower growth tracking with daily breakdowns"
+msgstr ""
+
+#: class-wpzoom-instagram-insights.php:168
+msgid "Followers"
+msgstr ""
+
+#: class-wpzoom-instagram-widget-display.php:575
 #: class-wpzoom-instagram-widget.php:235
+#: class-wpzoom-instagram-insights.php:179
 msgid "followers"
 msgstr ""
 
-#: class-wpzoom-instagram-widget-display.php:579
+#: class-wpzoom-instagram-widget-display.php:582
 #: class-wpzoom-instagram-widget.php:246
 msgid "following"
 msgstr ""
@@ -236,6 +329,10 @@ msgstr ""
 
 #: class-wpzoom-instagram-assets.php:309
 msgid "from now"
+msgstr ""
+
+#: class-wpzoom-instagram-insights.php:180
+msgid "gained"
 msgstr ""
 
 #: class-wpzoom-instagram-widget-api.php:819
@@ -271,6 +368,14 @@ msgstr ""
 msgid "Go to Instagram Accounts"
 msgstr ""
 
+#: class-wpzoom-instagram-insights.php:248
+msgid "Go to Instagram Users"
+msgstr ""
+
+#: class-wpzoom-instagram-insights.php:244
+msgid "Go to Instagram Users and use the \"Connect with Facebook\" button"
+msgstr ""
+
 #: class-wpzoom-instagram-widget.php:732
 msgid "Hide video <strong>thumbnails</strong>"
 msgstr ""
@@ -299,7 +404,7 @@ msgid ""
 "want to display the feed of a different Instagram account."
 msgstr ""
 
-#: instagram-widget-by-wpzoom.php:61
+#: instagram-widget-by-wpzoom.php:73
 #, php-format
 msgid ""
 "If you have just installed or updated this plugin, please go to the %1$s and "
@@ -308,6 +413,20 @@ msgstr ""
 
 #: class-wpzoom-instagram-widget.php:654
 msgid "Image spacing in pixels:"
+msgstr ""
+
+#: class-wpzoom-instagram-insights.php:189
+#: class-wpzoom-instagram-insights.php:629
+msgid "Impressions"
+msgstr ""
+
+#: class-wpzoom-instagram-insights.php:496
+msgid "Individual post performance insights"
+msgstr ""
+
+#: class-wpzoom-instagram-insights.php:82
+#: class-wpzoom-instagram-insights.php:88
+msgid "Insights"
 msgstr ""
 
 #: class-wpzoom-instagram-widget.php:31
@@ -322,7 +441,18 @@ msgstr ""
 msgid "Instagram Feed"
 msgstr ""
 
-#: class-wpzoom-instagram-widget-display.php:1010
+#: class-wpzoom-instagram-insights.php:228
+#: class-wpzoom-instagram-insights.php:469
+msgid "Instagram Insights"
+msgstr ""
+
+#: class-wpzoom-instagram-insights.php:236
+msgid ""
+"Instagram Insights are only available for Business or Creator accounts that "
+"are connected via Facebook."
+msgstr ""
+
+#: class-wpzoom-instagram-widget-display.php:1013
 #: class-wpzoom-instagram-widget.php:169
 msgid "Instagram Settings Page"
 msgstr ""
@@ -342,6 +472,19 @@ msgstr ""
 msgid "Instagram Widget Settings"
 msgstr ""
 
+#: class-wpzoom-instagram-insights.php:497
+msgid "Interactive charts and visualizations"
+msgstr ""
+
+#: class-wpzoom-instagram-insights.php:396
+#: class-wpzoom-instagram-insights.php:436
+msgid "Invalid account ID."
+msgstr ""
+
+#: class-wpzoom-instagram-insights.php:403
+msgid "Invalid date range."
+msgstr ""
+
 #: class-wpzoom-instagram-image-uploader.php:147
 msgid "Invalid media id."
 msgstr ""
@@ -354,6 +497,27 @@ msgstr ""
 msgid "Invalid nonce."
 msgstr ""
 
+#: class-wpzoom-instagram-insights.php:270
+msgid "Last 14 days"
+msgstr ""
+
+#: class-wpzoom-instagram-insights.php:271
+#: class-wpzoom-instagram-insights.php:520
+msgid "Last 30 days"
+msgstr ""
+
+#: class-wpzoom-instagram-insights.php:269
+msgid "Last 7 days"
+msgstr ""
+
+#: class-wpzoom-instagram-insights.php:272
+msgid "Last 90 days"
+msgstr ""
+
+#: class-wpzoom-instagram-insights.php:274
+msgid "Last month"
+msgstr ""
+
 #: class-wpzoom-instagram-widget.php:720
 msgid "Lazy Load <strong>images</strong>"
 msgstr ""
@@ -362,12 +526,34 @@ msgstr ""
 msgid "Learn More About This Change"
 msgstr ""
 
+#: class-wpzoom-instagram-insights.php:191
+#: class-wpzoom-instagram-insights.php:637
+msgid "Likes"
+msgstr ""
+
 #: class-wpzoom-instagram-general-settings.php:100
 msgid "Load CSS and JS on all pages"
 msgstr ""
 
-#: class-wpzoom-instagram-widget-display.php:637
+#: class-wpzoom-instagram-insights.php:198
+msgid "Load More Posts"
+msgstr ""
+
+#: class-wpzoom-instagram-widget-display.php:640
 msgid "Load More&hellip;"
+msgstr ""
+
+#: class-wpzoom-instagram-insights.php:199
+msgid "Loading..."
+msgstr ""
+
+#: class-wpzoom-instagram-insights.php:293
+#: class-wpzoom-instagram-insights.php:539
+msgid "Lost"
+msgstr ""
+
+#: class-wpzoom-instagram-insights.php:181
+msgid "lost"
 msgstr ""
 
 #: class-wpzoom-instagram-widget.php:644
@@ -378,12 +564,62 @@ msgstr ""
 msgid "Major Instagram API Update"
 msgstr ""
 
+#: class-wpzoom-instagram-insights.php:242
+msgid "Make sure your Instagram account is a Business or Creator account"
+msgstr ""
+
 #: class-wpzoom-instagram-assets.php:307
 msgid "minute"
 msgstr ""
 
 #: class-wpzoom-instagram-assets.php:308
 msgid "minutes"
+msgstr ""
+
+#: class-wpzoom-instagram-insights.php:297
+#: class-wpzoom-instagram-insights.php:543
+msgid "Net"
+msgstr ""
+
+#: class-wpzoom-instagram-insights.php:207
+msgid "Network error occurred. Please try again."
+msgstr ""
+
+#: class-wpzoom-instagram-insights.php:79
+msgid "NEW"
+msgstr ""
+
+#: class-wpzoom-instagram-insights.php:289
+#: class-wpzoom-instagram-insights.php:535
+msgid "New"
+msgstr ""
+
+#: class-wpzoom-instagram-insights.php:205
+msgid "No account selected."
+msgstr ""
+
+#: class-wpzoom-instagram-insights.php:233
+msgid "No accounts connected via Facebook found."
+msgstr ""
+
+#: class-wpzoom-instagram-insights.php:440
+msgid "No cursor provided."
+msgstr ""
+
+#: class-wpzoom-instagram-insights.php:453
+msgid "No more posts found."
+msgstr ""
+
+#: class-wpzoom-instagram-insights.php:200
+msgid "No more posts to load."
+msgstr ""
+
+#: class-wpzoom-instagram-insights.php:197
+msgid "No recent posts found."
+msgstr ""
+
+#: class-wpzoom-instagram-insights.php:331
+msgid "Note: Instagram limits follower data to the last 30 days."
 msgstr ""
 
 #: class-wpzoom-instagram-general-settings.php:127
@@ -398,15 +634,19 @@ msgstr ""
 msgid "Open items in a <strong>lightbox</strong>"
 msgstr ""
 
-#: instagram-widget-by-wpzoom.php:60
+#: class-wpzoom-instagram-insights.php:503
+msgid "Part of the Instagram Widget PRO plugin"
+msgstr ""
+
+#: instagram-widget-by-wpzoom.php:72
 msgid "Please configure Instagram Widget"
 msgstr ""
 
-#: class-wpzoom-instagram-widget-display.php:677
+#: class-wpzoom-instagram-widget-display.php:680
 msgid "Please select an account in the panel to the left&hellip;"
 msgstr ""
 
-#: class-wpzoom-instagram-widget-display.php:565
+#: class-wpzoom-instagram-widget-display.php:568
 #: class-wpzoom-instagram-widget.php:224
 msgid "posts"
 msgstr ""
@@ -415,15 +655,60 @@ msgstr ""
 msgid "Press space to see next"
 msgstr ""
 
+#: class-wpzoom-instagram-insights.php:79
+msgid "PRO"
+msgstr ""
+
+#: class-wpzoom-instagram-insights.php:170
+#: class-wpzoom-instagram-insights.php:190
+#: class-wpzoom-instagram-insights.php:335
+#: class-wpzoom-instagram-insights.php:596
+#: class-wpzoom-instagram-insights.php:633
+msgid "Reach"
+msgstr ""
+
+#: class-wpzoom-instagram-insights.php:494
+msgid "Reach and impressions analytics"
+msgstr ""
+
+#: class-wpzoom-instagram-insights.php:336
+msgid "Reach Chart"
+msgstr ""
+
+#: class-wpzoom-instagram-insights.php:341
+#: class-wpzoom-instagram-insights.php:618
+msgid "Recent Posts Performance"
+msgstr ""
+
+#: class-wpzoom-instagram-insights.php:626
+msgid "Sample post caption showing engagement metrics..."
+msgstr ""
+
+#: class-wpzoom-instagram-insights.php:193
+msgid "Saved"
+msgstr ""
+
 #: class-wpzoom-instagram-assets.php:310
 msgid "seconds"
+msgstr ""
+
+#: class-wpzoom-instagram-insights.php:256
+msgid "Select Account"
 msgstr ""
 
 #: elementor/widgets/wpzoom-instagram-feed/wpzoom-instagram-feed.php:159
 msgid "Select an Instagram Feed"
 msgstr ""
 
-#: instagram-widget-by-wpzoom.php:61
+#: class-wpzoom-instagram-insights.php:267
+msgid "Select Period"
+msgstr ""
+
+#: class-wpzoom-instagram-insights.php:210
+msgid "Server error occurred. Please try again later."
+msgstr ""
+
+#: instagram-widget-by-wpzoom.php:73
 msgid "Settings page"
 msgstr ""
 
@@ -437,6 +722,10 @@ msgstr ""
 
 #: class-wpzoom-instagram-widget.php:648
 msgid "Standard Resolution ( 640x640px )"
+msgstr ""
+
+#: class-wpzoom-instagram-insights.php:182
+msgid "Started with"
 msgstr ""
 
 #: class-wpzoom-instagram-general-settings.php:174
@@ -475,6 +764,10 @@ msgid ""
 "configuration..."
 msgstr ""
 
+#: class-wpzoom-instagram-insights.php:273
+msgid "This month"
+msgstr ""
+
 #: class-wpzoom-instagram-widget.php:641
 msgid "Thumbnail ( 150x150px )"
 msgstr ""
@@ -494,23 +787,75 @@ msgid ""
 "Instagram methods."
 msgstr ""
 
+#: class-wpzoom-instagram-insights.php:240
+msgid "To use Insights:"
+msgstr ""
+
 #: class-wpzoom-instagram-assets.php:312
 msgid "tomorrow"
+msgstr ""
+
+#: class-wpzoom-instagram-insights.php:285
+#: class-wpzoom-instagram-insights.php:531
+msgid "Total Followers"
+msgstr ""
+
+#: class-wpzoom-instagram-insights.php:186
+msgid "Total for period"
+msgstr ""
+
+#: class-wpzoom-instagram-insights.php:195
+msgid "Total Interactions"
+msgstr ""
+
+#: class-wpzoom-instagram-insights.php:322
+#: class-wpzoom-instagram-insights.php:568
+msgid "Total Likes"
 msgstr ""
 
 #: class-wpzoom-instagram-assets.php:301
 msgid "Touch to unmute"
 msgstr ""
 
-#: class-wpzoom-instagram-widget-display.php:517
-#: class-wpzoom-instagram-widget-display.php:615
-#: class-wpzoom-instagram-widget-display.php:981
+#: class-wpzoom-instagram-insights.php:490
+msgid ""
+"Track your Instagram account's growth and performance with detailed "
+"analytics. Get insights on followers, reach, engagement, and individual post "
+"performance."
+msgstr ""
+
+#: class-wpzoom-instagram-insights.php:488
+msgid "Unlock Instagram Insights"
+msgstr ""
+
+#: class-wpzoom-instagram-insights.php:500
+msgid "Upgrade to PRO"
+msgstr ""
+
+#: class-wpzoom-instagram-insights.php:194
+msgid "Video Views"
+msgstr ""
+
+#: class-wpzoom-instagram-widget-display.php:520
+#: class-wpzoom-instagram-widget-display.php:618
+#: class-wpzoom-instagram-widget-display.php:984
 #: class-wpzoom-instagram-widget.php:32 class-wpzoom-instagram-widget.php:504
 msgid "View on Instagram"
 msgstr ""
 
-#: class-wpzoom-instagram-widget-display.php:942
+#: class-wpzoom-instagram-insights.php:196
+msgid "View Post"
+msgstr ""
+
+#: class-wpzoom-instagram-widget-display.php:945
 msgid "View Reel on Instagram"
+msgstr ""
+
+#: class-wpzoom-instagram-insights.php:171
+#: class-wpzoom-instagram-insights.php:172
+#: class-wpzoom-instagram-insights.php:310
+#: class-wpzoom-instagram-insights.php:556
+msgid "Views"
 msgstr ""
 
 #: class-wpzoom-instagram-assets.php:303
@@ -580,7 +925,13 @@ msgstr ""
 msgid "You do not have enough permission to view this page"
 msgstr ""
 
-#: instagram-widget-by-wpzoom.php:62
+#: class-wpzoom-instagram-insights.php:209
+#: class-wpzoom-instagram-insights.php:388
+#: class-wpzoom-instagram-insights.php:429
+msgid "You do not have permission to access this data."
+msgstr ""
+
+#: instagram-widget-by-wpzoom.php:74
 msgid ""
 "You have to generate Instagram Access Token to allow widget to display your "
 "media."
