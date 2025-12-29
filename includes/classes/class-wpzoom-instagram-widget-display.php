@@ -320,7 +320,7 @@ class Wpzoom_Instagram_Widget_Display {
 				$show_user_bio = isset( $args['show-account-bio'] ) && boolval( $args['show-account-bio'] );
 				$user_bio = get_the_content( null, false, $user );
 				$show_user_image = isset( $args['show-account-image'] ) && boolval( $args['show-account-image'] );
-				$user_image = get_the_post_thumbnail_url( $user, 'thumbnail' ) ?: plugin_dir_url( __FILE__ ) . 'dist/images/backend/icon-insta.png';
+				$user_image = get_the_post_thumbnail_url( $user, 'thumbnail' ) ?: WPZOOM_INSTAGRAM_PLUGIN_URL . 'dist/images/backend/icon-insta.png';
 				$user_account_token = get_post_meta( $user_id, '_wpz-insta_token', true ) ?: '-1';
 				$user_business_page_id = get_post_meta( $user_id, '_wpz-insta_page_id', true ) ?: null;	
 
@@ -708,7 +708,7 @@ class Wpzoom_Instagram_Widget_Display {
 			$allowed_post_types = isset( $args['allowed-post-types'] ) ? $args['allowed-post-types'] : 'IMAGE,VIDEO,CAROUSEL_ALBUM';
 			$image_size = isset( $args['image-size'] ) && in_array( $args['image-size'], array( 'thumbnail', 'low_resolution', 'standard_resolution', 'full_resolution' ) ) ? $args['image-size'] : 'standard_resolution';
 			$small_class = $image_size <= 180 ? 'small' : '';
-			$svg_icons = plugin_dir_url( __FILE__ ) . 'dist/images/frontend/wpzoom-instagram-icons.svg';
+			$svg_icons = WPZOOM_INSTAGRAM_PLUGIN_URL . 'dist/images/frontend/wpzoom-instagram-icons.svg';
 			$preview = isset( $args['preview'] ) ? true : false;
 
 			$show_likes    = self::$instance->is_pro && isset( $args['show-likes'] ) && boolval( $args['show-likes'] );
@@ -882,7 +882,7 @@ class Wpzoom_Instagram_Widget_Display {
 				$count = 0;
 				$user_name = get_the_title( $user );
 				$user_name_display = sprintf( '@%s', $user_name );
-				$user_image = get_the_post_thumbnail_url( $user, 'thumbnail' ) ?: plugin_dir_url( __FILE__ ) . 'dist/images/backend/icon-insta.png';
+				$user_image = get_the_post_thumbnail_url( $user, 'thumbnail' ) ?: WPZOOM_INSTAGRAM_PLUGIN_URL . 'dist/images/backend/icon-insta.png';
 
 				foreach ( $items as $item ) {
 					$count++;

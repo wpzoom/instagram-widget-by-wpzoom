@@ -36,18 +36,18 @@ if ( ! defined( 'WPZOOM_INSTAGRAM_PLUGIN_URL' ) ) {
 require_once WPZOOM_INSTAGRAM_PLUGIN_PATH . 'includes/class-instagram-feed-pro.php';
 
 // Then load all other classes that might depend on it
-require_once WPZOOM_INSTAGRAM_PLUGIN_PATH . 'class-wpzoom-instagram-image-uploader.php';
-require_once WPZOOM_INSTAGRAM_PLUGIN_PATH . 'class-wpzoom-instagram-widget-settings.php';
-require_once WPZOOM_INSTAGRAM_PLUGIN_PATH . 'class-wpzoom-instagram-general-settings.php';
-require_once WPZOOM_INSTAGRAM_PLUGIN_PATH . 'class-wpzoom-instagram-widget-api.php';
-require_once WPZOOM_INSTAGRAM_PLUGIN_PATH . 'class-wpzoom-instagram-widget-display.php';
-require_once WPZOOM_INSTAGRAM_PLUGIN_PATH . 'class-wpzoom-instagram-widget.php';
-require_once WPZOOM_INSTAGRAM_PLUGIN_PATH . 'class-wpzoom-instagram-block.php';
-require_once WPZOOM_INSTAGRAM_PLUGIN_PATH . 'class-wpzoom-instagram-assets.php';
-require_once WPZOOM_INSTAGRAM_PLUGIN_PATH . 'class-wpzoom-instagram-widget-after-setup.php';
-require_once WPZOOM_INSTAGRAM_PLUGIN_PATH . 'class-wpzoom-instagram-email-notification.php';
-require_once WPZOOM_INSTAGRAM_PLUGIN_PATH . 'class-wpzoom-instagram-insights.php';
-require_once WPZOOM_INSTAGRAM_PLUGIN_PATH . 'class-wpzoom-instagram-review-notice.php';
+require_once WPZOOM_INSTAGRAM_PLUGIN_PATH . 'includes/classes/class-wpzoom-instagram-image-uploader.php';
+require_once WPZOOM_INSTAGRAM_PLUGIN_PATH . 'includes/classes/class-wpzoom-instagram-widget-settings.php';
+require_once WPZOOM_INSTAGRAM_PLUGIN_PATH . 'includes/classes/class-wpzoom-instagram-general-settings.php';
+require_once WPZOOM_INSTAGRAM_PLUGIN_PATH . 'includes/classes/class-wpzoom-instagram-widget-api.php';
+require_once WPZOOM_INSTAGRAM_PLUGIN_PATH . 'includes/classes/class-wpzoom-instagram-widget-display.php';
+require_once WPZOOM_INSTAGRAM_PLUGIN_PATH . 'includes/classes/class-wpzoom-instagram-widget.php';
+require_once WPZOOM_INSTAGRAM_PLUGIN_PATH . 'includes/classes/class-wpzoom-instagram-block.php';
+require_once WPZOOM_INSTAGRAM_PLUGIN_PATH . 'includes/classes/class-wpzoom-instagram-assets.php';
+require_once WPZOOM_INSTAGRAM_PLUGIN_PATH . 'includes/classes/class-wpzoom-instagram-widget-after-setup.php';
+require_once WPZOOM_INSTAGRAM_PLUGIN_PATH . 'includes/classes/class-wpzoom-instagram-email-notification.php';
+require_once WPZOOM_INSTAGRAM_PLUGIN_PATH . 'includes/classes/class-wpzoom-instagram-insights.php';
+require_once WPZOOM_INSTAGRAM_PLUGIN_PATH . 'includes/classes/class-wpzoom-instagram-review-notice.php';
 
 add_action( 'widgets_init', 'zoom_instagram_widget_register' );
 function zoom_instagram_widget_register() {

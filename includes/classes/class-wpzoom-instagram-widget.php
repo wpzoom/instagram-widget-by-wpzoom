@@ -282,11 +282,11 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 		$show_overlay          = wp_validate_boolean( $instance['show-counts-on-hover'] );
 		$show_media_type_icons = wp_validate_boolean( $instance['display-media-type-icons'] );
 		$small_class           = ( ! empty( $instance['image-width'] ) && $instance['image-width'] <= 180 ) ? 'small' : '';
-		$svg_icons             = plugin_dir_url( __FILE__ ) . 'dist/images/frontend/wpzoom-instagram-icons.svg';
+		$svg_icons             = WPZOOM_INSTAGRAM_PLUGIN_URL . 'dist/images/frontend/wpzoom-instagram-icons.svg';
 		$lightbox              = isset( $instance['lightbox'] ) ? wp_validate_boolean( $instance['lightbox'] ) : true;
 		$user_nfo              = is_object( $user_info ) && ! empty( $user_info ) && ! empty( $user_info->data ) ? $user_info->data : false;
 		$username              = false !== $user_nfo ? $user_nfo->username : '';
-		$avatar                = false !== $user_nfo && ! empty( $user_nfo->profile_picture ) ? $user_nfo->profile_picture : plugin_dir_url( __FILE__ ) . 'dist/images/backend/icon-insta.png';
+		$avatar                = false !== $user_nfo && ! empty( $user_nfo->profile_picture ) ? $user_nfo->profile_picture : WPZOOM_INSTAGRAM_PLUGIN_URL . 'dist/images/backend/icon-insta.png';
 		$full_name             = false !== $user_nfo && ! empty( $user_nfo->full_name ) ? $user_nfo->full_name : '';
 		?>
 		<ul class="zoom-instagram-widget__items layout-legacy zoom-instagram-widget__items--no-js"

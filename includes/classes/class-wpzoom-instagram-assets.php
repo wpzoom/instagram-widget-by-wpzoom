@@ -94,8 +94,8 @@ if ( ! class_exists( 'WPZOOM_Instagram_Widget_Assets ' ) ) {
 			$has_widget_block   = self::is_active_block_widget( 'wpzoom/instagram-block' ); 
 			$load_css_js        = isset( $general_options['load-css-js'] ) ? true : false;
 
-			$script_asset_file = include( plugin_dir_path( __FILE__ ) . 'dist/scripts/backend/block.asset.php' );
-			$style_asset_file = include( plugin_dir_path( __FILE__ ) . 'dist/styles/frontend/index.asset.php' );
+			$script_asset_file = include( WPZOOM_INSTAGRAM_PLUGIN_PATH . 'dist/scripts/backend/block.asset.php' );
+			$style_asset_file = include( WPZOOM_INSTAGRAM_PLUGIN_PATH . 'dist/styles/frontend/index.asset.php' );
 
 			$has_instagram_feed_elementor_widget = false;
 			if( $post && $post->ID ) {
@@ -105,36 +105,36 @@ if ( ! class_exists( 'WPZOOM_Instagram_Widget_Assets ' ) ) {
 			if( is_admin() || $load_css_js || $should_enqueue || $has_reusable_block || $is_active_widget || $has_shortcode || $has_widget_block || isset( $_GET['wpz-insta-widget-preview'] ) || $has_instagram_feed_elementor_widget ) {
 				wp_register_script(
 					'magnific-popup',
-					plugins_url( 'dist/scripts/library/magnific-popup.js', __FILE__ ),
+					WPZOOM_INSTAGRAM_PLUGIN_URL . 'dist/scripts/library/magnific-popup.js',
 					array( 'jquery', 'underscore', 'wp-util' ),
-					filemtime( plugin_dir_path( __FILE__ ) . 'dist/scripts/library/magnific-popup.js' ),
+					filemtime( WPZOOM_INSTAGRAM_PLUGIN_PATH . 'dist/scripts/library/magnific-popup.js' ),
 					true
 				);
 		
 				wp_register_script(
 					'swiper-js',
-					plugins_url( 'dist/scripts/library/swiper.js', __FILE__ ),
+					WPZOOM_INSTAGRAM_PLUGIN_URL . 'dist/scripts/library/swiper.js',
 					array(),
 					'7.4.1'
 				);
 		
 				wp_register_script(
 					'wpz-insta_block-frontend-script',
-					plugins_url( 'dist/scripts/frontend/block.js', __FILE__ ),
+					WPZOOM_INSTAGRAM_PLUGIN_URL . 'dist/scripts/frontend/block.js',
 					array( 'jquery', 'underscore', 'magnific-popup', 'swiper-js' ),
 					$script_asset_file['version']
 				);
 		
 				wp_register_style(
 					'magnific-popup',
-					plugins_url( 'dist/styles/library/magnific-popup.css', __FILE__ ),
+					WPZOOM_INSTAGRAM_PLUGIN_URL . 'dist/styles/library/magnific-popup.css',
 					array( 'dashicons' ),
 					WPZOOM_INSTAGRAM_VERSION
 				);
 			
 				wp_register_style(
 					'wpz-insta_block-frontend-style',
-					plugins_url( 'dist/styles/frontend/index.css', __FILE__ ),
+					WPZOOM_INSTAGRAM_PLUGIN_URL . 'dist/styles/frontend/index.css',
 					array( 'magnific-popup', 'swiper-css' ),
 					$style_asset_file['version']
 				);
@@ -145,12 +145,12 @@ if ( ! class_exists( 'WPZOOM_Instagram_Widget_Assets ' ) ) {
 
 		public function register_block_assets() {
 
-			$script_asset_file = include( plugin_dir_path( __FILE__ ) . 'dist/scripts/backend/block.asset.php' );
-			$style_asset_file = include( plugin_dir_path( __FILE__ ) . 'dist/styles/frontend/index.asset.php' );
+			$script_asset_file = include( WPZOOM_INSTAGRAM_PLUGIN_PATH . 'dist/scripts/backend/block.asset.php' );
+			$style_asset_file = include( WPZOOM_INSTAGRAM_PLUGIN_PATH . 'dist/styles/frontend/index.asset.php' );
 	
 			wp_register_script(
 				'wpz-insta_block-backend-script',
-				plugins_url( 'dist/scripts/backend/block.js', __FILE__ ),
+				WPZOOM_INSTAGRAM_PLUGIN_URL . 'dist/scripts/backend/block.js',
 				$script_asset_file['dependencies'],
 				$script_asset_file['version']
 			);
@@ -181,21 +181,21 @@ if ( ! class_exists( 'WPZOOM_Instagram_Widget_Assets ' ) ) {
 
                 wp_enqueue_style(
                     'swiper-css',
-                    plugin_dir_url( __FILE__ ) . 'dist/styles/library/swiper.css',
+                    WPZOOM_INSTAGRAM_PLUGIN_URL . 'dist/styles/library/swiper.css',
                     array(),
                     '7.4.1'
                 );
 
 				wp_enqueue_style(
 					'wpz-insta_block-frontend-style',
-					plugin_dir_url( __FILE__ ) . 'dist/styles/frontend/index.css',
+					WPZOOM_INSTAGRAM_PLUGIN_URL . 'dist/styles/frontend/index.css',
 					array( 'dashicons' ),
 					WPZOOM_INSTAGRAM_VERSION
 				);
 
 				wp_enqueue_style(
 					'magnific-popup',
-					plugin_dir_url( __FILE__ ) . 'dist/styles/library/magnific-popup.css',
+					WPZOOM_INSTAGRAM_PLUGIN_URL . 'dist/styles/library/magnific-popup.css',
 					array( 'dashicons' ),
 					WPZOOM_INSTAGRAM_VERSION
 				);
@@ -209,23 +209,23 @@ if ( ! class_exists( 'WPZOOM_Instagram_Widget_Assets ' ) ) {
 		public function register_widget_scripts() {
 			wp_register_script(
 				'zoom-instagram-widget-lazy-load',
-				plugin_dir_url( __FILE__ ) . 'dist/scripts/library/lazy.js',
+				WPZOOM_INSTAGRAM_PLUGIN_URL . 'dist/scripts/library/lazy.js',
 				array( 'jquery' ),
-				filemtime( plugin_dir_path( __FILE__ ) . 'dist/scripts/library/lazy.js' ),
+				filemtime( WPZOOM_INSTAGRAM_PLUGIN_PATH . 'dist/scripts/library/lazy.js' ),
 				true
 			);
 
 			wp_register_script(
 				'magnific-popup',
-				plugin_dir_url( __FILE__ ) . 'dist/scripts/library/magnific-popup.js',
+				WPZOOM_INSTAGRAM_PLUGIN_URL . 'dist/scripts/library/magnific-popup.js',
 				array( 'jquery', 'underscore', 'wp-util' ),
-				filemtime( plugin_dir_path( __FILE__ ) . 'dist/scripts/library/magnific-popup.js' ),
+				filemtime( WPZOOM_INSTAGRAM_PLUGIN_PATH . 'dist/scripts/library/magnific-popup.js' ),
 				true
 			);
 
 			wp_register_script(
 				'swiper-js',
-				plugin_dir_url( __FILE__ ) . 'dist/scripts/library/swiper.js',
+				WPZOOM_INSTAGRAM_PLUGIN_URL . 'dist/scripts/library/swiper.js',
 				array(),
 				'7.0.0-alpha.21',
 				true
@@ -233,7 +233,7 @@ if ( ! class_exists( 'WPZOOM_Instagram_Widget_Assets ' ) ) {
 
 				wp_register_script(
 				'zoom-instagram-widget',
-				plugin_dir_url( __FILE__ ) . 'dist/scripts/frontend/index.js',
+				WPZOOM_INSTAGRAM_PLUGIN_URL . 'dist/scripts/frontend/index.js',
 				array( 'jquery', 'underscore', 'wp-util', 'magnific-popup', 'swiper-js' ),
 				WPZOOM_INSTAGRAM_VERSION,
 				true
@@ -242,7 +242,7 @@ if ( ! class_exists( 'WPZOOM_Instagram_Widget_Assets ' ) ) {
 			// Register Instagram Stories script (uses Zuck.js)
 			wp_register_script(
 				'wpz-insta-stories',
-				plugin_dir_url( __FILE__ ) . 'dist/scripts/frontend/stories.js',
+				WPZOOM_INSTAGRAM_PLUGIN_URL . 'dist/scripts/frontend/stories.js',
 				array( 'jquery' ),
 				WPZOOM_INSTAGRAM_VERSION,
 				true
@@ -251,7 +251,7 @@ if ( ! class_exists( 'WPZOOM_Instagram_Widget_Assets ' ) ) {
 			// Register Instagram Stories CSS (Zuck.js styles)
 			wp_register_style(
 				'wpz-insta-stories',
-				plugin_dir_url( __FILE__ ) . 'dist/scripts/frontend/stories.css',
+				WPZOOM_INSTAGRAM_PLUGIN_URL . 'dist/scripts/frontend/stories.css',
 				array(),
 				WPZOOM_INSTAGRAM_VERSION
 			);

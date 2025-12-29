@@ -452,7 +452,7 @@ class WPZOOM_Instagram_Widget_Settings {
 
 		wp_enqueue_script(
 			'zoom-instagram-widget-cron-dismiss',
-			plugin_dir_url( dirname( __FILE__ ) . '/instagram-widget-by-wpzoom.php' ) . 'dist/scripts/backend/cron-dismiss.js',
+			WPZOOM_INSTAGRAM_PLUGIN_URL . 'dist/scripts/backend/cron-dismiss.js',
 			array( 'jquery' ),
 			WPZOOM_INSTAGRAM_VERSION,
 			true
@@ -736,7 +736,7 @@ class WPZOOM_Instagram_Widget_Settings {
 
 				case 'wpz-insta_account-photo' :
 					$photo_id = get_post_thumbnail_id( get_the_ID() ) ?: -1;
-					$photo_url = get_the_post_thumbnail_url( get_the_ID(), array( 100, 100 ) ) ?: plugins_url( '/dist/images/backend/icon-insta.png', __FILE__ );
+					$photo_url = get_the_post_thumbnail_url( get_the_ID(), array( 100, 100 ) ) ?: WPZOOM_INSTAGRAM_PLUGIN_URL . 'dist/images/backend/icon-insta.png';
 
 					?><div class="wpz-insta_quick-edit"><ul class="wpz-insta_quick-edit-columns">
 					<li class="wpz-insta_account-photo-wrapper">
@@ -1075,7 +1075,7 @@ class WPZOOM_Instagram_Widget_Settings {
 			$token = get_post_meta( $post_id, '_wpz-insta_token', true );
 			$token_expire = $this->get_token_expire_display( $post_id );
 			$photo_id = get_post_thumbnail_id( $post_id ) ?: -1;
-			$photo_url = get_the_post_thumbnail_url( $post_id, array( 100, 100 ) ) ?: plugins_url( '/dist/images/backend/icon-insta.png', __FILE__ );
+			$photo_url = get_the_post_thumbnail_url( $post_id, array( 100, 100 ) ) ?: WPZOOM_INSTAGRAM_PLUGIN_URL . 'dist/images/backend/icon-insta.png';
 			$user_name = sanitize_text_field( get_post_meta( $post_id, '_wpz-insta_user_name', true ) );
 			$bio = get_the_content();
 			$api_url  = get_post_meta( $post_id, '_wpz-insta_page_id', true ) ? $this->get_facebook_graph_api_url() : $this->get_instagram_business_api_url();
@@ -2139,14 +2139,14 @@ class WPZOOM_Instagram_Widget_Settings {
 	function enqueue_preview_scripts() {
 		wp_enqueue_style(
 			'zoom-instagram-widget-preview',
-			plugin_dir_url( dirname( __FILE__ ) . '/instagram-widget-by-wpzoom.php' ) . 'dist/styles/frontend/preview.css',
+			WPZOOM_INSTAGRAM_PLUGIN_URL . 'dist/styles/frontend/preview.css',
 			array(),
 			WPZOOM_INSTAGRAM_VERSION
 		);
 
 		wp_enqueue_script(
 			'zoom-instagram-widget-preview',
-			plugin_dir_url( dirname( __FILE__ ) . '/instagram-widget-by-wpzoom.php' ) . 'dist/scripts/frontend/preview.js',
+			WPZOOM_INSTAGRAM_PLUGIN_URL . 'dist/scripts/frontend/preview.js',
 			array( 'jquery' ),
 			WPZOOM_INSTAGRAM_VERSION,
 			true
@@ -2174,7 +2174,7 @@ class WPZOOM_Instagram_Widget_Settings {
 		}
 
 		try {
-			require_once( plugin_dir_path( __FILE__ ) . 'vendor/autoload.php' );
+			require_once( WPZOOM_INSTAGRAM_PLUGIN_PATH . 'vendor/autoload.php' );
 
 			$document = new DiDom\Document( $output );
 			$body_content = $document->find( 'body > *:not(script):not(link)' );
@@ -3603,8 +3603,8 @@ class WPZOOM_Instagram_Widget_Settings {
 		if ( self::is_wpzinsta_screen() ) {
 			wp_enqueue_media();
 			wp_enqueue_style( 'wp-color-picker' );
-			wp_enqueue_style( 'wpz-insta_block-frontend-style', plugin_dir_url( dirname( __FILE__ ) . '/instagram-widget-by-wpzoom.php' ) . 'dist/styles/backend/index.css', array( 'wp-color-picker' ), WPZOOM_INSTAGRAM_VERSION );
-			wp_enqueue_script( 'zoom-instagram-widget-admin', plugin_dir_url( dirname( __FILE__ ) . '/instagram-widget-by-wpzoom.php' ) . 'dist/scripts/backend/index.js', array( 'jquery', 'wp-color-picker' ), WPZOOM_INSTAGRAM_VERSION );
+			wp_enqueue_style( 'wpz-insta_block-frontend-style', WPZOOM_INSTAGRAM_PLUGIN_URL . 'dist/styles/backend/index.css', array( 'wp-color-picker' ), WPZOOM_INSTAGRAM_VERSION );
+			wp_enqueue_script( 'zoom-instagram-widget-admin', WPZOOM_INSTAGRAM_PLUGIN_URL . 'dist/scripts/backend/index.js', array( 'jquery', 'wp-color-picker' ), WPZOOM_INSTAGRAM_VERSION );
 			wp_localize_script(
 				'zoom-instagram-widget-admin',
 				'zoom_instagram_widget_admin',
@@ -3631,7 +3631,7 @@ class WPZOOM_Instagram_Widget_Settings {
 					'users_url' 					    => admin_url( self::$any_users ? 'edit.php?post_type=wpz-insta_user' : 'post-new.php?post_type=wpz-insta_user' ),
 					'edit_user_url'                     => admin_url( 'edit.php?post_type=wpz-insta_user#post-' ),
 					'preview_url'                       => site_url( '?wpz-insta-widget-preview=true' ),
-					'default_user_thumbnail'            => plugins_url( '/dist/images/backend/icon-insta.png', __FILE__ ),
+					'default_user_thumbnail'            => WPZOOM_INSTAGRAM_PLUGIN_URL . 'dist/images/backend/icon-insta.png',
 					'post_edit_url'                     => admin_url( 'post.php?action=edit&post=' ),
 					'ajax_url'                          => admin_url( 'admin-ajax.php' ),
                     'is_pro'                            => apply_filters( 'wpz-insta_is-pro', false ),
