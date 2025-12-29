@@ -30,6 +30,9 @@ class WPZOOM_Instagram_Widget_Settings {
 	 */
 	public static $feed_settings = array(
 		'user-id'                         => array( 'type' => 'integer', 'default' => -1 ),
+		'user-ids'                        => array( 'type' => 'string',  'default' => '' ), // Comma-separated list of user IDs for multi-account feeds (PRO)
+		'multi-account-header-mode'       => array( 'type' => 'string',  'default' => 'primary' ), // primary, hide, all (PRO)
+		'multi-account-show-attribution'  => array( 'type' => 'boolean', 'default' => false ), // Show account badge on each post (PRO)
 		'check-new-posts-interval-number' => array( 'type' => 'integer', 'default' => 1 ),
 		'check-new-posts-interval-suffix' => array( 'type' => 'integer', 'default' => 2 ),
 		'enable-request-timeout'          => array( 'type' => 'boolean', 'default' => false ),
@@ -1402,6 +1405,19 @@ class WPZOOM_Instagram_Widget_Settings {
 											<div id="wpz-insta_feed-user-remove-btn" class="wpz-insta_feed-user-remove-button button button-secondary"><?php esc_html_e( 'Remove', 'instagram-widget-by-wpzoom' ); ?></div>
 										</div>
 
+										<?php
+										/**
+										 * Action hook for PRO to render additional accounts inside the account selector.
+										 *
+										 * @since 2.2.13
+										 * @param int      $feed_id    The feed ID.
+										 * @param int      $user_id    The primary user ID.
+										 * @param WP_Post  $user       The primary user object.
+										 * @param array    $all_users  All available user accounts.
+										 */
+										do_action( 'wpz-insta_feed-settings-additional-accounts', $post->ID, $user_id, $user, $all_users );
+										?>
+
 										<div class="wpz-insta_feed-user-select-button-wrap">
 											<div class="wpz-insta_feed-user-select-button-highlight"></div>
 											<div id="wpz-insta_feed-user-select-btn" class="wpz-insta_feed-user-select-button button button-primary"><?php esc_html_e( 'Select an Account', 'instagram-widget-by-wpzoom' ); ?></div>
@@ -1411,6 +1427,20 @@ class WPZOOM_Instagram_Widget_Settings {
 									<a href="<?php echo esc_url( $user_edit_link ); ?>" target="_blank" class="wpz-insta_feed-user-select-edit-link"><?php esc_html_e( 'Edit account details', 'instagram-widget-by-wpzoom' ); ?></a>
 								</div>
 							</div>
+
+							<?php
+							/**
+							 * Action hook for PRO multi-account settings section.
+							 *
+							 * @since 2.3.0
+							 * @param int      $feed_id    The feed ID.
+							 * @param int      $user_id    The primary user ID.
+							 * @param WP_Post  $user       The primary user object.
+							 * @param array    $all_users  All available user accounts.
+							 * @param bool     $pro_toggle Whether PRO options toggle is shown.
+							 */
+							do_action( 'wpz-insta_feed-settings-after-account', $post->ID, $user_id, $user, $all_users, $pro_toggle );
+							?>
 
 							<div class="wpz-insta_sidebar-section wpz-insta_sidebar-section-check-new<?php echo $user instanceof WP_Post ? ' active' : ''; ?>">
 								<h4 class="wpz-insta_sidebar-section-title"><?php esc_html_e( 'Check for new posts every', 'instagram-widget-by-wpzoom' ); ?></h4>
@@ -2102,7 +2132,18 @@ class WPZOOM_Instagram_Widget_Settings {
 					<h2 class="wpz-insta_tabs-config-connect-title"><?php esc_html_e( 'Select an Account', 'instagram-widget-by-wpzoom' ); ?></h2>
 					<p class="wpz-insta_tabs-config-connect-description"><?php esc_html_e( 'Show posts from this account:', 'instagram-widget-by-wpzoom' ); ?></p>
 
-					<ul class="wpz-insta_tabs-config-connect-accounts">
+					<?php
+					/**
+					 * Filter to allow modifying the account selector panel before rendering.
+					 *
+					 * @since 2.2.13
+					 * @param bool  $multi_select_enabled Whether multi-select mode is enabled.
+					 * @param array $all_users            All available user accounts.
+					 */
+					$multi_select_enabled = apply_filters( 'wpz-insta_account-selector-multi-select', false, $all_users );
+					?>
+
+					<ul class="wpz-insta_tabs-config-connect-accounts<?php echo $multi_select_enabled ? ' multi-select-enabled' : ''; ?>">
 						<?php foreach ( $all_users as $user ) :
 							$user_id = $user->ID;
 							$user_name = sprintf( '@%s', get_the_title( $user ) );
@@ -2113,11 +2154,25 @@ class WPZOOM_Instagram_Widget_Settings {
 
 							?>
 							<li data-user-id="<?php echo esc_attr( $user_id ); ?>" data-user-name="<?php echo esc_attr( $user_name ); ?>" data-user-type="<?php echo esc_attr( $user_type ); ?>" data-user-token="<?php echo esc_attr( $user_token ); ?>" data-has-page-id="<?php echo $user_has_page_id ? '1' : '0'; ?>">
+								<?php if ( $multi_select_enabled ) : ?>
+								<span class="wpz-insta-account-checkbox"><input type="checkbox" class="wpz-insta-account-select" value="<?php echo esc_attr( $user_id ); ?>" /></span>
+								<?php endif; ?>
 								<h3><?php echo $user_name; ?></h3>
 								<p><?php echo $user_type; ?></p>
 							</li>
 						<?php endforeach; ?>
 					</ul>
+
+					<?php
+					/**
+					 * Action to render additional content after account list in selector.
+					 *
+					 * @since 2.2.13
+					 * @param bool  $multi_select_enabled Whether multi-select mode is enabled.
+					 * @param array $all_users            All available user accounts.
+					 */
+					do_action( 'wpz-insta_account-selector-after-list', $multi_select_enabled, $all_users );
+					?>
 
 					<hr/>
 

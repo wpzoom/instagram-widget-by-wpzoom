@@ -486,6 +486,12 @@ jQuery( function( $ ) {
 
 				if ( ! $target.is( '.preview-exclude' ) ) {
 					const key = $target.attr('name');
+
+					// Skip elements without a name attribute
+					if ( ! key ) {
+						return;
+					}
+
 					let trackingKey = key;
 					let currentValue;
 

@@ -325,6 +325,21 @@ class Wpzoom_Instagram_Widget_Display {
 				$user_business_page_id = get_post_meta( $user_id, '_wpz-insta_page_id', true ) ?: null;	
 
 				if ( '-1' !== $user_account_token ) {
+					/**
+					 * Filter to allow PRO plugin to handle multi-account feeds.
+					 * Return non-null to bypass single-account rendering.
+					 *
+					 * @since 2.3.0
+					 * @param string|null $output      The output markup. Return null to continue with default.
+					 * @param array       $args        Feed arguments.
+					 * @param int         $user_id     Primary user ID.
+					 * @param bool        $preview     Whether this is a preview.
+					 */
+					$multi_account_output = apply_filters( 'wpz-insta_multi-account-feed-output', null, $args, $user_id, $preview );
+					if ( null !== $multi_account_output ) {
+						return $multi_account_output;
+					}
+
 					$attrs = '';
 					$wrapper_classes = '';
 					$layout_names = array( 0 => 'grid', 1 => 'fullwidth', 2 => 'masonry', 3 => 'carousel' );
