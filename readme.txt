@@ -5,7 +5,7 @@ Tags: instagram, instagram feed, instagram gallery, instagram photos, instagram 
 Requires at least: 6.0
 Tested up to: 6.9
 Requires PHP: 7.4
-Stable tag: 2.2.12
+Stable tag: 2.3.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -53,6 +53,7 @@ Upgrade to **[Instagram Widget PRO](https://www.wpzoom.com/plugins/instagram-wid
 * **📊 Instagram Insights & Analytics 🆕** - Track follower growth, reach, impressions, engagement, and individual post performance with beautiful charts
 * **Display Instagram Stories** - Show your Instagram Stories directly on your website
 * **Display Follower Count** - Show your real-time follower count in the feed header
+* **Multi-Account Feed** - Display posts from multiple Instagram accounts in one unified feed
 * **Masonry Layout** - Pinterest-style grid for a modern look
 * **Carousel/Slider** - Showcase your photos in an interactive slider
 * **Responsive Column Control** - Set different columns for desktop, tablet, and mobile
@@ -106,7 +107,6 @@ Looking to contribute? [Fork the repository on GitHub](https://github.com/wpzoom
 4. Click **Connect** and follow the prompts to connect your Instagram account
 5. Create your first feed and customize it to match your website design
 6. Embed the feed using the Gutenberg block, shortcode, or widget
-
 
 
 == Frequently Asked Questions ==
@@ -167,6 +167,10 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 
 
 == Changelog ==
+
+= 2.3.0 =
+* Added new AJAX initial load option that improves page speed on first visit
+* Multiple improvements and bug fixes
 
 = 2.2.12 =
 * Minor bug fixes
