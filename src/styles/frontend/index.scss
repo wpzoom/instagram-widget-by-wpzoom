@@ -1440,3 +1440,87 @@ a.ig-b-v-24:hover {
     }
 }
 
+/* Skeleton Placeholder Styles for AJAX Initial Load */
+.wpz-insta-ajax-placeholder {
+    position: relative;
+    min-height: 200px;
+
+    &.loading::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+        animation: wpz-insta-shimmer 1.5s infinite;
+        pointer-events: none;
+    }
+
+    &.error {
+        opacity: 0.5;
+    }
+}
+
+.wpz-insta-skeleton-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.wpz-insta-skeleton-header-avatar {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    background: linear-gradient(90deg, #e0e0e0 25%, #f0f0f0 50%, #e0e0e0 75%);
+    background-size: 200% 100%;
+    animation: wpz-insta-shimmer-bg 1.5s infinite;
+    flex-shrink: 0;
+}
+
+.wpz-insta-skeleton-header-info {
+    flex: 1;
+}
+
+.wpz-insta-skeleton-header-info-name {
+    width: 120px;
+    height: 16px;
+    background: linear-gradient(90deg, #e0e0e0 25%, #f0f0f0 50%, #e0e0e0 75%);
+    background-size: 200% 100%;
+    animation: wpz-insta-shimmer-bg 1.5s infinite;
+    margin-bottom: 8px;
+    border-radius: 4px;
+}
+
+.wpz-insta-skeleton-header-info-stats {
+    width: 200px;
+    height: 12px;
+    background: linear-gradient(90deg, #e0e0e0 25%, #f0f0f0 50%, #e0e0e0 75%);
+    background-size: 200% 100%;
+    animation: wpz-insta-shimmer-bg 1.5s infinite;
+    border-radius: 4px;
+}
+
+.wpz-insta-skeleton-grid {
+    display: grid;
+}
+
+.wpz-insta-skeleton-grid-item {
+    aspect-ratio: 1;
+    background: linear-gradient(90deg, #e0e0e0 25%, #f0f0f0 50%, #e0e0e0 75%);
+    background-size: 200% 100%;
+    animation: wpz-insta-shimmer-bg 1.5s infinite;
+    border-radius: 4px;
+}
+
+@keyframes wpz-insta-shimmer {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+}
+
+@keyframes wpz-insta-shimmer-bg {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+

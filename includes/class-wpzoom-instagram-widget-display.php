@@ -53,6 +53,10 @@ class Wpzoom_Instagram_Widget_Display {
 		// Add AJAX handlers for fast load more functionality
 		add_action( 'wp_ajax_wpzoom_instagram_load_more', array( $this, 'ajax_load_more_posts' ) );
 		add_action( 'wp_ajax_nopriv_wpzoom_instagram_load_more', array( $this, 'ajax_load_more_posts' ) );
+
+		// Add AJAX handlers for initial feed load (async loading)
+		add_action( 'wp_ajax_wpzoom_instagram_initial_load', array( $this, 'ajax_initial_load' ) );
+		add_action( 'wp_ajax_nopriv_wpzoom_instagram_initial_load', array( $this, 'ajax_initial_load' ) );
 	}
 
 	/**
@@ -168,6 +172,61 @@ class Wpzoom_Instagram_Widget_Display {
 			'lightbox_html' => $lightbox_html,
 			'has_more' => ! empty( $items['paging'] ) && property_exists( $items['paging'], 'next' ) && ! empty( $items['paging']->next ),
 			'next_url' => ! empty( $items['paging'] ) && property_exists( $items['paging'], 'next' ) ? $items['paging']->next : '',
+		);
+
+		wp_send_json_success( $response );
+	}
+
+	/**
+	 * AJAX handler for initial feed load functionality.
+	 * This allows the feed to be loaded asynchronously after page load.
+	 *
+	 * @since 2.3.0
+	 * @return void
+	 */
+	public function ajax_initial_load() {
+		// Prevent caching of AJAX responses by optimization plugins
+		if ( ! headers_sent() ) {
+			header( 'Cache-Control: no-cache, must-revalidate, max-age=0' );
+			header( 'Pragma: no-cache' );
+			header( 'Expires: Wed, 11 Jan 1984 05:00:00 GMT' );
+		}
+
+		// Verify nonce
+		if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['_wpnonce'] ) ), 'wpzinsta-ajax-initial-load' ) ) {
+			wp_send_json_error( 'Invalid nonce' );
+		}
+
+		// Sanitize input data
+		$feed_id = isset( $_POST['feed_id'] ) ? intval( $_POST['feed_id'] ) : -1;
+
+		if ( $feed_id < 0 ) {
+			wp_send_json_error( 'Invalid feed ID' );
+		}
+
+		// Get feed post
+		$feed_post = get_post( $feed_id );
+		if ( ! $feed_post || 'wpz-insta_feed' !== $feed_post->post_type ) {
+			wp_send_json_error( 'Invalid feed' );
+		}
+
+		// Generate feed output using existing method (without AJAX loading to avoid recursion)
+		$feed_settings = array();
+		foreach ( WPZOOM_Instagram_Widget_Settings::$feed_settings as $setting_name => $setting_args ) {
+			$feed_settings[ $setting_name ] = WPZOOM_Instagram_Widget_Settings::get_feed_setting_value( $feed_id, $setting_name );
+		}
+
+		// Disable AJAX loading for this render to get actual content
+		$feed_settings['ajax-initial-load'] = false;
+		$feed_settings['feed-id'] = $feed_id;
+
+		// Get feed HTML
+		$html = $this->output_feed( $feed_id, false, $feed_settings );
+
+		// Prepare response
+		$response = array(
+			'html'    => $html,
+			'feed_id' => $feed_id,
 		);
 
 		wp_send_json_success( $response );
@@ -298,7 +357,15 @@ class Wpzoom_Instagram_Widget_Display {
 		$this->api = Wpzoom_Instagram_Widget_API::getInstance();
 		$output = '';
 		$user_id = isset( $args['user-id'] ) ? intval( $args['user-id'] ) : -1;
-		
+
+		// Check if AJAX initial load is enabled
+		$ajax_initial_load = isset( $args['ajax-initial-load'] ) && boolval( $args['ajax-initial-load'] );
+
+		// If AJAX loading enabled and not an AJAX request and not a preview, render placeholder
+		if ( $ajax_initial_load && ! wp_doing_ajax() && ! $preview && ! $this->is_crawler() ) {
+			return $this->render_skeleton_placeholder( $args );
+		}
+
 		if( $preview ) {
 			$args['preview'] = true;
 		};
@@ -476,23 +543,18 @@ class Wpzoom_Instagram_Widget_Display {
 						if ( $show_user_image || $show_user_nname || $show_user_name || $show_user_bio ) {
 							$output .= '<header class="zoom-instagram-widget__header">';
 
-							// Get follower count using Graph API
-							$followers_count = 0;
-							if (!empty($user_business_page_id)) {
-								$followers_count = $this->api->get_followers_count($user_business_page_id, $user_account_token);
+							// Get all account stats in a single API call (reduces 3 API calls to 1)
+							$account_stats = array(
+								'followers_count' => 0,
+								'follows_count'   => 0,
+								'media_count'     => 0,
+							);
+							if ( ! empty( $user_business_page_id ) ) {
+								$account_stats = $this->api->get_account_stats( $user_business_page_id, $user_account_token );
 							}
-
-							// Get following count using Graph API
-							$following_count = 0;
-							if (!empty($user_business_page_id)) {
-								$following_count = $this->api->get_following($user_business_page_id, $user_account_token);
-							}
-
-							// Get media count using Graph API
-							$media_count = 0;
-							if (!empty($user_business_page_id)) {
-								$media_count = $this->api->get_media_count($user_business_page_id, $user_account_token);
-							}
+							$followers_count = $account_stats['followers_count'];
+							$following_count = $account_stats['follows_count'];
+							$media_count = $account_stats['media_count'];
 
 							if ( $show_user_image && ! empty( $user_image ) ) {
 								// Stories feature is only available in Pro version and when enabled in feed settings
@@ -1355,5 +1417,92 @@ class Wpzoom_Instagram_Widget_Display {
 		}
 
 		return trim( $caption );
+	}
+
+	/**
+	 * Check if the current request is from a search engine crawler.
+	 * If so, render full content instead of placeholder for SEO.
+	 *
+	 * @since 2.3.0
+	 * @return bool True if crawler, false otherwise.
+	 */
+	private function is_crawler() {
+		if ( ! isset( $_SERVER['HTTP_USER_AGENT'] ) ) {
+			return false;
+		}
+
+		$user_agent = sanitize_text_field( wp_unslash( $_SERVER['HTTP_USER_AGENT'] ) );
+		$crawlers = array(
+			'googlebot',
+			'bingbot',
+			'slurp',
+			'duckduckbot',
+			'baiduspider',
+			'yandexbot',
+			'facebookexternalhit',
+			'twitterbot',
+			'linkedinbot',
+			'embedly',
+			'quora link preview',
+			'outbrain',
+			'pinterest',
+			'slack',
+			'vkshare',
+			'w3c_validator',
+			'applebot',
+		);
+
+		$user_agent_lower = strtolower( $user_agent );
+		foreach ( $crawlers as $crawler ) {
+			if ( strpos( $user_agent_lower, $crawler ) !== false ) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * Renders a skeleton placeholder for AJAX-loaded feeds.
+	 *
+	 * @since 2.3.0
+	 * @param array $args Feed configuration arguments.
+	 * @return string HTML markup for skeleton placeholder.
+	 */
+	private function render_skeleton_placeholder( array $args ) {
+		$feed_id = isset( $args['feed-id'] ) ? intval( $args['feed-id'] ) : -1;
+		$col_num = isset( $args['col-num'] ) ? intval( $args['col-num'] ) : 3;
+		$item_num = isset( $args['item-num'] ) ? intval( $args['item-num'] ) : 9;
+		$show_header = isset( $args['show-account-username'] ) && boolval( $args['show-account-username'] );
+		$show_user_image = isset( $args['show-account-image'] ) && boolval( $args['show-account-image'] );
+		$spacing_between = isset( $args['spacing-between'] ) && floatval( $args['spacing-between'] ) > -1 ? floatval( $args['spacing-between'] ) : 10;
+
+		// Generate nonce for AJAX request
+		$nonce = wp_create_nonce( 'wpzinsta-ajax-initial-load' );
+
+		ob_start();
+		?>
+		<div class="wpz-insta-ajax-placeholder"
+			 data-feed-id="<?php echo esc_attr( $feed_id ); ?>"
+			 data-nonce="<?php echo esc_attr( $nonce ); ?>">
+
+			<?php if ( $show_header || $show_user_image ) : ?>
+			<div class="wpz-insta-skeleton-header">
+				<div class="wpz-insta-skeleton-header-avatar"></div>
+				<div class="wpz-insta-skeleton-header-info">
+					<div class="wpz-insta-skeleton-header-info-name"></div>
+					<div class="wpz-insta-skeleton-header-info-stats"></div>
+				</div>
+			</div>
+			<?php endif; ?>
+
+			<div class="wpz-insta-skeleton-grid" style="grid-template-columns: repeat(<?php echo esc_attr( $col_num ); ?>, 1fr); gap: <?php echo esc_attr( $spacing_between ); ?>px;">
+				<?php for ( $i = 0; $i < $item_num; $i++ ) : ?>
+				<div class="wpz-insta-skeleton-grid-item"></div>
+				<?php endfor; ?>
+			</div>
+		</div>
+		<?php
+		return ob_get_clean();
 	}
 }

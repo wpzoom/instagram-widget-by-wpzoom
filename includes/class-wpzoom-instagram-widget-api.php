@@ -1290,6 +1290,67 @@ class Wpzoom_Instagram_Widget_API {
         return $media_count;
     }
 
+    /**
+     * Get all account stats (followers, following, media count) in a single API call.
+     * Uses Facebook Graph API field expansion to reduce HTTP requests.
+     *
+     * @since 2.3.0
+     * @param string $user_business_page_id Instagram business page ID.
+     * @param string $user_account_token    Access token.
+     * @return array Array with keys: followers_count, follows_count, media_count
+     */
+    public function get_account_stats( $user_business_page_id, $user_account_token ) {
+        $default_stats = array(
+            'followers_count' => 0,
+            'follows_count'   => 0,
+            'media_count'     => 0,
+        );
+
+        if ( empty( $user_business_page_id ) || empty( $user_account_token ) ) {
+            return $default_stats;
+        }
+
+        // Create combined transient key
+        $transient_key = 'wpz-insta_account_stats_' . $user_business_page_id;
+        $cached_stats = get_transient( $transient_key );
+
+        if ( false !== $cached_stats && is_array( $cached_stats ) ) {
+            return $cached_stats;
+        }
+
+        // Single API call with all fields
+        $graph_api_url = add_query_arg(
+            array(
+                'fields'       => 'followers_count,follows_count,media_count',
+                'access_token' => $user_account_token,
+            ),
+            'https://graph.facebook.com/v21.0/' . $user_business_page_id
+        );
+
+        $response = wp_remote_get( $graph_api_url );
+
+        $stats = $default_stats;
+
+        if ( ! is_wp_error( $response ) && 200 === wp_remote_retrieve_response_code( $response ) ) {
+            $data = json_decode( wp_remote_retrieve_body( $response ) );
+
+            if ( isset( $data->followers_count ) ) {
+                $stats['followers_count'] = intval( $data->followers_count );
+            }
+            if ( isset( $data->follows_count ) ) {
+                $stats['follows_count'] = intval( $data->follows_count );
+            }
+            if ( isset( $data->media_count ) ) {
+                $stats['media_count'] = intval( $data->media_count );
+            }
+
+            // Cache for 24 hours
+            set_transient( $transient_key, $stats, DAY_IN_SECONDS );
+        }
+
+        return $stats;
+    }
+
     // Add this new method to check if using Basic Display API
     public static function is_using_basic_display_api( $user_id ) {
 

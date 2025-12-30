@@ -239,6 +239,91 @@
 		// Initialize load more buttons
 		initLoadMoreButtons();
 
+		/**
+		 * AJAX Initial Feed Load functionality
+		 * Finds placeholder elements and fetches actual content via AJAX
+		 */
+		function initAjaxFeeds() {
+			$('.wpz-insta-ajax-placeholder').each(function() {
+				const $placeholder = $(this);
+				const feedId = $placeholder.data('feed-id');
+				const nonce = $placeholder.data('nonce');
+
+				// Skip if already loading, loaded, or missing required data
+				if (!feedId || $placeholder.hasClass('loading') || $placeholder.hasClass('loaded')) {
+					return;
+				}
+
+				$placeholder.addClass('loading');
+
+				$.ajax({
+					url: wpzInstaAjax.ajaxurl,
+					type: 'POST',
+					dataType: 'json',
+					data: {
+						action: 'wpzoom_instagram_initial_load',
+						feed_id: feedId,
+						_wpnonce: nonce
+					},
+					success: function(response) {
+						if (response.success && response.data.html) {
+							// Replace placeholder with actual content
+							const $newContent = $(response.data.html);
+							$placeholder.replaceWith($newContent);
+
+							// Find the new feed container
+							const $newFeed = $newContent.hasClass('zoom-instagram')
+								? $newContent
+								: $newContent.find('.zoom-instagram');
+
+							if ($newFeed.length > 0) {
+								// Initialize the Instagram widget functionality
+								const $itemsContainer = $newFeed.find('.zoom-instagram-widget__items');
+
+								if ($itemsContainer.length > 0) {
+									// Initialize layout (masonry or grid)
+									if ($itemsContainer.hasClass('layout-masonry') && typeof $.fn.masonry === 'function') {
+										$itemsContainer.masonry({
+											itemSelector: '.zoom-instagram-widget__item',
+											columnWidth: '.masonry-items-sizer',
+											percentPosition: true,
+											gutter: parseInt($itemsContainer.data('spacing') || 10)
+										});
+									} else {
+										$itemsContainer.zoomInstagramWidget();
+									}
+
+									// Load async images
+									$itemsContainer.zoomLoadAsyncImages();
+
+									// Initialize lightbox if enabled
+									if ($itemsContainer.attr('data-lightbox') === '1') {
+										$itemsContainer.zoomLightbox();
+									}
+								}
+
+								// Reinitialize load more buttons
+								initLoadMoreButtons();
+
+								// Trigger custom event for other scripts
+								$newFeed.trigger('wpz-insta:ajax-loaded', [feedId, response.data]);
+							}
+						} else {
+							console.error('Failed to load Instagram feed:', response.data || 'Unknown error');
+							$placeholder.removeClass('loading').addClass('error');
+						}
+					},
+					error: function(xhr, status, error) {
+						console.error('AJAX initial feed load error:', error);
+						$placeholder.removeClass('loading').addClass('error');
+					}
+				});
+			});
+		}
+
+		// Initialize AJAX feeds on page load
+		initAjaxFeeds();
+
 		$.fn.zoomLoadAsyncImages = function () {
 			return $(this).each(function () {
 				var $list = $(this);
