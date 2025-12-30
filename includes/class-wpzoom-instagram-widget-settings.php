@@ -1456,6 +1456,22 @@ class WPZOOM_Instagram_Widget_Settings {
 							 * @param bool     $pro_toggle Whether PRO options toggle is shown.
 							 */
 							do_action( 'wpz-insta_feed-settings-after-account', $post->ID, $user_id, $user, $all_users, $pro_toggle );
+
+							// Show multi-account placeholder when PRO is not active
+							if ( $pro_toggle && count( $all_users ) > 1 ) :
+							?>
+							<div class="wpz-insta_sidebar-section wpz-insta_sidebar-section-multi-account-promo<?php echo $user instanceof WP_Post ? ' active' : ''; ?>">
+								<div class="wpz-insta_add-another-account-wrap wpz-insta_pro-only-feature">
+									<button type="button" class="wpz-insta_add-another-account-btn-placeholder" disabled>
+										<span class="dashicons dashicons-plus-alt2"></span>
+										<?php esc_html_e( 'Add another account', 'instagram-widget-by-wpzoom' ); ?>
+										<span class="wpz-insta-pro-badge"><?php esc_html_e( 'PRO', 'instagram-widget-by-wpzoom' ); ?></span>
+									</button>
+									<p class="wpz-insta_add-another-account-description"><?php esc_html_e( 'Combine posts from multiple Instagram accounts into a single feed.', 'instagram-widget-by-wpzoom' ); ?></p>
+								</div>
+							</div>
+							<?php
+							endif;
 							?>
 
 							<div class="wpz-insta_sidebar-section wpz-insta_sidebar-section-check-new<?php echo $user instanceof WP_Post ? ' active' : ''; ?>">
