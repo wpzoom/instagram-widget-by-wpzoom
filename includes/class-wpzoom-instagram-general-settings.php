@@ -251,14 +251,14 @@ class WPZOOM_Instagram_General_Settings {
 		);
 
 		?>
-		<select lass="regular-text code"
-			id="wpzoom-instagram-widget-settings_enable_email_notification"
+		<select class="regular-text code"
+			id="wpzoom-instagram-widget-settings_send_email_notification_days"
 			name="wpzoom-instagram-general-settings[send-email-notification-days-before]"
 		>
 		<?php
 			foreach( $settings_opts as $key => $value ) {
 		?>
-			<option value="<?php echo $key; ?>" <?php selected( $key, $sent_email_notification_days ); ?>><?php echo $value; ?></option>
+			<option value="<?php echo esc_attr( $key ); ?>" <?php selected( $key, $sent_email_notification_days ); ?>><?php echo esc_html( $value ); ?></option>
 		<?php 
 			}
 		?>

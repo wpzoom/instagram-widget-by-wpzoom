@@ -390,8 +390,8 @@ class WPZOOM_Instagram_Widget_Settings {
 		} );
 
 		add_action( 'admin_init', function() {
-			if ( isset( $_POST['action'] ) && 'dismiss-wp-pointer' == $_POST['action'] ) {
-				update_user_meta( get_current_user_id(), 'wpzinsta-settings-pointer-dismissed', $_POST['pointer'], true );
+			if ( isset( $_POST['action'] ) && 'dismiss-wp-pointer' == $_POST['action'] && isset( $_POST['pointer'] ) ) {
+				update_user_meta( get_current_user_id(), 'wpzinsta-settings-pointer-dismissed', sanitize_text_field( $_POST['pointer'] ), true );
 			}
 		} );
 
@@ -2195,8 +2195,8 @@ class WPZOOM_Instagram_Widget_Settings {
 								<?php if ( $multi_select_enabled ) : ?>
 								<span class="wpz-insta-account-checkbox"><input type="checkbox" class="wpz-insta-account-select" value="<?php echo esc_attr( $user_id ); ?>" /></span>
 								<?php endif; ?>
-								<h3><?php echo $user_name; ?></h3>
-								<p><?php echo $user_type; ?></p>
+								<h3><?php echo esc_html( $user_name ); ?></h3>
+								<p><?php echo esc_html( $user_type ); ?></p>
 							</li>
 						<?php endforeach; ?>
 					</ul>
