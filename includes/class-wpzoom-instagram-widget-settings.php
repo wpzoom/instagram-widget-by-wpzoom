@@ -2877,8 +2877,8 @@ class WPZOOM_Instagram_Widget_Settings {
 		$user_business_page_id = get_post_meta( $user_id, '_wpz-insta_page_id', true ) ?: '';
 		
 		// Generate the same specific transient patterns that would be used by this feed
+		// Note: Do NOT include global 'zoom_instagram_is_configured' here - that would clear cache for ALL feeds
 		$base_patterns = array(
-			'zoom_instagram_is_configured',
 			'zoom_instagram_is_configured_feed_' . $post_ID,
 		);
 		
