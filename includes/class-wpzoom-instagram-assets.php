@@ -92,7 +92,7 @@ if ( ! class_exists( 'WPZOOM_Instagram_Widget_Assets ' ) ) {
 			$is_active_widget   = is_active_widget( false, false, 'wpzoom_instagram_widget', false );
 			$has_shortcode      = ( is_a( $post, 'WP_Post' ) && has_shortcode( $post->post_content, 'instagram' ) );
 			$has_widget_block   = self::is_active_block_widget( 'wpzoom/instagram-block' ); 
-			$load_css_js        = isset( $general_options['load-css-js'] ) ? true : false;
+			$load_css_js        = ! empty( $general_options['load-css-js'] ) && wp_validate_boolean( $general_options['load-css-js'] );
 
 			$script_asset_file = include( WPZOOM_INSTAGRAM_PLUGIN_PATH . 'dist/scripts/backend/block.asset.php' );
 			$style_asset_file = include( WPZOOM_INSTAGRAM_PLUGIN_PATH . 'dist/styles/frontend/index.asset.php' );
@@ -170,7 +170,7 @@ if ( ! class_exists( 'WPZOOM_Instagram_Widget_Assets ' ) ) {
 			$is_active_widget   = is_active_widget( false, false, 'wpzoom_instagram_widget', false );
 			$has_shortcode      = ( is_a( $post, 'WP_Post' ) && has_shortcode( $post->post_content, 'instagram' ) );
 			$has_widget_block   = self::is_active_block_widget( 'wpzoom/instagram-block' ); 
-			$load_css_js        = isset( $general_options['load-css-js'] ) ? true : false;
+			$load_css_js        = ! empty( $general_options['load-css-js'] ) && wp_validate_boolean( $general_options['load-css-js'] );
 
 			$has_instagram_feed_elementor_widget = false;
 			if( $post && $post->ID ) {
@@ -270,7 +270,7 @@ if ( ! class_exists( 'WPZOOM_Instagram_Widget_Assets ' ) ) {
 			$is_active_widget   = is_active_widget( false, false, 'wpzoom_instagram_widget', false );
 			$has_shortcode      = ( is_a( $post, 'WP_Post' ) && has_shortcode( $post->post_content, 'instagram' ) );
 			$has_widget_block   = self::is_active_block_widget( 'wpzoom/instagram-block' );
-			$load_css_js        = isset( $general_options['load-css-js'] ) ? true : false;
+			$load_css_js        = ! empty( $general_options['load-css-js'] ) && wp_validate_boolean( $general_options['load-css-js'] );
 
 			$has_instagram_feed_elementor_widget = false;
 			if( $post && $post->ID ) {

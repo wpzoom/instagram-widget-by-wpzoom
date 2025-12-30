@@ -212,11 +212,14 @@ if ( ! class_exists( 'WPZOOM_Instagram_Email_Notification' ) ) {
 
 					//Check if there is email and token is expired
 					if ( $sendto && 'expired' == $profile['token_status'] ) {
-						wp_mail( 
-							$sendto, 
-                            sprintf( esc_html__( '[%s] Action Required: Your Instagram Access Token expired or is about to expire!', 'instagram-widget-by-wpzoom' ), get_bloginfo( 'name' ) ),
-							$message, 
-							sprintf( "Content-Type: text/html; charset=UTF-8\r\nFrom: %s <%s>\r\nReply-To: %s\r\n", get_bloginfo( 'name' ), esc_html( $sendto ), 'no-reply:' . get_site_url() )
+						$site_host = wp_parse_url( get_site_url(), PHP_URL_HOST );
+						$noreply_email = 'noreply@' . $site_host;
+
+						wp_mail(
+							$sendto,
+							sprintf( esc_html__( '[%s] Action Required: Your Instagram Access Token expired or is about to expire!', 'instagram-widget-by-wpzoom' ), get_bloginfo( 'name' ) ),
+							$message,
+							sprintf( "Content-Type: text/html; charset=UTF-8\r\nFrom: %s <%s>\r\nReply-To: %s\r\n", get_bloginfo( 'name' ), esc_html( $sendto ), $noreply_email )
 						);
 					}
 
@@ -228,44 +231,57 @@ if ( ! class_exists( 'WPZOOM_Instagram_Email_Notification' ) ) {
 		public function get_profiles_data() {
 
 			$settings = get_option( 'wpzoom-instagram-general-settings' );
-			$sent_email_notification_days = ! empty( $settings['send-email-notification-days-before'] ) ?  $settings['send-email-notification-days-before'] : '1 day';
+			$sent_email_notification_days = ! empty( $settings['send-email-notification-days-before'] ) ? $settings['send-email-notification-days-before'] : '1 day';
 
 			$profiles_data = array();
-			$profiles = get_posts( 
+			$profiles = get_posts(
 				array(
-					'post_type' => 'wpz-insta_user'
+					'post_type'      => 'wpz-insta_user',
+					'posts_per_page' => -1,
 				)
 			);
 
-			$current_date = date( 'Y-m-d' ); // Current date
-			$token_status = 'valid';
+			$current_time = time();
 
-			if( ! empty( $profiles ) ) {
-				foreach( $profiles as $profile ) {
+			if ( ! empty( $profiles ) ) {
+				foreach ( $profiles as $profile ) {
+					// Reset token_status for each profile
+					$token_status = 'valid';
 
 					$token_expire_raw = intval( get_post_meta( $profile->ID, '_wpz-insta_token_expire', true ) );
-					$time_diff = $token_expire_raw > 0 ? (int)( $token_expire_raw - time() ) : 0;
-					$expires_soon = $time_diff > 0 && $time_diff < WEEK_IN_SECONDS;
+
+					// Skip if no expiration date set
+					if ( $token_expire_raw <= 0 ) {
+						continue;
+					}
+
+					$time_diff = $token_expire_raw - $current_time;
 					$already_expired = $time_diff <= 0;
-					
-					$token_expire = ! $already_expired && $expires_soon ? human_time_diff( time(), $token_expire_raw ) : date( 'Y-m-d', $token_expire_raw );
+					$expires_soon = ! $already_expired && $time_diff < WEEK_IN_SECONDS;
 
-					$days_before = '-' . $sent_email_notification_days . '';
-					$new_date = date( 'Y-m-d', strtotime( $days_before, strtotime( $token_expire ) ) );
+					// Calculate the notification threshold based on user settings
+					// Parse the days setting (e.g., "1 day", "3 days", "1 week")
+					$notification_threshold = strtotime( '+' . $sent_email_notification_days, $current_time ) - $current_time;
 
-					if( $token_expire < $current_date || $token_expire <= $new_date ) {
+					// Token should be marked as "expired" (needs attention) if:
+					// 1. Already expired, OR
+					// 2. Will expire within the notification threshold period
+					if ( $already_expired || $time_diff <= $notification_threshold ) {
 						$token_status = 'expired';
 					}
+
+					// Format expiration for display
+					$token_expire_display = $expires_soon ? human_time_diff( $current_time, $token_expire_raw ) : date( 'Y-m-d', $token_expire_raw );
 
 					$profiles_data[] = array(
 						'name'             => $profile->post_title,
 						'ID'               => $profile->ID,
 						'raw_token'        => get_post_meta( $profile->ID, '_wpz-insta_token', true ),
-						'token_expire_raw' => intval( get_post_meta( $profile->ID, '_wpz-insta_token_expire', true ) ),
-						'token_expire'     => $token_expire,
+						'token_expire_raw' => $token_expire_raw,
+						'token_expire'     => $token_expire_display,
 						'token_status'     => $token_status,
 					);
-				} 
+				}
 			}
 
 			return $profiles_data;
