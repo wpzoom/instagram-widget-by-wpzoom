@@ -1462,13 +1462,22 @@
 						grid-column: 1;
 						grid-row: 2;
 						align-self: start;
-						transition: all 0.3s ease;
+						transition: opacity 0.3s ease, visibility 0.3s ease;
 						overflow-x: hidden;
 						overflow-y: auto;
 
 						&:not(.active) {
 							pointer-events: none;
 							opacity: 0;
+							visibility: hidden;
+							position: absolute;
+							z-index: -1;
+						}
+
+						&.active {
+							visibility: visible;
+							position: relative;
+							z-index: 1;
 						}
 					}
 				}
