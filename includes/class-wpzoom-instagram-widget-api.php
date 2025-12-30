@@ -170,7 +170,10 @@ class Wpzoom_Instagram_Widget_API {
     public function set_schedule() {
 
         if ( ! wp_next_scheduled( 'wpzoom_instagram_widget_cron_hook' ) ) {
-            wp_schedule_event( time(), 'before_access_token_expires', 'wpzoom_instagram_widget_cron_hook' );
+            // Schedule 59 days from now (when tokens actually need refreshing)
+            // This prevents the cron from running immediately on plugin activation
+            $first_run = time() + 5097600; // 59 days in seconds
+            wp_schedule_event( $first_run, 'before_access_token_expires', 'wpzoom_instagram_widget_cron_hook' );
         }
 
     }
