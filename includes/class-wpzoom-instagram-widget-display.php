@@ -361,8 +361,12 @@ class Wpzoom_Instagram_Widget_Display {
 		// Check if AJAX initial load is enabled
 		$ajax_initial_load = isset( $args['ajax-initial-load'] ) && boolval( $args['ajax-initial-load'] );
 
-		// If AJAX loading enabled and not an AJAX request and not a preview, render placeholder
-		if ( $ajax_initial_load && ! wp_doing_ajax() && ! $preview && ! $this->is_crawler() ) {
+		// Check if we're in the block editor (REST API request or admin context)
+		$is_block_editor = defined( 'REST_REQUEST' ) && REST_REQUEST;
+		$is_admin_preview = is_admin() || ( isset( $_GET['wpz-insta-widget-preview'] ) );
+
+		// If AJAX loading enabled and not an AJAX request and not a preview and not in editor, render placeholder
+		if ( $ajax_initial_load && ! wp_doing_ajax() && ! $preview && ! $this->is_crawler() && ! $is_block_editor && ! $is_admin_preview ) {
 			return $this->render_skeleton_placeholder( $args );
 		}
 
