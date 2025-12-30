@@ -1184,7 +1184,7 @@ class WPZOOM_Instagram_Widget_Settings {
 			<header class="wpz-insta-wrap wpz-insta-wrap-sides wpz-insta_settings-header">
 				<div class="wpz-insta-wrap-left">
 					<h1 class="wpz-insta_settings-main-title wp-heading">
-						<input type="text" name="post_title" size="30" value="<?php echo esc_attr( ! empty( $feed_title ) ? $feed_title : __( 'Feed Title', 'instagram-widget-by-wpzoom' ) ); ?>" id="title" spellcheck="true" autocomplete="off" />
+						<input type="text" name="post_title" size="30" value="<?php echo esc_attr( ! empty( $feed_title ) ? $feed_title : sprintf( __( 'Instagram Feed #%d', 'instagram-widget-by-wpzoom' ), $post->ID ) ); ?>" id="title" spellcheck="true" autocomplete="off" />
 					</h1>
 
 					<nav class="wpz-insta_settings-main-nav wpz-insta_feed-edit-nav">
