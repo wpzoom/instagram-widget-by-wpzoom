@@ -1027,13 +1027,27 @@ class WPZOOM_Instagram_Widget_Settings {
 				break;
 
 			case 'wpz-insta_account-feeds' :
-				$latest_feeds = get_posts( array( 'numberposts' => 1, 'post_status' => 'publish', 'post_type' => 'wpz-insta_feed', 'meta_key' => '_wpz-insta_user-id', 'meta_value' => $post_id ) );
-				$latest_feed = ! empty( $latest_feeds ) && is_array( $latest_feeds ) && $latest_feeds[0] instanceof WP_Post ? $latest_feeds[0]->ID : -1;
+				// Get all feeds where this account is the primary user.
+				$feeds = get_posts( array(
+					'numberposts' => -1,
+					'post_status' => 'publish',
+					'post_type'   => 'wpz-insta_feed',
+					'meta_key'    => '_wpz-insta_user-id',
+					'meta_value'  => $post_id,
+				) );
 
-				if ( $latest_feed > 0 ) {
-					echo '<a href="' . esc_url( get_edit_post_link( $latest_feed ) ) . '">' . get_the_title( $latest_feed ) . '</a>';
+				$feed_links = array();
+				foreach ( $feeds as $feed ) {
+					$feed_links[] = '<a href="' . esc_url( get_edit_post_link( $feed->ID ) ) . '">' . esc_html( get_the_title( $feed ) ) . '</a>';
+				}
+
+				// Allow PRO plugin to add feeds where this account is an additional user.
+				$feed_links = apply_filters( 'wpz-insta_account-feeds-column', $feed_links, $post_id );
+
+				if ( ! empty( $feed_links ) ) {
+					echo implode( ', ', $feed_links );
 				} else {
-					echo __( 'None', 'instagram-widget-by-wpzoom' );
+					echo esc_html__( 'None', 'instagram-widget-by-wpzoom' );
 				}
 
 				break;
