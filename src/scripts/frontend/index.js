@@ -388,6 +388,16 @@
 								// Reinitialize load more buttons
 								initLoadMoreButtons();
 
+								// Initialize stories (single account)
+								if (typeof window.wpzInstaInitStories === 'function') {
+									window.wpzInstaInitStories();
+								}
+
+								// Initialize multi-account stories (PRO)
+								if (typeof window.wpzInstaMultiAccountStoriesInit === 'function') {
+									window.wpzInstaMultiAccountStoriesInit();
+								}
+
 								// Trigger custom event for other scripts
 								$newFeed.trigger('wpz-insta:ajax-loaded', [feedId, response.data]);
 							}
