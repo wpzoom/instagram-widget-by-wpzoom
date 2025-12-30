@@ -1075,6 +1075,30 @@ a.ig-b-v-24:hover {
     flex: 1;
 }
 
+.wpz-insta-lightbox-wrapper .wpz-insta-lightbox .details-wrapper .wpz-insta-counts {
+    display: flex;
+    gap: 16px;
+    padding: 0 16px 8px;
+    font-size: 12px;
+    font-weight: 500;
+    color: #262626;
+
+    .wpz-insta-likes,
+    .wpz-insta-comments {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .wpz-insta-likes .dashicons-heart {
+        color: #c0c7ca;
+    }
+
+    .wpz-insta-comments .dashicons-admin-comments {
+        color: #c0c7ca;
+    }
+}
+
 .wpz-insta-lightbox-wrapper .wpz-insta-lightbox .image-wrapper {
     flex-grow: 1;
     text-align: center;
@@ -1240,6 +1264,7 @@ a.ig-b-v-24:hover {
 
     .delimiter {
         padding: 0px 10px;
+        opacity: .3;
     }
 
 }
