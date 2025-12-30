@@ -1024,6 +1024,12 @@ jQuery( function( $ ) {
 			url += '&' + params;
 		}
 
+		// Add the post ID for the preview to identify the feed for Load More functionality
+		const postId = $( 'form#post input[name="post_ID"]' ).val();
+		if ( postId ) {
+			url += '&wpz-insta-feed-id=' + postId;
+		}
+
 		$( '#wpz-insta_widget-preview-view' ).closest( '.wpz-insta_sidebar-right' ).removeClass( 'hide-loading' );
 		$( '#wpz-insta_widget-preview-view iframe' ).addClass( 'wpz-insta_preview-hidden' ).attr( 'src', url );
 	};

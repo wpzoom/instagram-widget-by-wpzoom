@@ -2211,7 +2211,10 @@ class WPZOOM_Instagram_Widget_Settings {
 	function preview_frame() {
 		$display = Wpzoom_Instagram_Widget_Display::getInstance();
 		$preview_args = self::get_clean_feed_settings_from_query();
-		$preview_args['feed-id'] = get_the_ID();
+
+		// Get feed ID from query parameter (passed from feed editor), fallback to get_the_ID() for other contexts.
+		$feed_id = isset( $_GET['wpz-insta-feed-id'] ) ? intval( $_GET['wpz-insta-feed-id'] ) : get_the_ID();
+		$preview_args['feed-id'] = $feed_id > 0 ? $feed_id : 0;
 
 		printf( '<div class="zoom-new-instagram-widget">%s</div>', $display->get_preview( $preview_args ) );
 	}
