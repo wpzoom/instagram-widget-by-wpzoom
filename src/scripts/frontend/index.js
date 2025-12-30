@@ -281,17 +281,100 @@
 								const $itemsContainer = $newFeed.find('.zoom-instagram-widget__items');
 
 								if ($itemsContainer.length > 0) {
-									// Initialize layout (masonry or grid)
-									if ($itemsContainer.hasClass('layout-masonry') && typeof $.fn.masonry === 'function') {
-										$itemsContainer.masonry({
-											itemSelector: '.zoom-instagram-widget__item',
-											columnWidth: '.masonry-items-sizer',
-											percentPosition: true,
-											gutter: parseInt($itemsContainer.data('spacing') || 10)
+								// Check if this is a carousel layout
+								const isCarousel = $newFeed.hasClass('layout-carousel');
+
+								if (isCarousel) {
+									// Initialize Swiper for carousel layout
+									// The swiper element is .zoom-instagram-widget__items-wrapper.swiper
+									const $swiperEl = $newFeed.find('> .zoom-instagram-widget__items-wrapper.swiper');
+									if ($swiperEl.length > 0 && typeof Swiper !== 'undefined') {
+										// data-perpage is on the ul.swiper-wrapper element
+										const perpage = parseInt($itemsContainer.data('perpage')) || 3;
+										const perpageTablet = parseInt($itemsContainer.data('perpage-tablet')) || perpage;
+										const perpageMobile = parseInt($itemsContainer.data('perpage-mobile')) || perpage;
+										const spacing = parseFloat($itemsContainer.data('spacing')) || 20;
+
+										// Initialize lazy loading BEFORE Swiper so images start loading
+										if (typeof $.fn.lazy === 'function') {
+											$itemsContainer.find('.zoom-instagram-link-new').lazy();
+											$itemsContainer.find('a.zoom-instagram-link-old').lazy();
+										}
+
+										// Create Swiper instance
+										const carouselSwiper = new Swiper($swiperEl.get(0), {
+											direction: 'horizontal',
+											loop: false,
+											slidesPerView: perpage,
+											spaceBetween: spacing,
+											breakpoints: {
+												320: {
+													slidesPerView: perpageMobile,
+													spaceBetween: spacing
+												},
+												480: {
+													slidesPerView: perpageTablet,
+													spaceBetween: spacing
+												},
+												769: {
+													slidesPerView: perpage,
+													spaceBetween: spacing
+												}
+											},
+											autoHeight: true,
+											watchOverflow: true,
+											navigation: {
+												nextEl: $swiperEl.find('> .swiper-button-next').get(0),
+												prevEl: $swiperEl.find('> .swiper-button-prev').get(0)
+											},
+											keyboard: {
+												enabled: true,
+												onlyInViewport: true
+											}
 										});
-									} else {
-										$itemsContainer.zoomInstagramWidget();
+
+										$newFeed.addClass('carousel-active');
+
+										// Update Swiper after images load to fix autoHeight
+										const $images = $itemsContainer.find('img');
+										let loadedCount = 0;
+										const totalImages = $images.length;
+
+										if (totalImages > 0) {
+											$images.each(function() {
+												const img = this;
+												if (img.complete) {
+													loadedCount++;
+													if (loadedCount === totalImages) {
+														carouselSwiper.update();
+													}
+												} else {
+													$(img).on('load error', function() {
+														loadedCount++;
+														if (loadedCount === totalImages) {
+															carouselSwiper.update();
+														}
+													});
+												}
+											});
+											// Fallback: update after a delay in case load events don't fire
+											setTimeout(function() {
+												carouselSwiper.update();
+											}, 500);
+										}
 									}
+								} else if ($itemsContainer.hasClass('layout-masonry') && typeof $.fn.masonry === 'function') {
+									// Initialize masonry layout
+									$itemsContainer.masonry({
+										itemSelector: '.zoom-instagram-widget__item',
+										columnWidth: '.masonry-items-sizer',
+										percentPosition: true,
+										gutter: parseInt($itemsContainer.data('spacing') || 10)
+									});
+								} else {
+									// Initialize grid layout
+									$itemsContainer.zoomInstagramWidget();
+								}
 
 									// Load async images
 									$itemsContainer.zoomLoadAsyncImages();
