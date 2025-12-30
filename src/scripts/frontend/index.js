@@ -385,8 +385,13 @@
 									}
 								}
 
-								// Reinitialize load more buttons
+								// Reinitialize load more buttons (free plugin button-based)
 								initLoadMoreButtons();
+
+								// Initialize frontend (lightbox swipers from block.js)
+								if (typeof window.wpzInstaFrontendInit === 'function') {
+									window.wpzInstaFrontendInit();
+								}
 
 								// Initialize stories (single account)
 								if (typeof window.wpzInstaInitStories === 'function') {
@@ -401,6 +406,11 @@
 								// Initialize multi-account load more (PRO)
 								if (typeof window.wpzInstaMultiAccountLoadMoreInit === 'function') {
 									window.wpzInstaMultiAccountLoadMoreInit();
+								}
+
+								// Initialize PRO form-based load more (single account)
+								if (typeof window.wpzInstaProLoadMoreInit === 'function') {
+									window.wpzInstaProLoadMoreInit();
 								}
 
 								// Trigger custom event for other scripts
