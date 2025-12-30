@@ -44,6 +44,7 @@ WPZOOM Social Feed Widget makes it easy to showcase your Instagram photos, video
 * **Lightbox Gallery** - View photos and videos in a beautiful popup
 * **Custom Header** - Add your own avatar and bio text
 * **Lazy Loading** - Improves page speed and performance
+* **AJAX Initial Load** - Load feed content asynchronously for faster initial page loads
 * **Responsive Design** - Mobile-friendly out of the box
 
 = ⭐️ PRO FEATURES =
@@ -53,7 +54,7 @@ Upgrade to **[Instagram Widget PRO](https://www.wpzoom.com/plugins/instagram-wid
 * **📊 Instagram Insights & Analytics 🆕** - Track follower growth, reach, impressions, engagement, and individual post performance with beautiful charts
 * **Display Instagram Stories** - Show your Instagram Stories directly on your website
 * **Display Follower Count** - Show your real-time follower count in the feed header
-* **Multi-Account Feed** - Display posts from multiple Instagram accounts in one unified feed
+* **Multi-Account Feed 🆕** - Combine posts from multiple Instagram accounts into a single unified feed
 * **Masonry Layout** - Pinterest-style grid for a modern look
 * **Carousel/Slider** - Showcase your photos in an interactive slider
 * **Responsive Column Control** - Set different columns for desktop, tablet, and mobile
@@ -132,7 +133,11 @@ You can display your Instagram feed in Elementor in two ways:
 
 = Can I display multiple Instagram accounts? =
 
-Yes! With the **[PRO version](https://www.wpzoom.com/plugins/instagram-widget/)**, you can connect multiple Instagram accounts and display feeds from different accounts anywhere on your site.
+Yes! With the **[PRO version](https://www.wpzoom.com/plugins/instagram-widget/)**, you can connect multiple Instagram accounts and display feeds from different accounts anywhere on your site. You can also combine posts from multiple accounts into a single unified feed - perfect for brands with multiple Instagram profiles.
+
+= How can I improve my page load speed with Instagram feeds? =
+
+Enable the **AJAX Initial Load** option in your feed settings. This loads the Instagram feed content asynchronously after your page renders, dramatically improving initial page load time. Visitors will see an elegant skeleton placeholder with a shimmer animation while the feed loads in the background.
 
 = What are Instagram Insights and how do I access them? =
 
@@ -169,8 +174,17 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 == Changelog ==
 
 = 2.3.0 =
-* Added new AJAX initial load option that improves page speed on first visit
-* Multiple improvements and bug fixes
+* New: AJAX Initial Load option - dramatically improves page load speed by loading feed content asynchronously after the page renders
+* New: Skeleton placeholder with shimmer animation during AJAX feed loading
+* New: Likes and comments counts now displayed in the lightbox view
+* New: Batch API calls for account stats (3 API calls reduced to 1) for better performance
+* New: PRO - Multi-Account Feed feature - combine posts from multiple Instagram accounts into a single feed
+* Improved: Email notification system for expiring access tokens now works correctly
+* Fixed: "Load CSS and JS on all pages" setting now works correctly
+* Fixed: Cache clearing when creating new feeds no longer affects other feeds
+* Fixed: Various security improvements with proper input sanitization and output escaping
+* Fixed: Duplicate HTML IDs in settings page
+* Fixed: Wrong text domain in some error messages
 
 = 2.2.12 =
 * Minor bug fixes
