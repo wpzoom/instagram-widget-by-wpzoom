@@ -343,8 +343,14 @@ class Wpzoom_Instagram_Widget_API {
 			if ( $allowed_post_types !== 'IMAGE,VIDEO,CAROUSEL_ALBUM' ) {
 				$enhanced_transient .= '_filtered_' . substr( md5( $allowed_post_types ), 0, 8 );
 			}
+
+			// Add likes/comments flag to transient key to ensure proper cache isolation
+			// Without this, data cached without likes/comments would be returned when they're requested
+			if ( ! $skip_likes_comments ) {
+				$enhanced_transient .= '_lc';
+			}
 		}
-		
+
 		// Use enhanced key as primary, but keep it reasonable length
 		$transient = strlen( $enhanced_transient ) > 170 ? $legacy_transient : $enhanced_transient;
 
