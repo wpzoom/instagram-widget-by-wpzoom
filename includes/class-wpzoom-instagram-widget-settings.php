@@ -31,7 +31,7 @@ class WPZOOM_Instagram_Widget_Settings {
 	public static $feed_settings = array(
 		'user-id'                         => array( 'type' => 'integer', 'default' => -1 ),
 		'user-ids'                        => array( 'type' => 'string',  'default' => '' ), // Comma-separated list of user IDs for multi-account feeds (PRO)
-		'multi-account-header-mode'       => array( 'type' => 'string',  'default' => 'primary' ), // primary, hide, all (PRO)
+		'multi-account-header-mode'       => array( 'type' => 'string',  'default' => 'all' ), // primary, hide, all (PRO)
 		'multi-account-show-attribution'  => array( 'type' => 'boolean', 'default' => false ), // Show account badge on each post (PRO)
 		'check-new-posts-interval-number' => array( 'type' => 'integer', 'default' => 1 ),
 		'check-new-posts-interval-suffix' => array( 'type' => 'integer', 'default' => 2 ),
