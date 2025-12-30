@@ -398,6 +398,11 @@
 									window.wpzInstaMultiAccountStoriesInit();
 								}
 
+								// Initialize multi-account load more (PRO)
+								if (typeof window.wpzInstaMultiAccountLoadMoreInit === 'function') {
+									window.wpzInstaMultiAccountLoadMoreInit();
+								}
+
 								// Trigger custom event for other scripts
 								$newFeed.trigger('wpz-insta:ajax-loaded', [feedId, response.data]);
 							}
