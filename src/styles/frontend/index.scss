@@ -1469,6 +1469,7 @@ a.ig-b-v-24:hover {
 .wpz-insta-ajax-placeholder {
     position: relative;
     min-height: 200px;
+    overflow: hidden; /* Prevent horizontal scroll from shimmer animation */
 
     &.loading::after {
         content: '';
