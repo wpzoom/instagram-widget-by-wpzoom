@@ -261,7 +261,7 @@ import 'zuck.js/skins/snapgram';
 
 	/**
 	 * Enforce mute state on a video element.
-	 * Attaches event listeners to ensure video stays muted even after Zuck.js tries to unmute it.
+	 * Overrides the muted property setter to block Zuck.js from unmuting.
 	 */
 	function enforceVideoMuteState( video ) {
 		if ( video.wpzMuteEnforced ) {
@@ -269,25 +269,45 @@ import 'zuck.js/skins/snapgram';
 		}
 		video.wpzMuteEnforced = true;
 
-		// Set initial state
-		video.muted = isGloballyMuted;
-		video.volume = isGloballyMuted ? 0 : 1;
+		// Store the original muted property descriptor
+		const originalMutedDescriptor = Object.getOwnPropertyDescriptor( HTMLMediaElement.prototype, 'muted' );
 
-		// Capture phase listener to mute BEFORE Zuck.js can unmute
-		video.addEventListener( 'play', function() {
-			if ( isGloballyMuted ) {
-				this.muted = true;
-				this.volume = 0;
-			}
-		}, true ); // Use capture phase
+		// Override the muted property on this specific video element
+		Object.defineProperty( video, 'muted', {
+			get: function() {
+				return originalMutedDescriptor.get.call( this );
+			},
+			set: function( value ) {
+				// If we want it muted, ALWAYS set to true regardless of what Zuck tries
+				if ( isGloballyMuted ) {
+					originalMutedDescriptor.set.call( this, true );
+				} else {
+					originalMutedDescriptor.set.call( this, value );
+				}
+			},
+			configurable: true,
+		} );
 
-		// Also listen for volumechange to re-enforce mute if Zuck unmutes
-		video.addEventListener( 'volumechange', function() {
-			if ( isGloballyMuted && ! this.muted ) {
-				this.muted = true;
-				this.volume = 0;
-			}
-		}, true );
+		// Also override volume property
+		const originalVolumeDescriptor = Object.getOwnPropertyDescriptor( HTMLMediaElement.prototype, 'volume' );
+		Object.defineProperty( video, 'volume', {
+			get: function() {
+				return originalVolumeDescriptor.get.call( this );
+			},
+			set: function( value ) {
+				// If we want it muted, ALWAYS set volume to 0
+				if ( isGloballyMuted ) {
+					originalVolumeDescriptor.set.call( this, 0 );
+				} else {
+					originalVolumeDescriptor.set.call( this, value );
+				}
+			},
+			configurable: true,
+		} );
+
+		// Set initial state using the original setters directly
+		originalMutedDescriptor.set.call( video, isGloballyMuted );
+		originalVolumeDescriptor.set.call( video, isGloballyMuted ? 0 : 1 );
 	}
 
 	function startMutedClassObserver() {
