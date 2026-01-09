@@ -177,7 +177,14 @@ import 'zuck.js/skins/snapgram';
 	}
 
 	/**
-	 * Apply mute state to all videos in the modal
+	 * Apply mute state to all videos in the modal.
+	 *
+	 * We control the video.muted property directly for actual muting,
+	 * and we ALWAYS remove Zuck.js's 'muted' class to prevent its
+	 * tap-to-unmute behavior from interfering with navigation.
+	 *
+	 * Zuck.js normally: if 'muted' class present, tap unmutes then navigates.
+	 * We want: tap ONLY navigates, mute is controlled by our button.
 	 */
 	function applyMuteState() {
 		const $videos = $( '#zuck-modal video' );
@@ -186,21 +193,11 @@ import 'zuck.js/skins/snapgram';
 			if ( ! isGloballyMuted ) {
 				this.volume = 1.0;
 			}
-
-			// Set up handlers if not already done
-			if ( ! this.wpzMuteHandlersSet ) {
-				this.wpzMuteHandlersSet = true;
-				setupVideoMuteHandlers( this );
-			}
 		} );
 
-		// Update the story viewer muted class
-		const $storyViewer = $( '#zuck-modal .story-viewer.viewing' );
-		if ( isGloballyMuted ) {
-			$storyViewer.addClass( 'muted' );
-		} else {
-			$storyViewer.removeClass( 'muted' );
-		}
+		// ALWAYS remove Zuck's 'muted' class to prevent tap-to-unmute behavior.
+		// This ensures tapping always navigates, never unmutes.
+		$( '#zuck-modal .story-viewer' ).removeClass( 'muted' );
 
 		updateMuteButtonIcon();
 	}
@@ -251,36 +248,103 @@ import 'zuck.js/skins/snapgram';
 		}
 	}
 
-	/**
-	 * Setup video element to enforce mute state
-	 */
-	function setupVideoMuteHandlers( video ) {
-		// Force initial mute state
-		video.muted = isGloballyMuted;
-		if ( ! isGloballyMuted ) {
-			video.volume = 1.0;
-		}
-
-		// Listen for play events to enforce mute state
-		video.addEventListener( 'play', function() {
-			if ( isGloballyMuted && ! this.muted ) {
-				this.muted = true;
-			}
-		} );
-
-		// Listen for volumechange to enforce mute state
-		video.addEventListener( 'volumechange', function() {
-			if ( isGloballyMuted && ! this.muted ) {
-				this.muted = true;
-			}
-		} );
-	}
-
 	// Inject modal styles immediately
 	injectModalStyles();
 
 	// Track initialized containers to prevent duplicate initialization
 	const initializedContainers = new Set();
+
+	// MutationObserver to:
+	// 1. Remove Zuck's 'muted' class (prevents tap-to-unmute behavior)
+	// 2. Intercept new video elements and enforce mute state (prevents audio blip)
+	let mutedClassObserver = null;
+
+	/**
+	 * Enforce mute state on a video element.
+	 * Attaches event listeners to ensure video stays muted even after Zuck.js tries to unmute it.
+	 */
+	function enforceVideoMuteState( video ) {
+		if ( video.wpzMuteEnforced ) {
+			return;
+		}
+		video.wpzMuteEnforced = true;
+
+		// Set initial state
+		video.muted = isGloballyMuted;
+		video.volume = isGloballyMuted ? 0 : 1;
+
+		// Capture phase listener to mute BEFORE Zuck.js can unmute
+		video.addEventListener( 'play', function() {
+			if ( isGloballyMuted ) {
+				this.muted = true;
+				this.volume = 0;
+			}
+		}, true ); // Use capture phase
+
+		// Also listen for volumechange to re-enforce mute if Zuck unmutes
+		video.addEventListener( 'volumechange', function() {
+			if ( isGloballyMuted && ! this.muted ) {
+				this.muted = true;
+				this.volume = 0;
+			}
+		}, true );
+	}
+
+	function startMutedClassObserver() {
+		if ( mutedClassObserver ) {
+			return;
+		}
+
+		mutedClassObserver = new MutationObserver( function( mutations ) {
+			mutations.forEach( function( mutation ) {
+				// Handle class changes on story-viewer (remove 'muted' class)
+				if ( mutation.type === 'attributes' && mutation.attributeName === 'class' ) {
+					const target = mutation.target;
+					if ( target.classList && target.classList.contains( 'muted' ) && target.classList.contains( 'story-viewer' ) ) {
+						target.classList.remove( 'muted' );
+					}
+				}
+
+				// Handle new nodes being added (enforce mute on new videos)
+				if ( mutation.type === 'childList' && mutation.addedNodes.length > 0 ) {
+					mutation.addedNodes.forEach( function( node ) {
+						if ( node.nodeType === Node.ELEMENT_NODE ) {
+							// Check if the node itself is a video
+							if ( node.tagName === 'VIDEO' ) {
+								enforceVideoMuteState( node );
+							}
+							// Check for videos inside the added node
+							const videos = node.querySelectorAll ? node.querySelectorAll( 'video' ) : [];
+							videos.forEach( function( video ) {
+								enforceVideoMuteState( video );
+							} );
+						}
+					} );
+				}
+			} );
+		} );
+
+		// Observe the modal for class changes and new child elements
+		const modal = document.getElementById( 'zuck-modal' );
+		if ( modal ) {
+			mutedClassObserver.observe( modal, {
+				attributes: true,
+				attributeFilter: [ 'class' ],
+				childList: true,
+				subtree: true,
+			} );
+
+			// Also enforce mute on any existing videos
+			modal.querySelectorAll( 'video' ).forEach( enforceVideoMuteState );
+		}
+	}
+
+	function stopMutedClassObserver() {
+		if ( mutedClassObserver ) {
+			mutedClassObserver.disconnect();
+			mutedClassObserver = null;
+		}
+	}
 
 	// Store active Zuck instance for keyboard navigation
 	let activeZuckInstance = null;
@@ -556,6 +620,9 @@ import 'zuck.js/skins/snapgram';
 
 						callback();
 
+						// Start observer to continuously remove 'muted' class
+						startMutedClassObserver();
+
 						// After callback (which renders the modal), inject mute button and apply mute state
 						// Use setTimeout to ensure DOM is ready
 						setTimeout( function() {
@@ -572,6 +639,9 @@ import 'zuck.js/skins/snapgram';
 						callback();
 					},
 					onClose: function( storyId, callback ) {
+						// Stop the muted class observer
+						stopMutedClassObserver();
+
 						// Hide overlay and unlock body scroll
 						hideModalOverlay();
 
