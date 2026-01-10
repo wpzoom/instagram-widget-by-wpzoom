@@ -640,27 +640,27 @@ a.ig-b-v-24:hover {
     width: 100%;
     text-align: center;
     transition: opacity 0.25s ease-in-out;
-	height: 100%;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	position: relative;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
 
-	.zoom-instagram-icon {
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		width: 18px;
-		height: 18px;
-		svg {
-			width: 100%;
-			height: 100%;
-		}
-		&.icon-heart-outline {
-			position:relative;
-			top: 1px;
-		}
-	}
+    .zoom-instagram-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 18px;
+        height: 18px;
+        svg {
+            width: 100%;
+            height: 100%;
+        }
+        &.icon-heart-outline {
+            position:relative;
+            top: 1px;
+        }
+    }
 
 }
 
@@ -815,9 +815,9 @@ a.ig-b-v-24:hover {
         padding-right: 12px;
         font-size: 13px;
     }
-	.hover-controls .counter:last-child {
-		padding-right: 0;
-	}
+    .hover-controls .counter:last-child {
+        padding-right: 0;
+    }
 }
 
 
@@ -1149,7 +1149,7 @@ a.ig-b-v-24:hover {
             }
         }
     }
-    
+
 
 }
 
@@ -1548,5 +1548,43 @@ a.ig-b-v-24:hover {
 @keyframes wpz-insta-shimmer-bg {
     0% { background-position: 200% 0; }
     100% { background-position: -200% 0; }
+}
+
+/* Image Loading Shimmer Effect - only applies before wpz-insta-loaded is added */
+.zoom-instagram-widget__items .zoom-instagram-widget__item:not(.wpz-insta-loaded) {
+    .zoom-instagram-widget__item-inner-wrap {
+        background: #f0f0f0;
+
+        /* Shimmer overlay */
+        &::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, #e8e8e8 25%, #f5f5f5 50%, #e8e8e8 75%);
+            background-size: 200% 100%;
+            animation: wpz-insta-shimmer-bg 1.5s ease-in-out infinite;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        /* Hide images while loading */
+        > img.zoom-instagram-link,
+        > img.zoom-instagram-link-new {
+            opacity: 0;
+        }
+    }
+}
+
+/* Fade in images when loaded */
+.zoom-instagram-widget__items .zoom-instagram-widget__item.wpz-insta-loaded {
+    .zoom-instagram-widget__item-inner-wrap {
+        > img.zoom-instagram-link,
+        > img.zoom-instagram-link-new {
+            transition: opacity 0.3s ease-in-out, transform 0.5s cubic-bezier(0.215, 0.61, 0.355, 1);
+        }
+    }
 }
 

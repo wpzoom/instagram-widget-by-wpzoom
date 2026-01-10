@@ -1,6 +1,57 @@
 ( function( $ ) {
+	// Image loading shimmer effect - needs to run early to catch images before they load
+	function initImageLoadingShimmer() {
+		$('.zoom-instagram-widget__items').each(function() {
+			const $container = $(this);
+
+			$container.find('.zoom-instagram-widget__item').each(function() {
+				const $item = $(this);
+
+				// Skip if already processed
+				if ($item.hasClass('wpz-insta-loaded') || $item.data('shimmer-init')) {
+					return;
+				}
+				$item.data('shimmer-init', true);
+
+				const $img = $item.find('img.zoom-instagram-link, img.zoom-instagram-link-new').first();
+
+				if ($img.length === 0) {
+					$item.addClass('wpz-insta-loaded');
+					return;
+				}
+
+				// Check if image is already loaded (cached)
+				if ($img[0].complete && $img[0].naturalWidth > 0) {
+					$item.addClass('wpz-insta-loaded');
+					return;
+				}
+
+				// Listen for image load
+				$img.on('load.shimmer', function() {
+					$item.addClass('wpz-insta-loaded');
+				});
+
+				// Handle error case - still show the item
+				$img.on('error.shimmer', function() {
+					$item.addClass('wpz-insta-loaded');
+				});
+			});
+		});
+	}
+
+	// Run as early as possible - on DOMContentLoaded
+	$(document).ready(function() {
+		initImageLoadingShimmer();
+	});
+
+	// Export globally so PRO plugin can call after Load More
+	window.wpzInstaImageShimmerInit = initImageLoadingShimmer;
+
 	$( window ).on( 'load', function () {
 		var ticking = false;
+
+		// Re-run shimmer init in case new feeds were added
+		initImageLoadingShimmer();
 
 		// Fast AJAX Load More functionality
 		function initLoadMoreButtons() {
@@ -67,7 +118,10 @@
 						
 						// Reinitialize any image processing for the specific container
 						$itemsContainer.zoomLoadAsyncImages();
-						
+
+						// Initialize image loading shimmer for new items
+						initImageLoadingShimmer();
+
 						// Check if this is masonry layout and handle accordingly
 						if ($itemsContainer.hasClass('layout-masonry')) {
 							// Try to use WordPress masonry if available
@@ -384,6 +438,9 @@
 
 								// Reinitialize load more buttons (free plugin button-based)
 								initLoadMoreButtons();
+
+								// Initialize image loading shimmer for new content
+								initImageLoadingShimmer();
 
 								// Initialize frontend (lightbox swipers from block.js)
 								if (typeof window.wpzInstaFrontendInit === 'function') {
