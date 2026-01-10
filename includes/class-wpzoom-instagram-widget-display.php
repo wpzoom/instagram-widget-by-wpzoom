@@ -181,6 +181,12 @@ class Wpzoom_Instagram_Widget_Display {
 	 * AJAX handler for initial feed load functionality.
 	 * This allows the feed to be loaded asynchronously after page load.
 	 *
+	 * Note: This endpoint intentionally does not use nonce verification because:
+	 * 1. It's a read-only operation that only displays public Instagram feed content
+	 * 2. Nonces become stale when pages are cached (WP Rocket, etc.), causing failures
+	 * 3. The feed_id is validated against actual feed posts for security
+	 * 4. No user data is modified or sensitive actions performed
+	 *
 	 * @since 2.3.0
 	 * @return void
 	 */
@@ -190,11 +196,6 @@ class Wpzoom_Instagram_Widget_Display {
 			header( 'Cache-Control: no-cache, must-revalidate, max-age=0' );
 			header( 'Pragma: no-cache' );
 			header( 'Expires: Wed, 11 Jan 1984 05:00:00 GMT' );
-		}
-
-		// Verify nonce
-		if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['_wpnonce'] ) ), 'wpzinsta-ajax-initial-load' ) ) {
-			wp_send_json_error( 'Invalid nonce' );
 		}
 
 		// Sanitize input data
@@ -1495,14 +1496,10 @@ class Wpzoom_Instagram_Widget_Display {
 		$show_user_image = isset( $args['show-account-image'] ) && boolval( $args['show-account-image'] );
 		$spacing_between = isset( $args['spacing-between'] ) && floatval( $args['spacing-between'] ) > -1 ? floatval( $args['spacing-between'] ) : 10;
 
-		// Generate nonce for AJAX request
-		$nonce = wp_create_nonce( 'wpzinsta-ajax-initial-load' );
-
 		ob_start();
 		?>
 		<div class="wpz-insta-ajax-placeholder"
-			 data-feed-id="<?php echo esc_attr( $feed_id ); ?>"
-			 data-nonce="<?php echo esc_attr( $nonce ); ?>">
+			 data-feed-id="<?php echo esc_attr( $feed_id ); ?>">
 
 			<?php if ( $show_header || $show_user_image ) : ?>
 			<div class="wpz-insta-skeleton-header">

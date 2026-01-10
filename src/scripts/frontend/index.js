@@ -247,9 +247,7 @@
 			$('.wpz-insta-ajax-placeholder').each(function() {
 				const $placeholder = $(this);
 				const feedId = $placeholder.data('feed-id');
-				const nonce = $placeholder.data('nonce');
-
-				// Skip if already loading, loaded, or missing required data
+					// Skip if already loading, loaded, or missing required data
 				if (!feedId || $placeholder.hasClass('loading') || $placeholder.hasClass('loaded')) {
 					return;
 				}
@@ -262,8 +260,7 @@
 					dataType: 'json',
 					data: {
 						action: 'wpzoom_instagram_initial_load',
-						feed_id: feedId,
-						_wpnonce: nonce
+						feed_id: feedId
 					},
 					success: function(response) {
 						if (response.success && response.data.html) {
