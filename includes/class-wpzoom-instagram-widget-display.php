@@ -211,6 +211,19 @@ class Wpzoom_Instagram_Widget_Display {
 			wp_send_json_error( 'Invalid feed' );
 		}
 
+		// Try to get cached HTML output first
+		$cache_key = 'wpz_insta_feed_html_' . $feed_id;
+		$cached_html = get_transient( $cache_key );
+
+		if ( false !== $cached_html && ! empty( $cached_html ) ) {
+			// Return cached HTML - much faster!
+			wp_send_json_success( array(
+				'html'    => $cached_html,
+				'feed_id' => $feed_id,
+				'cached'  => true,
+			) );
+		}
+
 		// Generate feed output using existing method (without AJAX loading to avoid recursion)
 		$feed_settings = array();
 		foreach ( WPZOOM_Instagram_Widget_Settings::$feed_settings as $setting_name => $setting_args ) {
@@ -224,13 +237,42 @@ class Wpzoom_Instagram_Widget_Display {
 		// Get feed HTML
 		$html = $this->output_feed( $feed_id, false, $feed_settings );
 
+		// Cache the HTML output using the same lifetime as the feed's API cache
+		$cache_lifetime = $this->get_feed_cache_lifetime( $feed_id );
+		set_transient( $cache_key, $html, $cache_lifetime );
+
 		// Prepare response
 		$response = array(
 			'html'    => $html,
 			'feed_id' => $feed_id,
+			'cached'  => false,
 		);
 
 		wp_send_json_success( $response );
+	}
+
+	/**
+	 * Get the cache lifetime for a feed based on its settings.
+	 *
+	 * @since 2.3.0
+	 * @param int $feed_id The feed ID.
+	 * @return int Cache lifetime in seconds.
+	 */
+	private function get_feed_cache_lifetime( $feed_id ) {
+		$interval = (int) WPZOOM_Instagram_Widget_Settings::get_feed_setting_value( $feed_id, 'check-new-posts-interval-number' );
+		$interval_suffix = (int) WPZOOM_Instagram_Widget_Settings::get_feed_setting_value( $feed_id, 'check-new-posts-interval-suffix' );
+
+		$multipliers = array(
+			MINUTE_IN_SECONDS,
+			HOUR_IN_SECONDS,
+			DAY_IN_SECONDS,
+			WEEK_IN_SECONDS,
+			MONTH_IN_SECONDS,
+		);
+
+		$multiplier = isset( $multipliers[ $interval_suffix ] ) ? $multipliers[ $interval_suffix ] : DAY_IN_SECONDS;
+
+		return intval( $multiplier * max( 1, $interval ) );
 	}
 
 	/**
