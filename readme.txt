@@ -9,7 +9,7 @@ Stable tag: 2.3.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Instagram feed plugin for WordPress - Display beautiful Instagram photos, videos & reels. Easy setup with Gutenberg block, widget, shortcode & Elementor.
+Instagram feed plugin for WordPress: Display your Instagram photos, videos & reels. Easy setup with Gutenberg block, widget, shortcode & Elementor
 
 == Description ==
 
