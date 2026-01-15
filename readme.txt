@@ -9,15 +9,15 @@ Stable tag: 2.3.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Display beautiful, customizable Instagram feeds on your WordPress site. Easy setup, responsive design, Gutenberg block, and multiple layouts included.
+Instagram feed plugin for WordPress - Display beautiful Instagram photos, videos & reels. Easy setup with Gutenberg block, widget, shortcode & Elementor.
 
 == Description ==
 
-= The Most User-Friendly Instagram Feed Plugin for WordPress =
+= Instagram Feed Plugin for WordPress - Easy & Powerful =
 
-**Display stunning Instagram feeds on your WordPress website in minutes — no coding required!**
+**The best Instagram widget plugin for WordPress.** Display your Instagram feed, photos, videos, and reels in beautiful galleries. Works with Gutenberg blocks, widgets, shortcodes, and Elementor.
 
-WPZOOM Social Feed Widget makes it easy to showcase your Instagram photos, videos, and reels anywhere on your site. Whether you want to grow your followers, keep your website fresh with dynamic content, or add social proof to your pages — this plugin does it all.
+Create stunning **Instagram galleries** and **Instagram sliders** anywhere on your WordPress site. Perfect for showcasing your Instagram content, growing followers, and adding social proof to your website.
 
 ⭐️ **[Get Instagram Widget PRO](https://www.wpzoom.com/plugins/instagram-widget/?utm_source=wporg&utm_medium=insta-free-desc&utm_campaign=insta-free-pro-link)** — Unlock Stories, Analytics, Carousel & More! ⭐️
 
@@ -85,6 +85,16 @@ Track your Instagram performance directly from your WordPress dashboard:
 * Divi Builder
 * WPBakery Page Builder
 * Any theme or page builder with shortcode support
+
+= Smash Balloon Alternative =
+
+Looking for a **lightweight Instagram feed plugin**? WPZOOM Social Feed is a fast, easy-to-use alternative to heavier Instagram plugins. Get all the essential features without the bloat:
+
+* Smaller file size = faster loading
+* Clean, minimal code
+* No unnecessary features slowing down your site
+* Same Instagram API support
+* Regular updates and responsive support
 
 = Get Involved =
 
