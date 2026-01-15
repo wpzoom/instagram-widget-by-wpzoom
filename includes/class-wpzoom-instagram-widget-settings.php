@@ -72,7 +72,7 @@ class WPZOOM_Instagram_Widget_Settings {
 		'image-width-suffix'              => array( 'type' => 'integer', 'default' => 0 ),
 		'show-overlay'                    => array( 'type' => 'boolean', 'default' => true ),
 		'lazy-load'                       => array( 'type' => 'boolean', 'default' => true ),
-		'ajax-initial-load'               => array( 'type' => 'boolean', 'default' => true ),
+		'ajax-initial-load'               => array( 'type' => 'boolean', 'default' => false ),
 		'lightbox'                        => array( 'type' => 'boolean', 'default' => true ),
 		'allowed-post-types'              => array( 'type' => 'string',  'default' => 'IMAGE,VIDEO,CAROUSEL_ALBUM' ),
 		'image-aspect-ratio'              => array( 'type' => 'string',  'default' => 'square' ),
