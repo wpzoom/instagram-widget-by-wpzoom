@@ -3108,6 +3108,13 @@
         flex: 1;
     }
 
+    .wpz-insta-product-link-hint {
+        margin: 0 0 12px 0;
+        font-size: 13px;
+        color: #646970;
+        line-height: 1.4;
+    }
+
     .wpz-insta-product-search {
         margin-bottom: 20px;
 
@@ -3141,6 +3148,39 @@
 
             &.selected {
                 background: #e7f3ff;
+                border-color: #2271b1;
+
+                .wpz-insta-product-item-checkbox::after {
+                    opacity: 1;
+                }
+            }
+
+            .wpz-insta-product-item-checkbox {
+                flex-shrink: 0;
+                width: 20px;
+                height: 20px;
+                margin-right: 12px;
+                border: 2px solid #8c8f94;
+                border-radius: 3px;
+                position: relative;
+                transition: border-color 0.2s, background 0.2s;
+
+                &::after {
+                    content: '';
+                    position: absolute;
+                    left: 5px;
+                    top: 2px;
+                    width: 6px;
+                    height: 11px;
+                    border: solid #fff;
+                    border-width: 0 2px 2px 0;
+                    transform: rotate(45deg);
+                    opacity: 0;
+                }
+            }
+
+            &.selected .wpz-insta-product-item-checkbox {
+                background: #2271b1;
                 border-color: #2271b1;
             }
 

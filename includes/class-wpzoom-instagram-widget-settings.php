@@ -603,7 +603,7 @@ class WPZOOM_Instagram_Widget_Settings {
 	}
 
 	/**
-	 * AJAX handler to save a product link for an Instagram media item.
+	 * AJAX handler to save product link(s) for an Instagram media item (supports multiple products).
 	 *
 	 * @return void
 	 */
@@ -616,7 +616,9 @@ class WPZOOM_Instagram_Widget_Settings {
 
 		$feed_id = isset( $_POST['feed_id'] ) ? intval( $_POST['feed_id'] ) : 0;
 		$media_id = isset( $_POST['media_id'] ) ? sanitize_text_field( $_POST['media_id'] ) : '';
-		$product_id = isset( $_POST['product_id'] ) ? intval( $_POST['product_id'] ) : 0;
+		$product_ids = isset( $_POST['product_ids'] ) && is_array( $_POST['product_ids'] )
+			? array_map( 'intval', array_values( array_filter( $_POST['product_ids'], 'is_numeric' ) ) )
+			: array();
 
 		if ( empty( $feed_id ) || empty( $media_id ) ) {
 			wp_send_json_error( array( 'message' => __( 'Invalid feed ID or media ID.', 'instagram-widget-by-wpzoom' ) ) );
@@ -628,40 +630,30 @@ class WPZOOM_Instagram_Widget_Settings {
 			wp_send_json_error( array( 'message' => __( 'Invalid feed or insufficient permissions.', 'instagram-widget-by-wpzoom' ) ) );
 		}
 
-		// If product_id is 0, remove the link
-		if ( $product_id > 0 ) {
-			// Verify product exists
-			$product = wc_get_product( $product_id );
-			if ( ! $product ) {
+		// Verify all product IDs exist
+		foreach ( $product_ids as $product_id ) {
+			if ( $product_id > 0 && ! wc_get_product( $product_id ) ) {
 				wp_send_json_error( array( 'message' => __( 'Invalid product ID.', 'instagram-widget-by-wpzoom' ) ) );
 			}
 		}
 
-		$result = Wpzoom_Instagram_Widget_Display::save_linked_product_id( $feed_id, $media_id, $product_id );
+		$result = Wpzoom_Instagram_Widget_Display::save_linked_product_ids( $feed_id, $media_id, $product_ids );
 
 		if ( $result ) {
-			$product_data = null;
-			if ( $product_id > 0 ) {
-				$product = wc_get_product( $product_id );
-				if ( $product ) {
-					$product_data = array(
-						'id'    => $product->get_id(),
-						'title' => $product->get_name(),
-						'price' => $product->get_price_html(),
-					);
-				}
-			}
+			$message = ! empty( $product_ids )
+				? __( 'Product links saved successfully.', 'instagram-widget-by-wpzoom' )
+				: __( 'Product links removed successfully.', 'instagram-widget-by-wpzoom' );
 			wp_send_json_success( array(
-				'message'      => $product_id > 0 ? __( 'Product link saved successfully.', 'instagram-widget-by-wpzoom' ) : __( 'Product link removed successfully.', 'instagram-widget-by-wpzoom' ),
-				'product'      => $product_data,
+				'message'     => $message,
+				'product_ids' => $product_ids,
 			) );
 		} else {
-			wp_send_json_error( array( 'message' => __( 'Failed to save product link.', 'instagram-widget-by-wpzoom' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Failed to save product link(s).', 'instagram-widget-by-wpzoom' ) ) );
 		}
 	}
 
 	/**
-	 * AJAX handler to get the linked product for an Instagram media item.
+	 * AJAX handler to get the linked product(s) for an Instagram media item.
 	 *
 	 * @return void
 	 */
@@ -672,30 +664,31 @@ class WPZOOM_Instagram_Widget_Settings {
 			wp_send_json_error( array( 'message' => __( 'Permission denied.', 'instagram-widget-by-wpzoom' ) ) );
 		}
 
-		$feed_id = isset( $_POST['feed_id'] ) ? intval( $_POST['feed_id'] ) : 0;
+		$feed_id  = isset( $_POST['feed_id'] ) ? intval( $_POST['feed_id'] ) : 0;
 		$media_id = isset( $_POST['media_id'] ) ? sanitize_text_field( $_POST['media_id'] ) : '';
 
 		if ( empty( $feed_id ) || empty( $media_id ) ) {
 			wp_send_json_error( array( 'message' => __( 'Invalid feed ID or media ID.', 'instagram-widget-by-wpzoom' ) ) );
 		}
 
-		$product_id = Wpzoom_Instagram_Widget_Display::get_linked_product_id( $feed_id, $media_id );
-
-		if ( $product_id > 0 ) {
+		$product_ids = Wpzoom_Instagram_Widget_Display::get_linked_product_ids( $feed_id, $media_id );
+		$products    = array();
+		foreach ( $product_ids as $product_id ) {
 			$product = wc_get_product( $product_id );
 			if ( $product ) {
-				wp_send_json_success( array(
-					'product' => array(
-						'id'    => $product->get_id(),
-						'title' => $product->get_name(),
-						'price' => $product->get_price_html(),
-						'image' => $product->get_image_id() ? wp_get_attachment_image_url( $product->get_image_id(), 'thumbnail' ) : wc_placeholder_img_src(),
-					),
-				) );
+				$products[] = array(
+					'id'    => $product->get_id(),
+					'title' => $product->get_name(),
+					'price' => $product->get_price_html(),
+					'image' => $product->get_image_id() ? wp_get_attachment_image_url( $product->get_image_id(), 'thumbnail' ) : wc_placeholder_img_src(),
+				);
 			}
 		}
 
-		wp_send_json_success( array( 'product' => null ) );
+		wp_send_json_success( array(
+			'product_ids' => $product_ids,
+			'products'    => $products,
+		) );
 	}
 
 	function admin_body_class_filter( $classes ) {
@@ -2307,15 +2300,44 @@ class WPZOOM_Instagram_Widget_Settings {
 								<h5 class="wpz-insta_sidebar-section-title smaller-title"><?php esc_html_e( 'Settings', 'instagram-widget-by-wpzoom' ); ?></h5>
 								
 								<label class="wpz-insta_table-row">
-									<strong class="wpz-insta_table-cell"><?php esc_html_e( 'Show Add to Cart Button', 'instagram-widget-by-wpzoom' ); ?></strong>
+									<strong class="wpz-insta_table-cell"><?php esc_html_e( 'Show products', 'instagram-widget-by-wpzoom' ); ?></strong>
 									<div class="wpz-insta_table-cell">
 										<input type="checkbox" name="_wpz-insta_show-add-to-cart" id="_wpz-insta_show-add-to-cart" value="1" class="preview-exclude"<?php checked( get_post_meta( $post->ID, '_wpz-insta_show-add-to-cart', true ), '1' ); ?> />
 										<label for="_wpz-insta_show-add-to-cart"><?php esc_html_e( 'Enable', 'instagram-widget-by-wpzoom' ); ?></label>
 									</div>
 								</label>
 
-								<label class="wpz-insta_table-row">
-									<strong class="wpz-insta_table-cell"><?php esc_html_e( 'Button Text', 'instagram-widget-by-wpzoom' ); ?></strong>
+								<label class="wpz-insta_table-row wpz-insta-product-links-display-type-row">
+									<strong class="wpz-insta_table-cell"><?php esc_html_e( 'Display', 'instagram-widget-by-wpzoom' ); ?></strong>
+									<div class="wpz-insta_table-cell">
+										<select name="_wpz-insta_product-links-display-type" id="_wpz-insta_product-links-display-type" class="preview-exclude">
+											<option value="button" <?php selected( get_post_meta( $post->ID, '_wpz-insta_product-links-display-type', true ), 'button' ); ?>><?php esc_html_e( 'Add to Cart button', 'instagram-widget-by-wpzoom' ); ?></option>
+											<option value="icon" <?php selected( get_post_meta( $post->ID, '_wpz-insta_product-links-display-type', true ), 'icon' ); ?>><?php esc_html_e( 'Icon with popover', 'instagram-widget-by-wpzoom' ); ?></option>
+										</select>
+									</div>
+								</label>
+
+								<label class="wpz-insta_table-row wpz-insta-product-links-popover-title-row">
+									<strong class="wpz-insta_table-cell"><?php esc_html_e( 'Popover title', 'instagram-widget-by-wpzoom' ); ?></strong>
+									<div class="wpz-insta_table-cell">
+										<input type="text" name="_wpz-insta_product-links-popover-title" class="preview-exclude" value="<?php echo esc_attr( get_post_meta( $post->ID, '_wpz-insta_product-links-popover-title', true ) ?: __( 'Related products', 'instagram-widget-by-wpzoom' ) ); ?>" placeholder="<?php esc_attr_e( 'Related products', 'instagram-widget-by-wpzoom' ); ?>" />
+									</div>
+								</label>
+
+								<label class="wpz-insta_table-row wpz-insta-product-links-icon-position-row">
+									<strong class="wpz-insta_table-cell"><?php esc_html_e( 'Icon position', 'instagram-widget-by-wpzoom' ); ?></strong>
+									<div class="wpz-insta_table-cell">
+										<select name="_wpz-insta_product-links-icon-position" id="_wpz-insta_product-links-icon-position" class="preview-exclude">
+											<option value="top-left" <?php selected( get_post_meta( $post->ID, '_wpz-insta_product-links-icon-position', true ), 'top-left' ); ?>><?php esc_html_e( 'Top left', 'instagram-widget-by-wpzoom' ); ?></option>
+											<option value="top-right" <?php selected( get_post_meta( $post->ID, '_wpz-insta_product-links-icon-position', true ), 'top-right' ); ?>><?php esc_html_e( 'Top right', 'instagram-widget-by-wpzoom' ); ?></option>
+											<option value="bottom-left" <?php selected( get_post_meta( $post->ID, '_wpz-insta_product-links-icon-position', true ), 'bottom-left' ); ?>><?php esc_html_e( 'Bottom left', 'instagram-widget-by-wpzoom' ); ?></option>
+											<option value="bottom-right" <?php selected( get_post_meta( $post->ID, '_wpz-insta_product-links-icon-position', true ) ?: 'bottom-right', 'bottom-right' ); ?>><?php esc_html_e( 'Bottom right', 'instagram-widget-by-wpzoom' ); ?></option>
+										</select>
+									</div>
+								</label>
+
+								<label class="wpz-insta_table-row wpz-insta-add-to-cart-button-row">
+									<strong class="wpz-insta_table-cell"><?php esc_html_e( 'Button text', 'instagram-widget-by-wpzoom' ); ?></strong>
 									<div class="wpz-insta_table-cell">
 										<input type="text" name="_wpz-insta_add-to-cart-text" class="preview-exclude" value="<?php echo esc_attr( get_post_meta( $post->ID, '_wpz-insta_add-to-cart-text', true ) ?: __( 'Add to Cart', 'instagram-widget-by-wpzoom' ) ); ?>" />
 									</div>
@@ -3045,6 +3067,15 @@ class WPZOOM_Instagram_Widget_Settings {
 				if ( isset( $_POST['_wpz-insta_add-to-cart-text'] ) ) {
 					$add_to_cart_text = sanitize_text_field( $_POST['_wpz-insta_add-to-cart-text'] );
 					update_post_meta( $post_ID, '_wpz-insta_add-to-cart-text', $add_to_cart_text );
+				}
+				if ( isset( $_POST['_wpz-insta_product-links-display-type'] ) && in_array( $_POST['_wpz-insta_product-links-display-type'], array( 'button', 'icon' ), true ) ) {
+					update_post_meta( $post_ID, '_wpz-insta_product-links-display-type', sanitize_text_field( $_POST['_wpz-insta_product-links-display-type'] ) );
+				}
+				if ( isset( $_POST['_wpz-insta_product-links-popover-title'] ) ) {
+					update_post_meta( $post_ID, '_wpz-insta_product-links-popover-title', sanitize_text_field( $_POST['_wpz-insta_product-links-popover-title'] ) );
+				}
+				if ( isset( $_POST['_wpz-insta_product-links-icon-position'] ) && in_array( $_POST['_wpz-insta_product-links-icon-position'], array( 'top-left', 'top-right', 'bottom-left', 'bottom-right' ), true ) ) {
+					update_post_meta( $post_ID, '_wpz-insta_product-links-icon-position', sanitize_text_field( $_POST['_wpz-insta_product-links-icon-position'] ) );
 				}
 			}
 
@@ -3946,6 +3977,7 @@ class WPZOOM_Instagram_Widget_Settings {
 					'strings'                            => array(
 						'linkProduct'    => __( 'Link to Product', 'instagram-widget-by-wpzoom' ),
 						'searchProducts'  => __( 'Search products...', 'instagram-widget-by-wpzoom' ),
+						'selectProductsHint' => __( 'Select one or more products. Click an item to toggle selection.', 'instagram-widget-by-wpzoom' ),
 						'removeLink'      => __( 'Remove Link', 'instagram-widget-by-wpzoom' ),
 						'save'            => __( 'Save', 'instagram-widget-by-wpzoom' ),
 						'cancel'          => __( 'Cancel', 'instagram-widget-by-wpzoom' ),

@@ -344,7 +344,7 @@
 
         &.layout-grid {
             .zoom-instagram-widget__item {
-                img {
+                img:not(.wpz-insta-product-popover-item-img) {
                     object-fit: cover;
                     width: 100%;
                     aspect-ratio: 1/1;
@@ -1238,12 +1238,18 @@ a.ig-b-v-24:hover {
 /* Linked product block in lightbox (before header) */
 .wpz-insta-lightbox-wrapper .wpz-insta-lightbox .details-wrapper .wpz-insta-lightbox-product {
     display: flex;
-    flex-wrap: wrap;
-    align-items: center;
+    flex-direction: column;
     gap: 12px;
     padding: 12px 16px;
     border-bottom: 1px solid #efefef;
     background: #fafafa;
+
+    .wpz-insta-lightbox-product__item {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 12px;
+    }
 
     .wpz-insta-lightbox-product__link {
         display: flex;
@@ -1741,5 +1747,214 @@ a.ig-b-v-24:hover {
     &:hover {
         background: #135e96;
         color: #fff !important;
+    }
+}
+
+// Product icon + popover (display type: icon)
+.wpz-insta-product-icon-wrap {
+    position: absolute;
+    z-index: 10;
+    pointer-events: auto;
+
+    &.wpz-insta-product-icon-position-top-left {
+        top: 10px;
+        left: 10px;
+    }
+    &.wpz-insta-product-icon-position-top-right {
+        top: 10px;
+        right: 10px;
+    }
+    &.wpz-insta-product-icon-position-bottom-left {
+        bottom: 10px;
+        left: 10px;
+    }
+    &.wpz-insta-product-icon-position-bottom-right {
+        bottom: 10px;
+        right: 10px;
+    }
+}
+
+.wpz-insta-product-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    background: rgba(0, 0, 0, 0.65);
+    color: #fff;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background 0.2s;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+
+    &:hover {
+        background: rgba(0, 0, 0, 0.85);
+    }
+
+    svg {
+        width: 20px;
+        height: 20px;
+    }
+}
+
+.wpz-insta-product-popover {
+    position: absolute;
+    right: 0;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s, visibility 0.2s;
+    z-index: 100;
+    pointer-events: none;
+    padding: 8px 0;
+    .wpz-insta-product-icon-position-bottom-left {
+        left: 0;
+        bottom: 100%;
+    }
+    .wpz-insta-product-icon-position-bottom-right & {
+        right: 0;
+        bottom: 100%;
+    }
+    .wpz-insta-product-icon-position-top-left & {
+        left: 0;
+    }
+    .wpz-insta-product-icon-position-top-right & {
+        right: 0;
+    }
+
+    .wpz-insta-product-popover-wrapper{
+        padding: 12px 0;
+        min-width: 220px;
+        max-width: 280px;
+        background: #fff;
+        border-radius: 6px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    }
+}
+
+.wpz-insta-product-icon-wrap:hover .wpz-insta-product-popover {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+}
+
+.wpz-insta-product-popover-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: #1d2327;
+    padding: 0 12px 8px;
+    border-bottom: 1px solid #eee;
+    margin-bottom: 8px;
+}
+
+.wpz-insta-product-popover-list {
+    list-style: none;
+    margin: 0;
+    padding: 0 8px;
+    max-height: 240px;
+    overflow-y: auto;
+}
+
+.wpz-insta-product-popover-item {
+    padding: 0;
+    border-bottom: 1px solid #f0f0f0;
+    &:last-child {
+        border-bottom: none;
+    }
+}
+
+.wpz-insta-product-popover-item-link {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 4px;
+    text-decoration: none;
+    color: inherit;
+    transition: background 0.15s;
+
+    &:hover {
+        background: #f5f5f5;
+    }
+}
+
+.wpz-insta-product-popover-item-img {
+    width: 44px;
+    height: 44px;
+    object-fit: cover;
+    border-radius: 4px;
+    flex-shrink: 0;
+}
+
+.wpz-insta-product-popover-item-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+    flex: 1;
+}
+
+.wpz-insta-product-popover-item-title {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: #1d2327;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.wpz-insta-product-popover-item-price {
+    font-size: 12px;
+    color: #2271b1;
+    font-weight: 600;
+
+    .woocommerce-Price-amount {
+        font-weight: 600;
+    }
+}
+
+.wpz-insta-product-popover-item-chevron {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    color: #8c8f94;
+
+    svg {
+        width: 20px;
+        height: 20px;
+    }
+}
+
+.wpz-insta-product-popover-item-add {
+    display: inline-block;
+    padding: 5px 12px;
+    font-size: 12px;
+    font-weight: 600;
+    text-decoration: none;
+    background: #2271b1;
+    color: #fff !important;
+    border-radius: 4px;
+    transition: background 0.2s;
+
+    &:hover {
+        background: #135e96;
+        color: #fff !important;
+    }
+}
+
+// Lightbox: icon + popover (reuse popover styles, position within details)
+.wpz-insta-lightbox-wrapper .wpz-insta-lightbox-product-icon-wrap {
+    position: relative;
+    display: inline-block;
+    margin-bottom: 8px;
+
+    &.wpz-insta-product-icon-position-top-left,
+    &.wpz-insta-product-icon-position-top-right,
+    &.wpz-insta-product-icon-position-bottom-left,
+    &.wpz-insta-product-icon-position-bottom-right {
+        top: auto;
+        right: auto;
+        bottom: auto;
+        left: auto;
     }
 }

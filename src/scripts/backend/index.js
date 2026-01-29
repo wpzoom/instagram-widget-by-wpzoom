@@ -1053,10 +1053,11 @@ jQuery( function( $ ) {
 
 	// WooCommerce Product Link functionality
 	if ( typeof zoom_instagram_widget_admin !== 'undefined' ) {
-		// Product link popup
+		// Product link popup (multi-select)
 		var $productLinkModal = null;
 		var currentMediaId = null;
 		var currentFeedId = null;
+		var currentSelectedIds = []; // Selected product IDs (persists across pagination)
 
 		function initProductLinkModal() {
 			if ( $productLinkModal ) {
@@ -1071,6 +1072,7 @@ jQuery( function( $ ) {
 				'<button type="button" class="wpz-insta-modal-close">&times;</button>' +
 				'</div>' +
 				'<div class="wpz-insta-modal-body">' +
+				'<p class="wpz-insta-product-link-hint">' + ( strings.selectProductsHint || 'Select one or more products. Click an item to toggle selection.' ) + '</p>' +
 				'<div class="wpz-insta-product-search">' +
 				'<input type="text" id="wpz-insta-product-search-input" placeholder="' + ( strings.searchProducts || 'Search products...' ) + '" />' +
 				'</div>' +
@@ -1079,7 +1081,7 @@ jQuery( function( $ ) {
 				'</div>' +
 				'<div class="wpz-insta-modal-footer">' +
 				'<button type="button" class="button wpz-insta-remove-link" style="display: none;">' + ( strings.removeLink || 'Remove Link' ) + '</button>' +
-				'<button type="button" class="button button-primary wpz-insta-save-link">' + ( strings.save || 'Save' ) + '</button>' +
+				'<button type="button" class="button button-primary wpz-insta-save-link" disabled>' + ( strings.save || 'Save' ) + '</button>' +
 				'<button type="button" class="button wpz-insta-cancel-link">' + ( strings.cancel || 'Cancel' ) + '</button>' +
 				'</div>' +
 				'</div>' +
@@ -1095,23 +1097,28 @@ jQuery( function( $ ) {
 
 			// Remove link handler
 			$productLinkModal.on( 'click', '.wpz-insta-remove-link', function() {
-				saveProductLink( 0 );
+				saveProductLink( [] );
 			} );
 
 			// Save link handler
 			$productLinkModal.on( 'click', '.wpz-insta-save-link', function() {
-				var selectedProduct = $( '#wpz-insta-product-list .wpz-insta-product-item.selected' );
-				if ( selectedProduct.length ) {
-					var productId = selectedProduct.data( 'product-id' );
-					saveProductLink( productId );
-				}
+				var ids = currentSelectedIds.slice();
+				saveProductLink( ids );
 			} );
 
-			// Product item click handler
+			// Product item click: toggle selection (multi-select)
 			$productLinkModal.on( 'click', '.wpz-insta-product-item', function() {
-				$( '.wpz-insta-product-item' ).removeClass( 'selected' );
-				$( this ).addClass( 'selected' );
-				$( '.wpz-insta-save-link' ).prop( 'disabled', false );
+				var id = parseInt( $( this ).data( 'product-id' ), 10 );
+				var idx = currentSelectedIds.indexOf( id );
+				if ( idx === -1 ) {
+					currentSelectedIds.push( id );
+					$( this ).addClass( 'selected' );
+				} else {
+					currentSelectedIds.splice( idx, 1 );
+					$( this ).removeClass( 'selected' );
+				}
+				$( '.wpz-insta-save-link' ).prop( 'disabled', currentSelectedIds.length === 0 );
+				$( '.wpz-insta-remove-link' ).toggle( currentSelectedIds.length > 0 );
 			} );
 
 			// Search handler
@@ -1125,7 +1132,7 @@ jQuery( function( $ ) {
 			} );
 		}
 
-		function loadProducts( search, page, currentProductId ) {
+		function loadProducts( search, page ) {
 			page = page || 1;
 			$( '#wpz-insta-product-list' ).html( '<div class="wpz-insta-loading">Loading...</div>' );
 
@@ -1140,7 +1147,7 @@ jQuery( function( $ ) {
 				},
 				success: function( response ) {
 					if ( response.success && response.data.products ) {
-						displayProducts( response.data.products, response.data.pages, page, currentProductId );
+						displayProducts( response.data.products, response.data.pages, page );
 					} else {
 						$( '#wpz-insta-product-list' ).html( '<div class="wpz-insta-no-products">No products found.</div>' );
 					}
@@ -1151,14 +1158,16 @@ jQuery( function( $ ) {
 			} );
 		}
 
-		function displayProducts( products, totalPages, currentPage, currentProductId ) {
+		function displayProducts( products, totalPages, currentPage ) {
 			var html = '';
 			if ( products.length === 0 ) {
 				html = '<div class="wpz-insta-no-products">No products found.</div>';
 			} else {
 				products.forEach( function( product ) {
-					var selectedClass = (currentProductId == product.id) ? ' selected' : '';
+					var isSelected = currentSelectedIds.indexOf( parseInt( product.id, 10 ) ) !== -1;
+					var selectedClass = isSelected ? ' selected' : '';
 					html += '<div class="wpz-insta-product-item' + selectedClass + '" data-product-id="' + product.id + '">' +
+						'<span class="wpz-insta-product-item-checkbox" aria-hidden="true"></span>' +
 						'<img src="' + product.image + '" alt="" />' +
 						'<div class="wpz-insta-product-info">' +
 						'<h4>' + product.title + '</h4>' +
@@ -1182,9 +1191,13 @@ jQuery( function( $ ) {
 			} else {
 				$( '.wpz-insta-product-pagination' ).html( '' );
 			}
+
+			$( '.wpz-insta-save-link' ).prop( 'disabled', currentSelectedIds.length === 0 );
+			$( '.wpz-insta-remove-link' ).toggle( currentSelectedIds.length > 0 );
 		}
 
-		function saveProductLink( productId ) {
+		function saveProductLink( productIds ) {
+			productIds = Array.isArray( productIds ) ? productIds : ( productIds ? [ productIds ] : [] );
 			$.ajax( {
 				url: zoom_instagram_widget_admin.ajax_url,
 				type: 'POST',
@@ -1193,21 +1206,20 @@ jQuery( function( $ ) {
 					nonce: zoom_instagram_widget_admin.product_link_nonce,
 					feed_id: currentFeedId,
 					media_id: currentMediaId,
-					product_id: productId
+					product_ids: productIds
 				},
 				success: function( response ) {
 					if ( response.success ) {
 						$productLinkModal.hide();
-						// Reload preview to show updated button
 						if ( typeof window.wpzInstaReloadPreview === 'function' ) {
 							window.wpzInstaReloadPreview();
 						}
 					} else {
-						alert( response.data && response.data.message ? response.data.message : 'Error saving product link.' );
+						alert( response.data && response.data.message ? response.data.message : 'Error saving product link(s).' );
 					}
 				},
 				error: function() {
-					alert( 'Error saving product link.' );
+					alert( 'Error saving product link(s).' );
 				}
 			} );
 		}
@@ -1260,22 +1272,40 @@ jQuery( function( $ ) {
 			}
 			currentMediaId = e.data.mediaId || '';
 			currentFeedId = e.data.feedId || '';
-			var currentProductId = parseInt(e.data.productId) || 0;
 
 			initProductLinkModal();
 			$productLinkModal.show();
-			loadProducts( '', 1, currentProductId );
-
-			if ( currentProductId ) {
-				$( '.wpz-insta-remove-link' ).show();
-			} else {
-				$( '.wpz-insta-remove-link' ).hide();
-			}
-
+			$( '#wpz-insta-product-list' ).html( '<div class="wpz-insta-loading">Loading...</div>' );
 			$( '.wpz-insta-save-link' ).prop( 'disabled', true );
+
+			// Fetch current linked product IDs (supports multi-select)
+			$.ajax( {
+				url: zoom_instagram_widget_admin.ajax_url,
+				type: 'POST',
+				data: {
+					action: 'wpz-insta_get-product-link',
+					nonce: zoom_instagram_widget_admin.product_link_nonce,
+					feed_id: currentFeedId,
+					media_id: currentMediaId
+				},
+				success: function( response ) {
+					if ( response.success && response.data && response.data.product_ids && Array.isArray( response.data.product_ids ) ) {
+						currentSelectedIds = response.data.product_ids.slice();
+					} else {
+						currentSelectedIds = [];
+					}
+					$( '.wpz-insta-remove-link' ).toggle( currentSelectedIds.length > 0 );
+					loadProducts( '', 1 );
+				},
+				error: function() {
+					currentSelectedIds = [];
+					$( '.wpz-insta-remove-link' ).hide();
+					loadProducts( '', 1 );
+				}
+			} );
 		} );
 
-		// Pagination handlers
+		// Pagination handlers (preserve currentSelectedIds)
 		$( document ).on( 'click', '.wpz-insta-prev-page, .wpz-insta-next-page', function() {
 			var page = $( this ).data( 'page' );
 			var search = $( '#wpz-insta-product-search-input' ).val();
