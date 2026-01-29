@@ -785,7 +785,7 @@ class Wpzoom_Instagram_Widget_Display {
 
 						if ( $lightbox ) {
 							$output .= '<div class="wpz-insta-lightbox-wrapper mfp-hide"><div class="swiper"><div class="swiper-wrapper">';
-							$output .= self::lightbox_items_html( $items['items'], $user_id );
+							$output .= self::lightbox_items_html( $items['items'], $user_id, $args );
 							$output .= '</div><div class="swiper-button-prev"></div><div class="swiper-button-next"></div></div></div>';
 						}
 					}
@@ -977,6 +977,56 @@ class Wpzoom_Instagram_Widget_Display {
 					$output .= '</a>';
 				}
 
+				// Add "Link to a product" button in backend preview if WooCommerce is installed
+				if ( $preview && class_exists( 'WooCommerce' ) && ! empty( $media_id ) ) {
+					$feed_id = isset( $args['feed-id'] ) ? intval( $args['feed-id'] ) : 0;
+					$linked_product_id = self::get_linked_product_id( $feed_id, $media_id );
+					$is_linked = $linked_product_id > 0;
+					$button_text = $is_linked ? __( 'Edit Product Link', 'instagram-widget-by-wpzoom' ) : __( 'Link to a product', 'instagram-widget-by-wpzoom' );
+					$button_class = 'wpz-insta-link-product-btn' . ( $is_linked ? ' wpz-insta-link-product-btn--linked' : '' );
+					$icon_class  = $is_linked ? 'dashicons-edit' : 'dashicons-cart';
+					$output .= '<button type="button" class="' . esc_attr( $button_class ) . '" data-media-id="' . esc_attr( $media_id ) . '" data-feed-id="' . esc_attr( $feed_id ) . '" data-product-id="' . esc_attr( $linked_product_id ) . '" title="' . esc_attr( $button_text ) . '">';
+					$output .= '<span class="dashicons ' . esc_attr( $icon_class ) . '"></span> ' . esc_html( $button_text );
+					$output .= '</button>';
+
+					if ( $is_linked > 0 ) {
+						$output .= '<span class="wpz-insta-product-badge"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+  <path fill-rule="evenodd" d="M7.5 6v.75H5.513c-.96 0-1.764.724-1.865 1.679l-1.263 12A1.875 1.875 0 0 0 4.25 22.5h15.5a1.875 1.875 0 0 0 1.865-2.071l-1.263-12a1.875 1.875 0 0 0-1.865-1.679H16.5V6a4.5 4.5 0 1 0-9 0ZM12 3a3 3 0 0 0-3 3v.75h6V6a3 3 0 0 0-3-3Zm-3 8.25a3 3 0 1 0 6 0v-.75a.75.75 0 0 1 1.5 0v.75a4.5 4.5 0 1 1-9 0v-.75a.75.75 0 0 1 1.5 0v.75Z" clip-rule="evenodd" />
+</svg>
+' . esc_html__( 'Product', 'instagram-widget-by-wpzoom' ) . '</span>';
+					}
+				}
+
+				// Add product badge and "Add to Cart" button in frontend if item is linked to a product
+				if ( ! $preview && class_exists( 'WooCommerce' ) && ! empty( $media_id ) && apply_filters( 'wpz-insta_is-pro', false ) ) {
+					$feed_id = isset( $args['feed-id'] ) ? intval( $args['feed-id'] ) : 0;
+					$linked_product_id = self::get_linked_product_id( $feed_id, $media_id );
+
+					if ( $linked_product_id > 0 && class_exists( 'WooCommerce' ) ) {
+						$output .= '<span class="wpz-insta-product-badge"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+  <path fill-rule="evenodd" d="M7.5 6v.75H5.513c-.96 0-1.764.724-1.865 1.679l-1.263 12A1.875 1.875 0 0 0 4.25 22.5h15.5a1.875 1.875 0 0 0 1.865-2.071l-1.263-12a1.875 1.875 0 0 0-1.865-1.679H16.5V6a4.5 4.5 0 1 0-9 0ZM12 3a3 3 0 0 0-3 3v.75h6V6a3 3 0 0 0-3-3Zm-3 8.25a3 3 0 1 0 6 0v-.75a.75.75 0 0 1 1.5 0v.75a4.5 4.5 0 1 1-9 0v-.75a.75.75 0 0 1 1.5 0v.75Z" clip-rule="evenodd" />
+</svg>
+' . esc_html__( 'Click to view products', 'instagram-widget-by-wpzoom' ) . '</span>';
+					}
+
+					if ( $linked_product_id > 0 && class_exists( 'WooCommerce' ) ) {
+						$show_add_to_cart = get_post_meta( $feed_id, '_wpz-insta_show-add-to-cart', true );
+						$product = wc_get_product( $linked_product_id );
+						if ( $show_add_to_cart && $product && $product->is_purchasable() && $product->is_in_stock() ) {
+							$button_text = get_post_meta( $feed_id, '_wpz-insta_add-to-cart-text', true );
+							if ( empty( $button_text ) ) {
+								$button_text = __( 'Add to Cart', 'instagram-widget-by-wpzoom' );
+							}
+							$add_to_cart_url = esc_url( $product->add_to_cart_url() );
+							$output .= '<div class="wpz-insta-add-to-cart-wrapper">';
+							$output .= '<a href="' . $add_to_cart_url . '" class="wpz-insta-add-to-cart-btn button" data-product-id="' . esc_attr( $linked_product_id ) . '" rel="nofollow">';
+							$output .= esc_html( $button_text );
+							$output .= '</a>';
+							$output .= '</div>';
+						}
+					}
+				}
+
 				$output .= '</div></li>';
 
 				if ( ++ $count === $amount ) {
@@ -993,13 +1043,15 @@ class Wpzoom_Instagram_Widget_Display {
 	 *
 	 * @param  array  $items    The items to generate the markup for.
 	 * @param  int    $user_id  The ID of the user to disaply in the user info area.
+	 * @param  array  $args    Optional. Feed args including feed-id for product links.
 	 * @return string           The lightbox markup for the given feed items, empty string otherwise.
 	 */
-	public static function lightbox_items_html( $items, $user_id ) {
+	public static function lightbox_items_html( $items, $user_id, $args = array() ) {
 		$output = '';
 
 		if ( ! empty( $items ) && is_array( $items ) ) {
 			$user = get_post( $user_id );
+			$feed_id = isset( $args['feed-id'] ) ? intval( $args['feed-id'] ) : 0;
 
 			if ( $user instanceof WP_Post ) {
 				$amount = count( $items );
@@ -1077,7 +1129,42 @@ class Wpzoom_Instagram_Widget_Display {
 					}
 
 					$output .= '</div>
-					<div class="details-wrapper">
+					<div class="details-wrapper">';
+
+					// Linked product block (before header): show product + Add to Cart in lightbox when post is linked to a product
+					if ( $feed_id > 0 && class_exists( 'WooCommerce' ) && ! empty( $media_id ) && apply_filters( 'wpz-insta_is-pro', false ) ) {
+						$linked_product_id = self::get_linked_product_id( $feed_id, $media_id );
+						if ( $linked_product_id > 0 ) {
+							$product = wc_get_product( $linked_product_id );
+							if ( $product && $product->is_visible() ) {
+								$show_add_to_cart = get_post_meta( $feed_id, '_wpz-insta_show-add-to-cart', true );
+								$add_to_cart_text = get_post_meta( $feed_id, '_wpz-insta_add-to-cart-text', true );
+								if ( empty( $add_to_cart_text ) ) {
+									$add_to_cart_text = __( 'Add to Cart', 'instagram-widget-by-wpzoom' );
+								}
+								$product_link = get_permalink( $linked_product_id );
+								$product_title = $product->get_name();
+								$product_price = $product->get_price_html();
+								$product_image_id = $product->get_image_id();
+								$product_image_url = $product_image_id ? wp_get_attachment_image_url( $product_image_id, 'woocommerce_thumbnail' ) : wc_placeholder_img_src( 'woocommerce_thumbnail' );
+								$output .= '<div class="wpz-insta-lightbox-product">';
+								$output .= '<a href="' . esc_url( $product_link ) . '" class="wpz-insta-lightbox-product__link" rel="noopener">';
+								$output .= '<img class="wpz-insta-lightbox-product__img" src="' . esc_url( $product_image_url ) . '" alt="' . esc_attr( $product_title ) . '" loading="lazy"/>';
+								$output .= '<div class="wpz-insta-lightbox-product__info">';
+								$output .= '<span class="wpz-insta-lightbox-product__title">' . esc_html( $product_title ) . '</span>';
+								$output .= '<span class="wpz-insta-lightbox-product__price">' . $product_price . '</span>';
+								$output .= '</div>';
+								$output .= '</a>';
+								if ( $show_add_to_cart && $product->is_purchasable() && $product->is_in_stock() ) {
+									$add_to_cart_url = $product->add_to_cart_url();
+									$output .= '<a href="' . esc_url( $add_to_cart_url ) . '" class="wpz-insta-lightbox-product__add-to-cart button" data-product-id="' . esc_attr( $linked_product_id ) . '" rel="nofollow">' . esc_html( $add_to_cart_text ) . '</a>';
+								}
+								$output .= '</div>';
+							}
+						}
+					}
+
+					$output .= '
 					<div class="wpz-insta-header">
 						<div class="wpz-insta-avatar">
 							<img src="' . esc_url( $user_image ) . '" alt="' . esc_attr( $user_name_display ) . '" width="42" height="42"/>
@@ -1561,5 +1648,52 @@ class Wpzoom_Instagram_Widget_Display {
 		</div>
 		<?php
 		return ob_get_clean();
+	}
+
+	/**
+	 * Get the linked WooCommerce product ID for an Instagram media item.
+	 *
+	 * @param int    $feed_id  The feed post ID.
+	 * @param string $media_id The Instagram media ID.
+	 * @return int The product ID, or 0 if not linked.
+	 */
+	public static function get_linked_product_id( $feed_id, $media_id ) {
+		if ( empty( $feed_id ) || empty( $media_id ) || ! class_exists( 'WooCommerce' ) ) {
+			return 0;
+		}
+
+		$product_links = get_post_meta( $feed_id, '_wpz-insta_product-links', true );
+		if ( ! is_array( $product_links ) ) {
+			return 0;
+		}
+
+		return isset( $product_links[ $media_id ] ) ? intval( $product_links[ $media_id ] ) : 0;
+	}
+
+	/**
+	 * Save the linked WooCommerce product ID for an Instagram media item.
+	 *
+	 * @param int    $feed_id    The feed post ID.
+	 * @param string $media_id   The Instagram media ID.
+	 * @param int    $product_id The WooCommerce product ID. Use 0 to remove the link.
+	 * @return bool True on success, false on failure.
+	 */
+	public static function save_linked_product_id( $feed_id, $media_id, $product_id ) {
+		if ( empty( $feed_id ) || empty( $media_id ) || ! class_exists( 'WooCommerce' ) ) {
+			return false;
+		}
+
+		$product_links = get_post_meta( $feed_id, '_wpz-insta_product-links', true );
+		if ( ! is_array( $product_links ) ) {
+			$product_links = array();
+		}
+
+		if ( $product_id > 0 ) {
+			$product_links[ $media_id ] = intval( $product_id );
+		} else {
+			unset( $product_links[ $media_id ] );
+		}
+
+		return update_post_meta( $feed_id, '_wpz-insta_product-links', $product_links );
 	}
 }

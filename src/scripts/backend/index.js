@@ -448,7 +448,8 @@ jQuery( function( $ ) {
 		return checkedValues.sort().join(','); // Sort for consistent comparison
 	}
 
-	$( 'form#post .wpz-insta_tabs-content > .wpz-insta_sidebar > .wpz-insta_sidebar-left' ).find( 'input, textarea, select' ).add( 'form#post #title' ).filter( "[name][name!='']" ).not( '.preview-exclude' ).each( function( index ) {
+	// Include all named fields (including .preview-exclude) so Save button enables on change; preview-exclude only affects iframe URL
+	$( 'form#post .wpz-insta_tabs-content > .wpz-insta_sidebar > .wpz-insta_sidebar-left' ).find( 'input, textarea, select' ).add( 'form#post #title' ).filter( "[name][name!='']" ).each( function( index ) {
 		const fieldName = $.trim( $(this).attr('name') );
 		
 		if ( $(this).is(':radio') ) {
@@ -483,43 +484,40 @@ jQuery( function( $ ) {
 		debounce(
 			( e ) => {
 				const $target = $( e.target );
+				const key = $target.attr('name');
 
-				if ( ! $target.is( '.preview-exclude' ) ) {
-					const key = $target.attr('name');
+				// Skip elements without a name attribute
+				if ( ! key ) {
+					return;
+				}
 
-					// Skip elements without a name attribute
-					if ( ! key ) {
-						return;
+				let trackingKey = key;
+				let currentValue;
+
+				if ( key.endsWith('[]') ) {
+					// Handle checkbox arrays
+					trackingKey = key.replace('[]', '');
+					currentValue = getCheckboxArrayValue( key );
+				} else {
+					// Handle regular fields
+					currentValue = $target.is(':checkbox') ? ( $target.is(':checked') ? '1' : '0' ) : $.trim( '' + $target.val() );
+				}
+
+				if ( trackingKey in formInitialValues && currentValue != formInitialValues[trackingKey] ) {
+					if ( ! ( trackingKey in formChangedValues ) ) {
+						formChangedValues[trackingKey] = true;
 					}
-
-					let trackingKey = key;
-					let currentValue;
-
-					if ( key.endsWith('[]') ) {
-						// Handle checkbox arrays
-						trackingKey = key.replace('[]', '');
-						currentValue = getCheckboxArrayValue( key );
-					} else {
-						// Handle regular fields
-						currentValue = $target.is(':checkbox') ? ( $target.is(':checked') ? '1' : '0' ) : $.trim( '' + $target.val() );
+				} else {
+					if ( trackingKey in formChangedValues ) {
+						delete formChangedValues[trackingKey];
 					}
+				}
 
-					if ( trackingKey in formInitialValues && currentValue != formInitialValues[trackingKey] ) {
-						if ( ! ( trackingKey in formChangedValues ) ) {
-							formChangedValues[trackingKey] = true;
-						}
-					} else {
-						if ( trackingKey in formChangedValues ) {
-							delete formChangedValues[trackingKey];
-						}
-					}
+				$( 'input#publish' ).toggleClass( 'disabled', $.isEmptyObject( formChangedValues ) );
 
-					$( 'input#publish' ).toggleClass( 'disabled', $.isEmptyObject( formChangedValues ) );
-
-					if ( key !== 'post_title' ) {
-						window.wpzInstaReloadPreview();
-					}
-
+				// Reload preview only for non–preview-exclude fields (keeps iframe URL smaller)
+				if ( key !== 'post_title' && ! $target.is( '.preview-exclude' ) ) {
+					window.wpzInstaReloadPreview();
 				}
 			},
 			300
@@ -678,6 +676,13 @@ jQuery( function( $ ) {
 
 			$tabs.removeClass( 'active' );
 			$tabs.filter( '[data-id="' + id + '"]' ).addClass( 'active' );
+
+			// Notify iframe of tab change so it can show/hide "Link to a product" buttons without reload
+			const iframe = document.querySelector( '#wpz-insta_widget-preview-view iframe' );
+			if ( iframe && iframe.contentWindow ) {
+				const tabId = ( id + '' ).replace( /^#/, '' );
+				iframe.contentWindow.postMessage( { action: 'wpz-insta-tab-change', tab: tabId }, '*' );
+			}
 		}
 	}
 
@@ -1030,6 +1035,12 @@ jQuery( function( $ ) {
 			url += '&wpz-insta-feed-id=' + postId;
 		}
 
+		// Pass current tab so iframe can show/hide "Link to a product" buttons (only on Product Links tab)
+		const activeTab = $( '.wpz-insta_feed-edit-nav li.active a' ).attr( 'href' );
+		if ( activeTab ) {
+			url += '&wpz-insta-tab=' + encodeURIComponent( ( activeTab + '' ).replace( /^#/, '' ) );
+		}
+
 		$( '#wpz-insta_widget-preview-view' ).closest( '.wpz-insta_sidebar-right' ).removeClass( 'hide-loading' );
 		$( '#wpz-insta_widget-preview-view iframe' ).addClass( 'wpz-insta_preview-hidden' ).attr( 'src', url );
 	};
@@ -1039,4 +1050,236 @@ jQuery( function( $ ) {
 
 		$frame.height( parseInt( $frame.contents().find( 'body' ).prop( 'scrollHeight' ) ) );
 	};
+
+	// WooCommerce Product Link functionality
+	if ( typeof zoom_instagram_widget_admin !== 'undefined' ) {
+		// Product link popup
+		var $productLinkModal = null;
+		var currentMediaId = null;
+		var currentFeedId = null;
+
+		function initProductLinkModal() {
+			if ( $productLinkModal ) {
+				return;
+			}
+
+			var strings = zoom_instagram_widget_admin.strings || {};
+			var modalHTML = '<div id="wpz-insta-product-link-modal" class="wpz-insta-modal" style="display: none;">' +
+				'<div class="wpz-insta-modal-content">' +
+				'<div class="wpz-insta-modal-header">' +
+				'<h2>' + ( strings.linkProduct || 'Link to Product' ) + '</h2>' +
+				'<button type="button" class="wpz-insta-modal-close">&times;</button>' +
+				'</div>' +
+				'<div class="wpz-insta-modal-body">' +
+				'<div class="wpz-insta-product-search">' +
+				'<input type="text" id="wpz-insta-product-search-input" placeholder="' + ( strings.searchProducts || 'Search products...' ) + '" />' +
+				'</div>' +
+				'<div class="wpz-insta-product-list" id="wpz-insta-product-list"></div>' +
+				'<div class="wpz-insta-product-pagination"></div>' +
+				'</div>' +
+				'<div class="wpz-insta-modal-footer">' +
+				'<button type="button" class="button wpz-insta-remove-link" style="display: none;">' + ( strings.removeLink || 'Remove Link' ) + '</button>' +
+				'<button type="button" class="button button-primary wpz-insta-save-link">' + ( strings.save || 'Save' ) + '</button>' +
+				'<button type="button" class="button wpz-insta-cancel-link">' + ( strings.cancel || 'Cancel' ) + '</button>' +
+				'</div>' +
+				'</div>' +
+				'</div>';
+
+			$( 'body' ).append( modalHTML );
+			$productLinkModal = $( '#wpz-insta-product-link-modal' );
+
+			// Close modal handlers
+			$productLinkModal.on( 'click', '.wpz-insta-modal-close, .wpz-insta-cancel-link', function() {
+				$productLinkModal.hide();
+			} );
+
+			// Remove link handler
+			$productLinkModal.on( 'click', '.wpz-insta-remove-link', function() {
+				saveProductLink( 0 );
+			} );
+
+			// Save link handler
+			$productLinkModal.on( 'click', '.wpz-insta-save-link', function() {
+				var selectedProduct = $( '#wpz-insta-product-list .wpz-insta-product-item.selected' );
+				if ( selectedProduct.length ) {
+					var productId = selectedProduct.data( 'product-id' );
+					saveProductLink( productId );
+				}
+			} );
+
+			// Product item click handler
+			$productLinkModal.on( 'click', '.wpz-insta-product-item', function() {
+				$( '.wpz-insta-product-item' ).removeClass( 'selected' );
+				$( this ).addClass( 'selected' );
+				$( '.wpz-insta-save-link' ).prop( 'disabled', false );
+			} );
+
+			// Search handler
+			var searchTimeout;
+			$( '#wpz-insta-product-search-input' ).on( 'input', function() {
+				clearTimeout( searchTimeout );
+				var search = $( this ).val();
+				searchTimeout = setTimeout( function() {
+					loadProducts( search, 1 );
+				}, 500 );
+			} );
+		}
+
+		function loadProducts( search, page, currentProductId ) {
+			page = page || 1;
+			$( '#wpz-insta-product-list' ).html( '<div class="wpz-insta-loading">Loading...</div>' );
+
+			$.ajax( {
+				url: zoom_instagram_widget_admin.ajax_url,
+				type: 'POST',
+				data: {
+					action: 'wpz-insta_get-products',
+					nonce: zoom_instagram_widget_admin.product_link_nonce,
+					search: search || '',
+					page: page
+				},
+				success: function( response ) {
+					if ( response.success && response.data.products ) {
+						displayProducts( response.data.products, response.data.pages, page, currentProductId );
+					} else {
+						$( '#wpz-insta-product-list' ).html( '<div class="wpz-insta-no-products">No products found.</div>' );
+					}
+				},
+				error: function() {
+					$( '#wpz-insta-product-list' ).html( '<div class="wpz-insta-error">Error loading products.</div>' );
+				}
+			} );
+		}
+
+		function displayProducts( products, totalPages, currentPage, currentProductId ) {
+			var html = '';
+			if ( products.length === 0 ) {
+				html = '<div class="wpz-insta-no-products">No products found.</div>';
+			} else {
+				products.forEach( function( product ) {
+					var selectedClass = (currentProductId == product.id) ? ' selected' : '';
+					html += '<div class="wpz-insta-product-item' + selectedClass + '" data-product-id="' + product.id + '">' +
+						'<img src="' + product.image + '" alt="" />' +
+						'<div class="wpz-insta-product-info">' +
+						'<h4>' + product.title + '</h4>' +
+						'<span class="wpz-insta-product-price">' + product.price + '</span>' +
+						'</div>' +
+						'</div>';
+				} );
+			}
+			$( '#wpz-insta-product-list' ).html( html );
+
+			// Pagination
+			if ( totalPages > 1 ) {
+				var paginationHTML = '';
+				if ( currentPage > 1 ) {
+					paginationHTML += '<button type="button" class="button wpz-insta-prev-page" data-page="' + ( currentPage - 1 ) + '">Previous</button>';
+				}
+				if ( currentPage < totalPages ) {
+					paginationHTML += '<button type="button" class="button wpz-insta-next-page" data-page="' + ( currentPage + 1 ) + '">Next</button>';
+				}
+				$( '.wpz-insta-product-pagination' ).html( paginationHTML );
+			} else {
+				$( '.wpz-insta-product-pagination' ).html( '' );
+			}
+		}
+
+		function saveProductLink( productId ) {
+			$.ajax( {
+				url: zoom_instagram_widget_admin.ajax_url,
+				type: 'POST',
+				data: {
+					action: 'wpz-insta_save-product-link',
+					nonce: zoom_instagram_widget_admin.product_link_nonce,
+					feed_id: currentFeedId,
+					media_id: currentMediaId,
+					product_id: productId
+				},
+				success: function( response ) {
+					if ( response.success ) {
+						$productLinkModal.hide();
+						// Reload preview to show updated button
+						if ( typeof window.wpzInstaReloadPreview === 'function' ) {
+							window.wpzInstaReloadPreview();
+						}
+					} else {
+						alert( response.data && response.data.message ? response.data.message : 'Error saving product link.' );
+					}
+				},
+				error: function() {
+					alert( 'Error saving product link.' );
+				}
+			} );
+		}
+
+		// Product Links upsell modal (shown when no valid license)
+		var $productLinksUpsellModal = null;
+		function initProductLinksUpsellModal() {
+			if ( $productLinksUpsellModal ) {
+				return;
+			}
+			var strings = zoom_instagram_widget_admin.strings || {};
+			var upsellTitle = strings.productLinksUpsellTitle || 'Unlock Product Links';
+			var upsellMessage = strings.productLinksUpsellMessage || 'Link your Instagram posts to WooCommerce products and show an Add to Cart button. This feature is available with an active Instagram Widget PRO license.';
+			var upsellCta = strings.productLinksUpsellCta || 'Get PRO License';
+			var upsellClose = strings.productLinksUpsellClose || 'Close';
+			var upsellUrl = zoom_instagram_widget_admin.product_links_upsell_url || 'https://www.wpzoom.com/plugins/instagram-widget/';
+			var upsellHTML = '<div id="wpz-insta-product-links-upsell-modal" class="wpz-insta-modal wpz-insta-upsell-modal" style="display: none;">' +
+				'<div class="wpz-insta-modal-content wpz-insta-upsell-content">' +
+				'<div class="wpz-insta-modal-header">' +
+				'<h2>' + upsellTitle + '</h2>' +
+				'<button type="button" class="wpz-insta-modal-close">&times;</button>' +
+				'</div>' +
+				'<div class="wpz-insta-modal-body">' +
+				'<p class="wpz-insta-upsell-message">' + upsellMessage + '</p>' +
+				'<div class="wpz-insta-upsell-actions">' +
+				'<a href="' + upsellUrl + '" target="_blank" rel="noopener" class="button button-primary wpz-insta-upsell-cta">' + upsellCta + '</a>' +
+				'</div>' +
+				'</div>' +
+				'<div class="wpz-insta-modal-footer">' +
+				'<button type="button" class="button wpz-insta-upsell-close">' + upsellClose + '</button>' +
+				'</div>' +
+				'</div></div>';
+			$( 'body' ).append( upsellHTML );
+			$productLinksUpsellModal = $( '#wpz-insta-product-links-upsell-modal' );
+			$productLinksUpsellModal.on( 'click', '.wpz-insta-modal-close, .wpz-insta-upsell-close', function() {
+				$productLinksUpsellModal.hide();
+			} );
+		}
+
+		// Open product link modal when iframe sends message (button is inside iframe)
+		window.addEventListener( 'message', function( e ) {
+			if ( ! e.data || e.data.action !== 'wpz-insta-open-product-link' ) {
+				return;
+			}
+			// If no valid license (not PRO), show upsell modal instead of product selection
+			if ( ! zoom_instagram_widget_admin.is_pro ) {
+				initProductLinksUpsellModal();
+				$productLinksUpsellModal.show();
+				return;
+			}
+			currentMediaId = e.data.mediaId || '';
+			currentFeedId = e.data.feedId || '';
+			var currentProductId = parseInt(e.data.productId) || 0;
+
+			initProductLinkModal();
+			$productLinkModal.show();
+			loadProducts( '', 1, currentProductId );
+
+			if ( currentProductId ) {
+				$( '.wpz-insta-remove-link' ).show();
+			} else {
+				$( '.wpz-insta-remove-link' ).hide();
+			}
+
+			$( '.wpz-insta-save-link' ).prop( 'disabled', true );
+		} );
+
+		// Pagination handlers
+		$( document ).on( 'click', '.wpz-insta-prev-page, .wpz-insta-next-page', function() {
+			var page = $( this ).data( 'page' );
+			var search = $( '#wpz-insta-product-search-input' ).val();
+			loadProducts( search, page );
+		} );
+	}
 } );

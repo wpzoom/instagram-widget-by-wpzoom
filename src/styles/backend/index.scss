@@ -1010,6 +1010,28 @@
 									transform: translateY(100%);
 									transition: all 0.2s ease;
 								}
+
+								.wpz-insta-pro-badge {
+									font-size: 13px;
+									font-weight: 600;
+									color: #fff;
+									background: #f57c00;
+									padding: 2px 5px;
+									margin: 0 auto;
+									border-radius: 2px;
+									letter-spacing: 0.5px;
+								}
+
+								.wpz-insta-new-badge {
+									font-size: 13px;
+									font-weight: 600;
+									color: #fff;
+									background: #3496ff;
+									padding: 2px 5px;
+									margin: 0 auto;
+									border-radius: 2px;
+									letter-spacing: 0.5px;
+								}
 							}
 						}
 					}
@@ -2123,6 +2145,18 @@
 							margin-left: 4px;
 							letter-spacing: 0.5px;
 						}
+
+						.wpz-insta-new-badge {
+							background: #3496ff;
+							color: #fff;
+							font-size: 9px;
+							font-weight: 600;
+							text-transform: uppercase;
+							padding: 2px 6px;
+							border-radius: 3px;
+							margin-left: 4px;
+							letter-spacing: 0.5px;
+						}
 					}
 
 					.wpz-insta_add-another-account-description {
@@ -3005,4 +3039,184 @@
         margin-bottom: 20px;
     }
 
+}
+
+.zoom-instagram-widget__item-inner-wrap {
+    position: relative;
+
+    &:hover .wpz-insta-link-product-btn {
+        opacity: 1;
+    }
+}
+
+// Product Link Modal
+.wpz-insta-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 100000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .wpz-insta-modal-content {
+        background: #fff;
+        border-radius: 4px;
+        width: 90%;
+        max-width: 600px;
+        max-height: 80vh;
+        display: flex;
+        flex-direction: column;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    .wpz-insta-modal-header {
+        padding: 20px;
+        border-bottom: 1px solid #ddd;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        h2 {
+            margin: 0;
+            font-size: 18px;
+        }
+
+        .wpz-insta-modal-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #666;
+            padding: 0;
+            width: 30px;
+            height: 30px;
+            line-height: 30px;
+
+            &:hover {
+                color: #000;
+            }
+        }
+    }
+
+    .wpz-insta-modal-body {
+        padding: 20px;
+        overflow-y: auto;
+        flex: 1;
+    }
+
+    .wpz-insta-product-search {
+        margin-bottom: 20px;
+
+        input {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+            font-size: 14px;
+        }
+    }
+
+    .wpz-insta-product-list {
+        max-height: 400px;
+        overflow-y: auto;
+
+        .wpz-insta-product-item {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+
+            &:hover {
+                background: #f5f5f5;
+                border-color: #2271b1;
+            }
+
+            &.selected {
+                background: #e7f3ff;
+                border-color: #2271b1;
+            }
+
+            img {
+                width: 60px;
+                height: 60px;
+                object-fit: cover;
+                border-radius: 3px;
+                margin-right: 12px;
+            }
+
+            .wpz-insta-product-info {
+                flex: 1;
+
+                h4 {
+                    margin: 0 0 5px 0;
+                    font-size: 14px;
+                    font-weight: 600;
+                }
+
+                .wpz-insta-product-price {
+                    color: #2271b1;
+                    font-weight: 600;
+                    font-size: 14px;
+                }
+            }
+        }
+
+        .wpz-insta-loading,
+        .wpz-insta-no-products,
+        .wpz-insta-error {
+            text-align: center;
+            padding: 40px 20px;
+            color: #666;
+        }
+    }
+
+    .wpz-insta-product-pagination {
+        margin-top: 20px;
+        text-align: center;
+
+        button {
+            margin: 0 5px;
+        }
+    }
+
+    .wpz-insta-modal-footer {
+        padding: 20px;
+        border-top: 1px solid #ddd;
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+    }
+}
+
+// Product Links upsell modal (no license)
+.wpz-insta-upsell-modal {
+    .wpz-insta-upsell-content {
+        max-width: 440px;
+    }
+
+    .wpz-insta-upsell-message {
+        margin: 0 0 20px 0;
+        font-size: 14px;
+        line-height: 1.5;
+        color: #1d2327;
+    }
+
+    .wpz-insta-upsell-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        align-items: center;
+    }
+
+    .wpz-insta-modal-footer {
+        justify-content: flex-end;
+    }
 }

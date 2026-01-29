@@ -1,1 +1,1018 @@
-(()=>{"use strict";function t(e){return t="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(t){return typeof t}:function(t){return t&&"function"==typeof Symbol&&t.constructor===Symbol&&t!==Symbol.prototype?"symbol":typeof t},t(e)}jQuery(function(e){var n,i,a,s=e();if(e.fn.imageMediaControl=function(){this.each(function(){var t=e(this),n={frame:function(){return this._frame||(this._frame=wp.media({title:t.data("title"),library:{type:t.data("type")},button:{text:t.data("button")},multiple:!1,selection:[]}),this._frame.on("open",this.updateFrame).state("library").on("select",this.select)),this._frame},select:function(){var e,n,i=t.find(".attachment-input").add(s.find("input#wpz-insta_account-photo")),a=this.get("selection"),o=a.pluck("id");i.val(""+o).trigger("change");var r=a.first().toJSON(),d=null!==(e=null===(n=r.sizes.thumbnail)||void 0===n?void 0:n.url)&&void 0!==e?e:r.sizes.full.url;s.find("img.wpz-insta_profile-photo").attr("src",""+d)},updateFrame:function(){},init:function(){var i=t.find(".file-wrapper"),a=t.find(".attachment-input, #wpz-insta_account-photo"),o=t.find(".add-media, #wpz-insta_edit-account-photo"),r=t.find(".remove-avatar, #wpz-insta_reset-account-photo");o.on("click",function(t){t.preventDefault(),s=e(this).closest(".wpz-insta_account-photo-wrapper"),n.frame().open()}),r.on("click",function(t){t.preventDefault(),e("#the-list input.wpz-insta_profile-photo-input").val("-1").trigger("change"),e("#the-list img.wpz-insta_profile-photo").attr("src",zoom_instagram_widget_admin.default_user_thumbnail)}),a.on("change",function(n){n.preventDefault();var a=t.find(".attachment-input").val();a?(o.text(t.data("button-replace-text")),r.show(),wp.media.attachment(a).fetch().then(function(t){i.fadeOut(400,function(){var n=t.url;_.findKey(t,"thumbnail")&&(n=t.sizes.thumbnail.url),e(this).html('<img width="150" height="150" src="'+n+'"/>').fadeIn(400)})})):(i.hide(),r.hide(),o.text(t.data("button-add-text")))}).trigger("change")}};n.frame().on("open",function(){var e=t.find(".attachment-input, #wpz-insta_account-photo"),i=n.frame(),a=i.state().get("selection"),s=e.val(),o=wp.media.attachment(s);i.reset(),o.id&&a.add(o)}),n.init()})},e(".zoom-instagram-user-avatar-media-uploader, .inline-edit-wpz-insta_user .wpz-insta_quick-edit-columns .wpz-insta_two-columns").imageMediaControl(),e("#wpzoom_instagram_clear_data").on("click",function(t){t.preventDefault();var n={action:"wpzoom_instagram_clear_data",nonce:e(this).data("nonce")},i=e(this);window.confirm("Are you sure?")&&(i.text("Removing data..."),e.post(zoom_instagram_widget_admin.ajax_url,n,function(t){t.success&&(i.text("Done!"),i.prop("disabled",!0),i.next().html(t.data.message))}))}),e(window).on("beforeunload",function(t){e.isEmptyObject(l)||p||t.preventDefault()}),e("#the-list").on("click","#wpz-insta_reconnect",function(t){t.preventDefault(),e(this).attr("href").length>0&&window.wpzInstaAuthenticateInstagram(e(this).attr("href"))}),e(".wpzoom-instagram-widget-settings-request-type-wrapper").find("input[type=radio]").on("change",function(t){t.preventDefault();var n=e(this).val(),i=["with-access-token","with-basic-access-token","without-access-token"].filter(function(t){return t!==n}),a=e(this).closest(".form-table");a.find(".wpzoom-instagram-widget-"+n+"-group").show(),i.forEach(function(t){a.find(".wpzoom-instagram-widget-"+t+"-group").hide()})}),e(".wpzoom-instagram-widget-settings-request-type-wrapper").find("input[type=radio]:checked").change(),setTimeout(function(){if("hash"in window.location&&""!=(""+window.location.hash).trim()){var t=e(".edit-php.post-type-wpz-insta_user #the-list").find((""+window.location.hash).trim());t.length>0&&t.find("button.editinline").trigger("click")}},100),window.opener&&window.location.hash.length>1||(n=window.outerWidth,i=window.outerHeight,n<window.screen.width&&i<window.screen.height&&(n>=700&&n<=960)&&(i>=750&&i<=1200)&&window.location.hash.length>1)){if(window.opener&&"function"==typeof window.opener.wpzInstaHandleReturnedToken)window.opener.wpzInstaHandleReturnedToken(window.location),window.close();else{var o=(window.location,(a=window.location.href.split("#")[1])&&a.includes("access_token=")?new URLSearchParams(a).get("access_token"):null),r=e("#wpz-insta_modal-dialog-connection-failed");e("#wpz_generated_token").text(o),r.addClass("open"),e("#wpfooter").show()}window.location.hash.includes("access_graph_token")&&(window.opener.wpzInstaHandleReturnedGraphToken(window.location),window.close())}e("#screen-meta #wpz-insta_account-photo-hide, #screen-meta #wpz-insta_account-bio-hide, #screen-meta #wpz-insta_account-token-hide, #screen-meta #wpz-insta_actions-hide").closest("label").remove(),e("#titlediv").remove(),e("#title").length>0&&(e("#title").attr("size",e("#title").val().trim().length+3),e("#title").on("input",function(){e(this).attr("size",e(this).val().trim().length+3)})),e(".wpz-insta_feed-edit-nav").length>0&&(window.location.hash&&u(window.location.hash),e(".wpz-insta_feed-edit-nav a").on("click",function(){u(e(this).attr("href"))})),e("#wpz-insta_show-pro").on("change",function(t){t.preventDefault(),e(this).closest(".wpz-insta_sidebar").toggleClass("show-pro",this.checked)}),e("#wpz-insta_connect-personal, #wpz-insta_connect-business, .wpz-insta_tabs-config-connect-add").each(function(){var t=e(this).attr("href");if(t){var n=btoa(encodeURIComponent(zoom_instagram_widget_admin.feeds_url)),i=t.replace("RETURN_URL",n);e(this).attr("href",i)}}),e(".wpz-insta-wrap .account-options .account-option-button").on("click",function(t){t.preventDefault(),e(this).is(".disabled")||(e(this).is("#wpz-insta_connect-personal")||e(this).is("#wpz-insta_connect-business")?window.wpzInstaAuthenticateInstagram(e(this).attr("href")):e(this).is("#wpz-insta_account-token-button")?window.wpzInstaHandleReturnedGraphToken(e("#wpz-insta_account-token-input").val().trim().replace(/[^a-z0-9-_.]+/gi,""),!0):e(this).is("#wpz-insta-biz_account-token-button")&&window.wpzInstaHandleReturnedToken(e("#wpz-insta_biz_account-token-input").val().trim().replace(/[^a-z0-9-_.]+/gi,""),!0))}),e("#wpz-insta_account-token-input").on("input",function(){e("#wpz-insta_account-token-button").toggleClass("disabled",e("#wpz-insta_account-token-input").val().trim().length<=0)}),e("#wpz-insta_biz_account-token-input").on("input",function(){e("#wpz-insta-biz_account-token-button").toggleClass("disabled",e("#wpz-insta_biz_account-token-input").val().trim().length<=0)}),e('.wpz-insta_sidebar-section-layout input[name="_wpz-insta_layout"]').on("change",function(){var t=e(this).closest(".wpz-insta_sidebar-section-layout").find('input[name="_wpz-insta_col-num"]').closest(".wpz-insta_table-row"),n=e(this).closest(".wpz-insta_sidebar-section-layout").find('input[name="_wpz-insta_perpage-num"]').closest(".wpz-insta_table-row"),i=e(this).closest(".wpz-insta_sidebar-section-layout").find(".wpz-insta_table-row-featured-layout"),a=i.closest(".wpz-insta_feed-only-pro"),s=e(this).closest(".wpz-insta_sidebar-left-section"),o=s.find(".wpz-insta_sidebar-section-feed .wpz-insta_show-on-hover fieldset.wpz-insta_feed-only-pro.wpz-insta_pro-only"),r=s.find(".wpz-insta_sidebar-section-load-more");t.add(o).add(r).toggleClass("hidden","1"==e(this).val()||"3"==e(this).val()),e(".wpz-insta-admin .wpz-insta_widget-preview .wpz-insta_widget-preview-view").toggleClass("layout-fullwidth","1"==e(this).val()),i.toggleClass("hidden","0"!=e(this).val()),e(".wpz-insta_sidebar .wpz-insta_sidebar-left").hasClass(".is-pro")||a.toggleClass("hidden","0"!=e(this).val()),n.toggleClass("hidden","3"!=e(this).val())}),e('.wpz-insta_sidebar-section-layout input[name="_wpz-insta_col-num"]').on("input",function(){if("0"==e('.wpz-insta_sidebar-section-layout input[name="_wpz-insta_layout"]:checked').val()){var t=parseInt(e(this).closest(".wpz-insta_sidebar-section-layout").find('input[name="_wpz-insta_col-num"]').val()),n=e(this).closest(".wpz-insta_table").find("label.featured-layout"),i=n.closest(".wpz-insta_table-row");t<3||t>6?i.addClass("hidden"):(i.removeClass("hidden"),n.addClass("hidden"),n.each(function(){e(this).is(".featured-layout-columns_"+t)&&e(this).removeClass("hidden")}))}}),e('.wpz-insta_sidebar-section-layout input[name="_wpz-insta_col-num_responsive-enabled"]').on("change",function(){e(this).closest(".wpz-insta_responsive-table-row").toggleClass("wpz-insta_responsive-enabled",e(this).is(":checked"))}),e('.wpz-insta_sidebar-section-layout input[name="_wpz-insta_perpage-num_responsive-enabled"]').on("change",function(){e(this).closest(".wpz-insta_responsive-table-row").toggleClass("wpz-insta_responsive-enabled",e(this).is(":checked"))}),e("#_wpz-insta_featured-layout-enable").on("change",function(){e(this).closest(".wpz-insta_table-row").find(".wpz-insta_image-select").toggleClass("hidden",!e(this).is(":checked"))}),e("#wpz-insta_modal-dialog").find(".wpz-insta_modal-dialog_ok-button, .wpz-insta_modal-dialog_close-button").on("click",function(t){t.preventDefault();var n=e("#wpz-insta_modal-dialog");window.wpzInstaCloseConnectDoneDialog(n.hasClass("success"),n.hasClass("update"))}),e("#wpz-insta_modal_graph-dialog").find(".wpz-insta_modal-dialog_ok-button, .wpz-insta_modal-dialog_close-button").on("click",function(t){t.preventDefault(),e("#wpz-insta_modal_graph-dialog").removeClass("open")}),e("#wpz-insta_modal-dialog-connection-failed").find(".wpz-insta_modal-dialog_ok-button, .wpz-insta_modal-dialog_close-button").on("click",function(t){t.preventDefault();var n=e("#wpz-insta_modal-dialog-connection-failed");window.close(),n.removeClass("open")}),e("#wpz-insta_feed-user-select-btn").on("click",function(t){t.preventDefault(),e("#wpz-insta_tabs-config-cnnct").removeClass("active").addClass("active").prev(".wpz-insta_sidebar").removeClass("active"),e("#wpz-insta_tabs-config-cnnct").closest(".wpz-insta_tabs-content").find("> .wpz-insta_sidebar").addClass("hide")}),e("#wpz-insta_feed-user-remove-btn").on("click",function(t){t.preventDefault();var n=e("#wpz-insta_feed-user-select-btn").closest(".wpz-insta_feed-user-select"),i=n.find(".wpz-insta_feed-user-select-info");e("#wpz-insta_user-id").val("-1").trigger("change"),e("#wpz-insta_user-token").val("-1").trigger("change"),e("#wpz-insta_user-token, #wpz-insta_check-new-posts-interval-number, #wpz-insta_enable-request-timeout").closest(".wpz-insta_sidebar-section").removeClass("active"),e("#wpz-insta_widget-preview-links").addClass("disabled"),n.removeClass("is-set"),i.find(".wpz-insta_feed-user-select-info-name").html("None"),i.find(".wpz-insta_feed-user-select-info-type").html("None"),n.closest(".wrap").find(".wpz-insta_settings-header .wpz-insta_feed-edit-nav li:not(:first-child)").addClass("disable")}),e("#wpz-insta_tabs-config-cnnct .wpz-insta_tabs-config-connect-accounts li").on("click",function(t){t.preventDefault();var n=e("#wpz-insta_feed-user-select-btn").closest(".wpz-insta_feed-user-select"),i=n.find(".wpz-insta_feed-user-select-info");e("#wpz-insta_user-id").val(e(this).data("user-id")).trigger("change"),e("#wpz-insta_user-token").val(e(this).data("user-token")).trigger("change"),e("#wpz-insta_user-token, #wpz-insta_check-new-posts-interval-number, #wpz-insta_enable-request-timeout").closest(".wpz-insta_sidebar-section").addClass("active"),n.addClass("is-set"),i.find(".wpz-insta_feed-user-select-info-name").html(e(this).data("user-name")),i.find(".wpz-insta_feed-user-select-info-type").html(e(this).data("user-type")),n.closest(".wrap").find(".wpz-insta_settings-header .wpz-insta_feed-edit-nav li").removeClass("disable"),n.find(".wpz-insta_feed-user-select-edit-link").attr("href",zoom_instagram_widget_admin.edit_user_url+e(this).data("user-id")),e("#wpz-insta_widget-preview-links").removeClass("disabled");var a=1===e(this).data("has-page-id")||"1"===e(this).data("has-page-id"),s=e('input[name="_wpz-insta_show-stories"]').not('[type="hidden"]').closest(".wpz-insta_table-row"),o=s.find('input[type="checkbox"]');a?(s.removeClass("wpz-insta_disabled"),o.prop("disabled",!1)):(s.addClass("wpz-insta_disabled"),o.prop("disabled",!0).prop("checked",!1)),e("#wpz-insta_tabs-config-cnnct").removeClass("active").prev(".wpz-insta_sidebar").addClass("active"),e("#wpz-insta_tabs-config-cnnct").closest(".wpz-insta_tabs-content").find("> .wpz-insta_sidebar").removeClass("hide")});var d={},c={},l={},p=!1;function w(t){var n=[];return e('input[name="'+t+'"]').each(function(){e(this).is(":checked")&&n.push(e(this).val())}),n.sort().join(",")}function u(t){if(t){var n=e('.wpz-insta_feed-edit-nav a[href="'+t+'"]'),i=n.closest("form").find(".wpz-insta_tabs-content .wpz-insta_sidebar-left-section");n.closest(".wpz-insta_feed-edit-nav").find("li").removeClass("active"),n.closest("li").addClass("active"),i.removeClass("active"),i.filter('[data-id="'+t+'"]').addClass("active")}}function h(t){var e,n=this,i=arguments.length>1&&void 0!==arguments[1]?arguments[1]:300;return function(){for(var a=arguments.length,s=new Array(a),o=0;o<a;o++)s[o]=arguments[o];clearTimeout(e),e=setTimeout(function(){t.apply(n,s)},i)}}if(e("form#post .wpz-insta_tabs-content > .wpz-insta_sidebar > .wpz-insta_sidebar-left").find("input, textarea, select").add("form#post #title").filter("[name][name!='']").not(".preview-exclude").each(function(t){var n=e.trim(e(this).attr("name"));if(e(this).is(":radio"))e(this).is(":checked")&&(d[n]=e(this));else if(n.endsWith("[]")){var i=n.replace("[]","");d[i]||(d[i]=[]),d[i].push(e(this))}else d[n]=e(this)}),e.each(d,function(t,n){Array.isArray(n)?c[t]=w(t+"[]"):c[t]=n.is(":checkbox")?n.is(":checked")?"1":"0":e.trim(""+n.val())}),e("form#post").on("submit",function(){return p=!0}),e("form#post #title, form#post .wpz-insta_tabs-content > .wpz-insta_sidebar > .wpz-insta_sidebar-left").on("input change",h(function(t){var n=e(t.target);if(!n.is(".preview-exclude")){var i=n.attr("name");if(!i)return;var a,s=i;i.endsWith("[]")?(s=i.replace("[]",""),a=w(i)):a=n.is(":checkbox")?n.is(":checked")?"1":"0":e.trim(""+n.val()),s in c&&a!=c[s]?s in l||(l[s]=!0):s in l&&delete l[s],e("input#publish").toggleClass("disabled",e.isEmptyObject(l)),"post_title"!==i&&window.wpzInstaReloadPreview()}},300)),e(function(){window.wpzInstaReloadPreview()}),e("#wpz-insta_widget-preview-links .wpz-insta_widget-preview-header-link").on("click",function(){e(this).hasClass("active")||(e(this).addClass("active").siblings(".wpz-insta_widget-preview-header-link").removeClass("active"),e(this).closest(".wpz-insta_widget-preview").find(".wpz-insta_widget-preview-view").removeClass("wpz-insta_widget-preview-size-desktop wpz-insta_widget-preview-size-tablet wpz-insta_widget-preview-size-mobile").addClass(e(this).hasClass("wpz-insta_widget-preview-header-links-tablet")?"wpz-insta_widget-preview-size-tablet":e(this).hasClass("wpz-insta_widget-preview-header-links-mobile")?"wpz-insta_widget-preview-size-mobile":"wpz-insta_widget-preview-size-desktop"))}),e("#wpz-insta_widget-preview-view").on("transitionend",function(){var t=e(this).find("iframe");t.height(parseInt(t.contents().find("body").prop("scrollHeight"))+20)}),e("#wpz-insta_widget-preview-view iframe").on("load",function(){e(this).removeClass("wpz-insta_preview-hidden"),e(this).closest(".wpz-insta_sidebar-right").addClass("hide-loading")}),e(".wpz-insta_color-picker").wpColorPicker({change:function(t,n){var i=e.Event("change");i.target=t.target,e(t.target).closest("form#post").find(".wpz-insta_tabs-content > .wpz-insta_sidebar > .wpz-insta_sidebar-left").triggerHandler(i)}}),e(".wpzinsta-pointer").each(function(){e(this).parent().addBack().one("click",function(t){t.stopPropagation();var n=e(this);e(this).is("li")&&(n=e(this).find(".wpzinsta-pointer")),n.remove()})}),e("#post-body-content .wpz-insta_sidebar .wpz-insta_sidebar-left .wpz-insta_sidebar-left-section").on("scroll",function(){e(this).find(".wp-picker-holder").each(function(){var t=e(this).closest(".wp-picker-container"),n=t.offset();e(this).offset({top:n.top+t.outerHeight(),left:n.left})})}).triggerHandler("scroll"),e(window).on("scroll",function(){e("#post-body-content .wpz-insta_sidebar .wpz-insta_sidebar-left .wpz-insta_sidebar-left-section").each(function(){e(this).triggerHandler("scroll")})}),e("#post-body-content .wpz-insta_sidebar .wpz-insta_sidebar-left .wpz-insta_sidebar-left-section .wpz-insta_color-picker").length>0&&new IntersectionObserver(function(t,e){return t.forEach(function(t){return t.target.blur()})},{root:null,threshold:.1}).observe(e("#post-body-content .wpz-insta_sidebar .wpz-insta_sidebar-left .wpz-insta_sidebar-left-section .wpz-insta_color-picker")[0]),e("#wpz-insta_shortcode").on("focus",function(t){t.preventDefault(),e(this).select()}),e("#wpz-insta_shortcode-copy-btn").on("click",h(function(){window.wpzInstaCopyToClipboard(e("#wpz-insta_shortcode").val()).then(function(){e("#wpz-insta_shortcode-copy-btn").addClass("success"),clearTimeout(void 0),setTimeout(function(){e("#wpz-insta_shortcode-copy-btn").removeClass("success")},3e3)})},300)),e(".wpz-insta_actions-menu_copy-shortcode").on("click",function(t){t.preventDefault();var n=e(this).closest("tr").attr("id").replace("post-","");window.wpzInstaCopyToClipboard('[instagram feed="'+n+'"]').then(function(){window.wpzInstaShowDialog(zoom_instagram_widget_admin.i18n_shortcode_success_title,zoom_instagram_widget_admin.i18n_shortcode_success_content,"success update")})}),e(".wpz-insta_actions-menu_delete").on("click",function(t){t.preventDefault();var n=e(this).hasClass("wpz-insta_actions-menu_delete-feed"),i=e(this).find("a").attr("href");window.wpzInstaShowConfirmDialog(zoom_instagram_widget_admin["i18n_delete_"+(n?"feed":"user")+"_confirm_title"],zoom_instagram_widget_admin["i18n_delete_"+(n?"feed":"user")+"_confirm_content"],zoom_instagram_widget_admin.i18n_delete_confirm_button_ok,zoom_instagram_widget_admin.i18n_delete_confirm_button_cancel).then(function(t){!0===t&&(window.location=i),window.wpzInstaCloseDialog()})}),window.wpzInstaAuthenticateInstagram=function(t,e){var n=(window.screen.height-750)/2,i=(window.screen.width-700)/2;window.open(t,"","width=700,height=750,left="+i+",top="+n)},window.wpzInstaParseQuery=function(t){for(var e={},n=("?"===t[0]||"#"===t[0]?t.substr(1):t).split("&"),i=0;i<n.length;i++){var a=n[i].split("=");e[decodeURIComponent(a[0])]=decodeURIComponent(a[1]||"")}return e},window.wpzInstaHandleReturnedGraphToken=function(t){var n=arguments.length>1&&void 0!==arguments[1]&&arguments[1];if(t){var i=!n&&"hash"in t&&""!=(""+t.hash).trim()?window.wpzInstaParseQuery(""+t.hash):{};if(!n&&!e.isEmptyObject(i)||n&&""!=(""+t).trim()){var a=n?(""+t).trim():"access_graph_token"in i?(""+i.access_graph_token).trim():"-1";if(""!=a&&"-1"!=a){var s={action:"wpz-insta_connect_business-user",nonce:zoom_instagram_widget_admin.nonce,token:a};if(!n){var o="search"in t&&""!=(""+t.search).trim()?window.wpzInstaParseQuery(""+t.search):{};s.post_id=!e.isEmptyObject(o)&&"post"in o?parseInt(o.post):0}e.post(ajaxurl,s).done(function(t,n,i){if("success"==n){var a=e(t);a&&(e("#wpz-insta_modal_graph-dialog").find(".wpz-insta_modal-dialog_content").html(a),e("#wpz-insta_modal_graph-dialog").removeClass().addClass("open success"),e(".wpz-insta_business-accounts-link").on("click",function(t){t.preventDefault(),zoom_instagram_widget_admin.is_pro?e(this).toggleClass("selected"):(e(".wpz-insta_business-accounts-link").removeClass("selected"),e(this).addClass("selected")),e("#wpz-insta-graph-connect-account").removeClass("disabled")}))}}).fail(function(){console.log("Failed to connect business user")})}}}},e("#wpz-insta-select-api").on("change",function(t){var n=e(this).val();e(this).parent().find("#wpz-insta_reconnect").attr("href",n)}),e("#wpz-add_manual_token").on("click",function(t){t.preventDefault(),e("#wpz-insta-token_label").toggle()}),e("#wpz-insta-graph-connect-account").on("click",function(t){t.preventDefault();var n=[],i=e(".wpz-insta_business-accounts-link").parent().data("post-id");if(e(".wpz-insta_business-accounts-link").each(function(){e(this).hasClass("selected")&&n.push(e(this).data("account-info"))}),n.length>0){var a={action:"wpz-insta_connect_business-account",nonce:zoom_instagram_widget_admin.nonce,account_info:JSON.stringify(n),post_id:i};e.post(ajaxurl,a).done(function(t,n,i){"success"==n&&e("#wpz-insta_modal_graph-dialog").removeClass("open"),window.location.replace(zoom_instagram_widget_admin.feeds_url)}).fail(function(t,e,n){console.log(t)})}}),window.wpzInstaShowConnectDoneDialog=function(t){var e=arguments.length>1&&void 0!==arguments[1]&&arguments[1];window.wpzInstaShowDialog(t?e?zoom_instagram_widget_admin.i18n_reconnect_success_title:zoom_instagram_widget_admin.i18n_connect_success_title:zoom_instagram_widget_admin.i18n_connect_fail_title,t?e?zoom_instagram_widget_admin.i18n_reconnect_success_content:zoom_instagram_widget_admin.i18n_connect_success_content:zoom_instagram_widget_admin.i18n_connect_fail_content,(t?"success":"fail")+(e?" update":""))},window.wpzInstaShowDialog=function(){var t=arguments.length>0&&void 0!==arguments[0]?arguments[0]:"[DIALOG TITLE]",n=arguments.length>1&&void 0!==arguments[1]?arguments[1]:"[DIALOG CONTENT]",i=arguments.length>2&&void 0!==arguments[2]?arguments[2]:"success",a=e("#wpz-insta_modal-dialog"),s=a.find(".wpz-insta_modal-dialog_header-title"),o=a.find(".wpz-insta_modal-dialog_content"),r=(a.find(".wpz-insta_modal-dialog_footer .wpz-insta_modal-dialog_ok-button"),a.find(".wpz-insta_modal-dialog_footer .wpz-insta_modal-dialog_cancel-button"));s.html(""+t),o.html(""+n),r.addClass("hidden"),a.removeClass().addClass("open "+i)},window.wpzInstaShowConfirmDialog=function(){var t=arguments.length>0&&void 0!==arguments[0]?arguments[0]:"[DIALOG TITLE]",n=arguments.length>1&&void 0!==arguments[1]?arguments[1]:"[DIALOG CONTENT]",i=arguments.length>2&&void 0!==arguments[2]?arguments[2]:"[OK]",a=arguments.length>3&&void 0!==arguments[3]?arguments[3]:"[CANCEL]";return new Promise(function(s,o){var r=e("#wpz-insta_modal-dialog"),d=r.find(".wpz-insta_modal-dialog_header-title"),c=r.find(".wpz-insta_modal-dialog_content"),l=r.find(".wpz-insta_modal-dialog_footer .wpz-insta_modal-dialog_ok-button"),p=r.find(".wpz-insta_modal-dialog_footer .wpz-insta_modal-dialog_cancel-button");d.html(""+t),c.html(""+n),l.removeClass("hidden").html(""+i),l.on("click",function(){return s(!0)}),p.removeClass("hidden").html(""+a),p.on("click",function(){return s(!1)}),r.removeClass().addClass("open confirm")})},window.wpzInstaCloseConnectDoneDialog=function(t){var e=arguments.length>1&&void 0!==arguments[1]&&arguments[1];window.wpzInstaCloseDialog(),t&&!e&&window.location.replace(zoom_instagram_widget_admin.feeds_url)},window.wpzInstaCloseDialog=function(){e("#wpz-insta_modal-dialog").removeClass("open")},window.wpzInstaCopyToClipboard=function(t){if(navigator.clipboard&&window.isSecureContext)return navigator.clipboard.writeText(t);var e=document.createElement("textarea");return e.value=t,e.style.position="fixed",e.style.left="-999999px",e.style.top="-999999px",document.body.appendChild(e),e.focus(),e.select(),new Promise(function(t,n){document.execCommand("copy")?t():n(),e.remove()})},"inlineEditPost"in window){e(".inline-edit-save").find(".button-primary").addClass("disabled");var f=window.inlineEditPost.edit;window.inlineEditPost.edit=function(n){f.apply(this,arguments),"object"===t(n)&&(n=window.inlineEditPost.getId(n));for(var i,a,s=["_wpz-insta_account-type","_wpz-insta_token","_wpz-insta_token_expire","_thumbnail_id","wpz-insta_profile-photo","_wpz-insta_user_name","_wpz-insta_user-bio","_wpz-insta_api-url"],o=e("#inline_"+n),r=e("#edit-"+n),d=e("#wpz-insta_reconnect",r),c=0;c<s.length;c++)i=(i=e("."+(a=s[c]),o)).text(),"wpz-insta_profile-photo"==a?e("img."+a).attr("src",i):"_wpz-insta_token"==a?e("#wpz-insta_token",r).val(i):"_wpz-insta_token_expire"==a?e("#wpz-insta_token-expire-time",r).html(i):"_wpz-insta_api-url"==a?e("#wpz-insta_reconnect",r).attr("href",i):e(':input[name="'+a+'"]',r).val(i),e(':input[name="'+a+'"]',r).on("change paste keyup",function(){e(".inline-edit-save",r).find(".button-primary").removeClass("disabled")});e("#wpz-insta-select-api option",r).each(function(){var t=btoa(encodeURIComponent(zoom_instagram_widget_admin.post_edit_url+n)),i=e(this).val();if(i.includes("RETURN_URL")){var a=i.replace("RETURN_URL",encodeURIComponent(t));e(this).val(a)}}),d.attr({href:d.attr("href").replace("RETURN_URL",btoa(encodeURIComponent(zoom_instagram_widget_admin.post_edit_url+n))),"data-user-id":n})}}window.wpzInstaHandleReturnedToken=function(t){var n=arguments.length>1&&void 0!==arguments[1]&&arguments[1];if(t){var i=!n&&"hash"in t&&""!=(""+t.hash).trim()?window.wpzInstaParseQuery(""+t.hash):{};if(!n&&!e.isEmptyObject(i)||n&&""!=(""+t).trim()){var a=n?(""+t).trim():"access_token"in i?(""+i.access_token).trim():"-1";if(""!=a&&"-1"!=a){var s={action:"wpz-insta_connect-user",nonce:zoom_instagram_widget_admin.nonce,token:a};if(!n){var o="search"in t&&""!=(""+t.search).trim()?window.wpzInstaParseQuery(""+t.search):{};s.post_id=!e.isEmptyObject(o)&&"post"in o?parseInt(o.post):0}e.post(ajaxurl,s).done(function(t){e(".inline-edit-wpz-insta_user #wpz-insta_token").val(a);var n=new Date;n.setDate(n.getDate()+60),e("#the-list #wpz-insta_token-expire-time").html(n.toLocaleDateString("en-US",{weekday:"long",day:"numeric",month:"long",year:"numeric"})),window.wpzInstaShowConnectDoneDialog(t.success,"data"in t&&"update"in t.data&&t.data.update)}).fail(function(){window.wpzInstaShowConnectDoneDialog(!1)})}}}},window.wpzInstaReloadPreview=function(){var t=zoom_instagram_widget_admin.preview_url,n=e.param(e("form#post #title, form#post .wpz-insta_tabs-content > .wpz-insta_sidebar > .wpz-insta_sidebar-left").find("input, textarea, select").not(".preview-exclude").serializeArray());n&&(t+="&"+n);var i=e('form#post input[name="post_ID"]').val();i&&(t+="&wpz-insta-feed-id="+i),e("#wpz-insta_widget-preview-view").closest(".wpz-insta_sidebar-right").removeClass("hide-loading"),e("#wpz-insta_widget-preview-view iframe").addClass("wpz-insta_preview-hidden").attr("src",t)},window.wpzInstaUpdatePreviewHeight=function(){var t=e("#wpz-insta_widget-preview-view iframe");t.height(parseInt(t.contents().find("body").prop("scrollHeight")))}})})();
+/******/ (() => { // webpackBootstrap
+/******/ 	"use strict";
+/*!**************************************!*\
+  !*** ./src/scripts/backend/index.js ***!
+  \**************************************/
+
+
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+jQuery(function ($) {
+  var $imageMediaControlTarget = $();
+  $.fn.imageMediaControl = function () {
+    this.each(function () {
+      var $this = $(this);
+      var mediaControl = {
+        // Initializes a new media manager or returns an existing frame.
+        // @see wp.media.featuredImage.frame()
+        frame: function frame() {
+          if (this._frame) return this._frame;
+          this._frame = wp.media({
+            title: $this.data('title'),
+            library: {
+              type: $this.data('type')
+            },
+            button: {
+              text: $this.data('button')
+            },
+            multiple: false,
+            selection: []
+          });
+          this._frame.on('open', this.updateFrame).state('library').on('select', this.select);
+          return this._frame;
+        },
+        select: function select() {
+          var _selectionData$sizes$, _selectionData$sizes$2;
+          var $attachmentInput = $this.find('.attachment-input').add($imageMediaControlTarget.find('input#wpz-insta_account-photo'));
+          var selection = this.get('selection');
+          var attachmentId = selection.pluck('id');
+          $attachmentInput.val('' + attachmentId).trigger('change');
+          var selectionData = selection.first().toJSON();
+          var thumbnail_url = (_selectionData$sizes$ = (_selectionData$sizes$2 = selectionData.sizes.thumbnail) === null || _selectionData$sizes$2 === void 0 ? void 0 : _selectionData$sizes$2.url) !== null && _selectionData$sizes$ !== void 0 ? _selectionData$sizes$ : selectionData.sizes.full.url;
+          $imageMediaControlTarget.find('img.wpz-insta_profile-photo').attr('src', '' + thumbnail_url);
+        },
+        updateFrame: function updateFrame() {},
+        init: function init() {
+          var $fileWrapper = $this.find('.file-wrapper');
+          var $attachmentInput = $this.find('.attachment-input, #wpz-insta_account-photo');
+          var $addButton = $this.find('.add-media, #wpz-insta_edit-account-photo');
+          var $removeButton = $this.find('.remove-avatar, #wpz-insta_reset-account-photo');
+          $addButton.on('click', function (e) {
+            e.preventDefault();
+            $imageMediaControlTarget = $(this).closest('.wpz-insta_account-photo-wrapper');
+            mediaControl.frame().open();
+          });
+          $removeButton.on('click', function (e) {
+            e.preventDefault();
+            $('#the-list input.wpz-insta_profile-photo-input').val('-1').trigger('change');
+            $('#the-list img.wpz-insta_profile-photo').attr('src', zoom_instagram_widget_admin.default_user_thumbnail);
+          });
+          $attachmentInput.on('change', function (e) {
+            e.preventDefault();
+            var attachmentId = $this.find('.attachment-input').val();
+            if (!!attachmentId) {
+              $addButton.text($this.data('button-replace-text'));
+              $removeButton.show();
+              var attachment = wp.media.attachment(attachmentId);
+              attachment.fetch().then(function (fetched) {
+                $fileWrapper.fadeOut(400, function () {
+                  var imgSrc = fetched.url;
+                  if (_.findKey(fetched, 'thumbnail')) {
+                    imgSrc = fetched.sizes.thumbnail.url;
+                  }
+                  $(this).html('<img width="150" height="150" src="' + imgSrc + '"/>').fadeIn(400);
+                });
+              });
+            } else {
+              $fileWrapper.hide();
+              $removeButton.hide();
+              $addButton.text($this.data('button-add-text'));
+            }
+          }).trigger('change');
+        }
+      };
+      mediaControl.frame().on('open', function () {
+        var $attachmentInput = $this.find('.attachment-input, #wpz-insta_account-photo');
+        var frame = mediaControl.frame();
+        var selection = frame.state().get('selection'),
+          attachmentId = $attachmentInput.val(),
+          attachment = wp.media.attachment(attachmentId);
+        frame.reset();
+        if (attachment.id) {
+          selection.add(attachment);
+        }
+      });
+      mediaControl.init();
+    });
+  };
+  $('.zoom-instagram-user-avatar-media-uploader, .inline-edit-wpz-insta_user .wpz-insta_quick-edit-columns .wpz-insta_two-columns').imageMediaControl();
+  $('#wpzoom_instagram_clear_data').on('click', function (e) {
+    e.preventDefault();
+    var data = {
+      action: 'wpzoom_instagram_clear_data',
+      nonce: $(this).data('nonce')
+    };
+    var $this = $(this);
+    if (window.confirm("Are you sure?")) {
+      $this.text('Removing data...');
+      $.post(zoom_instagram_widget_admin.ajax_url, data, function (response) {
+        if (response.success) {
+          $this.text('Done!');
+          $this.prop('disabled', true);
+          $this.next().html(response.data.message);
+        }
+      });
+    }
+  });
+  $(window).on('beforeunload', function (e) {
+    if (!$.isEmptyObject(formChangedValues) && !formSubmitted) {
+      e.preventDefault();
+    }
+  });
+  $('#the-list').on('click', '#wpz-insta_reconnect', function (e) {
+    e.preventDefault();
+    if ($(this).attr('href').length > 0) {
+      window.wpzInstaAuthenticateInstagram($(this).attr('href'));
+    }
+  });
+  $('.wpzoom-instagram-widget-settings-request-type-wrapper').find('input[type=radio]').on('change', function (e) {
+    e.preventDefault();
+    var activeClass = $(this).val();
+    var allDivs = ['with-access-token', 'with-basic-access-token', 'without-access-token'];
+    var inactiveDivs = allDivs.filter(function (item) {
+      return item !== activeClass;
+    });
+    var $formTable = $(this).closest('.form-table');
+    $formTable.find('.wpzoom-instagram-widget-' + activeClass + '-group').show();
+    inactiveDivs.forEach(function (inactive) {
+      $formTable.find('.wpzoom-instagram-widget-' + inactive + '-group').hide();
+    });
+  });
+  $('.wpzoom-instagram-widget-settings-request-type-wrapper').find('input[type=radio]:checked').change();
+  setTimeout(function () {
+    if ('hash' in window.location && '' != ('' + window.location.hash).trim()) {
+      var $elem = $('.edit-php.post-type-wpz-insta_user #the-list').find(('' + window.location.hash).trim());
+      if ($elem.length > 0) {
+        $elem.find('button.editinline').trigger('click');
+      }
+    }
+  }, 100);
+  if (window.opener && window.location.hash.length > 1 || isLikelyPopup(700, 960, 750, 1200) && window.location.hash.length > 1) {
+    if (window.opener && typeof window.opener.wpzInstaHandleReturnedToken === 'function') {
+      window.opener.wpzInstaHandleReturnedToken(window.location);
+      window.close();
+    } else {
+      var getToken = getAccessTokenFromURL(window.location);
+      var notice = $('#wpz-insta_modal-dialog-connection-failed');
+      $('#wpz_generated_token').text(getToken);
+      notice.addClass('open');
+      $('#wpfooter').show();
+    }
+    if (window.location.hash.includes('access_graph_token')) {
+      window.opener.wpzInstaHandleReturnedGraphToken(window.location);
+      window.close();
+    }
+  }
+  function getAccessTokenFromURL() {
+    // Get the full URL from window.location.href
+    var url = window.location.href;
+
+    // Check if the URL contains a hash and if it includes 'access_token'
+    var hash = url.split('#')[1]; // Get everything after the '#'
+    if (hash && hash.includes('access_token=')) {
+      // Extract the query parameters in the hash
+      var params = new URLSearchParams(hash);
+      // Get the value of 'access_token'
+      var accessToken = params.get('access_token');
+      return accessToken;
+    }
+    return null; // Return null if no access_token is found
+  }
+  $('#screen-meta #wpz-insta_account-photo-hide, #screen-meta #wpz-insta_account-bio-hide, #screen-meta #wpz-insta_account-token-hide, #screen-meta #wpz-insta_actions-hide').closest('label').remove();
+  $('#titlediv').remove();
+  if ($('#title').length > 0) {
+    $('#title').attr('size', $('#title').val().trim().length + 3);
+    $('#title').on('input', function () {
+      $(this).attr('size', $(this).val().trim().length + 3);
+    });
+  }
+  if ($('.wpz-insta_feed-edit-nav').length > 0) {
+    if (window.location.hash) {
+      setTab(window.location.hash);
+    }
+    $('.wpz-insta_feed-edit-nav a').on('click', function () {
+      setTab($(this).attr('href'));
+    });
+  }
+  $('#wpz-insta_show-pro').on('change', function (e) {
+    e.preventDefault();
+    $(this).closest('.wpz-insta_sidebar').toggleClass('show-pro', this.checked);
+  });
+  $('#wpz-insta_connect-personal, #wpz-insta_connect-business, .wpz-insta_tabs-config-connect-add').each(function () {
+    // Get the current href attribute
+    var currentHref = $(this).attr('href');
+
+    // Check if the href attribute exists
+    if (currentHref) {
+      // Construct the new URL part
+      var newUrlPart = btoa(encodeURIComponent(zoom_instagram_widget_admin.feeds_url));
+
+      // Replace RETURN_URL in the href with the new encoded URL part
+      var newHref = currentHref.replace('RETURN_URL', newUrlPart);
+
+      // Set the new href attribute on the current element
+      $(this).attr('href', newHref);
+    }
+  });
+  $('.wpz-insta-wrap .account-options .account-option-button').on('click', function (e) {
+    e.preventDefault();
+    if (!$(this).is('.disabled')) {
+      if ($(this).is('#wpz-insta_connect-personal') || $(this).is('#wpz-insta_connect-business')) {
+        window.wpzInstaAuthenticateInstagram($(this).attr('href'));
+      } else if ($(this).is('#wpz-insta_account-token-button')) {
+        window.wpzInstaHandleReturnedGraphToken($('#wpz-insta_account-token-input').val().trim().replace(/[^a-z0-9-_.]+/gi, ''), true);
+      } else if ($(this).is('#wpz-insta-biz_account-token-button')) {
+        window.wpzInstaHandleReturnedToken($('#wpz-insta_biz_account-token-input').val().trim().replace(/[^a-z0-9-_.]+/gi, ''), true);
+      }
+    }
+  });
+  $('#wpz-insta_account-token-input').on('input', function () {
+    $('#wpz-insta_account-token-button').toggleClass('disabled', $('#wpz-insta_account-token-input').val().trim().length <= 0);
+  });
+  $('#wpz-insta_biz_account-token-input').on('input', function () {
+    $('#wpz-insta-biz_account-token-button').toggleClass('disabled', $('#wpz-insta_biz_account-token-input').val().trim().length <= 0);
+  });
+  $('.wpz-insta_sidebar-section-layout input[name="_wpz-insta_layout"]').on('change', function () {
+    var $colNumOption = $(this).closest('.wpz-insta_sidebar-section-layout').find('input[name="_wpz-insta_col-num"]').closest('.wpz-insta_table-row'),
+      $perPageOption = $(this).closest('.wpz-insta_sidebar-section-layout').find('input[name="_wpz-insta_perpage-num"]').closest('.wpz-insta_table-row'),
+      $featOption = $(this).closest('.wpz-insta_sidebar-section-layout').find('.wpz-insta_table-row-featured-layout'),
+      $featOptionWrap = $featOption.closest('.wpz-insta_feed-only-pro'),
+      $parentLeftSect = $(this).closest('.wpz-insta_sidebar-left-section'),
+      $proFieldset = $parentLeftSect.find('.wpz-insta_sidebar-section-feed .wpz-insta_show-on-hover fieldset.wpz-insta_feed-only-pro.wpz-insta_pro-only'),
+      $loadMoreOptions = $parentLeftSect.find('.wpz-insta_sidebar-section-load-more'),
+      $toggleItems = $colNumOption.add($proFieldset).add($loadMoreOptions);
+    $toggleItems.toggleClass('hidden', $(this).val() == '1' || $(this).val() == '3');
+    $('.wpz-insta-admin .wpz-insta_widget-preview .wpz-insta_widget-preview-view').toggleClass('layout-fullwidth', $(this).val() == '1');
+    $featOption.toggleClass('hidden', $(this).val() != '0');
+    if (!$('.wpz-insta_sidebar .wpz-insta_sidebar-left').hasClass('.is-pro')) $featOptionWrap.toggleClass('hidden', $(this).val() != '0');
+    $perPageOption.toggleClass('hidden', $(this).val() != '3');
+  });
+  $('.wpz-insta_sidebar-section-layout input[name="_wpz-insta_col-num"]').on('input', function () {
+    if ($('.wpz-insta_sidebar-section-layout input[name="_wpz-insta_layout"]:checked').val() == '0') {
+      var colNum = parseInt($(this).closest('.wpz-insta_sidebar-section-layout').find('input[name="_wpz-insta_col-num"]').val()),
+        $featuredLayouts = $(this).closest('.wpz-insta_table').find('label.featured-layout'),
+        $featuredLayoutsWrap = $featuredLayouts.closest('.wpz-insta_table-row');
+      if (colNum < 3 || colNum > 6) {
+        $featuredLayoutsWrap.addClass('hidden');
+      } else {
+        $featuredLayoutsWrap.removeClass('hidden');
+        $featuredLayouts.addClass('hidden');
+        $featuredLayouts.each(function () {
+          if ($(this).is('.featured-layout-columns_' + colNum)) {
+            $(this).removeClass('hidden');
+          }
+        });
+      }
+    }
+  });
+  $('.wpz-insta_sidebar-section-layout input[name="_wpz-insta_col-num_responsive-enabled"]').on('change', function () {
+    $(this).closest('.wpz-insta_responsive-table-row').toggleClass('wpz-insta_responsive-enabled', $(this).is(':checked'));
+  });
+  $('.wpz-insta_sidebar-section-layout input[name="_wpz-insta_perpage-num_responsive-enabled"]').on('change', function () {
+    $(this).closest('.wpz-insta_responsive-table-row').toggleClass('wpz-insta_responsive-enabled', $(this).is(':checked'));
+  });
+  $('#_wpz-insta_featured-layout-enable').on('change', function () {
+    $(this).closest('.wpz-insta_table-row').find('.wpz-insta_image-select').toggleClass('hidden', !$(this).is(':checked'));
+  });
+  $('#wpz-insta_modal-dialog').find('.wpz-insta_modal-dialog_ok-button, .wpz-insta_modal-dialog_close-button').on('click', function (e) {
+    e.preventDefault();
+    var $dialog = $('#wpz-insta_modal-dialog');
+    window.wpzInstaCloseConnectDoneDialog($dialog.hasClass('success'), $dialog.hasClass('update'));
+  });
+  $('#wpz-insta_modal_graph-dialog').find('.wpz-insta_modal-dialog_ok-button, .wpz-insta_modal-dialog_close-button').on('click', function (e) {
+    e.preventDefault();
+    var $dialog = $('#wpz-insta_modal_graph-dialog');
+    $dialog.removeClass('open');
+  });
+  $('#wpz-insta_modal-dialog-connection-failed').find('.wpz-insta_modal-dialog_ok-button, .wpz-insta_modal-dialog_close-button').on('click', function (e) {
+    e.preventDefault();
+    var $dialog = $('#wpz-insta_modal-dialog-connection-failed');
+    window.close();
+    $dialog.removeClass('open');
+  });
+  $('#wpz-insta_feed-user-select-btn').on('click', function (e) {
+    e.preventDefault();
+    $('#wpz-insta_tabs-config-cnnct').removeClass('active').addClass('active').prev('.wpz-insta_sidebar').removeClass('active');
+    $('#wpz-insta_tabs-config-cnnct').closest('.wpz-insta_tabs-content').find('> .wpz-insta_sidebar').addClass('hide');
+  });
+  $('#wpz-insta_feed-user-remove-btn').on('click', function (e) {
+    e.preventDefault();
+    var $btn = $('#wpz-insta_feed-user-select-btn'),
+      $select = $btn.closest('.wpz-insta_feed-user-select'),
+      $info = $select.find('.wpz-insta_feed-user-select-info');
+    $('#wpz-insta_user-id').val('-1').trigger('change');
+    $('#wpz-insta_user-token').val('-1').trigger('change');
+    $('#wpz-insta_user-token, #wpz-insta_check-new-posts-interval-number, #wpz-insta_enable-request-timeout').closest('.wpz-insta_sidebar-section').removeClass('active');
+    $('#wpz-insta_widget-preview-links').addClass('disabled');
+    $select.removeClass('is-set');
+    $info.find('.wpz-insta_feed-user-select-info-name').html('None');
+    $info.find('.wpz-insta_feed-user-select-info-type').html('None');
+    $select.closest('.wrap').find('.wpz-insta_settings-header .wpz-insta_feed-edit-nav li:not(:first-child)').addClass('disable');
+  });
+  $('#wpz-insta_tabs-config-cnnct .wpz-insta_tabs-config-connect-accounts li').on('click', function (e) {
+    e.preventDefault();
+    var $btn = $('#wpz-insta_feed-user-select-btn'),
+      $select = $btn.closest('.wpz-insta_feed-user-select'),
+      $info = $select.find('.wpz-insta_feed-user-select-info');
+    $('#wpz-insta_user-id').val($(this).data('user-id')).trigger('change');
+    $('#wpz-insta_user-token').val($(this).data('user-token')).trigger('change');
+    $('#wpz-insta_user-token, #wpz-insta_check-new-posts-interval-number, #wpz-insta_enable-request-timeout').closest('.wpz-insta_sidebar-section').addClass('active');
+    $select.addClass('is-set');
+    $info.find('.wpz-insta_feed-user-select-info-name').html($(this).data('user-name'));
+    $info.find('.wpz-insta_feed-user-select-info-type').html($(this).data('user-type'));
+    $select.closest('.wrap').find('.wpz-insta_settings-header .wpz-insta_feed-edit-nav li').removeClass('disable');
+    $select.find('.wpz-insta_feed-user-select-edit-link').attr('href', zoom_instagram_widget_admin.edit_user_url + $(this).data('user-id'));
+    $('#wpz-insta_widget-preview-links').removeClass('disabled');
+
+    // Toggle Stories checkbox based on whether the account has a Facebook Page connection
+    var hasPageId = $(this).data('has-page-id') === 1 || $(this).data('has-page-id') === '1';
+    var $storiesRow = $('input[name="_wpz-insta_show-stories"]').not('[type="hidden"]').closest('.wpz-insta_table-row');
+    var $storiesCheckbox = $storiesRow.find('input[type="checkbox"]');
+    if (hasPageId) {
+      $storiesRow.removeClass('wpz-insta_disabled');
+      $storiesCheckbox.prop('disabled', false);
+    } else {
+      $storiesRow.addClass('wpz-insta_disabled');
+      $storiesCheckbox.prop('disabled', true).prop('checked', false);
+    }
+    $('#wpz-insta_tabs-config-cnnct').removeClass('active').prev('.wpz-insta_sidebar').addClass('active');
+    $('#wpz-insta_tabs-config-cnnct').closest('.wpz-insta_tabs-content').find('> .wpz-insta_sidebar').removeClass('hide');
+  });
+  var formFields = {};
+  var formInitialValues = {};
+  var formChangedValues = {};
+  var formSubmitted = false;
+
+  // Helper function to get current checkbox array values
+  function getCheckboxArrayValue(name) {
+    var checkedValues = [];
+    $('input[name="' + name + '"]').each(function () {
+      if ($(this).is(':checked')) {
+        checkedValues.push($(this).val());
+      }
+    });
+    return checkedValues.sort().join(','); // Sort for consistent comparison
+  }
+
+  // Include all named fields (including .preview-exclude) so Save button enables on change; preview-exclude only affects iframe URL
+  $('form#post .wpz-insta_tabs-content > .wpz-insta_sidebar > .wpz-insta_sidebar-left').find('input, textarea, select').add('form#post #title').filter("[name][name!='']").each(function (index) {
+    var fieldName = $.trim($(this).attr('name'));
+    if ($(this).is(':radio')) {
+      if ($(this).is(':checked')) {
+        formFields[fieldName] = $(this);
+      }
+    } else if (fieldName.endsWith('[]')) {
+      // Handle checkbox arrays - store all checkboxes with this name
+      var baseName = fieldName.replace('[]', '');
+      if (!formFields[baseName]) {
+        formFields[baseName] = [];
+      }
+      formFields[baseName].push($(this));
+    } else {
+      formFields[fieldName] = $(this);
+    }
+  });
+  $.each(formFields, function (i, val) {
+    if (Array.isArray(val)) {
+      // Handle checkbox arrays - get comma-separated list of checked values
+      formInitialValues[i] = getCheckboxArrayValue(i + '[]');
+    } else {
+      formInitialValues[i] = val.is(':checkbox') ? val.is(':checked') ? '1' : '0' : $.trim('' + val.val());
+    }
+  });
+  $('form#post').on('submit', function () {
+    return formSubmitted = true;
+  });
+  $('form#post #title, form#post .wpz-insta_tabs-content > .wpz-insta_sidebar > .wpz-insta_sidebar-left').on('input change', debounce(function (e) {
+    var $target = $(e.target);
+    var key = $target.attr('name');
+
+    // Skip elements without a name attribute
+    if (!key) {
+      return;
+    }
+    var trackingKey = key;
+    var currentValue;
+    if (key.endsWith('[]')) {
+      // Handle checkbox arrays
+      trackingKey = key.replace('[]', '');
+      currentValue = getCheckboxArrayValue(key);
+    } else {
+      // Handle regular fields
+      currentValue = $target.is(':checkbox') ? $target.is(':checked') ? '1' : '0' : $.trim('' + $target.val());
+    }
+    if (trackingKey in formInitialValues && currentValue != formInitialValues[trackingKey]) {
+      if (!(trackingKey in formChangedValues)) {
+        formChangedValues[trackingKey] = true;
+      }
+    } else {
+      if (trackingKey in formChangedValues) {
+        delete formChangedValues[trackingKey];
+      }
+    }
+    $('input#publish').toggleClass('disabled', $.isEmptyObject(formChangedValues));
+
+    // Reload preview only for non–preview-exclude fields (keeps iframe URL smaller)
+    if (key !== 'post_title' && !$target.is('.preview-exclude')) {
+      window.wpzInstaReloadPreview();
+    }
+  }, 300));
+  $(function () {
+    window.wpzInstaReloadPreview();
+  });
+  $('#wpz-insta_widget-preview-links .wpz-insta_widget-preview-header-link').on('click', function () {
+    if (!$(this).hasClass('active')) {
+      $(this).addClass('active').siblings('.wpz-insta_widget-preview-header-link').removeClass('active');
+      $(this).closest('.wpz-insta_widget-preview').find('.wpz-insta_widget-preview-view').removeClass('wpz-insta_widget-preview-size-desktop wpz-insta_widget-preview-size-tablet wpz-insta_widget-preview-size-mobile').addClass($(this).hasClass('wpz-insta_widget-preview-header-links-tablet') ? 'wpz-insta_widget-preview-size-tablet' : $(this).hasClass('wpz-insta_widget-preview-header-links-mobile') ? 'wpz-insta_widget-preview-size-mobile' : 'wpz-insta_widget-preview-size-desktop');
+    }
+  });
+  $('#wpz-insta_widget-preview-view').on('transitionend', function () {
+    var $iframe = $(this).find('iframe');
+    $iframe.height(parseInt($iframe.contents().find('body').prop('scrollHeight')) + 20);
+  });
+  $('#wpz-insta_widget-preview-view iframe').on('load', function () {
+    /*$(this).height( parseInt( $(this).contents().find('body').prop('scrollHeight') ) + 20 );*/
+    $(this).removeClass('wpz-insta_preview-hidden');
+    $(this).closest('.wpz-insta_sidebar-right').addClass('hide-loading');
+  });
+  $('.wpz-insta_color-picker').wpColorPicker({
+    change: function change(event, ui) {
+      var changeEvent = $.Event('change');
+      changeEvent.target = event.target;
+      $(event.target).closest('form#post').find('.wpz-insta_tabs-content > .wpz-insta_sidebar > .wpz-insta_sidebar-left').triggerHandler(changeEvent);
+    }
+  });
+  $('.wpzinsta-pointer').each(function () {
+    $(this).parent().addBack().one('click', function (e) {
+      e.stopPropagation();
+      var $target = $(this);
+      if ($(this).is('li')) {
+        $target = $(this).find('.wpzinsta-pointer');
+      }
+      $target.remove();
+    });
+  });
+  $('#post-body-content .wpz-insta_sidebar .wpz-insta_sidebar-left .wpz-insta_sidebar-left-section').on('scroll', function () {
+    $(this).find('.wp-picker-holder').each(function () {
+      var $parent = $(this).closest('.wp-picker-container');
+      var parentOffset = $parent.offset();
+      $(this).offset({
+        top: parentOffset.top + $parent.outerHeight(),
+        left: parentOffset.left
+      });
+    });
+  }).triggerHandler('scroll');
+  $(window).on('scroll', function () {
+    $('#post-body-content .wpz-insta_sidebar .wpz-insta_sidebar-left .wpz-insta_sidebar-left-section').each(function () {
+      $(this).triggerHandler('scroll');
+    });
+  });
+  if ($('#post-body-content .wpz-insta_sidebar .wpz-insta_sidebar-left .wpz-insta_sidebar-left-section .wpz-insta_color-picker').length > 0) {
+    var observer = new IntersectionObserver(function (es, os) {
+      return es.forEach(function (en) {
+        return en.target.blur();
+      });
+    }, {
+      root: null,
+      threshold: .1
+    });
+    observer.observe($('#post-body-content .wpz-insta_sidebar .wpz-insta_sidebar-left .wpz-insta_sidebar-left-section .wpz-insta_color-picker')[0]);
+  }
+  $('#wpz-insta_shortcode').on('focus', function (e) {
+    e.preventDefault();
+    $(this).select();
+  });
+  var wpzInstaShortcodeCopyTimer;
+  $('#wpz-insta_shortcode-copy-btn').on('click', debounce(function () {
+    window.wpzInstaCopyToClipboard($('#wpz-insta_shortcode').val()).then(function () {
+      $('#wpz-insta_shortcode-copy-btn').addClass('success');
+      clearTimeout(wpzInstaShortcodeCopyTimer);
+      setTimeout(function () {
+        $('#wpz-insta_shortcode-copy-btn').removeClass('success');
+      }, 3000);
+    });
+  }, 300));
+  $('.wpz-insta_actions-menu_copy-shortcode').on('click', function (e) {
+    e.preventDefault();
+    var id = $(this).closest('tr').attr('id').replace('post-', '');
+    window.wpzInstaCopyToClipboard('[instagram feed="' + id + '"]').then(function () {
+      window.wpzInstaShowDialog(zoom_instagram_widget_admin.i18n_shortcode_success_title, zoom_instagram_widget_admin.i18n_shortcode_success_content, 'success update');
+    });
+  });
+  $('.wpz-insta_actions-menu_delete').on('click', function (e) {
+    e.preventDefault();
+    var isFeed = $(this).hasClass('wpz-insta_actions-menu_delete-feed'),
+      href = $(this).find('a').attr('href');
+    window.wpzInstaShowConfirmDialog(zoom_instagram_widget_admin['i18n_delete_' + (isFeed ? 'feed' : 'user') + '_confirm_title'], zoom_instagram_widget_admin['i18n_delete_' + (isFeed ? 'feed' : 'user') + '_confirm_content'], zoom_instagram_widget_admin['i18n_delete_confirm_button_ok'], zoom_instagram_widget_admin['i18n_delete_confirm_button_cancel']).then(function (result) {
+      if (result === true) {
+        window.location = href;
+      }
+      window.wpzInstaCloseDialog();
+    });
+  });
+  function setTab(id) {
+    if (id) {
+      var $target = $('.wpz-insta_feed-edit-nav a[href="' + id + '"]'),
+        $tabs = $target.closest('form').find('.wpz-insta_tabs-content .wpz-insta_sidebar-left-section');
+      $target.closest('.wpz-insta_feed-edit-nav').find('li').removeClass('active');
+      $target.closest('li').addClass('active');
+      $tabs.removeClass('active');
+      $tabs.filter('[data-id="' + id + '"]').addClass('active');
+
+      // Notify iframe of tab change so it can show/hide "Link to a product" buttons without reload
+      var iframe = document.querySelector('#wpz-insta_widget-preview-view iframe');
+      if (iframe && iframe.contentWindow) {
+        var tabId = (id + '').replace(/^#/, '');
+        iframe.contentWindow.postMessage({
+          action: 'wpz-insta-tab-change',
+          tab: tabId
+        }, '*');
+      }
+    }
+  }
+  window.wpzInstaAuthenticateInstagram = function (url, callback) {
+    var popupWidth = 700,
+      popupHeight = 750,
+      popupTop = (window.screen.height - popupHeight) / 2,
+      popupLeft = (window.screen.width - popupWidth) / 2;
+    window.open(url, '', 'width=' + popupWidth + ',height=' + popupHeight + ',left=' + popupLeft + ',top=' + popupTop);
+  };
+
+  // Helper function to check if the current window is a popup
+  function isLikelyPopup(minWidth, maxWidth, minHeight, maxHeight) {
+    var windowWidth = window.outerWidth;
+    var windowHeight = window.outerHeight;
+
+    // Check if the window is smaller than the full screen
+    var isSmallerThanScreen = windowWidth < window.screen.width && windowHeight < window.screen.height;
+
+    // Check if the window size falls within the expected range
+    var withinWidthRange = windowWidth >= minWidth && windowWidth <= maxWidth;
+    var withinHeightRange = windowHeight >= minHeight && windowHeight <= maxHeight;
+    return isSmallerThanScreen && withinWidthRange && withinHeightRange;
+  }
+  window.wpzInstaParseQuery = function (queryString) {
+    var query = {};
+    var pairs = (queryString[0] === '?' || queryString[0] === '#' ? queryString.substr(1) : queryString).split('&');
+    for (var i = 0; i < pairs.length; i++) {
+      var pair = pairs[i].split('=');
+      query[decodeURIComponent(pair[0])] = decodeURIComponent(pair[1] || '');
+    }
+    return query;
+  };
+
+  // Function to handle the returned token from graph API
+  window.wpzInstaHandleReturnedGraphToken = function (url) {
+    var rawToken = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+    if (url) {
+      var parsedHash = !rawToken && 'hash' in url && '' != ('' + url.hash).trim() ? window.wpzInstaParseQuery('' + url.hash) : {};
+      if (!rawToken && !$.isEmptyObject(parsedHash) || rawToken && '' != ('' + url).trim()) {
+        var token = rawToken ? ('' + url).trim() : 'access_graph_token' in parsedHash ? ('' + parsedHash.access_graph_token).trim() : '-1';
+        if ('' != token && '-1' != token) {
+          var args = {
+            action: 'wpz-insta_connect_business-user',
+            nonce: zoom_instagram_widget_admin.nonce,
+            token: token
+          };
+          if (!rawToken) {
+            var parsedQuery = 'search' in url && '' != ('' + url.search).trim() ? window.wpzInstaParseQuery('' + url.search) : {};
+            args.post_id = !$.isEmptyObject(parsedQuery) && 'post' in parsedQuery ? parseInt(parsedQuery.post) : 0;
+          }
+          $.post(ajaxurl, args).done(function (data, status, code) {
+            if ('success' == status) {
+              var getBusinessUsers = $(data);
+              if (getBusinessUsers) {
+                $('#wpz-insta_modal_graph-dialog').find('.wpz-insta_modal-dialog_content').html(getBusinessUsers);
+                $('#wpz-insta_modal_graph-dialog').removeClass().addClass('open success');
+                $('.wpz-insta_business-accounts-link').on('click', function (e) {
+                  e.preventDefault();
+                  // If the user is not a pro, remove the selected class from all links
+                  if (!zoom_instagram_widget_admin.is_pro) {
+                    $('.wpz-insta_business-accounts-link').removeClass('selected'); // Remove from all links
+                    $(this).addClass('selected'); // Add to the clicked link
+                  } else {
+                    $(this).toggleClass('selected'); // Add to the clicked link
+                  }
+                  $('#wpz-insta-graph-connect-account').removeClass('disabled');
+                });
+              }
+            }
+          }).fail(function () {
+            console.log('Failed to connect business user');
+          });
+        }
+      }
+    }
+  };
+
+  // Set the selected API
+  $('#wpz-insta-select-api').on('change', function (e) {
+    var selected = $(this).val();
+    $(this).parent().find('#wpz-insta_reconnect').attr('href', selected);
+  });
+  $('#wpz-add_manual_token').on('click', function (e) {
+    e.preventDefault();
+    $('#wpz-insta-token_label').toggle();
+  });
+
+  // Function to connect the selected business account
+  $('#wpz-insta-graph-connect-account').on('click', function (e) {
+    e.preventDefault();
+    var selected_accounts = [],
+      post_id = $('.wpz-insta_business-accounts-link').parent().data('post-id');
+    $('.wpz-insta_business-accounts-link').each(function () {
+      if ($(this).hasClass('selected')) {
+        selected_accounts.push($(this).data('account-info'));
+      }
+    });
+    if (selected_accounts.length > 0) {
+      var args = {
+        action: 'wpz-insta_connect_business-account',
+        nonce: zoom_instagram_widget_admin.nonce,
+        account_info: JSON.stringify(selected_accounts),
+        post_id: post_id
+      };
+      $.post(ajaxurl, args).done(function (data, status, code) {
+        if ('success' == status) {
+          $('#wpz-insta_modal_graph-dialog').removeClass('open');
+        }
+        window.location.replace(zoom_instagram_widget_admin.feeds_url);
+      }).fail(function (data, status, code) {
+        console.log(data);
+      });
+    }
+  });
+  window.wpzInstaShowConnectDoneDialog = function (success) {
+    var update = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+    window.wpzInstaShowDialog(success ? update ? zoom_instagram_widget_admin.i18n_reconnect_success_title : zoom_instagram_widget_admin.i18n_connect_success_title : zoom_instagram_widget_admin.i18n_connect_fail_title, success ? update ? zoom_instagram_widget_admin.i18n_reconnect_success_content : zoom_instagram_widget_admin.i18n_connect_success_content : zoom_instagram_widget_admin.i18n_connect_fail_content, (success ? 'success' : 'fail') + (update ? ' update' : ''));
+  };
+  window.wpzInstaShowDialog = function () {
+    var title = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '[DIALOG TITLE]';
+    var content = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '[DIALOG CONTENT]';
+    var wrapperClass = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'success';
+    var $dialog = $('#wpz-insta_modal-dialog'),
+      $title = $dialog.find('.wpz-insta_modal-dialog_header-title'),
+      $content = $dialog.find('.wpz-insta_modal-dialog_content'),
+      $buttonOk = $dialog.find('.wpz-insta_modal-dialog_footer .wpz-insta_modal-dialog_ok-button'),
+      $buttonCancel = $dialog.find('.wpz-insta_modal-dialog_footer .wpz-insta_modal-dialog_cancel-button');
+    $title.html('' + title);
+    $content.html('' + content);
+    $buttonCancel.addClass('hidden');
+    $dialog.removeClass().addClass('open ' + wrapperClass);
+  };
+  window.wpzInstaShowConfirmDialog = function () {
+    var title = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '[DIALOG TITLE]';
+    var content = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '[DIALOG CONTENT]';
+    var okButtonLabel = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : '[OK]';
+    var cancelButtonLabel = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : '[CANCEL]';
+    return new Promise(function (resolve, reject) {
+      var $dialog = $('#wpz-insta_modal-dialog'),
+        $title = $dialog.find('.wpz-insta_modal-dialog_header-title'),
+        $content = $dialog.find('.wpz-insta_modal-dialog_content'),
+        $buttonOk = $dialog.find('.wpz-insta_modal-dialog_footer .wpz-insta_modal-dialog_ok-button'),
+        $buttonCancel = $dialog.find('.wpz-insta_modal-dialog_footer .wpz-insta_modal-dialog_cancel-button');
+      $title.html('' + title);
+      $content.html('' + content);
+      $buttonOk.removeClass('hidden').html('' + okButtonLabel);
+      $buttonOk.on('click', function () {
+        return resolve(true);
+      });
+      $buttonCancel.removeClass('hidden').html('' + cancelButtonLabel);
+      $buttonCancel.on('click', function () {
+        return resolve(false);
+      });
+      $dialog.removeClass().addClass('open confirm');
+    });
+  };
+  window.wpzInstaCloseConnectDoneDialog = function (success) {
+    var update = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+    window.wpzInstaCloseDialog();
+    if (success && !update) {
+      window.location.replace(zoom_instagram_widget_admin.feeds_url);
+    }
+  };
+  window.wpzInstaCloseDialog = function () {
+    $('#wpz-insta_modal-dialog').removeClass('open');
+  };
+  function debounce(func) {
+    var _this = this;
+    var timeout = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 300;
+    var timer;
+    return function () {
+      for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+        args[_key] = arguments[_key];
+      }
+      clearTimeout(timer);
+      timer = setTimeout(function () {
+        func.apply(_this, args);
+      }, timeout);
+    };
+  }
+  window.wpzInstaCopyToClipboard = function (textToCopy) {
+    if (navigator.clipboard && window.isSecureContext) {
+      return navigator.clipboard.writeText(textToCopy);
+    } else {
+      var textArea = document.createElement('textarea');
+      textArea.value = textToCopy;
+      textArea.style.position = 'fixed';
+      textArea.style.left = '-999999px';
+      textArea.style.top = '-999999px';
+      document.body.appendChild(textArea);
+      textArea.focus();
+      textArea.select();
+      return new Promise(function (res, rej) {
+        document.execCommand('copy') ? res() : rej();
+        textArea.remove();
+      });
+    }
+  };
+  if ('inlineEditPost' in window) {
+    $('.inline-edit-save').find('.button-primary').addClass('disabled');
+    var origInlineEditPost = window.inlineEditPost.edit;
+    window.inlineEditPost.edit = function (id) {
+      origInlineEditPost.apply(this, arguments);
+      if (_typeof(id) === 'object') {
+        id = window.inlineEditPost.getId(id);
+      }
+      var fields = ['_wpz-insta_account-type', '_wpz-insta_token', '_wpz-insta_token_expire', '_thumbnail_id', 'wpz-insta_profile-photo', '_wpz-insta_user_name', '_wpz-insta_user-bio', '_wpz-insta_api-url'],
+        rowData = $('#inline_' + id),
+        editRow = $('#edit-' + id),
+        reconnectBtn = $('#wpz-insta_reconnect', editRow),
+        val,
+        field;
+      for (var i = 0; i < fields.length; i++) {
+        field = fields[i];
+        val = $('.' + field, rowData);
+        val = val.text();
+        if ('wpz-insta_profile-photo' == field) {
+          $('img.' + field).attr('src', val);
+        } else if ('_wpz-insta_token' == field) {
+          $('#wpz-insta_token', editRow).val(val);
+        } else if ('_wpz-insta_token_expire' == field) {
+          $('#wpz-insta_token-expire-time', editRow).html(val);
+        } else if ('_wpz-insta_api-url' == field) {
+          $('#wpz-insta_reconnect', editRow).attr('href', val);
+        } else {
+          $(':input[name="' + field + '"]', editRow).val(val);
+        }
+        $(':input[name="' + field + '"]', editRow).on('change paste keyup', function () {
+          $('.inline-edit-save', editRow).find('.button-primary').removeClass('disabled');
+        });
+      }
+
+      // Update the RETURN_URL in the values of the options
+      $('#wpz-insta-select-api option', editRow).each(function () {
+        var newUrlPart = btoa(encodeURIComponent(zoom_instagram_widget_admin.post_edit_url + id));
+        var currentValue = $(this).val();
+        if (currentValue.includes('RETURN_URL')) {
+          // Replace 'RETURN_URL' with the new return URL
+          var updatedValue = currentValue.replace('RETURN_URL', encodeURIComponent(newUrlPart));
+          $(this).val(updatedValue);
+        }
+      });
+      reconnectBtn.attr({
+        'href': reconnectBtn.attr('href').replace('RETURN_URL', btoa(encodeURIComponent(zoom_instagram_widget_admin.post_edit_url + id))),
+        'data-user-id': id
+      });
+    };
+  }
+  window.wpzInstaHandleReturnedToken = function (url) {
+    var rawToken = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+    if (url) {
+      var parsedHash = !rawToken && 'hash' in url && '' != ('' + url.hash).trim() ? window.wpzInstaParseQuery('' + url.hash) : {};
+      if (!rawToken && !$.isEmptyObject(parsedHash) || rawToken && '' != ('' + url).trim()) {
+        var token = rawToken ? ('' + url).trim() : 'access_token' in parsedHash ? ('' + parsedHash.access_token).trim() : '-1';
+        if ('' != token && '-1' != token) {
+          var args = {
+            action: 'wpz-insta_connect-user',
+            nonce: zoom_instagram_widget_admin.nonce,
+            token: token
+          };
+          if (!rawToken) {
+            var parsedQuery = 'search' in url && '' != ('' + url.search).trim() ? window.wpzInstaParseQuery('' + url.search) : {};
+            args.post_id = !$.isEmptyObject(parsedQuery) && 'post' in parsedQuery ? parseInt(parsedQuery.post) : 0;
+          }
+          $.post(ajaxurl, args).done(function (response) {
+            $('.inline-edit-wpz-insta_user #wpz-insta_token').val(token);
+            var date = new Date();
+            date.setDate(date.getDate() + 60);
+            $('#the-list #wpz-insta_token-expire-time').html(date.toLocaleDateString('en-US', {
+              weekday: 'long',
+              day: 'numeric',
+              month: 'long',
+              year: 'numeric'
+            }));
+            window.wpzInstaShowConnectDoneDialog(response.success, 'data' in response && 'update' in response.data && response.data.update);
+          }).fail(function () {
+            window.wpzInstaShowConnectDoneDialog(false);
+          });
+        }
+      }
+    }
+  };
+  window.wpzInstaReloadPreview = function () {
+    var url = zoom_instagram_widget_admin.preview_url,
+      params = $.param($('form#post #title, form#post .wpz-insta_tabs-content > .wpz-insta_sidebar > .wpz-insta_sidebar-left').find('input, textarea, select').not('.preview-exclude').serializeArray());
+    if (params) {
+      url += '&' + params;
+    }
+
+    // Add the post ID for the preview to identify the feed for Load More functionality
+    var postId = $('form#post input[name="post_ID"]').val();
+    if (postId) {
+      url += '&wpz-insta-feed-id=' + postId;
+    }
+
+    // Pass current tab so iframe can show/hide "Link to a product" buttons (only on Product Links tab)
+    var activeTab = $('.wpz-insta_feed-edit-nav li.active a').attr('href');
+    if (activeTab) {
+      url += '&wpz-insta-tab=' + encodeURIComponent((activeTab + '').replace(/^#/, ''));
+    }
+    $('#wpz-insta_widget-preview-view').closest('.wpz-insta_sidebar-right').removeClass('hide-loading');
+    $('#wpz-insta_widget-preview-view iframe').addClass('wpz-insta_preview-hidden').attr('src', url);
+  };
+  window.wpzInstaUpdatePreviewHeight = function () {
+    var $frame = $('#wpz-insta_widget-preview-view iframe');
+    $frame.height(parseInt($frame.contents().find('body').prop('scrollHeight')));
+  };
+
+  // WooCommerce Product Link functionality
+  if (typeof zoom_instagram_widget_admin !== 'undefined') {
+    var initProductLinkModal = function initProductLinkModal() {
+      if ($productLinkModal) {
+        return;
+      }
+      var strings = zoom_instagram_widget_admin.strings || {};
+      var modalHTML = '<div id="wpz-insta-product-link-modal" class="wpz-insta-modal" style="display: none;">' + '<div class="wpz-insta-modal-content">' + '<div class="wpz-insta-modal-header">' + '<h2>' + (strings.linkProduct || 'Link to Product') + '</h2>' + '<button type="button" class="wpz-insta-modal-close">&times;</button>' + '</div>' + '<div class="wpz-insta-modal-body">' + '<div class="wpz-insta-product-search">' + '<input type="text" id="wpz-insta-product-search-input" placeholder="' + (strings.searchProducts || 'Search products...') + '" />' + '</div>' + '<div class="wpz-insta-product-list" id="wpz-insta-product-list"></div>' + '<div class="wpz-insta-product-pagination"></div>' + '</div>' + '<div class="wpz-insta-modal-footer">' + '<button type="button" class="button wpz-insta-remove-link" style="display: none;">' + (strings.removeLink || 'Remove Link') + '</button>' + '<button type="button" class="button button-primary wpz-insta-save-link">' + (strings.save || 'Save') + '</button>' + '<button type="button" class="button wpz-insta-cancel-link">' + (strings.cancel || 'Cancel') + '</button>' + '</div>' + '</div>' + '</div>';
+      $('body').append(modalHTML);
+      $productLinkModal = $('#wpz-insta-product-link-modal');
+
+      // Close modal handlers
+      $productLinkModal.on('click', '.wpz-insta-modal-close, .wpz-insta-cancel-link', function () {
+        $productLinkModal.hide();
+      });
+
+      // Remove link handler
+      $productLinkModal.on('click', '.wpz-insta-remove-link', function () {
+        saveProductLink(0);
+      });
+
+      // Save link handler
+      $productLinkModal.on('click', '.wpz-insta-save-link', function () {
+        var selectedProduct = $('#wpz-insta-product-list .wpz-insta-product-item.selected');
+        if (selectedProduct.length) {
+          var productId = selectedProduct.data('product-id');
+          saveProductLink(productId);
+        }
+      });
+
+      // Product item click handler
+      $productLinkModal.on('click', '.wpz-insta-product-item', function () {
+        $('.wpz-insta-product-item').removeClass('selected');
+        $(this).addClass('selected');
+        $('.wpz-insta-save-link').prop('disabled', false);
+      });
+
+      // Search handler
+      var searchTimeout;
+      $('#wpz-insta-product-search-input').on('input', function () {
+        clearTimeout(searchTimeout);
+        var search = $(this).val();
+        searchTimeout = setTimeout(function () {
+          loadProducts(search, 1);
+        }, 500);
+      });
+    };
+    var loadProducts = function loadProducts(search, page, currentProductId) {
+      page = page || 1;
+      $('#wpz-insta-product-list').html('<div class="wpz-insta-loading">Loading...</div>');
+      $.ajax({
+        url: zoom_instagram_widget_admin.ajax_url,
+        type: 'POST',
+        data: {
+          action: 'wpz-insta_get-products',
+          nonce: zoom_instagram_widget_admin.product_link_nonce,
+          search: search || '',
+          page: page
+        },
+        success: function success(response) {
+          if (response.success && response.data.products) {
+            displayProducts(response.data.products, response.data.pages, page, currentProductId);
+          } else {
+            $('#wpz-insta-product-list').html('<div class="wpz-insta-no-products">No products found.</div>');
+          }
+        },
+        error: function error() {
+          $('#wpz-insta-product-list').html('<div class="wpz-insta-error">Error loading products.</div>');
+        }
+      });
+    };
+    var displayProducts = function displayProducts(products, totalPages, currentPage, currentProductId) {
+      var html = '';
+      if (products.length === 0) {
+        html = '<div class="wpz-insta-no-products">No products found.</div>';
+      } else {
+        products.forEach(function (product) {
+          var selectedClass = currentProductId == product.id ? ' selected' : '';
+          html += '<div class="wpz-insta-product-item' + selectedClass + '" data-product-id="' + product.id + '">' + '<img src="' + product.image + '" alt="" />' + '<div class="wpz-insta-product-info">' + '<h4>' + product.title + '</h4>' + '<span class="wpz-insta-product-price">' + product.price + '</span>' + '</div>' + '</div>';
+        });
+      }
+      $('#wpz-insta-product-list').html(html);
+
+      // Pagination
+      if (totalPages > 1) {
+        var paginationHTML = '';
+        if (currentPage > 1) {
+          paginationHTML += '<button type="button" class="button wpz-insta-prev-page" data-page="' + (currentPage - 1) + '">Previous</button>';
+        }
+        if (currentPage < totalPages) {
+          paginationHTML += '<button type="button" class="button wpz-insta-next-page" data-page="' + (currentPage + 1) + '">Next</button>';
+        }
+        $('.wpz-insta-product-pagination').html(paginationHTML);
+      } else {
+        $('.wpz-insta-product-pagination').html('');
+      }
+    };
+    var saveProductLink = function saveProductLink(productId) {
+      $.ajax({
+        url: zoom_instagram_widget_admin.ajax_url,
+        type: 'POST',
+        data: {
+          action: 'wpz-insta_save-product-link',
+          nonce: zoom_instagram_widget_admin.product_link_nonce,
+          feed_id: currentFeedId,
+          media_id: currentMediaId,
+          product_id: productId
+        },
+        success: function success(response) {
+          if (response.success) {
+            $productLinkModal.hide();
+            // Reload preview to show updated button
+            if (typeof window.wpzInstaReloadPreview === 'function') {
+              window.wpzInstaReloadPreview();
+            }
+          } else {
+            alert(response.data && response.data.message ? response.data.message : 'Error saving product link.');
+          }
+        },
+        error: function error() {
+          alert('Error saving product link.');
+        }
+      });
+    }; // Product Links upsell modal (shown when no valid license)
+    var initProductLinksUpsellModal = function initProductLinksUpsellModal() {
+      if ($productLinksUpsellModal) {
+        return;
+      }
+      var strings = zoom_instagram_widget_admin.strings || {};
+      var upsellTitle = strings.productLinksUpsellTitle || 'Unlock Product Links';
+      var upsellMessage = strings.productLinksUpsellMessage || 'Link your Instagram posts to WooCommerce products and show an Add to Cart button. This feature is available with an active Instagram Widget PRO license.';
+      var upsellCta = strings.productLinksUpsellCta || 'Get PRO License';
+      var upsellClose = strings.productLinksUpsellClose || 'Close';
+      var upsellUrl = zoom_instagram_widget_admin.product_links_upsell_url || 'https://www.wpzoom.com/plugins/instagram-widget/';
+      var upsellHTML = '<div id="wpz-insta-product-links-upsell-modal" class="wpz-insta-modal wpz-insta-upsell-modal" style="display: none;">' + '<div class="wpz-insta-modal-content wpz-insta-upsell-content">' + '<div class="wpz-insta-modal-header">' + '<h2>' + upsellTitle + '</h2>' + '<button type="button" class="wpz-insta-modal-close">&times;</button>' + '</div>' + '<div class="wpz-insta-modal-body">' + '<p class="wpz-insta-upsell-message">' + upsellMessage + '</p>' + '<div class="wpz-insta-upsell-actions">' + '<a href="' + upsellUrl + '" target="_blank" rel="noopener" class="button button-primary wpz-insta-upsell-cta">' + upsellCta + '</a>' + '</div>' + '</div>' + '<div class="wpz-insta-modal-footer">' + '<button type="button" class="button wpz-insta-upsell-close">' + upsellClose + '</button>' + '</div>' + '</div></div>';
+      $('body').append(upsellHTML);
+      $productLinksUpsellModal = $('#wpz-insta-product-links-upsell-modal');
+      $productLinksUpsellModal.on('click', '.wpz-insta-modal-close, .wpz-insta-upsell-close', function () {
+        $productLinksUpsellModal.hide();
+      });
+    }; // Open product link modal when iframe sends message (button is inside iframe)
+    // Product link popup
+    var $productLinkModal = null;
+    var currentMediaId = null;
+    var currentFeedId = null;
+    var $productLinksUpsellModal = null;
+    window.addEventListener('message', function (e) {
+      if (!e.data || e.data.action !== 'wpz-insta-open-product-link') {
+        return;
+      }
+      // If no valid license (not PRO), show upsell modal instead of product selection
+      if (!zoom_instagram_widget_admin.is_pro) {
+        initProductLinksUpsellModal();
+        $productLinksUpsellModal.show();
+        return;
+      }
+      currentMediaId = e.data.mediaId || '';
+      currentFeedId = e.data.feedId || '';
+      var currentProductId = parseInt(e.data.productId) || 0;
+      initProductLinkModal();
+      $productLinkModal.show();
+      loadProducts('', 1, currentProductId);
+      if (currentProductId) {
+        $('.wpz-insta-remove-link').show();
+      } else {
+        $('.wpz-insta-remove-link').hide();
+      }
+      $('.wpz-insta-save-link').prop('disabled', true);
+    });
+
+    // Pagination handlers
+    $(document).on('click', '.wpz-insta-prev-page, .wpz-insta-next-page', function () {
+      var page = $(this).data('page');
+      var search = $('#wpz-insta-product-search-input').val();
+      loadProducts(search, page);
+    });
+  }
+});
+/******/ })()
+;
+//# sourceMappingURL=index.js.map

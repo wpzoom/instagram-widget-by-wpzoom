@@ -106,3 +106,59 @@ html {
 		transform: translateX(0%);
 	}
 }
+
+// WooCommerce Product Link button (inside iframe preview)
+.zoom-instagram-widget__item-inner-wrap {
+	position: relative;
+}
+
+.wpz-insta-link-product-btn {
+	display: none; // Shown only when Product Links tab is active (body.wpz-insta-product-links-tab-active)
+	position: absolute;
+	bottom: 16px;
+	left: 16px;
+	right: 16px;
+	background: #3496ff;
+	color: #fff;
+	border: none;
+	padding: 12px 16px;
+	border-radius: 3px;
+	cursor: pointer;
+	font-size: 12px;
+	align-items: center;
+	justify-content: center;
+	gap: 5px;
+	z-index: 10;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+	transition: background 0.2s, border-color 0.2s, color 0.2s;
+	width: auto;
+
+	&:hover {
+		background: #2b88e9;
+	}
+
+	.dashicons {
+		font-size: 16px;
+		width: 16px;
+		height: 16px;
+	}
+
+	// Edit Product Link state (when item is already linked)
+    &--linked {
+        background-color:  #2e7d32;
+        color: #fff;
+
+        &:hover {
+            background-color: #1e4620;
+        }
+
+        .dashicons-edit {
+            opacity: 0.95;
+        }
+    }
+}
+
+// Show "Link to a product" buttons only when Product Links tab is active (no iframe reload)
+body.wpz-insta-product-links-tab-active .wpz-insta-link-product-btn {
+	display: flex;
+}

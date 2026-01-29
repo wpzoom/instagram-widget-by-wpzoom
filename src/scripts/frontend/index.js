@@ -904,3 +904,22 @@
 	} );
 
 } )( jQuery );
+
+// WooCommerce Product Link: notify parent when "Link to a product" is clicked (we're inside iframe)
+document.body.addEventListener( 'click', function( event ) {
+	var btn = event.target.closest( '.wpz-insta-link-product-btn' );
+
+	if ( ! btn ) {
+		return;
+	}
+	event.preventDefault();
+	event.stopPropagation();
+	if ( typeof window.parent.postMessage === 'function' ) {
+		window.parent.postMessage( {
+			action: 'wpz-insta-open-product-link',
+			mediaId: btn.getAttribute( 'data-media-id' ) || '',
+			feedId: btn.getAttribute( 'data-feed-id' ) || '',
+			productId: btn.getAttribute( 'data-product-id' ) || ''
+		}, '*' );
+	}
+}, true );

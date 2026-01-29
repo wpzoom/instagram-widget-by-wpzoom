@@ -348,6 +348,14 @@ class WPZOOM_Instagram_Widget_Settings {
 		
 		add_action( 'wp_ajax_inline-save', array( $this, 'ajax_inline_save' ), 1 );
 		add_action( 'wp_ajax_wpz-insta_dismiss-cron-notice', array( $this, 'ajax_dismiss_cron_notice' ) );
+		
+		// WooCommerce product linking AJAX handlers
+		if ( class_exists( 'WooCommerce' ) ) {
+			add_action( 'wp_ajax_wpz-insta_get-products', array( $this, 'ajax_get_products' ) );
+			add_action( 'wp_ajax_wpz-insta_save-product-link', array( $this, 'ajax_save_product_link' ) );
+			add_action( 'wp_ajax_wpz-insta_get-product-link', array( $this, 'ajax_get_product_link' ) );
+		}
+		
 		add_action( 'save_post_wpz-insta_feed', array( $this, 'save_feed' ), 15, 3 );
 		add_action( 'save_post_wpz-insta_user', array( $this, 'save_user' ), 15, 3 );
 		add_action( 'wp_after_insert_post', array( $this, 'after_insert_post' ), 10, 4 );
@@ -537,6 +545,157 @@ class WPZOOM_Instagram_Widget_Settings {
 
 			wp_send_json_error( null, 500 );
 		}
+	}
+
+	/**
+	 * AJAX handler to get WooCommerce products for the product link popup.
+	 *
+	 * @return void
+	 */
+	function ajax_get_products() {
+		check_ajax_referer( 'wpz-insta-product-link', 'nonce' );
+
+		if ( ! current_user_can( 'edit_posts' ) || ! class_exists( 'WooCommerce' ) ) {
+			wp_send_json_error( array( 'message' => __( 'Permission denied.', 'instagram-widget-by-wpzoom' ) ) );
+		}
+
+		$search = isset( $_POST['search'] ) ? sanitize_text_field( $_POST['search'] ) : '';
+		$page = isset( $_POST['page'] ) ? intval( $_POST['page'] ) : 1;
+		$per_page = 20;
+
+		$args = array(
+			'post_type'      => 'product',
+			'post_status'    => 'publish',
+			'posts_per_page' => $per_page,
+			'paged'          => $page,
+			'orderby'        => 'title',
+			'order'          => 'ASC',
+		);
+
+		if ( ! empty( $search ) ) {
+			$args['s'] = $search;
+		}
+
+		$query = new WP_Query( $args );
+		$products = array();
+
+		if ( $query->have_posts() ) {
+			while ( $query->have_posts() ) {
+				$query->the_post();
+				$product = wc_get_product( get_the_ID() );
+				if ( $product ) {
+					$products[] = array(
+						'id'    => $product->get_id(),
+						'title' => $product->get_name(),
+						'price' => $product->get_price_html(),
+						'image' => $product->get_image_id() ? wp_get_attachment_image_url( $product->get_image_id(), 'thumbnail' ) : wc_placeholder_img_src(),
+					);
+				}
+			}
+			wp_reset_postdata();
+		}
+
+		wp_send_json_success( array(
+			'products' => $products,
+			'total'   => $query->found_posts,
+			'pages'   => $query->max_num_pages,
+		) );
+	}
+
+	/**
+	 * AJAX handler to save a product link for an Instagram media item.
+	 *
+	 * @return void
+	 */
+	function ajax_save_product_link() {
+		check_ajax_referer( 'wpz-insta-product-link', 'nonce' );
+
+		if ( ! current_user_can( 'edit_posts' ) || ! class_exists( 'WooCommerce' ) ) {
+			wp_send_json_error( array( 'message' => __( 'Permission denied.', 'instagram-widget-by-wpzoom' ) ) );
+		}
+
+		$feed_id = isset( $_POST['feed_id'] ) ? intval( $_POST['feed_id'] ) : 0;
+		$media_id = isset( $_POST['media_id'] ) ? sanitize_text_field( $_POST['media_id'] ) : '';
+		$product_id = isset( $_POST['product_id'] ) ? intval( $_POST['product_id'] ) : 0;
+
+		if ( empty( $feed_id ) || empty( $media_id ) ) {
+			wp_send_json_error( array( 'message' => __( 'Invalid feed ID or media ID.', 'instagram-widget-by-wpzoom' ) ) );
+		}
+
+		// Verify feed exists and user can edit it
+		$feed = get_post( $feed_id );
+		if ( ! $feed || 'wpz-insta_feed' !== $feed->post_type || ! current_user_can( 'edit_post', $feed_id ) ) {
+			wp_send_json_error( array( 'message' => __( 'Invalid feed or insufficient permissions.', 'instagram-widget-by-wpzoom' ) ) );
+		}
+
+		// If product_id is 0, remove the link
+		if ( $product_id > 0 ) {
+			// Verify product exists
+			$product = wc_get_product( $product_id );
+			if ( ! $product ) {
+				wp_send_json_error( array( 'message' => __( 'Invalid product ID.', 'instagram-widget-by-wpzoom' ) ) );
+			}
+		}
+
+		$result = Wpzoom_Instagram_Widget_Display::save_linked_product_id( $feed_id, $media_id, $product_id );
+
+		if ( $result ) {
+			$product_data = null;
+			if ( $product_id > 0 ) {
+				$product = wc_get_product( $product_id );
+				if ( $product ) {
+					$product_data = array(
+						'id'    => $product->get_id(),
+						'title' => $product->get_name(),
+						'price' => $product->get_price_html(),
+					);
+				}
+			}
+			wp_send_json_success( array(
+				'message'      => $product_id > 0 ? __( 'Product link saved successfully.', 'instagram-widget-by-wpzoom' ) : __( 'Product link removed successfully.', 'instagram-widget-by-wpzoom' ),
+				'product'      => $product_data,
+			) );
+		} else {
+			wp_send_json_error( array( 'message' => __( 'Failed to save product link.', 'instagram-widget-by-wpzoom' ) ) );
+		}
+	}
+
+	/**
+	 * AJAX handler to get the linked product for an Instagram media item.
+	 *
+	 * @return void
+	 */
+	function ajax_get_product_link() {
+		check_ajax_referer( 'wpz-insta-product-link', 'nonce' );
+
+		if ( ! current_user_can( 'edit_posts' ) || ! class_exists( 'WooCommerce' ) ) {
+			wp_send_json_error( array( 'message' => __( 'Permission denied.', 'instagram-widget-by-wpzoom' ) ) );
+		}
+
+		$feed_id = isset( $_POST['feed_id'] ) ? intval( $_POST['feed_id'] ) : 0;
+		$media_id = isset( $_POST['media_id'] ) ? sanitize_text_field( $_POST['media_id'] ) : '';
+
+		if ( empty( $feed_id ) || empty( $media_id ) ) {
+			wp_send_json_error( array( 'message' => __( 'Invalid feed ID or media ID.', 'instagram-widget-by-wpzoom' ) ) );
+		}
+
+		$product_id = Wpzoom_Instagram_Widget_Display::get_linked_product_id( $feed_id, $media_id );
+
+		if ( $product_id > 0 ) {
+			$product = wc_get_product( $product_id );
+			if ( $product ) {
+				wp_send_json_success( array(
+					'product' => array(
+						'id'    => $product->get_id(),
+						'title' => $product->get_name(),
+						'price' => $product->get_price_html(),
+						'image' => $product->get_image_id() ? wp_get_attachment_image_url( $product->get_image_id(), 'thumbnail' ) : wc_placeholder_img_src(),
+					),
+				) );
+			}
+		}
+
+		wp_send_json_success( array( 'product' => null ) );
 	}
 
 	function admin_body_class_filter( $classes ) {
@@ -1193,6 +1352,9 @@ class WPZOOM_Instagram_Widget_Settings {
 							<li class="active"><a href="<?php echo esc_url( '#config' ); ?>"><?php _e( 'Configure', 'instagram-widget-by-wpzoom' ); ?></a></li>
 							<li <?php echo $disabled_class; ?>><a href="<?php echo esc_url( '#design' ); ?>"><?php _e( 'Design', 'instagram-widget-by-wpzoom' ); ?></a></li>
 							<li <?php echo $disabled_class; ?>><a href="<?php echo esc_url( '#embed' ); ?>"><?php _e( 'Embed', 'instagram-widget-by-wpzoom' ); ?></a><?php echo $embed_pointer; ?></li>
+							<?php if ( class_exists( 'WooCommerce' ) ) : ?>
+							<li <?php echo $disabled_class; ?>><a href="<?php echo esc_url( '#product-links' ); ?>"><?php _e( 'Product Links', 'instagram-widget-by-wpzoom' ); ?> <?php if ( apply_filters( 'wpz-insta_is-pro', false ) ) : ?><span class="wpz-insta-new-badge"><?php esc_html_e( 'New', 'instagram-widget-by-wpzoom' ); ?></span><?php else : ?><span class="wpz-insta-pro-badge"><?php esc_html_e( 'PRO', 'instagram-widget-by-wpzoom' ); ?></span><?php endif; ?></a></li>
+							<?php endif; ?>
 						</ul>
 					</nav>
 				</div>
@@ -2126,6 +2288,41 @@ class WPZOOM_Instagram_Widget_Settings {
 								</div>
 							</div>
 						</div>
+
+						<?php if ( class_exists( 'WooCommerce' ) ) : ?>
+						<div class="wpz-insta_sidebar-left-section" data-id="#product-links">
+							<h4 class="wpz-insta_sidebar-section-big-title"><?php esc_html_e( 'Product Links', 'instagram-widget-by-wpzoom' ); ?></h4>
+
+							<div class="wpz-insta_sidebar-section wpz-insta_sidebar-section-product-links">
+								<h5 class="wpz-insta_sidebar-section-title smaller-title"><?php esc_html_e( 'Link Instagram Items to Products', 'instagram-widget-by-wpzoom' ); ?></h5>
+								<p class="wpz-insta_sidebar-section-description">
+									<?php esc_html_e( 'Link your Instagram posts to WooCommerce products. When a post is linked to a product, an "Add to Cart" button will appear on the frontend.', 'instagram-widget-by-wpzoom' ); ?>
+								</p>
+								<p class="wpz-insta_sidebar-section-description">
+									<?php esc_html_e( 'To link a post to a product, click the "Link to a product" button that appears on each Instagram item in the preview below.', 'instagram-widget-by-wpzoom' ); ?>
+								</p>
+							</div>
+
+							<div class="wpz-insta_sidebar-section wpz-insta_sidebar-section-product-links-settings">
+								<h5 class="wpz-insta_sidebar-section-title smaller-title"><?php esc_html_e( 'Settings', 'instagram-widget-by-wpzoom' ); ?></h5>
+								
+								<label class="wpz-insta_table-row">
+									<strong class="wpz-insta_table-cell"><?php esc_html_e( 'Show Add to Cart Button', 'instagram-widget-by-wpzoom' ); ?></strong>
+									<div class="wpz-insta_table-cell">
+										<input type="checkbox" name="_wpz-insta_show-add-to-cart" id="_wpz-insta_show-add-to-cart" value="1" class="preview-exclude"<?php checked( get_post_meta( $post->ID, '_wpz-insta_show-add-to-cart', true ), '1' ); ?> />
+										<label for="_wpz-insta_show-add-to-cart"><?php esc_html_e( 'Enable', 'instagram-widget-by-wpzoom' ); ?></label>
+									</div>
+								</label>
+
+								<label class="wpz-insta_table-row">
+									<strong class="wpz-insta_table-cell"><?php esc_html_e( 'Button Text', 'instagram-widget-by-wpzoom' ); ?></strong>
+									<div class="wpz-insta_table-cell">
+										<input type="text" name="_wpz-insta_add-to-cart-text" class="preview-exclude" value="<?php echo esc_attr( get_post_meta( $post->ID, '_wpz-insta_add-to-cart-text', true ) ?: __( 'Add to Cart', 'instagram-widget-by-wpzoom' ) ); ?>" />
+									</div>
+								</label>
+							</div>
+						</div>
+						<?php endif; ?>
 					</div>
 
 					<div class="wpz-insta_sidebar-right is-loading">
@@ -2837,6 +3034,17 @@ class WPZOOM_Instagram_Widget_Settings {
 					} else {
 						update_post_meta( $post_ID, $key, $args['default'] );
 					}
+				}
+			}
+
+			// Save WooCommerce product link settings
+			if ( class_exists( 'WooCommerce' ) ) {
+				$show_add_to_cart = isset( $_POST['_wpz-insta_show-add-to-cart'] ) ? '1' : '0';
+				update_post_meta( $post_ID, '_wpz-insta_show-add-to-cart', $show_add_to_cart );
+
+				if ( isset( $_POST['_wpz-insta_add-to-cart-text'] ) ) {
+					$add_to_cart_text = sanitize_text_field( $_POST['_wpz-insta_add-to-cart-text'] );
+					update_post_meta( $post_ID, '_wpz-insta_add-to-cart-text', $add_to_cart_text );
 				}
 			}
 
@@ -3733,7 +3941,30 @@ class WPZOOM_Instagram_Widget_Settings {
 					'default_user_thumbnail'            => WPZOOM_INSTAGRAM_PLUGIN_URL . 'dist/images/backend/icon-insta.png',
 					'post_edit_url'                     => admin_url( 'post.php?action=edit&post=' ),
 					'ajax_url'                          => admin_url( 'admin-ajax.php' ),
-                    'is_pro'                            => apply_filters( 'wpz-insta_is-pro', false ),
+					'is_pro'                            => apply_filters( 'wpz-insta_is-pro', false ),
+					'product_link_nonce'                 => wp_create_nonce( 'wpz-insta-product-link' ),
+					'strings'                            => array(
+						'linkProduct'    => __( 'Link to Product', 'instagram-widget-by-wpzoom' ),
+						'searchProducts'  => __( 'Search products...', 'instagram-widget-by-wpzoom' ),
+						'removeLink'      => __( 'Remove Link', 'instagram-widget-by-wpzoom' ),
+						'save'            => __( 'Save', 'instagram-widget-by-wpzoom' ),
+						'cancel'          => __( 'Cancel', 'instagram-widget-by-wpzoom' ),
+						'productLinksUpsellTitle'   => __( 'Unlock Product Links', 'instagram-widget-by-wpzoom' ),
+						'productLinksUpsellMessage' => __( 'Link your Instagram posts to WooCommerce products and show an Add to Cart button. This feature is available with an active Instagram Widget PRO license.', 'instagram-widget-by-wpzoom' ),
+						'productLinksUpsellCta'     => __( 'Get PRO License', 'instagram-widget-by-wpzoom' ),
+						'productLinksUpsellClose'   => __( 'Close', 'instagram-widget-by-wpzoom' ),
+					),
+					'product_links_upsell_url'          => apply_filters(
+						'wpz-insta_product-links-upsell-url',
+						add_query_arg(
+							array(
+								'utm_source'   => 'instagram_widget',
+								'utm_medium'   => 'plugin',
+								'utm_campaign' => 'product_links_upsell',
+							),
+							'https://www.wpzoom.com/plugins/instagram-widget/'
+						)
+					),
 				)
 			);
 		}
