@@ -361,7 +361,7 @@
             grid-auto-rows: 0;
 
             .zoom-instagram-widget__item {
-                img {
+                img:not(.wpz-insta-product-popover-item-img) {
                     aspect-ratio: 1;
                     height: 100% !important;
                 }
@@ -386,7 +386,7 @@
             .zoom-instagram-widget__item {
                 height: auto;
 
-                img {
+                img:not(.wpz-insta-product-popover-item-img) {
                     aspect-ratio: 1;
                     object-fit: cover;
                     height: auto;
@@ -448,12 +448,6 @@
 
 
 .zoom-instagram-widget__items {
-
-    .zoom-instagram-widget__item-inner-wrap {
-        position: relative;
-        height: 100%;
-        overflow: hidden;
-    }
 
     .zoom-instagram-widget__item .zoom-instagram-link {
         display: block;
@@ -538,7 +532,7 @@
 
     &.layout-grid {
         .zoom-instagram-widget__item {
-            img {
+            img:not(.wpz-insta-product-popover-item-img) {
                 width: 100%;
                 aspect-ratio: 1/1;
             }
@@ -550,7 +544,7 @@
         // width: 5000px;
 
         .zoom-instagram-widget__item {
-            img {
+            img:not(.wpz-insta-product-popover-item-img) {
                 aspect-ratio: 1;
             }
         }
@@ -563,7 +557,7 @@
         .zoom-instagram-widget__item {
             height: auto;
 
-            img {
+            img:not(.wpz-insta-product-popover-item-img) {
                 aspect-ratio: 1;
                 height: auto;
                 width: 100%;
@@ -1245,10 +1239,18 @@ a.ig-b-v-24:hover {
     background: #fafafa;
 
     .wpz-insta-lightbox-product__item {
+        &:not(:last-child) {
+            border-bottom: 1px solid #efefef;
+            padding-bottom: 12px;
+        }
         display: flex;
         flex-wrap: wrap;
         align-items: center;
         gap: 12px;
+
+        &:hover {
+            opacity: 0.8;
+        }
     }
 
     .wpz-insta-lightbox-product__link {
@@ -1295,6 +1297,8 @@ a.ig-b-v-24:hover {
     }
 
     .wpz-insta-lightbox-product__add-to-cart {
+        color: #fff;
+        background-color: #0095f6;
         flex-shrink: 0;
         padding: 8px 14px;
         font-size: 13px;
@@ -1879,6 +1883,7 @@ a.ig-b-v-24:hover {
 .wpz-insta-product-popover-item-img {
     width: 44px;
     height: 44px;
+    max-width: 46px !important;
     object-fit: cover;
     border-radius: 4px;
     flex-shrink: 0;

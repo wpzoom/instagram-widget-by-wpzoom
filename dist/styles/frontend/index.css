@@ -290,7 +290,7 @@
   grid-template-rows: auto;
   grid-auto-rows: 0;
 }
-.zoom-instagram .zoom-instagram-widget__items.layout-fullwidth .zoom-instagram-widget__item img {
+.zoom-instagram .zoom-instagram-widget__items.layout-fullwidth .zoom-instagram-widget__item img:not(.wpz-insta-product-popover-item-img) {
   aspect-ratio: 1;
   height: 100% !important;
 }
@@ -306,7 +306,7 @@
 .zoom-instagram .zoom-instagram-widget__items.layout-carousel .zoom-instagram-widget__item {
   height: auto;
 }
-.zoom-instagram .zoom-instagram-widget__items.layout-carousel .zoom-instagram-widget__item img {
+.zoom-instagram .zoom-instagram-widget__items.layout-carousel .zoom-instagram-widget__item img:not(.wpz-insta-product-popover-item-img) {
   aspect-ratio: 1;
   -o-object-fit: cover;
      object-fit: cover;
@@ -351,11 +351,6 @@
   margin: 0 0 15px;
 }
 
-.zoom-instagram-widget__items .zoom-instagram-widget__item-inner-wrap {
-  position: relative;
-  height: 100%;
-  overflow: hidden;
-}
 .zoom-instagram-widget__items .zoom-instagram-widget__item .zoom-instagram-link {
   display: block;
   background-size: cover !important;
@@ -427,13 +422,13 @@
 .widget.zoom-new-instagram-widget .zoom-instagram-widget__items::after {
   display: none;
 }
-.widget_block .zoom-instagram-widget__items.layout-grid .zoom-instagram-widget__item img,
-.widget.zoom-new-instagram-widget .zoom-instagram-widget__items.layout-grid .zoom-instagram-widget__item img {
+.widget_block .zoom-instagram-widget__items.layout-grid .zoom-instagram-widget__item img:not(.wpz-insta-product-popover-item-img),
+.widget.zoom-new-instagram-widget .zoom-instagram-widget__items.layout-grid .zoom-instagram-widget__item img:not(.wpz-insta-product-popover-item-img) {
   width: 100%;
   aspect-ratio: 1/1;
 }
-.widget_block .zoom-instagram-widget__items.layout-fullwidth .zoom-instagram-widget__item img,
-.widget.zoom-new-instagram-widget .zoom-instagram-widget__items.layout-fullwidth .zoom-instagram-widget__item img {
+.widget_block .zoom-instagram-widget__items.layout-fullwidth .zoom-instagram-widget__item img:not(.wpz-insta-product-popover-item-img),
+.widget.zoom-new-instagram-widget .zoom-instagram-widget__items.layout-fullwidth .zoom-instagram-widget__item img:not(.wpz-insta-product-popover-item-img) {
   aspect-ratio: 1;
 }
 .widget_block .zoom-instagram-widget__items.layout-carousel,
@@ -445,8 +440,8 @@
 .widget.zoom-new-instagram-widget .zoom-instagram-widget__items.layout-carousel .zoom-instagram-widget__item {
   height: auto;
 }
-.widget_block .zoom-instagram-widget__items.layout-carousel .zoom-instagram-widget__item img,
-.widget.zoom-new-instagram-widget .zoom-instagram-widget__items.layout-carousel .zoom-instagram-widget__item img {
+.widget_block .zoom-instagram-widget__items.layout-carousel .zoom-instagram-widget__item img:not(.wpz-insta-product-popover-item-img),
+.widget.zoom-new-instagram-widget .zoom-instagram-widget__items.layout-carousel .zoom-instagram-widget__item img:not(.wpz-insta-product-popover-item-img) {
   aspect-ratio: 1;
   height: auto;
   width: 100%;
@@ -1019,11 +1014,18 @@ a.ig-b-v-24:hover {
   border-bottom: 1px solid #efefef;
   background: #fafafa;
 }
+.wpz-insta-lightbox-wrapper .wpz-insta-lightbox .details-wrapper .wpz-insta-lightbox-product .wpz-insta-lightbox-product__item:not(:last-child) {
+  border-bottom: 1px solid #efefef;
+  padding-bottom: 12px;
+}
 .wpz-insta-lightbox-wrapper .wpz-insta-lightbox .details-wrapper .wpz-insta-lightbox-product .wpz-insta-lightbox-product__item {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: 12px;
+}
+.wpz-insta-lightbox-wrapper .wpz-insta-lightbox .details-wrapper .wpz-insta-lightbox-product .wpz-insta-lightbox-product__item:hover {
+  opacity: 0.8;
 }
 .wpz-insta-lightbox-wrapper .wpz-insta-lightbox .details-wrapper .wpz-insta-lightbox-product .wpz-insta-lightbox-product__link {
   display: flex;
@@ -1064,6 +1066,8 @@ a.ig-b-v-24:hover {
   font-weight: 600;
 }
 .wpz-insta-lightbox-wrapper .wpz-insta-lightbox .details-wrapper .wpz-insta-lightbox-product .wpz-insta-lightbox-product__add-to-cart {
+  color: #fff;
+  background-color: #0095f6;
   flex-shrink: 0;
   padding: 8px 14px;
   font-size: 13px;
@@ -1576,6 +1580,7 @@ a.ig-b-v-24:hover {
 .wpz-insta-product-popover-item-img {
   width: 44px;
   height: 44px;
+  max-width: 46px !important;
   -o-object-fit: cover;
      object-fit: cover;
   border-radius: 4px;
