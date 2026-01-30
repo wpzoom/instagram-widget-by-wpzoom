@@ -2286,62 +2286,61 @@ class WPZOOM_Instagram_Widget_Settings {
 						<div class="wpz-insta_sidebar-left-section" data-id="#product-links">
 							<h4 class="wpz-insta_sidebar-section-big-title"><?php esc_html_e( 'Product Links', 'instagram-widget-by-wpzoom' ); ?></h4>
 
-							<div class="wpz-insta_sidebar-section wpz-insta_sidebar-section-product-links">
+							<div class="wpz-insta_sidebar-section wpz-insta_sidebar-section-product-links-intro no-top-border">
 								<h5 class="wpz-insta_sidebar-section-title smaller-title"><?php esc_html_e( 'Link Instagram Items to Products', 'instagram-widget-by-wpzoom' ); ?></h5>
-								<p class="wpz-insta_sidebar-section-description">
-									<?php esc_html_e( 'Link your Instagram posts to WooCommerce products. When a post is linked to a product, an "Add to Cart" button will appear on the frontend.', 'instagram-widget-by-wpzoom' ); ?>
-								</p>
-								<p class="wpz-insta_sidebar-section-description">
-									<?php esc_html_e( 'To link a post to a product, click the "Link to a product" button that appears on each Instagram item in the preview below.', 'instagram-widget-by-wpzoom' ); ?>
-								</p>
+								<div class="wpz-insta_sidebar-section-description">
+									<p><?php esc_html_e( 'Link your Instagram posts to WooCommerce products. When a post is linked to a product, an "Add to Cart" button will appear on the frontend.', 'instagram-widget-by-wpzoom' ); ?></p>
+									<p><?php esc_html_e( 'To link a post to a product, click the "Link to a product" button that appears on each Instagram item in the preview below.', 'instagram-widget-by-wpzoom' ); ?></p>
+								</div>
 							</div>
 
 							<div class="wpz-insta_sidebar-section wpz-insta_sidebar-section-product-links-settings">
 								<h5 class="wpz-insta_sidebar-section-title smaller-title"><?php esc_html_e( 'Settings', 'instagram-widget-by-wpzoom' ); ?></h5>
-								
-								<label class="wpz-insta_table-row">
-									<strong class="wpz-insta_table-cell"><?php esc_html_e( 'Show products', 'instagram-widget-by-wpzoom' ); ?></strong>
-									<div class="wpz-insta_table-cell">
-										<input type="checkbox" name="_wpz-insta_show-add-to-cart" id="_wpz-insta_show-add-to-cart" value="1" class="preview-exclude"<?php checked( get_post_meta( $post->ID, '_wpz-insta_show-add-to-cart', true ), '1' ); ?> />
-										<label for="_wpz-insta_show-add-to-cart"><?php esc_html_e( 'Enable', 'instagram-widget-by-wpzoom' ); ?></label>
-									</div>
-								</label>
+								<div class="wpz-insta_product-links-general wpz-insta_table">
+									<label class="wpz-insta_table-row">
+										<strong class="wpz-insta_table-cell"><?php esc_html_e( 'Show products', 'instagram-widget-by-wpzoom' ); ?></strong>
+										<div class="wpz-insta_table-cell">
+											<input type="checkbox" name="_wpz-insta_show-add-to-cart" id="_wpz-insta_show-add-to-cart" value="1" class="preview-exclude"<?php checked( get_post_meta( $post->ID, '_wpz-insta_show-add-to-cart', true ), '1' ); ?> />
+											<label for="_wpz-insta_show-add-to-cart"><?php esc_html_e( 'Enable', 'instagram-widget-by-wpzoom' ); ?></label>
+										</div>
+									</label>
 
-								<label class="wpz-insta_table-row wpz-insta-product-links-display-type-row">
-									<strong class="wpz-insta_table-cell"><?php esc_html_e( 'Display', 'instagram-widget-by-wpzoom' ); ?></strong>
-									<div class="wpz-insta_table-cell">
-										<select name="_wpz-insta_product-links-display-type" id="_wpz-insta_product-links-display-type" class="preview-exclude">
-											<option value="button" <?php selected( get_post_meta( $post->ID, '_wpz-insta_product-links-display-type', true ), 'button' ); ?>><?php esc_html_e( 'Add to Cart button', 'instagram-widget-by-wpzoom' ); ?></option>
-											<option value="icon" <?php selected( get_post_meta( $post->ID, '_wpz-insta_product-links-display-type', true ), 'icon' ); ?>><?php esc_html_e( 'Icon with popover', 'instagram-widget-by-wpzoom' ); ?></option>
-										</select>
-									</div>
-								</label>
+									<label class="wpz-insta_table-row wpz-insta-product-links-display-type-row">
+										<strong class="wpz-insta_table-cell"><?php esc_html_e( 'Display', 'instagram-widget-by-wpzoom' ); ?></strong>
+										<div class="wpz-insta_table-cell">
+											<select name="_wpz-insta_product-links-display-type" id="_wpz-insta_product-links-display-type" class="preview-exclude">
+												<option value="button" <?php selected( get_post_meta( $post->ID, '_wpz-insta_product-links-display-type', true ), 'button' ); ?>><?php esc_html_e( 'Add to Cart button', 'instagram-widget-by-wpzoom' ); ?></option>
+												<option value="icon" <?php selected( get_post_meta( $post->ID, '_wpz-insta_product-links-display-type', true ), 'icon' ); ?>><?php esc_html_e( 'Icon with popover', 'instagram-widget-by-wpzoom' ); ?></option>
+											</select>
+										</div>
+									</label>
 
-								<label class="wpz-insta_table-row wpz-insta-product-links-popover-title-row">
-									<strong class="wpz-insta_table-cell"><?php esc_html_e( 'Popover title', 'instagram-widget-by-wpzoom' ); ?></strong>
-									<div class="wpz-insta_table-cell">
-										<input type="text" name="_wpz-insta_product-links-popover-title" class="preview-exclude" value="<?php echo esc_attr( get_post_meta( $post->ID, '_wpz-insta_product-links-popover-title', true ) ?: __( 'Related products', 'instagram-widget-by-wpzoom' ) ); ?>" placeholder="<?php esc_attr_e( 'Related products', 'instagram-widget-by-wpzoom' ); ?>" />
-									</div>
-								</label>
+									<label class="wpz-insta_table-row wpz-insta-product-links-popover-title-row">
+										<strong class="wpz-insta_table-cell"><?php esc_html_e( 'Popover title', 'instagram-widget-by-wpzoom' ); ?></strong>
+										<div class="wpz-insta_table-cell">
+											<input type="text" name="_wpz-insta_product-links-popover-title" class="preview-exclude" value="<?php echo esc_attr( get_post_meta( $post->ID, '_wpz-insta_product-links-popover-title', true ) ?: __( 'Related products', 'instagram-widget-by-wpzoom' ) ); ?>" placeholder="<?php esc_attr_e( 'Related products', 'instagram-widget-by-wpzoom' ); ?>" />
+										</div>
+									</label>
 
-								<label class="wpz-insta_table-row wpz-insta-product-links-icon-position-row">
-									<strong class="wpz-insta_table-cell"><?php esc_html_e( 'Icon position', 'instagram-widget-by-wpzoom' ); ?></strong>
-									<div class="wpz-insta_table-cell">
-										<select name="_wpz-insta_product-links-icon-position" id="_wpz-insta_product-links-icon-position" class="preview-exclude">
-											<option value="top-left" <?php selected( get_post_meta( $post->ID, '_wpz-insta_product-links-icon-position', true ), 'top-left' ); ?>><?php esc_html_e( 'Top left', 'instagram-widget-by-wpzoom' ); ?></option>
-											<option value="top-right" <?php selected( get_post_meta( $post->ID, '_wpz-insta_product-links-icon-position', true ), 'top-right' ); ?>><?php esc_html_e( 'Top right', 'instagram-widget-by-wpzoom' ); ?></option>
-											<option value="bottom-left" <?php selected( get_post_meta( $post->ID, '_wpz-insta_product-links-icon-position', true ), 'bottom-left' ); ?>><?php esc_html_e( 'Bottom left', 'instagram-widget-by-wpzoom' ); ?></option>
-											<option value="bottom-right" <?php selected( get_post_meta( $post->ID, '_wpz-insta_product-links-icon-position', true ) ?: 'bottom-right', 'bottom-right' ); ?>><?php esc_html_e( 'Bottom right', 'instagram-widget-by-wpzoom' ); ?></option>
-										</select>
-									</div>
-								</label>
+									<label class="wpz-insta_table-row wpz-insta-product-links-icon-position-row">
+										<strong class="wpz-insta_table-cell"><?php esc_html_e( 'Icon position', 'instagram-widget-by-wpzoom' ); ?></strong>
+										<div class="wpz-insta_table-cell">
+											<select name="_wpz-insta_product-links-icon-position" id="_wpz-insta_product-links-icon-position" class="preview-exclude">
+												<option value="top-left" <?php selected( get_post_meta( $post->ID, '_wpz-insta_product-links-icon-position', true ), 'top-left' ); ?>><?php esc_html_e( 'Top left', 'instagram-widget-by-wpzoom' ); ?></option>
+												<option value="top-right" <?php selected( get_post_meta( $post->ID, '_wpz-insta_product-links-icon-position', true ), 'top-right' ); ?>><?php esc_html_e( 'Top right', 'instagram-widget-by-wpzoom' ); ?></option>
+												<option value="bottom-left" <?php selected( get_post_meta( $post->ID, '_wpz-insta_product-links-icon-position', true ), 'bottom-left' ); ?>><?php esc_html_e( 'Bottom left', 'instagram-widget-by-wpzoom' ); ?></option>
+												<option value="bottom-right" <?php selected( ( get_post_meta( $post->ID, '_wpz-insta_product-links-icon-position', true ) ?: 'bottom-right' ), 'bottom-right' ); ?>><?php esc_html_e( 'Bottom right', 'instagram-widget-by-wpzoom' ); ?></option>
+											</select>
+										</div>
+									</label>
 
-								<label class="wpz-insta_table-row wpz-insta-add-to-cart-button-row">
-									<strong class="wpz-insta_table-cell"><?php esc_html_e( 'Button text', 'instagram-widget-by-wpzoom' ); ?></strong>
-									<div class="wpz-insta_table-cell">
-										<input type="text" name="_wpz-insta_add-to-cart-text" class="preview-exclude" value="<?php echo esc_attr( get_post_meta( $post->ID, '_wpz-insta_add-to-cart-text', true ) ?: __( 'Add to Cart', 'instagram-widget-by-wpzoom' ) ); ?>" />
-									</div>
-								</label>
+									<label class="wpz-insta_table-row wpz-insta-add-to-cart-button-row">
+										<strong class="wpz-insta_table-cell"><?php esc_html_e( 'Button text', 'instagram-widget-by-wpzoom' ); ?></strong>
+										<div class="wpz-insta_table-cell">
+											<input type="text" name="_wpz-insta_add-to-cart-text" class="preview-exclude" value="<?php echo esc_attr( get_post_meta( $post->ID, '_wpz-insta_add-to-cart-text', true ) ?: __( 'Add to Cart', 'instagram-widget-by-wpzoom' ) ); ?>" />
+										</div>
+									</label>
+								</div>
 							</div>
 						</div>
 						<?php endif; ?>
