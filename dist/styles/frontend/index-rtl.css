@@ -28,7 +28,6 @@
 /* styling just for the block */
 .zoom-instagram {
   font-size: 14px;
-  overflow: hidden;
   display: block; /* fix for Neve theme's display: flex; */
 }
 .zoom-instagram img {
@@ -263,9 +262,6 @@
 .zoom-instagram .zoom-instagram-widget__footer .wpzinsta-pro-load-more.loading button[type=submit]::before {
   width: 18px;
 }
-.zoom-instagram .zoom-instagram-widget__items-wrapper {
-  overflow: hidden;
-}
 .zoom-instagram .zoom-instagram-widget__items {
   list-style: none !important;
   padding: 0;
@@ -405,11 +401,6 @@
 .widget.zoom-instagram-widget ul li.zoom-instagram-widget__item,
 .widget.zoom-new-instagram-widget ul li.zoom-instagram-widget__item {
   padding: 0;
-}
-
-.widget_block .zoom-instagram-widget__items-wrapper,
-.widget.zoom-new-instagram-widget .zoom-instagram-widget__items-wrapper {
-  overflow: hidden;
 }
 
 .widget_block .zoom-instagram-widget__items,
@@ -1066,15 +1057,16 @@ a.ig-b-v-24:hover {
   font-weight: 600;
 }
 .wpz-insta-lightbox-wrapper .wpz-insta-lightbox .details-wrapper .wpz-insta-lightbox-product .wpz-insta-lightbox-product__add-to-cart {
-  color: #fff;
-  background-color: #0095f6;
   flex-shrink: 0;
   padding: 8px 14px;
   font-size: 13px;
   font-weight: 600;
   text-decoration: none;
-  border-radius: 4px;
   white-space: nowrap;
+  transition: background-color 0.2s;
+}
+.wpz-insta-lightbox-wrapper .wpz-insta-lightbox .details-wrapper .wpz-insta-lightbox-product .wpz-insta-lightbox-product__add-to-cart:hover {
+  background-color: var(--wpz-insta-atc-hover, #135e96) !important;
 }
 
 .wpz-insta-lightbox-wrapper .wpz-insta-lightbox .details-wrapper .view-post {
@@ -1438,14 +1430,14 @@ a.ig-b-v-24:hover {
 }
 
 .wpz-insta-add-to-cart-btn {
-  background-color: #2271b1;
+  background-color: var(--wpz-insta-atc-bg, #2271b1);
   display: flex;
   justify-content: center;
   align-items: center;
-  color: #fff !important;
+  color: var(--wpz-insta-atc-color, #fff) !important;
   border: none;
   padding: 10px 20px;
-  border-radius: 3px;
+  border-radius: var(--wpz-insta-atc-radius, 3px);
   text-decoration: none;
   font-size: 14px;
   font-weight: 600;
@@ -1453,8 +1445,8 @@ a.ig-b-v-24:hover {
   transition: background 0.2s;
 }
 .wpz-insta-add-to-cart-btn:hover {
-  background: #135e96;
-  color: #fff !important;
+  background: var(--wpz-insta-atc-hover-bg, #135e96);
+  color: var(--wpz-insta-atc-color, #fff) !important;
 }
 
 .wpz-insta-product-icon-wrap {

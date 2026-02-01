@@ -539,7 +539,8 @@
   width: auto;
   padding-left: 30px;
 }
-.wpz-insta-admin #wpbody-content > .wrap .wp-picker-container .wp-picker-input-wrap .wp-picker-clear {
+.wpz-insta-admin #wpbody-content > .wrap .wp-picker-container .wp-picker-input-wrap .wp-picker-clear,
+.wpz-insta-admin #wpbody-content > .wrap .wp-picker-container .wp-picker-input-wrap .wp-picker-default {
   display: none;
 }
 .wpz-insta-admin #wpbody-content > .wrap .wp-picker-container .wp-picker-holder {
@@ -1485,7 +1486,8 @@
 .wpz-insta-admin #wpbody-content > .wrap .wpz-insta_sidebar-section .wpz-insta_feed-general,
 .wpz-insta-admin #wpbody-content > .wrap .wpz-insta_sidebar-section .wpz-insta_feed-profile-general,
 .wpz-insta-admin #wpbody-content > .wrap .wpz-insta_sidebar-section .wpz-insta_feed-load-more-general,
-.wpz-insta-admin #wpbody-content > .wrap .wpz-insta_sidebar-section .wpz-insta_product-links-general {
+.wpz-insta-admin #wpbody-content > .wrap .wpz-insta_sidebar-section .wpz-insta_product-links-general,
+.wpz-insta-admin #wpbody-content > .wrap .wpz-insta_sidebar-section .wpz-insta_product-links-design {
   font-size: 14px;
 }
 .wpz-insta-admin #wpbody-content > .wrap .wpz-insta_sidebar-section .wpz-insta_table {

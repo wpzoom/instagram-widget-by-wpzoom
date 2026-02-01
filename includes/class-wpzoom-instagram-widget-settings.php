@@ -2297,20 +2297,12 @@ class WPZOOM_Instagram_Widget_Settings {
 							<div class="wpz-insta_sidebar-section wpz-insta_sidebar-section-product-links-settings">
 								<h5 class="wpz-insta_sidebar-section-title smaller-title"><?php esc_html_e( 'Settings', 'instagram-widget-by-wpzoom' ); ?></h5>
 								<div class="wpz-insta_product-links-general wpz-insta_table">
-									<label class="wpz-insta_table-row">
-										<strong class="wpz-insta_table-cell"><?php esc_html_e( 'Show products', 'instagram-widget-by-wpzoom' ); ?></strong>
-										<div class="wpz-insta_table-cell">
-											<input type="checkbox" name="_wpz-insta_show-add-to-cart" id="_wpz-insta_show-add-to-cart" value="1" class="preview-exclude"<?php checked( get_post_meta( $post->ID, '_wpz-insta_show-add-to-cart', true ), '1' ); ?> />
-											<label for="_wpz-insta_show-add-to-cart"><?php esc_html_e( 'Enable', 'instagram-widget-by-wpzoom' ); ?></label>
-										</div>
-									</label>
-
 									<label class="wpz-insta_table-row wpz-insta-product-links-display-type-row">
 										<strong class="wpz-insta_table-cell"><?php esc_html_e( 'Display', 'instagram-widget-by-wpzoom' ); ?></strong>
 										<div class="wpz-insta_table-cell">
 											<select name="_wpz-insta_product-links-display-type" id="_wpz-insta_product-links-display-type" class="preview-exclude">
+												<option value="icon" <?php selected( ( get_post_meta( $post->ID, '_wpz-insta_product-links-display-type', true ) ?: 'icon' ), 'icon' ); ?>><?php esc_html_e( 'Icon with popover', 'instagram-widget-by-wpzoom' ); ?></option>
 												<option value="button" <?php selected( get_post_meta( $post->ID, '_wpz-insta_product-links-display-type', true ), 'button' ); ?>><?php esc_html_e( 'Add to Cart button', 'instagram-widget-by-wpzoom' ); ?></option>
-												<option value="icon" <?php selected( get_post_meta( $post->ID, '_wpz-insta_product-links-display-type', true ), 'icon' ); ?>><?php esc_html_e( 'Icon with popover', 'instagram-widget-by-wpzoom' ); ?></option>
 											</select>
 										</div>
 									</label>
@@ -2338,6 +2330,36 @@ class WPZOOM_Instagram_Widget_Settings {
 										<strong class="wpz-insta_table-cell"><?php esc_html_e( 'Button text', 'instagram-widget-by-wpzoom' ); ?></strong>
 										<div class="wpz-insta_table-cell">
 											<input type="text" name="_wpz-insta_add-to-cart-text" class="preview-exclude" value="<?php echo esc_attr( get_post_meta( $post->ID, '_wpz-insta_add-to-cart-text', true ) ?: __( 'Add to Cart', 'instagram-widget-by-wpzoom' ) ); ?>" />
+										</div>
+									</label>
+								</div>
+							</div>
+
+							<div class="wpz-insta_sidebar-section wpz-insta_sidebar-section-product-links-design">
+								<h4 class="wpz-insta_sidebar-section-title"><?php esc_html_e( 'Design', 'instagram-widget-by-wpzoom' ); ?></h4>
+								<div class="wpz-insta_product-links-design wpz-insta_table">
+									<label class="wpz-insta_table-row">
+										<strong class="wpz-insta_table-cell"><?php esc_html_e( 'Background', 'instagram-widget-by-wpzoom' ); ?></strong>
+										<div class="wpz-insta_table-cell">
+											<input type="text" name="_wpz-insta_add-to-cart-bg" id="_wpz-insta_add-to-cart-bg" value="<?php echo esc_attr( get_post_meta( $post->ID, '_wpz-insta_add-to-cart-bg', true ) ?: '#2271b1' ); ?>" size="8" class="wpz-insta_color-picker wp-color-picker preview-exclude" data-default-color="#2271b1" />
+										</div>
+									</label>
+									<label class="wpz-insta_table-row">
+										<strong class="wpz-insta_table-cell"><?php esc_html_e( 'Text color', 'instagram-widget-by-wpzoom' ); ?></strong>
+										<div class="wpz-insta_table-cell">
+											<input type="text" name="_wpz-insta_add-to-cart-color" id="_wpz-insta_add-to-cart-color" value="<?php echo esc_attr( get_post_meta( $post->ID, '_wpz-insta_add-to-cart-color', true ) ?: '#ffffff' ); ?>" size="8" class="wpz-insta_color-picker wp-color-picker preview-exclude" data-default-color="#ffffff" />
+										</div>
+									</label>
+									<label class="wpz-insta_table-row">
+										<strong class="wpz-insta_table-cell"><?php esc_html_e( 'Hover background', 'instagram-widget-by-wpzoom' ); ?></strong>
+										<div class="wpz-insta_table-cell">
+											<input type="text" name="_wpz-insta_add-to-cart-hover-bg" id="_wpz-insta_add-to-cart-hover-bg" value="<?php echo esc_attr( get_post_meta( $post->ID, '_wpz-insta_add-to-cart-hover-bg', true ) ?: '#135e96' ); ?>" size="8" class="wpz-insta_color-picker wp-color-picker preview-exclude" data-default-color="#135e96" />
+										</div>
+									</label>
+									<label class="wpz-insta_table-row">
+										<strong class="wpz-insta_table-cell"><?php esc_html_e( 'Border radius', 'instagram-widget-by-wpzoom' ); ?></strong>
+										<div class="wpz-insta_table-cell">
+											<input type="text" name="_wpz-insta_add-to-cart-border-radius" id="_wpz-insta_add-to-cart-border-radius" class="preview-exclude" value="<?php echo esc_attr( get_post_meta( $post->ID, '_wpz-insta_add-to-cart-border-radius', true ) ?: '3px' ); ?>" placeholder="3px" />
 										</div>
 									</label>
 								</div>
@@ -3060,9 +3082,6 @@ class WPZOOM_Instagram_Widget_Settings {
 
 			// Save WooCommerce product link settings
 			if ( class_exists( 'WooCommerce' ) ) {
-				$show_add_to_cart = isset( $_POST['_wpz-insta_show-add-to-cart'] ) ? '1' : '0';
-				update_post_meta( $post_ID, '_wpz-insta_show-add-to-cart', $show_add_to_cart );
-
 				if ( isset( $_POST['_wpz-insta_add-to-cart-text'] ) ) {
 					$add_to_cart_text = sanitize_text_field( $_POST['_wpz-insta_add-to-cart-text'] );
 					update_post_meta( $post_ID, '_wpz-insta_add-to-cart-text', $add_to_cart_text );
@@ -3075,6 +3094,23 @@ class WPZOOM_Instagram_Widget_Settings {
 				}
 				if ( isset( $_POST['_wpz-insta_product-links-icon-position'] ) && in_array( $_POST['_wpz-insta_product-links-icon-position'], array( 'top-left', 'top-right', 'bottom-left', 'bottom-right' ), true ) ) {
 					update_post_meta( $post_ID, '_wpz-insta_product-links-icon-position', sanitize_text_field( $_POST['_wpz-insta_product-links-icon-position'] ) );
+				}
+				// Add to cart button styling
+				if ( isset( $_POST['_wpz-insta_add-to-cart-bg'] ) ) {
+					$val = sanitize_text_field( $_POST['_wpz-insta_add-to-cart-bg'] );
+					update_post_meta( $post_ID, '_wpz-insta_add-to-cart-bg', $val ?: '#2271b1' );
+				}
+				if ( isset( $_POST['_wpz-insta_add-to-cart-color'] ) ) {
+					$val = sanitize_text_field( $_POST['_wpz-insta_add-to-cart-color'] );
+					update_post_meta( $post_ID, '_wpz-insta_add-to-cart-color', $val ?: '#ffffff' );
+				}
+				if ( isset( $_POST['_wpz-insta_add-to-cart-hover-bg'] ) ) {
+					$val = sanitize_text_field( $_POST['_wpz-insta_add-to-cart-hover-bg'] );
+					update_post_meta( $post_ID, '_wpz-insta_add-to-cart-hover-bg', $val ?: '#135e96' );
+				}
+				if ( isset( $_POST['_wpz-insta_add-to-cart-border-radius'] ) ) {
+					$val = sanitize_text_field( $_POST['_wpz-insta_add-to-cart-border-radius'] );
+					update_post_meta( $post_ID, '_wpz-insta_add-to-cart-border-radius', $val ?: '3px' );
 				}
 			}
 

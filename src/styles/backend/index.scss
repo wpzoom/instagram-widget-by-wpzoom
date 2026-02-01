@@ -674,7 +674,8 @@
 						padding-left: 30px;
 					}
 
-					.wp-picker-clear {
+					.wp-picker-clear,
+					.wp-picker-default {
 						display: none;
 					}
 				}
@@ -1868,7 +1869,8 @@
 				.wpz-insta_feed-general,
 				.wpz-insta_feed-profile-general,
 				.wpz-insta_feed-load-more-general,
-				.wpz-insta_product-links-general {
+				.wpz-insta_product-links-general,
+				.wpz-insta_product-links-design {
 					font-size: 14px;
 				}
 

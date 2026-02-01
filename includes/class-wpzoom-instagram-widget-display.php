@@ -512,8 +512,23 @@ class Wpzoom_Instagram_Widget_Display {
 					// Instead of setting API instance state (which causes collisions), 
 					// we'll pass parameters directly to get_items() call
 
+					$wrapper_style = '';
 					if ( isset( $args['feed-id'] ) ) {
 						$wrapper_classes .= sprintf( ' feed-%d', intval( $args['feed-id'] ) );
+						if ( class_exists( 'WooCommerce' ) && apply_filters( 'wpz-insta_is-pro', false ) ) {
+							$feed_id = intval( $args['feed-id'] );
+							$atc_bg    = get_post_meta( $feed_id, '_wpz-insta_add-to-cart-bg', true ) ?: '#2271b1';
+							$atc_color = get_post_meta( $feed_id, '_wpz-insta_add-to-cart-color', true ) ?: '#ffffff';
+							$atc_hover = get_post_meta( $feed_id, '_wpz-insta_add-to-cart-hover-bg', true ) ?: '#135e96';
+							$atc_radius = get_post_meta( $feed_id, '_wpz-insta_add-to-cart-border-radius', true ) ?: '3px';
+							$wrapper_style = sprintf(
+								'--wpz-insta-atc-bg:%s;--wpz-insta-atc-color:%s;--wpz-insta-atc-hover-bg:%s;--wpz-insta-atc-radius:%s;',
+								esc_attr( $atc_bg ),
+								esc_attr( $atc_color ),
+								esc_attr( $atc_hover ),
+								esc_attr( $atc_radius )
+							);
+						}
 					}
 
 					if ( isset( $args['extra-attrs'] ) && is_array( $args['extra-attrs'] ) && isset( $args['extra-attrs']['align'] ) ) {
@@ -582,7 +597,7 @@ class Wpzoom_Instagram_Widget_Display {
 					);
 					$errors = $this->api->errors->get_error_messages();
 
-					$output .= '<div class="zoom-instagram' . $wrapper_classes . '">';
+					$output .= '<div class="zoom-instagram' . $wrapper_classes . '"' . ( $wrapper_style ? ' style="' . $wrapper_style . '"' : '' ) . '>';
 
 					if ( ! is_array( $items ) ) {
 						return $this->get_errors( $errors );
@@ -997,14 +1012,14 @@ class Wpzoom_Instagram_Widget_Display {
 					}
 				}
 
+				$output .= '</div>';
+
 				// Add product badge/icon+popover or "Add to Cart" button in frontend (PRO + valid license only)
 				if ( ! $preview && class_exists( 'WooCommerce' ) && ! empty( $media_id ) && apply_filters( 'wpz-insta_is-pro', false ) ) {
 					$feed_id = isset( $args['feed-id'] ) ? intval( $args['feed-id'] ) : 0;
 					$linked_ids = self::get_linked_product_ids( $feed_id, $media_id );
 					if ( ! empty( $linked_ids ) ) {
-						$show_products = get_post_meta( $feed_id, '_wpz-insta_show-add-to-cart', true );
-						if ( $show_products ) {
-							$display_type = get_post_meta( $feed_id, '_wpz-insta_product-links-display-type', true ) ?: 'button';
+							$display_type = get_post_meta( $feed_id, '_wpz-insta_product-links-display-type', true ) ?: 'icon';
 							$icon_position = get_post_meta( $feed_id, '_wpz-insta_product-links-icon-position', true ) ?: 'bottom-right';
 							$popover_title = get_post_meta( $feed_id, '_wpz-insta_product-links-popover-title', true ) ?: __( 'Related products', 'instagram-widget-by-wpzoom' );
 							$add_to_cart_text = get_post_meta( $feed_id, '_wpz-insta_add-to-cart-text', true ) ?: __( 'Add to Cart', 'instagram-widget-by-wpzoom' );
@@ -1051,11 +1066,10 @@ class Wpzoom_Instagram_Widget_Display {
 									}
 								}
 							}
-						}
 					}
 				}
 
-				$output .= '</div></li>';
+				$output .= '</li>';
 
 				if ( ++ $count === $amount ) {
 					break;
@@ -1163,10 +1177,18 @@ class Wpzoom_Instagram_Widget_Display {
 					if ( $feed_id > 0 && class_exists( 'WooCommerce' ) && ! empty( $media_id ) && apply_filters( 'wpz-insta_is-pro', false ) ) {
 						$linked_ids = self::get_linked_product_ids( $feed_id, $media_id );
 						if ( ! empty( $linked_ids ) ) {
-							$show_products = get_post_meta( $feed_id, '_wpz-insta_show-add-to-cart', true );
-							if ( $show_products ) {
 								$add_to_cart_text = get_post_meta( $feed_id, '_wpz-insta_add-to-cart-text', true ) ?: __( 'Add to Cart', 'instagram-widget-by-wpzoom' );
-								$output .= '<div class="wpz-insta-lightbox-product">';
+								$atc_bg    = get_post_meta( $feed_id, '_wpz-insta_add-to-cart-bg', true ) ?: '#2271b1';
+								$atc_color = get_post_meta( $feed_id, '_wpz-insta_add-to-cart-color', true ) ?: '#ffffff';
+								$atc_hover = get_post_meta( $feed_id, '_wpz-insta_add-to-cart-hover-bg', true ) ?: '#135e96';
+								$atc_radius = get_post_meta( $feed_id, '_wpz-insta_add-to-cart-border-radius', true ) ?: '3px';
+								$lightbox_atc_style = sprintf(
+									'background-color:%s;color:%s;border-radius:%s;',
+									esc_attr( $atc_bg ),
+									esc_attr( $atc_color ),
+									esc_attr( $atc_radius )
+								);
+								$output .= '<div class="wpz-insta-lightbox-product" style="--wpz-insta-atc-hover:' . esc_attr( $atc_hover ) . '">';
 
 								foreach ( $linked_ids as $linked_product_id ) {
 									$product = wc_get_product( $linked_product_id );
@@ -1186,13 +1208,12 @@ class Wpzoom_Instagram_Widget_Display {
 									$output .= '<span class="wpz-insta-lightbox-product__price">' . $product_price . '</span>';
 									$output .= '</div></a>';
 									if ( $product->is_purchasable() && $product->is_in_stock() ) {
-										$output .= '<a href="' . esc_url( $product->add_to_cart_url() ) . '" class="wpz-insta-lightbox-product__add-to-cart button" data-product-id="' . esc_attr( $linked_product_id ) . '" rel="nofollow">' . esc_html( $add_to_cart_text ) . '</a>';
+										$output .= '<a href="' . esc_url( $product->add_to_cart_url() ) . '" class="wpz-insta-lightbox-product__add-to-cart button" style="' . $lightbox_atc_style . '" data-product-id="' . esc_attr( $linked_product_id ) . '" rel="nofollow">' . esc_html( $add_to_cart_text ) . '</a>';
 									}
 									$output .= '</div>';
 								}
 
 								$output .= '</div>';
-							}
 						}
 					}
 
