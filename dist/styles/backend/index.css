@@ -2592,10 +2592,6 @@
   border-radius: 3px;
   font-size: 14px;
 }
-.wpz-insta-modal .wpz-insta-product-list {
-  max-height: 400px;
-  overflow-y: auto;
-}
 .wpz-insta-modal .wpz-insta-product-list .wpz-insta-product-item {
   display: flex;
   align-items: center;

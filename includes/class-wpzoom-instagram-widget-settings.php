@@ -2365,11 +2365,17 @@ class WPZOOM_Instagram_Widget_Settings {
 										</div>
 									</label>
 
-									<label class="wpz-insta_table-row wpz-insta-add-to-cart-button-row<?php echo $product_links_is_icon ? ' hidden' : ''; ?>">
+									<label class="wpz-insta_table-row wpz-insta-buy-now-button-row<?php echo $product_links_is_icon ? ' hidden' : ''; ?>">
 										<strong class="wpz-insta_table-cell"><?php esc_html_e( 'Button text', 'instagram-widget-by-wpzoom' ); ?></strong>
 										<div class="wpz-insta_table-cell">
-											<input type="text" name="_wpz-insta_add-to-cart-text" class="preview-exclude" value="<?php echo esc_attr( get_post_meta( $post->ID, '_wpz-insta_add-to-cart-text', true ) ?: __( 'Add to Cart', 'instagram-widget-by-wpzoom' ) ); ?>" />
+											<input type="text" name="_wpz-insta_buy-now-text" class="preview-exclude" value="<?php echo esc_attr( get_post_meta( $post->ID, '_wpz-insta_buy-now-text', true ) ?: __( 'Buy now', 'instagram-widget-by-wpzoom' ) ); ?>" />
 										</div>
+									</label>
+
+									<label class="wpz-insta_table-row wpz-insta-buy-now-button-row<?php echo $product_links_is_icon ? ' hidden' : ''; ?>">
+										<input type="hidden" name="_wpz-insta_buy-now-new-tab" value="0" />
+										<input type="checkbox" name="_wpz-insta_buy-now-new-tab" value="1" class="preview-exclude" <?php checked( get_post_meta( $post->ID, '_wpz-insta_buy-now-new-tab', true ), '1' ); ?> />
+										<span><?php esc_html_e( 'Open in new tab', 'instagram-widget-by-wpzoom' ); ?></span>
 									</label>
 
 									<label class="wpz-insta_table-row wpz-insta-product-links-badge-row<?php echo $product_links_is_icon ? ' hidden' : ''; ?>" style="align-items: flex-start;">
@@ -2412,47 +2418,53 @@ class WPZOOM_Instagram_Widget_Settings {
 									<label class="wpz-insta_table-row">
 										<strong class="wpz-insta_table-cell"><?php esc_html_e( 'Background', 'instagram-widget-by-wpzoom' ); ?></strong>
 										<div class="wpz-insta_table-cell">
-											<input type="text" name="_wpz-insta_add-to-cart-bg" id="_wpz-insta_add-to-cart-bg" value="<?php echo esc_attr( get_post_meta( $post->ID, '_wpz-insta_add-to-cart-bg', true ) ?: '#2271b1' ); ?>" size="8" class="wpz-insta_color-picker wp-color-picker preview-exclude" data-default-color="#2271b1" />
+											<input type="text" name="_wpz-insta_buy-now-bg" id="_wpz-insta_buy-now-bg" value="<?php echo esc_attr( get_post_meta( $post->ID, '_wpz-insta_buy-now-bg', true ) ?: get_post_meta( $post->ID, '_wpz-insta_add-to-cart-bg', true ) ?: '#2271b1' ); ?>" size="8" class="wpz-insta_color-picker wp-color-picker preview-exclude" data-default-color="#2271b1" />
 										</div>
 									</label>
 									<label class="wpz-insta_table-row">
 										<strong class="wpz-insta_table-cell"><?php esc_html_e( 'Text color', 'instagram-widget-by-wpzoom' ); ?></strong>
 										<div class="wpz-insta_table-cell">
-											<input type="text" name="_wpz-insta_add-to-cart-color" id="_wpz-insta_add-to-cart-color" value="<?php echo esc_attr( get_post_meta( $post->ID, '_wpz-insta_add-to-cart-color', true ) ?: '#ffffff' ); ?>" size="8" class="wpz-insta_color-picker wp-color-picker preview-exclude" data-default-color="#ffffff" />
+											<input type="text" name="_wpz-insta_buy-now-color" id="_wpz-insta_buy-now-color" value="<?php echo esc_attr( get_post_meta( $post->ID, '_wpz-insta_buy-now-color', true ) ?: get_post_meta( $post->ID, '_wpz-insta_add-to-cart-color', true ) ?: '#ffffff' ); ?>" size="8" class="wpz-insta_color-picker wp-color-picker preview-exclude" data-default-color="#ffffff" />
 										</div>
 									</label>
 									<label class="wpz-insta_table-row">
 										<strong class="wpz-insta_table-cell"><?php esc_html_e( 'Hover background', 'instagram-widget-by-wpzoom' ); ?></strong>
 										<div class="wpz-insta_table-cell">
-											<input type="text" name="_wpz-insta_add-to-cart-hover-bg" id="_wpz-insta_add-to-cart-hover-bg" value="<?php echo esc_attr( get_post_meta( $post->ID, '_wpz-insta_add-to-cart-hover-bg', true ) ?: '#135e96' ); ?>" size="8" class="wpz-insta_color-picker wp-color-picker preview-exclude" data-default-color="#135e96" />
+											<input type="text" name="_wpz-insta_buy-now-hover-bg" id="_wpz-insta_buy-now-hover-bg" value="<?php echo esc_attr( get_post_meta( $post->ID, '_wpz-insta_buy-now-hover-bg', true ) ?: get_post_meta( $post->ID, '_wpz-insta_add-to-cart-hover-bg', true ) ?: '#135e96' ); ?>" size="8" class="wpz-insta_color-picker wp-color-picker preview-exclude" data-default-color="#135e96" />
 										</div>
 									</label>
 									<label class="wpz-insta_table-row">
 										<strong class="wpz-insta_table-cell"><?php esc_html_e( 'Border radius', 'instagram-widget-by-wpzoom' ); ?></strong>
 										<div class="wpz-insta_table-cell">
 											<?php
-											$atc_radius_saved   = get_post_meta( $post->ID, '_wpz-insta_add-to-cart-border-radius', true );
-											$atc_radius_suffix  = get_post_meta( $post->ID, '_wpz-insta_add-to-cart-border-radius-suffix', true );
-											$atc_radius_num     = 3;
-											$atc_radius_suffix_i = 0;
-											if ( '' !== $atc_radius_suffix && is_numeric( $atc_radius_suffix ) ) {
-												$atc_radius_suffix_i = (int) $atc_radius_suffix;
-												$atc_radius_num      = is_numeric( $atc_radius_saved ) ? (float) $atc_radius_saved : 3;
-											} elseif ( '' !== $atc_radius_saved ) {
-												$atc_radius_num = (float) preg_replace( '/[^0-9.]/', '', $atc_radius_saved ) ?: 3;
-												if ( false !== strpos( $atc_radius_saved, '%' ) ) {
-													$atc_radius_suffix_i = 2;
-												} elseif ( false !== strpos( $atc_radius_saved, 'em' ) ) {
-													$atc_radius_suffix_i = 1;
+											$buy_now_radius_saved   = get_post_meta( $post->ID, '_wpz-insta_buy-now-border-radius', true );
+											if ( '' === (string) $buy_now_radius_saved ) {
+												$buy_now_radius_saved = get_post_meta( $post->ID, '_wpz-insta_add-to-cart-border-radius', true );
+											}
+											$buy_now_radius_suffix  = get_post_meta( $post->ID, '_wpz-insta_buy-now-border-radius-suffix', true );
+											if ( '' === (string) $buy_now_radius_suffix ) {
+												$buy_now_radius_suffix = get_post_meta( $post->ID, '_wpz-insta_add-to-cart-border-radius-suffix', true );
+											}
+											$buy_now_radius_num     = 3;
+											$buy_now_radius_suffix_i = 0;
+											if ( '' !== $buy_now_radius_suffix && is_numeric( $buy_now_radius_suffix ) ) {
+												$buy_now_radius_suffix_i = (int) $buy_now_radius_suffix;
+												$buy_now_radius_num      = is_numeric( $buy_now_radius_saved ) ? (float) $buy_now_radius_saved : 3;
+											} elseif ( '' !== $buy_now_radius_saved ) {
+												$buy_now_radius_num = (float) preg_replace( '/[^0-9.]/', '', $buy_now_radius_saved ) ?: 3;
+												if ( false !== strpos( $buy_now_radius_saved, '%' ) ) {
+													$buy_now_radius_suffix_i = 2;
+												} elseif ( false !== strpos( $buy_now_radius_saved, 'em' ) ) {
+													$buy_now_radius_suffix_i = 1;
 												}
 											}
 											?>
 											<div class="wpz-insta_suffixed-number-input">
-												<input type="number" name="_wpz-insta_add-to-cart-border-radius" id="_wpz-insta_add-to-cart-border-radius" class="preview-exclude" value="<?php echo esc_attr( $atc_radius_num ); ?>" size="3" min="0" max="200" step="1" />
-												<select name="_wpz-insta_add-to-cart-border-radius-suffix" class="preview-exclude">
-													<option value="0" <?php selected( $atc_radius_suffix_i, 0 ); ?>><?php esc_html_e( 'px', 'instagram-widget-by-wpzoom' ); ?></option>
-													<option value="1" <?php selected( $atc_radius_suffix_i, 1 ); ?>><?php esc_html_e( 'em', 'instagram-widget-by-wpzoom' ); ?></option>
-													<option value="2" <?php selected( $atc_radius_suffix_i, 2 ); ?>><?php esc_html_e( '%', 'instagram-widget-by-wpzoom' ); ?></option>
+												<input type="number" name="_wpz-insta_buy-now-border-radius" id="_wpz-insta_buy-now-border-radius" class="preview-exclude" value="<?php echo esc_attr( $buy_now_radius_num ); ?>" size="3" min="0" max="200" step="1" />
+												<select name="_wpz-insta_buy-now-border-radius-suffix" class="preview-exclude">
+													<option value="0" <?php selected( $buy_now_radius_suffix_i, 0 ); ?>><?php esc_html_e( 'px', 'instagram-widget-by-wpzoom' ); ?></option>
+													<option value="1" <?php selected( $buy_now_radius_suffix_i, 1 ); ?>><?php esc_html_e( 'em', 'instagram-widget-by-wpzoom' ); ?></option>
+													<option value="2" <?php selected( $buy_now_radius_suffix_i, 2 ); ?>><?php esc_html_e( '%', 'instagram-widget-by-wpzoom' ); ?></option>
 												</select>
 											</div>
 										</div>
@@ -3177,10 +3189,11 @@ class WPZOOM_Instagram_Widget_Settings {
 
 			// Save WooCommerce product link settings
 			if ( class_exists( 'WooCommerce' ) ) {
-				if ( isset( $_POST['_wpz-insta_add-to-cart-text'] ) ) {
-					$add_to_cart_text = sanitize_text_field( $_POST['_wpz-insta_add-to-cart-text'] );
-					update_post_meta( $post_ID, '_wpz-insta_add-to-cart-text', $add_to_cart_text );
+				if ( isset( $_POST['_wpz-insta_buy-now-text'] ) ) {
+					$buy_now_text = sanitize_text_field( $_POST['_wpz-insta_buy-now-text'] );
+					update_post_meta( $post_ID, '_wpz-insta_buy-now-text', $buy_now_text );
 				}
+				update_post_meta( $post_ID, '_wpz-insta_buy-now-new-tab', ( isset( $_POST['_wpz-insta_buy-now-new-tab'] ) && '1' === $_POST['_wpz-insta_buy-now-new-tab'] ) ? '1' : '' );
 				if ( isset( $_POST['_wpz-insta_product-links-display-type'] ) && in_array( $_POST['_wpz-insta_product-links-display-type'], array( 'button', 'icon' ), true ) ) {
 					update_post_meta( $post_ID, '_wpz-insta_product-links-display-type', sanitize_text_field( $_POST['_wpz-insta_product-links-display-type'] ) );
 				}
@@ -3206,25 +3219,25 @@ class WPZOOM_Instagram_Widget_Settings {
 					$val = sanitize_text_field( $_POST['_wpz-insta_product-icon-color'] );
 					update_post_meta( $post_ID, '_wpz-insta_product-icon-color', $val ?: '#ffffff' );
 				}
-				// Add to cart button styling
-				if ( isset( $_POST['_wpz-insta_add-to-cart-bg'] ) ) {
-					$val = sanitize_text_field( $_POST['_wpz-insta_add-to-cart-bg'] );
-					update_post_meta( $post_ID, '_wpz-insta_add-to-cart-bg', $val ?: '#2271b1' );
+				// Buy now button styling
+				if ( isset( $_POST['_wpz-insta_buy-now-bg'] ) ) {
+					$val = sanitize_text_field( $_POST['_wpz-insta_buy-now-bg'] );
+					update_post_meta( $post_ID, '_wpz-insta_buy-now-bg', $val ?: '#2271b1' );
 				}
-				if ( isset( $_POST['_wpz-insta_add-to-cart-color'] ) ) {
-					$val = sanitize_text_field( $_POST['_wpz-insta_add-to-cart-color'] );
-					update_post_meta( $post_ID, '_wpz-insta_add-to-cart-color', $val ?: '#ffffff' );
+				if ( isset( $_POST['_wpz-insta_buy-now-color'] ) ) {
+					$val = sanitize_text_field( $_POST['_wpz-insta_buy-now-color'] );
+					update_post_meta( $post_ID, '_wpz-insta_buy-now-color', $val ?: '#ffffff' );
 				}
-				if ( isset( $_POST['_wpz-insta_add-to-cart-hover-bg'] ) ) {
-					$val = sanitize_text_field( $_POST['_wpz-insta_add-to-cart-hover-bg'] );
-					update_post_meta( $post_ID, '_wpz-insta_add-to-cart-hover-bg', $val ?: '#135e96' );
+				if ( isset( $_POST['_wpz-insta_buy-now-hover-bg'] ) ) {
+					$val = sanitize_text_field( $_POST['_wpz-insta_buy-now-hover-bg'] );
+					update_post_meta( $post_ID, '_wpz-insta_buy-now-hover-bg', $val ?: '#135e96' );
 				}
-				if ( isset( $_POST['_wpz-insta_add-to-cart-border-radius'] ) ) {
-					$val = isset( $_POST['_wpz-insta_add-to-cart-border-radius'] ) && is_numeric( $_POST['_wpz-insta_add-to-cart-border-radius'] ) ? floatval( $_POST['_wpz-insta_add-to-cart-border-radius'] ) : 3;
-					update_post_meta( $post_ID, '_wpz-insta_add-to-cart-border-radius', $val );
+				if ( isset( $_POST['_wpz-insta_buy-now-border-radius'] ) ) {
+					$val = isset( $_POST['_wpz-insta_buy-now-border-radius'] ) && is_numeric( $_POST['_wpz-insta_buy-now-border-radius'] ) ? floatval( $_POST['_wpz-insta_buy-now-border-radius'] ) : 3;
+					update_post_meta( $post_ID, '_wpz-insta_buy-now-border-radius', $val );
 				}
-				if ( isset( $_POST['_wpz-insta_add-to-cart-border-radius-suffix'] ) && in_array( (int) $_POST['_wpz-insta_add-to-cart-border-radius-suffix'], array( 0, 1, 2 ), true ) ) {
-					update_post_meta( $post_ID, '_wpz-insta_add-to-cart-border-radius-suffix', (int) $_POST['_wpz-insta_add-to-cart-border-radius-suffix'] );
+				if ( isset( $_POST['_wpz-insta_buy-now-border-radius-suffix'] ) && in_array( (int) $_POST['_wpz-insta_buy-now-border-radius-suffix'], array( 0, 1, 2 ), true ) ) {
+					update_post_meta( $post_ID, '_wpz-insta_buy-now-border-radius-suffix', (int) $_POST['_wpz-insta_buy-now-border-radius-suffix'] );
 				}
 			}
 
@@ -4131,7 +4144,7 @@ class WPZOOM_Instagram_Widget_Settings {
 						'save'            => __( 'Save', 'instagram-widget-by-wpzoom' ),
 						'cancel'          => __( 'Cancel', 'instagram-widget-by-wpzoom' ),
 						'productLinksUpsellTitle'   => __( 'Unlock Product Links', 'instagram-widget-by-wpzoom' ),
-						'productLinksUpsellMessage' => __( 'Link your Instagram posts to WooCommerce products and show an Add to Cart button. This feature is available with an active Instagram Widget PRO license.', 'instagram-widget-by-wpzoom' ),
+						'productLinksUpsellMessage' => __( 'Link your Instagram posts to WooCommerce products and show a Buy now button. This feature is available with an active Instagram Widget PRO license.', 'instagram-widget-by-wpzoom' ),
 						'productLinksUpsellCta'     => __( 'Get PRO License', 'instagram-widget-by-wpzoom' ),
 						'productLinksUpsellClose'   => __( 'Close', 'instagram-widget-by-wpzoom' ),
 					),

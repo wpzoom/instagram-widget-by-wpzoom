@@ -1296,7 +1296,7 @@ a.ig-b-v-24:hover {
         }
     }
 
-    .wpz-insta-lightbox-product__add-to-cart {
+    .wpz-insta-lightbox-product__buy-now {
         flex-shrink: 0;
         padding: 8px 14px;
         font-size: 13px;
@@ -1306,7 +1306,7 @@ a.ig-b-v-24:hover {
         transition: background-color 0.2s;
 
         &:hover {
-            background-color: var(--wpz-insta-atc-hover, #135e96) !important;
+            background-color: var(--wpz-insta-buy-now-hover, #135e96) !important;
         }
     }
 }
@@ -1720,8 +1720,8 @@ a.ig-b-v-24:hover {
     line-height: 1;
 }
 
-// Frontend Add to Cart Button
-.wpz-insta-add-to-cart-wrapper {
+// Frontend Buy now button (link to product page)
+.wpz-insta-buy-now-wrapper {
     position: absolute;
     bottom: 10px;
     left: 10px;
@@ -1731,19 +1731,19 @@ a.ig-b-v-24:hover {
     transition: opacity 0.2s;
 }
 
-.zoom-instagram-widget__item:hover .wpz-insta-add-to-cart-wrapper {
+.zoom-instagram-widget__item:hover .wpz-insta-buy-now-wrapper {
     opacity: 1;
 }
 
-.wpz-insta-add-to-cart-btn {
-    background-color: var(--wpz-insta-atc-bg, #2271b1);
+.wpz-insta-buy-now-btn {
+    background-color: var(--wpz-insta-buy-now-bg, #2271b1);
     display: flex;
     justify-content: center;
     align-items: center;
-    color: var(--wpz-insta-atc-color, #fff) !important;
+    color: var(--wpz-insta-buy-now-color, #fff) !important;
     border: none;
     padding: 10px 20px;
-    border-radius: var(--wpz-insta-atc-radius, 3px);
+    border-radius: var(--wpz-insta-buy-now-radius, 3px);
     text-decoration: none;
     font-size: 14px;
     font-weight: 600;
@@ -1751,8 +1751,8 @@ a.ig-b-v-24:hover {
     transition: background 0.2s;
 
     &:hover {
-        background: var(--wpz-insta-atc-hover-bg, #135e96);
-        color: var(--wpz-insta-atc-color, #fff) !important;
+        background: var(--wpz-insta-buy-now-hover-bg, #135e96);
+        color: var(--wpz-insta-buy-now-color, #fff) !important;
     }
 }
 
