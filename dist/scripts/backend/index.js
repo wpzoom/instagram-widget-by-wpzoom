@@ -433,6 +433,18 @@ jQuery(function ($) {
     /*$(this).height( parseInt( $(this).contents().find('body').prop('scrollHeight') ) + 20 );*/
     $(this).removeClass('wpz-insta_preview-hidden');
     $(this).closest('.wpz-insta_sidebar-right').addClass('hide-loading');
+    // Re-send current tab so "Link to a product" buttons show if Product Links tab was clicked before iframe loaded
+    var iframe = this;
+    if (iframe.contentWindow) {
+      var activeTab = $('.wpz-insta_feed-edit-nav li.active a').attr('href');
+      if (activeTab) {
+        var tabId = (activeTab + '').replace(/^#/, '');
+        iframe.contentWindow.postMessage({
+          action: 'wpz-insta-tab-change',
+          tab: tabId
+        }, '*');
+      }
+    }
   });
   $('.wpz-insta_color-picker').wpColorPicker({
     change: function change(event, ui) {
