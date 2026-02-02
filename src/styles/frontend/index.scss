@@ -1784,22 +1784,22 @@ a.ig-b-v-24:hover {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 36px;
-    height: 36px;
-    background: rgba(0, 0, 0, 0.65);
-    color: #fff;
+    width: var(--wpz-insta-icon-size, 36px);
+    height: var(--wpz-insta-icon-size, 36px);
+    background: var(--wpz-insta-icon-bg, #333333);
+    color: var(--wpz-insta-icon-color, #fff);
     border-radius: 50%;
     cursor: pointer;
-    transition: background 0.2s;
+    transition: background 0.2s, color 0.2s;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
 
     &:hover {
-        background: rgba(0, 0, 0, 0.85);
+        filter: brightness(0.9);
     }
 
     svg {
-        width: 20px;
-        height: 20px;
+        width: 55.56%;
+        height: 55.56%;
     }
 }
 
@@ -1854,7 +1854,7 @@ a.ig-b-v-24:hover {
 
 .wpz-insta-product-popover-list {
     list-style: none;
-    margin: 0;
+    margin: 0 !important;
     padding: 0 8px;
     max-height: 240px;
     overflow-y: auto;
@@ -1863,6 +1863,7 @@ a.ig-b-v-24:hover {
 .wpz-insta-product-popover-item {
     padding: 0;
     border-bottom: 1px solid #f0f0f0;
+    list-style-type: none !important;
     &:last-child {
         border-bottom: none;
     }

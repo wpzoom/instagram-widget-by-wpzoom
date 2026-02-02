@@ -1547,6 +1547,10 @@
 				border-top: 1px solid $light-grey-color;
 				margin: 30px 20px 20px;
 
+				&.hidden {
+					display: none;
+				}
+
 				&:first-child,
 				&.no-top-border {
 					padding-top: 0;
@@ -1870,8 +1874,67 @@
 				.wpz-insta_feed-profile-general,
 				.wpz-insta_feed-load-more-general,
 				.wpz-insta_product-links-general,
-				.wpz-insta_product-links-design {
+				.wpz-insta_product-links-design,
+				.wpz-insta_product-links-icon-design {
 					font-size: 14px;
+				}
+
+				.wpz-insta-product-links-display-type-row{
+					display: block !important;
+				}
+
+				.wpz-insta_product-links-display-type {
+					margin-top: 10px;
+					display: flex;
+					gap: 10px;
+					align-items: flex-start;
+
+					.wpz-insta_product-links-display-option {
+						display: block;
+						background: transparent;
+						padding: 0;
+						border: 0;
+						box-shadow: none;
+						outline: none;
+						margin: 0;
+						transition: all 0.3s ease;
+
+						&.disabled {
+							pointer-events: none;
+							opacity: 0.4;
+						}
+
+						svg{
+							border: 1px solid $darker-blue-grey-color;
+							border-radius: 4px;
+						}
+
+						&:hover {
+							svg {
+								color: $darker-blue-grey-color;
+								fill: $darker-blue-grey-color;
+							}
+						}
+
+						input {
+							display: none;
+						}
+
+						svg {
+							display: block;
+							color: $blue-grey-color;
+							fill: $blue-grey-color;
+                            max-width: 100%;
+                            height: auto;
+							transition: all 0.3s ease;
+						}
+
+						input:checked ~ svg {
+							color: $primary-color;
+							fill: $primary-color;
+							border-color: $primary-color;
+						}
+					}
 				}
 
 				.wpz-insta_table {
@@ -1884,6 +1947,10 @@
 						display: flex;
 						align-items: center;
 						width: 100%;
+
+						&.hidden {
+							display: none;
+						}
 
 						&.wpz-insta_disabled {
 							> input[type="checkbox"] {

@@ -564,6 +564,26 @@ jQuery( function( $ ) {
 		}
 	} );
 
+	// Product Links: show/hide settings by display type (icon vs button)
+	function wpzInstaToggleProductLinksDisplayType() {
+		const $container = $( '#_wpz-insta_product-links-display-type' );
+		if ( ! $container.length ) {
+			return;
+		}
+		const $section = $container.closest( '.wpz-insta_sidebar-left-section' );
+		const displayType = $container.find( 'input[name="_wpz-insta_product-links-display-type"]:checked' ).val();
+		const isIcon = displayType === 'icon';
+
+		$section.find( '.wpz-insta-product-links-popover-title-row' ).toggleClass( 'hidden', ! isIcon );
+		$section.find( '.wpz-insta-product-links-icon-position-row' ).toggleClass( 'hidden', ! isIcon );
+		$section.find( '.wpz-insta_sidebar-section-product-links-icon-design' ).toggleClass( 'hidden', ! isIcon );
+		$section.find( '.wpz-insta-add-to-cart-button-row' ).toggleClass( 'hidden', isIcon );
+		$section.find( '.wpz-insta-product-links-badge-row' ).toggleClass( 'hidden', isIcon );
+		$section.find( '.wpz-insta_sidebar-section-product-links-design' ).toggleClass( 'hidden', isIcon );
+	}
+	wpzInstaToggleProductLinksDisplayType();
+	$( document ).on( 'change', 'input[name="_wpz-insta_product-links-display-type"]', wpzInstaToggleProductLinksDisplayType );
+
 	$( '.wpzinsta-pointer' ).each( function () {
 		$(this).parent().addBack().one( 'click', function ( e ) {
 			e.stopPropagation();

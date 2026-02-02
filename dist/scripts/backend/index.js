@@ -441,6 +441,25 @@ jQuery(function ($) {
       $(event.target).closest('form#post').find('.wpz-insta_tabs-content > .wpz-insta_sidebar > .wpz-insta_sidebar-left').triggerHandler(changeEvent);
     }
   });
+
+  // Product Links: show/hide settings by display type (icon vs button)
+  function wpzInstaToggleProductLinksDisplayType() {
+    var $container = $('#_wpz-insta_product-links-display-type');
+    if (!$container.length) {
+      return;
+    }
+    var $section = $container.closest('.wpz-insta_sidebar-left-section');
+    var displayType = $container.find('input[name="_wpz-insta_product-links-display-type"]:checked').val();
+    var isIcon = displayType === 'icon';
+    $section.find('.wpz-insta-product-links-popover-title-row').toggleClass('hidden', !isIcon);
+    $section.find('.wpz-insta-product-links-icon-position-row').toggleClass('hidden', !isIcon);
+    $section.find('.wpz-insta_sidebar-section-product-links-icon-design').toggleClass('hidden', !isIcon);
+    $section.find('.wpz-insta-add-to-cart-button-row').toggleClass('hidden', isIcon);
+    $section.find('.wpz-insta-product-links-badge-row').toggleClass('hidden', isIcon);
+    $section.find('.wpz-insta_sidebar-section-product-links-design').toggleClass('hidden', isIcon);
+  }
+  wpzInstaToggleProductLinksDisplayType();
+  $(document).on('change', 'input[name="_wpz-insta_product-links-display-type"]', wpzInstaToggleProductLinksDisplayType);
   $('.wpzinsta-pointer').each(function () {
     $(this).parent().addBack().one('click', function (e) {
       e.stopPropagation();

@@ -520,13 +520,26 @@ class Wpzoom_Instagram_Widget_Display {
 							$atc_bg    = get_post_meta( $feed_id, '_wpz-insta_add-to-cart-bg', true ) ?: '#2271b1';
 							$atc_color = get_post_meta( $feed_id, '_wpz-insta_add-to-cart-color', true ) ?: '#ffffff';
 							$atc_hover = get_post_meta( $feed_id, '_wpz-insta_add-to-cart-hover-bg', true ) ?: '#135e96';
-							$atc_radius = get_post_meta( $feed_id, '_wpz-insta_add-to-cart-border-radius', true ) ?: '3px';
+							$atc_radius_raw   = get_post_meta( $feed_id, '_wpz-insta_add-to-cart-border-radius', true );
+							$atc_radius_suffix = get_post_meta( $feed_id, '_wpz-insta_add-to-cart-border-radius-suffix', true );
+							if ( '' !== $atc_radius_suffix && is_numeric( $atc_radius_suffix ) ) {
+								$atc_radius_num = is_numeric( $atc_radius_raw ) ? (float) $atc_radius_raw : 3;
+								$atc_radius     = $atc_radius_num . $this->get_suffix( (int) $atc_radius_suffix );
+							} else {
+								$atc_radius = $atc_radius_raw ?: '3px';
+							}
+							$icon_size  = get_post_meta( $feed_id, '_wpz-insta_product-icon-size', true ) ?: '36px';
+							$icon_bg    = get_post_meta( $feed_id, '_wpz-insta_product-icon-bg', true ) ?: '#333333';
+							$icon_color = get_post_meta( $feed_id, '_wpz-insta_product-icon-color', true ) ?: '#ffffff';
 							$wrapper_style = sprintf(
-								'--wpz-insta-atc-bg:%s;--wpz-insta-atc-color:%s;--wpz-insta-atc-hover-bg:%s;--wpz-insta-atc-radius:%s;',
+								'--wpz-insta-atc-bg:%s;--wpz-insta-atc-color:%s;--wpz-insta-atc-hover-bg:%s;--wpz-insta-atc-radius:%s;--wpz-insta-icon-size:%s;--wpz-insta-icon-bg:%s;--wpz-insta-icon-color:%s;',
 								esc_attr( $atc_bg ),
 								esc_attr( $atc_color ),
 								esc_attr( $atc_hover ),
-								esc_attr( $atc_radius )
+								esc_attr( $atc_radius ),
+								esc_attr( $icon_size ),
+								esc_attr( $icon_bg ),
+								esc_attr( $icon_color )
 							);
 						}
 					}
@@ -1055,7 +1068,10 @@ class Wpzoom_Instagram_Widget_Display {
 								}
 								$output .= '</ul></div></div></div>';
 							} else {
-								$output .= '<span class="wpz-insta-product-badge"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M7.5 6v.75H5.513c-.96 0-1.764.724-1.865 1.679l-1.263 12A1.875 1.875 0 0 0 4.25 22.5h15.5a1.875 1.875 0 0 0 1.865-2.071l-1.263-12a1.875 1.875 0 0 0-1.865-1.679H16.5V6a4.5 4.5 0 1 0-9 0ZM12 3a3 3 0 0 0-3 3v.75h6V6a3 3 0 0 0-3-3Zm-3 8.25a3 3 0 1 0 6 0v-.75a.75.75 0 0 1 1.5 0v.75a4.5 4.5 0 1 1-9 0v-.75a.75.75 0 0 1 1.5 0v.75Z" clip-rule="evenodd"/></svg>' . esc_html__( 'Click to view products', 'instagram-widget-by-wpzoom' ) . '</span>';
+								$badge_label = get_post_meta( $feed_id, '_wpz-insta_product-badge-label', true );
+								if ( '' !== $badge_label ) {
+									$output .= '<span class="wpz-insta-product-badge"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M7.5 6v.75H5.513c-.96 0-1.764.724-1.865 1.679l-1.263 12A1.875 1.875 0 0 0 4.25 22.5h15.5a1.875 1.875 0 0 0 1.865-2.071l-1.263-12a1.875 1.875 0 0 0-1.865-1.679H16.5V6a4.5 4.5 0 1 0-9 0ZM12 3a3 3 0 0 0-3 3v.75h6V6a3 3 0 0 0-3-3Zm-3 8.25a3 3 0 1 0 6 0v-.75a.75.75 0 0 1 1.5 0v.75a4.5 4.5 0 1 1-9 0v-.75a.75.75 0 0 1 1.5 0v.75Z" clip-rule="evenodd"/></svg>' . esc_html( $badge_label ) . '</span>';
+								}
 								foreach ( $linked_ids as $linked_product_id ) {
 									$product = wc_get_product( $linked_product_id );
 									if ( $product && $product->is_purchasable() && $product->is_in_stock() ) {
@@ -1181,7 +1197,15 @@ class Wpzoom_Instagram_Widget_Display {
 								$atc_bg    = get_post_meta( $feed_id, '_wpz-insta_add-to-cart-bg', true ) ?: '#2271b1';
 								$atc_color = get_post_meta( $feed_id, '_wpz-insta_add-to-cart-color', true ) ?: '#ffffff';
 								$atc_hover = get_post_meta( $feed_id, '_wpz-insta_add-to-cart-hover-bg', true ) ?: '#135e96';
-								$atc_radius = get_post_meta( $feed_id, '_wpz-insta_add-to-cart-border-radius', true ) ?: '3px';
+								$atc_radius_raw_lt   = get_post_meta( $feed_id, '_wpz-insta_add-to-cart-border-radius', true );
+								$atc_radius_suffix_lt = get_post_meta( $feed_id, '_wpz-insta_add-to-cart-border-radius-suffix', true );
+								if ( '' !== $atc_radius_suffix_lt && is_numeric( $atc_radius_suffix_lt ) ) {
+									$atc_radius_num_lt = is_numeric( $atc_radius_raw_lt ) ? (float) $atc_radius_raw_lt : 3;
+									$atc_radius_suffix_str = ( 2 === (int) $atc_radius_suffix_lt ) ? '%' : ( ( 1 === (int) $atc_radius_suffix_lt ) ? 'em' : 'px' );
+									$atc_radius = $atc_radius_num_lt . $atc_radius_suffix_str;
+								} else {
+									$atc_radius = $atc_radius_raw_lt ?: '3px';
+								}
 								$lightbox_atc_style = sprintf(
 									'background-color:%s;color:%s;border-radius:%s;',
 									esc_attr( $atc_bg ),
