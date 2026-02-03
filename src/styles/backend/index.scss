@@ -2980,6 +2980,14 @@
     }
 }
 
+.wpz-insta_feed-only-pro {
+	.wpz-insta_product-links-icon-design,
+	.wpz-insta_product-links-design,
+	.wpz-insta_product-links-general{
+		opacity: 0.5;
+	}
+}
+
 @keyframes slidedown {
 	from {
 		max-height: 0;
@@ -3310,6 +3318,14 @@
 .wpz-insta-upsell-modal {
     .wpz-insta-upsell-content {
         max-width: 440px;
+    }
+
+    .wpz-insta-upsell-image {
+        display: block;
+        max-width: 100%;
+        height: auto;
+        margin: 0 0 16px 0;
+        border-radius: 4px;
     }
 
     .wpz-insta-upsell-message {

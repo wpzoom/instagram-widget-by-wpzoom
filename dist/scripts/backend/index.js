@@ -411,13 +411,21 @@ jQuery(function ($) {
     }
     $('input#publish').toggleClass('disabled', $.isEmptyObject(formChangedValues));
 
-    // Reload preview only for non–preview-exclude fields (keeps iframe URL smaller)
-    if (key !== 'post_title' && !$target.is('.preview-exclude')) {
+    // Update preview: postMessage for design settings (no reload), reload only for server-dependent fields
+    if (key === 'post_title' || $target.is('.preview-exclude')) return;
+    var needsReload = wpzInstaPreviewReloadKeys.indexOf(key) !== -1 || key && key.indexOf('_wpz-insta_allowed-post-types') === 0;
+    if (needsReload) {
       window.wpzInstaReloadPreview();
+    } else {
+      wpzInstaSendPreviewUpdate();
     }
   }, 300));
   $(function () {
-    window.wpzInstaReloadPreview();
+    // Only set iframe src from JS if PHP did not already set it (initial load uses PHP-built URL).
+    var $previewIframe = $('#wpz-insta_widget-preview-view iframe');
+    if (!$previewIframe.attr('src') || $previewIframe.attr('src') === '') {
+      window.wpzInstaReloadPreview();
+    }
   });
   $('#wpz-insta_widget-preview-links .wpz-insta_widget-preview-header-link').on('click', function () {
     if (!$(this).hasClass('active')) {
@@ -430,9 +438,10 @@ jQuery(function ($) {
     $iframe.height(parseInt($iframe.contents().find('body').prop('scrollHeight')) + 20);
   });
   $('#wpz-insta_widget-preview-view iframe').on('load', function () {
-    /*$(this).height( parseInt( $(this).contents().find('body').prop('scrollHeight') ) + 20 );*/
     $(this).removeClass('wpz-insta_preview-hidden');
     $(this).closest('.wpz-insta_sidebar-right').addClass('hide-loading');
+    // Sync current form state to preview via postMessage (so unsaved design changes apply without another reload)
+    wpzInstaSendPreviewUpdate();
     // Re-send current tab so "Link to a product" buttons show if Product Links tab was clicked before iframe loaded
     var iframe = this;
     if (iframe.contentWindow) {
@@ -840,23 +849,71 @@ jQuery(function ($) {
       }
     }
   };
-  window.wpzInstaReloadPreview = function () {
-    var url = zoom_instagram_widget_admin.preview_url,
-      params = $.param($('form#post #title, form#post .wpz-insta_tabs-content > .wpz-insta_sidebar > .wpz-insta_sidebar-left').find('input, textarea, select').not('.preview-exclude').serializeArray());
-    if (params) {
-      url += '&' + params;
-    }
 
-    // Add the post ID for the preview to identify the feed for Load More functionality
+  // Fields that require a full iframe reload (server-side: different data). All others are applied via postMessage.
+  var wpzInstaPreviewReloadKeys = ['_wpz-insta_user-id', '_wpz-insta_item-num', '_wpz-insta_allowed-post-types-submitted'];
+  function wpzInstaCollectPreviewState() {
+    var $form = $('form#post .wpz-insta_tabs-content > .wpz-insta_sidebar > .wpz-insta_sidebar-left');
+    var state = {};
+    $('form#post #title').add($form.find('input, textarea, select').not('.preview-exclude')).each(function () {
+      var $el = $(this);
+      var name = $el.attr('name');
+      if (!name || name === 'post_ID') return;
+      var key = name.replace(/^_wpz-insta_/, '').replace(/\[\]$/, '');
+      var val;
+      if ($el.is(':radio, :checkbox')) {
+        if (name.indexOf('[]') !== -1) {
+          val = $('form#post').find('input[name="' + name + '"]:checked').map(function () {
+            return $(this).val();
+          }).get().join(',');
+        } else if ($el.is(':radio')) {
+          // Radio group: use the checked value so layout/featured-layout etc. are correct
+          var $checked = $('form#post').find('input[name="' + name + '"]:checked');
+          val = $checked.length ? $checked.val() || '0' : '0';
+        } else {
+          val = $el.is(':checked') ? $el.val() || '1' : '0';
+        }
+      } else {
+        val = $el.val();
+      }
+      state[key] = val;
+    });
+    return state;
+  }
+  function wpzInstaSendPreviewUpdate() {
+    var iframe = document.querySelector('#wpz-insta_widget-preview-view iframe');
+    if (!iframe || !iframe.contentWindow) return;
+    var state = wpzInstaCollectPreviewState();
+    iframe.contentWindow.postMessage({
+      action: 'wpz-insta-preview-update',
+      data: state
+    }, '*');
+  }
+  window.wpzInstaReloadPreview = function () {
+    // Base URL: feed-id and tab. PHP loads settings from DB then overlays these params (so unsaved values apply).
+    var url = zoom_instagram_widget_admin.preview_url;
     var postId = $('form#post input[name="post_ID"]').val();
     if (postId) {
-      url += '&wpz-insta-feed-id=' + postId;
+      url += '&wpz-insta-feed-id=' + encodeURIComponent(postId);
     }
-
-    // Pass current tab so iframe can show/hide "Link to a product" buttons (only on Product Links tab)
     var activeTab = $('.wpz-insta_feed-edit-nav li.active a').attr('href');
     if (activeTab) {
       url += '&wpz-insta-tab=' + encodeURIComponent((activeTab + '').replace(/^#/, ''));
+    }
+    // Pass current form values for reload-triggering fields so preview uses them before save.
+    var itemNum = $('form#post input[name="_wpz-insta_item-num"]').val();
+    if (itemNum != null && itemNum !== '') {
+      url += '&_wpz-insta_item-num=' + encodeURIComponent(itemNum);
+    }
+    var userId = $('form#post input[name="_wpz-insta_user-id"]').val();
+    if (userId != null && userId !== '') {
+      url += '&_wpz-insta_user-id=' + encodeURIComponent(userId);
+    }
+    var allowedTypes = $('form#post input[name="_wpz-insta_allowed-post-types[]"]:checked').map(function () {
+      return $(this).val();
+    }).get().join(',');
+    if (allowedTypes) {
+      url += '&_wpz-insta_allowed-post-types=' + encodeURIComponent(allowedTypes);
     }
     $('#wpz-insta_widget-preview-view').closest('.wpz-insta_sidebar-right').removeClass('hide-loading');
     $('#wpz-insta_widget-preview-view iframe').addClass('wpz-insta_preview-hidden').attr('src', url);
@@ -1005,11 +1062,13 @@ jQuery(function ($) {
       }
       var strings = zoom_instagram_widget_admin.strings || {};
       var upsellTitle = strings.productLinksUpsellTitle || 'Unlock Product Links';
-      var upsellMessage = strings.productLinksUpsellMessage || 'Link your Instagram posts to WooCommerce products and show an Add to Cart button. This feature is available with an active Instagram Widget PRO license.';
+      var upsellMessage = strings.productLinksUpsellMessage || 'Link your Instagram posts to WooCommerce products and display the product details or a Buy now button. This feature is available with an active Instagram Widget PRO license.';
       var upsellCta = strings.productLinksUpsellCta || 'Get PRO License';
       var upsellClose = strings.productLinksUpsellClose || 'Close';
       var upsellUrl = zoom_instagram_widget_admin.product_links_upsell_url || 'https://www.wpzoom.com/plugins/instagram-widget/';
-      var upsellHTML = '<div id="wpz-insta-product-links-upsell-modal" class="wpz-insta-modal wpz-insta-upsell-modal" style="display: none;">' + '<div class="wpz-insta-modal-content wpz-insta-upsell-content">' + '<div class="wpz-insta-modal-header">' + '<h2>' + upsellTitle + '</h2>' + '<button type="button" class="wpz-insta-modal-close">&times;</button>' + '</div>' + '<div class="wpz-insta-modal-body">' + '<p class="wpz-insta-upsell-message">' + upsellMessage + '</p>' + '<div class="wpz-insta-upsell-actions">' + '<a href="' + upsellUrl + '" target="_blank" rel="noopener" class="button button-primary wpz-insta-upsell-cta">' + upsellCta + '</a>' + '</div>' + '</div>' + '<div class="wpz-insta-modal-footer">' + '<button type="button" class="button wpz-insta-upsell-close">' + upsellClose + '</button>' + '</div>' + '</div></div>';
+      var upsellImageUrl = zoom_instagram_widget_admin.product_links_upsell_image_url || '';
+      var upsellImageHTML = upsellImageUrl ? '<img src="' + upsellImageUrl + '" alt="" class="wpz-insta-upsell-image" />' : '';
+      var upsellHTML = '<div id="wpz-insta-product-links-upsell-modal" class="wpz-insta-modal wpz-insta-upsell-modal" style="display: none;">' + '<div class="wpz-insta-modal-content wpz-insta-upsell-content">' + '<div class="wpz-insta-modal-header">' + '<h2>' + upsellTitle + '</h2>' + '<button type="button" class="wpz-insta-modal-close">&times;</button>' + '</div>' + '<div class="wpz-insta-modal-body">' + upsellImageHTML + '<p class="wpz-insta-upsell-message">' + upsellMessage + '</p>' + '<div class="wpz-insta-upsell-actions">' + '<a href="' + upsellUrl + '" target="_blank" rel="noopener" class="button button-primary wpz-insta-upsell-cta">' + upsellCta + '</a>' + '</div>' + '</div>' + '<div class="wpz-insta-modal-footer">' + '<button type="button" class="button wpz-insta-upsell-close">' + upsellClose + '</button>' + '</div>' + '</div></div>';
       $('body').append(upsellHTML);
       $productLinksUpsellModal = $('#wpz-insta-product-links-upsell-modal');
       $productLinksUpsellModal.on('click', '.wpz-insta-modal-close, .wpz-insta-upsell-close', function () {

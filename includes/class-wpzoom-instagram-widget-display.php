@@ -436,7 +436,21 @@ class Wpzoom_Instagram_Widget_Display {
 				$show_user_image = isset( $args['show-account-image'] ) && boolval( $args['show-account-image'] );
 				$user_image = get_the_post_thumbnail_url( $user, 'thumbnail' ) ?: WPZOOM_INSTAGRAM_PLUGIN_URL . 'dist/images/backend/icon-insta.png';
 				$user_account_token = get_post_meta( $user_id, '_wpz-insta_token', true ) ?: '-1';
-				$user_business_page_id = get_post_meta( $user_id, '_wpz-insta_page_id', true ) ?: null;	
+				$user_business_page_id = get_post_meta( $user_id, '_wpz-insta_page_id', true ) ?: null;
+
+				// In preview, use placeholder text for empty values so header elements can be shown/hidden via design options.
+				if ( $preview ) {
+					if ( '' === trim( (string) $user_display_name ) ) {
+						$user_display_name = __( 'Account Name', 'instagram-widget-by-wpzoom' );
+					}
+					if ( '' === trim( (string) $user_name ) ) {
+						$user_name_display = __( '@username', 'instagram-widget-by-wpzoom' );
+						$user_link         = 'https://www.instagram.com/';
+					}
+					if ( '' === trim( (string) $user_bio ) ) {
+						$user_bio = __( 'Preview bio text.', 'instagram-widget-by-wpzoom' );
+					}
+				}
 
 				if ( '-1' !== $user_account_token ) {
 					/**
@@ -555,7 +569,9 @@ class Wpzoom_Instagram_Widget_Display {
 						$wrapper_classes .= sprintf( ' align%s', in_array( $align, array( 'left', 'right', 'wide', 'full' ) ) ? $align : 'center' );
 					}
 
-					$wrapper_classes .= sprintf( ' layout-%s', $layout );
+					// In preview use grid so frontend does not init Swiper/masonry.
+					$layout_class = ( $preview && ( 'carousel' === $layout || 'masonry' === $layout ) ) ? 'grid' : $layout;
+					$wrapper_classes .= sprintf( ' layout-%s', $layout_class );
 					$wrapper_classes .= $featured_layout_class;
 					$wrapper_classes .= ' columns-' . $col_num;
 
@@ -621,7 +637,8 @@ class Wpzoom_Instagram_Widget_Display {
 					if ( ! is_array( $items ) ) {
 						return $this->get_errors( $errors );
 					} else {
-						if ( $show_user_image || $show_user_nname || $show_user_name || $show_user_bio ) {
+						// In preview always output header so design options (show/hide name, username, badge, etc.) can be toggled.
+						if ( $preview || $show_user_image || $show_user_nname || $show_user_name || $show_user_bio ) {
 							$output .= '<header class="zoom-instagram-widget__header">';
 
 							// Get all account stats in a single API call (reduces 3 API calls to 1)
@@ -637,7 +654,7 @@ class Wpzoom_Instagram_Widget_Display {
 							$following_count = $account_stats['follows_count'];
 							$media_count = $account_stats['media_count'];
 
-							if ( $show_user_image && ! empty( $user_image ) ) {
+							if ( ( $preview || $show_user_image ) && ! empty( $user_image ) ) {
 								// Stories feature is only available in Pro version and when enabled in feed settings
 								$stories = array();
 								$has_stories = false;
@@ -699,45 +716,46 @@ class Wpzoom_Instagram_Widget_Display {
 								$output .= '</div>';
 							}
 
-							if ( $show_user_nname || $show_user_name || $show_user_bio ) {
+							if ( $preview || $show_user_nname || $show_user_name || $show_user_bio ) {
 								$output .= '<div class="zoom-instagram-widget__header-column-right">';
 
-								if ( $show_user_nname ) {
+								if ( $preview || $show_user_nname ) {
                                     $output .= '<h5 class="zoom-instagram-widget__header-name">' . esc_html( $user_display_name ) . '</h5>';
 								}
 
-								if ( $show_user_name ) {
+								if ( $preview || $show_user_name ) {
 									$the_badge = '';
-									if( $show_user_badge ) {
+									// In preview always output badge HTML so JS can show/hide it; on frontend only if option is on.
+									if ( $preview || $show_user_badge ) {
                                         $the_badge = '<span class="wpz-insta-badge"><svg width=\'24\' height=\'24\' viewBox=\'0 0 24 24\' xmlns=\'http://www.w3.org/2000/svg\' xmlns:xlink=\'http://www.w3.org/1999/xlink\'><rect width=\'24\' height=\'24\' stroke=\'none\' fill=\'#000000\' opacity=\'0\'/><g transform="matrix(0.42 0 0 0.42 12 12)" ><g style="" ><g transform="matrix(1 0 0 1 0 0)" ><polygon style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: #0095f6; fill-rule: nonzero; opacity: 1;" points="5.62,-21 9.05,-15.69 15.37,-15.38 15.69,-9.06 21,-5.63 18.12,0 21,5.62 15.69,9.05 15.38,15.37 9.06,15.69 5.63,21 0,18.12 -5.62,21 -9.05,15.69 -15.37,15.38 -15.69,9.06 -21,5.63 -18.12,0 -21,-5.62 -15.69,-9.05 -15.38,-15.37 -9.06,-15.69 -5.63,-21 0,-18.12 " /></g><g transform="matrix(1 0 0 1 -0.01 0.51)" ><polygon style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: rgb(255,255,255); fill-rule: nonzero; opacity: 1;" points="-2.6,6.74 -9.09,0.25 -6.97,-1.87 -2.56,2.53 7,-6.74 9.09,-4.59 " /></g></g></g></svg></span>';									}
                                     $output .= '<p class="zoom-instagram-widget__header-user"><a href="' . esc_url( $user_link ) . '" target="_blank" rel="nofollow">' . esc_html( $user_name_display ) . '</a>' . $the_badge . '</p>';
 								}
 
 
-                                if ( $show_user_stats ) {
+                                if ( $preview || $show_user_stats ) {
 
-    								// Add all three counts in a stats wrapper
-    								if ($followers_count > 0 || $following_count > 0 || $media_count > 0) {
+    								// Add all three counts in a stats wrapper (in preview show even when 0 so design option can be toggled)
+    								if ( $preview || $followers_count > 0 || $following_count > 0 || $media_count > 0 ) {
     									$output .= '<div class="wpz-insta-stats">';
 
-    									if ($media_count > 0) {
+    									if ( $preview || $media_count > 0 ) {
     										$output .= '<div class="wpz-insta-posts">';
-    										$output .= '<strong>' . self::format_number($media_count) . '</strong> ';
-    										$output .= esc_html__('posts', 'instagram-widget-by-wpzoom');
+    										$output .= '<strong>' . self::format_number( $media_count ) . '</strong> ';
+    										$output .= esc_html__( 'posts', 'instagram-widget-by-wpzoom' );
     										$output .= '</div>';
     									}
 
-    									if ($followers_count > 0) {
+    									if ( $preview || $followers_count > 0 ) {
     										$output .= '<div class="wpz-insta-followers">';
-    										$output .= '<strong>' . self::format_number($followers_count) . '</strong> ';
-    										$output .= esc_html__('followers', 'instagram-widget-by-wpzoom');
+    										$output .= '<strong>' . self::format_number( $followers_count ) . '</strong> ';
+    										$output .= esc_html__( 'followers', 'instagram-widget-by-wpzoom' );
     										$output .= '</div>';
     									}
 
-    									if ($following_count > 0) {
+    									if ( $preview || $following_count > 0 ) {
     										$output .= '<div class="wpz-insta-following">';
-    										$output .= '<strong>' . self::format_number($following_count) . '</strong> ';
-    										$output .= esc_html__('following', 'instagram-widget-by-wpzoom');
+    										$output .= '<strong>' . self::format_number( $following_count ) . '</strong> ';
+    										$output .= esc_html__( 'following', 'instagram-widget-by-wpzoom' );
     										$output .= '</div>';
     									}
 
@@ -745,7 +763,7 @@ class Wpzoom_Instagram_Widget_Display {
     								}
                                 }
 
-								if ( $show_user_bio ) {
+								if ( $preview || $show_user_bio ) {
                                     $output .= '<div class="zoom-instagram-widget__header-bio">' . esc_html( $user_bio ) . '</div>';
 								}
 
@@ -755,16 +773,20 @@ class Wpzoom_Instagram_Widget_Display {
 							$output .= '</header>';
 						}
 
-						$classes = 'zoom-instagram-widget__items zoom-instagram-widget__items--no-js' . sprintf( ' layout-%s', $layout );
+						// In preview use grid layout class so frontend does not init Swiper/masonry (scripts not enqueued).
+						$classes = 'zoom-instagram-widget__items zoom-instagram-widget__items--no-js' . sprintf( ' layout-%s', $layout_class );
 
-						if ( $this->is_pro && 'carousel' === $layout ) {
+						// In preview, skip carousel/masonry markup (preview shows grid/static; no Swiper/masonry scripts).
+						if ( $this->is_pro && 'carousel' === $layout && ! $preview ) {
 							$classes .= ' swiper-wrapper';
 						}
 
-						$output .= '<div class="zoom-instagram-widget__items-wrapper' . ( $this->is_pro && 'carousel' === $layout ? ' swiper' : '' ) . '"><ul class="' . $classes . '"' . $attrs . '>' . ( $this->is_pro && 'masonry' === $layout ? '<li class="masonry-items-sizer"></li>' : '' );
+						$wrapper_swiper_class = ( $this->is_pro && 'carousel' === $layout && ! $preview ) ? ' swiper' : '';
+						$masonry_sizer         = ( $this->is_pro && 'masonry' === $layout && ! $preview ) ? '<li class="masonry-items-sizer"></li>' : '';
+						$output .= '<div class="zoom-instagram-widget__items-wrapper' . $wrapper_swiper_class . '"><ul class="' . $classes . '"' . $attrs . '>' . $masonry_sizer;
 						$output .= self::items_html( $items['items'], $args );
 						$output .= '</ul>';
-						if ( $this->is_pro && 'carousel' === $layout ) {
+						if ( $this->is_pro && 'carousel' === $layout && ! $preview ) {
 							$output .= '<div class="swiper-button-prev"></div><div class="swiper-button-next"></div>';
 						}
 						$output .= '</div>';
@@ -938,7 +960,7 @@ class Wpzoom_Instagram_Widget_Display {
 					$classes .= ' date-hover';
 				}
 
-				if ( self::$instance->is_pro && 3 === $layout ) {
+				if ( self::$instance->is_pro && 3 === $layout && ! $preview ) {
 					$classes .= ' swiper-slide';
 				}
 
@@ -1403,50 +1425,22 @@ class Wpzoom_Instagram_Widget_Display {
 			$output .= "}";
 		}
 
-		if ( 0 === $layout ) {
+		if ( 0 === $layout || 2 === $layout ) {
 			$output .= ".zoom-instagram{$feed_id} .zoom-instagram-widget__items{";
 			$output .= "display:grid!important;";
 			$output .= "grid-template-columns:repeat({$col_num},1fr);";
 			$output .= "}";
 		}
 
-		if ( ( 0 === $layout || 1 === $layout ) && $spacing_between > -1 ) {
+		if ( ( 0 === $layout || 1 === $layout || 2 === $layout ) && $spacing_between > -1 ) {
 			$output .= ".zoom-instagram{$feed_id} .zoom-instagram-widget__items{";
 			$output .= "gap:{$spacing_between}{$spacing_between_suffix}!important;";
 			$output .= "}";
 		}
 
-		if ( $this->is_pro ) {
-			if ( 2 === $layout ) {
-				$output .= ".zoom-instagram{$feed_id} .zoom-instagram-widget__item,.zoom-instagram{$feed_id} .masonry-items-sizer{";
-				$output .= "width:calc(1/{$col_num}*100%" . ( $spacing_between > 0 ? " - (1 - 1/{$col_num})*{$spacing_between}{$spacing_between_suffix}" : "" ) . ")!important;";
-				$output .= "}";
-
-				if ( $spacing_between > -1 ) {
-					$output .= ".zoom-instagram{$feed_id} .zoom-instagram-widget__item{";
-					$output .= "margin:0 0 {$spacing_between}{$spacing_between_suffix}!important;";
-					$output .= "}";
-				}
-			}
-
-			if ( $border_radius > -1 ) {
-				$output .= ".zoom-instagram{$feed_id} .zoom-instagram-widget__item .zoom-instagram-widget__item-inner-wrap{";
-				$output .= "border-radius:{$border_radius}{$border_radius_suffix}!important;";
-				$output .= "}";
-			}
-
-			if ( '' != $loadmore_bg ) {
-				// Target both old form-based button and new AJAX button
-				$output .= ".zoom-instagram{$feed_id} .wpzinsta-pro-load-more button[type=submit],";
-				$output .= ".zoom-instagram{$feed_id} .zoom-instagram-widget__footer .wpzinsta-pro-load-more-wrapper .wpzinsta-pro-load-more-btn{";
-				$output .= "background-color:{$loadmore_bg}!important;";
-				$output .= "}";
-			}
-		}
-
 		if ( $image_width > -1 && 1 === $layout ) {
 			$output .= ".zoom-instagram{$feed_id} .zoom-instagram-widget__items img {";
-			$output .= "width:{$image_width}{$image_width_suffix}!important;";
+			$output .= "width:{$image_width}{$image_width_suffix}";
 			$output .= "}";
 		}
 
@@ -1463,50 +1457,33 @@ class Wpzoom_Instagram_Widget_Display {
 		}
 
 		// Add aspect ratio CSS for grid layout
-		if ( 0 === $layout && 'portrait' === $image_aspect_ratio ) {
+		if ( ( 0 === $layout || 2 === $layout ) && 'portrait' === $image_aspect_ratio ) {
 			$output .= ".zoom-instagram{$feed_id} .zoom-instagram-widget__items.layout-grid .zoom-instagram-widget__item img{";
 			$output .= "aspect-ratio:3/4!important;";
 			$output .= "}";
 		}
 
 		if ( $col_num_rspnsve_enbld ) {
+			// Layout 2 (masonry) uses the same grid styles as layout 0.
 			$output .= "@media screen and (min-width:1200px){";
-			if ( 2 === $layout ) {
-				$output .= ".zoom-instagram{$feed_id} .zoom-instagram-widget__item,.zoom-instagram{$feed_id} .masonry-items-sizer{";
-				$output .= "width:calc(1/{$col_num}*100%" . ( $spacing_between > 0 ? " - (1 - 1/{$col_num})*{$spacing_between}{$spacing_between_suffix}" : "" ) . ")!important;";
-				$output .= "}";
-			} else {
-				$output .= ".zoom-instagram{$feed_id} .zoom-instagram-widget__items{";
-				$output .= "grid-template-columns:repeat({$col_num},1fr);";
-				$output .= "}";
-			}
+			$output .= ".zoom-instagram{$feed_id} .zoom-instagram-widget__items{";
+			$output .= "grid-template-columns:repeat({$col_num},1fr);";
+			$output .= "}";
 			$output .= "}";
 
 			$output .= "@media screen and (max-width:768px){";
-			if ( 2 === $layout ) {
-				$output .= ".zoom-instagram{$feed_id} .zoom-instagram-widget__item,.zoom-instagram{$feed_id} .masonry-items-sizer{";
-				$output .= "width:calc(1/{$col_num_tablet}*100%" . ( $spacing_between > 0 ? " - (1 - 1/{$col_num_tablet})*{$spacing_between}{$spacing_between_suffix}" : "" ) . ")!important;";
-				$output .= "}";
-			} else {
-				$output .= ".zoom-instagram{$feed_id} .zoom-instagram-widget__items{";
-				$output .= "grid-template-columns:repeat({$col_num_tablet},1fr);";
-				$output .= "}";
-				$output .= ".zoom-instagram{$feed_id} .zoom-instagram-widget__item{";
-				$output .= "grid-row:auto!important;grid-column:auto!important;";
-				$output .= "}";
-			}
+			$output .= ".zoom-instagram{$feed_id} .zoom-instagram-widget__items{";
+			$output .= "grid-template-columns:repeat({$col_num_tablet},1fr);";
+			$output .= "}";
+			$output .= ".zoom-instagram{$feed_id} .zoom-instagram-widget__item{";
+			$output .= "grid-row:auto!important;grid-column:auto!important;";
+			$output .= "}";
 			$output .= "}";
 
 			$output .= "@media screen and (max-width:480px){";
-			if ( 2 === $layout ) {
-				$output .= ".zoom-instagram{$feed_id} .zoom-instagram-widget__item,.zoom-instagram{$feed_id} .masonry-items-sizer{";
-				$output .= "width:calc(1/{$col_num_mobile}*100%" . ( $spacing_between > 0 ? " - (1 - 1/{$col_num_mobile})*{$spacing_between}{$spacing_between_suffix}" : "" ) . ")!important;";
-				$output .= "}";
-			} else {
-				$output .= ".zoom-instagram{$feed_id} .zoom-instagram-widget__items{";
-				$output .= "grid-template-columns:repeat({$col_num_mobile},1fr);";
-				$output .= "}";
-			}
+			$output .= ".zoom-instagram{$feed_id} .zoom-instagram-widget__items{";
+			$output .= "grid-template-columns:repeat({$col_num_mobile},1fr);";
+			$output .= "}";
 			$output .= "}";
 		}
 

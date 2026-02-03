@@ -107,6 +107,26 @@ html {
 	}
 }
 
+// Match frontend: item and image sizing so preview matches live feed
+.zoom-new-instagram-widget .zoom-instagram .zoom-instagram-widget__item {
+	position: relative;
+	list-style-type: none !important;
+
+	.zoom-instagram-widget__item-inner-wrap {
+		position: relative;
+		height: 100%;
+		overflow: hidden;
+	}
+
+	img:not(.wpz-insta-product-popover-item-img) {
+		object-fit: cover;
+		object-position: center;
+		height: 100%;
+		width: 100%;
+		display: block;
+	}
+}
+
 // WooCommerce Product Link button (inside iframe preview)
 .zoom-instagram-widget__item-inner-wrap {
 	position: relative;
@@ -161,4 +181,79 @@ html {
 // Show "Link to a product" buttons only when Product Links tab is active (no iframe reload)
 body.wpz-insta-product-links-tab-active .wpz-insta-link-product-btn {
 	display: flex;
+}
+
+// Layout styles for preview iframe (index.scss uses .widget.zoom-new-instagram-widget; preview wrapper has only .zoom-new-instagram-widget)
+// Ensures layout-grid, layout-fullwidth, layout-carousel and layout-masonry apply when design is updated via postMessage
+.zoom-new-instagram-widget .zoom-instagram .zoom-instagram-widget__items {
+	padding: 0;
+	margin: 0;
+
+	&::before,
+	&::after {
+		display: none;
+	}
+
+	&.layout-grid .zoom-instagram-widget__item img:not(.wpz-insta-product-popover-item-img) {
+		object-fit: cover;
+		width: 100%;
+		aspect-ratio: 1 / 1;
+		height: 100% !important;
+	}
+
+	&.layout-fullwidth {
+		white-space: nowrap;
+		display: grid;
+		grid-template-rows: auto;
+		grid-auto-rows: 0;
+
+		.zoom-instagram-widget__item img:not(.wpz-insta-product-popover-item-img) {
+			aspect-ratio: 1;
+			height: 100% !important;
+		}
+	}
+
+	&.layout-carousel {
+		display: flex;
+		height: auto !important;
+		overflow: hidden;
+		flex-wrap: nowrap;
+
+		.zoom-instagram-widget__item {
+			height: auto;
+			flex: 0 0 calc(100% / var(--wpz-insta-perpage, 3));
+			min-width: 0;
+
+			img:not(.wpz-insta-product-popover-item-img) {
+				aspect-ratio: 1;
+				object-fit: cover;
+				height: auto;
+				width: 100%;
+			}
+		}
+	}
+}
+
+// Masonry in preview: show as grid and hide the masonry sizer (extra li)
+.zoom-new-instagram-widget .zoom-instagram.wpz-insta-preview-masonry .zoom-instagram-widget__items .masonry-items-sizer {
+	display: none !important;
+}
+
+// Notice when masonry is selected (preview shows grid; masonry applied on frontend)
+.wpz-insta-preview-masonry-notice {
+	display: block;
+	margin: 0 0 12px;
+	padding: 10px 14px;
+	font-size: 13px;
+	line-height: 1.4;
+	color: #1d2327;
+	background: #f0f6fc;
+	border-left: 4px solid #2271b1;
+	border-radius: 0 2px 2px 0;
+	box-sizing: border-box;
+}
+
+.zoom-new-instagram-widget .zoom-instagram.layout-masonry .zoom-instagram-widget__items .zoom-instagram-widget__item img,
+.zoom-new-instagram-widget .zoom-instagram.layout-masonry .zoom-instagram-widget__items .masonry-items-sizer img {
+	filter: none;
 }

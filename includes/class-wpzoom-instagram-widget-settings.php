@@ -1462,6 +1462,40 @@ class WPZOOM_Instagram_Widget_Settings {
 		return $values;
 	}
 
+	/**
+	 * Whether the current request has feed form params in the query string (used for preview).
+	 *
+	 * @return bool
+	 */
+	public static function preview_has_query_params() {
+		if ( empty( $_GET ) || ! is_array( $_GET ) ) {
+			return false;
+		}
+		foreach ( array_keys( $_GET ) as $key ) {
+			if ( strpos( (string) $key, '_wpz-insta_' ) === 0 ) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Get feed settings from post meta by feed ID (for minimal preview URL).
+	 *
+	 * @param int $feed_id Feed post ID.
+	 * @return array Same shape as get_clean_feed_settings_from_query().
+	 */
+	public static function get_feed_settings_from_feed_id( $feed_id ) {
+		$values = array();
+		if ( $feed_id <= 0 || empty( self::$feed_settings ) ) {
+			return $values;
+		}
+		foreach ( self::$feed_settings as $setting_name => $setting_args ) {
+			$values[ $setting_name ] = self::get_feed_setting_value( $feed_id, $setting_name );
+		}
+		return $values;
+	}
+
 	public static function get_clean_feed_settings_from_query() {
 		$values = array();
 
@@ -2298,6 +2332,9 @@ class WPZOOM_Instagram_Widget_Settings {
 
 							<div class="wpz-insta_sidebar-section wpz-insta_sidebar-section-product-links-settings">
 								<h4 class="wpz-insta_sidebar-section-title"><?php esc_html_e( 'Settings', 'instagram-widget-by-wpzoom' ); ?></h4>
+
+								<?php echo $pro_toggle ? '<fieldset class="wpz-insta_feed-only-pro wpz-insta_pro-only wpz-insta_pro-only-with-bottom' . ( 1 === $feed_layout ? ' hidden' : '' ) . '"><legend><strong>' . esc_html__( 'PRO', 'instagram-widget-by-wpzoom' ) . '</strong></legend>' : ''; ?>
+
 								<div class="wpz-insta_product-links-general wpz-insta_table">
 									<div class="wpz-insta_table-row wpz-insta-product-links-display-type-row">
 										<strong class="wpz-insta_table-cell"><?php esc_html_e( 'Display', 'instagram-widget-by-wpzoom' ); ?></strong>
@@ -2386,10 +2423,15 @@ class WPZOOM_Instagram_Widget_Settings {
 										</div>
 									</label>
 								</div>
+
+								<?php echo $pro_toggle ? '</fieldset>' : ''; ?>
 							</div>
 
 							<div class="wpz-insta_sidebar-section wpz-insta_sidebar-section-product-links-icon-design<?php echo $product_links_is_icon ? '' : ' hidden'; ?>">
 								<h4 class="wpz-insta_sidebar-section-title"><?php esc_html_e( 'Icon design', 'instagram-widget-by-wpzoom' ); ?></h4>
+
+								<?php echo $pro_toggle ? '<fieldset class="wpz-insta_feed-only-pro wpz-insta_pro-only wpz-insta_pro-only-with-bottom' . ( 1 === $feed_layout ? ' hidden' : '' ) . '"><legend><strong>' . esc_html__( 'PRO', 'instagram-widget-by-wpzoom' ) . '</strong></legend>' : ''; ?>
+
 								<div class="wpz-insta_product-links-icon-design wpz-insta_table">
 									<label class="wpz-insta_table-row">
 										<strong class="wpz-insta_table-cell"><?php esc_html_e( 'Icon size', 'instagram-widget-by-wpzoom' ); ?></strong>
@@ -2410,10 +2452,15 @@ class WPZOOM_Instagram_Widget_Settings {
 										</div>
 									</label>
 								</div>
+
+								<?php echo $pro_toggle ? '</fieldset>' : ''; ?>
 							</div>
 
 							<div class="wpz-insta_sidebar-section wpz-insta_sidebar-section-product-links-design<?php echo $product_links_is_icon ? ' hidden' : ''; ?>">
 								<h4 class="wpz-insta_sidebar-section-title"><?php esc_html_e( 'Button design', 'instagram-widget-by-wpzoom' ); ?></h4>
+
+								<?php echo $pro_toggle ? '<fieldset class="wpz-insta_feed-only-pro wpz-insta_pro-only wpz-insta_pro-only-with-bottom' . ( 1 === $feed_layout ? ' hidden' : '' ) . '"><legend><strong>' . esc_html__( 'PRO', 'instagram-widget-by-wpzoom' ) . '</strong></legend>' : ''; ?>
+
 								<div class="wpz-insta_product-links-design wpz-insta_table">
 									<label class="wpz-insta_table-row">
 										<strong class="wpz-insta_table-cell"><?php esc_html_e( 'Background', 'instagram-widget-by-wpzoom' ); ?></strong>
@@ -2470,6 +2517,8 @@ class WPZOOM_Instagram_Widget_Settings {
 										</div>
 									</label>
 								</div>
+
+								<?php echo $pro_toggle ? '</fieldset>' : ''; ?>
 							</div>
 						</div>
 						<?php endif; ?>
@@ -2506,7 +2555,8 @@ class WPZOOM_Instagram_Widget_Settings {
 
 							<div class="wpz-insta_widget-preview-view wpz-insta_widget-preview-size-desktop<?php echo 1 === $feed_layout ? ' layout-fullwidth' : ''; ?>">
 								<div id="wpz-insta_widget-preview-view" class="wpz-insta_widget-preview-view-inner">
-									<iframe src="" scrolling="no" class="wpz-insta_preview-hidden"></iframe>
+									<?php $preview_iframe_src = $post->ID > 0 ? self::get_initial_preview_iframe_url( $post->ID, 'config' ) : ''; ?>
+									<iframe src="<?php echo $preview_iframe_src; ?>" scrolling="no" class="wpz-insta_preview-hidden"></iframe>
 								</div>
 							</div>
 						</div>
@@ -2595,13 +2645,45 @@ class WPZOOM_Instagram_Widget_Settings {
 
 	function preview_frame() {
 		$display = Wpzoom_Instagram_Widget_Display::getInstance();
-		$preview_args = self::get_clean_feed_settings_from_query();
 
 		// Get feed ID from query parameter (passed from feed editor), fallback to get_the_ID() for other contexts.
 		$feed_id = isset( $_GET['wpz-insta-feed-id'] ) ? intval( $_GET['wpz-insta-feed-id'] ) : get_the_ID();
-		$preview_args['feed-id'] = $feed_id > 0 ? $feed_id : 0;
+		$feed_id = $feed_id > 0 ? $feed_id : 0;
+
+		// Load settings from DB (or from query when no feed). Then overlay any _wpz-insta_* GET params
+		// so unsaved form values (e.g. item-num) used when reloading preview are applied.
+		if ( $feed_id > 0 ) {
+			$preview_args = self::get_feed_settings_from_feed_id( $feed_id );
+			if ( ! empty( self::$feed_settings ) ) {
+				foreach ( array_keys( self::$feed_settings ) as $setting_name ) {
+					$prefixed = '_wpz-insta_' . $setting_name;
+					if ( isset( $_GET[ $prefixed ] ) ) {
+						$preview_args[ $setting_name ] = self::sanitize_feed_setting_value( $setting_name, $_GET[ $prefixed ] );
+					}
+				}
+			}
+		} else {
+			$preview_args = self::get_clean_feed_settings_from_query();
+		}
+		$preview_args['feed-id'] = $feed_id;
 
 		printf( '<div class="zoom-new-instagram-widget">%s</div>', $display->get_preview( $preview_args ) );
+	}
+
+	/**
+	 * Build the initial preview iframe URL for the feed edit screen (PHP-rendered first load).
+	 *
+	 * @param int    $feed_id Feed post ID.
+	 * @param string $tab     Tab identifier (e.g. 'config', 'design'). Default 'config'.
+	 * @return string Escaped URL for the preview iframe.
+	 */
+	public static function get_initial_preview_iframe_url( $feed_id, $tab = 'config' ) {
+		$base = site_url( '?wpz-insta-widget-preview=true' );
+		$args = array(
+			'wpz-insta-feed-id' => (int) $feed_id,
+			'wpz-insta-tab'     => sanitize_key( $tab ),
+		);
+		return esc_url( add_query_arg( $args, $base ) );
 	}
 
 	public function get_preview_frame() {
@@ -4144,7 +4226,7 @@ class WPZOOM_Instagram_Widget_Settings {
 						'save'            => __( 'Save', 'instagram-widget-by-wpzoom' ),
 						'cancel'          => __( 'Cancel', 'instagram-widget-by-wpzoom' ),
 						'productLinksUpsellTitle'   => __( 'Unlock Product Links', 'instagram-widget-by-wpzoom' ),
-						'productLinksUpsellMessage' => __( 'Link your Instagram posts to WooCommerce products and show a Buy now button. This feature is available with an active Instagram Widget PRO license.', 'instagram-widget-by-wpzoom' ),
+						'productLinksUpsellMessage' => __( 'Link your Instagram posts to WooCommerce products and display the product details or a Buy now button. This feature is available with an active Instagram Widget PRO license.', 'instagram-widget-by-wpzoom' ),
 						'productLinksUpsellCta'     => __( 'Get PRO License', 'instagram-widget-by-wpzoom' ),
 						'productLinksUpsellClose'   => __( 'Close', 'instagram-widget-by-wpzoom' ),
 					),
@@ -4159,6 +4241,7 @@ class WPZOOM_Instagram_Widget_Settings {
 							'https://www.wpzoom.com/plugins/instagram-widget/'
 						)
 					),
+					'product_links_upsell_image_url'   => WPZOOM_INSTAGRAM_PLUGIN_URL . 'assets/backend/img/woo-products-upsell.jpg',
 				)
 			);
 		}
