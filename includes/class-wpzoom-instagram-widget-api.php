@@ -416,14 +416,12 @@ class Wpzoom_Instagram_Widget_API {
 		}
 
 		if ( ! empty( $data->data ) ) {
-			if ( ! $bypass_transient ) {
-				set_transient(
-					$transient,
-					wp_json_encode( $data ),
-					$this->get_transient_lifetime( $feed_id )
-				);
-
-			}
+			// Always update cache when we have fresh data (e.g. from "Load latest") so frontend and next loads use it
+			set_transient(
+				$transient,
+				wp_json_encode( $data ),
+				$this->get_transient_lifetime( $feed_id )
+			);
 		} else {
 			if ( ! $bypass_transient ) {
 				set_transient( $transient, wp_json_encode( false ), MINUTE_IN_SECONDS );
