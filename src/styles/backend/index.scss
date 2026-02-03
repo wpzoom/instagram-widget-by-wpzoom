@@ -2309,7 +2309,6 @@
 					margin: 0;
 
 					.wpz-insta_widget-preview-header-title {
-						flex-grow: 1;
 						font-size: 14px;
 						font-weight: 600;
 						text-align: center;
@@ -2369,6 +2368,24 @@
 								transition: all 0.3s ease;
 							}
 						}
+					}
+				}
+
+				.wpz-insta_widget-preview-refresh {
+					flex-shrink: 0;
+					margin-left: 8px;
+					padding: 6px 10px;
+					height: auto;
+					line-height: 1.4;
+					font-size: 12px;
+
+					&.disabled,
+					&:disabled {
+						pointer-events: none;
+						opacity: 0.5;
+					}
+					svg{
+						margin-right: 6px;
 					}
 				}
 

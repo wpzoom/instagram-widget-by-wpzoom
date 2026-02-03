@@ -623,7 +623,7 @@ class Wpzoom_Instagram_Widget_Display {
 							'include-pagination'   => true,
 							'allowed-post-types'   => $allowed_post_types,
 							'pagination-cursor'    => $pagination_cursor,
-							'bypass-transient'     => $preview,
+							'bypass-transient'     => $preview && ! empty( $_GET['wpz-insta-preview-refresh'] ),
 							'skip-likes-comments'  => $is_load_more_request, // Skip likes/comments for load-more to improve performance
 							'access-token'         => $user_account_token,   // Pass token directly to avoid state collision
 							'feed-id'             => isset( $args['feed-id'] ) ? $args['feed-id'] : -1,

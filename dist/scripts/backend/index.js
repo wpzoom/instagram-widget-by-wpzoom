@@ -303,6 +303,7 @@ jQuery(function ($) {
     $('#wpz-insta_user-token').val('-1').trigger('change');
     $('#wpz-insta_user-token, #wpz-insta_check-new-posts-interval-number, #wpz-insta_enable-request-timeout').closest('.wpz-insta_sidebar-section').removeClass('active');
     $('#wpz-insta_widget-preview-links').addClass('disabled');
+    $('.wpz-insta_widget-preview-refresh').addClass('disabled').prop('disabled', true);
     $select.removeClass('is-set');
     $info.find('.wpz-insta_feed-user-select-info-name').html('None');
     $info.find('.wpz-insta_feed-user-select-info-type').html('None');
@@ -322,6 +323,7 @@ jQuery(function ($) {
     $select.closest('.wrap').find('.wpz-insta_settings-header .wpz-insta_feed-edit-nav li').removeClass('disable');
     $select.find('.wpz-insta_feed-user-select-edit-link').attr('href', zoom_instagram_widget_admin.edit_user_url + $(this).data('user-id'));
     $('#wpz-insta_widget-preview-links').removeClass('disabled');
+    $('.wpz-insta_widget-preview-refresh').removeClass('disabled').prop('disabled', false);
 
     // Toggle Stories checkbox based on whether the account has a Facebook Page connection
     var hasPageId = $(this).data('has-page-id') === 1 || $(this).data('has-page-id') === '1';
@@ -889,8 +891,14 @@ jQuery(function ($) {
       data: state
     }, '*');
   }
-  window.wpzInstaReloadPreview = function () {
-    // Base URL: feed-id and tab. PHP loads settings from DB then overlays these params (so unsaved values apply).
+
+  /**
+   * Build the preview iframe URL (optionally with refresh param to bypass cache).
+   *
+   * @param {boolean} [withRefresh=false] If true, add wpz-insta-preview-refresh=1 to fetch fresh data from Instagram.
+   * @returns {string} Preview URL.
+   */
+  function wpzInstaBuildPreviewUrl(withRefresh) {
     var url = zoom_instagram_widget_admin.preview_url;
     var postId = $('form#post input[name="post_ID"]').val();
     if (postId) {
@@ -900,7 +908,6 @@ jQuery(function ($) {
     if (activeTab) {
       url += '&wpz-insta-tab=' + encodeURIComponent((activeTab + '').replace(/^#/, ''));
     }
-    // Pass current form values for reload-triggering fields so preview uses them before save.
     var itemNum = $('form#post input[name="_wpz-insta_item-num"]').val();
     if (itemNum != null && itemNum !== '') {
       url += '&_wpz-insta_item-num=' + encodeURIComponent(itemNum);
@@ -915,9 +922,19 @@ jQuery(function ($) {
     if (allowedTypes) {
       url += '&_wpz-insta_allowed-post-types=' + encodeURIComponent(allowedTypes);
     }
+    if (withRefresh) {
+      url += '&wpz-insta-preview-refresh=1';
+    }
+    return url;
+  }
+  window.wpzInstaReloadPreview = function (withRefresh) {
+    var url = wpzInstaBuildPreviewUrl(!!withRefresh);
     $('#wpz-insta_widget-preview-view').closest('.wpz-insta_sidebar-right').removeClass('hide-loading');
     $('#wpz-insta_widget-preview-view iframe').addClass('wpz-insta_preview-hidden').attr('src', url);
   };
+  $('.wpz-insta_widget-preview-refresh').on('click', function () {
+    window.wpzInstaReloadPreview(true);
+  });
   window.wpzInstaUpdatePreviewHeight = function () {
     var $frame = $('#wpz-insta_widget-preview-view iframe');
     $frame.height(parseInt($frame.contents().find('body').prop('scrollHeight')));
