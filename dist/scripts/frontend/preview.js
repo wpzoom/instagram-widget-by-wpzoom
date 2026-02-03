@@ -28,7 +28,52 @@ function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == 
     var s = String(v).toLowerCase();
     return s === '1' || s === 'true' || s === 'yes' || s === 'on';
   }
+
+  // Breakpoints aligned with PHP (style_content): 1200px desktop, 768px tablet, 480px mobile
+  function getEffectiveColNum(data) {
+    if (!data || _typeof(data) !== 'object') return 3;
+    var responsive = boolVal(data['col-num_responsive-enabled']);
+    var colDesktop = parseInt(data['col-num'], 10);
+    var colTablet = parseInt(data['col-num_tablet'], 10);
+    var colMobile = parseInt(data['col-num_mobile'], 10);
+    if (isNaN(colDesktop) || colDesktop < 0) colDesktop = 3;
+    if (isNaN(colTablet) || colTablet < 0) colTablet = 2;
+    if (isNaN(colMobile) || colMobile < 0) colMobile = 1;
+    if (!responsive) {
+      return colDesktop;
+    }
+    var w = window.innerWidth;
+    // PHP: min-width 1200 desktop; max-width 768 tablet; max-width 480 mobile
+    if (w > 768) return colDesktop;
+    if (w > 480) return colTablet;
+    return colMobile;
+  }
+
+  /**
+   * Applies the effective column number (based on viewport + responsive settings) to the preview DOM.
+   * Uses lastPreviewData; call after applyPreviewUpdate or on window resize.
+   */
+  function applyColNumToPreview() {
+    if (!lastPreviewData) return;
+    var root = document.querySelector('.zoom-new-instagram-widget .zoom-instagram');
+    if (!root) return;
+    var colNum = getEffectiveColNum(lastPreviewData);
+    [].slice.call(root.classList).forEach(function (c) {
+      if (c.indexOf('columns-') === 0) root.classList.remove(c);
+    });
+    root.classList.add('columns-' + colNum);
+    var layoutInt = parseInt(lastPreviewData.layout, 10);
+    var layoutName = !isNaN(layoutInt) && layoutInt >= 0 && layoutInt < LAYOUT_NAMES.length ? LAYOUT_NAMES[layoutInt] : '';
+    if (layoutName === 'grid' || layoutName === 'masonry') {
+      var itemsEl = root.querySelector('.zoom-instagram-widget__items');
+      if (itemsEl && itemsEl.style) {
+        itemsEl.style.gridTemplateColumns = 'repeat(' + colNum + ', 1fr)';
+      }
+    }
+  }
+  var lastPreviewData = null;
   function applyPreviewUpdate(data) {
+    lastPreviewData = data;
     if (!data || _typeof(data) !== 'object') return;
     var root = document.querySelector('.zoom-new-instagram-widget .zoom-instagram');
     if (!root) return;
@@ -71,15 +116,12 @@ function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == 
         });
         items.classList.add('layout-' + itemsLayoutClass);
         items.classList.toggle('swiper-wrapper', layoutName === 'carousel');
-        var colNum = parseInt(data['col-num'], 10);
-        if (isNaN(colNum) || colNum < 0) colNum = 3;
         var itemNum = parseInt(data['item-num'], 10);
         if (isNaN(itemNum) || itemNum < 1) itemNum = 6;
         var perpageNum = parseInt(data['perpage-num'], 10);
         if (isNaN(perpageNum) || perpageNum < 1) perpageNum = 3;
         if (layoutName === 'grid' || layoutName === 'masonry') {
           items.style.display = 'grid';
-          items.style.gridTemplateColumns = 'repeat(' + colNum + ', 1fr)';
           items.style.removeProperty('--wpz-insta-perpage');
         } else if (layoutName === 'fullwidth') {
           items.style.display = 'grid';
@@ -101,20 +143,7 @@ function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == 
         wrapper.classList.toggle('swiper', layoutName === 'carousel');
       }
     }
-    var colNum = parseInt(data['col-num'], 10);
-    if (!isNaN(colNum) && colNum >= 0) {
-      [].slice.call(root.classList).forEach(function (c) {
-        if (c.indexOf('columns-') === 0) root.classList.remove(c);
-      });
-      root.classList.add('columns-' + colNum);
-      // Only apply col-num to grid-template-columns for grid layout; fullwidth uses item-num (set in layout block above)
-      var currentLayoutInt = parseInt(data.layout, 10);
-      var currentLayoutName = !isNaN(currentLayoutInt) && currentLayoutInt >= 0 && currentLayoutInt < LAYOUT_NAMES.length ? LAYOUT_NAMES[currentLayoutInt] : '';
-      var itemsEl = root.querySelector('.zoom-instagram-widget__items');
-      if (itemsEl && itemsEl.style && currentLayoutName === 'grid') {
-        itemsEl.style.gridTemplateColumns = 'repeat(' + colNum + ', 1fr)';
-      }
-    }
+    applyColNumToPreview();
     var spacing = parseFloat(data['spacing-between'], 10);
     var itemsListGap = root.querySelector('.zoom-instagram-widget__items');
     if (itemsListGap && itemsListGap.style) {
@@ -267,6 +296,11 @@ function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == 
     } else if (event.data.action === 'wpz-insta-preview-update' && event.data.data) {
       applyPreviewUpdate(event.data.data);
     }
+  });
+
+  // When viewport size changes (e.g. Desktop/Tablet/Mobile toggle), update column count only
+  window.addEventListener('resize', function () {
+    applyColNumToPreview();
   });
 })();
 document.body.addEventListener('load', function (event) {
