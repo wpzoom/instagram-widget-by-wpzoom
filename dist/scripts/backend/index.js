@@ -942,11 +942,72 @@ jQuery(function ($) {
 
   // WooCommerce Product Link functionality
   if (typeof zoom_instagram_widget_admin !== 'undefined') {
-    // Selected product IDs (persists across pagination)
+    // Initialize pending product links from existing data if available
+    var initPendingProductLinks = function initPendingProductLinks() {
+      var $hiddenInput = $('#wpz-insta-pending-product-links');
+      if ($hiddenInput.length === 0) {
+        // Create hidden input to store pending product links for form submission
+        $('form#post').append('<input type="hidden" id="wpz-insta-pending-product-links" name="_wpz-insta_pending-product-links" value="" />');
+      }
+    }; // Update the hidden input with current pending product links
+    var updatePendingProductLinksInput = function updatePendingProductLinksInput() {
+      var $hiddenInput = $('#wpz-insta-pending-product-links');
+      if ($hiddenInput.length) {
+        $hiddenInput.val(JSON.stringify(pendingProductLinks));
+      }
+
+      // Trigger form change detection so Save button becomes active
+      if (!$.isEmptyObject(pendingProductLinks) || hasAnyPendingChanges()) {
+        // Mark form as changed
+        if (!('_wpz-insta_pending-product-links' in formChangedValues)) {
+          formChangedValues['_wpz-insta_pending-product-links'] = true;
+        }
+      } else {
+        if ('_wpz-insta_pending-product-links' in formChangedValues) {
+          delete formChangedValues['_wpz-insta_pending-product-links'];
+        }
+      }
+      $('input#publish').toggleClass('disabled', $.isEmptyObject(formChangedValues));
+    }; // Check if there are any pending changes (different from initial state)
+    var hasAnyPendingChanges = function hasAnyPendingChanges() {
+      var mediaIds = Object.keys(pendingProductLinks);
+      for (var i = 0; i < mediaIds.length; i++) {
+        var mediaId = mediaIds[i];
+        var pending = pendingProductLinks[mediaId] || [];
+        var initial = initialProductLinks[mediaId] || [];
+        if (JSON.stringify(pending.sort()) !== JSON.stringify(initial.sort())) {
+          return true;
+        }
+      }
+      return false;
+    }; // Get linked product IDs for a media item (check pending first, then initial)
+    var getLinkedProductIds = function getLinkedProductIds(mediaId) {
+      if (mediaId in pendingProductLinks) {
+        return pendingProductLinks[mediaId].slice();
+      }
+      if (mediaId in initialProductLinks) {
+        return initialProductLinks[mediaId].slice();
+      }
+      return [];
+    }; // Update preview iframe to reflect has-linked-products class changes
+    var updatePreviewLinkedProducts = function updatePreviewLinkedProducts(mediaId, hasLinks) {
+      var iframe = document.querySelector('#wpz-insta_widget-preview-view iframe');
+      if (iframe && iframe.contentWindow) {
+        iframe.contentWindow.postMessage({
+          action: 'wpz-insta-product-link-update',
+          mediaId: mediaId,
+          hasLinks: hasLinks,
+          productIds: hasLinks ? getLinkedProductIds(mediaId) : []
+        }, '*');
+      }
+    };
     var initProductLinkModal = function initProductLinkModal() {
       if ($productLinkModal) {
         return;
       }
+
+      // Initialize the hidden input for pending product links
+      initPendingProductLinks();
       var strings = zoom_instagram_widget_admin.strings || {};
       var modalHTML = '<div id="wpz-insta-product-link-modal" class="wpz-insta-modal" style="display: none;">' + '<div class="wpz-insta-modal-content">' + '<div class="wpz-insta-modal-header">' + '<h2>' + (strings.linkProduct || 'Link to Product') + '</h2>' + '<button type="button" class="wpz-insta-modal-close">&times;</button>' + '</div>' + '<div class="wpz-insta-modal-body">' + '<p class="wpz-insta-product-link-hint">' + (strings.selectProductsHint || 'Select one or more products. Click an item to toggle selection.') + '</p>' + '<div class="wpz-insta-product-search">' + '<input type="text" id="wpz-insta-product-search-input" placeholder="' + (strings.searchProducts || 'Search products...') + '" />' + '</div>' + '<div class="wpz-insta-product-list" id="wpz-insta-product-list"></div>' + '<div class="wpz-insta-product-pagination"></div>' + '</div>' + '<div class="wpz-insta-modal-footer">' + '<button type="button" class="button wpz-insta-remove-link" style="display: none;">' + (strings.removeLink || 'Remove Link') + '</button>' + '<button type="button" class="button button-primary wpz-insta-save-link" disabled>' + (strings.save || 'Save') + '</button>' + '<button type="button" class="button wpz-insta-cancel-link">' + (strings.cancel || 'Cancel') + '</button>' + '</div>' + '</div>' + '</div>';
       $('body').append(modalHTML);
@@ -959,13 +1020,13 @@ jQuery(function ($) {
 
       // Remove link handler
       $productLinkModal.on('click', '.wpz-insta-remove-link', function () {
-        saveProductLink([]);
+        saveProductLinkToMemory([]);
       });
 
-      // Save link handler
+      // Save link handler - now saves to memory, not DB
       $productLinkModal.on('click', '.wpz-insta-save-link', function () {
         var ids = currentSelectedIds.slice();
-        saveProductLink(ids);
+        saveProductLinkToMemory(ids);
       });
 
       // Product item click: toggle selection (multi-select)
@@ -979,7 +1040,9 @@ jQuery(function ($) {
           currentSelectedIds.splice(idx, 1);
           $(this).removeClass('selected');
         }
-        $('.wpz-insta-save-link').prop('disabled', currentSelectedIds.length === 0);
+        // Enable save button if selection differs from original
+        var hasChanges = JSON.stringify(currentSelectedIds.slice().sort()) !== JSON.stringify(originalSelectedIds.slice().sort());
+        $('.wpz-insta-save-link').prop('disabled', !hasChanges);
         $('.wpz-insta-remove-link').toggle(currentSelectedIds.length > 0);
       });
 
@@ -1043,35 +1106,32 @@ jQuery(function ($) {
       } else {
         $('.wpz-insta-product-pagination').html('');
       }
-      $('.wpz-insta-save-link').prop('disabled', currentSelectedIds.length === 0);
+
+      // Enable save button if selection differs from original
+      var hasChanges = JSON.stringify(currentSelectedIds.slice().sort()) !== JSON.stringify(originalSelectedIds.slice().sort());
+      $('.wpz-insta-save-link').prop('disabled', !hasChanges);
       $('.wpz-insta-remove-link').toggle(currentSelectedIds.length > 0);
-    };
-    var saveProductLink = function saveProductLink(productIds) {
+    }; // Save product link to memory (not to DB) - will be saved when post is saved
+    var saveProductLinkToMemory = function saveProductLinkToMemory(productIds) {
       productIds = Array.isArray(productIds) ? productIds : productIds ? [productIds] : [];
-      $.ajax({
-        url: zoom_instagram_widget_admin.ajax_url,
-        type: 'POST',
-        data: {
-          action: 'wpz-insta_save-product-link',
-          nonce: zoom_instagram_widget_admin.product_link_nonce,
-          feed_id: currentFeedId,
-          media_id: currentMediaId,
-          product_ids: productIds
-        },
-        success: function success(response) {
-          if (response.success) {
-            $productLinkModal.hide();
-            if (typeof window.wpzInstaReloadPreview === 'function') {
-              window.wpzInstaReloadPreview();
-            }
-          } else {
-            alert(response.data && response.data.message ? response.data.message : 'Error saving product link(s).');
-          }
-        },
-        error: function error() {
-          alert('Error saving product link(s).');
-        }
-      });
+
+      // Update pending product links in memory
+      if (productIds.length > 0) {
+        pendingProductLinks[currentMediaId] = productIds;
+      } else {
+        // If removing all links, store empty array to indicate removal
+        pendingProductLinks[currentMediaId] = [];
+      }
+
+      // Update the hidden input for form submission
+      updatePendingProductLinksInput();
+
+      // Update preview iframe
+      var hasLinks = productIds.length > 0;
+      updatePreviewLinkedProducts(currentMediaId, hasLinks);
+
+      // Close modal
+      $productLinkModal.hide();
     }; // Product Links upsell modal (shown when no valid license)
     var initProductLinksUpsellModal = function initProductLinksUpsellModal() {
       if ($productLinksUpsellModal) {
@@ -1096,7 +1156,15 @@ jQuery(function ($) {
     var $productLinkModal = null;
     var currentMediaId = null;
     var currentFeedId = null;
-    var currentSelectedIds = [];
+    var currentSelectedIds = []; // Selected product IDs (persists across pagination)
+    var originalSelectedIds = []; // Original IDs from DB when modal opened (to detect changes)
+
+    // Pending product links stored in memory (not saved to DB until post is saved)
+    // Structure: { mediaId: [productId1, productId2, ...], ... }
+    var pendingProductLinks = {};
+
+    // Track which media IDs had links when page loaded (from DB)
+    var initialProductLinks = {};
     var $productLinksUpsellModal = null;
     window.addEventListener('message', function (e) {
       if (!e.data || e.data.action !== 'wpz-insta-open-product-link') {
@@ -1115,31 +1183,45 @@ jQuery(function ($) {
       $('#wpz-insta-product-list').html('<div class="wpz-insta-loading">Loading...</div>');
       $('.wpz-insta-save-link').prop('disabled', true);
 
-      // Fetch current linked product IDs (supports multi-select)
-      $.ajax({
-        url: zoom_instagram_widget_admin.ajax_url,
-        type: 'POST',
-        data: {
-          action: 'wpz-insta_get-product-link',
-          nonce: zoom_instagram_widget_admin.product_link_nonce,
-          feed_id: currentFeedId,
-          media_id: currentMediaId
-        },
-        success: function success(response) {
-          if (response.success && response.data && response.data.product_ids && Array.isArray(response.data.product_ids)) {
-            currentSelectedIds = response.data.product_ids.slice();
-          } else {
+      // First check if we have pending changes in memory for this media ID
+      if (currentMediaId in pendingProductLinks) {
+        currentSelectedIds = pendingProductLinks[currentMediaId].slice();
+        originalSelectedIds = currentSelectedIds.slice();
+        $('.wpz-insta-remove-link').toggle(currentSelectedIds.length > 0);
+        loadProducts('', 1);
+      } else {
+        // Fetch current linked product IDs from DB (supports multi-select)
+        $.ajax({
+          url: zoom_instagram_widget_admin.ajax_url,
+          type: 'POST',
+          data: {
+            action: 'wpz-insta_get-product-link',
+            nonce: zoom_instagram_widget_admin.product_link_nonce,
+            feed_id: currentFeedId,
+            media_id: currentMediaId
+          },
+          success: function success(response) {
+            if (response.success && response.data && response.data.product_ids && Array.isArray(response.data.product_ids)) {
+              currentSelectedIds = response.data.product_ids.slice();
+              // Store initial state from DB
+              initialProductLinks[currentMediaId] = response.data.product_ids.slice();
+            } else {
+              currentSelectedIds = [];
+              initialProductLinks[currentMediaId] = [];
+            }
+            originalSelectedIds = currentSelectedIds.slice();
+            $('.wpz-insta-remove-link').toggle(currentSelectedIds.length > 0);
+            loadProducts('', 1);
+          },
+          error: function error() {
             currentSelectedIds = [];
+            originalSelectedIds = [];
+            initialProductLinks[currentMediaId] = [];
+            $('.wpz-insta-remove-link').hide();
+            loadProducts('', 1);
           }
-          $('.wpz-insta-remove-link').toggle(currentSelectedIds.length > 0);
-          loadProducts('', 1);
-        },
-        error: function error() {
-          currentSelectedIds = [];
-          $('.wpz-insta-remove-link').hide();
-          loadProducts('', 1);
-        }
-      });
+        });
+      }
     });
 
     // Pagination handlers (preserve currentSelectedIds)

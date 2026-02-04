@@ -288,6 +288,75 @@ function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == 
   // Initial state from URL (so direct visit to Product Links tab shows buttons)
   parseTabFromUrl();
 
+  /**
+   * Updates the has-linked-products class on an item based on product link changes.
+   * Also updates button text and badge visibility.
+   *
+   * @param {string} mediaId - The Instagram media ID.
+   * @param {boolean} hasLinks - Whether the item has linked products.
+   */
+  function updateItemLinkedProductsClass(mediaId, hasLinks) {
+    if (!mediaId) return;
+
+    // Find the item by checking the "Link to a product" button's data-media-id attribute
+    // This is the most reliable way since the button always has this attribute in preview mode
+    var items = document.querySelectorAll('.zoom-instagram-widget__item');
+    items.forEach(function (item) {
+      var matchFound = false;
+
+      // Primary method: check the "Link to a product" button's data-media-id (preview mode)
+      var btn = item.querySelector('.wpz-insta-link-product-btn');
+      if (btn) {
+        var btnMediaId = btn.getAttribute('data-media-id') || '';
+        if (btnMediaId === mediaId) {
+          matchFound = true;
+        }
+      }
+
+      // Fallback: check data-mfp-src on inner link/image elements (non-preview mode)
+      if (!matchFound) {
+        var innerLink = item.querySelector('.zoom-instagram-link');
+        if (innerLink) {
+          var linkMediaId = innerLink.getAttribute('data-mfp-src') || '';
+          if (linkMediaId === mediaId) {
+            matchFound = true;
+          }
+        }
+      }
+      if (matchFound) {
+        // Toggle has-linked-products class on the item
+        item.classList.toggle('has-linked-products', hasLinks);
+
+        // Update button text and icon
+        if (btn) {
+          btn.classList.toggle('wpz-insta-link-product-btn--linked', hasLinks);
+          if (hasLinks) {
+            btn.innerHTML = '<span class="dashicons dashicons-edit"></span> Edit Product Link';
+            btn.setAttribute('title', 'Edit Product Link');
+          } else {
+            btn.innerHTML = '<span class="dashicons dashicons-cart"></span> Link to a product';
+            btn.setAttribute('title', 'Link to a product');
+          }
+        }
+
+        // Toggle badge visibility
+        var badge = item.querySelector('.wpz-insta-product-badge');
+        if (badge) {
+          badge.style.display = hasLinks ? '' : 'none';
+        } else if (hasLinks) {
+          // Create badge if doesn't exist and has links
+          var innerWrap = item.querySelector('.zoom-instagram-widget__item-inner-wrap');
+          if (innerWrap) {
+            var newBadge = document.createElement('span');
+            newBadge.className = 'wpz-insta-product-badge';
+            newBadge.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M7.5 6v.75H5.513c-.96 0-1.764.724-1.865 1.679l-1.263 12A1.875 1.875 0 0 0 4.25 22.5h15.5a1.875 1.875 0 0 0 1.865-2.071l-1.263-12a1.875 1.875 0 0 0-1.865-1.679H16.5V6a4.5 4.5 0 1 0-9 0ZM12 3a3 3 0 0 0-3 3v.75h6V6a3 3 0 0 0-3-3Zm-3 8.25a3 3 0 1 0 6 0v-.75a.75.75 0 0 1 1.5 0v.75a4.5 4.5 0 1 1-9 0v-.75a.75.75 0 0 1 1.5 0v.75Z" clip-rule="evenodd" /></svg>Product';
+            innerWrap.appendChild(newBadge);
+          }
+        }
+      }
+    });
+  }
+
   // When parent switches tab or sends preview design update (no iframe reload)
   window.addEventListener('message', function (event) {
     if (!event.data) return;
@@ -295,6 +364,9 @@ function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == 
       setProductLinksTabActive(event.data.tab === TAB_PRODUCT_LINKS);
     } else if (event.data.action === 'wpz-insta-preview-update' && event.data.data) {
       applyPreviewUpdate(event.data.data);
+    } else if (event.data.action === 'wpz-insta-product-link-update') {
+      // Handle product link changes from the parent modal
+      updateItemLinkedProductsClass(event.data.mediaId, event.data.hasLinks);
     }
   });
 

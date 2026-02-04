@@ -964,6 +964,15 @@ class Wpzoom_Instagram_Widget_Display {
 					$classes .= ' swiper-slide';
 				}
 
+				// Add has-linked-products class if the item has linked products
+				$feed_id_for_links = isset( $args['feed-id'] ) ? intval( $args['feed-id'] ) : 0;
+				if ( $feed_id_for_links > 0 && class_exists( 'WooCommerce' ) && ! empty( $media_id ) ) {
+					$linked_ids_for_class = self::get_linked_product_ids( $feed_id_for_links, $media_id );
+					if ( ! empty( $linked_ids_for_class ) ) {
+						$classes .= ' has-linked-products';
+					}
+				}
+
 				$src_attr = $is_editor ? sprintf( 'src="%s"', esc_url( $src ) ) : '';
 
 				$output .= '<li class="zoom-instagram-widget__item' . $classes . '" ' . $inline_attrs . '><div class="zoom-instagram-widget__item-inner-wrap">';

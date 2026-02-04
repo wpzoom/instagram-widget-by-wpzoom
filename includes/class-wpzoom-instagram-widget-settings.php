@@ -3327,6 +3327,55 @@ class WPZOOM_Instagram_Widget_Settings {
 				if ( isset( $_POST['_wpz-insta_buy-now-border-radius-suffix'] ) && in_array( (int) $_POST['_wpz-insta_buy-now-border-radius-suffix'], array( 0, 1, 2 ), true ) ) {
 					update_post_meta( $post_ID, '_wpz-insta_buy-now-border-radius-suffix', (int) $_POST['_wpz-insta_buy-now-border-radius-suffix'] );
 				}
+
+				// Save pending product links from the form submission
+				// This handles the case where product links are modified in the modal
+				// but not saved to DB until the post is saved
+				if ( isset( $_POST['_wpz-insta_pending-product-links'] ) && ! empty( $_POST['_wpz-insta_pending-product-links'] ) ) {
+					$pending_links_json = wp_unslash( $_POST['_wpz-insta_pending-product-links'] );
+					$pending_links = json_decode( $pending_links_json, true );
+
+					if ( is_array( $pending_links ) && ! empty( $pending_links ) ) {
+						// Get existing product links
+						$existing_links = get_post_meta( $post_ID, '_wpz-insta_product-links', true );
+						if ( ! is_array( $existing_links ) ) {
+							$existing_links = array();
+						}
+
+						// Merge pending links with existing links
+						foreach ( $pending_links as $media_id => $product_ids ) {
+							$media_id = sanitize_text_field( $media_id );
+							
+							if ( is_array( $product_ids ) ) {
+								// Sanitize and validate product IDs
+								$product_ids = array_values( array_unique( array_map( 'intval', array_filter( $product_ids, function( $id ) {
+									return is_numeric( $id ) && intval( $id ) > 0;
+								} ) ) ) );
+
+								// Verify all product IDs exist
+								$valid_product_ids = array();
+								foreach ( $product_ids as $product_id ) {
+									if ( wc_get_product( $product_id ) ) {
+										$valid_product_ids[] = $product_id;
+									}
+								}
+
+								if ( ! empty( $valid_product_ids ) ) {
+									$existing_links[ $media_id ] = $valid_product_ids;
+								} else {
+									// If empty array (all links removed), remove the entry
+									unset( $existing_links[ $media_id ] );
+								}
+							} else {
+								// If not an array, remove the entry
+								unset( $existing_links[ $media_id ] );
+							}
+						}
+
+						// Save the merged product links
+						update_post_meta( $post_ID, '_wpz-insta_product-links', $existing_links );
+					}
+				}
 			}
 
 			if ( metadata_exists( 'post', $post_ID, '_wpz-insta_feed_is_duplicate' ) ) {
