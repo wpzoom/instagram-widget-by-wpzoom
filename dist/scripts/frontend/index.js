@@ -520,6 +520,24 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
         // Debug: Check if lightbox wrapper has content
         var $lightboxWrapper = $swipe_el.closest('.wpz-insta-lightbox-wrapper');
         if ($swipe_el.length > 0) {
+          // Function to update product tag visibility based on album slide index
+          var updateProductTagVisibility = function updateProductTagVisibility($imageWrapper, activeIndex) {
+            var $tagsContainer = $imageWrapper.find('.wpz-insta-lightbox-tags');
+            if ($tagsContainer.length === 0) return;
+            $tagsContainer.find('.wpz-insta-lightbox-tag').each(function () {
+              var $tag = $(this);
+              var albumIndex = parseInt($tag.attr('data-album-index'), 10);
+
+              // Show tag if:
+              // - albumIndex is -1 (not album-specific, i.e., single image)
+              // - albumIndex matches the active slide index
+              if (albumIndex === -1 || albumIndex === activeIndex) {
+                $tag.addClass('wpz-insta-lightbox-tag--visible');
+              } else {
+                $tag.removeClass('wpz-insta-lightbox-tag--visible');
+              }
+            });
+          }; // Find the gallery trigger using the same strategy as swiper element
           var $nested = $swipe_el.find('.image-wrapper > .swiper');
           var swiper = new Swiper($swipe_el.get(0), _defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty({
             lazy: {
@@ -552,24 +570,30 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
             }
           }));
           $nested.each(function () {
-            new Swiper($(this).get(0), _defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty({
+            var $nestedSwiper = $(this);
+            var $imageWrapper = $nestedSwiper.closest('.image-wrapper');
+            new Swiper($nestedSwiper.get(0), _defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty({
               lazy: {
                 threshold: 50
               },
               watchSlidesVisibility: true,
               preloadImages: false
             }, "lazy", true), "direction", 'horizontal'), "loop", false), "spaceBetween", 20), "nested", true), "watchOverflow", true), "pagination", {
-              el: $(this).find('> .swiper-pagination').get(0),
+              el: $nestedSwiper.find('> .swiper-pagination').get(0),
               type: 'bullets',
               clickable: true,
               hideOnClick: false
             }), "navigation", {
-              nextEl: $(this).find('> .swiper-button-next').get(0),
-              prevEl: $(this).find('> .swiper-button-prev').get(0)
+              nextEl: $nestedSwiper.find('> .swiper-button-next').get(0),
+              prevEl: $nestedSwiper.find('> .swiper-button-prev').get(0)
             }), "keyboard", {
               enabled: true,
               onlyInViewport: true
             }), "on", {
+              init: function init() {
+                // Show tags for initial slide (index 0)
+                updateProductTagVisibility($imageWrapper, 0);
+              },
               activeIndexChange: function activeIndexChange() {
                 // Get the active slide
                 var activeSlide = this.slides[this.activeIndex];
@@ -580,11 +604,12 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
                 if (video) {
                   video.play();
                 }
+
+                // Update product tag visibility for album carousels
+                updateProductTagVisibility($imageWrapper, this.activeIndex);
               }
             }));
           });
-
-          // Find the gallery trigger using the same strategy as swiper element
           var galleryTrigger = $(this).closest('.widget').find('.zoom-instagram-widget__items');
 
           // Fallback 1: Look in the same Instagram widget container
@@ -905,11 +930,30 @@ document.body.addEventListener('click', function (event) {
   event.preventDefault();
   event.stopPropagation();
   if (typeof window.parent.postMessage === 'function') {
+    // Find the parent item to get media type and image URL
+    var item = btn.closest('.zoom-instagram-widget__item');
+    var mediaType = item ? item.getAttribute('data-media-type') || 'image' : 'image';
+    var imageUrl = '';
+    var albumImages = [];
+
+    // Get image URL for tagging
+    var img = item ? item.querySelector('img.zoom-instagram-link') : null;
+    if (img) {
+      imageUrl = img.getAttribute('src') || img.getAttribute('data-src') || '';
+    }
+
+    // For carousel albums, collect all children images from the lightbox data if available
+    if (mediaType === 'carousel_album') {
+      // Album children data will be fetched via AJAX when tagging view opens
+      // This is more reliable than trying to parse from DOM
+    }
     window.parent.postMessage({
       action: 'wpz-insta-open-product-link',
       mediaId: btn.getAttribute('data-media-id') || '',
       feedId: btn.getAttribute('data-feed-id') || '',
-      productId: btn.getAttribute('data-product-id') || ''
+      productId: btn.getAttribute('data-product-id') || '',
+      mediaType: mediaType,
+      imageUrl: imageUrl
     }, '*');
   }
 }, true);

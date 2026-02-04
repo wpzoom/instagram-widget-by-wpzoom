@@ -1870,4 +1870,129 @@ a.ig-b-v-24:hover {
   left: auto;
 }
 
+.wpz-insta-lightbox-tags {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.wpz-insta-lightbox-tag {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  pointer-events: auto;
+  z-index: 11;
+}
+.wpz-insta-lightbox-tag__dot {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 50%;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+  cursor: pointer;
+  transition: transform 0.2s, background 0.2s;
+  color: #1d2327;
+}
+.wpz-insta-lightbox-tag__dot svg {
+  width: 18px;
+  height: 18px;
+}
+.wpz-insta-lightbox-tag__dot:hover {
+  transform: scale(1.1);
+  background: #fff;
+}
+.wpz-insta-lightbox-tag__popover {
+  position: absolute;
+  bottom: calc(100% + 10px);
+  left: 50%;
+  transform: translateX(-50%);
+  min-width: 200px;
+  max-width: 280px;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s, visibility 0.2s;
+  z-index: 100;
+  pointer-events: none;
+}
+.wpz-insta-lightbox-tag__popover::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 8px solid transparent;
+  border-top-color: #fff;
+}
+.wpz-insta-lightbox-tag:hover .wpz-insta-lightbox-tag__popover {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+.wpz-insta-lightbox-tag__link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  text-decoration: none;
+  color: inherit;
+}
+.wpz-insta-lightbox-tag__link:hover {
+  text-decoration: none;
+}
+.wpz-insta-lightbox-tag__img {
+  width: 60px;
+  height: 60px;
+  -o-object-fit: cover;
+     object-fit: cover;
+  border-radius: 6px;
+  flex-shrink: 0;
+}
+.wpz-insta-lightbox-tag__info {
+  flex: 1;
+  min-width: 0;
+}
+.wpz-insta-lightbox-tag__title {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  color: #1d2327;
+  line-height: 1.3;
+  margin-bottom: 4px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.wpz-insta-lightbox-tag__price {
+  display: block;
+  font-size: 14px;
+  font-weight: 500;
+  color: #2271b1;
+}
+.wpz-insta-lightbox-tag__price del {
+  color: #999;
+  margin-right: 4px;
+}
+.wpz-insta-lightbox-tag__price ins {
+  text-decoration: none;
+}
+
+.wpz-insta-lightbox-tag[data-album-index]:not([data-album-index="-1"]) {
+  display: none;
+}
+.wpz-insta-lightbox-tag[data-album-index][data-album-index="-1"] {
+  display: block;
+}
+.wpz-insta-lightbox-tag[data-album-index].wpz-insta-lightbox-tag--visible {
+  display: block;
+}
+
 /*# sourceMappingURL=index.css.map*/

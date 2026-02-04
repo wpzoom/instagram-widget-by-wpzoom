@@ -1241,6 +1241,42 @@ class Wpzoom_Instagram_Widget_Display {
 						}
 					}
 
+					// Add product tag markers inside image-wrapper (for tagged products)
+					if ( $feed_id > 0 && class_exists( 'WooCommerce' ) && ! empty( $media_id ) && apply_filters( 'wpz-insta_is-pro', false ) ) {
+						$linked_products_for_tags = self::get_linked_products( $feed_id, $media_id );
+						$tags_html = '';
+						foreach ( $linked_products_for_tags as $linked_product ) {
+							if ( ! empty( $linked_product['tag'] ) && isset( $linked_product['tag']['x'] ) && isset( $linked_product['tag']['y'] ) ) {
+								$product_for_tag = wc_get_product( $linked_product['id'] );
+								if ( $product_for_tag && $product_for_tag->is_visible() ) {
+									$tag_x = floatval( $linked_product['tag']['x'] );
+									$tag_y = floatval( $linked_product['tag']['y'] );
+									$tag_album_index = isset( $linked_product['tag']['album_index'] ) && $linked_product['tag']['album_index'] !== null ? intval( $linked_product['tag']['album_index'] ) : -1;
+									$product_title_tag = $product_for_tag->get_name();
+									$product_price_tag = $product_for_tag->get_price_html();
+									$product_link_tag = get_permalink( $linked_product['id'] );
+									$product_image_id_tag = $product_for_tag->get_image_id();
+									$product_image_url_tag = $product_image_id_tag ? wp_get_attachment_image_url( $product_image_id_tag, 'thumbnail' ) : wc_placeholder_img_src( 'thumbnail' );
+
+									$tags_html .= '<div class="wpz-insta-lightbox-tag" data-album-index="' . esc_attr( $tag_album_index ) . '" style="left:' . esc_attr( $tag_x ) . '%;top:' . esc_attr( $tag_y ) . '%;">';
+									$tags_html .= '<span class="wpz-insta-lightbox-tag__dot"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M7.5 6v.75H5.513c-.96 0-1.764.724-1.865 1.679l-1.263 12A1.875 1.875 0 0 0 4.25 22.5h15.5a1.875 1.875 0 0 0 1.865-2.071l-1.263-12a1.875 1.875 0 0 0-1.865-1.679H16.5V6a4.5 4.5 0 1 0-9 0ZM12 3a3 3 0 0 0-3 3v.75h6V6a3 3 0 0 0-3-3Zm-3 8.25a3 3 0 1 0 6 0v-.75a.75.75 0 0 1 1.5 0v.75a4.5 4.5 0 1 1-9 0v-.75a.75.75 0 0 1 1.5 0v.75Z" clip-rule="evenodd"/></svg></span>';
+									$tags_html .= '<div class="wpz-insta-lightbox-tag__popover">';
+									$tags_html .= '<a href="' . esc_url( $product_link_tag ) . '" class="wpz-insta-lightbox-tag__link" target="_blank" rel="noopener">';
+									$tags_html .= '<img class="wpz-insta-lightbox-tag__img" src="' . esc_url( $product_image_url_tag ) . '" alt="' . esc_attr( $product_title_tag ) . '" />';
+									$tags_html .= '<div class="wpz-insta-lightbox-tag__info">';
+									$tags_html .= '<span class="wpz-insta-lightbox-tag__title">' . esc_html( $product_title_tag ) . '</span>';
+									$tags_html .= '<span class="wpz-insta-lightbox-tag__price">' . $product_price_tag . '</span>';
+									$tags_html .= '</div>';
+									$tags_html .= '</a></div>';
+									$tags_html .= '</div>';
+								}
+							}
+						}
+						if ( ! empty( $tags_html ) ) {
+							$output .= '<div class="wpz-insta-lightbox-tags">' . $tags_html . '</div>';
+						}
+					}
+
 					$output .= '</div>
 					<div class="details-wrapper">';
 
@@ -1832,6 +1868,21 @@ class Wpzoom_Instagram_Widget_Display {
 	 * @return int[] Array of product IDs (empty if none linked).
 	 */
 	public static function get_linked_product_ids( $feed_id, $media_id ) {
+		$products = self::get_linked_products( $feed_id, $media_id );
+		return array_map( function( $p ) {
+			return $p['id'];
+		}, $products );
+	}
+
+	/**
+	 * Get linked products with tag data for an Instagram media item.
+	 * New format: array of { 'id' => int, 'tag' => array|null }
+	 *
+	 * @param int    $feed_id  The feed post ID.
+	 * @param string $media_id The Instagram media ID.
+	 * @return array Array of product objects with tag data (empty if none linked).
+	 */
+	public static function get_linked_products( $feed_id, $media_id ) {
 		if ( empty( $feed_id ) || empty( $media_id ) || ! class_exists( 'WooCommerce' ) ) {
 			return array();
 		}
@@ -1846,18 +1897,37 @@ class Wpzoom_Instagram_Widget_Display {
 			return array();
 		}
 
-		return array_values( array_map( 'intval', array_filter( $val, 'is_numeric' ) ) );
+		// Check if it's the new format (array of objects with 'id' key) or old format (array of IDs)
+		$result = array();
+		foreach ( $val as $item ) {
+			if ( is_array( $item ) && isset( $item['id'] ) ) {
+				// New format: { id, tag }
+				$result[] = array(
+					'id'  => intval( $item['id'] ),
+					'tag' => isset( $item['tag'] ) ? $item['tag'] : null,
+				);
+			} elseif ( is_numeric( $item ) && intval( $item ) > 0 ) {
+				// Old format: just product ID - convert to new format
+				$result[] = array(
+					'id'  => intval( $item ),
+					'tag' => null,
+				);
+			}
+		}
+
+		return $result;
 	}
 
 	/**
-	 * Save the linked WooCommerce product IDs for an Instagram media item.
+	 * Save linked products with tag data for an Instagram media item.
+	 * Accepts new format: array of { 'id' => int, 'tag' => array|null }
 	 *
-	 * @param int    $feed_id     The feed post ID.
-	 * @param string $media_id    The Instagram media ID.
-	 * @param int[]  $product_ids Array of WooCommerce product IDs. Empty array to remove all links.
+	 * @param int    $feed_id  The feed post ID.
+	 * @param string $media_id The Instagram media ID.
+	 * @param array  $products Array of product objects { id, tag }. Empty array to remove all links.
 	 * @return bool True on success, false on failure.
 	 */
-	public static function save_linked_product_ids( $feed_id, $media_id, array $product_ids ) {
+	public static function save_linked_products( $feed_id, $media_id, array $products ) {
 		if ( empty( $feed_id ) || empty( $media_id ) || ! class_exists( 'WooCommerce' ) ) {
 			return false;
 		}
@@ -1867,16 +1937,54 @@ class Wpzoom_Instagram_Widget_Display {
 			$product_links = array();
 		}
 
-		$product_ids = array_values( array_unique( array_map( 'intval', array_filter( $product_ids, function ( $id ) {
-			return $id > 0;
-		} ) ) ) );
+		// Validate and sanitize products
+		$valid_products = array();
+		foreach ( $products as $product ) {
+			if ( is_array( $product ) && isset( $product['id'] ) && intval( $product['id'] ) > 0 ) {
+				$sanitized = array(
+					'id'  => intval( $product['id'] ),
+					'tag' => null,
+				);
+				if ( isset( $product['tag'] ) && is_array( $product['tag'] ) ) {
+					$sanitized['tag'] = array(
+						'x'           => isset( $product['tag']['x'] ) ? floatval( $product['tag']['x'] ) : 0,
+						'y'           => isset( $product['tag']['y'] ) ? floatval( $product['tag']['y'] ) : 0,
+						'album_index' => isset( $product['tag']['album_index'] ) ? intval( $product['tag']['album_index'] ) : null,
+					);
+				}
+				$valid_products[] = $sanitized;
+			}
+		}
 
-		if ( ! empty( $product_ids ) ) {
-			$product_links[ $media_id ] = $product_ids;
+		if ( ! empty( $valid_products ) ) {
+			$product_links[ $media_id ] = $valid_products;
 		} else {
 			unset( $product_links[ $media_id ] );
 		}
 
 		return update_post_meta( $feed_id, '_wpz-insta_product-links', $product_links );
+	}
+
+	/**
+	 * Save the linked WooCommerce product IDs for an Instagram media item.
+	 * Legacy method - converts to new format internally.
+	 *
+	 * @param int    $feed_id     The feed post ID.
+	 * @param string $media_id    The Instagram media ID.
+	 * @param int[]  $product_ids Array of WooCommerce product IDs. Empty array to remove all links.
+	 * @return bool True on success, false on failure.
+	 */
+	public static function save_linked_product_ids( $feed_id, $media_id, array $product_ids ) {
+		// Convert old format to new format
+		$products = array();
+		foreach ( $product_ids as $id ) {
+			if ( is_numeric( $id ) && intval( $id ) > 0 ) {
+				$products[] = array(
+					'id'  => intval( $id ),
+					'tag' => null,
+				);
+			}
+		}
+		return self::save_linked_products( $feed_id, $media_id, $products );
 	}
 }

@@ -1154,11 +1154,17 @@ jQuery( function( $ ) {
 		var $productLinkModal = null;
 		var currentMediaId = null;
 		var currentFeedId = null;
-		var currentSelectedIds = []; // Selected product IDs (persists across pagination)
-		var originalSelectedIds = []; // Original IDs from DB when modal opened (to detect changes)
+		var currentSelectedProducts = []; // Selected products with tags: [{ id, tag: { x, y, album_index } | null }]
+		var originalSelectedProducts = []; // Original products from DB when modal opened (to detect changes)
+		var currentMediaType = 'image'; // 'image', 'video', 'carousel_album'
+		var currentImageUrl = ''; // Main image URL for tagging
+		var currentAlbumImages = []; // Array of album images for carousel_album
+		var currentTaggingProductId = null; // Product being tagged
+		var isTaggingViewActive = false; // Whether tagging view is active
+		var currentSelectedAlbumIndex = null; // Selected album image index for carousel_album
 
 		// Pending product links stored in memory (not saved to DB until post is saved)
-		// Structure: { mediaId: [productId1, productId2, ...], ... }
+		// New structure: { mediaId: [{ id: productId, tag: { x, y, album_index } | null }], ... }
 		var pendingProductLinks = {};
 
 		// Track which media IDs had links when page loaded (from DB)
@@ -1201,22 +1207,50 @@ jQuery( function( $ ) {
 				var mediaId = mediaIds[ i ];
 				var pending = pendingProductLinks[ mediaId ] || [];
 				var initial = initialProductLinks[ mediaId ] || [];
-				if ( JSON.stringify( pending.sort() ) !== JSON.stringify( initial.sort() ) ) {
+				if ( JSON.stringify( pending ) !== JSON.stringify( initial ) ) {
 					return true;
 				}
 			}
 			return false;
 		}
 
-		// Get linked product IDs for a media item (check pending first, then initial)
-		function getLinkedProductIds( mediaId ) {
+		// Get linked products for a media item (check pending first, then initial)
+		// Returns array of { id, tag } objects
+		function getLinkedProducts( mediaId ) {
 			if ( mediaId in pendingProductLinks ) {
-				return pendingProductLinks[ mediaId ].slice();
+				return JSON.parse( JSON.stringify( pendingProductLinks[ mediaId ] ) );
 			}
 			if ( mediaId in initialProductLinks ) {
-				return initialProductLinks[ mediaId ].slice();
+				return JSON.parse( JSON.stringify( initialProductLinks[ mediaId ] ) );
 			}
 			return [];
+		}
+
+		// Get just the product IDs for a media item (for backward compatibility)
+		function getLinkedProductIds( mediaId ) {
+			var products = getLinkedProducts( mediaId );
+			return products.map( function( p ) { return p.id; } );
+		}
+
+		// Get tag data for a specific product in a media item
+		function getProductTag( mediaId, productId ) {
+			var products = getLinkedProducts( mediaId );
+			for ( var i = 0; i < products.length; i++ ) {
+				if ( products[ i ].id === productId ) {
+					return products[ i ].tag || null;
+				}
+			}
+			return null;
+		}
+
+		// Check if a product is tagged in the current media
+		function isProductTagged( productId ) {
+			for ( var i = 0; i < currentSelectedProducts.length; i++ ) {
+				if ( currentSelectedProducts[ i ].id === productId && currentSelectedProducts[ i ].tag ) {
+					return true;
+				}
+			}
+			return false;
 		}
 
 		// Update preview iframe to reflect has-linked-products class changes
@@ -1232,6 +1266,48 @@ jQuery( function( $ ) {
 			}
 		}
 
+		// Find index of a product in the products array by ID
+		function findProductIndex( products, productId ) {
+			for ( var i = 0; i < products.length; i++ ) {
+				if ( products[ i ].id === productId ) {
+					return i;
+				}
+			}
+			return -1;
+		}
+
+		// Check if two product arrays are equal (for change detection)
+		function areProductArraysEqual( arr1, arr2 ) {
+			if ( arr1.length !== arr2.length ) return false;
+			var sorted1 = arr1.slice().sort( function( a, b ) { return a.id - b.id; } );
+			var sorted2 = arr2.slice().sort( function( a, b ) { return a.id - b.id; } );
+			return JSON.stringify( sorted1 ) === JSON.stringify( sorted2 );
+		}
+
+		// Get current selected product IDs only (for backward compatibility)
+		function getCurrentSelectedIds() {
+			return currentSelectedProducts.map( function( p ) { return p.id; } );
+		}
+
+		// Update the tag button on a product item based on tag state
+		function updateProductItemButton( $item, productId ) {
+			var $btn = $item.find( '.wpz-insta-tag-in-image-btn' );
+			if ( $btn.length === 0 ) return;
+
+			var strings = zoom_instagram_widget_admin.strings || {};
+			var hasTag = isProductTagged( productId );
+			var editTagSVG = '<svg xmlns="http://www.w3.org/2000/svg" height="18" viewBox="0 -960 960 960" width="18" fill="currentColor"><path d="M160-120q-17 0-28.5-11.5T120-160v-97q0-16 6-30.5t17-25.5l505-504q12-11 26.5-17t30.5-6q16 0 31 6t26 18l55 56q12 11 17.5 26t5.5 30q0 16-5.5 30.5T817-647L313-143q-11 11-25.5 17t-30.5 6h-97Zm544-528 56-56-56-56-56 56 56 56Z"/></svg>';
+			var tagInImageSVG = '<svg xmlns="http://www.w3.org/2000/svg" height="18" viewBox="0 -960 960 960" width="18" fill="currentColor"><path d="M640-760v280l68 68q6 6 9 13.5t3 15.5v23q0 17-11.5 28.5T680-320H520v234q0 17-11.5 28.5T480-46q-17 0-28.5-11.5T440-86v-234H280q-17 0-28.5-11.5T240-360v-23q0-8 3-15.5t9-13.5l68-68v-280q-17 0-28.5-11.5T280-800q0-17 11.5-28.5T320-840h320q17 0 28.5 11.5T680-800q0 17-11.5 28.5T640-760Z"></path></svg>';
+			var btnIcon = hasTag ? editTagSVG : tagInImageSVG;
+			var btnText = hasTag ? ( strings.editTag || 'Edit Tag' ) : ( strings.tagInImage || 'Tag in Image' );
+
+			if ( hasTag ) {
+				$btn.addClass( 'wpz-insta-tag-btn--tagged' ).html( btnIcon + ' ' + btnText ).attr( 'title', btnText );
+			} else {
+				$btn.removeClass( 'wpz-insta-tag-btn--tagged' ).html( btnIcon + ' ' + btnText ).attr( 'title', btnText );
+			}
+		}
+
 		function initProductLinkModal() {
 			if ( $productLinkModal ) {
 				return;
@@ -1244,10 +1320,14 @@ jQuery( function( $ ) {
 			var modalHTML = '<div id="wpz-insta-product-link-modal" class="wpz-insta-modal" style="display: none;">' +
 				'<div class="wpz-insta-modal-content">' +
 				'<div class="wpz-insta-modal-header">' +
-				'<h2>' + ( strings.linkProduct || 'Link to Product' ) + '</h2>' +
+				'<button type="button" class="wpz-insta-back-to-products" style="display: none;" title="' + ( strings.backToProducts || 'Back' ) + '"><span class="dashicons dashicons-arrow-left-alt2"></span></button>' +
+				'<h2 class="wpz-insta-modal-title">' + ( strings.linkProduct || 'Link to Product' ) + '</h2>' +
+				'<div class="wpz-insta-tagging-header-preview" id="wpz-insta-tagging-header-preview" style="display: none;"></div>' +
 				'<button type="button" class="wpz-insta-modal-close">&times;</button>' +
 				'</div>' +
 				'<div class="wpz-insta-modal-body">' +
+				// Product selection view
+				'<div class="wpz-insta-product-selection-view">' +
 				'<p class="wpz-insta-product-link-hint">' + ( strings.selectProductsHint || 'Select one or more products. Click an item to toggle selection.' ) + '</p>' +
 				'<div class="wpz-insta-product-search">' +
 				'<input type="text" id="wpz-insta-product-search-input" placeholder="' + ( strings.searchProducts || 'Search products...' ) + '" />' +
@@ -1255,10 +1335,38 @@ jQuery( function( $ ) {
 				'<div class="wpz-insta-product-list" id="wpz-insta-product-list"></div>' +
 				'<div class="wpz-insta-product-pagination"></div>' +
 				'</div>' +
+				// Album selector view (for carousel_album)
+				'<div class="wpz-insta-album-selector-view" style="display: none;">' +
+				'<p class="wpz-insta-album-hint">' + ( strings.selectAlbumImage || 'Select an image from the album to tag the product on:' ) + '</p>' +
+				'<div class="wpz-insta-album-images" id="wpz-insta-album-images"></div>' +
+				'</div>' +
+				// Tagging view (product info is in header; hidden element here for data only)
+				'<div class="wpz-insta-tagging-view" style="display: none;">' +
+				'<div id="wpz-insta-tagging-product-info" style="display: none;"></div>' +
+				'<p class="wpz-insta-tagging-hint">' + ( strings.taggingHint || 'Click on the image to place the product tag. You can drag to reposition.' ) + '</p>' +
+				'<div class="wpz-insta-tagging-canvas-wrap">' +
+				'<img id="wpz-insta-tagging-image" src="" alt="" />' +
+				'<div class="wpz-insta-tagging-tags" id="wpz-insta-tagging-tags"></div>' +
+				'</div>' +
+				'</div>' +
+				'</div>' +
 				'<div class="wpz-insta-modal-footer">' +
+				'<div class="wpz-insta-modal-footer-right">' +
 				'<button type="button" class="button wpz-insta-remove-link" style="display: none;">' + ( strings.removeLink || 'Remove Link' ) + '</button>' +
+				'</div>' +
+				'<div class="wpz-insta-modal-footer-left">' +
 				'<button type="button" class="button button-primary wpz-insta-save-link" disabled>' + ( strings.save || 'Save' ) + '</button>' +
 				'<button type="button" class="button wpz-insta-cancel-link">' + ( strings.cancel || 'Cancel' ) + '</button>' +
+				'</div>' +
+				'</div>' +
+				'<div class="wpz-insta-tagging-footer" style="display: none;">' +
+				'<div class="wpz-insta-modal-footer-right">' +
+				'<button type="button" class="button wpz-insta-remove-tag-position" disabled>' + ( strings.removeTagPosition || 'Remove tag position' ) + '</button>' +
+				'</div>' +
+				'<div class="wpz-insta-modal-footer-left">' +
+				'<button type="button" class="button button-primary wpz-insta-save-link">' + ( strings.save || 'Save' ) + '</button>' +
+				'<button type="button" class="button wpz-insta-cancel-link">' + ( strings.cancel || 'Cancel' ) + '</button>' +
+				'</div>' +
 				'</div>' +
 				'</div>' +
 				'</div>';
@@ -1268,6 +1376,7 @@ jQuery( function( $ ) {
 
 			// Close modal handlers
 			$productLinkModal.on( 'click', '.wpz-insta-modal-close, .wpz-insta-cancel-link', function() {
+				resetTaggingView();
 				$productLinkModal.hide();
 			} );
 
@@ -1278,25 +1387,87 @@ jQuery( function( $ ) {
 
 			// Save link handler - now saves to memory, not DB
 			$productLinkModal.on( 'click', '.wpz-insta-save-link', function() {
-				var ids = currentSelectedIds.slice();
-				saveProductLinkToMemory( ids );
+				var products = JSON.parse( JSON.stringify( currentSelectedProducts ) );
+				saveProductLinkToMemory( products );
+			} );
+
+			// "Tag in Image" button click handler
+			$productLinkModal.on( 'click', '.wpz-insta-tag-in-image-btn', function( e ) {
+				e.stopPropagation(); // Prevent toggling selection
+				var $item = $( this ).closest( '.wpz-insta-product-item' );
+				var productId = parseInt( $item.data( 'product-id' ), 10 );
+				var productTitle = decodeURIComponent( $item.data( 'product-title' ) || '' );
+				var productImage = decodeURIComponent( $item.data( 'product-image' ) || '' );
+
+				// Store the product being tagged
+				currentTaggingProductId = productId;
+
+				// For carousel_album, show album selector first
+				if ( currentMediaType === 'carousel_album' ) {
+					showAlbumSelectorView( productId, productTitle, productImage );
+				} else {
+					// For single images, go directly to tagging view
+					showTaggingView( productId, productTitle, productImage, currentImageUrl );
+				}
+			} );
+
+			// "Back to Products" button click handler - always go back to Link to Product
+			$productLinkModal.on( 'click', '.wpz-insta-back-to-products', function() {
+				resetTaggingView();
+			} );
+
+			// "Remove tag position" button in tagging view
+			$productLinkModal.on( 'click', '.wpz-insta-remove-tag-position', function() {
+				if ( $( this ).prop( 'disabled' ) ) return;
+				removeCurrentTagPosition();
+			} );
+
+			// Album image selection click handler
+			$productLinkModal.on( 'click', '.wpz-insta-album-image-item', function() {
+				var imageUrl = $( this ).data( 'image-url' );
+				var imageIndex = $( this ).data( 'image-index' );
+				currentSelectedAlbumIndex = imageIndex;
+
+				// Get stored product info and show tagging view
+				var productTitle = $( '#wpz-insta-tagging-product-info' ).data( 'product-title' ) || '';
+				var productImage = $( '#wpz-insta-tagging-product-info' ).data( 'product-image' ) || '';
+
+				showTaggingView( currentTaggingProductId, productTitle, productImage, imageUrl );
+			} );
+
+			// Tagging canvas click handler - place tag
+			$productLinkModal.on( 'click', '#wpz-insta-tagging-image', function( e ) {
+				var $img = $( this );
+				var offset = $img.offset();
+				var x = ( ( e.pageX - offset.left ) / $img.width() ) * 100;
+				var y = ( ( e.pageY - offset.top ) / $img.height() ) * 100;
+
+				// Clamp to 0-100
+				x = Math.max( 0, Math.min( 100, x ) );
+				y = Math.max( 0, Math.min( 100, y ) );
+
+				placeProductTag( currentTaggingProductId, x, y );
 			} );
 
 			// Product item click: toggle selection (multi-select)
 			$productLinkModal.on( 'click', '.wpz-insta-product-item', function() {
 				var id = parseInt( $( this ).data( 'product-id' ), 10 );
-				var idx = currentSelectedIds.indexOf( id );
-				if ( idx === -1 ) {
-					currentSelectedIds.push( id );
+				var existingIndex = findProductIndex( currentSelectedProducts, id );
+				if ( existingIndex === -1 ) {
+					// Add product without tag
+					currentSelectedProducts.push( { id: id, tag: null } );
 					$( this ).addClass( 'selected' );
 				} else {
-					currentSelectedIds.splice( idx, 1 );
-					$( this ).removeClass( 'selected' );
+					// Remove product (and its tag)
+					currentSelectedProducts.splice( existingIndex, 1 );
+					$( this ).removeClass( 'selected has-tag' );
 				}
+				// Update button display
+				updateProductItemButton( $( this ), id );
 				// Enable save button if selection differs from original
-				var hasChanges = JSON.stringify( currentSelectedIds.slice().sort() ) !== JSON.stringify( originalSelectedIds.slice().sort() );
+				var hasChanges = ! areProductArraysEqual( currentSelectedProducts, originalSelectedProducts );
 				$( '.wpz-insta-save-link' ).prop( 'disabled', ! hasChanges );
-				$( '.wpz-insta-remove-link' ).toggle( currentSelectedIds.length > 0 );
+				$( '.wpz-insta-remove-link' ).toggle( currentSelectedProducts.length > 0 );
 			} );
 
 			// Search handler
@@ -1308,6 +1479,386 @@ jQuery( function( $ ) {
 					loadProducts( search, 1 );
 				}, 500 );
 			} );
+		}
+
+		// Reset modal to product selection view only (no loadProducts). Use when opening the modal.
+		function resetProductLinkModalView() {
+			isTaggingViewActive = false;
+			currentTaggingProductId = null;
+			currentSelectedAlbumIndex = null;
+			var strings = zoom_instagram_widget_admin.strings || {};
+			$productLinkModal.find( '.wpz-insta-modal-title' ).text( strings.linkProduct || 'Link to Product' );
+			$productLinkModal.find( '#wpz-insta-tagging-header-preview' ).hide().empty();
+			$productLinkModal.find( '.wpz-insta-product-selection-view' ).show();
+			$productLinkModal.find( '.wpz-insta-album-selector-view' ).hide();
+			$productLinkModal.find( '.wpz-insta-tagging-view' ).hide();
+			$productLinkModal.find( '.wpz-insta-back-to-products' ).hide();
+			$productLinkModal.find( '.wpz-insta-modal-footer' ).show();
+			$productLinkModal.find( '.wpz-insta-tagging-footer' ).hide();
+			$( '#wpz-insta-tagging-tags' ).empty();
+			$( '#wpz-insta-tagging-image' ).attr( 'src', '' );
+		}
+
+		// Reset tagging view and show product selection
+		function resetTaggingView() {
+			isTaggingViewActive = false;
+			currentTaggingProductId = null;
+			currentSelectedAlbumIndex = null;
+			var strings = zoom_instagram_widget_admin.strings || {};
+
+			// Reset modal title
+			$productLinkModal.find( '.wpz-insta-modal-title' ).text( strings.linkProduct || 'Link to Product' );
+
+			// Hide header product preview (used only in tagging view)
+			$productLinkModal.find( '#wpz-insta-tagging-header-preview' ).hide().empty();
+
+			// Show product selection, hide tagging/album views
+			$productLinkModal.find( '.wpz-insta-product-selection-view' ).show();
+			$productLinkModal.find( '.wpz-insta-album-selector-view' ).hide();
+			$productLinkModal.find( '.wpz-insta-tagging-view' ).hide();
+
+			// Hide back button in header, show main footer, hide tagging footer
+			$productLinkModal.find( '.wpz-insta-back-to-products' ).hide();
+			$productLinkModal.find( '.wpz-insta-modal-footer' ).show();
+			$productLinkModal.find( '.wpz-insta-tagging-footer' ).hide();
+
+			// Update footer buttons
+			var hasChanges = ! areProductArraysEqual( currentSelectedProducts, originalSelectedProducts );
+			$productLinkModal.find( '.wpz-insta-save-link' ).prop( 'disabled', ! hasChanges );
+			$productLinkModal.find( '.wpz-insta-remove-link' ).toggle( currentSelectedProducts.length > 0 );
+
+			// Re-render product list to update tag button states
+			var search = $( '#wpz-insta-product-search-input' ).val() || '';
+			loadProducts( search, 1 );
+
+			// Clear tagging canvas
+			$( '#wpz-insta-tagging-tags' ).empty();
+			$( '#wpz-insta-tagging-image' ).attr( 'src', '' );
+		}
+
+		// Show album selector view for carousel_album
+		function showAlbumSelectorView( productId, productTitle, productImage ) {
+			var strings = zoom_instagram_widget_admin.strings || {};
+			isTaggingViewActive = false;
+
+			// Update modal title
+			$productLinkModal.find( '.wpz-insta-modal-title' ).text( strings.selectImage || 'Select Image to Tag' );
+
+			// Store product info for later use (when user picks an album image)
+			$( '#wpz-insta-tagging-product-info' )
+				.data( 'product-id', productId )
+				.data( 'product-title', productTitle )
+				.data( 'product-image', productImage );
+
+			// Hide product selection, show album selector
+			$productLinkModal.find( '.wpz-insta-product-selection-view' ).hide();
+			$productLinkModal.find( '.wpz-insta-album-selector-view' ).show();
+			$productLinkModal.find( '.wpz-insta-tagging-view' ).hide();
+
+			// Show back button in header, hide footer
+			$productLinkModal.find( '.wpz-insta-back-to-products' ).show();
+			$productLinkModal.find( '.wpz-insta-modal-footer' ).hide();
+
+			// Load album images
+			loadAlbumImages();
+		}
+
+		// Load album images for carousel_album via AJAX
+		function loadAlbumImages() {
+			var $container = $( '#wpz-insta-album-images' );
+			$container.html( '<div class="wpz-insta-loading">Loading album images...</div>' );
+
+			// If we already have album images cached, use them
+			if ( currentAlbumImages.length > 0 ) {
+				renderAlbumImages( currentAlbumImages );
+				return;
+			}
+
+			// Fetch album children via AJAX
+			$.ajax( {
+				url: zoom_instagram_widget_admin.ajax_url,
+				type: 'POST',
+				data: {
+					action: 'wpz-insta_get-album-images',
+					nonce: zoom_instagram_widget_admin.product_link_nonce,
+					feed_id: currentFeedId,
+					media_id: currentMediaId
+				},
+				success: function( response ) {
+					if ( response.success && response.data && response.data.images ) {
+						currentAlbumImages = response.data.images;
+						renderAlbumImages( currentAlbumImages );
+					} else {
+						// Fallback: use main image if album fetch fails
+						currentAlbumImages = [ { url: currentImageUrl, index: 0 } ];
+						renderAlbumImages( currentAlbumImages );
+					}
+				},
+				error: function() {
+					// Fallback: use main image
+					currentAlbumImages = [ { url: currentImageUrl, index: 0 } ];
+					renderAlbumImages( currentAlbumImages );
+				}
+			} );
+		}
+
+		// Render album images in the selector
+		function renderAlbumImages( images ) {
+			var $container = $( '#wpz-insta-album-images' );
+			var html = '';
+
+			if ( images.length === 0 ) {
+				html = '<div class="wpz-insta-no-images">No images found in this album.</div>';
+			} else {
+				images.forEach( function( img, index ) {
+					var imageUrl = img.url || img;
+					// Skip videos in album
+					if ( img.type === 'video' ) {
+						return;
+					}
+					html += '<div class="wpz-insta-album-image-item" data-image-url="' + encodeURIComponent( imageUrl ) + '" data-image-index="' + index + '">' +
+						'<img src="' + imageUrl + '" alt="" />' +
+						'<span class="wpz-insta-album-image-number">' + ( index + 1 ) + '</span>' +
+						'</div>';
+				} );
+			}
+
+			$container.html( html );
+		}
+
+		// Go back to album selector from tagging view
+		function showAlbumSelectorFromTagging() {
+			var strings = zoom_instagram_widget_admin.strings || {};
+			isTaggingViewActive = false;
+
+			// Update modal title
+			$productLinkModal.find( '.wpz-insta-modal-title' ).text( strings.selectImage || 'Select Image to Tag' );
+
+			// Show album selector, hide tagging view
+			$productLinkModal.find( '.wpz-insta-album-selector-view' ).show();
+			$productLinkModal.find( '.wpz-insta-tagging-view' ).hide();
+
+			// Footer stays hidden (we're still in sub-view)
+		}
+
+		// Show the tagging view
+		function showTaggingView( productId, productTitle, productImage, imageUrl ) {
+			var strings = zoom_instagram_widget_admin.strings || {};
+			isTaggingViewActive = true;
+
+			// Update modal title
+			$productLinkModal.find( '.wpz-insta-modal-title' ).text( strings.tagProduct || 'Tag Product on Image' );
+
+			// Store product data (used by tag logic)
+			$( '#wpz-insta-tagging-product-info' )
+				.data( 'product-id', productId )
+				.data( 'product-title', productTitle )
+				.data( 'product-image', productImage );
+
+			// Show product preview in header
+			var headerPreviewHtml = '<div class="wpz-insta-tagging-product-preview">' +
+				'<img src="' + productImage + '" alt="" />' +
+				'<span>' + productTitle + '</span>' +
+				'</div>';
+			$( '#wpz-insta-tagging-header-preview' ).html( headerPreviewHtml ).show();
+
+			// Set the tagging image
+			$( '#wpz-insta-tagging-image' ).attr( 'src', decodeURIComponent( imageUrl ) );
+
+			// Hide other views, show tagging view
+			$productLinkModal.find( '.wpz-insta-product-selection-view' ).hide();
+			$productLinkModal.find( '.wpz-insta-album-selector-view' ).hide();
+			$productLinkModal.find( '.wpz-insta-tagging-view' ).show();
+
+			// Show back button, show tagging footer, hide main footer
+			$productLinkModal.find( '.wpz-insta-back-to-products' ).show();
+			$productLinkModal.find( '.wpz-insta-modal-footer' ).hide();
+			$productLinkModal.find( '.wpz-insta-tagging-footer' ).show();
+
+			// Load existing tag position if any
+			loadExistingTagPosition( productId );
+
+			// Enable/disable "Remove tag position" in tagging footer
+			updateRemoveTagPositionButtonVisibility();
+		}
+
+		// Remove the tag position for the current product in tagging view
+		function removeCurrentTagPosition() {
+			var productId = $( '#wpz-insta-tagging-product-info' ).data( 'product-id' );
+			if ( productId == null ) return;
+
+			var existingIdx = findProductIndex( currentSelectedProducts, productId );
+			if ( existingIdx !== -1 ) {
+				currentSelectedProducts[ existingIdx ].tag = null;
+			}
+
+			// Remove tag from canvas
+			$( '#wpz-insta-tagging-tags' ).find( '.wpz-insta-tag[data-product-id="' + productId + '"]' ).remove();
+
+			// Persist to pending
+			pendingProductLinks[ currentMediaId ] = JSON.parse( JSON.stringify( currentSelectedProducts ) );
+			updatePendingProductLinksInput();
+
+			updateRemoveTagPositionButtonVisibility();
+		}
+
+		// Enable or disable the "Remove tag position" button depending on whether current product has a tag on canvas
+		function updateRemoveTagPositionButtonVisibility() {
+			var productId = $( '#wpz-insta-tagging-product-info' ).data( 'product-id' );
+			var hasTag = productId != null && $( '#wpz-insta-tagging-tags .wpz-insta-tag[data-product-id="' + productId + '"]' ).length > 0;
+			$productLinkModal.find( '.wpz-insta-remove-tag-position' ).prop( 'disabled', ! hasTag );
+		}
+
+		// Place a product tag on the image
+		function placeProductTag( productId, x, y ) {
+			var $container = $( '#wpz-insta-tagging-tags' );
+			var productTitle = $( '#wpz-insta-tagging-product-info' ).data( 'product-title' ) || '';
+
+			// Remove existing tag for this product (only one tag per product per image)
+			$container.find( '.wpz-insta-tag[data-product-id="' + productId + '"]' ).remove();
+
+			// Create new tag element
+			var $tag = $( '<div class="wpz-insta-tag" data-product-id="' + productId + '" data-x="' + x + '" data-y="' + y + '">' +
+				'<span class="wpz-insta-tag-dot"></span>' +
+				'<span class="wpz-insta-tag-label">' + productTitle + '</span>' +
+				'</div>' );
+
+			$tag.css( {
+				left: x + '%',
+				top: y + '%'
+			} );
+
+			$container.append( $tag );
+
+			// Auto-save the tag position immediately
+			saveTagPositionFromCoords( productId, x, y );
+
+			// Show "Remove tag position" button
+			updateRemoveTagPositionButtonVisibility();
+
+			// Make tag draggable
+			makeTagDraggable( $tag );
+		}
+
+		// Save tag position from coordinates (called when placing or dragging)
+		function saveTagPositionFromCoords( productId, x, y ) {
+			// Find the product in currentSelectedProducts and update its tag
+			var existingIdx = findProductIndex( currentSelectedProducts, productId );
+			if ( existingIdx !== -1 ) {
+				var tagData = { x: x, y: y };
+				// For albums, include the album index
+				if ( currentMediaType === 'carousel_album' && currentSelectedAlbumIndex !== null ) {
+					tagData.album_index = currentSelectedAlbumIndex;
+				} else {
+					tagData.album_index = null;
+				}
+				currentSelectedProducts[ existingIdx ].tag = tagData;
+
+				// Save to pending product links immediately
+				pendingProductLinks[ currentMediaId ] = JSON.parse( JSON.stringify( currentSelectedProducts ) );
+				updatePendingProductLinksInput();
+			}
+		}
+
+		// Make a tag element draggable
+		function makeTagDraggable( $tag ) {
+			var isDragging = false;
+			var startX, startY, startLeft, startTop;
+
+			$tag.on( 'mousedown', function( e ) {
+				if ( e.target.classList.contains( 'wpz-insta-tag-dot' ) || e.target.classList.contains( 'wpz-insta-tag' ) ) {
+					isDragging = true;
+					startX = e.pageX;
+					startY = e.pageY;
+					startLeft = parseFloat( $tag.css( 'left' ) );
+					startTop = parseFloat( $tag.css( 'top' ) );
+					$tag.addClass( 'dragging' );
+					e.preventDefault();
+				}
+			} );
+
+			$( document ).on( 'mousemove.tagdrag', function( e ) {
+				if ( ! isDragging ) return;
+
+				var $img = $( '#wpz-insta-tagging-image' );
+				var imgWidth = $img.width();
+				var imgHeight = $img.height();
+
+				var deltaX = ( ( e.pageX - startX ) / imgWidth ) * 100;
+				var deltaY = ( ( e.pageY - startY ) / imgHeight ) * 100;
+
+				var newX = Math.max( 0, Math.min( 100, ( startLeft / imgWidth ) * 100 + deltaX ) );
+				var newY = Math.max( 0, Math.min( 100, ( startTop / imgHeight ) * 100 + deltaY ) );
+
+				// Recalculate based on pixel position
+				var newLeftPx = startLeft + ( e.pageX - startX );
+				var newTopPx = startTop + ( e.pageY - startY );
+
+				newX = ( newLeftPx / imgWidth ) * 100;
+				newY = ( newTopPx / imgHeight ) * 100;
+
+				newX = Math.max( 0, Math.min( 100, newX ) );
+				newY = Math.max( 0, Math.min( 100, newY ) );
+
+				$tag.css( {
+					left: newX + '%',
+					top: newY + '%'
+				} );
+				$tag.data( 'x', newX );
+				$tag.data( 'y', newY );
+			} );
+
+			$( document ).on( 'mouseup.tagdrag', function() {
+				if ( isDragging ) {
+					isDragging = false;
+					$tag.removeClass( 'dragging' );
+
+					// Auto-save after drag ends
+					var productId = parseInt( $tag.data( 'product-id' ), 10 );
+					var x = parseFloat( $tag.data( 'x' ) ) || parseFloat( $tag.css( 'left' ) );
+					var y = parseFloat( $tag.data( 'y' ) ) || parseFloat( $tag.css( 'top' ) );
+					saveTagPositionFromCoords( productId, x, y );
+				}
+			} );
+		}
+
+		// Load existing tag position for a product from currentSelectedProducts
+		function loadExistingTagPosition( productId ) {
+			var existingIdx = findProductIndex( currentSelectedProducts, productId );
+			if ( existingIdx !== -1 && currentSelectedProducts[ existingIdx ].tag ) {
+				var tag = currentSelectedProducts[ existingIdx ].tag;
+				// For albums, only show tag if it matches the current album index
+				if ( currentMediaType === 'carousel_album' && currentSelectedAlbumIndex !== null ) {
+					if ( tag.album_index === currentSelectedAlbumIndex ) {
+						displayTagOnCanvas( productId, tag.x, tag.y );
+					}
+				} else {
+					displayTagOnCanvas( productId, tag.x, tag.y );
+				}
+			}
+		}
+
+		// Display a tag on canvas without saving (for loading existing tags)
+		function displayTagOnCanvas( productId, x, y ) {
+			var $container = $( '#wpz-insta-tagging-tags' );
+			var productTitle = $( '#wpz-insta-tagging-product-info' ).data( 'product-title' ) || '';
+
+			// Remove existing tag for this product
+			$container.find( '.wpz-insta-tag[data-product-id="' + productId + '"]' ).remove();
+
+			// Create tag element
+			var $tag = $( '<div class="wpz-insta-tag" data-product-id="' + productId + '" data-x="' + x + '" data-y="' + y + '">' +
+				'<span class="wpz-insta-tag-dot"></span>' +
+				'<span class="wpz-insta-tag-label">' + productTitle + '</span>' +
+				'</div>' );
+
+			$tag.css( {
+				left: x + '%',
+				top: y + '%'
+			} );
+
+			$container.append( $tag );
+			makeTagDraggable( $tag );
 		}
 
 		function loadProducts( search, page ) {
@@ -1338,20 +1889,39 @@ jQuery( function( $ ) {
 
 		function displayProducts( products, totalPages, currentPage ) {
 			var html = '';
+			var strings = zoom_instagram_widget_admin.strings || {};
+			// Only show "Tag in Image" button for image and carousel_album (not video)
+			var canTag = currentMediaType === 'image' || currentMediaType === 'carousel_album';
+			var selectedIds = getCurrentSelectedIds();
 			if ( products.length === 0 ) {
 				html = '<div class="wpz-insta-no-products">No products found.</div>';
 			} else {
 				products.forEach( function( product ) {
-					var isSelected = currentSelectedIds.indexOf( parseInt( product.id, 10 ) ) !== -1;
+					var productId = parseInt( product.id, 10 );
+					var isSelected = selectedIds.indexOf( productId ) !== -1;
+					var hasTag = isProductTagged( productId );
 					var selectedClass = isSelected ? ' selected' : '';
-					html += '<div class="wpz-insta-product-item' + selectedClass + '" data-product-id="' + product.id + '">' +
+					var taggedClass = hasTag ? ' has-tag' : '';
+					html += '<div class="wpz-insta-product-item' + selectedClass + taggedClass + '" data-product-id="' + product.id + '" data-product-title="' + encodeURIComponent( product.title ) + '" data-product-image="' + encodeURIComponent( product.image ) + '">' +
 						'<span class="wpz-insta-product-item-checkbox" aria-hidden="true"></span>' +
 						'<img src="' + product.image + '" alt="" />' +
 						'<div class="wpz-insta-product-info">' +
 						'<h4>' + product.title + '</h4>' +
 						'<span class="wpz-insta-product-price">' + product.price + '</span>' +
-						'</div>' +
 						'</div>';
+					// Add "Tag in Image" button (visible only when selected, for Photos and Albums)
+					if ( canTag ) {
+						var btnClass = 'button wpz-insta-tag-in-image-btn' + ( hasTag ? ' wpz-insta-tag-btn--tagged' : '' );
+						var btnText = hasTag ? ( strings.editTag || 'Edit Tag' ) : ( strings.tagInImage || 'Tag in Image' );
+						const editTagSVG = '<svg xmlns="http://www.w3.org/2000/svg" height="18" viewBox="0 -960 960 960" width="18" fill="currentColor"><path d="M160-120q-17 0-28.5-11.5T120-160v-97q0-16 6-30.5t17-25.5l505-504q12-11 26.5-17t30.5-6q16 0 31 6t26 18l55 56q12 11 17.5 26t5.5 30q0 16-5.5 30.5T817-647L313-143q-11 11-25.5 17t-30.5 6h-97Zm544-528 56-56-56-56-56 56 56 56Z"/></svg>';
+						const tagInImageSVG = '<svg xmlns="http://www.w3.org/2000/svg" height="18" viewBox="0 -960 960 960" width="18" fill="currentColor"><path d="M640-760v280l68 68q6 6 9 13.5t3 15.5v23q0 17-11.5 28.5T680-320H520v234q0 17-11.5 28.5T480-46q-17 0-28.5-11.5T440-86v-234H280q-17 0-28.5-11.5T240-360v-23q0-8 3-15.5t9-13.5l68-68v-280q-17 0-28.5-11.5T280-800q0-17 11.5-28.5T320-840h320q17 0 28.5 11.5T680-800q0 17-11.5 28.5T640-760Z"></path></svg>';
+						var btnIcon = hasTag ? editTagSVG : tagInImageSVG;
+
+						html += `<button type="button" class="${btnClass}" title="${btnText}">
+							${btnIcon} ${btnText}
+						</button>`;
+					}
+					html += '</div>';
 				} );
 			}
 			$( '#wpz-insta-product-list' ).html( html );
@@ -1371,18 +1941,19 @@ jQuery( function( $ ) {
 			}
 
 			// Enable save button if selection differs from original
-			var hasChanges = JSON.stringify( currentSelectedIds.slice().sort() ) !== JSON.stringify( originalSelectedIds.slice().sort() );
+			var hasChanges = ! areProductArraysEqual( currentSelectedProducts, originalSelectedProducts );
 			$( '.wpz-insta-save-link' ).prop( 'disabled', ! hasChanges );
-			$( '.wpz-insta-remove-link' ).toggle( currentSelectedIds.length > 0 );
+			$( '.wpz-insta-remove-link' ).toggle( currentSelectedProducts.length > 0 );
 		}
 
 		// Save product link to memory (not to DB) - will be saved when post is saved
-		function saveProductLinkToMemory( productIds ) {
-			productIds = Array.isArray( productIds ) ? productIds : ( productIds ? [ productIds ] : [] );
+		function saveProductLinkToMemory( products ) {
+			// Accept array of product objects { id, tag } or empty array
+			products = Array.isArray( products ) ? products : [];
 
 			// Update pending product links in memory
-			if ( productIds.length > 0 ) {
-				pendingProductLinks[ currentMediaId ] = productIds;
+			if ( products.length > 0 ) {
+				pendingProductLinks[ currentMediaId ] = products;
 			} else {
 				// If removing all links, store empty array to indicate removal
 				pendingProductLinks[ currentMediaId ] = [];
@@ -1392,7 +1963,7 @@ jQuery( function( $ ) {
 			updatePendingProductLinksInput();
 
 			// Update preview iframe
-			var hasLinks = productIds.length > 0;
+			var hasLinks = products.length > 0;
 			updatePreviewLinkedProducts( currentMediaId, hasLinks );
 
 			// Close modal
@@ -1450,20 +2021,24 @@ jQuery( function( $ ) {
 			}
 			currentMediaId = e.data.mediaId || '';
 			currentFeedId = e.data.feedId || '';
+			currentMediaType = e.data.mediaType || 'image';
+			currentImageUrl = e.data.imageUrl || '';
+			currentAlbumImages = []; // Reset album images cache
 
 			initProductLinkModal();
+			resetProductLinkModalView(); // Always open on "Link to Product" view, not tagging view
 			$productLinkModal.show();
 			$( '#wpz-insta-product-list' ).html( '<div class="wpz-insta-loading">Loading...</div>' );
 			$( '.wpz-insta-save-link' ).prop( 'disabled', true );
 
 			// First check if we have pending changes in memory for this media ID
 			if ( currentMediaId in pendingProductLinks ) {
-				currentSelectedIds = pendingProductLinks[ currentMediaId ].slice();
-				originalSelectedIds = currentSelectedIds.slice();
-				$( '.wpz-insta-remove-link' ).toggle( currentSelectedIds.length > 0 );
+				currentSelectedProducts = JSON.parse( JSON.stringify( pendingProductLinks[ currentMediaId ] ) );
+				originalSelectedProducts = JSON.parse( JSON.stringify( currentSelectedProducts ) );
+				$( '.wpz-insta-remove-link' ).toggle( currentSelectedProducts.length > 0 );
 				loadProducts( '', 1 );
 			} else {
-				// Fetch current linked product IDs from DB (supports multi-select)
+				// Fetch current linked products from DB (supports multi-select with tags)
 				$.ajax( {
 					url: zoom_instagram_widget_admin.ajax_url,
 					type: 'POST',
@@ -1474,21 +2049,27 @@ jQuery( function( $ ) {
 						media_id: currentMediaId
 					},
 					success: function( response ) {
-						if ( response.success && response.data && response.data.product_ids && Array.isArray( response.data.product_ids ) ) {
-							currentSelectedIds = response.data.product_ids.slice();
-							// Store initial state from DB
-							initialProductLinks[ currentMediaId ] = response.data.product_ids.slice();
+						if ( response.success && response.data && response.data.products && Array.isArray( response.data.products ) ) {
+							// New format: array of { id, tag }
+							currentSelectedProducts = response.data.products.slice();
+							initialProductLinks[ currentMediaId ] = JSON.parse( JSON.stringify( response.data.products ) );
+						} else if ( response.success && response.data && response.data.product_ids && Array.isArray( response.data.product_ids ) ) {
+							// Old format: array of IDs - convert to new format
+							currentSelectedProducts = response.data.product_ids.map( function( id ) {
+								return { id: id, tag: null };
+							} );
+							initialProductLinks[ currentMediaId ] = JSON.parse( JSON.stringify( currentSelectedProducts ) );
 						} else {
-							currentSelectedIds = [];
+							currentSelectedProducts = [];
 							initialProductLinks[ currentMediaId ] = [];
 						}
-						originalSelectedIds = currentSelectedIds.slice();
-						$( '.wpz-insta-remove-link' ).toggle( currentSelectedIds.length > 0 );
+						originalSelectedProducts = JSON.parse( JSON.stringify( currentSelectedProducts ) );
+						$( '.wpz-insta-remove-link' ).toggle( currentSelectedProducts.length > 0 );
 						loadProducts( '', 1 );
 					},
 					error: function() {
-						currentSelectedIds = [];
-						originalSelectedIds = [];
+						currentSelectedProducts = [];
+						originalSelectedProducts = [];
 						initialProductLinks[ currentMediaId ] = [];
 						$( '.wpz-insta-remove-link' ).hide();
 						loadProducts( '', 1 );
@@ -1497,7 +2078,7 @@ jQuery( function( $ ) {
 			}
 		} );
 
-		// Pagination handlers (preserve currentSelectedIds)
+		// Pagination handlers (preserve currentSelectedProducts)
 		$( document ).on( 'click', '.wpz-insta-prev-page, .wpz-insta-next-page', function() {
 			var page = $( this ).data( 'page' );
 			var search = $( '#wpz-insta-product-search-input' ).val();

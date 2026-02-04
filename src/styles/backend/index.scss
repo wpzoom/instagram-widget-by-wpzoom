@@ -3178,10 +3178,39 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
+        gap: 12px;
 
-        h2 {
+        .wpz-insta-back-to-products {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #2271b1;
+            padding: 4px;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+            flex-shrink: 0;
+            transition: background 0.15s, color 0.15s;
+
+            .dashicons {
+                font-size: 20px;
+                width: 20px;
+                height: 20px;
+            }
+
+            &:hover {
+                background: #f0f0f0;
+                color: #135e96;
+            }
+        }
+
+        h2, .wpz-insta-modal-title {
             margin: 0;
             font-size: 18px;
+            flex: 1;
         }
 
         .wpz-insta-modal-close {
@@ -3194,6 +3223,7 @@
             width: 30px;
             height: 30px;
             line-height: 30px;
+            flex-shrink: 0;
 
             &:hover {
                 color: #000;
@@ -3330,8 +3360,27 @@
         padding: 20px;
         border-top: 1px solid #ddd;
         display: flex;
-        justify-content: flex-end;
+        justify-content: space-between;
         gap: 10px;
+
+		.wpz-insta-modal-footer-left {
+			display: flex;
+			gap: 10px;
+		}
+
+		button {
+			padding: 6px 12px;
+		}
+
+		.wpz-insta-remove-link {
+			color: #b32d2e;
+			border: 1px solid #e5b8b7;
+			&:hover,
+			&:focus {
+				color: #9b191c;
+				border-color: #e57373;
+			}
+		}
     }
 }
 
@@ -3365,5 +3414,281 @@
 
     .wpz-insta-modal-footer {
         justify-content: flex-end;
+    }
+}
+
+// "Tag in Image" button inside product items
+.wpz-insta-product-item {
+    position: relative;
+
+    .wpz-insta-tag-in-image-btn {
+        display: none; // Hidden by default
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        padding: 4px 10px;
+        font-size: 12px;
+        line-height: 1.4;
+        white-space: nowrap;
+        background-color: #1e1e1e;
+        color: #fff;
+        border: none;
+        border-radius: 3px;
+        cursor: pointer;
+        z-index: 2;
+		gap: 4px;
+
+        &:hover {
+            background-color: #333;
+        	color: #fff;
+		}
+    }
+
+    // Show "Tag in Image" button only when item is selected
+    &.selected .wpz-insta-tag-in-image-btn {
+        display: inline-flex;
+        align-items: center;
+    }
+
+    // Tagged state - different style for "Edit Tag" button
+    &.has-tag .wpz-insta-tag-in-image-btn,
+    .wpz-insta-tag-in-image-btn.wpz-insta-tag-btn--tagged {
+        background-color: #00a32a;
+
+        &:hover {
+            background-color: #008a20;
+            color: #fff;
+        }
+    }
+}
+
+// Album selector view
+.wpz-insta-album-selector-view {
+    .wpz-insta-album-hint {
+        margin: 0 0 16px;
+        font-size: 14px;
+        color: #50575e;
+    }
+}
+
+#wpz-insta-album-images {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 12px;
+    max-height: 400px;
+    overflow-y: auto;
+    padding: 4px;
+
+    .wpz-insta-album-image-item {
+        position: relative;
+        cursor: pointer;
+        border: 2px solid transparent;
+        border-radius: 4px;
+        overflow: hidden;
+        transition: border-color 0.2s, transform 0.2s;
+
+        &:hover {
+            border-color: #2271b1;
+            transform: scale(1.02);
+        }
+
+        img {
+            display: block;
+            width: 100%;
+            aspect-ratio: 1;
+            object-fit: cover;
+        }
+
+        .wpz-insta-album-image-number {
+            position: absolute;
+            top: 6px;
+            left: 6px;
+            background: rgba(0, 0, 0, 0.7);
+            color: #fff;
+            font-size: 11px;
+            font-weight: 600;
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+    }
+
+    .wpz-insta-no-images {
+        grid-column: 1 / -1;
+        text-align: center;
+        padding: 40px 20px;
+        color: #666;
+    }
+}
+
+// Tagging view
+.wpz-insta-tagging-view {
+    .wpz-insta-tagging-hint {
+        margin: 0 0 12px;
+        font-size: 14px;
+        color: #50575e;
+    }
+}
+
+// Tagging view: product preview in header
+.wpz-insta-tagging-header-preview {
+    flex: 0 1 auto;
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    margin-left: 12px;
+
+    .wpz-insta-tagging-product-preview {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 6px 12px 6px 6px;
+        background: #f6f7f7;
+        border-radius: 4px;
+        border: 1px solid #ddd;
+        max-width: 100%;
+
+        img {
+            width: 28px;
+            height: 28px;
+            object-fit: cover;
+            border-radius: 3px;
+            flex-shrink: 0;
+        }
+
+        span {
+            font-size: 13px;
+            font-weight: 500;
+            color: #1d2327;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 180px;
+        }
+    }
+}
+
+// Tagging view footer (Remove tag position left, Save + Cancel right)
+.wpz-insta-tagging-footer {
+    padding: 20px;
+    border-top: 1px solid #ddd;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+
+    .wpz-insta-modal-footer-right {
+        margin-right: auto;
+    }
+
+    .wpz-insta-modal-footer-left {
+        display: flex;
+        gap: 10px;
+    }
+
+    button {
+        padding: 6px 12px !important;
+    }
+
+	.wpz-insta-remove-tag-position {
+		color: #b32d2e;
+		border: 1px solid #e5b8b7;
+		&:hover,
+		&:focus {
+			color: #9b191c;
+			border-color: #e57373;
+		}
+		&:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+	}
+}
+
+.wpz-insta-tagging-canvas-wrap {
+    position: relative;
+    display: inline-block;
+    max-width: 100%;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    overflow: hidden;
+    background: #f0f0f0;
+
+    #wpz-insta-tagging-image {
+        display: block;
+        max-width: 100%;
+        max-height: 450px;
+        object-fit: contain;
+        cursor: crosshair;
+    }
+}
+
+#wpz-insta-tagging-tags {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
+
+    .wpz-insta-tag {
+        position: absolute;
+        transform: translate(-50%, -50%);
+        pointer-events: auto;
+        cursor: grab;
+        z-index: 10;
+
+        &.dragging {
+            cursor: grabbing;
+        }
+
+        .wpz-insta-tag-dot {
+            display: block;
+            width: 24px;
+            height: 24px;
+            background: #2271b1;
+            border: 3px solid #fff;
+            border-radius: 50%;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+            transition: transform 0.15s;
+
+            &:hover {
+                transform: scale(1.1);
+            }
+        }
+
+        .wpz-insta-tag-label {
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            margin-top: 6px;
+            padding: 4px 10px;
+            background: rgba(0, 0, 0, 0.85);
+            color: #fff;
+            font-size: 12px;
+            font-weight: 500;
+            white-space: nowrap;
+            border-radius: 4px;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.2s;
+
+            &::before {
+                content: '';
+                position: absolute;
+                bottom: 100%;
+                left: 50%;
+                transform: translateX(-50%);
+                border: 5px solid transparent;
+                border-bottom-color: rgba(0, 0, 0, 0.85);
+            }
+        }
+
+        &:hover .wpz-insta-tag-label,
+        &.dragging .wpz-insta-tag-label {
+            opacity: 1;
+        }
     }
 }

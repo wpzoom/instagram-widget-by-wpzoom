@@ -354,6 +354,7 @@ class WPZOOM_Instagram_Widget_Settings {
 			add_action( 'wp_ajax_wpz-insta_get-products', array( $this, 'ajax_get_products' ) );
 			add_action( 'wp_ajax_wpz-insta_save-product-link', array( $this, 'ajax_save_product_link' ) );
 			add_action( 'wp_ajax_wpz-insta_get-product-link', array( $this, 'ajax_get_product_link' ) );
+			add_action( 'wp_ajax_wpz-insta_get-album-images', array( $this, 'ajax_get_album_images' ) );
 		}
 		
 		add_action( 'save_post_wpz-insta_feed', array( $this, 'save_feed' ), 15, 3 );
@@ -671,12 +672,17 @@ class WPZOOM_Instagram_Widget_Settings {
 			wp_send_json_error( array( 'message' => __( 'Invalid feed ID or media ID.', 'instagram-widget-by-wpzoom' ) ) );
 		}
 
-		$product_ids = Wpzoom_Instagram_Widget_Display::get_linked_product_ids( $feed_id, $media_id );
-		$products    = array();
-		foreach ( $product_ids as $product_id ) {
-			$product = wc_get_product( $product_id );
+		// Get linked products with tag data (new format)
+		$linked_products = Wpzoom_Instagram_Widget_Display::get_linked_products( $feed_id, $media_id );
+		$product_ids     = array();
+		$products_data   = array();
+		
+		foreach ( $linked_products as $linked ) {
+			$product_id = $linked['id'];
+			$product    = wc_get_product( $product_id );
 			if ( $product ) {
-				$products[] = array(
+				$product_ids[] = $product_id;
+				$products_data[] = array(
 					'id'    => $product->get_id(),
 					'title' => $product->get_name(),
 					'price' => $product->get_price_html(),
@@ -687,8 +693,162 @@ class WPZOOM_Instagram_Widget_Settings {
 
 		wp_send_json_success( array(
 			'product_ids' => $product_ids,
-			'products'    => $products,
+			'products'    => $linked_products, // New format: array of { id, tag }
+			'products_data' => $products_data, // Product details for display
 		) );
+	}
+
+	/**
+	 * AJAX handler to get album (carousel) images for product tagging.
+	 *
+	 * @return void
+	 */
+	function ajax_get_album_images() {
+		check_ajax_referer( 'wpz-insta-product-link', 'nonce' );
+
+		if ( ! current_user_can( 'edit_posts' ) ) {
+			wp_send_json_error( array( 'message' => __( 'Permission denied.', 'instagram-widget-by-wpzoom' ) ) );
+		}
+
+		$feed_id  = isset( $_POST['feed_id'] ) ? intval( $_POST['feed_id'] ) : 0;
+		$media_id = isset( $_POST['media_id'] ) ? sanitize_text_field( $_POST['media_id'] ) : '';
+
+		if ( empty( $feed_id ) || empty( $media_id ) ) {
+			wp_send_json_error( array( 'message' => __( 'Invalid feed ID or media ID.', 'instagram-widget-by-wpzoom' ) ) );
+		}
+
+		$images = $this->get_album_images_for_media( $feed_id, $media_id );
+
+		if ( empty( $images ) ) {
+			wp_send_json_error( array( 'message' => __( 'No images found for this media item.', 'instagram-widget-by-wpzoom' ) ) );
+		}
+
+		wp_send_json_success( array( 'images' => $images ) );
+	}
+
+	/**
+	 * Get album (carousel) child images for a media item. Uses feed's transient cache first, then API.
+	 *
+	 * @param int    $feed_id  Feed post ID.
+	 * @param string $media_id Instagram media ID.
+	 * @return array List of image entries (url, type, index).
+	 */
+	private function get_album_images_for_media( $feed_id, $media_id ) {
+		$images = array();
+
+		// 1. Try feed's transient cache (same cache the feed uses: zoom_instagram_is_configured_feed_* or legacy)
+		$legacy_key = 'zoom_instagram_is_configured_' . substr( (string) $feed_id, 0, 20 );
+		$cached     = get_transient( $legacy_key );
+		if ( false !== $cached && is_string( $cached ) ) {
+			$data = json_decode( $cached );
+			if ( is_object( $data ) && ! empty( $data->data ) && is_array( $data->data ) ) {
+				foreach ( $data->data as $item ) {
+					$item_id = isset( $item->id ) ? $item->id : '';
+					if ( $item_id === $media_id ) {
+						$images = $this->extract_images_from_album_item( $item );
+						if ( ! empty( $images ) ) {
+							return $images;
+						}
+						break;
+					}
+				}
+			}
+		}
+
+		// 2. Fallback: get feed items via API (uses/populates feed cache), then find this media's children
+		$user_id = get_post_meta( $feed_id, '_wpz-insta_user-id', true );
+		if ( ! empty( $user_id ) ) {
+			$access_token = get_post_meta( (int) $user_id, '_wpz-insta_token', true );
+			if ( ! empty( $access_token ) && class_exists( 'Wpzoom_Instagram_Widget_Api' ) ) {
+				$api   = Wpzoom_Instagram_Widget_Api::getInstance();
+				$items = $api->get_items( array(
+					'image-limit'        => 50,
+					'allowed-post-types' => 'IMAGE,VIDEO,CAROUSEL_ALBUM',
+					'feed-id'            => $feed_id,
+					'access-token'       => $access_token,
+				) );
+				if ( is_array( $items ) && ! empty( $items['items'] ) ) {
+					foreach ( $items['items'] as $item ) {
+						$item_id = isset( $item['image-id'] ) ? $item['image-id'] : '';
+						if ( $item_id === $media_id ) {
+							$images = $this->extract_images_from_album_item( (object) $item );
+							if ( ! empty( $images ) ) {
+								return $images;
+							}
+							break;
+						}
+					}
+				}
+			}
+		}
+
+		// 3. Single image fallback: one image (caller may pass currentImageUrl on frontend)
+		return $images;
+	}
+
+	/**
+	 * Extract images array from a single media item (carousel children or main image).
+	 *
+	 * @param object $item Media item (object with children, image-url, etc.).
+	 * @return array List of array( 'url', 'type', 'index' ).
+	 */
+	private function extract_images_from_album_item( $item ) {
+		$images = array();
+
+		if ( ! empty( $item->children ) ) {
+			$children_data = $item->children;
+			if ( is_object( $children_data ) && isset( $children_data->data ) ) {
+				$children = $children_data->data;
+			} elseif ( is_array( $children_data ) ) {
+				$children = $children_data;
+			} else {
+				$children = array();
+			}
+
+			foreach ( $children as $index => $child ) {
+				$child_url  = '';
+				$child_type = 'image';
+				if ( is_object( $child ) ) {
+					$child_url  = isset( $child->media_url ) ? $child->media_url : '';
+					$child_type = isset( $child->media_type ) ? strtolower( $child->media_type ) : 'image';
+					if ( 'video' === $child_type && isset( $child->thumbnail_url ) ) {
+						$child_url = $child->thumbnail_url;
+					}
+				} elseif ( is_array( $child ) ) {
+					$child_url  = isset( $child['media_url'] ) ? $child['media_url'] : '';
+					$child_type = isset( $child['media_type'] ) ? strtolower( $child['media_type'] ) : 'image';
+					if ( 'video' === $child_type && isset( $child['thumbnail_url'] ) ) {
+						$child_url = $child['thumbnail_url'];
+					}
+				}
+				if ( ! empty( $child_url ) ) {
+					$images[] = array(
+						'url'   => $child_url,
+						'type'  => $child_type,
+						'index' => $index,
+					);
+				}
+			}
+		}
+
+		if ( empty( $images ) ) {
+			$main_url = isset( $item->{'image-url'} ) ? $item->{'image-url'} : '';
+			if ( empty( $main_url ) && isset( $item->{'original-image-url'} ) ) {
+				$main_url = $item->{'original-image-url'};
+			}
+			if ( empty( $main_url ) && isset( $item->media_url ) ) {
+				$main_url = $item->media_url;
+			}
+			if ( ! empty( $main_url ) ) {
+				$images[] = array(
+					'url'   => $main_url,
+					'type'  => 'image',
+					'index' => 0,
+				);
+			}
+		}
+
+		return $images;
 	}
 
 	function admin_body_class_filter( $classes ) {
@@ -3378,25 +3538,45 @@ class WPZOOM_Instagram_Widget_Settings {
 						}
 
 						// Merge pending links with existing links
-						foreach ( $pending_links as $media_id => $product_ids ) {
+						foreach ( $pending_links as $media_id => $products ) {
 							$media_id = sanitize_text_field( $media_id );
 							
-							if ( is_array( $product_ids ) ) {
-								// Sanitize and validate product IDs
-								$product_ids = array_values( array_unique( array_map( 'intval', array_filter( $product_ids, function( $id ) {
-									return is_numeric( $id ) && intval( $id ) > 0;
-								} ) ) ) );
-
-								// Verify all product IDs exist
-								$valid_product_ids = array();
-								foreach ( $product_ids as $product_id ) {
-									if ( wc_get_product( $product_id ) ) {
-										$valid_product_ids[] = $product_id;
+							if ( is_array( $products ) ) {
+								// New format: array of { id, tag }
+								$valid_products = array();
+								foreach ( $products as $product ) {
+									// Check if it's new format (object with id) or old format (just ID)
+									if ( is_array( $product ) && isset( $product['id'] ) ) {
+										$product_id = intval( $product['id'] );
+										if ( $product_id > 0 && wc_get_product( $product_id ) ) {
+											$sanitized = array(
+												'id'  => $product_id,
+												'tag' => null,
+											);
+											// Sanitize tag data if present
+											if ( isset( $product['tag'] ) && is_array( $product['tag'] ) ) {
+												$sanitized['tag'] = array(
+													'x'           => isset( $product['tag']['x'] ) ? floatval( $product['tag']['x'] ) : 0,
+													'y'           => isset( $product['tag']['y'] ) ? floatval( $product['tag']['y'] ) : 0,
+													'album_index' => isset( $product['tag']['album_index'] ) && $product['tag']['album_index'] !== null ? intval( $product['tag']['album_index'] ) : null,
+												);
+											}
+											$valid_products[] = $sanitized;
+										}
+									} elseif ( is_numeric( $product ) && intval( $product ) > 0 ) {
+										// Old format: just product ID
+										$product_id = intval( $product );
+										if ( wc_get_product( $product_id ) ) {
+											$valid_products[] = array(
+												'id'  => $product_id,
+												'tag' => null,
+											);
+										}
 									}
 								}
 
-								if ( ! empty( $valid_product_ids ) ) {
-									$existing_links[ $media_id ] = $valid_product_ids;
+								if ( ! empty( $valid_products ) ) {
+									$existing_links[ $media_id ] = $valid_products;
 								} else {
 									// If empty array (all links removed), remove the entry
 									unset( $existing_links[ $media_id ] );
@@ -4312,9 +4492,10 @@ class WPZOOM_Instagram_Widget_Settings {
 						'linkProduct'    => __( 'Link to Product', 'instagram-widget-by-wpzoom' ),
 						'searchProducts'  => __( 'Search products...', 'instagram-widget-by-wpzoom' ),
 						'selectProductsHint' => __( 'Select one or more products. Click an item to toggle selection.', 'instagram-widget-by-wpzoom' ),
-						'removeLink'      => __( 'Remove Link', 'instagram-widget-by-wpzoom' ),
-						'save'            => __( 'Save', 'instagram-widget-by-wpzoom' ),
-						'cancel'          => __( 'Cancel', 'instagram-widget-by-wpzoom' ),
+						'removeLink'        => __( 'Remove Link', 'instagram-widget-by-wpzoom' ),
+						'removeTagPosition' => __( 'Remove tag position', 'instagram-widget-by-wpzoom' ),
+						'save'              => __( 'Save', 'instagram-widget-by-wpzoom' ),
+						'cancel'            => __( 'Cancel', 'instagram-widget-by-wpzoom' ),
 						'productLinksUpsellTitle'   => __( 'Unlock Product Links', 'instagram-widget-by-wpzoom' ),
 						'productLinksUpsellMessage' => __( 'Link your Instagram posts to WooCommerce products and display the product details or a Buy now button. This feature is available with an active Instagram Widget PRO license.', 'instagram-widget-by-wpzoom' ),
 						'productLinksUpsellCta'     => __( 'Get PRO License', 'instagram-widget-by-wpzoom' ),
