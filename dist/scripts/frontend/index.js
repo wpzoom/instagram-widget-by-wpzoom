@@ -544,6 +544,11 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
               if (video) {
                 video.play();
               }
+
+              // Initialize product carousel in the active slide
+              if (typeof window.wpzInstaInitProductCarousel === 'function') {
+                window.wpzInstaInitProductCarousel($activeSlide);
+              }
             }
           }));
           $nested.each(function () {
@@ -612,6 +617,12 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
                 if (_typeof($thisSwiper) === 'object') {
                   $thisSwiper.slideTo(this.content.find('> .swiper > .swiper-wrapper > .swiper-slide[data-uid="' + currentElement.data('mfp-src') + '"]').index());
                 }
+
+                // Initialize product carousel in the current slide
+                var $currentSlide = this.content.find('> .swiper > .swiper-wrapper > .swiper-slide[data-uid="' + currentElement.data('mfp-src') + '"]');
+                if (typeof window.wpzInstaInitProductCarousel === 'function') {
+                  window.wpzInstaInitProductCarousel($currentSlide);
+                }
               },
               afterClose: function afterClose() {
                 // Destroy swiper videos
@@ -626,6 +637,81 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
         }
       });
     };
+
+    // Initialize product card carousel in lightbox
+    function initProductCarousel($container) {
+      var $carousels = $container.find('.wpz-insta-lightbox-product--carousel');
+      $carousels.each(function () {
+        var $carousel = $(this);
+
+        // Skip if already initialized
+        if ($carousel.data('carousel-initialized')) {
+          return;
+        }
+        var $inner = $carousel.find('.wpz-insta-lightbox-product__carousel-inner');
+        var $cards = $inner.find('.wpz-insta-lightbox-product__card');
+        var $prevBtn = $carousel.find('.wpz-insta-lightbox-product__carousel-prev');
+        var $nextBtn = $carousel.find('.wpz-insta-lightbox-product__carousel-next');
+        var $dotsContainer = $carousel.find('.wpz-insta-lightbox-product__carousel-dots');
+        if ($cards.length <= 1) {
+          $prevBtn.hide();
+          $nextBtn.hide();
+          $dotsContainer.hide();
+          return;
+        }
+        var currentIndex = 0;
+        var totalSlides = $cards.length;
+
+        // Create dots
+        $dotsContainer.empty();
+        var _loop = function _loop(i) {
+          var $dot = $('<span class="wpz-insta-lightbox-product__carousel-dot"></span>');
+          if (i === 0) {
+            $dot.addClass('active');
+          }
+          $dot.on('click', function () {
+            goToSlide(i);
+          });
+          $dotsContainer.append($dot);
+        };
+        for (var i = 0; i < totalSlides; i++) {
+          _loop(i);
+        }
+        function updateCarousel() {
+          $inner.css('transform', 'translateX(-' + currentIndex * 100 + '%)');
+
+          // Update dots
+          $dotsContainer.find('.wpz-insta-lightbox-product__carousel-dot').removeClass('active').eq(currentIndex).addClass('active');
+
+          // Update buttons
+          $prevBtn.prop('disabled', currentIndex === 0);
+          $nextBtn.prop('disabled', currentIndex === totalSlides - 1);
+        }
+        function goToSlide(index) {
+          if (index >= 0 && index < totalSlides) {
+            currentIndex = index;
+            updateCarousel();
+          }
+        }
+        $prevBtn.on('click', function () {
+          if (currentIndex > 0) {
+            goToSlide(currentIndex - 1);
+          }
+        });
+        $nextBtn.on('click', function () {
+          if (currentIndex < totalSlides - 1) {
+            goToSlide(currentIndex + 1);
+          }
+        });
+
+        // Initialize
+        updateCarousel();
+        $carousel.data('carousel-initialized', true);
+      });
+    }
+
+    // Expose globally for use in lightbox callbacks
+    window.wpzInstaInitProductCarousel = initProductCarousel;
     $.fn.zoomInstagramWidget = function (options) {
       return $(this).each(function () {
         var $list = $(this);

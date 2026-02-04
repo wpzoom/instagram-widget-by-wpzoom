@@ -1008,7 +1008,7 @@
 									background: $primary-color;
 									height: 6px;
 									border-radius: 2px 2px 0 0;
-									transform: translateY(100%);
+									transform: translateY(calc(100% + 2px));
 									transition: all 0.2s ease;
 								}
 
@@ -2996,7 +2996,11 @@
 
     }
 }
-
+.wpz-insta_sidebar-section {
+	input{
+		max-width: 100%;
+	}
+}
 .wpz-insta_feed-only-pro {
 	.wpz-insta_product-links-icon-design,
 	.wpz-insta_product-links-design,

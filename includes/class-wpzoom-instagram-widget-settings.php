@@ -2409,18 +2409,45 @@ class WPZOOM_Instagram_Widget_Settings {
 										</div>
 									</label>
 
-									<label class="wpz-insta_table-row wpz-insta-buy-now-button-row<?php echo $product_links_is_icon ? ' hidden' : ''; ?>">
-										<input type="hidden" name="_wpz-insta_buy-now-new-tab" value="0" />
-										<input type="checkbox" name="_wpz-insta_buy-now-new-tab" value="1" class="preview-exclude" <?php checked( get_post_meta( $post->ID, '_wpz-insta_buy-now-new-tab', true ), '1' ); ?> />
-										<span><?php esc_html_e( 'Open in new tab', 'instagram-widget-by-wpzoom' ); ?></span>
-									</label>
-
-									<label class="wpz-insta_table-row wpz-insta-product-links-badge-row<?php echo $product_links_is_icon ? ' hidden' : ''; ?>" style="align-items: flex-start;">
+									<label class="wpz-insta_table-row wpz-insta-product-links-badge-row" style="align-items: flex-start;">
 										<strong class="wpz-insta_table-cell"><?php esc_html_e( 'Badge label', 'instagram-widget-by-wpzoom' ); ?></strong>
 										<div class="wpz-insta_table-cell">
-											<input type="text" name="_wpz-insta_product-badge-label" id="_wpz-insta_product-badge-label" class="preview-exclude" value="<?php echo esc_attr( get_post_meta( $post->ID, '_wpz-insta_product-badge-label', true ) ); ?>" placeholder="<?php esc_attr_e( 'Click to view products', 'instagram-widget-by-wpzoom' ); ?>" />
-											<p class="description"><?php esc_html_e( 'Leave empty to hide the badge.', 'instagram-widget-by-wpzoom' ); ?></p>
+											<?php $badge_label_value = get_post_meta( $post->ID, '_wpz-insta_product-badge-label', true ); ?>
+											<input type="text" name="_wpz-insta_product-badge-label" id="_wpz-insta_product-badge-label" class="preview-exclude" value="<?php echo esc_attr( '' !== $badge_label_value ? $badge_label_value : __( 'Product', 'instagram-widget-by-wpzoom' ) ); ?>" placeholder="<?php esc_attr_e( 'Product', 'instagram-widget-by-wpzoom' ); ?>" />
+											<p class="description"><?php esc_html_e( 'Badge displayed on items linked to products. Leave empty to hide.', 'instagram-widget-by-wpzoom' ); ?></p>
 										</div>
+									</label>
+
+									<label class="wpz-insta_table-row wpz-insta-lightbox-product-position-row" style="align-items: flex-start;">
+										<strong class="wpz-insta_table-cell"><?php esc_html_e( 'Lightbox position', 'instagram-widget-by-wpzoom' ); ?></strong>
+										<div class="wpz-insta_table-cell">
+											<?php $lightbox_product_position = get_post_meta( $post->ID, '_wpz-insta_lightbox-product-position', true ) ?: 'top'; ?>
+											<select name="_wpz-insta_lightbox-product-position" id="_wpz-insta_lightbox-product-position" class="preview-exclude">
+												<option value="top" <?php selected( $lightbox_product_position, 'top' ); ?>><?php esc_html_e( 'Before profile', 'instagram-widget-by-wpzoom' ); ?></option>
+												<option value="before-caption" <?php selected( $lightbox_product_position, 'before-caption' ); ?>><?php esc_html_e( 'After profile', 'instagram-widget-by-wpzoom' ); ?></option>
+												<option value="footer" <?php selected( $lightbox_product_position, 'footer' ); ?>><?php esc_html_e( 'After details', 'instagram-widget-by-wpzoom' ); ?></option>
+											</select>
+											<p class="description"><?php esc_html_e( 'Choose where to display linked products in the lightbox.', 'instagram-widget-by-wpzoom' ); ?></p>
+										</div>
+									</label>
+
+									<label class="wpz-insta_table-row wpz-insta-lightbox-product-layout-row" style="align-items: flex-start;">
+										<strong class="wpz-insta_table-cell"><?php esc_html_e( 'Lightbox layout', 'instagram-widget-by-wpzoom' ); ?></strong>
+										<div class="wpz-insta_table-cell">
+											<?php $lightbox_product_layout = get_post_meta( $post->ID, '_wpz-insta_lightbox-product-layout', true ) ?: 'list'; ?>
+											<select name="_wpz-insta_lightbox-product-layout" id="_wpz-insta_lightbox-product-layout" class="preview-exclude">
+												<option value="list" <?php selected( $lightbox_product_layout, 'list' ); ?>><?php esc_html_e( 'List', 'instagram-widget-by-wpzoom' ); ?></option>
+												<option value="card" <?php selected( $lightbox_product_layout, 'card' ); ?>><?php esc_html_e( 'Card', 'instagram-widget-by-wpzoom' ); ?></option>
+											</select>
+											<p class="description"><?php esc_html_e( 'Choose the layout style for products in the lightbox.', 'instagram-widget-by-wpzoom' ); ?></p>
+										</div>
+									</label>
+
+									<label class="wpz-insta_table-row">
+										<input type="hidden" name="_wpz-insta_buy-now-new-tab" value="0" />
+										<input type="checkbox" name="_wpz-insta_buy-now-new-tab" value="1" class="preview-exclude" <?php checked( get_post_meta( $post->ID, '_wpz-insta_buy-now-new-tab', true ), '1' ); ?> />
+										<span><?php esc_html_e( 'Open product links in new tab', 'instagram-widget-by-wpzoom' ); ?></span>
+										<small class="help" aria-hidden="true" data-tooltip="<?php esc_attr_e( 'When enabled, all product links (images, buttons, and popover items) will open in a new browser tab.', 'instagram-widget-by-wpzoom' ); ?>"><svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='16' height='16'><path fill='#000' fill-rule='evenodd' clip-rule='evenodd' d='M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm-1 16v-2h2v2h-2zm2-3v-1.141A3.991 3.991 0 0016 10a4 4 0 00-8 0h2c0-1.103.897-2 2-2s2 .897 2 2-.897 2-2 2a1 1 0 00-1 1v2h2z'></path></svg></small>
 									</label>
 								</div>
 
@@ -3293,6 +3320,14 @@ class WPZOOM_Instagram_Widget_Settings {
 				}
 				if ( isset( $_POST['_wpz-insta_product-badge-label'] ) ) {
 					update_post_meta( $post_ID, '_wpz-insta_product-badge-label', sanitize_text_field( $_POST['_wpz-insta_product-badge-label'] ) );
+				}
+				// Lightbox product position
+				if ( isset( $_POST['_wpz-insta_lightbox-product-position'] ) && in_array( $_POST['_wpz-insta_lightbox-product-position'], array( 'top', 'before-caption', 'footer' ), true ) ) {
+					update_post_meta( $post_ID, '_wpz-insta_lightbox-product-position', sanitize_text_field( $_POST['_wpz-insta_lightbox-product-position'] ) );
+				}
+				// Lightbox product layout
+				if ( isset( $_POST['_wpz-insta_lightbox-product-layout'] ) && in_array( $_POST['_wpz-insta_lightbox-product-layout'], array( 'list', 'card' ), true ) ) {
+					update_post_meta( $post_ID, '_wpz-insta_lightbox-product-layout', sanitize_text_field( $_POST['_wpz-insta_lightbox-product-layout'] ) );
 				}
 				// Product icon design
 				if ( isset( $_POST['_wpz-insta_product-icon-size'] ) ) {

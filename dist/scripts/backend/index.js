@@ -478,7 +478,6 @@ jQuery(function ($) {
     $section.find('.wpz-insta-product-links-icon-position-row').toggleClass('hidden', !isIcon);
     $section.find('.wpz-insta_sidebar-section-product-links-icon-design').toggleClass('hidden', !isIcon);
     $section.find('.wpz-insta-buy-now-button-row').toggleClass('hidden', isIcon);
-    $section.find('.wpz-insta-product-links-badge-row').toggleClass('hidden', isIcon);
     $section.find('.wpz-insta_sidebar-section-product-links-design').toggleClass('hidden', isIcon);
   }
   wpzInstaToggleProductLinksDisplayType();

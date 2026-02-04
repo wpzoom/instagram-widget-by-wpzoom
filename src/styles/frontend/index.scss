@@ -1031,6 +1031,7 @@ a.ig-b-v-24:hover {
             font-weight: normal;
             overflow-y: scroll;
             max-height: 384px;
+            min-height: 80px;
             border-bottom: 1px solid #efefef;
         }
     }
@@ -1227,6 +1228,7 @@ a.ig-b-v-24:hover {
     display: flex;
     flex-direction: column;
     flex-grow: 1;
+    overflow-y: auto;
 }
 
 /* Linked product block in lightbox (before header) */
@@ -1290,9 +1292,49 @@ a.ig-b-v-24:hover {
     .wpz-insta-lightbox-product__price {
         font-size: 13px;
         color: #262626;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        flex-wrap: wrap;
 
         .woocommerce-Price-amount {
             font-weight: 600;
+        }
+
+        // Hide screen reader text
+        .screen-reader-text {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+
+        // Original price (strikethrough)
+        del {
+            color: #8e8e8e;
+            font-weight: 400;
+            text-decoration: line-through;
+            opacity: 0.8;
+
+            .woocommerce-Price-amount {
+                font-weight: 400;
+            }
+        }
+
+        // Sale price
+        ins {
+            text-decoration: none;
+            color: #262626;
+            font-weight: 600;
+
+            .woocommerce-Price-amount {
+                font-weight: 600;
+            }
         }
     }
 
@@ -1307,6 +1349,193 @@ a.ig-b-v-24:hover {
 
         &:hover {
             background-color: var(--wpz-insta-buy-now-hover, #135e96) !important;
+        }
+    }
+
+    // Card layout styles
+    &.wpz-insta-lightbox-product--card {
+        padding: 16px;
+        gap: 0;
+        background: #fff;
+
+        .wpz-insta-lightbox-product__card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            width: 100%;
+        }
+
+        .wpz-insta-lightbox-product__card-link {
+            display: block;
+            text-decoration: none;
+            margin-bottom: 12px;
+        }
+
+        .wpz-insta-lightbox-product__card-img {
+            width: 120px;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+        .wpz-insta-lightbox-product__card-info {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            margin-bottom: 12px;
+            width: 100%;
+        }
+
+        .wpz-insta-lightbox-product__card-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: #262626;
+        }
+
+        .wpz-insta-lightbox-product__card-price {
+            font-size: 14px;
+            color: #262626;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            flex-wrap: wrap;
+
+            .woocommerce-Price-amount {
+                font-weight: 600;
+            }
+
+            // Hide screen reader text
+            .screen-reader-text {
+                position: absolute;
+                width: 1px;
+                height: 1px;
+                padding: 0;
+                margin: -1px;
+                overflow: hidden;
+                clip: rect(0, 0, 0, 0);
+                white-space: nowrap;
+                border: 0;
+            }
+
+            // Original price (strikethrough)
+            del {
+                color: #8e8e8e;
+                font-weight: 400;
+                text-decoration: line-through;
+                opacity: 0.8;
+
+                .woocommerce-Price-amount {
+                    font-weight: 400;
+                }
+            }
+
+            // Sale price
+            ins {
+                text-decoration: none;
+                color: #262626;
+                font-weight: 600;
+
+                .woocommerce-Price-amount {
+                    font-weight: 600;
+                }
+            }
+        }
+
+        .wpz-insta-lightbox-product__card-button {
+            display: block;
+            text-decoration: none;
+            transition: background-color 0.2s;
+
+            &:hover {
+                background-color: var(--wpz-insta-buy-now-hover, #135e96) !important;
+            }
+        }
+
+        // Carousel styles
+        &.wpz-insta-lightbox-product--carousel {
+            padding: 0;
+        }
+
+        .wpz-insta-lightbox-product__carousel {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .wpz-insta-lightbox-product__carousel-inner {
+            display: flex;
+            transition: transform 0.3s ease;
+        }
+
+        .wpz-insta-lightbox-product__carousel-inner .wpz-insta-lightbox-product__card {
+            flex: 0 0 100%;
+            padding: 16px;
+            box-sizing: border-box;
+        }
+
+        .wpz-insta-lightbox-product__carousel-prev,
+        .wpz-insta-lightbox-product__carousel-next {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            padding: 10px;
+            border: none;
+            background: transparent;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2;
+            transition: opacity 0.2s, background-color 0.2s;
+
+            &:hover {
+                background: #fff;
+            }
+
+            &:disabled {
+                opacity: 0.3;
+                cursor: not-allowed;
+            }
+
+            svg {
+                width: 18px;
+                height: 18px;
+                color: #262626;
+            }
+        }
+
+        .wpz-insta-lightbox-product__carousel-prev {
+            left: 8px;
+        }
+
+        .wpz-insta-lightbox-product__carousel-next {
+            right: 8px;
+        }
+
+        .wpz-insta-lightbox-product__carousel-dots {
+            display: flex;
+            justify-content: center;
+            gap: 6px;
+            padding: 8px 0 16px;
+
+            .wpz-insta-lightbox-product__carousel-dot {
+                width: 8px;
+                height: 8px;
+                border-radius: 50%;
+                background: #dbdbdb;
+                cursor: pointer;
+                transition: background-color 0.2s;
+
+                &.active {
+                    background: #262626;
+                }
+
+                &:hover:not(.active) {
+                    background: #8e8e8e;
+                }
+            }
         }
     }
 }
@@ -1914,9 +2143,49 @@ a.ig-b-v-24:hover {
     font-size: 12px;
     color: #2271b1;
     font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex-wrap: wrap;
 
     .woocommerce-Price-amount {
         font-weight: 600;
+    }
+
+    // Hide screen reader text
+    .screen-reader-text {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+    }
+
+    // Original price (strikethrough)
+    del {
+        color: #8e8e8e;
+        font-weight: 400;
+        text-decoration: line-through;
+        opacity: 0.8;
+
+        .woocommerce-Price-amount {
+            font-weight: 400;
+        }
+    }
+
+    // Sale price
+    ins {
+        text-decoration: none;
+        color: #2271b1;
+        font-weight: 600;
+
+        .woocommerce-Price-amount {
+            font-weight: 600;
+        }
     }
 }
 

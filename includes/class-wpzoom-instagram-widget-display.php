@@ -1055,10 +1055,14 @@ class Wpzoom_Instagram_Widget_Display {
 					$output .= '</button>';
 
 					if ( $is_linked > 0 ) {
-						$output .= '<span class="wpz-insta-product-badge"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-  <path fill-rule="evenodd" d="M7.5 6v.75H5.513c-.96 0-1.764.724-1.865 1.679l-1.263 12A1.875 1.875 0 0 0 4.25 22.5h15.5a1.875 1.875 0 0 0 1.865-2.071l-1.263-12a1.875 1.875 0 0 0-1.865-1.679H16.5V6a4.5 4.5 0 1 0-9 0ZM12 3a3 3 0 0 0-3 3v.75h6V6a3 3 0 0 0-3-3Zm-3 8.25a3 3 0 1 0 6 0v-.75a.75.75 0 0 1 1.5 0v.75a4.5 4.5 0 1 1-9 0v-.75a.75.75 0 0 1 1.5 0v.75Z" clip-rule="evenodd" />
-</svg>
-' . esc_html__( 'Product', 'instagram-widget-by-wpzoom' ) . '</span>';
+						// Get badge label from settings (default: "Product")
+						$preview_badge_label = get_post_meta( $feed_id, '_wpz-insta_product-badge-label', true );
+						if ( false === $preview_badge_label || '' === $preview_badge_label ) {
+							$preview_badge_label = __( 'Product', 'instagram-widget-by-wpzoom' );
+						}
+						if ( '' !== $preview_badge_label ) {
+							$output .= '<span class="wpz-insta-product-badge"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M7.5 6v.75H5.513c-.96 0-1.764.724-1.865 1.679l-1.263 12A1.875 1.875 0 0 0 4.25 22.5h15.5a1.875 1.875 0 0 0 1.865-2.071l-1.263-12a1.875 1.875 0 0 0-1.865-1.679H16.5V6a4.5 4.5 0 1 0-9 0ZM12 3a3 3 0 0 0-3 3v.75h6V6a3 3 0 0 0-3-3Zm-3 8.25a3 3 0 1 0 6 0v-.75a.75.75 0 0 1 1.5 0v.75a4.5 4.5 0 1 1-9 0v-.75a.75.75 0 0 1 1.5 0v.75Z" clip-rule="evenodd"/></svg>' . esc_html( $preview_badge_label ) . '</span>';
+						}
 					}
 				}
 
@@ -1072,6 +1076,21 @@ class Wpzoom_Instagram_Widget_Display {
 							$display_type = get_post_meta( $feed_id, '_wpz-insta_product-links-display-type', true ) ?: 'icon';
 							$icon_position = get_post_meta( $feed_id, '_wpz-insta_product-links-icon-position', true ) ?: 'bottom-right';
 							$popover_title = get_post_meta( $feed_id, '_wpz-insta_product-links-popover-title', true ) ?: __( 'Related products', 'instagram-widget-by-wpzoom' );
+							// Get the "open in new tab" setting for all product links
+							$product_links_new_tab = ( '1' === get_post_meta( $feed_id, '_wpz-insta_buy-now-new-tab', true ) );
+							$product_links_rel     = $product_links_new_tab ? 'noopener noreferrer' : 'noopener';
+							$product_links_target  = $product_links_new_tab ? ' target="_blank"' : '';
+
+							// Display badge for all display types (if label is not empty)
+							$badge_label = get_post_meta( $feed_id, '_wpz-insta_product-badge-label', true );
+							// Use "Product" as default if not set
+							if ( false === $badge_label || '' === $badge_label ) {
+								$badge_label = __( 'Product', 'instagram-widget-by-wpzoom' );
+							}
+							if ( '' !== $badge_label ) {
+								$output .= '<span class="wpz-insta-product-badge"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M7.5 6v.75H5.513c-.96 0-1.764.724-1.865 1.679l-1.263 12A1.875 1.875 0 0 0 4.25 22.5h15.5a1.875 1.875 0 0 0 1.865-2.071l-1.263-12a1.875 1.875 0 0 0-1.865-1.679H16.5V6a4.5 4.5 0 1 0-9 0ZM12 3a3 3 0 0 0-3 3v.75h6V6a3 3 0 0 0-3-3Zm-3 8.25a3 3 0 1 0 6 0v-.75a.75.75 0 0 1 1.5 0v.75a4.5 4.5 0 1 1-9 0v-.75a.75.75 0 0 1 1.5 0v.75Z" clip-rule="evenodd"/></svg>' . esc_html( $badge_label ) . '</span>';
+							}
+
 							if ( 'icon' === $display_type ) {
 								$output .= '<div class="wpz-insta-product-icon-wrap wpz-insta-product-icon-position-' . esc_attr( $icon_position ) . '">';
 								$output .= '<span class="wpz-insta-product-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M7.5 6v.75H5.513c-.96 0-1.764.724-1.865 1.679l-1.263 12A1.875 1.875 0 0 0 4.25 22.5h15.5a1.875 1.875 0 0 0 1.865-2.071l-1.263-12a1.875 1.875 0 0 0-1.865-1.679H16.5V6a4.5 4.5 0 1 0-9 0ZM12 3a3 3 0 0 0-3 3v.75h6V6a3 3 0 0 0-3-3Zm-3 8.25a3 3 0 1 0 6 0v-.75a.75.75 0 0 1 1.5 0v.75a4.5 4.5 0 1 1-9 0v-.75a.75.75 0 0 1 1.5 0v.75Z" clip-rule="evenodd"/></svg></span>';
@@ -1091,7 +1110,7 @@ class Wpzoom_Instagram_Widget_Display {
 									$product_image_url = $product_image_id ? wp_get_attachment_image_url( $product_image_id, 'woocommerce_thumbnail' ) : wc_placeholder_img_src( 'woocommerce_thumbnail' );
 									$chevron_svg = '<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="currentColor" aria-hidden="true"><path d="M504-480 348-636q-11-11-11-28t11-28q11-11 28-11t28 11l184 184q6 6 8.5 13t2.5 15q0 8-2.5 15t-8.5 13L404-268q-11 11-28 11t-28-11q-11-11-11-28t11-28l156-156Z"/></svg>';
 									$output .= '<li class="wpz-insta-product-popover-item">';
-									$output .= '<a href="' . esc_url( $product_link ) . '" class="wpz-insta-product-popover-item-link" rel="noopener">';
+									$output .= '<a href="' . esc_url( $product_link ) . '" class="wpz-insta-product-popover-item-link" rel="' . esc_attr( $product_links_rel ) . '"' . $product_links_target . '>';
 									$output .= '<img class="wpz-insta-product-popover-item-img" src="' . esc_url( $product_image_url ) . '" alt="' . esc_attr( $product_title ) . '" loading="lazy" />';
 									$output .= '<div class="wpz-insta-product-popover-item-info">';
 									$output .= '<span class="wpz-insta-product-popover-item-title">' . esc_html( $product_title ) . '</span>';
@@ -1107,10 +1126,6 @@ class Wpzoom_Instagram_Widget_Display {
 								$buy_now_new_tab = ( '1' === get_post_meta( $feed_id, '_wpz-insta_buy-now-new-tab', true ) );
 								$buy_now_rel     = $buy_now_new_tab ? 'noopener noreferrer' : 'noopener';
 								$buy_now_target  = $buy_now_new_tab ? ' target="_blank"' : '';
-								$badge_label = get_post_meta( $feed_id, '_wpz-insta_product-badge-label', true );
-								if ( '' !== $badge_label ) {
-									$output .= '<span class="wpz-insta-product-badge"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M7.5 6v.75H5.513c-.96 0-1.764.724-1.865 1.679l-1.263 12A1.875 1.875 0 0 0 4.25 22.5h15.5a1.875 1.875 0 0 0 1.865-2.071l-1.263-12a1.875 1.875 0 0 0-1.865-1.679H16.5V6a4.5 4.5 0 1 0-9 0ZM12 3a3 3 0 0 0-3 3v.75h6V6a3 3 0 0 0-3-3Zm-3 8.25a3 3 0 1 0 6 0v-.75a.75.75 0 0 1 1.5 0v.75a4.5 4.5 0 1 1-9 0v-.75a.75.75 0 0 1 1.5 0v.75Z" clip-rule="evenodd"/></svg>' . esc_html( $badge_label ) . '</span>';
-								}
 								foreach ( $linked_ids as $linked_product_id ) {
 									$product = wc_get_product( $linked_product_id );
 									if ( $product && $product->is_visible() ) {
@@ -1229,10 +1244,14 @@ class Wpzoom_Instagram_Widget_Display {
 					$output .= '</div>
 					<div class="details-wrapper">';
 
-					// Linked product block (before header): show product(s) in lightbox (display type: button = full block, icon = icon + popover)
+					// Build product block HTML for lightbox (will be inserted based on position setting)
+					$product_block_html = '';
 					if ( $feed_id > 0 && class_exists( 'WooCommerce' ) && ! empty( $media_id ) && apply_filters( 'wpz-insta_is-pro', false ) ) {
 						$linked_ids = self::get_linked_product_ids( $feed_id, $media_id );
 						if ( ! empty( $linked_ids ) ) {
+								// Get layout setting (default: list)
+								$lightbox_product_layout = get_post_meta( $feed_id, '_wpz-insta_lightbox-product-layout', true ) ?: 'list';
+
 								$buy_now_text_lt   = get_post_meta( $feed_id, '_wpz-insta_buy-now-text', true ) ?: __( 'Buy now', 'instagram-widget-by-wpzoom' );
 								$buy_now_new_tab_lt = ( '1' === get_post_meta( $feed_id, '_wpz-insta_buy-now-new-tab', true ) );
 								$buy_now_rel_lt     = $buy_now_new_tab_lt ? 'noopener noreferrer' : 'noopener';
@@ -1261,31 +1280,85 @@ class Wpzoom_Instagram_Widget_Display {
 									esc_attr( $buy_now_color_lt ),
 									esc_attr( $buy_now_radius_lt )
 								);
-								$output .= '<div class="wpz-insta-lightbox-product" style="--wpz-insta-buy-now-hover:' . esc_attr( $buy_now_hover_lt ) . '">';
 
-								foreach ( $linked_ids as $linked_product_id ) {
-									$product = wc_get_product( $linked_product_id );
-									if ( ! $product || ! $product->is_visible() ) {
-										continue;
+								// Card layout with carousel for multiple products
+								if ( 'card' === $lightbox_product_layout ) {
+									$is_carousel = count( $linked_ids ) > 1;
+									$product_block_html .= '<div class="wpz-insta-lightbox-product wpz-insta-lightbox-product--card' . ( $is_carousel ? ' wpz-insta-lightbox-product--carousel' : '' ) . '" style="--wpz-insta-buy-now-hover:' . esc_attr( $buy_now_hover_lt ) . '">';
+
+									if ( $is_carousel ) {
+										$product_block_html .= '<div class="wpz-insta-lightbox-product__carousel">';
+										$product_block_html .= '<div class="wpz-insta-lightbox-product__carousel-inner">';
 									}
-									$product_link = get_permalink( $linked_product_id );
-									$product_title = $product->get_name();
-									$product_price = $product->get_price_html();
-									$product_image_id = $product->get_image_id();
-									$product_image_url = $product_image_id ? wp_get_attachment_image_url( $product_image_id, 'woocommerce_thumbnail' ) : wc_placeholder_img_src( 'woocommerce_thumbnail' );
-									$output .= '<div class="wpz-insta-lightbox-product__item">';
-									$output .= '<a href="' . esc_url( $product_link ) . '" class="wpz-insta-lightbox-product__link" rel="noopener">';
-									$output .= '<img class="wpz-insta-lightbox-product__img" src="' . esc_url( $product_image_url ) . '" alt="' . esc_attr( $product_title ) . '" loading="lazy"/>';
-									$output .= '<div class="wpz-insta-lightbox-product__info">';
-									$output .= '<span class="wpz-insta-lightbox-product__title">' . esc_html( $product_title ) . '</span>';
-									$output .= '<span class="wpz-insta-lightbox-product__price">' . $product_price . '</span>';
-									$output .= '</div></a>';
-									$output .= '<a href="' . esc_url( $product_link ) . '" class="wpz-insta-lightbox-product__buy-now button" style="' . $lightbox_buy_now_style . '" data-product-id="' . esc_attr( $linked_product_id ) . '" rel="' . esc_attr( $buy_now_rel_lt ) . '"' . $buy_now_target_lt . '>' . esc_html( $buy_now_text_lt ) . '</a>';
-									$output .= '</div>';
-								}
 
-								$output .= '</div>';
+									foreach ( $linked_ids as $linked_product_id ) {
+										$product = wc_get_product( $linked_product_id );
+										if ( ! $product || ! $product->is_visible() ) {
+											continue;
+										}
+										$product_link = get_permalink( $linked_product_id );
+										$product_title = $product->get_name();
+										$product_price = $product->get_price_html();
+										$product_image_id = $product->get_image_id();
+										$product_image_url = $product_image_id ? wp_get_attachment_image_url( $product_image_id, 'woocommerce_thumbnail' ) : wc_placeholder_img_src( 'woocommerce_thumbnail' );
+
+										$product_block_html .= '<div class="wpz-insta-lightbox-product__card">';
+										$product_block_html .= '<a href="' . esc_url( $product_link ) . '" class="wpz-insta-lightbox-product__card-link" rel="noopener"' . $buy_now_target_lt . '>';
+										$product_block_html .= '<img class="wpz-insta-lightbox-product__card-img" src="' . esc_url( $product_image_url ) . '" alt="' . esc_attr( $product_title ) . '" loading="lazy"/>';
+										$product_block_html .= '</a>';
+										$product_block_html .= '<div class="wpz-insta-lightbox-product__card-info">';
+										$product_block_html .= '<span class="wpz-insta-lightbox-product__card-title">' . esc_html( $product_title ) . '</span>';
+										$product_block_html .= '<span class="wpz-insta-lightbox-product__card-price">' . $product_price . '</span>';
+										$product_block_html .= '</div>';
+										$product_block_html .= '<a href="' . esc_url( $product_link ) . '" class="wpz-insta-lightbox-product__card-button button" style="' . $lightbox_buy_now_style . '" data-product-id="' . esc_attr( $linked_product_id ) . '" rel="' . esc_attr( $buy_now_rel_lt ) . '"' . $buy_now_target_lt . '>' . esc_html( $buy_now_text_lt ) . '</a>';
+										$product_block_html .= '</div>';
+									}
+
+									if ( $is_carousel ) {
+										$product_block_html .= '</div>'; // .wpz-insta-lightbox-product__carousel-inner
+										$product_block_html .= '<button type="button" class="wpz-insta-lightbox-product__carousel-prev" aria-label="' . esc_attr__( 'Previous product', 'instagram-widget-by-wpzoom' ) . '"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>';
+										$product_block_html .= '<button type="button" class="wpz-insta-lightbox-product__carousel-next" aria-label="' . esc_attr__( 'Next product', 'instagram-widget-by-wpzoom' ) . '"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>';
+										$product_block_html .= '<div class="wpz-insta-lightbox-product__carousel-dots"></div>';
+										$product_block_html .= '</div>'; // .wpz-insta-lightbox-product__carousel
+									}
+
+									$product_block_html .= '</div>';
+								} else {
+									// Default list layout
+									$product_block_html .= '<div class="wpz-insta-lightbox-product" style="--wpz-insta-buy-now-hover:' . esc_attr( $buy_now_hover_lt ) . '">';
+
+									foreach ( $linked_ids as $linked_product_id ) {
+										$product = wc_get_product( $linked_product_id );
+										if ( ! $product || ! $product->is_visible() ) {
+											continue;
+										}
+										$product_link = get_permalink( $linked_product_id );
+										$product_title = $product->get_name();
+										$product_price = $product->get_price_html();
+										$product_image_id = $product->get_image_id();
+										$product_image_url = $product_image_id ? wp_get_attachment_image_url( $product_image_id, 'woocommerce_thumbnail' ) : wc_placeholder_img_src( 'woocommerce_thumbnail' );
+										$product_block_html .= '<div class="wpz-insta-lightbox-product__item">';
+										$product_block_html .= '<a href="' . esc_url( $product_link ) . '" class="wpz-insta-lightbox-product__link" rel="' . esc_attr( $buy_now_rel_lt ) . '"' . $buy_now_target_lt . '>';
+										$product_block_html .= '<img class="wpz-insta-lightbox-product__img" src="' . esc_url( $product_image_url ) . '" alt="' . esc_attr( $product_title ) . '" loading="lazy"/>';
+										$product_block_html .= '<div class="wpz-insta-lightbox-product__info">';
+										$product_block_html .= '<span class="wpz-insta-lightbox-product__title">' . esc_html( $product_title ) . '</span>';
+										$product_block_html .= '<span class="wpz-insta-lightbox-product__price">' . $product_price . '</span>';
+										$product_block_html .= '</div></a>';
+										$product_block_html .= '<a href="' . esc_url( $product_link ) . '" class="wpz-insta-lightbox-product__buy-now button" style="' . $lightbox_buy_now_style . '" data-product-id="' . esc_attr( $linked_product_id ) . '" rel="' . esc_attr( $buy_now_rel_lt ) . '"' . $buy_now_target_lt . '>' . esc_html( $buy_now_text_lt ) . '</a>';
+										$product_block_html .= '</div>';
+									}
+
+									$product_block_html .= '</div>';
+								}
 						}
+					}
+
+					// Get lightbox product position setting (default: top)
+					$lightbox_product_position = $feed_id > 0 ? ( get_post_meta( $feed_id, '_wpz-insta_lightbox-product-position', true ) ?: 'top' ) : 'top';
+
+					// Output product block at top position (before header)
+					if ( 'top' === $lightbox_product_position && ! empty( $product_block_html ) ) {
+						$output .= $product_block_html;
 					}
 
 					$output .= '
@@ -1307,6 +1380,11 @@ class Wpzoom_Instagram_Widget_Display {
 						</div>
 					</div>';
 
+					// Output product block before caption position
+					if ( 'before-caption' === $lightbox_product_position && ! empty( $product_block_html ) ) {
+						$output .= $product_block_html;
+					}
+
 					if ( ! empty( $item['image-caption'] ) ) {
 						$output .= '<div class="wpz-insta-caption">' . self::filter_caption( $item['image-caption'] ) . '</div>';
 					}
@@ -1327,6 +1405,11 @@ class Wpzoom_Instagram_Widget_Display {
 							$output .= '<span class="wpz-insta-comments"><svg width="18" height="18" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 28 28" id="comment"><path fill="#c0c7ca" d="M25.784 21.017A10.992 10.992 0 0 0 27 16c0-6.065-4.935-11-11-11S5 9.935 5 16s4.935 11 11 11c1.742 0 3.468-.419 5.018-1.215l4.74 1.185a.996.996 0 0 0 .949-.263 1 1 0 0 0 .263-.95l-1.186-4.74zm-2.033.11.874 3.498-3.498-.875a1.006 1.006 0 0 0-.731.098A8.99 8.99 0 0 1 16 25c-4.963 0-9-4.038-9-9s4.037-9 9-9 9 4.038 9 9a8.997 8.997 0 0 1-1.151 4.395.995.995 0 0 0-.098.732z"></path></svg>' . self::format_number( $comments ) . '</span>';
 						}
 						$output .= '</div>';
+					}
+
+					// Output product block at footer position (after date/counts)
+					if ( 'footer' === $lightbox_product_position && ! empty( $product_block_html ) ) {
+						$output .= $product_block_html;
 					}
 
 					$output .= '<div class="view-post">
