@@ -1156,6 +1156,12 @@ class WPZOOM_Instagram_Widget_Settings {
 						}
 					}
 
+					// Explicitly copy linked products (stored as single serialized array; generic loop can miss or double-serialize).
+					$product_links = get_post_meta( $post_id, '_wpz-insta_product-links', true );
+					if ( is_array( $product_links ) ) {
+						update_post_meta( $new_post_id, '_wpz-insta_product-links', $product_links );
+					}
+
 					add_post_meta( $new_post_id, '_wpz-insta_feed_is_duplicate', true );
 
 					wp_redirect(
