@@ -1295,9 +1295,7 @@ jQuery( function( $ ) {
 
 			var strings = zoom_instagram_widget_admin.strings || {};
 			var hasTag = isProductTagged( productId );
-			var editTagSVG = '<svg xmlns="http://www.w3.org/2000/svg" height="18" viewBox="0 -960 960 960" width="18" fill="currentColor"><path d="M160-120q-17 0-28.5-11.5T120-160v-97q0-16 6-30.5t17-25.5l505-504q12-11 26.5-17t30.5-6q16 0 31 6t26 18l55 56q12 11 17.5 26t5.5 30q0 16-5.5 30.5T817-647L313-143q-11 11-25.5 17t-30.5 6h-97Zm544-528 56-56-56-56-56 56 56 56Z"/></svg>';
-			var tagInImageSVG = '<svg xmlns="http://www.w3.org/2000/svg" height="18" viewBox="0 -960 960 960" width="18" fill="currentColor"><path d="M640-760v280l68 68q6 6 9 13.5t3 15.5v23q0 17-11.5 28.5T680-320H520v234q0 17-11.5 28.5T480-46q-17 0-28.5-11.5T440-86v-234H280q-17 0-28.5-11.5T240-360v-23q0-8 3-15.5t9-13.5l68-68v-280q-17 0-28.5-11.5T280-800q0-17 11.5-28.5T320-840h320q17 0 28.5 11.5T680-800q0 17-11.5 28.5T640-760Z"></path></svg>';
-			var btnIcon = hasTag ? editTagSVG : tagInImageSVG;
+			var btnIcon = '<svg xmlns="http://www.w3.org/2000/svg" height="18" viewBox="0 -960 960 960" width="18" fill="currentColor"><path d="M640-760v280l68 68q6 6 9 13.5t3 15.5v23q0 17-11.5 28.5T680-320H520v234q0 17-11.5 28.5T480-46q-17 0-28.5-11.5T440-86v-234H280q-17 0-28.5-11.5T240-360v-23q0-8 3-15.5t9-13.5l68-68v-280q-17 0-28.5-11.5T280-800q0-17 11.5-28.5T320-840h320q17 0 28.5 11.5T680-800q0 17-11.5 28.5T640-760Z"></path></svg>';
 			var btnText = hasTag ? ( strings.editTag || 'Edit Tag' ) : ( strings.tagInImage || 'Tag in Image' );
 
 			if ( hasTag ) {
@@ -1756,6 +1754,10 @@ jQuery( function( $ ) {
 				// Save to pending product links immediately
 				pendingProductLinks[ currentMediaId ] = JSON.parse( JSON.stringify( currentSelectedProducts ) );
 				updatePendingProductLinksInput();
+
+				// Enable Save button when tag position differs from original
+				var hasChanges = ! areProductArraysEqual( currentSelectedProducts, originalSelectedProducts );
+				$productLinkModal.find( '.wpz-insta-save-link' ).prop( 'disabled', ! hasChanges );
 			}
 		}
 
@@ -1912,9 +1914,7 @@ jQuery( function( $ ) {
 					if ( canTag ) {
 						var btnClass = 'button wpz-insta-tag-in-image-btn' + ( hasTag ? ' wpz-insta-tag-btn--tagged' : '' );
 						var btnText = hasTag ? ( strings.editTag || 'Edit Tag' ) : ( strings.tagInImage || 'Tag in Image' );
-						const editTagSVG = '<svg xmlns="http://www.w3.org/2000/svg" height="18" viewBox="0 -960 960 960" width="18" fill="currentColor"><path d="M160-120q-17 0-28.5-11.5T120-160v-97q0-16 6-30.5t17-25.5l505-504q12-11 26.5-17t30.5-6q16 0 31 6t26 18l55 56q12 11 17.5 26t5.5 30q0 16-5.5 30.5T817-647L313-143q-11 11-25.5 17t-30.5 6h-97Zm544-528 56-56-56-56-56 56 56 56Z"/></svg>';
-						const tagInImageSVG = '<svg xmlns="http://www.w3.org/2000/svg" height="18" viewBox="0 -960 960 960" width="18" fill="currentColor"><path d="M640-760v280l68 68q6 6 9 13.5t3 15.5v23q0 17-11.5 28.5T680-320H520v234q0 17-11.5 28.5T480-46q-17 0-28.5-11.5T440-86v-234H280q-17 0-28.5-11.5T240-360v-23q0-8 3-15.5t9-13.5l68-68v-280q-17 0-28.5-11.5T280-800q0-17 11.5-28.5T320-840h320q17 0 28.5 11.5T680-800q0 17-11.5 28.5T640-760Z"></path></svg>';
-						var btnIcon = hasTag ? editTagSVG : tagInImageSVG;
+						var btnIcon = '<svg xmlns="http://www.w3.org/2000/svg" height="18" viewBox="0 -960 960 960" width="18" fill="currentColor"><path d="M640-760v280l68 68q6 6 9 13.5t3 15.5v23q0 17-11.5 28.5T680-320H520v234q0 17-11.5 28.5T480-46q-17 0-28.5-11.5T440-86v-234H280q-17 0-28.5-11.5T240-360v-23q0-8 3-15.5t9-13.5l68-68v-280q-17 0-28.5-11.5T280-800q0-17 11.5-28.5T320-840h320q17 0 28.5 11.5T680-800q0 17-11.5 28.5T640-760Z"></path></svg>';
 
 						html += `<button type="button" class="${btnClass}" title="${btnText}">
 							${btnIcon} ${btnText}

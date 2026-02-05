@@ -1553,8 +1553,6 @@ class Wpzoom_Instagram_Widget_Display {
 
 			$output .= "}";
 		}
-
-		error_log(print_r($is_preview, true));
 		
 		if ( 0 === $layout || ( 2 === $layout && $is_preview ) ) {
 			$output .= ".zoom-instagram{$feed_id} .zoom-instagram-widget__items{";

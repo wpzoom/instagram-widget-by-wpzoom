@@ -300,8 +300,8 @@ class Wpzoom_Instagram_Widget_API {
 			)
 		);
 
-		$image_limit           = $sliced['image-limit'];
-		$image_width           = $sliced['image-width'];
+		$image_limit           = isset( $sliced['image-limit'] ) ? $sliced['image-limit'] : 12;
+		$image_width           = isset( $sliced['image-width'] ) ? $sliced['image-width'] : 640;
 		$image_resolution      = ! empty( $sliced['image-resolution'] ) ? $sliced['image-resolution'] : 'standard_resolution';
 		$injected_username     = ! empty( $sliced['username'] ) ? $sliced['username'] : '';
 		$allowed_post_types    = ! empty( $sliced['allowed-post-types'] ) ? $sliced['allowed-post-types'] : 'IMAGE,VIDEO,CAROUSEL_ALBUM';

@@ -3427,7 +3427,7 @@
         right: 12px;
         top: 50%;
         transform: translateY(-50%);
-        padding: 4px 10px;
+        padding: 8px 12px;
         font-size: 12px;
         line-height: 1.4;
         white-space: nowrap;
@@ -3438,6 +3438,7 @@
         cursor: pointer;
         z-index: 2;
 		gap: 4px;
+		font-weight: 600;
 
         &:hover {
             background-color: #333;
@@ -3460,6 +3461,9 @@
             background-color: #008a20;
             color: #fff;
         }
+		svg{
+			transform: rotate(30deg);
+		}
     }
 }
 
