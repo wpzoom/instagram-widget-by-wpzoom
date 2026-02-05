@@ -598,7 +598,6 @@ jQuery( function( $ ) {
 		$section.find( '.wpz-insta-product-links-icon-position-row' ).toggleClass( 'hidden', ! isIcon );
 		$section.find( '.wpz-insta_sidebar-section-product-links-icon-design' ).toggleClass( 'hidden', ! isIcon );
 		$section.find( '.wpz-insta-buy-now-button-row' ).toggleClass( 'hidden', isIcon );
-		$section.find( '.wpz-insta-product-links-badge-row' ).toggleClass( 'hidden', isIcon );
 		$section.find( '.wpz-insta_sidebar-section-product-links-design' ).toggleClass( 'hidden', isIcon );
 	}
 	wpzInstaToggleProductLinksDisplayType();
@@ -1352,7 +1351,7 @@ jQuery( function( $ ) {
 				'</div>' +
 				'<div class="wpz-insta-modal-footer">' +
 				'<div class="wpz-insta-modal-footer-right">' +
-				'<button type="button" class="button wpz-insta-remove-link" style="display: none;">' + ( strings.removeLink || 'Remove Link' ) + '</button>' +
+				'<button type="button" class="button wpz-insta-remove-link" disabled>' + ( strings.removeLink || 'Remove Link' ) + '</button>' +
 				'</div>' +
 				'<div class="wpz-insta-modal-footer-left">' +
 				'<button type="button" class="button button-primary wpz-insta-save-link" disabled>' + ( strings.save || 'Save' ) + '</button>' +
@@ -1467,7 +1466,7 @@ jQuery( function( $ ) {
 				// Enable save button if selection differs from original
 				var hasChanges = ! areProductArraysEqual( currentSelectedProducts, originalSelectedProducts );
 				$( '.wpz-insta-save-link' ).prop( 'disabled', ! hasChanges );
-				$( '.wpz-insta-remove-link' ).toggle( currentSelectedProducts.length > 0 );
+				$( '.wpz-insta-remove-link' ).prop( 'disabled', ! currentSelectedProducts.length > 0 );
 			} );
 
 			// Search handler
@@ -1525,7 +1524,7 @@ jQuery( function( $ ) {
 			// Update footer buttons
 			var hasChanges = ! areProductArraysEqual( currentSelectedProducts, originalSelectedProducts );
 			$productLinkModal.find( '.wpz-insta-save-link' ).prop( 'disabled', ! hasChanges );
-			$productLinkModal.find( '.wpz-insta-remove-link' ).toggle( currentSelectedProducts.length > 0 );
+			$productLinkModal.find( '.wpz-insta-remove-link' ).prop( 'disabled', ! currentSelectedProducts.length > 0 );
 
 			// Re-render product list to update tag button states
 			var search = $( '#wpz-insta-product-search-input' ).val() || '';
@@ -1943,7 +1942,7 @@ jQuery( function( $ ) {
 			// Enable save button if selection differs from original
 			var hasChanges = ! areProductArraysEqual( currentSelectedProducts, originalSelectedProducts );
 			$( '.wpz-insta-save-link' ).prop( 'disabled', ! hasChanges );
-			$( '.wpz-insta-remove-link' ).toggle( currentSelectedProducts.length > 0 );
+			$( '.wpz-insta-remove-link' ).prop( 'disabled', ! currentSelectedProducts.length > 0 );
 		}
 
 		// Save product link to memory (not to DB) - will be saved when post is saved
@@ -2035,7 +2034,7 @@ jQuery( function( $ ) {
 			if ( currentMediaId in pendingProductLinks ) {
 				currentSelectedProducts = JSON.parse( JSON.stringify( pendingProductLinks[ currentMediaId ] ) );
 				originalSelectedProducts = JSON.parse( JSON.stringify( currentSelectedProducts ) );
-				$( '.wpz-insta-remove-link' ).toggle( currentSelectedProducts.length > 0 );
+				$( '.wpz-insta-remove-link' ).prop( 'disabled', ! currentSelectedProducts.length > 0 );
 				loadProducts( '', 1 );
 			} else {
 				// Fetch current linked products from DB (supports multi-select with tags)
@@ -2064,14 +2063,14 @@ jQuery( function( $ ) {
 							initialProductLinks[ currentMediaId ] = [];
 						}
 						originalSelectedProducts = JSON.parse( JSON.stringify( currentSelectedProducts ) );
-						$( '.wpz-insta-remove-link' ).toggle( currentSelectedProducts.length > 0 );
+						$( '.wpz-insta-remove-link' ).prop( 'disabled', ! currentSelectedProducts.length > 0 );
 						loadProducts( '', 1 );
 					},
 					error: function() {
 						currentSelectedProducts = [];
 						originalSelectedProducts = [];
 						initialProductLinks[ currentMediaId ] = [];
-						$( '.wpz-insta-remove-link' ).hide();
+						$( '.wpz-insta-remove-link' ).prop( 'disabled', true );
 						loadProducts( '', 1 );
 					}
 				} );
