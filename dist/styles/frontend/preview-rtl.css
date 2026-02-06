@@ -113,19 +113,18 @@ html body .zoom-instagram .select-a-feed svg {
   position: absolute;
   top: 8px;
   right: 8px;
-  background: rgba(0, 0, 0, 0.6);
+  background-color: rgba(0, 0, 0, 0.9);
   color: #fff;
   border: none;
   padding: 0;
   width: 36px;
   height: 36px;
-  border-radius: 50%;
+  border-radius: 8px;
   cursor: pointer;
   z-index: 10;
   align-items: center;
   justify-content: center;
   transition: background 0.2s, transform 0.15s;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
 }
 .wpz-insta-moderate-btn svg {
   width: 20px;
@@ -147,6 +146,7 @@ body:not(.wpz-insta-moderate-tab-active) .zoom-instagram-widget__item.wpz-insta-
 }
 body:not(.wpz-insta-moderate-tab-active) .zoom-instagram-widget__item.wpz-insta-post-hidden img {
   opacity: 0.4;
+  filter: blur(4px);
 }
 body:not(.wpz-insta-moderate-tab-active) .zoom-instagram-widget__item.wpz-insta-post-hidden .zoom-instagram-widget__overlay {
   background-image: url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%2720%27 height=%2720%27 viewBox=%270 0 24 24%27 fill=%27none%27 stroke=%27%23ffffff%27 stroke-width=%272%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27%3E%3Cpath d=%27M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24%27%3E%3C/path%3E%3Cline x1=%271%27 y1=%271%27 x2=%2723%27 y2=%2723%27%3E%3C/line%3E%3C/svg%3E");
@@ -166,9 +166,10 @@ body.wpz-insta-moderate-tab-active .zoom-instagram-widget__item.wpz-insta-post-h
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.55);
+  background-color: rgba(255, 255, 255, 0.5);
   z-index: 5;
   pointer-events: none;
+  backdrop-filter: blur(6px);
 }
 body.wpz-insta-moderate-tab-active .zoom-instagram-widget__item.wpz-insta-post-hidden .wpz-insta-moderate-btn {
   z-index: 10;
