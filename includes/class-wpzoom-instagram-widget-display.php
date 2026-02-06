@@ -838,6 +838,16 @@ class Wpzoom_Instagram_Widget_Display {
 			$show_likes    = self::$instance->is_pro && isset( $args['show-likes'] ) && boolval( $args['show-likes'] );
 			$show_comments = self::$instance->is_pro && isset( $args['show-comments'] ) && boolval( $args['show-comments'] );
 
+			// Get hidden posts for this feed (used in both preview and frontend)
+			$feed_id = isset( $args['feed-id'] ) ? intval( $args['feed-id'] ) : 0;
+			$hidden_posts = array();
+			if ( $feed_id > 0 ) {
+				$hidden_posts_meta = get_post_meta( $feed_id, '_wpz-insta_hidden-posts', true );
+				if ( is_array( $hidden_posts_meta ) ) {
+					$hidden_posts = $hidden_posts_meta;
+				}
+			}
+
 			foreach ( $items as $item ) {                
 
 				$inline_attrs  = '';
@@ -852,6 +862,12 @@ class Wpzoom_Instagram_Widget_Display {
 				$is_video      = 'video' == $type;
 				$likes         = isset( $item['likes'] ) ? intval( $item['likes'] ) : 0;
 				$comments      = isset( $item['comments'] ) ? intval( $item['comments'] ) : 0;
+
+				// On the frontend (non-preview), skip hidden posts
+				$is_post_hidden = ! empty( $media_id ) && in_array( $media_id, $hidden_posts, true );
+				if ( ! $preview && $is_post_hidden ) {
+					continue;
+				}
 
 				// Post type filtering is now handled in the API layer
 
@@ -906,6 +922,11 @@ class Wpzoom_Instagram_Widget_Display {
 
 				if ( self::$instance->is_pro && 3 === $layout ) {
 					$classes .= ' swiper-slide';
+				}
+
+				// In preview, add hidden class for posts that are hidden
+				if ( $preview && $is_post_hidden ) {
+					$classes .= ' wpz-insta-post-hidden';
 				}
 
 				$src_attr = $is_editor ? sprintf( 'src="%s"', esc_url( $src ) ) : '';
@@ -975,6 +996,21 @@ class Wpzoom_Instagram_Widget_Display {
 					}
 
 					$output .= '</a>';
+				}
+
+				// Add moderate (eye) button in backend preview
+				if ( $preview && ! empty( $media_id ) ) {
+					$eye_title = $is_post_hidden ? __( 'Show post', 'instagram-widget-by-wpzoom' ) : __( 'Hide post', 'instagram-widget-by-wpzoom' );
+					if ( $is_post_hidden ) {
+						// Eye-off icon (post is hidden)
+						$eye_svg = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>';
+					} else {
+						// Eye icon (post is visible)
+						$eye_svg = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>';
+					}
+					$output .= '<button type="button" class="wpz-insta-moderate-btn" data-media-id="' . esc_attr( $media_id ) . '" title="' . esc_attr( $eye_title ) . '">';
+					$output .= $eye_svg;
+					$output .= '</button>';
 				}
 
 				$output .= '</div></li>';

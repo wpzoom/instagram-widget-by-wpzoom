@@ -448,7 +448,8 @@ jQuery( function( $ ) {
 		return checkedValues.sort().join(','); // Sort for consistent comparison
 	}
 
-	$( 'form#post .wpz-insta_tabs-content > .wpz-insta_sidebar > .wpz-insta_sidebar-left' ).find( 'input, textarea, select' ).add( 'form#post #title' ).filter( "[name][name!='']" ).not( '.preview-exclude' ).each( function( index ) {
+	// Include all named fields (including .preview-exclude) so Save button enables on change; preview-exclude only affects iframe URL
+	$( 'form#post .wpz-insta_tabs-content > .wpz-insta_sidebar > .wpz-insta_sidebar-left' ).find( 'input, textarea, select' ).add( 'form#post #title' ).filter( "[name][name!='']" ).each( function( index ) {
 		const fieldName = $.trim( $(this).attr('name') );
 		
 		if ( $(this).is(':radio') ) {
@@ -483,43 +484,44 @@ jQuery( function( $ ) {
 		debounce(
 			( e ) => {
 				const $target = $( e.target );
+				const key = $target.attr('name');
 
-				if ( ! $target.is( '.preview-exclude' ) ) {
-					const key = $target.attr('name');
+				// Skip elements without a name attribute
+				if ( ! key ) {
+					return;
+				}
 
-					// Skip elements without a name attribute
-					if ( ! key ) {
-						return;
+				let trackingKey = key;
+				let currentValue;
+
+				if ( key.endsWith('[]') ) {
+					// Handle checkbox arrays
+					trackingKey = key.replace('[]', '');
+					currentValue = getCheckboxArrayValue( key );
+				} else {
+					// Handle regular fields
+					currentValue = $target.is(':checkbox') ? ( $target.is(':checked') ? '1' : '0' ) : $.trim( '' + $target.val() );
+				}
+
+				if ( trackingKey in formInitialValues && currentValue != formInitialValues[trackingKey] ) {
+					if ( ! ( trackingKey in formChangedValues ) ) {
+						formChangedValues[trackingKey] = true;
 					}
-
-					let trackingKey = key;
-					let currentValue;
-
-					if ( key.endsWith('[]') ) {
-						// Handle checkbox arrays
-						trackingKey = key.replace('[]', '');
-						currentValue = getCheckboxArrayValue( key );
-					} else {
-						// Handle regular fields
-						currentValue = $target.is(':checkbox') ? ( $target.is(':checked') ? '1' : '0' ) : $.trim( '' + $target.val() );
+				} else {
+					if ( trackingKey in formChangedValues ) {
+						delete formChangedValues[trackingKey];
 					}
+				}
 
-					if ( trackingKey in formInitialValues && currentValue != formInitialValues[trackingKey] ) {
-						if ( ! ( trackingKey in formChangedValues ) ) {
-							formChangedValues[trackingKey] = true;
-						}
-					} else {
-						if ( trackingKey in formChangedValues ) {
-							delete formChangedValues[trackingKey];
-						}
-					}
+				$( 'input#publish' ).toggleClass( 'disabled', $.isEmptyObject( formChangedValues ) );
 
-					$( 'input#publish' ).toggleClass( 'disabled', $.isEmptyObject( formChangedValues ) );
-
-					if ( key !== 'post_title' ) {
-						window.wpzInstaReloadPreview();
-					}
-
+				// Update preview: postMessage for design settings (no reload), reload only for server-dependent fields
+				if ( key === 'post_title' || $target.is( '.preview-exclude' ) ) return;
+				var needsReload = wpzInstaPreviewReloadKeys.indexOf( key ) !== -1 || ( key && key.indexOf( '_wpz-insta_allowed-post-types' ) === 0 );
+				if ( needsReload ) {
+					window.wpzInstaReloadPreview();
+				} else {
+					wpzInstaSendPreviewUpdate();
 				}
 			},
 			300
@@ -527,7 +529,11 @@ jQuery( function( $ ) {
 	);
 
 	$( function() {
-		window.wpzInstaReloadPreview();
+		// Only set iframe src from JS if PHP did not already set it (initial load uses PHP-built URL).
+		var $previewIframe = $( '#wpz-insta_widget-preview-view iframe' );
+		if ( ! $previewIframe.attr( 'src' ) || $previewIframe.attr( 'src' ) === '' ) {
+			window.wpzInstaReloadPreview();
+		}
 	} );
 
 	$( '#wpz-insta_widget-preview-links .wpz-insta_widget-preview-header-link' ).on( 'click', function () {
@@ -552,9 +558,19 @@ jQuery( function( $ ) {
 	} );
 
 	$( '#wpz-insta_widget-preview-view iframe' ).on( 'load', function() {
-		/*$(this).height( parseInt( $(this).contents().find('body').prop('scrollHeight') ) + 20 );*/
 		$(this).removeClass( 'wpz-insta_preview-hidden' );
 		$(this).closest( '.wpz-insta_sidebar-right' ).addClass( 'hide-loading' );
+		// Sync current form state to preview via postMessage (so unsaved design changes apply without another reload)
+		wpzInstaSendPreviewUpdate();
+		// Re-send current tab so buttons show if tab was clicked before iframe loaded
+		const iframe = this;
+		if ( iframe.contentWindow ) {
+			const activeTab = $( '.wpz-insta_feed-edit-nav li.active a' ).attr( 'href' );
+			if ( activeTab ) {
+				const tabId = ( activeTab + '' ).replace( /^#/, '' );
+				iframe.contentWindow.postMessage( { action: 'wpz-insta-tab-change', tab: tabId }, '*' );
+			}
+		}
 	} );
 
 	$( '.wpz-insta_color-picker' ).wpColorPicker( {
@@ -678,6 +694,13 @@ jQuery( function( $ ) {
 
 			$tabs.removeClass( 'active' );
 			$tabs.filter( '[data-id="' + id + '"]' ).addClass( 'active' );
+
+			// Notify iframe of tab change so it can show/hide action buttons without reload
+			const iframe = document.querySelector( '#wpz-insta_widget-preview-view iframe' );
+			if ( iframe && iframe.contentWindow ) {
+				const tabId = ( id + '' ).replace( /^#/, '' );
+				iframe.contentWindow.postMessage( { action: 'wpz-insta-tab-change', tab: tabId }, '*' );
+			}
 		}
 	}
 
@@ -1016,20 +1039,75 @@ jQuery( function( $ ) {
 		}
 	};
 
-	window.wpzInstaReloadPreview = function () {
-		let url = zoom_instagram_widget_admin.preview_url,
-		    params = $.param( $( 'form#post #title, form#post .wpz-insta_tabs-content > .wpz-insta_sidebar > .wpz-insta_sidebar-left' ).find( 'input, textarea, select' ).not( '.preview-exclude' ).serializeArray() );
+	// Fields that require a full iframe reload (server-side: different data). All others are applied via postMessage.
+	var wpzInstaPreviewReloadKeys = [ '_wpz-insta_user-id', '_wpz-insta_item-num', '_wpz-insta_allowed-post-types-submitted' ];
 
-		if ( params ) {
-			url += '&' + params;
-		}
+	function wpzInstaCollectPreviewState() {
+		var $form = $( 'form#post .wpz-insta_tabs-content > .wpz-insta_sidebar > .wpz-insta_sidebar-left' );
+		var state = {};
+		$( 'form#post #title' ).add( $form.find( 'input, textarea, select' ).not( '.preview-exclude' ) ).each( function() {
+			var $el = $( this );
+			var name = $el.attr( 'name' );
+			if ( ! name || name === 'post_ID' ) return;
+			var key = name.replace( /^_wpz-insta_/, '' ).replace( /\[\]$/, '' );
+			var val;
+			if ( $el.is( ':radio, :checkbox' ) ) {
+				if ( name.indexOf( '[]' ) !== -1 ) {
+					val = $( 'form#post' ).find( 'input[name="' + name + '"]:checked' ).map( function() { return $( this ).val(); } ).get().join( ',' );
+				} else if ( $el.is( ':radio' ) ) {
+					var $checked = $( 'form#post' ).find( 'input[name="' + name + '"]:checked' );
+					val = $checked.length ? ( $checked.val() || '0' ) : '0';
+				} else {
+					val = $el.is( ':checked' ) ? ( $el.val() || '1' ) : '0';
+				}
+			} else {
+				val = $el.val();
+			}
+			state[ key ] = val;
+		} );
+		return state;
+	}
 
-		// Add the post ID for the preview to identify the feed for Load More functionality
-		const postId = $( 'form#post input[name="post_ID"]' ).val();
+	function wpzInstaSendPreviewUpdate() {
+		var iframe = document.querySelector( '#wpz-insta_widget-preview-view iframe' );
+		if ( ! iframe || ! iframe.contentWindow ) return;
+		var state = wpzInstaCollectPreviewState();
+		iframe.contentWindow.postMessage( { action: 'wpz-insta-preview-update', data: state }, '*' );
+	}
+
+	/**
+	 * Build the preview iframe URL (optionally with refresh param to bypass cache).
+	 */
+	function wpzInstaBuildPreviewUrl( withRefresh ) {
+		var url = zoom_instagram_widget_admin.preview_url;
+		var postId = $( 'form#post input[name="post_ID"]' ).val();
 		if ( postId ) {
-			url += '&wpz-insta-feed-id=' + postId;
+			url += '&wpz-insta-feed-id=' + encodeURIComponent( postId );
 		}
+		var activeTab = $( '.wpz-insta_feed-edit-nav li.active a' ).attr( 'href' );
+		if ( activeTab ) {
+			url += '&wpz-insta-tab=' + encodeURIComponent( ( activeTab + '' ).replace( /^#/, '' ) );
+		}
+		var itemNum = $( 'form#post input[name="_wpz-insta_item-num"]' ).val();
+		if ( itemNum != null && itemNum !== '' ) {
+			url += '&_wpz-insta_item-num=' + encodeURIComponent( itemNum );
+		}
+		var userId = $( 'form#post input[name="_wpz-insta_user-id"]' ).val();
+		if ( userId != null && userId !== '' ) {
+			url += '&_wpz-insta_user-id=' + encodeURIComponent( userId );
+		}
+		var allowedTypes = $( 'form#post input[name="_wpz-insta_allowed-post-types[]"]:checked' ).map( function() { return $( this ).val(); } ).get().join( ',' );
+		if ( allowedTypes ) {
+			url += '&_wpz-insta_allowed-post-types=' + encodeURIComponent( allowedTypes );
+		}
+		if ( withRefresh ) {
+			url += '&wpz-insta-preview-refresh=1';
+		}
+		return url;
+	}
 
+	window.wpzInstaReloadPreview = function ( withRefresh ) {
+		var url = wpzInstaBuildPreviewUrl( !! withRefresh );
 		$( '#wpz-insta_widget-preview-view' ).closest( '.wpz-insta_sidebar-right' ).removeClass( 'hide-loading' );
 		$( '#wpz-insta_widget-preview-view iframe' ).addClass( 'wpz-insta_preview-hidden' ).attr( 'src', url );
 	};
@@ -1039,4 +1117,110 @@ jQuery( function( $ ) {
 
 		$frame.height( parseInt( $frame.contents().find( 'body' ).prop( 'scrollHeight' ) ) );
 	};
+
+	// =============================
+	// Moderate Posts functionality
+	// =============================
+
+	// Pending hidden posts stored in memory (saved to DB when post is saved)
+	// Structure: { mediaId: true, ... } where true = hidden
+	var pendingHiddenPosts = {};
+
+	// Track which media IDs were hidden when page loaded (from DB)
+	var initialHiddenPosts = {};
+
+	// Initialize pending hidden posts from existing data
+	function initPendingHiddenPosts() {
+		var $hiddenInput = $( '#wpz-insta-pending-hidden-posts' );
+		if ( $hiddenInput.length === 0 ) {
+			$( 'form#post' ).append( '<input type="hidden" id="wpz-insta-pending-hidden-posts" name="_wpz-insta_pending-hidden-posts" value="" class="preview-exclude" />' );
+		}
+
+		// Load initial hidden posts from localized data
+		if ( typeof zoom_instagram_widget_admin !== 'undefined' && zoom_instagram_widget_admin.hidden_posts ) {
+			try {
+				var parsed = typeof zoom_instagram_widget_admin.hidden_posts === 'string'
+					? JSON.parse( zoom_instagram_widget_admin.hidden_posts )
+					: zoom_instagram_widget_admin.hidden_posts;
+				if ( Array.isArray( parsed ) ) {
+					parsed.forEach( function( id ) {
+						initialHiddenPosts[ id ] = true;
+					} );
+				}
+			} catch ( e ) {}
+		}
+	}
+
+	// Update the hidden input with current pending hidden posts
+	function updatePendingHiddenPostsInput() {
+		var $hiddenInput = $( '#wpz-insta-pending-hidden-posts' );
+		if ( $hiddenInput.length ) {
+			$hiddenInput.val( JSON.stringify( pendingHiddenPosts ) );
+		}
+
+		// Trigger form change detection so Save button becomes active
+		if ( hasAnyHiddenPostChanges() ) {
+			if ( ! ( '_wpz-insta_pending-hidden-posts' in formChangedValues ) ) {
+				formChangedValues[ '_wpz-insta_pending-hidden-posts' ] = true;
+			}
+		} else {
+			if ( '_wpz-insta_pending-hidden-posts' in formChangedValues ) {
+				delete formChangedValues[ '_wpz-insta_pending-hidden-posts' ];
+			}
+		}
+		$( 'input#publish' ).toggleClass( 'disabled', $.isEmptyObject( formChangedValues ) );
+	}
+
+	// Check if there are any pending changes compared to initial state
+	function hasAnyHiddenPostChanges() {
+		return ! $.isEmptyObject( pendingHiddenPosts );
+	}
+
+	// Check if a media ID is hidden (check pending first, then initial)
+	function isPostHidden( mediaId ) {
+		if ( mediaId in pendingHiddenPosts ) {
+			return pendingHiddenPosts[ mediaId ];
+		}
+		return !! initialHiddenPosts[ mediaId ];
+	}
+
+	// Toggle the hidden state of a media item
+	function togglePostVisibility( mediaId ) {
+		var currentlyHidden = isPostHidden( mediaId );
+		var newState = ! currentlyHidden;
+
+		// Store the new state
+		pendingHiddenPosts[ mediaId ] = newState;
+
+		// If we're reverting to the initial state, remove from pending
+		if ( ( !! initialHiddenPosts[ mediaId ] ) === newState ) {
+			delete pendingHiddenPosts[ mediaId ];
+		}
+
+		updatePendingHiddenPostsInput();
+
+		// Notify iframe to update the visual state
+		var iframe = document.querySelector( '#wpz-insta_widget-preview-view iframe' );
+		if ( iframe && iframe.contentWindow ) {
+			iframe.contentWindow.postMessage( {
+				action: 'wpz-insta-moderate-update',
+				mediaId: mediaId,
+				hidden: newState
+			}, '*' );
+		}
+	}
+
+	// Initialize moderate posts
+	initPendingHiddenPosts();
+
+	// Listen for moderate toggle messages from the iframe
+	window.addEventListener( 'message', function( e ) {
+		if ( ! e.data || e.data.action !== 'wpz-insta-toggle-visibility' ) {
+			return;
+		}
+		var mediaId = e.data.mediaId || '';
+		if ( mediaId ) {
+			togglePostVisibility( mediaId );
+		}
+	} );
 } );
