@@ -2,9 +2,7 @@
 
 (function() {
 	var TAB_MODERATE = 'moderate';
-	var TAB_PRODUCT_LINKS = 'product-links';
 	var BODY_CLASS_MODERATE = 'wpz-insta-moderate-tab-active';
-	var BODY_CLASS_PRODUCT_LINKS = 'wpz-insta-product-links-tab-active';
 	var LAYOUT_NAMES = [ 'grid', 'fullwidth', 'masonry', 'carousel' ];
 
 	function setModerateTabActive( active ) {
@@ -15,19 +13,10 @@
 		}
 	}
 
-	function setProductLinksTabActive( active ) {
-		if ( active ) {
-			document.body.classList.add( BODY_CLASS_PRODUCT_LINKS );
-		} else {
-			document.body.classList.remove( BODY_CLASS_PRODUCT_LINKS );
-		}
-	}
-
 	function parseTabFromUrl() {
 		var params = new URLSearchParams( window.location.search || '' );
 		var tab = params.get( 'wpz-insta-tab' ) || '';
 		setModerateTabActive( tab === TAB_MODERATE );
-		setProductLinksTabActive( tab === TAB_PRODUCT_LINKS );
 	}
 
 	function boolVal( v ) {
@@ -310,64 +299,6 @@
 		} );
 	}
 
-	/**
-	 * Updates the has-linked-products class on an item based on product link changes.
-	 */
-	function updateItemLinkedProductsClass( mediaId, hasLinks ) {
-		if ( ! mediaId ) return;
-
-		var items = document.querySelectorAll( '.zoom-instagram-widget__item' );
-		items.forEach( function( item ) {
-			var matchFound = false;
-
-			var btn = item.querySelector( '.wpz-insta-link-product-btn' );
-			if ( btn ) {
-				var btnMediaId = btn.getAttribute( 'data-media-id' ) || '';
-				if ( btnMediaId === mediaId ) {
-					matchFound = true;
-				}
-			}
-
-			if ( ! matchFound ) {
-				var innerLink = item.querySelector( '.zoom-instagram-link' );
-				if ( innerLink ) {
-					var linkMediaId = innerLink.getAttribute( 'data-mfp-src' ) || '';
-					if ( linkMediaId === mediaId ) {
-						matchFound = true;
-					}
-				}
-			}
-
-			if ( matchFound ) {
-				item.classList.toggle( 'has-linked-products', hasLinks );
-
-				if ( btn ) {
-					btn.classList.toggle( 'wpz-insta-link-product-btn--linked', hasLinks );
-					if ( hasLinks ) {
-						btn.innerHTML = '<span class="dashicons dashicons-edit"></span> Edit Product Link';
-						btn.setAttribute( 'title', 'Edit Product Link' );
-					} else {
-						btn.innerHTML = '<span class="dashicons dashicons-cart"></span> Link to a product';
-						btn.setAttribute( 'title', 'Link to a product' );
-					}
-				}
-
-				var badgeEl = item.querySelector( '.wpz-insta-product-badge' );
-				if ( badgeEl ) {
-					badgeEl.style.display = hasLinks ? '' : 'none';
-				} else if ( hasLinks ) {
-					var innerWrap = item.querySelector( '.zoom-instagram-widget__item-inner-wrap' );
-					if ( innerWrap ) {
-						var newBadge = document.createElement( 'span' );
-						newBadge.className = 'wpz-insta-product-badge';
-						newBadge.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M7.5 6v.75H5.513c-.96 0-1.764.724-1.865 1.679l-1.263 12A1.875 1.875 0 0 0 4.25 22.5h15.5a1.875 1.875 0 0 0 1.865-2.071l-1.263-12a1.875 1.875 0 0 0-1.865-1.679H16.5V6a4.5 4.5 0 1 0-9 0ZM12 3a3 3 0 0 0-3 3v.75h6V6a3 3 0 0 0-3-3Zm-3 8.25a3 3 0 1 0 6 0v-.75a.75.75 0 0 1 1.5 0v.75a4.5 4.5 0 1 1-9 0v-.75a.75.75 0 0 1 1.5 0v.75Z" clip-rule="evenodd" /></svg>Product';
-						innerWrap.appendChild( newBadge );
-					}
-				}
-			}
-		} );
-	}
-
 	// Handle click on moderate button (eye icon) inside the iframe
 	document.addEventListener( 'click', function( e ) {
 		var btn = e.target.closest( '.wpz-insta-moderate-btn' );
@@ -384,46 +315,13 @@
 		}
 	} );
 
-	// Handle click on "Link to a product" button inside the iframe
-	document.addEventListener( 'click', function( e ) {
-		var btn = e.target.closest( '.wpz-insta-link-product-btn' );
-		if ( btn ) {
-			e.preventDefault();
-			e.stopPropagation();
-			var mediaId = btn.getAttribute( 'data-media-id' ) || '';
-			var feedId = btn.getAttribute( 'data-feed-id' ) || '';
-			var mediaType = '';
-			var imageUrl = '';
-			var item = btn.closest( '.zoom-instagram-widget__item' );
-			if ( item ) {
-				mediaType = item.getAttribute( 'data-media-type' ) || 'image';
-				var img = item.querySelector( 'img.zoom-instagram-link' );
-				if ( img ) {
-					imageUrl = img.getAttribute( 'src' ) || img.getAttribute( 'data-src' ) || '';
-				}
-			}
-			if ( mediaId && window.parent ) {
-				window.parent.postMessage( {
-					action: 'wpz-insta-open-product-link',
-					mediaId: mediaId,
-					feedId: feedId,
-					mediaType: mediaType,
-					imageUrl: imageUrl
-				}, '*' );
-			}
-		}
-	} );
-
 	// When parent switches tab or sends preview design update (no iframe reload)
 	window.addEventListener( 'message', function( event ) {
 		if ( ! event.data ) return;
 		if ( event.data.action === 'wpz-insta-tab-change' ) {
 			setModerateTabActive( event.data.tab === TAB_MODERATE );
-			setProductLinksTabActive( event.data.tab === TAB_PRODUCT_LINKS );
 		} else if ( event.data.action === 'wpz-insta-preview-update' && event.data.data ) {
 			applyPreviewUpdate( event.data.data );
-		} else if ( event.data.action === 'wpz-insta-product-link-update' ) {
-			updateItemLinkedProductsClass( event.data.mediaId, event.data.hasLinks );
 		} else if ( event.data.action === 'wpz-insta-moderate-update' ) {
 			updateItemVisibility( event.data.mediaId, event.data.hidden );
 		}

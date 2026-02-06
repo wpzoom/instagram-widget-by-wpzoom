@@ -1192,8 +1192,8 @@ class WPZOOM_Instagram_Widget_Settings {
 						<ul>
 							<li class="active"><a href="<?php echo esc_url( '#config' ); ?>"><?php _e( 'Configure', 'instagram-widget-by-wpzoom' ); ?></a></li>
 							<li <?php echo $disabled_class; ?>><a href="<?php echo esc_url( '#design' ); ?>"><?php _e( 'Design', 'instagram-widget-by-wpzoom' ); ?></a></li>
-							<li <?php echo $disabled_class; ?>><a href="<?php echo esc_url( '#embed' ); ?>"><?php _e( 'Embed', 'instagram-widget-by-wpzoom' ); ?></a><?php echo $embed_pointer; ?></li>
 							<li <?php echo $disabled_class; ?>><a href="<?php echo esc_url( '#moderate' ); ?>"><?php _e( 'Moderate', 'instagram-widget-by-wpzoom' ); ?></a></li>
+							<li <?php echo $disabled_class; ?>><a href="<?php echo esc_url( '#embed' ); ?>"><?php _e( 'Embed', 'instagram-widget-by-wpzoom' ); ?></a><?php echo $embed_pointer; ?></li>
 						</ul>
 					</nav>
 				</div>
@@ -2087,6 +2087,17 @@ class WPZOOM_Instagram_Widget_Settings {
 							</div>
 						</div>
 
+						<div class="wpz-insta_sidebar-left-section" data-id="#moderate">
+							<h4 class="wpz-insta_sidebar-section-big-title"><?php esc_html_e( 'Moderate Posts', 'instagram-widget-by-wpzoom' ); ?></h4>
+
+							<div class="wpz-insta_sidebar-section wpz-insta_sidebar-section-moderate-intro no-top-border">
+								<h5 class="wpz-insta_sidebar-section-title smaller-title"><?php esc_html_e( 'Hide or Show Posts', 'instagram-widget-by-wpzoom' ); ?></h5>
+								<div class="wpz-insta_sidebar-section-description">
+									<p><?php esc_html_e( 'Click the eye icon on each Instagram post in the preview to hide or show it in your feed. Hidden posts will not be visible to visitors on your website', 'instagram-widget-by-wpzoom' ); ?></p>
+								</div>
+							</div>
+						</div>
+
 						<div class="wpz-insta_sidebar-left-section" data-id="#embed">
 							<h4 class="wpz-insta_sidebar-section-big-title"><?php esc_html_e( 'Display your Feed', 'instagram-widget-by-wpzoom' ); ?></h4>
 
@@ -2124,17 +2135,6 @@ class WPZOOM_Instagram_Widget_Settings {
 										<li><?php _e( 'Then, add a <strong>Text Widget</strong>.', 'instagram-widget-by-wpzoom' ); ?></li>
 										<li><?php _e( 'Copy the <strong>Shortcode</strong> above and insert it in the Text widget.', 'instagram-widget-by-wpzoom' ); ?></li>
 									</ol>
-								</div>
-							</div>
-						</div>
-
-						<div class="wpz-insta_sidebar-left-section" data-id="#moderate">
-							<h4 class="wpz-insta_sidebar-section-big-title"><?php esc_html_e( 'Moderate Posts', 'instagram-widget-by-wpzoom' ); ?></h4>
-
-							<div class="wpz-insta_sidebar-section wpz-insta_sidebar-section-moderate-intro no-top-border">
-								<h5 class="wpz-insta_sidebar-section-title smaller-title"><?php esc_html_e( 'Hide or Show Posts', 'instagram-widget-by-wpzoom' ); ?></h5>
-								<div class="wpz-insta_sidebar-section-description">
-									<p><?php esc_html_e( 'Click the eye icon on each Instagram post in the preview to hide or show it in your feed. Hidden posts will not be visible to visitors on your website', 'instagram-widget-by-wpzoom' ); ?></p>
 								</div>
 							</div>
 						</div>
@@ -2809,6 +2809,37 @@ class WPZOOM_Instagram_Widget_Settings {
 
 				$should_clear_transients = ( $old_item_num != $new_item_num ) || ( $old_allowed_post_types != $new_allowed_post_types ) || ( $old_user_id != $new_user_id );
 
+			// Save pending hidden posts from the form submission (Moderate Posts feature)
+			if ( isset( $_POST['_wpz-insta_pending-hidden-posts'] ) && ! empty( $_POST['_wpz-insta_pending-hidden-posts'] ) ) {
+				$pending_hidden_json = wp_unslash( $_POST['_wpz-insta_pending-hidden-posts'] );
+				$pending_hidden = json_decode( $pending_hidden_json, true );
+
+				if ( is_array( $pending_hidden ) && ! empty( $pending_hidden ) ) {
+					// Get existing hidden posts
+					$existing_hidden = get_post_meta( $post_ID, '_wpz-insta_hidden-posts', true );
+					if ( ! is_array( $existing_hidden ) ) {
+						$existing_hidden = array();
+					}
+
+					// Merge pending changes with existing hidden posts
+					foreach ( $pending_hidden as $media_id => $is_hidden ) {
+						$media_id = sanitize_text_field( $media_id );
+						if ( $is_hidden ) {
+							// Add to hidden list
+							if ( ! in_array( $media_id, $existing_hidden, true ) ) {
+								$existing_hidden[] = $media_id;
+							}
+						} else {
+							// Remove from hidden list
+							$existing_hidden = array_values( array_diff( $existing_hidden, array( $media_id ) ) );
+						}
+					}
+
+					// Save the updated hidden posts list
+					update_post_meta( $post_ID, '_wpz-insta_hidden-posts', $existing_hidden );
+				}
+			}
+
 		if ( ! empty( $meta_keys ) ) {
 			$meta_keys = array_filter( $meta_keys, function( $key ) { return strpos( $key, 'wpz-insta_' ) !== false; }, ARRAY_FILTER_USE_KEY );
 
@@ -2849,37 +2880,6 @@ class WPZOOM_Instagram_Widget_Settings {
 					} else {
 						update_post_meta( $post_ID, $key, $args['default'] );
 					}
-				}
-			}
-
-			// Save pending hidden posts from the form submission (Moderate Posts feature)
-			if ( isset( $_POST['_wpz-insta_pending-hidden-posts'] ) && ! empty( $_POST['_wpz-insta_pending-hidden-posts'] ) ) {
-				$pending_hidden_json = wp_unslash( $_POST['_wpz-insta_pending-hidden-posts'] );
-				$pending_hidden = json_decode( $pending_hidden_json, true );
-
-				if ( is_array( $pending_hidden ) && ! empty( $pending_hidden ) ) {
-					// Get existing hidden posts
-					$existing_hidden = get_post_meta( $post_ID, '_wpz-insta_hidden-posts', true );
-					if ( ! is_array( $existing_hidden ) ) {
-						$existing_hidden = array();
-					}
-
-					// Merge pending changes with existing hidden posts
-					foreach ( $pending_hidden as $media_id => $is_hidden ) {
-						$media_id = sanitize_text_field( $media_id );
-						if ( $is_hidden ) {
-							// Add to hidden list
-							if ( ! in_array( $media_id, $existing_hidden, true ) ) {
-								$existing_hidden[] = $media_id;
-							}
-						} else {
-							// Remove from hidden list
-							$existing_hidden = array_values( array_diff( $existing_hidden, array( $media_id ) ) );
-						}
-					}
-
-					// Save the updated hidden posts list
-					update_post_meta( $post_ID, '_wpz-insta_hidden-posts', $existing_hidden );
 				}
 			}
 
@@ -3785,7 +3785,8 @@ class WPZOOM_Instagram_Widget_Settings {
 					'i18n_delete_feed_confirm_content'  => __( 'Are you sure you want to delete this feed? <strong class="severe">This action cannot be undone!</strong>', 'instagram-widget-by-wpzoom' ),
 					'i18n_delete_confirm_button_ok'     => __( 'Yes', 'instagram-widget-by-wpzoom' ),
 					'i18n_delete_confirm_button_cancel' => __( 'No', 'instagram-widget-by-wpzoom' ),
-					'nonce'                             => wp_create_nonce( 'ajax-nonce' ),	
+					'nonce'                             => wp_create_nonce( 'ajax-nonce' ),
+					'hidden_posts'                      => $this->get_hidden_posts_for_js(),
 					'feeds_url'                         => admin_url( self::$any_feeds ? 'edit.php?post_type=wpz-insta_feed' : 'post-new.php?post_type=wpz-insta_feed' ),
 					'users_url' 					    => admin_url( self::$any_users ? 'edit.php?post_type=wpz-insta_user' : 'post-new.php?post_type=wpz-insta_user' ),
 					'edit_user_url'                     => admin_url( 'edit.php?post_type=wpz-insta_user#post-' ),
@@ -3794,7 +3795,6 @@ class WPZOOM_Instagram_Widget_Settings {
 					'post_edit_url'                     => admin_url( 'post.php?action=edit&post=' ),
 					'ajax_url'                          => admin_url( 'admin-ajax.php' ),
                     'is_pro'                            => apply_filters( 'wpz-insta_is-pro', false ),
-					'hidden_posts'                      => $this->get_hidden_posts_for_js(),
 				)
 			);
 		}
