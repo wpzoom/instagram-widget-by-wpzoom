@@ -843,6 +843,53 @@
 				}
 			}
 
+			// WooCommerce required notice (Product Links tab)
+			.wpz-insta_woo-required-notice {
+				display: flex;
+				flex-direction: column;
+				align-items: flex-start;
+				text-align: left;
+				padding: 40px 30px;
+
+				.wpz-insta_woo-required-notice-icon {
+					margin-bottom: 16px;
+
+					svg {
+						display: block;
+					}
+				}
+
+				.wpz-insta_woo-required-notice-title {
+					font-size: 15px;
+					font-weight: 600;
+					color: #1d2327;
+					margin: 0 0 12px;
+				}
+
+				.wpz-insta_woo-required-notice-desc {
+					font-size: 13px;
+					color: #646970;
+					line-height: 1.6;
+					margin: 0 0 8px;
+					max-width: 400px;
+				}
+
+				.wpz-insta_woo-required-notice-btn {
+					margin-top: 12px;
+					background: #7f54b3;
+					border-color: #7f54b3;
+					color: #fff;
+					text-decoration: none;
+
+					&:hover,
+					&:focus {
+						background: #6b4399;
+						border-color: #6b4399;
+						color: #fff;
+					}
+				}
+			}
+
 			.wpz-insta_settings-header {
 				font-family: $main-font-family;
 				color: $main-font-color;
