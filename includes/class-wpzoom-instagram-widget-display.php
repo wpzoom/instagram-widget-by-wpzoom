@@ -54,14 +54,20 @@ class Wpzoom_Instagram_Widget_Display {
 		add_action( 'wp_ajax_wpzoom_instagram_load_more', array( $this, 'ajax_load_more_posts' ) );
 		add_action( 'wp_ajax_nopriv_wpzoom_instagram_load_more', array( $this, 'ajax_load_more_posts' ) );
 
+		// Add AJAX handler for preview load more (admin only - serves cached posts for product linking)
+		add_action( 'wp_ajax_wpzoom_instagram_preview_load_more', array( $this, 'ajax_preview_load_more_posts' ) );
+
 		// Add AJAX handlers for initial feed load (async loading)
 		add_action( 'wp_ajax_wpzoom_instagram_initial_load', array( $this, 'ajax_initial_load' ) );
 		add_action( 'wp_ajax_nopriv_wpzoom_instagram_initial_load', array( $this, 'ajax_initial_load' ) );
 	}
 
 	/**
-	 * AJAX handler for load more posts functionality
-	 * This replaces the slow form POST method with fast AJAX
+	 * AJAX handler for load more posts functionality.
+	 * Supports two modes:
+	 * 1. Cache-based: When 'offset' is provided, serves posts from transient cache first.
+	 *    This ensures posts the user has linked products to in the preview are shown.
+	 * 2. API-based: Falls back to Instagram API pagination when cache is exhausted.
 	 */
 	public function ajax_load_more_posts() {
 		// Prevent caching of AJAX responses by optimization plugins
@@ -77,23 +83,12 @@ class Wpzoom_Instagram_Widget_Display {
 		}
 
 		// Sanitize input data
-		$feed_id = intval( $_POST['feed_id'] );
-		$item_amount = intval( $_POST['item_amount'] );
-		$image_size = sanitize_text_field( $_POST['image_size'] );
+		$feed_id            = intval( $_POST['feed_id'] );
+		$item_amount        = intval( $_POST['item_amount'] );
+		$image_size         = sanitize_text_field( $_POST['image_size'] );
 		$allowed_post_types = sanitize_text_field( $_POST['allowed_post_types'] );
-		$next_url = sanitize_text_field( $_POST['next'] );
-
-		// Extract pagination cursor from URL
-		$pagination_cursor = '';
-		if ( ! empty( $next_url ) ) {
-			$parsed_url = parse_url( $next_url );
-			if ( isset( $parsed_url['query'] ) ) {
-				parse_str( $parsed_url['query'], $params );
-				if ( isset( $params['after'] ) ) {
-					$pagination_cursor = $params['after'];
-				}
-			}
-		}
+		$next_url           = sanitize_text_field( $_POST['next'] );
+		$cache_offset       = isset( $_POST['cache_offset'] ) ? intval( $_POST['cache_offset'] ) : -1;
 
 		// Get feed settings
 		$feed_post = get_post( $feed_id );
@@ -102,8 +97,8 @@ class Wpzoom_Instagram_Widget_Display {
 		}
 
 		// Get user account details for this feed
-		$user_id = WPZOOM_Instagram_Widget_Settings::get_feed_setting_value( $feed_id, 'user-id' );
-		$user_account_token = get_post_meta( $user_id, '_wpz-insta_token', true );
+		$user_id               = WPZOOM_Instagram_Widget_Settings::get_feed_setting_value( $feed_id, 'user-id' );
+		$user_account_token    = get_post_meta( $user_id, '_wpz-insta_token', true );
 		$user_business_page_id = get_post_meta( $user_id, '_wpz-insta_page_id', true );
 
 		if ( empty( $user_account_token ) ) {
@@ -120,9 +115,111 @@ class Wpzoom_Instagram_Widget_Display {
 		}
 
 		// Get feed layout settings
-		$image_width = (int) WPZOOM_Instagram_Widget_Settings::get_feed_setting_value( $feed_id, 'image-width' );
+		$image_width      = (int) WPZOOM_Instagram_Widget_Settings::get_feed_setting_value( $feed_id, 'image-width' );
+		$image_resolution = ! empty( $image_size ) ? $image_size : 'standard_resolution';
 
-		// Fetch items using optimized API call
+		// --- Cache-based loading: try to serve from cached posts first ---
+		if ( $cache_offset >= 0 ) {
+			// Use a high image-limit to get ALL cached items so we can accurately check has_more.
+			// IMPORTANT: skip-likes-comments must be false to match the transient key from the initial fetch
+			// (the initial fetch uses skip-likes-comments=false, which adds '_lc' to the transient key).
+			$all_items = $this->api->get_items(
+				array(
+					'image-limit'         => 100, // Get all cached items
+					'image-resolution'    => $image_resolution,
+					'image-width'         => $image_width,
+					'include-pagination'  => true,
+					'allowed-post-types'  => $allowed_post_types,
+					'bypass-transient'    => false, // Read from cache only
+					'skip-likes-comments' => false, // Must match initial fetch transient key (_lc suffix)
+					'access-token'        => $user_account_token,
+					'feed-id'             => $feed_id,
+					'business-page-id'    => $user_business_page_id,
+				)
+			);
+
+			if ( is_array( $all_items ) && ! empty( $all_items['items'] ) ) {
+				$cached_slice = array_slice( $all_items['items'], $cache_offset, $item_amount );
+
+				if ( ! empty( $cached_slice ) ) {
+					$new_offset   = $cache_offset + count( $cached_slice );
+					$total_cached = count( $all_items['items'] );
+					// Cache has more items, or API has more pages
+					$api_has_more   = ! empty( $all_items['paging'] ) && property_exists( $all_items['paging'], 'next' ) && ! empty( $all_items['paging']->next );
+					$cache_has_more = $new_offset < $total_cached;
+					$has_more       = $cache_has_more || $api_has_more;
+
+					// Ensure images use valid URLs: local thumbnails may not exist for cached items
+					foreach ( $cached_slice as &$ci ) {
+						if ( ! empty( $ci['image-url'] ) && ! empty( $ci['original-image-url'] ) ) {
+							$local_path = self::convert_url_to_path( $ci['image-url'] );
+							if ( ! file_exists( $local_path ) ) {
+								$ci['image-url'] = $ci['original-image-url'];
+							}
+						} elseif ( empty( $ci['image-url'] ) && ! empty( $ci['original-image-url'] ) ) {
+							$ci['image-url'] = $ci['original-image-url'];
+						}
+					}
+					unset( $ci );
+
+					// Prepare args for HTML generation (includes product linking data)
+					$args = array(
+						'layout'                 => WPZOOM_Instagram_Widget_Settings::get_feed_setting_value( $feed_id, 'layout' ),
+						'item-num'               => $item_amount,
+						'col-num'                => WPZOOM_Instagram_Widget_Settings::get_feed_setting_value( $feed_id, 'col-num' ),
+						'show-overlay'           => WPZOOM_Instagram_Widget_Settings::get_feed_setting_value( $feed_id, 'show-overlay' ),
+						'hover-link'             => WPZOOM_Instagram_Widget_Settings::get_feed_setting_value( $feed_id, 'hover-link' ),
+						'show-media-type-icons'  => WPZOOM_Instagram_Widget_Settings::get_feed_setting_value( $feed_id, 'show-media-type-icons' ),
+						'hover-media-type-icons' => WPZOOM_Instagram_Widget_Settings::get_feed_setting_value( $feed_id, 'hover-media-type-icons' ),
+						'hover-date'             => WPZOOM_Instagram_Widget_Settings::get_feed_setting_value( $feed_id, 'hover-date' ),
+						'allowed-post-types'     => $allowed_post_types,
+						'image-size'             => $image_size,
+						'show-likes'             => false,
+						'show-comments'          => false,
+						'feed-id'                => $feed_id,
+					);
+
+					$html = self::items_html( $cached_slice, $args );
+
+					// Generate lightbox content for cached items (pass $args so feed-id is available for product tags)
+					$lightbox_html = '';
+					$lightbox_enabled = WPZOOM_Instagram_Widget_Settings::get_feed_setting_value( $feed_id, 'lightbox' );
+					if ( false === $lightbox_enabled || boolval( $lightbox_enabled ) ) {
+						$lightbox_html = self::lightbox_items_html( $cached_slice, $user_id, $args );
+					}
+
+					wp_send_json_success( array(
+						'html'         => $html,
+						'lightbox_html' => $lightbox_html,
+						'has_more'     => $has_more,
+						'next_url'     => $next_url, // Keep the API next URL for when cache is exhausted
+						'from_cache'   => true,
+						'cache_offset' => $new_offset,
+					) );
+				}
+			}
+			// If cache didn't have items at this offset, fall through to API-based loading
+		}
+
+		// --- API-based loading: fetch from Instagram API ---
+		// Extract pagination cursor from the next URL
+		$pagination_cursor = '';
+		if ( ! empty( $next_url ) ) {
+			$parsed_url = parse_url( $next_url );
+			if ( isset( $parsed_url['query'] ) ) {
+				parse_str( $parsed_url['query'], $params );
+				if ( isset( $params['after'] ) ) {
+					$pagination_cursor = $params['after'];
+				}
+			}
+		}
+
+		// Guard: If cache was attempted but exhausted AND there's no API pagination cursor,
+		// don't fetch from the beginning (which would return duplicates of already-displayed posts).
+		if ( $cache_offset >= 0 && empty( $pagination_cursor ) ) {
+			wp_send_json_error( 'No more posts to load' );
+		}
+
 		$items = $this->api->get_items( 
 			array( 
 				'image-limit'          => $item_amount, 
@@ -131,8 +228,11 @@ class Wpzoom_Instagram_Widget_Display {
 				'include-pagination'   => true,
 				'allowed-post-types'   => $allowed_post_types,
 				'pagination-cursor'    => $pagination_cursor,
-				'bypass-transient'     => true, // Always get fresh data for load more
-				'skip-likes-comments'  => true  // Skip likes/comments for speed
+				'bypass-transient'     => true,
+				'skip-likes-comments'  => true,
+				'access-token'         => $user_account_token,
+				'feed-id'              => $feed_id,
+				'business-page-id'     => $user_business_page_id,
 			) 
 		);
 
@@ -142,39 +242,172 @@ class Wpzoom_Instagram_Widget_Display {
 
 		// Prepare args for HTML generation
 		$args = array(
-			'layout'               => WPZOOM_Instagram_Widget_Settings::get_feed_setting_value( $feed_id, 'layout' ),
-			'item-num'             => $item_amount,
-			'col-num'              => WPZOOM_Instagram_Widget_Settings::get_feed_setting_value( $feed_id, 'col-num' ),
-			'show-overlay'         => WPZOOM_Instagram_Widget_Settings::get_feed_setting_value( $feed_id, 'show-overlay' ),
-			'hover-link'           => WPZOOM_Instagram_Widget_Settings::get_feed_setting_value( $feed_id, 'hover-link' ),
-			'show-media-type-icons' => WPZOOM_Instagram_Widget_Settings::get_feed_setting_value( $feed_id, 'show-media-type-icons' ),
+			'layout'                 => WPZOOM_Instagram_Widget_Settings::get_feed_setting_value( $feed_id, 'layout' ),
+			'item-num'               => $item_amount,
+			'col-num'                => WPZOOM_Instagram_Widget_Settings::get_feed_setting_value( $feed_id, 'col-num' ),
+			'show-overlay'           => WPZOOM_Instagram_Widget_Settings::get_feed_setting_value( $feed_id, 'show-overlay' ),
+			'hover-link'             => WPZOOM_Instagram_Widget_Settings::get_feed_setting_value( $feed_id, 'hover-link' ),
+			'show-media-type-icons'  => WPZOOM_Instagram_Widget_Settings::get_feed_setting_value( $feed_id, 'show-media-type-icons' ),
 			'hover-media-type-icons' => WPZOOM_Instagram_Widget_Settings::get_feed_setting_value( $feed_id, 'hover-media-type-icons' ),
-			'hover-date'           => WPZOOM_Instagram_Widget_Settings::get_feed_setting_value( $feed_id, 'hover-date' ),
-			'allowed-post-types'   => $allowed_post_types,
-			'image-size'           => $image_size,
-			'show-likes'           => false, // Skip for performance
-			'show-comments'        => false, // Skip for performance
+			'hover-date'             => WPZOOM_Instagram_Widget_Settings::get_feed_setting_value( $feed_id, 'hover-date' ),
+			'allowed-post-types'     => $allowed_post_types,
+			'image-size'             => $image_size,
+			'show-likes'             => false,
+			'show-comments'          => false,
+			'feed-id'                => $feed_id,
 		);
 
 		// Generate HTML for new items
 		$html = self::items_html( $items['items'], $args );
 
-		// Generate lightbox content for new items if lightbox is enabled
+		// Generate lightbox content for new items if lightbox is enabled (pass $args so feed-id is available for product tags)
 		$lightbox_html = '';
 		$lightbox_enabled = isset( $args['lightbox'] ) ? boolval( $args['lightbox'] ) : true;
 		if ( $lightbox_enabled ) {
-			$lightbox_html = self::lightbox_items_html( $items['items'], $user_id );
+			$lightbox_html = self::lightbox_items_html( $items['items'], $user_id, $args );
 		}
 
 		// Prepare response data
 		$response = array(
-			'html' => $html,
+			'html'         => $html,
 			'lightbox_html' => $lightbox_html,
-			'has_more' => ! empty( $items['paging'] ) && property_exists( $items['paging'], 'next' ) && ! empty( $items['paging']->next ),
-			'next_url' => ! empty( $items['paging'] ) && property_exists( $items['paging'], 'next' ) ? $items['paging']->next : '',
+			'has_more'     => ! empty( $items['paging'] ) && property_exists( $items['paging'], 'next' ) && ! empty( $items['paging']->next ),
+			'next_url'     => ! empty( $items['paging'] ) && property_exists( $items['paging'], 'next' ) ? $items['paging']->next : '',
+			'from_cache'   => false,
+			'cache_offset' => -1, // Cache exhausted, use API pagination from now on
 		);
 
 		wp_send_json_success( $response );
+	}
+
+	/**
+	 * AJAX handler for loading more cached posts in the backend preview.
+	 * This serves posts from the transient cache so users can see and link products
+	 * to posts beyond the initial display count, without hitting the Instagram API.
+	 *
+	 * @since 2.3.0
+	 * @return void
+	 */
+	public function ajax_preview_load_more_posts() {
+		// Only admins can use preview load more
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( 'Unauthorized' );
+		}
+
+		// Verify nonce
+		if ( ! wp_verify_nonce( $_POST['_wpnonce'], 'wpzinsta-preview-load-more' ) ) {
+			wp_send_json_error( 'Invalid nonce' );
+		}
+
+		$feed_id    = intval( $_POST['feed_id'] );
+		$offset     = intval( $_POST['offset'] );
+		$amount     = intval( $_POST['amount'] );
+		$image_size = sanitize_text_field( $_POST['image_size'] );
+
+		if ( $amount < 1 ) {
+			$amount = 9;
+		}
+
+		// Validate feed
+		$feed_post = get_post( $feed_id );
+		if ( ! $feed_post || 'wpz-insta_feed' !== $feed_post->post_type ) {
+			wp_send_json_error( 'Invalid feed ID' );
+		}
+
+		// Get user account details for this feed
+		$user_id               = WPZOOM_Instagram_Widget_Settings::get_feed_setting_value( $feed_id, 'user-id' );
+		$user_account_token    = get_post_meta( $user_id, '_wpz-insta_token', true );
+		$user_business_page_id = get_post_meta( $user_id, '_wpz-insta_page_id', true );
+
+		if ( empty( $user_account_token ) ) {
+			wp_send_json_error( 'No valid access token found' );
+		}
+
+		// Build the transient key to read cached data
+		$this->api = Wpzoom_Instagram_Widget_API::getInstance();
+		$this->api->set_access_token( $user_account_token );
+		$this->api->set_feed_id( $feed_id );
+		if ( ! empty( $user_business_page_id ) ) {
+			$this->api->set_business_page_id( $user_business_page_id );
+		}
+
+		$allowed_post_types = WPZOOM_Instagram_Widget_Settings::get_feed_setting_value( $feed_id, 'allowed-post-types' ) ?: 'IMAGE,VIDEO,CAROUSEL_ALBUM';
+		$image_width        = (int) WPZOOM_Instagram_Widget_Settings::get_feed_setting_value( $feed_id, 'image-width' );
+		$image_resolution   = ! empty( $image_size ) ? $image_size : 'standard_resolution';
+
+		// Fetch all cached items.
+		// IMPORTANT: skip-likes-comments must be false to match the transient key from the initial fetch
+		// (the initial fetch uses skip-likes-comments=false, which adds '_lc' to the transient key).
+		$all_items = $this->api->get_items(
+			array(
+				'image-limit'         => 100, // Get all cached items
+				'image-resolution'    => $image_resolution,
+				'image-width'         => $image_width,
+				'include-pagination'  => true,
+				'allowed-post-types'  => $allowed_post_types,
+				'bypass-transient'    => false, // Read from cache only
+				'skip-likes-comments' => false, // Must match initial fetch transient key (_lc suffix)
+				'access-token'        => $user_account_token,
+				'feed-id'             => $feed_id,
+				'business-page-id'    => $user_business_page_id,
+			)
+		);
+
+		if ( ! is_array( $all_items ) || empty( $all_items['items'] ) ) {
+			wp_send_json_error( 'No cached posts available' );
+		}
+
+		// Slice to get only the items beyond the offset
+		$cached_items = array_slice( $all_items['items'], $offset, $amount );
+
+		if ( empty( $cached_items ) ) {
+			wp_send_json_error( 'No more cached posts' );
+		}
+
+		// Check if there are more items in cache beyond what we're returning
+		$total_cached = count( $all_items['items'] );
+		$has_more     = ( $offset + $amount ) < $total_cached;
+
+		// Ensure images use valid URLs: local thumbnails may not exist for cached items
+		// that haven't been displayed before. Fall back to the Instagram CDN URL.
+		foreach ( $cached_items as &$ci ) {
+			if ( ! empty( $ci['image-url'] ) && ! empty( $ci['original-image-url'] ) ) {
+				$local_path = self::convert_url_to_path( $ci['image-url'] );
+				if ( ! file_exists( $local_path ) ) {
+					$ci['image-url'] = $ci['original-image-url'];
+				}
+			} elseif ( empty( $ci['image-url'] ) && ! empty( $ci['original-image-url'] ) ) {
+				$ci['image-url'] = $ci['original-image-url'];
+			}
+		}
+		unset( $ci );
+
+		// Prepare args for preview-mode HTML generation (includes "Link to a product" buttons)
+		$args = array(
+			'layout'                 => WPZOOM_Instagram_Widget_Settings::get_feed_setting_value( $feed_id, 'layout' ),
+			'item-num'               => $amount,
+			'col-num'                => WPZOOM_Instagram_Widget_Settings::get_feed_setting_value( $feed_id, 'col-num' ),
+			'show-overlay'           => WPZOOM_Instagram_Widget_Settings::get_feed_setting_value( $feed_id, 'show-overlay' ),
+			'hover-link'             => WPZOOM_Instagram_Widget_Settings::get_feed_setting_value( $feed_id, 'hover-link' ),
+			'show-media-type-icons'  => WPZOOM_Instagram_Widget_Settings::get_feed_setting_value( $feed_id, 'show-media-type-icons' ),
+			'hover-media-type-icons' => WPZOOM_Instagram_Widget_Settings::get_feed_setting_value( $feed_id, 'hover-media-type-icons' ),
+			'hover-date'             => WPZOOM_Instagram_Widget_Settings::get_feed_setting_value( $feed_id, 'hover-date' ),
+			'allowed-post-types'     => $allowed_post_types,
+			'image-size'             => $image_size,
+			'show-likes'             => false,
+			'show-comments'          => false,
+			'feed-id'                => $feed_id,
+			'preview'                => true,  // Preview mode: includes "Link to a product" buttons
+		);
+
+		// Generate preview-mode HTML for cached items
+		$html = self::items_html( $cached_items, $args );
+
+		wp_send_json_success( array(
+			'html'     => $html,
+			'has_more' => $has_more,
+			'offset'   => $offset + count( $cached_items ),
+		) );
 	}
 
 	/**
@@ -804,7 +1037,10 @@ class Wpzoom_Instagram_Widget_Display {
 
 							if ( $show_load_more_button && 'fullwidth' !== $layout && 'carousel' !== $layout ) {
 								$next_url = ! empty( $items ) && array_key_exists( 'paging', $items ) && is_object( $items['paging'] ) && property_exists( $items['paging'], 'next' ) ? esc_url( $items['paging']->next ) : '';
-								$has_more = ! empty( $next_url );
+								$initial_display_count = is_array( $items ) && ! empty( $items['items'] ) ? count( $items['items'] ) : 0;
+								// Has more: either more cached items (we fetch ~30 initially) or more from API
+								$has_more_in_cache = $initial_display_count > 0 && $initial_display_count < 30;
+								$has_more = $has_more_in_cache || ! empty( $next_url );
 								
 								// New fast button-based AJAX system (always generate for performance)
 								$output .= '<div class="wpzinsta-pro-load-more-wrapper"' . ( ! $this->is_pro ? ' data-disabled="true"' : '' ) . '>';
@@ -815,6 +1051,7 @@ class Wpzoom_Instagram_Widget_Display {
 										   ' data-allowed-post-types="' . esc_attr( $allowed_post_types ) . '"' .
 										   ' data-next-url="' . esc_attr( $next_url ) . '"' .
 										   ' data-nonce="' . wp_create_nonce( 'wpzinsta-pro-load-more' ) . '"' .
+										   ' data-cache-offset="' . esc_attr( $initial_display_count ) . '"' .
 										   ( ! $has_more ? ' disabled style="display:none;"' : '' ) .
 										   ( ! $this->is_pro ? ' disabled' : '' ) . '>';
 								$output .= '<span class="button-text">' . esc_html( ( isset( $args['load-more-text'] ) ? trim( $args['load-more-text'] ) : __( 'Load More&hellip;', 'instagram-widget-by-wpzoom' ) ) . ( ! $this->is_pro ? __( ' [PRO only]', 'instagram-widget-by-wpzoom' ) : '' ) ) . '</span>';

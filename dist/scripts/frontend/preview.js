@@ -289,6 +289,123 @@ function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == 
   parseTabFromUrl();
 
   /**
+   * Preview Load More: load cached posts via AJAX so the user can see and
+   * link products to posts beyond the initial display count.
+   */
+  function initPreviewLoadMore() {
+    var loadMoreBtn = document.querySelector('.wpzinsta-pro-load-more-btn');
+    if (!loadMoreBtn) return;
+
+    // Track offset: how many items are currently displayed
+    var currentOffset = parseInt(loadMoreBtn.getAttribute('data-cache-offset') || '0', 10);
+    if (!currentOffset || currentOffset < 1) {
+      var itemsList = document.querySelectorAll('.zoom-instagram-widget__item');
+      currentOffset = itemsList.length;
+    }
+
+    // Use capturing listener to intercept before the frontend index.js handler
+    loadMoreBtn.addEventListener('click', function (e) {
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      if (loadMoreBtn.classList.contains('loading') || loadMoreBtn.disabled) return;
+      var feedId = loadMoreBtn.getAttribute('data-feed-id') || '';
+      var amount = parseInt(loadMoreBtn.getAttribute('data-item-amount') || '9', 10);
+      var imageSize = loadMoreBtn.getAttribute('data-image-size') || 'standard_resolution';
+      var ajaxUrl = typeof wpzInstaPreview !== 'undefined' && wpzInstaPreview.ajaxurl ? wpzInstaPreview.ajaxurl : typeof wpzInstaAjax !== 'undefined' ? wpzInstaAjax.ajaxurl : '';
+      var nonce = typeof wpzInstaPreview !== 'undefined' && wpzInstaPreview.nonce ? wpzInstaPreview.nonce : '';
+      if (!ajaxUrl || !feedId || !nonce) return;
+
+      // Show loading state (add .loading to both the wrapper and button to trigger the CSS spinner)
+      var loadMoreWrapper = loadMoreBtn.closest('.wpzinsta-pro-load-more-wrapper');
+      if (loadMoreWrapper) loadMoreWrapper.classList.add('loading');
+      loadMoreBtn.classList.add('loading');
+      loadMoreBtn.disabled = true;
+      var btnText = loadMoreBtn.querySelector('.button-text');
+      var originalText = btnText ? btnText.textContent : '';
+      if (btnText) btnText.textContent = 'Loading...';
+      var formData = new FormData();
+      formData.append('action', 'wpzoom_instagram_preview_load_more');
+      formData.append('feed_id', feedId);
+      formData.append('offset', currentOffset);
+      formData.append('amount', amount);
+      formData.append('image_size', imageSize);
+      formData.append('_wpnonce', nonce);
+      fetch(ajaxUrl, {
+        method: 'POST',
+        body: formData,
+        credentials: 'same-origin'
+      }).then(function (resp) {
+        return resp.json();
+      }).then(function (data) {
+        if (data.success && data.data && data.data.html) {
+          var itemsContainer = document.querySelector('.zoom-instagram-widget__items');
+          if (itemsContainer) {
+            itemsContainer.insertAdjacentHTML('beforeend', data.data.html);
+
+            // Initialize shimmer / loaded state for newly added items.
+            // The CSS shows a shimmer animation on items without .wpz-insta-loaded.
+            // Preview items use src (not data-src), so images may already be loaded
+            // from the browser cache or will fire load/error shortly.
+            var newItems = itemsContainer.querySelectorAll('.zoom-instagram-widget__item:not(.wpz-insta-loaded)');
+            newItems.forEach(function (item) {
+              var img = item.querySelector('img.zoom-instagram-link, img.zoom-instagram-link-new');
+              if (!img) {
+                item.classList.add('wpz-insta-loaded');
+                return;
+              }
+              if (img.complete && img.naturalWidth > 0) {
+                item.classList.add('wpz-insta-loaded');
+                return;
+              }
+              img.addEventListener('load', function () {
+                item.classList.add('wpz-insta-loaded');
+              });
+              img.addEventListener('error', function () {
+                item.classList.add('wpz-insta-loaded');
+              });
+            });
+          }
+          currentOffset = data.data.offset || currentOffset + amount;
+
+          // Hide button if no more cached items
+          if (!data.data.has_more) {
+            loadMoreBtn.style.display = 'none';
+          }
+
+          // Update iframe height
+          if (typeof window.parent.wpzInstaUpdatePreviewHeight === 'function') {
+            requestAnimationFrame(function () {
+              window.parent.wpzInstaUpdatePreviewHeight();
+            });
+          }
+
+          // Apply current preview styles to new items (aspect ratio, border radius, etc.)
+          if (lastPreviewData) {
+            applyPreviewUpdate(lastPreviewData);
+          }
+        } else {
+          // No more cached items
+          loadMoreBtn.style.display = 'none';
+        }
+      })["catch"](function () {
+        loadMoreBtn.style.display = 'none';
+      })["finally"](function () {
+        if (loadMoreWrapper) loadMoreWrapper.classList.remove('loading');
+        loadMoreBtn.classList.remove('loading');
+        loadMoreBtn.disabled = false;
+        if (btnText) btnText.textContent = originalText;
+      });
+    }, true); // capture phase: runs before jQuery handlers
+  }
+
+  // Initialize preview load more on DOM ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initPreviewLoadMore);
+  } else {
+    initPreviewLoadMore();
+  }
+
+  /**
    * Updates the has-linked-products class on an item based on product link changes.
    * Also updates button text and badge visibility.
    *

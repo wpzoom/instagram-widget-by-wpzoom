@@ -491,7 +491,11 @@ class Wpzoom_Instagram_Widget_API {
 		}
 		
 		// Original retry logic for initial loads only
-		$max_retries = 2; // Reduce retries from 3 to 2
+		// Always fetch at least 30 items so the cache has enough for "Load More" in the backend preview.
+		// This allows users to see and link products to posts beyond the initial display count.
+		$min_cache_items = 30;
+		$target_items = max( $image_limit, $min_cache_items );
+		$max_retries = 3;
 		$retry_count = 0;
 		$all_items = array();
 		$final_paging = null;
@@ -500,7 +504,7 @@ class Wpzoom_Instagram_Widget_API {
 		// Use a larger API limit when filtering to ensure we get enough of the desired type
 		$all_types = 'IMAGE,VIDEO,CAROUSEL_ALBUM';
 		$is_filtering = ( $allowed_post_types !== $all_types );
-		$api_limit = $is_filtering ? min( $image_limit * 2, 25 ) : $image_limit; // Instagram max is 25
+		$api_limit = 25; // Always fetch max per request (Instagram max is 25) to build a larger cache
 
 		do {
 			$request_url = add_query_arg(
@@ -551,7 +555,8 @@ class Wpzoom_Instagram_Widget_API {
 			$allowed_items_count = $this->count_allowed_items( $all_items, $allowed_post_types );
 
 			// Check if we have enough items or if there's no more data
-			$has_enough_items = $allowed_items_count >= $image_limit;
+			// Use $target_items (at least 30) so the cache has enough for preview "Load More"
+			$has_enough_items = $allowed_items_count >= $target_items;
 			$has_more_data = property_exists( $raw_data, 'paging' ) &&
 							 property_exists( $raw_data->paging, 'next' ) &&
 							 ! empty( $raw_data->paging->next );

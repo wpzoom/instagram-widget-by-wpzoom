@@ -2865,6 +2865,12 @@ class WPZOOM_Instagram_Widget_Settings {
 			WPZOOM_INSTAGRAM_VERSION,
 			true
 		);
+
+		// Localize AJAX URL and nonce for preview load more functionality
+		wp_localize_script( 'zoom-instagram-widget-preview', 'wpzInstaPreview', array(
+			'ajaxurl' => admin_url( 'admin-ajax.php' ),
+			'nonce'   => wp_create_nonce( 'wpzinsta-preview-load-more' ),
+		) );
 	}
 
 	function preview_frame() {

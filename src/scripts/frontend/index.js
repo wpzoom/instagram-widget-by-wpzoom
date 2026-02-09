@@ -75,8 +75,10 @@
 				const allowedPostTypes = $button.attr('data-allowed-post-types');
 				const nextUrl = $button.attr('data-next-url');
 				const nonce = $button.attr('data-nonce');
+				const cacheOffset = parseInt($button.attr('data-cache-offset') || '-1', 10);
 				
-				if (!nextUrl) {
+				// Need either a cache offset or a next URL to load more
+				if (cacheOffset < 0 && !nextUrl) {
 					$button.hide();
 					return;
 				}
@@ -87,20 +89,26 @@
 				const originalText = $button.find('.button-text').text();
 				$button.find('.button-text').text('Loading...');
 				
+				// Build request data - include cache_offset for cache-based loading
+				var requestData = {
+					action: 'wpzoom_instagram_load_more',
+					feed_id: feedId,
+					item_amount: itemAmount,
+					image_size: imageSize,
+					allowed_post_types: allowedPostTypes,
+					next: nextUrl,
+					_wpnonce: nonce
+				};
+				if (cacheOffset >= 0) {
+					requestData.cache_offset = cacheOffset;
+				}
+				
 				// Make AJAX request
 				$.ajax({
 					url: wpzInstaAjax.ajaxurl,
 					type: 'POST',
 					dataType: 'json',
-					data: {
-						action: 'wpzoom_instagram_load_more',
-						feed_id: feedId,
-						item_amount: itemAmount,
-						image_size: imageSize,
-						allowed_post_types: allowedPostTypes,
-						next: nextUrl,
-						_wpnonce: nonce
-					},
+					data: requestData,
 									success: function(response) {
 					if (response.success && response.data.html) {
 						// Store current item count before adding new items
@@ -109,9 +117,18 @@
 						// Append new items
 						$itemsContainer.append(response.data.html);
 						
-						// Update button state
-						if (response.data.has_more && response.data.next_url) {
-							$button.attr('data-next-url', response.data.next_url);
+						// Update button state: track cache offset and API next URL
+						if (response.data.has_more) {
+							if (typeof response.data.cache_offset !== 'undefined' && response.data.cache_offset >= 0) {
+								// Still loading from cache - update cache offset
+								$button.attr('data-cache-offset', response.data.cache_offset);
+							} else {
+								// Cache exhausted - switch to API pagination
+								$button.attr('data-cache-offset', '-1');
+							}
+							if (response.data.next_url) {
+								$button.attr('data-next-url', response.data.next_url);
+							}
 						} else {
 							$button.hide();
 						}
