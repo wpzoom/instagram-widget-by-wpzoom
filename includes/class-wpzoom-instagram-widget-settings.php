@@ -782,7 +782,13 @@ class WPZOOM_Instagram_Widget_Settings {
 			}
 		}
 
-		// 3. Single image fallback: one image (caller may pass currentImageUrl on frontend)
+		// 3. Allow PRO/multi-account to provide album images from merged cache (e.g. when item is from another account).
+		$filtered = apply_filters( 'wpz-insta_album_images_for_media', $images, $feed_id, $media_id );
+		if ( is_array( $filtered ) && ! empty( $filtered ) ) {
+			return $filtered;
+		}
+
+		// 4. Single image fallback: one image (caller may pass currentImageUrl on frontend)
 		return $images;
 	}
 
@@ -2422,18 +2428,18 @@ class WPZOOM_Instagram_Widget_Settings {
 								<div class="wpz-insta_feed-load-more-general wpz-insta_table">
 									<label class="wpz-insta_table-row">
 										<input type="hidden" name="_wpz-insta_show-load-more" value="0" />
-										<input type="checkbox" name="_wpz-insta_show-load-more" value="1"<?php checked( $show_load_more ); disabled( $pro_toggle ); ?> />
+										<input type="checkbox" name="_wpz-insta_show-load-more" value="1"<?php checked( $show_load_more ); ?> />
 										<span><?php _e( 'Display <strong>Load more</strong> button', 'instagram-widget-by-wpzoom' ); ?></span>
 									</label>
 
 									<label class="wpz-insta_table-row wpz-insta_table-row-full">
 										<strong class="wpz-insta_table-cell"><?php esc_html_e( 'Button text', 'instagram-widget-by-wpzoom' ); ?></strong>
-										<div class="wpz-insta_table-cell"><input type="text" name="_wpz-insta_load-more-text" value="<?php echo esc_attr( $load_more_text ); ?>" class="widefat"<?php disabled( $pro_toggle ); ?> /></div>
+										<div class="wpz-insta_table-cell"><input type="text" name="_wpz-insta_load-more-text" value="<?php echo esc_attr( $load_more_text ); ?>" class="widefat" /></div>
 									</label>
 
 									<label class="wpz-insta_table-row">
 										<strong class="wpz-insta_table-cell"><?php esc_html_e( 'Load more button color', 'instagram-widget-by-wpzoom' ); ?></strong>
-										<div class="wpz-insta_table-cell"><input type="text" name="_wpz-insta_load-more-color" value="<?php echo esc_attr( $load_more_color ); ?>" size="8" class="wpz-insta_color-picker"<?php disabled( $pro_toggle ); ?> /></div>
+										<div class="wpz-insta_table-cell"><input type="text" name="_wpz-insta_load-more-color" value="<?php echo esc_attr( $load_more_color ); ?>" size="8" class="wpz-insta_color-picker" /></div>
 									</label>
 								</div>
 							</div>
@@ -3469,12 +3475,15 @@ class WPZOOM_Instagram_Widget_Settings {
 					}
 				}
 
+			// Keys that should be preserved when missing from POST (e.g. when section is hidden by layout or control is disabled).
+			$preserve_when_missing = array( '_wpz-insta_show-load-more', '_wpz-insta_show-view-button' );
+
 			foreach ( $meta_keys as $key => $args ) {
 					// Skip allowed-post-types as it's handled separately above
 					if ( $key === '_wpz-insta_allowed-post-types' ) {
 						continue;
 					}
-					
+
 					if ( isset( $_POST[ $key ] ) ) {
 						$value = wp_unslash( $_POST[ $key ] );
 
@@ -3494,6 +3503,10 @@ class WPZOOM_Instagram_Widget_Settings {
 
 						update_post_meta( $post_ID, $key, $value );
 					} else {
+						if ( in_array( $key, $preserve_when_missing, true ) && metadata_exists( 'post', $post_ID, $key ) ) {
+							// Preserve existing value so hidden/disabled controls don't overwrite with default.
+							continue;
+						}
 						update_post_meta( $post_ID, $key, $args['default'] );
 					}
 				}
