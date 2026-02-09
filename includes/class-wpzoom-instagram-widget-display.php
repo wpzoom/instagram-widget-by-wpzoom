@@ -314,8 +314,15 @@ class Wpzoom_Instagram_Widget_Display {
 			wp_send_json_error( 'Invalid feed ID' );
 		}
 
-		// Get user account details for this feed
-		$user_id               = WPZOOM_Instagram_Widget_Settings::get_feed_setting_value( $feed_id, 'user-id' );
+		// Get user account details for this feed.
+		// First try reading from saved post meta; if not valid (e.g. unsaved/new feed
+		// where the default is -1), fall back to the user_id passed from the preview form.
+		$user_id = intval( WPZOOM_Instagram_Widget_Settings::get_feed_setting_value( $feed_id, 'user-id' ) );
+
+		if ( $user_id < 1 && ! empty( $_POST['user_id'] ) ) {
+			$user_id = intval( $_POST['user_id'] );
+		}
+
 		$user_account_token    = get_post_meta( $user_id, '_wpz-insta_token', true );
 		$user_business_page_id = get_post_meta( $user_id, '_wpz-insta_page_id', true );
 

@@ -323,6 +323,11 @@
 			var originalText = btnText ? btnText.textContent : '';
 			if ( btnText ) btnText.textContent = 'Loading...';
 
+			// Get the user ID from the preview URL (needed for unsaved/new feeds
+			// where the user-id post meta doesn't exist yet).
+			var previewParams = new URLSearchParams( window.location.search || '' );
+			var userId = previewParams.get( '_wpz-insta_user-id' ) || '';
+
 			var formData = new FormData();
 			formData.append( 'action', 'wpzoom_instagram_preview_load_more' );
 			formData.append( 'feed_id', feedId );
@@ -330,6 +335,9 @@
 			formData.append( 'amount', amount );
 			formData.append( 'image_size', imageSize );
 			formData.append( '_wpnonce', nonce );
+			if ( userId ) {
+				formData.append( 'user_id', userId );
+			}
 
 			fetch( ajaxUrl, { method: 'POST', body: formData, credentials: 'same-origin' } )
 				.then( function( resp ) { return resp.json(); } )
