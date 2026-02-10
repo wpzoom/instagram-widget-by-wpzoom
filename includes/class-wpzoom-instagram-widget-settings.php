@@ -782,13 +782,19 @@ class WPZOOM_Instagram_Widget_Settings {
 			}
 		}
 
-		// 3. Allow PRO/multi-account to provide album images from merged cache (e.g. when item is from another account).
+		// 3. Direct API call: fetch this specific media's children by ID (fast, no full feed re-fetch).
+		$direct_images = $this->get_album_images_direct_api( $feed_id, $media_id );
+		if ( ! empty( $direct_images ) ) {
+			return $direct_images;
+		}
+
+		// 4. Allow PRO/multi-account to provide album images from merged cache (e.g. when item is from another account).
 		$filtered = apply_filters( 'wpz-insta_album_images_for_media', $images, $feed_id, $media_id );
 		if ( is_array( $filtered ) && ! empty( $filtered ) ) {
 			return $filtered;
 		}
 
-		// 4. Single image fallback: one image (caller may pass currentImageUrl on frontend)
+		// 5. Single image fallback: one image (caller may pass currentImageUrl on frontend)
 		return $images;
 	}
 
@@ -855,6 +861,80 @@ class WPZOOM_Instagram_Widget_Settings {
 		}
 
 		return $images;
+	}
+
+	/**
+	 * Fetch album children directly from the Instagram API by media ID.
+	 * Tries all account tokens associated with the feed until it finds the right one.
+	 * Much faster than re-fetching the full feed for paginated (Load More) items.
+	 *
+	 * @param int    $feed_id  Feed post ID.
+	 * @param string $media_id Instagram media ID.
+	 * @return array List of array( 'url', 'type', 'index' ), empty if not found.
+	 */
+	private function get_album_images_direct_api( $feed_id, $media_id ) {
+		// Collect all access tokens for this feed (primary + multi-account).
+		$tokens = array();
+		$user_id = get_post_meta( $feed_id, '_wpz-insta_user-id', true );
+		if ( ! empty( $user_id ) ) {
+			$token = get_post_meta( (int) $user_id, '_wpz-insta_token', true );
+			if ( ! empty( $token ) ) {
+				$tokens[] = $token;
+			}
+		}
+
+		// Also collect tokens from additional multi-account user IDs (PRO).
+		$user_ids_string = get_post_meta( $feed_id, '_wpz-insta_user-ids', true );
+		if ( ! empty( $user_ids_string ) ) {
+			$extra_user_ids = array_map( 'intval', array_filter( explode( ',', $user_ids_string ) ) );
+			foreach ( $extra_user_ids as $extra_user_id ) {
+				if ( $extra_user_id === (int) $user_id ) {
+					continue; // Already added.
+				}
+				$extra_token = get_post_meta( $extra_user_id, '_wpz-insta_token', true );
+				if ( ! empty( $extra_token ) ) {
+					$tokens[] = $extra_token;
+				}
+			}
+		}
+
+		// Try each token to fetch the media's children directly.
+		foreach ( $tokens as $access_token ) {
+			$request_url = add_query_arg(
+				array(
+					'fields'       => 'media_type,children{media_url,media_type,thumbnail_url}',
+					'access_token' => $access_token,
+				),
+				'https://graph.instagram.com/' . $media_id
+			);
+
+			$response = wp_remote_get( $request_url, array( 'timeout' => 15 ) );
+
+			if ( is_wp_error( $response ) || 200 !== wp_remote_retrieve_response_code( $response ) ) {
+				continue; // Wrong token or error, try next.
+			}
+
+			$data = json_decode( wp_remote_retrieve_body( $response ) );
+			if ( ! is_object( $data ) ) {
+				continue;
+			}
+
+			// Extract children images.
+			$images = $this->extract_images_from_album_item( $data );
+			if ( ! empty( $images ) ) {
+				return $images;
+			}
+
+			// Media found but it's not a carousel — return main image.
+			if ( isset( $data->media_type ) ) {
+				$main_url = isset( $data->media_url ) ? $data->media_url : '';
+				if ( ! empty( $main_url ) ) {
+					return array( array( 'url' => $main_url, 'type' => strtolower( $data->media_type ), 'index' => 0 ) );
+				}
+			}
+		}
+
+		return array();
 	}
 
 	function admin_body_class_filter( $classes ) {
