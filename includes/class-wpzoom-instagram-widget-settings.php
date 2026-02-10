@@ -1192,7 +1192,7 @@ class WPZOOM_Instagram_Widget_Settings {
 						<ul>
 							<li class="active"><a href="<?php echo esc_url( '#config' ); ?>"><?php _e( 'Configure', 'instagram-widget-by-wpzoom' ); ?></a></li>
 							<li <?php echo $disabled_class; ?>><a href="<?php echo esc_url( '#design' ); ?>"><?php _e( 'Design', 'instagram-widget-by-wpzoom' ); ?></a></li>
-							<li <?php echo $disabled_class; ?>><a href="<?php echo esc_url( '#moderate' ); ?>"><?php _e( 'Moderate', 'instagram-widget-by-wpzoom' ); ?></a></li>
+							<li <?php echo $disabled_class; ?>><a href="<?php echo esc_url( '#moderate' ); ?>"><?php _e( 'Moderate', 'instagram-widget-by-wpzoom' ); ?><?php echo apply_filters( 'wpz-insta_admin-pro-options-toggle', true ) ? ' <span class="wpz-insta-pro-badge">' . esc_html__( 'PRO', 'instagram-widget-by-wpzoom' ) . '</span>' : ''; ?></a></li>
 							<li <?php echo $disabled_class; ?>><a href="<?php echo esc_url( '#embed' ); ?>"><?php _e( 'Embed', 'instagram-widget-by-wpzoom' ); ?></a><?php echo $embed_pointer; ?></li>
 						</ul>
 					</nav>
@@ -2088,14 +2088,26 @@ class WPZOOM_Instagram_Widget_Settings {
 						</div>
 
 						<div class="wpz-insta_sidebar-left-section" data-id="#moderate">
-							<h4 class="wpz-insta_sidebar-section-big-title"><?php esc_html_e( 'Moderate Posts', 'instagram-widget-by-wpzoom' ); ?></h4>
+							<h4 class="wpz-insta_sidebar-section-big-title"><?php esc_html_e( 'Moderate Posts', 'instagram-widget-by-wpzoom' ); ?><?php echo $pro_toggle ? ' <span class="wpz-insta-pro-badge">' . esc_html__( 'PRO', 'instagram-widget-by-wpzoom' ) . '</span>' : ''; ?></h4>
 
+							<?php if ( $pro_toggle ) : ?>
+							<div class="wpz-insta_sidebar-section wpz-insta_sidebar-section-moderate-intro no-top-border wpz-insta_pro-only-feature">
+								<p class="wpz-insta_sidebar-section-description"><?php esc_html_e( 'Hide or show individual posts in your feed. Click the eye icon on each post in the preview to control visibility—hidden posts will not be visible to visitors on your website.', 'instagram-widget-by-wpzoom' ); ?></p>
+								<a href="https://www.wpzoom.com/plugins/instagram-widget/?utm_source=plugin&utm_medium=moderate-section&utm_campaign=upgrade-to-pro" 
+								   target="_blank" 
+								   class="button button-primary wpz-insta-upgrade-pro-btn"
+								   style="margin-top: 16px;">
+									<?php esc_html_e( 'Upgrade to PRO', 'instagram-widget-by-wpzoom' ); ?>
+								</a>
+							</div>
+							<?php else : ?>
 							<div class="wpz-insta_sidebar-section wpz-insta_sidebar-section-moderate-intro no-top-border">
 								<h5 class="wpz-insta_sidebar-section-title smaller-title"><?php esc_html_e( 'Hide or Show Posts', 'instagram-widget-by-wpzoom' ); ?></h5>
 								<div class="wpz-insta_sidebar-section-description">
 									<p><?php esc_html_e( 'Click the eye icon on each Instagram post in the preview to hide or show it in your feed. Hidden posts will not be visible to visitors on your website', 'instagram-widget-by-wpzoom' ); ?></p>
 								</div>
 							</div>
+							<?php endif; ?>
 						</div>
 
 						<div class="wpz-insta_sidebar-left-section" data-id="#embed">
@@ -2809,8 +2821,9 @@ class WPZOOM_Instagram_Widget_Settings {
 
 				$should_clear_transients = ( $old_item_num != $new_item_num ) || ( $old_allowed_post_types != $new_allowed_post_types ) || ( $old_user_id != $new_user_id );
 
-			// Save pending hidden posts from the form submission (Moderate Posts feature)
-			if ( isset( $_POST['_wpz-insta_pending-hidden-posts'] ) && ! empty( $_POST['_wpz-insta_pending-hidden-posts'] ) ) {
+			// Save pending hidden posts from the form submission (Moderate Posts feature — PRO only)
+			$pro_toggle_save = apply_filters( 'wpz-insta_admin-pro-options-toggle', true );
+			if ( ! $pro_toggle_save && isset( $_POST['_wpz-insta_pending-hidden-posts'] ) && ! empty( $_POST['_wpz-insta_pending-hidden-posts'] ) ) {
 				$pending_hidden_json = wp_unslash( $_POST['_wpz-insta_pending-hidden-posts'] );
 				$pending_hidden = json_decode( $pending_hidden_json, true );
 

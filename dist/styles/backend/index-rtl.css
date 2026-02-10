@@ -814,6 +814,16 @@
   transform: translateY(100%);
   transition: all 0.2s ease;
 }
+.wpz-insta-admin #wpbody-content > .wrap .wpz-insta_settings-header .wpz-insta_settings-main-nav ul li a .wpz-insta-pro-badge {
+  font-size: 13px;
+  font-weight: 600;
+  color: #fff;
+  background: #f57c00;
+  padding: 2px 5px;
+  margin: 0 auto;
+  border-radius: 2px;
+  letter-spacing: 0.5px;
+}
 .wpz-insta-admin #wpbody-content > .wrap .wpz-insta-wrap.with-bg {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
   font-size: 14px;

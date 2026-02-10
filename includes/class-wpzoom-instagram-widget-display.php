@@ -839,10 +839,10 @@ class Wpzoom_Instagram_Widget_Display {
 			$show_likes    = self::$instance->is_pro && isset( $args['show-likes'] ) && boolval( $args['show-likes'] );
 			$show_comments = self::$instance->is_pro && isset( $args['show-comments'] ) && boolval( $args['show-comments'] );
 
-			// Get hidden posts for this feed (used in both preview and frontend)
+			// Get hidden posts for this feed (PRO only — used in both preview and frontend)
 			$feed_id = isset( $args['feed-id'] ) ? intval( $args['feed-id'] ) : 0;
 			$hidden_posts = array();
-			if ( $feed_id > 0 ) {
+			if ( self::$instance->is_pro && $feed_id > 0 ) {
 				$hidden_posts_meta = get_post_meta( $feed_id, '_wpz-insta_hidden-posts', true );
 				if ( is_array( $hidden_posts_meta ) ) {
 					$hidden_posts = $hidden_posts_meta;
@@ -938,8 +938,8 @@ class Wpzoom_Instagram_Widget_Display {
 
 				$output .= '<li class="zoom-instagram-widget__item' . $classes . '" ' . $inline_attrs . '><div class="zoom-instagram-widget__item-inner-wrap">';
 
-				// Add moderate (eye) button in backend preview
-				if ( $preview && ! empty( $media_id ) ) {
+				// Add moderate (eye) button in backend preview (PRO only)
+				if ( $preview && ! empty( $media_id ) && self::$instance->is_pro ) {
 					$eye_title = $is_post_hidden ? __( 'Show post', 'instagram-widget-by-wpzoom' ) : __( 'Hide post', 'instagram-widget-by-wpzoom' );
 					if ( $is_post_hidden ) {
 						// Eye-off icon (post is hidden)

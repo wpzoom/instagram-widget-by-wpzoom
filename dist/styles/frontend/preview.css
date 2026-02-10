@@ -141,19 +141,27 @@ body.wpz-insta-moderate-tab-active .wpz-insta-moderate-btn {
   display: flex;
 }
 
-body:not(.wpz-insta-moderate-tab-active) .zoom-instagram-widget__item.wpz-insta-post-hidden {
-  border: 2px dotted var(--wp-admin-theme-color, #2b88e9);
-}
 body:not(.wpz-insta-moderate-tab-active) .zoom-instagram-widget__item.wpz-insta-post-hidden img {
   opacity: 0.4;
   filter: blur(4px);
 }
-body:not(.wpz-insta-moderate-tab-active) .zoom-instagram-widget__item.wpz-insta-post-hidden .zoom-instagram-widget__overlay {
+body:not(.wpz-insta-moderate-tab-active) .zoom-instagram-widget__item.wpz-insta-post-hidden::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 46px;
+  height: 46px;
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 8px;
+  z-index: 10;
+  pointer-events: none;
+  display: block;
   background-image: url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%2720%27 height=%2720%27 viewBox=%270 0 24 24%27 fill=%27none%27 stroke=%27%23ffffff%27 stroke-width=%272%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27%3E%3Cpath d=%27M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24%27%3E%3C/path%3E%3Cline x1=%271%27 y1=%271%27 x2=%2723%27 y2=%2723%27%3E%3C/line%3E%3C/svg%3E");
-  background-position: 16px 16px;
   background-repeat: no-repeat;
-  background-size: 24px;
-  mix-blend-mode: difference;
+  background-position: center;
+  background-size: 20px 20px;
 }
 
 body.wpz-insta-moderate-tab-active .zoom-instagram-widget__item.wpz-insta-post-hidden .zoom-instagram-widget__item-inner-wrap {
