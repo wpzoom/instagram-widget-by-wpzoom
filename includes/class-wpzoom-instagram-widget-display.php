@@ -122,18 +122,27 @@ class Wpzoom_Instagram_Widget_Display {
 		// Get feed layout settings
 		$image_width = (int) WPZOOM_Instagram_Widget_Settings::get_feed_setting_value( $feed_id, 'image-width' );
 
+		// Over-fetch to compensate for hidden/moderated posts (PRO only)
+		$api_limit = $item_amount;
+		if ( self::$instance->is_pro && $feed_id > 0 ) {
+			$hidden_posts_meta = get_post_meta( $feed_id, '_wpz-insta_hidden-posts', true );
+			if ( is_array( $hidden_posts_meta ) && ! empty( $hidden_posts_meta ) ) {
+				$api_limit = $item_amount + count( $hidden_posts_meta );
+			}
+		}
+
 		// Fetch items using optimized API call
-		$items = $this->api->get_items( 
-			array( 
-				'image-limit'          => $item_amount, 
-				'image-resolution'     => $image_size, 
+		$items = $this->api->get_items(
+			array(
+				'image-limit'          => $api_limit,
+				'image-resolution'     => $image_size,
 				'image-width'          => $image_width,
 				'include-pagination'   => true,
 				'allowed-post-types'   => $allowed_post_types,
 				'pagination-cursor'    => $pagination_cursor,
 				'bypass-transient'     => true, // Always get fresh data for load more
 				'skip-likes-comments'  => true  // Skip likes/comments for speed
-			) 
+			)
 		);
 
 		if ( ! is_array( $items ) || empty( $items['items'] ) ) {
@@ -571,10 +580,20 @@ class Wpzoom_Instagram_Widget_Display {
 						}
 					}
 					
-					$items  = $this->api->get_items( 
-						array( 
-							'image-limit'          => $amount, 
-							'image-resolution'     => $image_size, 
+					// Over-fetch to compensate for hidden/moderated posts (PRO only)
+					$feed_id_for_api = isset( $args['feed-id'] ) ? intval( $args['feed-id'] ) : -1;
+					$api_limit = $amount;
+					if ( $this->is_pro && $feed_id_for_api > 0 && ! $preview ) {
+						$hidden_posts_meta = get_post_meta( $feed_id_for_api, '_wpz-insta_hidden-posts', true );
+						if ( is_array( $hidden_posts_meta ) && ! empty( $hidden_posts_meta ) ) {
+							$api_limit = $amount + count( $hidden_posts_meta );
+						}
+					}
+
+					$items  = $this->api->get_items(
+						array(
+							'image-limit'          => $api_limit,
+							'image-resolution'     => $image_size,
 							'image-width'          => $image_width,
 							'include-pagination'   => true,
 							'allowed-post-types'   => $allowed_post_types,
@@ -582,9 +601,9 @@ class Wpzoom_Instagram_Widget_Display {
 							'bypass-transient'     => $preview,
 							'skip-likes-comments'  => $is_load_more_request, // Skip likes/comments for load-more to improve performance
 							'access-token'         => $user_account_token,   // Pass token directly to avoid state collision
-							'feed-id'             => isset( $args['feed-id'] ) ? $args['feed-id'] : -1,
+							'feed-id'             => $feed_id_for_api,
 							'business-page-id'    => $user_business_page_id, // Pass business page ID directly
-						) 
+						)
 					);
 					$errors = $this->api->errors->get_error_messages();
 
