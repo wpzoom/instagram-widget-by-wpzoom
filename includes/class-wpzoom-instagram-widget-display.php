@@ -391,6 +391,37 @@ class Wpzoom_Instagram_Widget_Display {
 	}
 
 	/**
+	 * Check if we are in any Elementor editing context.
+	 *
+	 * @return bool
+	 */
+	public static function is_elementor_editor() {
+		if ( ! defined( 'ELEMENTOR_VERSION' ) ) {
+			return false;
+		}
+
+		// Elementor preview URL parameter (most reliable check)
+		if ( isset( $_GET['elementor-preview'] ) ) {
+			return true;
+		}
+
+		// AJAX widget rendering in editor
+		if ( wp_doing_ajax() && ( ! empty( $_REQUEST['editor_post_id'] ) || ( isset( $_REQUEST['action'] ) && 'elementor_ajax' === $_REQUEST['action'] ) ) ) {
+			return true;
+		}
+
+		// Editor or preview mode via Elementor API
+		if ( isset( \Elementor\Plugin::$instance->editor ) && \Elementor\Plugin::$instance->editor->is_edit_mode() ) {
+			return true;
+		}
+		if ( isset( \Elementor\Plugin::$instance->preview ) && \Elementor\Plugin::$instance->preview->is_preview_mode() ) {
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
 	 * Returns the markup for a feed configured with the given arguments.
 	 *
 	 * @param  array  $args The arguments to define how to return the feed content.
@@ -456,6 +487,11 @@ class Wpzoom_Instagram_Widget_Display {
 
 					$attrs = '';
 					$wrapper_classes = '';
+					$is_editor_preview = ( defined( 'REST_REQUEST' ) && true === REST_REQUEST && 'edit' === filter_input( INPUT_GET, 'context', FILTER_SANITIZE_SPECIAL_CHARS ) )
+						|| self::is_elementor_editor();
+					if ( $is_editor_preview ) {
+						$wrapper_classes .= ' is-editor-preview';
+					}
 					$layout_names = array( 0 => 'grid', 1 => 'fullwidth', 2 => 'masonry', 3 => 'carousel' );
 					$raw_layout = isset( $args['layout'] ) ? intval( $args['layout'] ) : 0;
 					$layout_int = $this->is_pro ? $raw_layout : ( $raw_layout > 1 ? 0 : $raw_layout );
@@ -820,7 +856,7 @@ class Wpzoom_Instagram_Widget_Display {
 
 		if ( ! empty( $items ) && is_array( $items ) ) {
 			$is_editor = ( defined( 'REST_REQUEST' ) && true === REST_REQUEST && 'edit' === filter_input( INPUT_GET, 'context', FILTER_SANITIZE_SPECIAL_CHARS ) )
-				|| ( defined( 'ELEMENTOR_VERSION' ) && isset( \Elementor\Plugin::$instance->editor ) && \Elementor\Plugin::$instance->editor->is_edit_mode() );
+				|| self::is_elementor_editor();
 			$count = 0;
 			$layout = isset( $args['layout'] ) ? intval( $args['layout'] ) : 0;
 			$amount = isset( $args['item-num'] ) ? intval( $args['item-num'] ) : 9;
@@ -1252,6 +1288,18 @@ class Wpzoom_Instagram_Widget_Display {
 					$output .= "margin:0 0 {$spacing_between}{$spacing_between_suffix}!important;";
 					$output .= "}";
 				}
+
+				// CSS columns fallback for masonry in editor previews (where JS masonry doesn't run)
+				$output .= ".zoom-instagram{$feed_id}.is-editor-preview .zoom-instagram-widget__items{";
+				$output .= "display:block!important;column-count:{$col_num}!important;";
+				if ( $spacing_between > -1 ) {
+					$output .= "column-gap:{$spacing_between}{$spacing_between_suffix}!important;";
+				}
+				$output .= "}";
+				$output .= ".zoom-instagram{$feed_id}.is-editor-preview .zoom-instagram-widget__item{";
+				$output .= "break-inside:avoid!important;width:100%!important;";
+				$output .= "}";
+				$output .= ".zoom-instagram{$feed_id}.is-editor-preview .masonry-items-sizer{display:none!important;}";
 			}
 
 			if ( $border_radius > -1 ) {
