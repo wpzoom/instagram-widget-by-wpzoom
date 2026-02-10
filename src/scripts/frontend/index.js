@@ -201,6 +201,8 @@
 								$allNestedSwipers.each(function() {
 									// Only initialize if not already initialized
 									if (!this.swiper) {
+										var $nestedSwiper = $(this);
+										var $imageWrapper = $nestedSwiper.closest('.image-wrapper');
 										new Swiper(this, {
 											lazy: {
 												threshold: 50
@@ -214,29 +216,40 @@
 											nested: true,
 											watchOverflow: true,
 											pagination: {
-												el: $(this).find('> .swiper-pagination').get(0),
+												el: $nestedSwiper.find('> .swiper-pagination').get(0),
 												type: 'bullets',
 												clickable: true,
 												hideOnClick: false
 											},
 											navigation: {
-												nextEl: $(this).find('> .swiper-button-next').get(0),
-												prevEl: $(this).find('> .swiper-button-prev').get(0)
+												nextEl: $nestedSwiper.find('> .swiper-button-next').get(0),
+												prevEl: $nestedSwiper.find('> .swiper-button-prev').get(0)
 											},
 											keyboard: {
 												enabled: true,
 												onlyInViewport: true
 											},
 											on: {
+												init: function() {
+													// Show product tags for initial slide (index 0)
+													if (typeof window.wpzInstaUpdateProductTagVisibility === 'function') {
+														window.wpzInstaUpdateProductTagVisibility($imageWrapper, 0);
+													}
+												},
 												activeIndexChange: function () {
 													// Get the active slide
 													const activeSlide = this.slides[this.activeIndex];
 													const $activeSlide = $(activeSlide);
-													
+
 													// Play the video in the active slide if it exists
 													const video = $activeSlide.find('video').get(0);
 													if (video) {
 														video.play();
+													}
+
+													// Update product tag visibility for album carousels
+													if (typeof window.wpzInstaUpdateProductTagVisibility === 'function') {
+														window.wpzInstaUpdateProductTagVisibility($imageWrapper, this.activeIndex);
 													}
 												},
 											},
@@ -672,6 +685,8 @@
 					} );
 
 					// Function to update product tag visibility based on album slide index
+					// Exposed globally so Load More nested swipers can reuse it.
+					window.wpzInstaUpdateProductTagVisibility = updateProductTagVisibility;
 					function updateProductTagVisibility( $imageWrapper, activeIndex ) {
 						var $tagsContainer = $imageWrapper.find( '.wpz-insta-lightbox-tags' );
 						if ( $tagsContainer.length === 0 ) return;
