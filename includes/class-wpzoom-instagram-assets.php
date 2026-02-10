@@ -66,7 +66,6 @@ if ( ! class_exists( 'WPZOOM_Instagram_Widget_Assets ' ) ) {
 			add_action( 'enqueue_block_assets', array( $this, 'widget_styles' ), 5 );
 			
 			add_action( 'enqueue_block_editor_assets', array( $this, 'register_block_assets' ) );
-			add_action( 'enqueue_block_editor_assets', array( $this, 'widget_styles' ) );
 
 			add_action( 'wp_enqueue_scripts', array( $this, 'widget_styles' ) );
 			add_action( 'wp_enqueue_scripts', array( $this, 'register_widget_scripts' ) );
@@ -179,12 +178,21 @@ if ( ! class_exists( 'WPZOOM_Instagram_Widget_Assets ' ) ) {
 
 			if( is_admin() || $load_css_js || $should_enqueue || $has_reusable_block || $is_active_widget || $has_shortcode || $has_widget_block || isset( $_GET['wpz-insta-widget-preview'] ) || $has_instagram_feed_elementor_widget ) {
 
-                wp_enqueue_style(
-                    'swiper-css',
-                    WPZOOM_INSTAGRAM_PLUGIN_URL . 'dist/styles/library/swiper.css',
-                    array(),
-                    '7.4.1'
-                );
+				$is_preview = isset( $_GET['wpz-insta-widget-preview'] );
+				if ( ! $is_preview ) {
+					wp_enqueue_style(
+						'swiper-css',
+						WPZOOM_INSTAGRAM_PLUGIN_URL . 'dist/styles/library/swiper.css',
+						array(),
+						'7.4.1'
+					);
+				} else {
+					// Preview: don't load Swiper CSS; remove from frontend style deps so it still enqueues.
+					$wp_styles = wp_styles();
+					if ( isset( $wp_styles->registered['wpz-insta_block-frontend-style'] ) && ! empty( $wp_styles->registered['wpz-insta_block-frontend-style']->deps ) ) {
+						$wp_styles->registered['wpz-insta_block-frontend-style']->deps = array_diff( $wp_styles->registered['wpz-insta_block-frontend-style']->deps, array( 'swiper-css' ) );
+					}
+				}
 
 				wp_enqueue_style(
 					'wpz-insta_block-frontend-style',
@@ -278,9 +286,21 @@ if ( ! class_exists( 'WPZOOM_Instagram_Widget_Assets ' ) ) {
 			}
 
 			if( is_admin() || $load_css_js || $should_enqueue || $has_reusable_block || $is_active_widget || $has_shortcode || $has_widget_block || isset( $_GET['wpz-insta-widget-preview'] ) || $has_instagram_feed_elementor_widget ) {
+				$is_preview = isset( $_GET['wpz-insta-widget-preview'] );
+				if ( $is_preview ) {
+					// Preview shows carousel/masonry as static; skip Swiper so we don't enqueue or init it.
+					$wp_scripts = wp_scripts();
+					foreach ( array( 'zoom-instagram-widget', 'wpz-insta_block-frontend-script' ) as $handle ) {
+						if ( isset( $wp_scripts->registered[ $handle ] ) && ! empty( $wp_scripts->registered[ $handle ]->deps ) ) {
+							$wp_scripts->registered[ $handle ]->deps = array_diff( $wp_scripts->registered[ $handle ]->deps, array( 'swiper-js' ) );
+						}
+					}
+				}
 				wp_enqueue_script( 'zoom-instagram-widget-lazy-load' );
 				wp_enqueue_script( 'magnific-popup' );
-				wp_enqueue_script( 'swiper-js' );
+				if ( ! $is_preview ) {
+					wp_enqueue_script( 'swiper-js' );
+				}
 				wp_enqueue_script( 'zoom-instagram-widget' );
 				wp_enqueue_script( 'wpz-insta_block-frontend-script' );
 

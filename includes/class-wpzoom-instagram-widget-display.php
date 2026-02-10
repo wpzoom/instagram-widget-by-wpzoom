@@ -54,14 +54,20 @@ class Wpzoom_Instagram_Widget_Display {
 		add_action( 'wp_ajax_wpzoom_instagram_load_more', array( $this, 'ajax_load_more_posts' ) );
 		add_action( 'wp_ajax_nopriv_wpzoom_instagram_load_more', array( $this, 'ajax_load_more_posts' ) );
 
+		// Add AJAX handler for preview load more (admin only - serves cached posts for product linking)
+		add_action( 'wp_ajax_wpzoom_instagram_preview_load_more', array( $this, 'ajax_preview_load_more_posts' ) );
+
 		// Add AJAX handlers for initial feed load (async loading)
 		add_action( 'wp_ajax_wpzoom_instagram_initial_load', array( $this, 'ajax_initial_load' ) );
 		add_action( 'wp_ajax_nopriv_wpzoom_instagram_initial_load', array( $this, 'ajax_initial_load' ) );
 	}
 
 	/**
-	 * AJAX handler for load more posts functionality
-	 * This replaces the slow form POST method with fast AJAX
+	 * AJAX handler for load more posts functionality.
+	 * Supports two modes:
+	 * 1. Cache-based: When 'offset' is provided, serves posts from transient cache first.
+	 *    This ensures posts the user has linked products to in the preview are shown.
+	 * 2. API-based: Falls back to Instagram API pagination when cache is exhausted.
 	 */
 	public function ajax_load_more_posts() {
 		// Prevent caching of AJAX responses by optimization plugins
@@ -77,23 +83,12 @@ class Wpzoom_Instagram_Widget_Display {
 		}
 
 		// Sanitize input data
-		$feed_id = intval( $_POST['feed_id'] );
-		$item_amount = intval( $_POST['item_amount'] );
-		$image_size = sanitize_text_field( $_POST['image_size'] );
+		$feed_id            = intval( $_POST['feed_id'] );
+		$item_amount        = intval( $_POST['item_amount'] );
+		$image_size         = sanitize_text_field( $_POST['image_size'] );
 		$allowed_post_types = sanitize_text_field( $_POST['allowed_post_types'] );
-		$next_url = sanitize_text_field( $_POST['next'] );
-
-		// Extract pagination cursor from URL
-		$pagination_cursor = '';
-		if ( ! empty( $next_url ) ) {
-			$parsed_url = parse_url( $next_url );
-			if ( isset( $parsed_url['query'] ) ) {
-				parse_str( $parsed_url['query'], $params );
-				if ( isset( $params['after'] ) ) {
-					$pagination_cursor = $params['after'];
-				}
-			}
-		}
+		$next_url           = sanitize_text_field( $_POST['next'] );
+		$cache_offset       = isset( $_POST['cache_offset'] ) ? intval( $_POST['cache_offset'] ) : -1;
 
 		// Get feed settings
 		$feed_post = get_post( $feed_id );
@@ -102,8 +97,8 @@ class Wpzoom_Instagram_Widget_Display {
 		}
 
 		// Get user account details for this feed
-		$user_id = WPZOOM_Instagram_Widget_Settings::get_feed_setting_value( $feed_id, 'user-id' );
-		$user_account_token = get_post_meta( $user_id, '_wpz-insta_token', true );
+		$user_id               = WPZOOM_Instagram_Widget_Settings::get_feed_setting_value( $feed_id, 'user-id' );
+		$user_account_token    = get_post_meta( $user_id, '_wpz-insta_token', true );
 		$user_business_page_id = get_post_meta( $user_id, '_wpz-insta_page_id', true );
 
 		if ( empty( $user_account_token ) ) {
@@ -120,9 +115,111 @@ class Wpzoom_Instagram_Widget_Display {
 		}
 
 		// Get feed layout settings
-		$image_width = (int) WPZOOM_Instagram_Widget_Settings::get_feed_setting_value( $feed_id, 'image-width' );
+		$image_width      = (int) WPZOOM_Instagram_Widget_Settings::get_feed_setting_value( $feed_id, 'image-width' );
+		$image_resolution = ! empty( $image_size ) ? $image_size : 'standard_resolution';
 
-		// Fetch items using optimized API call
+		// --- Cache-based loading: try to serve from cached posts first ---
+		if ( $cache_offset >= 0 ) {
+			// Use a high image-limit to get ALL cached items so we can accurately check has_more.
+			// IMPORTANT: skip-likes-comments must be false to match the transient key from the initial fetch
+			// (the initial fetch uses skip-likes-comments=false, which adds '_lc' to the transient key).
+			$all_items = $this->api->get_items(
+				array(
+					'image-limit'         => 100, // Get all cached items
+					'image-resolution'    => $image_resolution,
+					'image-width'         => $image_width,
+					'include-pagination'  => true,
+					'allowed-post-types'  => $allowed_post_types,
+					'bypass-transient'    => false, // Read from cache only
+					'skip-likes-comments' => false, // Must match initial fetch transient key (_lc suffix)
+					'access-token'        => $user_account_token,
+					'feed-id'             => $feed_id,
+					'business-page-id'    => $user_business_page_id,
+				)
+			);
+
+			if ( is_array( $all_items ) && ! empty( $all_items['items'] ) ) {
+				$cached_slice = array_slice( $all_items['items'], $cache_offset, $item_amount );
+
+				if ( ! empty( $cached_slice ) ) {
+					$new_offset   = $cache_offset + count( $cached_slice );
+					$total_cached = count( $all_items['items'] );
+					// Cache has more items, or API has more pages
+					$api_has_more   = ! empty( $all_items['paging'] ) && property_exists( $all_items['paging'], 'next' ) && ! empty( $all_items['paging']->next );
+					$cache_has_more = $new_offset < $total_cached;
+					$has_more       = $cache_has_more || $api_has_more;
+
+					// Ensure images use valid URLs: local thumbnails may not exist for cached items
+					foreach ( $cached_slice as &$ci ) {
+						if ( ! empty( $ci['image-url'] ) && ! empty( $ci['original-image-url'] ) ) {
+							$local_path = self::convert_url_to_path( $ci['image-url'] );
+							if ( ! file_exists( $local_path ) ) {
+								$ci['image-url'] = $ci['original-image-url'];
+							}
+						} elseif ( empty( $ci['image-url'] ) && ! empty( $ci['original-image-url'] ) ) {
+							$ci['image-url'] = $ci['original-image-url'];
+						}
+					}
+					unset( $ci );
+
+					// Prepare args for HTML generation (includes product linking data)
+					$args = array(
+						'layout'                 => WPZOOM_Instagram_Widget_Settings::get_feed_setting_value( $feed_id, 'layout' ),
+						'item-num'               => $item_amount,
+						'col-num'                => WPZOOM_Instagram_Widget_Settings::get_feed_setting_value( $feed_id, 'col-num' ),
+						'show-overlay'           => WPZOOM_Instagram_Widget_Settings::get_feed_setting_value( $feed_id, 'show-overlay' ),
+						'hover-link'             => WPZOOM_Instagram_Widget_Settings::get_feed_setting_value( $feed_id, 'hover-link' ),
+						'show-media-type-icons'  => WPZOOM_Instagram_Widget_Settings::get_feed_setting_value( $feed_id, 'show-media-type-icons' ),
+						'hover-media-type-icons' => WPZOOM_Instagram_Widget_Settings::get_feed_setting_value( $feed_id, 'hover-media-type-icons' ),
+						'hover-date'             => WPZOOM_Instagram_Widget_Settings::get_feed_setting_value( $feed_id, 'hover-date' ),
+						'allowed-post-types'     => $allowed_post_types,
+						'image-size'             => $image_size,
+						'show-likes'             => false,
+						'show-comments'          => false,
+						'feed-id'                => $feed_id,
+					);
+
+					$html = self::items_html( $cached_slice, $args );
+
+					// Generate lightbox content for cached items (pass $args so feed-id is available for product tags)
+					$lightbox_html = '';
+					$lightbox_enabled = WPZOOM_Instagram_Widget_Settings::get_feed_setting_value( $feed_id, 'lightbox' );
+					if ( false === $lightbox_enabled || boolval( $lightbox_enabled ) ) {
+						$lightbox_html = self::lightbox_items_html( $cached_slice, $user_id, $args );
+					}
+
+					wp_send_json_success( array(
+						'html'         => $html,
+						'lightbox_html' => $lightbox_html,
+						'has_more'     => $has_more,
+						'next_url'     => $next_url, // Keep the API next URL for when cache is exhausted
+						'from_cache'   => true,
+						'cache_offset' => $new_offset,
+					) );
+				}
+			}
+			// If cache didn't have items at this offset, fall through to API-based loading
+		}
+
+		// --- API-based loading: fetch from Instagram API ---
+		// Extract pagination cursor from the next URL
+		$pagination_cursor = '';
+		if ( ! empty( $next_url ) ) {
+			$parsed_url = parse_url( $next_url );
+			if ( isset( $parsed_url['query'] ) ) {
+				parse_str( $parsed_url['query'], $params );
+				if ( isset( $params['after'] ) ) {
+					$pagination_cursor = $params['after'];
+				}
+			}
+		}
+
+		// Guard: If cache was attempted but exhausted AND there's no API pagination cursor,
+		// don't fetch from the beginning (which would return duplicates of already-displayed posts).
+		if ( $cache_offset >= 0 && empty( $pagination_cursor ) ) {
+			wp_send_json_error( 'No more posts to load' );
+		}
+
 		$items = $this->api->get_items( 
 			array( 
 				'image-limit'          => $item_amount, 
@@ -131,8 +228,11 @@ class Wpzoom_Instagram_Widget_Display {
 				'include-pagination'   => true,
 				'allowed-post-types'   => $allowed_post_types,
 				'pagination-cursor'    => $pagination_cursor,
-				'bypass-transient'     => true, // Always get fresh data for load more
-				'skip-likes-comments'  => true  // Skip likes/comments for speed
+				'bypass-transient'     => true,
+				'skip-likes-comments'  => true,
+				'access-token'         => $user_account_token,
+				'feed-id'              => $feed_id,
+				'business-page-id'     => $user_business_page_id,
 			) 
 		);
 
@@ -142,39 +242,179 @@ class Wpzoom_Instagram_Widget_Display {
 
 		// Prepare args for HTML generation
 		$args = array(
-			'layout'               => WPZOOM_Instagram_Widget_Settings::get_feed_setting_value( $feed_id, 'layout' ),
-			'item-num'             => $item_amount,
-			'col-num'              => WPZOOM_Instagram_Widget_Settings::get_feed_setting_value( $feed_id, 'col-num' ),
-			'show-overlay'         => WPZOOM_Instagram_Widget_Settings::get_feed_setting_value( $feed_id, 'show-overlay' ),
-			'hover-link'           => WPZOOM_Instagram_Widget_Settings::get_feed_setting_value( $feed_id, 'hover-link' ),
-			'show-media-type-icons' => WPZOOM_Instagram_Widget_Settings::get_feed_setting_value( $feed_id, 'show-media-type-icons' ),
+			'layout'                 => WPZOOM_Instagram_Widget_Settings::get_feed_setting_value( $feed_id, 'layout' ),
+			'item-num'               => $item_amount,
+			'col-num'                => WPZOOM_Instagram_Widget_Settings::get_feed_setting_value( $feed_id, 'col-num' ),
+			'show-overlay'           => WPZOOM_Instagram_Widget_Settings::get_feed_setting_value( $feed_id, 'show-overlay' ),
+			'hover-link'             => WPZOOM_Instagram_Widget_Settings::get_feed_setting_value( $feed_id, 'hover-link' ),
+			'show-media-type-icons'  => WPZOOM_Instagram_Widget_Settings::get_feed_setting_value( $feed_id, 'show-media-type-icons' ),
 			'hover-media-type-icons' => WPZOOM_Instagram_Widget_Settings::get_feed_setting_value( $feed_id, 'hover-media-type-icons' ),
-			'hover-date'           => WPZOOM_Instagram_Widget_Settings::get_feed_setting_value( $feed_id, 'hover-date' ),
-			'allowed-post-types'   => $allowed_post_types,
-			'image-size'           => $image_size,
-			'show-likes'           => false, // Skip for performance
-			'show-comments'        => false, // Skip for performance
+			'hover-date'             => WPZOOM_Instagram_Widget_Settings::get_feed_setting_value( $feed_id, 'hover-date' ),
+			'allowed-post-types'     => $allowed_post_types,
+			'image-size'             => $image_size,
+			'show-likes'             => false,
+			'show-comments'          => false,
+			'feed-id'                => $feed_id,
 		);
 
 		// Generate HTML for new items
 		$html = self::items_html( $items['items'], $args );
 
-		// Generate lightbox content for new items if lightbox is enabled
+		// Generate lightbox content for new items if lightbox is enabled (pass $args so feed-id is available for product tags)
 		$lightbox_html = '';
 		$lightbox_enabled = isset( $args['lightbox'] ) ? boolval( $args['lightbox'] ) : true;
 		if ( $lightbox_enabled ) {
-			$lightbox_html = self::lightbox_items_html( $items['items'], $user_id );
+			$lightbox_html = self::lightbox_items_html( $items['items'], $user_id, $args );
 		}
 
 		// Prepare response data
 		$response = array(
-			'html' => $html,
+			'html'         => $html,
 			'lightbox_html' => $lightbox_html,
-			'has_more' => ! empty( $items['paging'] ) && property_exists( $items['paging'], 'next' ) && ! empty( $items['paging']->next ),
-			'next_url' => ! empty( $items['paging'] ) && property_exists( $items['paging'], 'next' ) ? $items['paging']->next : '',
+			'has_more'     => ! empty( $items['paging'] ) && property_exists( $items['paging'], 'next' ) && ! empty( $items['paging']->next ),
+			'next_url'     => ! empty( $items['paging'] ) && property_exists( $items['paging'], 'next' ) ? $items['paging']->next : '',
+			'from_cache'   => false,
+			'cache_offset' => -1, // Cache exhausted, use API pagination from now on
 		);
 
 		wp_send_json_success( $response );
+	}
+
+	/**
+	 * AJAX handler for loading more cached posts in the backend preview.
+	 * This serves posts from the transient cache so users can see and link products
+	 * to posts beyond the initial display count, without hitting the Instagram API.
+	 *
+	 * @since 2.3.0
+	 * @return void
+	 */
+	public function ajax_preview_load_more_posts() {
+		// Only admins can use preview load more
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( 'Unauthorized' );
+		}
+
+		// Verify nonce
+		if ( ! wp_verify_nonce( $_POST['_wpnonce'], 'wpzinsta-preview-load-more' ) ) {
+			wp_send_json_error( 'Invalid nonce' );
+		}
+
+		$feed_id    = intval( $_POST['feed_id'] );
+		$offset     = intval( $_POST['offset'] );
+		$amount     = intval( $_POST['amount'] );
+		$image_size = sanitize_text_field( $_POST['image_size'] );
+
+		if ( $amount < 1 ) {
+			$amount = 9;
+		}
+
+		// Validate feed
+		$feed_post = get_post( $feed_id );
+		if ( ! $feed_post || 'wpz-insta_feed' !== $feed_post->post_type ) {
+			wp_send_json_error( 'Invalid feed ID' );
+		}
+
+		// Get user account details for this feed.
+		// First try reading from saved post meta; if not valid (e.g. unsaved/new feed
+		// where the default is -1), fall back to the user_id passed from the preview form.
+		$user_id = intval( WPZOOM_Instagram_Widget_Settings::get_feed_setting_value( $feed_id, 'user-id' ) );
+
+		if ( $user_id < 1 && ! empty( $_POST['user_id'] ) ) {
+			$user_id = intval( $_POST['user_id'] );
+		}
+
+		$user_account_token    = get_post_meta( $user_id, '_wpz-insta_token', true );
+		$user_business_page_id = get_post_meta( $user_id, '_wpz-insta_page_id', true );
+
+		if ( empty( $user_account_token ) ) {
+			wp_send_json_error( 'No valid access token found' );
+		}
+
+		// Build the transient key to read cached data
+		$this->api = Wpzoom_Instagram_Widget_API::getInstance();
+		$this->api->set_access_token( $user_account_token );
+		$this->api->set_feed_id( $feed_id );
+		if ( ! empty( $user_business_page_id ) ) {
+			$this->api->set_business_page_id( $user_business_page_id );
+		}
+
+		$allowed_post_types = WPZOOM_Instagram_Widget_Settings::get_feed_setting_value( $feed_id, 'allowed-post-types' ) ?: 'IMAGE,VIDEO,CAROUSEL_ALBUM';
+		$image_width        = (int) WPZOOM_Instagram_Widget_Settings::get_feed_setting_value( $feed_id, 'image-width' );
+		$image_resolution   = ! empty( $image_size ) ? $image_size : 'standard_resolution';
+
+		// Fetch all cached items.
+		// IMPORTANT: skip-likes-comments must be false to match the transient key from the initial fetch
+		// (the initial fetch uses skip-likes-comments=false, which adds '_lc' to the transient key).
+		$all_items = $this->api->get_items(
+			array(
+				'image-limit'         => 100, // Get all cached items
+				'image-resolution'    => $image_resolution,
+				'image-width'         => $image_width,
+				'include-pagination'  => true,
+				'allowed-post-types'  => $allowed_post_types,
+				'bypass-transient'    => false, // Read from cache only
+				'skip-likes-comments' => false, // Must match initial fetch transient key (_lc suffix)
+				'access-token'        => $user_account_token,
+				'feed-id'             => $feed_id,
+				'business-page-id'    => $user_business_page_id,
+			)
+		);
+
+		if ( ! is_array( $all_items ) || empty( $all_items['items'] ) ) {
+			wp_send_json_error( 'No cached posts available' );
+		}
+
+		// Slice to get only the items beyond the offset
+		$cached_items = array_slice( $all_items['items'], $offset, $amount );
+
+		if ( empty( $cached_items ) ) {
+			wp_send_json_error( 'No more cached posts' );
+		}
+
+		// Check if there are more items in cache beyond what we're returning
+		$total_cached = count( $all_items['items'] );
+		$has_more     = ( $offset + $amount ) < $total_cached;
+
+		// Ensure images use valid URLs: local thumbnails may not exist for cached items
+		// that haven't been displayed before. Fall back to the Instagram CDN URL.
+		foreach ( $cached_items as &$ci ) {
+			if ( ! empty( $ci['image-url'] ) && ! empty( $ci['original-image-url'] ) ) {
+				$local_path = self::convert_url_to_path( $ci['image-url'] );
+				if ( ! file_exists( $local_path ) ) {
+					$ci['image-url'] = $ci['original-image-url'];
+				}
+			} elseif ( empty( $ci['image-url'] ) && ! empty( $ci['original-image-url'] ) ) {
+				$ci['image-url'] = $ci['original-image-url'];
+			}
+		}
+		unset( $ci );
+
+		// Prepare args for preview-mode HTML generation (includes "Link to a product" buttons)
+		$args = array(
+			'layout'                 => WPZOOM_Instagram_Widget_Settings::get_feed_setting_value( $feed_id, 'layout' ),
+			'item-num'               => $amount,
+			'col-num'                => WPZOOM_Instagram_Widget_Settings::get_feed_setting_value( $feed_id, 'col-num' ),
+			'show-overlay'           => WPZOOM_Instagram_Widget_Settings::get_feed_setting_value( $feed_id, 'show-overlay' ),
+			'hover-link'             => WPZOOM_Instagram_Widget_Settings::get_feed_setting_value( $feed_id, 'hover-link' ),
+			'show-media-type-icons'  => WPZOOM_Instagram_Widget_Settings::get_feed_setting_value( $feed_id, 'show-media-type-icons' ),
+			'hover-media-type-icons' => WPZOOM_Instagram_Widget_Settings::get_feed_setting_value( $feed_id, 'hover-media-type-icons' ),
+			'hover-date'             => WPZOOM_Instagram_Widget_Settings::get_feed_setting_value( $feed_id, 'hover-date' ),
+			'allowed-post-types'     => $allowed_post_types,
+			'image-size'             => $image_size,
+			'show-likes'             => false,
+			'show-comments'          => false,
+			'feed-id'                => $feed_id,
+			'preview'                => true,  // Preview mode: includes "Link to a product" buttons
+		);
+
+		// Generate preview-mode HTML for cached items
+		$html = self::items_html( $cached_items, $args );
+
+		wp_send_json_success( array(
+			'html'     => $html,
+			'has_more' => $has_more,
+			'offset'   => $offset + count( $cached_items ),
+		) );
 	}
 
 	/**
@@ -391,6 +631,37 @@ class Wpzoom_Instagram_Widget_Display {
 	}
 
 	/**
+	 * Check if we are in any Elementor editing context.
+	 *
+	 * @return bool
+	 */
+	public static function is_elementor_editor() {
+		if ( ! defined( 'ELEMENTOR_VERSION' ) ) {
+			return false;
+		}
+
+		// Elementor preview URL parameter (most reliable check)
+		if ( isset( $_GET['elementor-preview'] ) ) {
+			return true;
+		}
+
+		// AJAX widget rendering in editor
+		if ( wp_doing_ajax() && ( ! empty( $_REQUEST['editor_post_id'] ) || ( isset( $_REQUEST['action'] ) && 'elementor_ajax' === $_REQUEST['action'] ) ) ) {
+			return true;
+		}
+
+		// Editor or preview mode via Elementor API
+		if ( isset( \Elementor\Plugin::$instance->editor ) && \Elementor\Plugin::$instance->editor->is_edit_mode() ) {
+			return true;
+		}
+		if ( isset( \Elementor\Plugin::$instance->preview ) && \Elementor\Plugin::$instance->preview->is_preview_mode() ) {
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
 	 * Returns the markup for a feed configured with the given arguments.
 	 *
 	 * @param  array  $args The arguments to define how to return the feed content.
@@ -409,7 +680,7 @@ class Wpzoom_Instagram_Widget_Display {
 		$is_admin_preview = is_admin() || ( isset( $_GET['wpz-insta-widget-preview'] ) );
 
 		// If AJAX loading enabled and not an AJAX request and not a preview and not in editor, render placeholder
-		if ( $ajax_initial_load && ! wp_doing_ajax() && ! $preview && ! $this->is_crawler() && ! $is_block_editor && ! $is_admin_preview ) {
+		if ( $ajax_initial_load && ! wp_doing_ajax() && ! $preview && ! $this->is_crawler() && ! $is_block_editor && ! $is_admin_preview && ! self::is_elementor_editor() ) {
 			return $this->render_skeleton_placeholder( $args );
 		}
 
@@ -436,7 +707,21 @@ class Wpzoom_Instagram_Widget_Display {
 				$show_user_image = isset( $args['show-account-image'] ) && boolval( $args['show-account-image'] );
 				$user_image = get_the_post_thumbnail_url( $user, 'thumbnail' ) ?: WPZOOM_INSTAGRAM_PLUGIN_URL . 'dist/images/backend/icon-insta.png';
 				$user_account_token = get_post_meta( $user_id, '_wpz-insta_token', true ) ?: '-1';
-				$user_business_page_id = get_post_meta( $user_id, '_wpz-insta_page_id', true ) ?: null;	
+				$user_business_page_id = get_post_meta( $user_id, '_wpz-insta_page_id', true ) ?: null;
+
+				// In preview, use placeholder text for empty values so header elements can be shown/hidden via design options.
+				if ( $preview ) {
+					if ( '' === trim( (string) $user_display_name ) ) {
+						$user_display_name = __( 'Account Name', 'instagram-widget-by-wpzoom' );
+					}
+					if ( '' === trim( (string) $user_name ) ) {
+						$user_name_display = __( '@username', 'instagram-widget-by-wpzoom' );
+						$user_link         = 'https://www.instagram.com/';
+					}
+					if ( '' === trim( (string) $user_bio ) ) {
+						$user_bio = __( 'Preview bio text.', 'instagram-widget-by-wpzoom' );
+					}
+				}
 
 				if ( '-1' !== $user_account_token ) {
 					/**
@@ -456,6 +741,11 @@ class Wpzoom_Instagram_Widget_Display {
 
 					$attrs = '';
 					$wrapper_classes = '';
+					$is_editor_preview = ( defined( 'REST_REQUEST' ) && true === REST_REQUEST && 'edit' === filter_input( INPUT_GET, 'context', FILTER_SANITIZE_SPECIAL_CHARS ) )
+						|| self::is_elementor_editor();
+					if ( $is_editor_preview ) {
+						$wrapper_classes .= ' is-editor-preview';
+					}
 					$layout_names = array( 0 => 'grid', 1 => 'fullwidth', 2 => 'masonry', 3 => 'carousel' );
 					$raw_layout = isset( $args['layout'] ) ? intval( $args['layout'] ) : 0;
 					$layout_int = $this->is_pro ? $raw_layout : ( $raw_layout > 1 ? 0 : $raw_layout );
@@ -512,8 +802,42 @@ class Wpzoom_Instagram_Widget_Display {
 					// Instead of setting API instance state (which causes collisions), 
 					// we'll pass parameters directly to get_items() call
 
+					$wrapper_style = '';
 					if ( isset( $args['feed-id'] ) ) {
 						$wrapper_classes .= sprintf( ' feed-%d', intval( $args['feed-id'] ) );
+						if ( class_exists( 'WooCommerce' ) && apply_filters( 'wpz-insta_is-pro', false ) ) {
+							$feed_id = intval( $args['feed-id'] );
+							$buy_now_bg    = get_post_meta( $feed_id, '_wpz-insta_buy-now-bg', true ) ?: get_post_meta( $feed_id, '_wpz-insta_add-to-cart-bg', true ) ?: '#2271b1';
+							$buy_now_color = get_post_meta( $feed_id, '_wpz-insta_buy-now-color', true ) ?: get_post_meta( $feed_id, '_wpz-insta_add-to-cart-color', true ) ?: '#ffffff';
+							$buy_now_hover = get_post_meta( $feed_id, '_wpz-insta_buy-now-hover-bg', true ) ?: get_post_meta( $feed_id, '_wpz-insta_add-to-cart-hover-bg', true ) ?: '#135e96';
+							$buy_now_radius_raw   = get_post_meta( $feed_id, '_wpz-insta_buy-now-border-radius', true );
+							if ( '' === (string) $buy_now_radius_raw ) {
+								$buy_now_radius_raw = get_post_meta( $feed_id, '_wpz-insta_add-to-cart-border-radius', true );
+							}
+							$buy_now_radius_suffix = get_post_meta( $feed_id, '_wpz-insta_buy-now-border-radius-suffix', true );
+							if ( '' === (string) $buy_now_radius_suffix ) {
+								$buy_now_radius_suffix = get_post_meta( $feed_id, '_wpz-insta_add-to-cart-border-radius-suffix', true );
+							}
+							if ( '' !== (string) $buy_now_radius_suffix && is_numeric( $buy_now_radius_suffix ) ) {
+								$buy_now_radius_num = is_numeric( $buy_now_radius_raw ) ? (float) $buy_now_radius_raw : 3;
+								$buy_now_radius     = $buy_now_radius_num . $this->get_suffix( (int) $buy_now_radius_suffix );
+							} else {
+								$buy_now_radius = $buy_now_radius_raw ?: '3px';
+							}
+							$icon_size  = get_post_meta( $feed_id, '_wpz-insta_product-icon-size', true ) ?: '36px';
+							$icon_bg    = get_post_meta( $feed_id, '_wpz-insta_product-icon-bg', true ) ?: '#333333';
+							$icon_color = get_post_meta( $feed_id, '_wpz-insta_product-icon-color', true ) ?: '#ffffff';
+							$wrapper_style = sprintf(
+								'--wpz-insta-buy-now-bg:%s;--wpz-insta-buy-now-color:%s;--wpz-insta-buy-now-hover-bg:%s;--wpz-insta-buy-now-radius:%s;--wpz-insta-icon-size:%s;--wpz-insta-icon-bg:%s;--wpz-insta-icon-color:%s;',
+								esc_attr( $buy_now_bg ),
+								esc_attr( $buy_now_color ),
+								esc_attr( $buy_now_hover ),
+								esc_attr( $buy_now_radius ),
+								esc_attr( $icon_size ),
+								esc_attr( $icon_bg ),
+								esc_attr( $icon_color )
+							);
+						}
 					}
 
 					if ( isset( $args['extra-attrs'] ) && is_array( $args['extra-attrs'] ) && isset( $args['extra-attrs']['align'] ) ) {
@@ -521,7 +845,9 @@ class Wpzoom_Instagram_Widget_Display {
 						$wrapper_classes .= sprintf( ' align%s', in_array( $align, array( 'left', 'right', 'wide', 'full' ) ) ? $align : 'center' );
 					}
 
-					$wrapper_classes .= sprintf( ' layout-%s', $layout );
+					// In preview use grid so frontend does not init Swiper/masonry.
+					$layout_class = ( $preview && ( 'carousel' === $layout || 'masonry' === $layout ) ) ? 'grid' : $layout;
+					$wrapper_classes .= sprintf( ' layout-%s', $layout_class );
 					$wrapper_classes .= $featured_layout_class;
 					$wrapper_classes .= ' columns-' . $col_num;
 
@@ -573,7 +899,7 @@ class Wpzoom_Instagram_Widget_Display {
 							'include-pagination'   => true,
 							'allowed-post-types'   => $allowed_post_types,
 							'pagination-cursor'    => $pagination_cursor,
-							'bypass-transient'     => $preview,
+							'bypass-transient'     => $preview && ! empty( $_GET['wpz-insta-preview-refresh'] ),
 							'skip-likes-comments'  => $is_load_more_request, // Skip likes/comments for load-more to improve performance
 							'access-token'         => $user_account_token,   // Pass token directly to avoid state collision
 							'feed-id'             => isset( $args['feed-id'] ) ? $args['feed-id'] : -1,
@@ -582,12 +908,13 @@ class Wpzoom_Instagram_Widget_Display {
 					);
 					$errors = $this->api->errors->get_error_messages();
 
-					$output .= '<div class="zoom-instagram' . $wrapper_classes . '">';
+					$output .= '<div class="zoom-instagram' . $wrapper_classes . '"' . ( $wrapper_style ? ' style="' . $wrapper_style . '"' : '' ) . '>';
 
 					if ( ! is_array( $items ) ) {
 						return $this->get_errors( $errors );
 					} else {
-						if ( $show_user_image || $show_user_nname || $show_user_name || $show_user_bio ) {
+						// In preview always output header so design options (show/hide name, username, badge, etc.) can be toggled.
+						if ( $preview || $show_user_image || $show_user_nname || $show_user_name || $show_user_bio ) {
 							$output .= '<header class="zoom-instagram-widget__header">';
 
 							// Get all account stats in a single API call (reduces 3 API calls to 1)
@@ -603,7 +930,7 @@ class Wpzoom_Instagram_Widget_Display {
 							$following_count = $account_stats['follows_count'];
 							$media_count = $account_stats['media_count'];
 
-							if ( $show_user_image && ! empty( $user_image ) ) {
+							if ( ( $preview || $show_user_image ) && ! empty( $user_image ) ) {
 								// Stories feature is only available in Pro version and when enabled in feed settings
 								$stories = array();
 								$has_stories = false;
@@ -665,45 +992,46 @@ class Wpzoom_Instagram_Widget_Display {
 								$output .= '</div>';
 							}
 
-							if ( $show_user_nname || $show_user_name || $show_user_bio ) {
+							if ( $preview || $show_user_nname || $show_user_name || $show_user_bio ) {
 								$output .= '<div class="zoom-instagram-widget__header-column-right">';
 
-								if ( $show_user_nname ) {
+								if ( $preview || $show_user_nname ) {
                                     $output .= '<h5 class="zoom-instagram-widget__header-name">' . esc_html( $user_display_name ) . '</h5>';
 								}
 
-								if ( $show_user_name ) {
+								if ( $preview || $show_user_name ) {
 									$the_badge = '';
-									if( $show_user_badge ) {
+									// In preview always output badge HTML so JS can show/hide it; on frontend only if option is on.
+									if ( $preview || $show_user_badge ) {
                                         $the_badge = '<span class="wpz-insta-badge"><svg width=\'24\' height=\'24\' viewBox=\'0 0 24 24\' xmlns=\'http://www.w3.org/2000/svg\' xmlns:xlink=\'http://www.w3.org/1999/xlink\'><rect width=\'24\' height=\'24\' stroke=\'none\' fill=\'#000000\' opacity=\'0\'/><g transform="matrix(0.42 0 0 0.42 12 12)" ><g style="" ><g transform="matrix(1 0 0 1 0 0)" ><polygon style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: #0095f6; fill-rule: nonzero; opacity: 1;" points="5.62,-21 9.05,-15.69 15.37,-15.38 15.69,-9.06 21,-5.63 18.12,0 21,5.62 15.69,9.05 15.38,15.37 9.06,15.69 5.63,21 0,18.12 -5.62,21 -9.05,15.69 -15.37,15.38 -15.69,9.06 -21,5.63 -18.12,0 -21,-5.62 -15.69,-9.05 -15.38,-15.37 -9.06,-15.69 -5.63,-21 0,-18.12 " /></g><g transform="matrix(1 0 0 1 -0.01 0.51)" ><polygon style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: rgb(255,255,255); fill-rule: nonzero; opacity: 1;" points="-2.6,6.74 -9.09,0.25 -6.97,-1.87 -2.56,2.53 7,-6.74 9.09,-4.59 " /></g></g></g></svg></span>';									}
                                     $output .= '<p class="zoom-instagram-widget__header-user"><a href="' . esc_url( $user_link ) . '" target="_blank" rel="nofollow">' . esc_html( $user_name_display ) . '</a>' . $the_badge . '</p>';
 								}
 
 
-                                if ( $show_user_stats ) {
+                                if ( $preview || $show_user_stats ) {
 
-    								// Add all three counts in a stats wrapper
-    								if ($followers_count > 0 || $following_count > 0 || $media_count > 0) {
+    								// Add all three counts in a stats wrapper (in preview show even when 0 so design option can be toggled)
+    								if ( $preview || $followers_count > 0 || $following_count > 0 || $media_count > 0 ) {
     									$output .= '<div class="wpz-insta-stats">';
 
-    									if ($media_count > 0) {
+    									if ( $preview || $media_count > 0 ) {
     										$output .= '<div class="wpz-insta-posts">';
-    										$output .= '<strong>' . self::format_number($media_count) . '</strong> ';
-    										$output .= esc_html__('posts', 'instagram-widget-by-wpzoom');
+    										$output .= '<strong>' . self::format_number( $media_count ) . '</strong> ';
+    										$output .= esc_html__( 'posts', 'instagram-widget-by-wpzoom' );
     										$output .= '</div>';
     									}
 
-    									if ($followers_count > 0) {
+    									if ( $preview || $followers_count > 0 ) {
     										$output .= '<div class="wpz-insta-followers">';
-    										$output .= '<strong>' . self::format_number($followers_count) . '</strong> ';
-    										$output .= esc_html__('followers', 'instagram-widget-by-wpzoom');
+    										$output .= '<strong>' . self::format_number( $followers_count ) . '</strong> ';
+    										$output .= esc_html__( 'followers', 'instagram-widget-by-wpzoom' );
     										$output .= '</div>';
     									}
 
-    									if ($following_count > 0) {
+    									if ( $preview || $following_count > 0 ) {
     										$output .= '<div class="wpz-insta-following">';
-    										$output .= '<strong>' . self::format_number($following_count) . '</strong> ';
-    										$output .= esc_html__('following', 'instagram-widget-by-wpzoom');
+    										$output .= '<strong>' . self::format_number( $following_count ) . '</strong> ';
+    										$output .= esc_html__( 'following', 'instagram-widget-by-wpzoom' );
     										$output .= '</div>';
     									}
 
@@ -711,7 +1039,7 @@ class Wpzoom_Instagram_Widget_Display {
     								}
                                 }
 
-								if ( $show_user_bio ) {
+								if ( $preview || $show_user_bio ) {
                                     $output .= '<div class="zoom-instagram-widget__header-bio">' . esc_html( $user_bio ) . '</div>';
 								}
 
@@ -721,16 +1049,20 @@ class Wpzoom_Instagram_Widget_Display {
 							$output .= '</header>';
 						}
 
-						$classes = 'zoom-instagram-widget__items zoom-instagram-widget__items--no-js' . sprintf( ' layout-%s', $layout );
+						// In preview use grid layout class so frontend does not init Swiper/masonry (scripts not enqueued).
+						$classes = 'zoom-instagram-widget__items zoom-instagram-widget__items--no-js' . sprintf( ' layout-%s', $layout_class );
 
-						if ( $this->is_pro && 'carousel' === $layout ) {
+						// In preview, skip carousel/masonry markup (preview shows grid/static; no Swiper/masonry scripts).
+						if ( $this->is_pro && 'carousel' === $layout && ! $preview ) {
 							$classes .= ' swiper-wrapper';
 						}
 
-						$output .= '<div class="zoom-instagram-widget__items-wrapper' . ( $this->is_pro && 'carousel' === $layout ? ' swiper' : '' ) . '"><ul class="' . $classes . '"' . $attrs . '>' . ( $this->is_pro && 'masonry' === $layout ? '<li class="masonry-items-sizer"></li>' : '' );
+						$wrapper_swiper_class = ( $this->is_pro && 'carousel' === $layout && ! $preview ) ? ' swiper' : '';
+						$masonry_sizer         = ( $this->is_pro && 'masonry' === $layout && ! $preview ) ? '<li class="masonry-items-sizer"></li>' : '';
+						$output .= '<div class="zoom-instagram-widget__items-wrapper' . $wrapper_swiper_class . '"><ul class="' . $classes . '"' . $attrs . '>' . $masonry_sizer;
 						$output .= self::items_html( $items['items'], $args );
 						$output .= '</ul>';
-						if ( $this->is_pro && 'carousel' === $layout ) {
+						if ( $this->is_pro && 'carousel' === $layout && ! $preview ) {
 							$output .= '<div class="swiper-button-prev"></div><div class="swiper-button-next"></div>';
 						}
 						$output .= '</div>';
@@ -748,7 +1080,10 @@ class Wpzoom_Instagram_Widget_Display {
 
 							if ( $show_load_more_button && 'fullwidth' !== $layout && 'carousel' !== $layout ) {
 								$next_url = ! empty( $items ) && array_key_exists( 'paging', $items ) && is_object( $items['paging'] ) && property_exists( $items['paging'], 'next' ) ? esc_url( $items['paging']->next ) : '';
-								$has_more = ! empty( $next_url );
+								$initial_display_count = is_array( $items ) && ! empty( $items['items'] ) ? count( $items['items'] ) : 0;
+								// Has more: either more cached items (we fetch ~30 initially) or more from API
+								$has_more_in_cache = $initial_display_count > 0 && $initial_display_count < 30;
+								$has_more = $has_more_in_cache || ! empty( $next_url );
 								
 								// New fast button-based AJAX system (always generate for performance)
 								$output .= '<div class="wpzinsta-pro-load-more-wrapper"' . ( ! $this->is_pro ? ' data-disabled="true"' : '' ) . '>';
@@ -759,6 +1094,7 @@ class Wpzoom_Instagram_Widget_Display {
 										   ' data-allowed-post-types="' . esc_attr( $allowed_post_types ) . '"' .
 										   ' data-next-url="' . esc_attr( $next_url ) . '"' .
 										   ' data-nonce="' . wp_create_nonce( 'wpzinsta-pro-load-more' ) . '"' .
+										   ' data-cache-offset="' . esc_attr( $initial_display_count ) . '"' .
 										   ( ! $has_more ? ' disabled style="display:none;"' : '' ) .
 										   ( ! $this->is_pro ? ' disabled' : '' ) . '>';
 								$output .= '<span class="button-text">' . esc_html( ( isset( $args['load-more-text'] ) ? trim( $args['load-more-text'] ) : __( 'Load More&hellip;', 'instagram-widget-by-wpzoom' ) ) . ( ! $this->is_pro ? __( ' [PRO only]', 'instagram-widget-by-wpzoom' ) : '' ) ) . '</span>';
@@ -785,7 +1121,7 @@ class Wpzoom_Instagram_Widget_Display {
 
 						if ( $lightbox ) {
 							$output .= '<div class="wpz-insta-lightbox-wrapper mfp-hide"><div class="swiper"><div class="swiper-wrapper">';
-							$output .= self::lightbox_items_html( $items['items'], $user_id );
+							$output .= self::lightbox_items_html( $items['items'], $user_id, $args );
 							$output .= '</div><div class="swiper-button-prev"></div><div class="swiper-button-next"></div></div></div>';
 						}
 					}
@@ -819,7 +1155,8 @@ class Wpzoom_Instagram_Widget_Display {
 		$output = '';
 
 		if ( ! empty( $items ) && is_array( $items ) ) {
-			$is_editor = defined( 'REST_REQUEST' ) && true === REST_REQUEST && 'edit' === filter_input( INPUT_GET, 'context', FILTER_SANITIZE_SPECIAL_CHARS );
+			$is_editor = ( defined( 'REST_REQUEST' ) && true === REST_REQUEST && 'edit' === filter_input( INPUT_GET, 'context', FILTER_SANITIZE_SPECIAL_CHARS ) )
+				|| self::is_elementor_editor();
 			$count = 0;
 			$layout = isset( $args['layout'] ) ? intval( $args['layout'] ) : 0;
 			$amount = isset( $args['item-num'] ) ? intval( $args['item-num'] ) : 9;
@@ -904,11 +1241,24 @@ class Wpzoom_Instagram_Widget_Display {
 					$classes .= ' date-hover';
 				}
 
-				if ( self::$instance->is_pro && 3 === $layout ) {
+				if ( self::$instance->is_pro && 3 === $layout && ! $preview ) {
 					$classes .= ' swiper-slide';
 				}
 
+				// Add has-linked-products class if the item has linked products
+				$feed_id_for_links = isset( $args['feed-id'] ) ? intval( $args['feed-id'] ) : 0;
+				if ( $feed_id_for_links > 0 && class_exists( 'WooCommerce' ) && ! empty( $media_id ) ) {
+					$linked_ids_for_class = self::get_linked_product_ids( $feed_id_for_links, $media_id );
+					if ( ! empty( $linked_ids_for_class ) ) {
+						$classes .= ' has-linked-products';
+					}
+				}
+
 				$src_attr = $is_editor ? sprintf( 'src="%s"', esc_url( $src ) ) : '';
+
+				if ( $is_editor ) {
+					$classes .= ' wpz-insta-loaded';
+				}
 
 				$output .= '<li class="zoom-instagram-widget__item' . $classes . '" ' . $inline_attrs . '><div class="zoom-instagram-widget__item-inner-wrap">';
 
@@ -977,7 +1327,105 @@ class Wpzoom_Instagram_Widget_Display {
 					$output .= '</a>';
 				}
 
-				$output .= '</div></li>';
+				// Add "Link to a product" button in backend preview if WooCommerce is installed
+				if ( $preview && class_exists( 'WooCommerce' ) && ! empty( $media_id ) ) {
+					$feed_id = isset( $args['feed-id'] ) ? intval( $args['feed-id'] ) : 0;
+					$linked_product_id = self::get_linked_product_id( $feed_id, $media_id );
+					$is_linked = $linked_product_id > 0;
+					$button_text = $is_linked ? __( 'Edit Product Link', 'instagram-widget-by-wpzoom' ) : __( 'Link to a product', 'instagram-widget-by-wpzoom' );
+					$button_class = 'wpz-insta-link-product-btn' . ( $is_linked ? ' wpz-insta-link-product-btn--linked' : '' );
+					$icon_class  = $is_linked ? 'dashicons-edit' : 'dashicons-cart';
+					$output .= '<button type="button" class="' . esc_attr( $button_class ) . '" data-media-id="' . esc_attr( $media_id ) . '" data-feed-id="' . esc_attr( $feed_id ) . '" data-product-id="' . esc_attr( $linked_product_id ) . '" title="' . esc_attr( $button_text ) . '">';
+					$output .= '<span class="dashicons ' . esc_attr( $icon_class ) . '"></span> ' . esc_html( $button_text );
+					$output .= '</button>';
+
+					if ( $is_linked > 0 ) {
+						// Get badge label from settings (default: "Product")
+						$preview_badge_label = get_post_meta( $feed_id, '_wpz-insta_product-badge-label', true );
+						if ( false === $preview_badge_label || '' === $preview_badge_label ) {
+							$preview_badge_label = __( 'Product', 'instagram-widget-by-wpzoom' );
+						}
+						if ( '' !== $preview_badge_label ) {
+							$output .= '<span class="wpz-insta-product-badge"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M7.5 6v.75H5.513c-.96 0-1.764.724-1.865 1.679l-1.263 12A1.875 1.875 0 0 0 4.25 22.5h15.5a1.875 1.875 0 0 0 1.865-2.071l-1.263-12a1.875 1.875 0 0 0-1.865-1.679H16.5V6a4.5 4.5 0 1 0-9 0ZM12 3a3 3 0 0 0-3 3v.75h6V6a3 3 0 0 0-3-3Zm-3 8.25a3 3 0 1 0 6 0v-.75a.75.75 0 0 1 1.5 0v.75a4.5 4.5 0 1 1-9 0v-.75a.75.75 0 0 1 1.5 0v.75Z" clip-rule="evenodd"/></svg>' . esc_html( $preview_badge_label ) . '</span>';
+						}
+					}
+				}
+
+				$output .= '</div>';
+
+				// Add product badge/icon+popover or "Buy now" button (link to product) in frontend (PRO + valid license only)
+				if ( ! $preview && class_exists( 'WooCommerce' ) && ! empty( $media_id ) && apply_filters( 'wpz-insta_is-pro', false ) ) {
+					$feed_id = isset( $args['feed-id'] ) ? intval( $args['feed-id'] ) : 0;
+					$linked_ids = self::get_linked_product_ids( $feed_id, $media_id );
+					if ( ! empty( $linked_ids ) ) {
+							$display_type = get_post_meta( $feed_id, '_wpz-insta_product-links-display-type', true ) ?: 'icon';
+							$icon_position = get_post_meta( $feed_id, '_wpz-insta_product-links-icon-position', true ) ?: 'bottom-right';
+							$popover_title = get_post_meta( $feed_id, '_wpz-insta_product-links-popover-title', true ) ?: __( 'Related products', 'instagram-widget-by-wpzoom' );
+							// Get the "open in new tab" setting for all product links
+							$product_links_new_tab = ( '1' === get_post_meta( $feed_id, '_wpz-insta_buy-now-new-tab', true ) );
+							$product_links_rel     = $product_links_new_tab ? 'noopener noreferrer' : 'noopener';
+							$product_links_target  = $product_links_new_tab ? ' target="_blank"' : '';
+
+							// Display badge for all display types (if label is not empty)
+							$badge_label = get_post_meta( $feed_id, '_wpz-insta_product-badge-label', true );
+							// Use "Product" as default if not set
+							if ( false === $badge_label || '' === $badge_label ) {
+								$badge_label = __( 'Product', 'instagram-widget-by-wpzoom' );
+							}
+							if ( '' !== $badge_label ) {
+								$output .= '<span class="wpz-insta-product-badge"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M7.5 6v.75H5.513c-.96 0-1.764.724-1.865 1.679l-1.263 12A1.875 1.875 0 0 0 4.25 22.5h15.5a1.875 1.875 0 0 0 1.865-2.071l-1.263-12a1.875 1.875 0 0 0-1.865-1.679H16.5V6a4.5 4.5 0 1 0-9 0ZM12 3a3 3 0 0 0-3 3v.75h6V6a3 3 0 0 0-3-3Zm-3 8.25a3 3 0 1 0 6 0v-.75a.75.75 0 0 1 1.5 0v.75a4.5 4.5 0 1 1-9 0v-.75a.75.75 0 0 1 1.5 0v.75Z" clip-rule="evenodd"/></svg>' . esc_html( $badge_label ) . '</span>';
+							}
+
+							if ( 'icon' === $display_type ) {
+								$output .= '<div class="wpz-insta-product-icon-wrap wpz-insta-product-icon-position-' . esc_attr( $icon_position ) . '">';
+								$output .= '<span class="wpz-insta-product-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M7.5 6v.75H5.513c-.96 0-1.764.724-1.865 1.679l-1.263 12A1.875 1.875 0 0 0 4.25 22.5h15.5a1.875 1.875 0 0 0 1.865-2.071l-1.263-12a1.875 1.875 0 0 0-1.865-1.679H16.5V6a4.5 4.5 0 1 0-9 0ZM12 3a3 3 0 0 0-3 3v.75h6V6a3 3 0 0 0-3-3Zm-3 8.25a3 3 0 1 0 6 0v-.75a.75.75 0 0 1 1.5 0v.75a4.5 4.5 0 1 1-9 0v-.75a.75.75 0 0 1 1.5 0v.75Z" clip-rule="evenodd"/></svg></span>';
+								$output .= '<div class="wpz-insta-product-popover">';
+								$output .= '<div class="wpz-insta-product-popover-wrapper">';
+								$output .= '<div class="wpz-insta-product-popover-title">' . esc_html( $popover_title ) . '</div>';
+								$output .= '<ul class="wpz-insta-product-popover-list">';
+								foreach ( $linked_ids as $pid ) {
+									$product = wc_get_product( $pid );
+									if ( ! $product || ! $product->is_visible() ) {
+										continue;
+									}
+									$product_link = get_permalink( $pid );
+									$product_title = $product->get_name();
+									$product_price = $product->get_price_html();
+									$product_image_id = $product->get_image_id();
+									$product_image_url = $product_image_id ? wp_get_attachment_image_url( $product_image_id, 'woocommerce_thumbnail' ) : wc_placeholder_img_src( 'woocommerce_thumbnail' );
+									$chevron_svg = '<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="currentColor" aria-hidden="true"><path d="M504-480 348-636q-11-11-11-28t11-28q11-11 28-11t28 11l184 184q6 6 8.5 13t2.5 15q0 8-2.5 15t-8.5 13L404-268q-11 11-28 11t-28-11q-11-11-11-28t11-28l156-156Z"/></svg>';
+									$output .= '<li class="wpz-insta-product-popover-item">';
+									$output .= '<a href="' . esc_url( $product_link ) . '" class="wpz-insta-product-popover-item-link" rel="' . esc_attr( $product_links_rel ) . '"' . $product_links_target . '>';
+									$output .= '<img class="wpz-insta-product-popover-item-img" src="' . esc_url( $product_image_url ) . '" alt="' . esc_attr( $product_title ) . '" loading="lazy" />';
+									$output .= '<div class="wpz-insta-product-popover-item-info">';
+									$output .= '<span class="wpz-insta-product-popover-item-title">' . esc_html( $product_title ) . '</span>';
+									$output .= '<span class="wpz-insta-product-popover-item-price">' . $product_price . '</span>';
+									$output .= '</div>';
+									$output .= '<span class="wpz-insta-product-popover-item-chevron">' . $chevron_svg . '</span>';
+									$output .= '</a>';
+									$output .= '</li>';
+								}
+								$output .= '</ul></div></div></div>';
+							} else {
+								$buy_now_text = get_post_meta( $feed_id, '_wpz-insta_buy-now-text', true ) ?: __( 'Buy now', 'instagram-widget-by-wpzoom' );
+								$buy_now_new_tab = ( '1' === get_post_meta( $feed_id, '_wpz-insta_buy-now-new-tab', true ) );
+								$buy_now_rel     = $buy_now_new_tab ? 'noopener noreferrer' : 'noopener';
+								$buy_now_target  = $buy_now_new_tab ? ' target="_blank"' : '';
+								foreach ( $linked_ids as $linked_product_id ) {
+									$product = wc_get_product( $linked_product_id );
+									if ( $product && $product->is_visible() ) {
+										$product_link = get_permalink( $linked_product_id );
+										$output .= '<div class="wpz-insta-buy-now-wrapper">';
+										$output .= '<a href="' . esc_url( $product_link ) . '" class="wpz-insta-buy-now-btn button" data-product-id="' . esc_attr( $linked_product_id ) . '" rel="' . esc_attr( $buy_now_rel ) . '"' . $buy_now_target . '>' . esc_html( $buy_now_text ) . '</a>';
+										$output .= '</div>';
+										break;
+									}
+								}
+							}
+					}
+				}
+
+				$output .= '</li>';
 
 				if ( ++ $count === $amount ) {
 					break;
@@ -993,13 +1441,15 @@ class Wpzoom_Instagram_Widget_Display {
 	 *
 	 * @param  array  $items    The items to generate the markup for.
 	 * @param  int    $user_id  The ID of the user to disaply in the user info area.
+	 * @param  array  $args    Optional. Feed args including feed-id for product links.
 	 * @return string           The lightbox markup for the given feed items, empty string otherwise.
 	 */
-	public static function lightbox_items_html( $items, $user_id ) {
+	public static function lightbox_items_html( $items, $user_id, $args = array() ) {
 		$output = '';
 
 		if ( ! empty( $items ) && is_array( $items ) ) {
 			$user = get_post( $user_id );
+			$feed_id = isset( $args['feed-id'] ) ? intval( $args['feed-id'] ) : 0;
 
 			if ( $user instanceof WP_Post ) {
 				$amount = count( $items );
@@ -1076,8 +1526,27 @@ class Wpzoom_Instagram_Widget_Display {
 						}
 					}
 
+					// Add product tag markers inside image-wrapper (for tagged products)
+					$product_tags_html = self::get_lightbox_product_tags_html( $feed_id, $media_id );
+					if ( ! empty( $product_tags_html ) ) {
+						$output .= $product_tags_html;
+					}
+
 					$output .= '</div>
-					<div class="details-wrapper">
+					<div class="details-wrapper">';
+
+					// Build product block HTML for lightbox (will be inserted based on position setting)
+					$product_block_html = self::get_lightbox_product_block_html( $feed_id, $media_id );
+
+					// Get lightbox product position setting (default: top)
+					$lightbox_product_position = $feed_id > 0 ? ( get_post_meta( $feed_id, '_wpz-insta_lightbox-product-position', true ) ?: 'top' ) : 'top';
+
+					// Output product block at top position (before header)
+					if ( 'top' === $lightbox_product_position && ! empty( $product_block_html ) ) {
+						$output .= $product_block_html;
+					}
+
+					$output .= '
 					<div class="wpz-insta-header">
 						<div class="wpz-insta-avatar">
 							<img src="' . esc_url( $user_image ) . '" alt="' . esc_attr( $user_name_display ) . '" width="42" height="42"/>
@@ -1095,6 +1564,11 @@ class Wpzoom_Instagram_Widget_Display {
 							</div>
 						</div>
 					</div>';
+
+					// Output product block before caption position
+					if ( 'before-caption' === $lightbox_product_position && ! empty( $product_block_html ) ) {
+						$output .= $product_block_html;
+					}
 
 					if ( ! empty( $item['image-caption'] ) ) {
 						$output .= '<div class="wpz-insta-caption">' . self::filter_caption( $item['image-caption'] ) . '</div>';
@@ -1116,6 +1590,11 @@ class Wpzoom_Instagram_Widget_Display {
 							$output .= '<span class="wpz-insta-comments"><svg width="18" height="18" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 28 28" id="comment"><path fill="#c0c7ca" d="M25.784 21.017A10.992 10.992 0 0 0 27 16c0-6.065-4.935-11-11-11S5 9.935 5 16s4.935 11 11 11c1.742 0 3.468-.419 5.018-1.215l4.74 1.185a.996.996 0 0 0 .949-.263 1 1 0 0 0 .263-.95l-1.186-4.74zm-2.033.11.874 3.498-3.498-.875a1.006 1.006 0 0 0-.731.098A8.99 8.99 0 0 1 16 25c-4.963 0-9-4.038-9-9s4.037-9 9-9 9 4.038 9 9a8.997 8.997 0 0 1-1.151 4.395.995.995 0 0 0-.098.732z"></path></svg>' . self::format_number( $comments ) . '</span>';
 						}
 						$output .= '</div>';
+					}
+
+					// Output product block at footer position (after date/counts)
+					if ( 'footer' === $lightbox_product_position && ! empty( $product_block_html ) ) {
+						$output .= $product_block_html;
 					}
 
 					$output .= '<div class="view-post">
@@ -1173,6 +1652,7 @@ class Wpzoom_Instagram_Widget_Display {
 	 */
 	public function style_content( array $args ) {
 		$output                 = '';
+		$is_preview             = ! empty( $args['preview'] );
 		$feed_id                = isset( $args['feed-id'] ) ? ".feed-" . $args['feed-id'] : "";
 		$raw_layout             = isset( $args['layout'] ) ? intval( $args['layout'] ) : 0;
 		$layout                 = $this->is_pro ? $raw_layout : ( $raw_layout > 1 ? 0 : $raw_layout );
@@ -1222,22 +1702,22 @@ class Wpzoom_Instagram_Widget_Display {
 
 			$output .= "}";
 		}
-
-		if ( 0 === $layout ) {
+		
+		if ( 0 === $layout || ( 2 === $layout && $is_preview ) ) {
 			$output .= ".zoom-instagram{$feed_id} .zoom-instagram-widget__items{";
 			$output .= "display:grid!important;";
 			$output .= "grid-template-columns:repeat({$col_num},1fr);";
 			$output .= "}";
 		}
 
-		if ( ( 0 === $layout || 1 === $layout ) && $spacing_between > -1 ) {
+		if ( ( 0 === $layout || 1 === $layout || ( 2 === $layout && $is_preview ) ) && $spacing_between > -1 ) {
 			$output .= ".zoom-instagram{$feed_id} .zoom-instagram-widget__items{";
 			$output .= "gap:{$spacing_between}{$spacing_between_suffix}!important;";
 			$output .= "}";
 		}
 
 		if ( $this->is_pro ) {
-			if ( 2 === $layout ) {
+			if ( 2 === $layout && ! $is_preview ) {
 				$output .= ".zoom-instagram{$feed_id} .zoom-instagram-widget__item,.zoom-instagram{$feed_id} .masonry-items-sizer{";
 				$output .= "width:calc(1/{$col_num}*100%" . ( $spacing_between > 0 ? " - (1 - 1/{$col_num})*{$spacing_between}{$spacing_between_suffix}" : "" ) . ")!important;";
 				$output .= "}";
@@ -1247,6 +1727,19 @@ class Wpzoom_Instagram_Widget_Display {
 					$output .= "margin:0 0 {$spacing_between}{$spacing_between_suffix}!important;";
 					$output .= "}";
 				}
+
+				// CSS columns fallback for masonry in editor previews (where JS masonry doesn't run)
+				// :not(.masonry-active) ensures this steps aside if JS masonry initializes (e.g. in Elementor)
+				$output .= ".zoom-instagram{$feed_id}.is-editor-preview:not(.masonry-active) .zoom-instagram-widget__items{";
+				$output .= "display:block!important;column-count:{$col_num}!important;";
+				if ( $spacing_between > -1 ) {
+					$output .= "column-gap:{$spacing_between}{$spacing_between_suffix}!important;";
+				}
+				$output .= "}";
+				$output .= ".zoom-instagram{$feed_id}.is-editor-preview:not(.masonry-active) .zoom-instagram-widget__item{";
+				$output .= "break-inside:avoid!important;width:100%!important;";
+				$output .= "}";
+				$output .= ".zoom-instagram{$feed_id}.is-editor-preview:not(.masonry-active) .masonry-items-sizer{display:none!important;}";
 			}
 
 			if ( $border_radius > -1 ) {
@@ -1266,15 +1759,15 @@ class Wpzoom_Instagram_Widget_Display {
 
 		if ( $image_width > -1 && 1 === $layout ) {
 			$output .= ".zoom-instagram{$feed_id} .zoom-instagram-widget__items img {";
-			$output .= "width:{$image_width}{$image_width_suffix}!important;";
+			$output .= "width:{$image_width}{$image_width_suffix}";
 			$output .= "}";
 		}
 
-        if ( $image_width > -1 && 1 === $layout ) {
-            $output .= ".zoom-instagram{$feed_id} .zoom-instagram-widget__items.layout-fullwidth{";
-            $output .= "grid-template-columns:repeat({$feed_items_num},1fr);";
-            $output .= "}";
-        }
+		if ( $image_width > -1 && 1 === $layout ) {
+			$output .= ".zoom-instagram{$feed_id} .zoom-instagram-widget__items.layout-fullwidth{";
+			$output .= "grid-template-columns:repeat({$feed_items_num},1fr);";
+			$output .= "}";
+		}
 
 		if ( '' != $button_bg ) {
 			$output .= ".zoom-instagram{$feed_id} .wpz-insta-view-on-insta-button{";
@@ -1283,7 +1776,7 @@ class Wpzoom_Instagram_Widget_Display {
 		}
 
 		// Add aspect ratio CSS for grid layout
-		if ( 0 === $layout && 'portrait' === $image_aspect_ratio ) {
+		if ( ( 0 === $layout || 2 === $layout ) && 'portrait' === $image_aspect_ratio ) {
 			$output .= ".zoom-instagram{$feed_id} .zoom-instagram-widget__items.layout-grid .zoom-instagram-widget__item img{";
 			$output .= "aspect-ratio:3/4!important;";
 			$output .= "}";
@@ -1329,6 +1822,7 @@ class Wpzoom_Instagram_Widget_Display {
 			}
 			$output .= "}";
 		}
+	
 
 		return trim( $output );
 	}
@@ -1368,6 +1862,7 @@ class Wpzoom_Instagram_Widget_Display {
 	 * @return void
 	 */
 	public function output_preview_styles( array $args, bool $echo = true ) {
+		$args['preview'] = true;
 		$output = $this->style_content( $args );
 
 		if ( $echo ) {
@@ -1561,5 +2056,303 @@ class Wpzoom_Instagram_Widget_Display {
 		</div>
 		<?php
 		return ob_get_clean();
+	}
+
+	/**
+	 * Get the first linked WooCommerce product ID for an Instagram media item.
+	 *
+	 * @param int    $feed_id  The feed post ID.
+	 * @param string $media_id The Instagram media ID.
+	 * @return int The product ID, or 0 if not linked.
+	 */
+	public static function get_linked_product_id( $feed_id, $media_id ) {
+		$ids = self::get_linked_product_ids( $feed_id, $media_id );
+		return ! empty( $ids ) ? (int) $ids[0] : 0;
+	}
+
+	/**
+	 * Get linked WooCommerce product IDs for an Instagram media item.
+	 *
+	 * @param int    $feed_id  The feed post ID.
+	 * @param string $media_id The Instagram media ID.
+	 * @return int[] Array of product IDs (empty if none linked).
+	 */
+	public static function get_linked_product_ids( $feed_id, $media_id ) {
+		$products = self::get_linked_products( $feed_id, $media_id );
+		return array_map( function( $p ) {
+			return $p['id'];
+		}, $products );
+	}
+
+	/**
+	 * Build the lightbox linked-products block HTML (list or card layout with buy-now styling).
+	 * Used by the free plugin lightbox and by the Pro plugin for consistent output and position support.
+	 *
+	 * @param int    $feed_id  The feed post ID.
+	 * @param string $media_id The Instagram media ID.
+	 * @return string HTML fragment, or empty string if no linked products or not Pro/WooCommerce.
+	 */
+	public static function get_lightbox_product_block_html( $feed_id, $media_id ) {
+		if ( $feed_id <= 0 || ! class_exists( 'WooCommerce' ) || empty( $media_id ) || ! apply_filters( 'wpz-insta_is-pro', false ) ) {
+			return '';
+		}
+		$linked_ids = self::get_linked_product_ids( $feed_id, $media_id );
+		if ( empty( $linked_ids ) ) {
+			return '';
+		}
+
+		$lightbox_product_layout = get_post_meta( $feed_id, '_wpz-insta_lightbox-product-layout', true ) ?: 'list';
+		$buy_now_text_lt        = get_post_meta( $feed_id, '_wpz-insta_buy-now-text', true ) ?: __( 'Buy now', 'instagram-widget-by-wpzoom' );
+		$buy_now_new_tab_lt     = ( '1' === get_post_meta( $feed_id, '_wpz-insta_buy-now-new-tab', true ) );
+		$buy_now_rel_lt         = $buy_now_new_tab_lt ? 'noopener noreferrer' : 'noopener';
+		$buy_now_target_lt      = $buy_now_new_tab_lt ? ' target="_blank"' : '';
+		$buy_now_bg_lt          = get_post_meta( $feed_id, '_wpz-insta_buy-now-bg', true ) ?: get_post_meta( $feed_id, '_wpz-insta_add-to-cart-bg', true ) ?: '#2271b1';
+		$buy_now_color_lt       = get_post_meta( $feed_id, '_wpz-insta_buy-now-color', true ) ?: get_post_meta( $feed_id, '_wpz-insta_add-to-cart-color', true ) ?: '#ffffff';
+		$buy_now_hover_lt       = get_post_meta( $feed_id, '_wpz-insta_buy-now-hover-bg', true ) ?: get_post_meta( $feed_id, '_wpz-insta_add-to-cart-hover-bg', true ) ?: '#135e96';
+		$buy_now_radius_raw_lt  = get_post_meta( $feed_id, '_wpz-insta_buy-now-border-radius', true );
+		if ( '' === (string) $buy_now_radius_raw_lt ) {
+			$buy_now_radius_raw_lt = get_post_meta( $feed_id, '_wpz-insta_add-to-cart-border-radius', true );
+		}
+		$buy_now_radius_suffix_lt = get_post_meta( $feed_id, '_wpz-insta_buy-now-border-radius-suffix', true );
+		if ( '' === (string) $buy_now_radius_suffix_lt ) {
+			$buy_now_radius_suffix_lt = get_post_meta( $feed_id, '_wpz-insta_add-to-cart-border-radius-suffix', true );
+		}
+		if ( '' !== (string) $buy_now_radius_suffix_lt && is_numeric( $buy_now_radius_suffix_lt ) ) {
+			$buy_now_radius_num_lt     = is_numeric( $buy_now_radius_raw_lt ) ? (float) $buy_now_radius_raw_lt : 3;
+			$buy_now_radius_suffix_str = ( 2 === (int) $buy_now_radius_suffix_lt ) ? '%' : ( ( 1 === (int) $buy_now_radius_suffix_lt ) ? 'em' : 'px' );
+			$buy_now_radius_lt         = $buy_now_radius_num_lt . $buy_now_radius_suffix_str;
+		} else {
+			$buy_now_radius_lt = $buy_now_radius_raw_lt ?: '3px';
+		}
+		$lightbox_buy_now_style = sprintf(
+			'background-color:%s;color:%s;border-radius:%s;',
+			esc_attr( $buy_now_bg_lt ),
+			esc_attr( $buy_now_color_lt ),
+			esc_attr( $buy_now_radius_lt )
+		);
+
+		$product_block_html = '';
+		if ( 'card' === $lightbox_product_layout ) {
+			$is_carousel = count( $linked_ids ) > 1;
+			$product_block_html .= '<div class="wpz-insta-lightbox-product wpz-insta-lightbox-product--card' . ( $is_carousel ? ' wpz-insta-lightbox-product--carousel' : '' ) . '" style="--wpz-insta-buy-now-hover:' . esc_attr( $buy_now_hover_lt ) . '">';
+			if ( $is_carousel ) {
+				$product_block_html .= '<div class="wpz-insta-lightbox-product__carousel">';
+				$product_block_html .= '<div class="wpz-insta-lightbox-product__carousel-inner">';
+			}
+			foreach ( $linked_ids as $linked_product_id ) {
+				$product = wc_get_product( $linked_product_id );
+				if ( ! $product || ! $product->is_visible() ) {
+					continue;
+				}
+				$product_link     = get_permalink( $linked_product_id );
+				$product_title    = $product->get_name();
+				$product_price    = $product->get_price_html();
+				$product_image_id = $product->get_image_id();
+				$product_image_url = $product_image_id ? wp_get_attachment_image_url( $product_image_id, 'woocommerce_thumbnail' ) : wc_placeholder_img_src( 'woocommerce_thumbnail' );
+				$product_block_html .= '<div class="wpz-insta-lightbox-product__card">';
+				$product_block_html .= '<a href="' . esc_url( $product_link ) . '" class="wpz-insta-lightbox-product__card-link" rel="noopener"' . $buy_now_target_lt . '>';
+				$product_block_html .= '<img class="wpz-insta-lightbox-product__card-img" src="' . esc_url( $product_image_url ) . '" alt="' . esc_attr( $product_title ) . '" loading="lazy"/>';
+				$product_block_html .= '</a>';
+				$product_block_html .= '<div class="wpz-insta-lightbox-product__card-info">';
+				$product_block_html .= '<span class="wpz-insta-lightbox-product__card-title">' . esc_html( $product_title ) . '</span>';
+				$product_block_html .= '<span class="wpz-insta-lightbox-product__card-price">' . $product_price . '</span>';
+				$product_block_html .= '</div>';
+				$product_block_html .= '<a href="' . esc_url( $product_link ) . '" class="wpz-insta-lightbox-product__card-button button" style="' . $lightbox_buy_now_style . '" data-product-id="' . esc_attr( $linked_product_id ) . '" rel="' . esc_attr( $buy_now_rel_lt ) . '"' . $buy_now_target_lt . '>' . esc_html( $buy_now_text_lt ) . '</a>';
+				$product_block_html .= '</div>';
+			}
+			if ( $is_carousel ) {
+				$product_block_html .= '</div>';
+				$product_block_html .= '<button type="button" class="wpz-insta-lightbox-product__carousel-prev" aria-label="' . esc_attr__( 'Previous product', 'instagram-widget-by-wpzoom' ) . '"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>';
+				$product_block_html .= '<button type="button" class="wpz-insta-lightbox-product__carousel-next" aria-label="' . esc_attr__( 'Next product', 'instagram-widget-by-wpzoom' ) . '"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>';
+				$product_block_html .= '<div class="wpz-insta-lightbox-product__carousel-dots"></div>';
+				$product_block_html .= '</div>';
+			}
+			$product_block_html .= '</div>';
+		} else {
+			$product_block_html .= '<div class="wpz-insta-lightbox-product" style="--wpz-insta-buy-now-hover:' . esc_attr( $buy_now_hover_lt ) . '">';
+			foreach ( $linked_ids as $linked_product_id ) {
+				$product = wc_get_product( $linked_product_id );
+				if ( ! $product || ! $product->is_visible() ) {
+					continue;
+				}
+				$product_link      = get_permalink( $linked_product_id );
+				$product_title     = $product->get_name();
+				$product_price     = $product->get_price_html();
+				$product_image_id  = $product->get_image_id();
+				$product_image_url = $product_image_id ? wp_get_attachment_image_url( $product_image_id, 'woocommerce_thumbnail' ) : wc_placeholder_img_src( 'woocommerce_thumbnail' );
+				$product_block_html .= '<div class="wpz-insta-lightbox-product__item">';
+				$product_block_html .= '<a href="' . esc_url( $product_link ) . '" class="wpz-insta-lightbox-product__link" rel="' . esc_attr( $buy_now_rel_lt ) . '"' . $buy_now_target_lt . '>';
+				$product_block_html .= '<img class="wpz-insta-lightbox-product__img" src="' . esc_url( $product_image_url ) . '" alt="' . esc_attr( $product_title ) . '" loading="lazy"/>';
+				$product_block_html .= '<div class="wpz-insta-lightbox-product__info">';
+				$product_block_html .= '<span class="wpz-insta-lightbox-product__title">' . esc_html( $product_title ) . '</span>';
+				$product_block_html .= '<span class="wpz-insta-lightbox-product__price">' . $product_price . '</span>';
+				$product_block_html .= '</div></a>';
+				$product_block_html .= '<a href="' . esc_url( $product_link ) . '" class="wpz-insta-lightbox-product__buy-now button" style="' . $lightbox_buy_now_style . '" data-product-id="' . esc_attr( $linked_product_id ) . '" rel="' . esc_attr( $buy_now_rel_lt ) . '"' . $buy_now_target_lt . '>' . esc_html( $buy_now_text_lt ) . '</a>';
+				$product_block_html .= '</div>';
+			}
+			$product_block_html .= '</div>';
+		}
+		return $product_block_html;
+	}
+
+	/**
+	 * Build the lightbox product tag markers HTML (dots + popovers on the image).
+	 * Used by the free plugin lightbox and by the Pro plugin for consistent output.
+	 *
+	 * @param int    $feed_id  The feed post ID.
+	 * @param string $media_id The Instagram media ID.
+	 * @return string HTML fragment (wrapper div with tags), or empty string if no tagged products or not Pro/WooCommerce.
+	 */
+	public static function get_lightbox_product_tags_html( $feed_id, $media_id ) {
+		if ( $feed_id <= 0 || ! class_exists( 'WooCommerce' ) || empty( $media_id ) || ! apply_filters( 'wpz-insta_is-pro', false ) ) {
+			return '';
+		}
+		$linked_products_for_tags = self::get_linked_products( $feed_id, $media_id );
+		$tags_html = '';
+		foreach ( $linked_products_for_tags as $linked_product ) {
+			if ( ! empty( $linked_product['tag'] ) && isset( $linked_product['tag']['x'] ) && isset( $linked_product['tag']['y'] ) ) {
+				$product_for_tag = wc_get_product( $linked_product['id'] );
+				if ( $product_for_tag && $product_for_tag->is_visible() ) {
+					$tag_x = floatval( $linked_product['tag']['x'] );
+					$tag_y = floatval( $linked_product['tag']['y'] );
+					$tag_album_index = isset( $linked_product['tag']['album_index'] ) && $linked_product['tag']['album_index'] !== null ? intval( $linked_product['tag']['album_index'] ) : -1;
+					$product_title_tag = $product_for_tag->get_name();
+					$product_price_tag = $product_for_tag->get_price_html();
+					$product_link_tag = get_permalink( $linked_product['id'] );
+					$product_image_id_tag = $product_for_tag->get_image_id();
+					$product_image_url_tag = $product_image_id_tag ? wp_get_attachment_image_url( $product_image_id_tag, 'thumbnail' ) : wc_placeholder_img_src( 'thumbnail' );
+
+					$tags_html .= '<div class="wpz-insta-lightbox-tag" data-album-index="' . esc_attr( $tag_album_index ) . '" style="left:' . esc_attr( $tag_x ) . '%;top:' . esc_attr( $tag_y ) . '%;">';
+					$tags_html .= '<span class="wpz-insta-lightbox-tag__dot"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M7.5 6v.75H5.513c-.96 0-1.764.724-1.865 1.679l-1.263 12A1.875 1.875 0 0 0 4.25 22.5h15.5a1.875 1.875 0 0 0 1.865-2.071l-1.263-12a1.875 1.875 0 0 0-1.865-1.679H16.5V6a4.5 4.5 0 1 0-9 0ZM12 3a3 3 0 0 0-3 3v.75h6V6a3 3 0 0 0-3-3Zm-3 8.25a3 3 0 1 0 6 0v-.75a.75.75 0 0 1 1.5 0v.75a4.5 4.5 0 1 1-9 0v-.75a.75.75 0 0 1 1.5 0v.75Z" clip-rule="evenodd"/></svg></span>';
+					$tags_html .= '<div class="wpz-insta-lightbox-tag__popover">';
+					$tags_html .= '<a href="' . esc_url( $product_link_tag ) . '" class="wpz-insta-lightbox-tag__link" target="_blank" rel="noopener">';
+					$tags_html .= '<img class="wpz-insta-lightbox-tag__img" src="' . esc_url( $product_image_url_tag ) . '" alt="' . esc_attr( $product_title_tag ) . '" />';
+					$tags_html .= '<div class="wpz-insta-lightbox-tag__info">';
+					$tags_html .= '<span class="wpz-insta-lightbox-tag__title">' . esc_html( $product_title_tag ) . '</span>';
+					$tags_html .= '<span class="wpz-insta-lightbox-tag__price">' . $product_price_tag . '</span>';
+					$tags_html .= '</div>';
+					$tags_html .= '</a></div>';
+					$tags_html .= '</div>';
+				}
+			}
+		}
+		if ( empty( $tags_html ) ) {
+			return '';
+		}
+		return '<div class="wpz-insta-lightbox-tags">' . $tags_html . '</div>';
+	}
+
+	/**
+	 * Get linked products with tag data for an Instagram media item.
+	 * New format: array of { 'id' => int, 'tag' => array|null }
+	 *
+	 * @param int    $feed_id  The feed post ID.
+	 * @param string $media_id The Instagram media ID.
+	 * @return array Array of product objects with tag data (empty if none linked).
+	 */
+	public static function get_linked_products( $feed_id, $media_id ) {
+		if ( empty( $feed_id ) || empty( $media_id ) || ! class_exists( 'WooCommerce' ) ) {
+			return array();
+		}
+
+		$product_links = get_post_meta( $feed_id, '_wpz-insta_product-links', true );
+		if ( ! is_array( $product_links ) || ! isset( $product_links[ $media_id ] ) ) {
+			return array();
+		}
+
+		$val = $product_links[ $media_id ];
+		if ( ! is_array( $val ) ) {
+			return array();
+		}
+
+		// Check if it's the new format (array of objects with 'id' key) or old format (array of IDs)
+		$result = array();
+		foreach ( $val as $item ) {
+			if ( is_array( $item ) && isset( $item['id'] ) ) {
+				// New format: { id, tag }
+				$result[] = array(
+					'id'  => intval( $item['id'] ),
+					'tag' => isset( $item['tag'] ) ? $item['tag'] : null,
+				);
+			} elseif ( is_numeric( $item ) && intval( $item ) > 0 ) {
+				// Old format: just product ID - convert to new format
+				$result[] = array(
+					'id'  => intval( $item ),
+					'tag' => null,
+				);
+			}
+		}
+
+		return $result;
+	}
+
+	/**
+	 * Save linked products with tag data for an Instagram media item.
+	 * Accepts new format: array of { 'id' => int, 'tag' => array|null }
+	 *
+	 * @param int    $feed_id  The feed post ID.
+	 * @param string $media_id The Instagram media ID.
+	 * @param array  $products Array of product objects { id, tag }. Empty array to remove all links.
+	 * @return bool True on success, false on failure.
+	 */
+	public static function save_linked_products( $feed_id, $media_id, array $products ) {
+		if ( empty( $feed_id ) || empty( $media_id ) || ! class_exists( 'WooCommerce' ) ) {
+			return false;
+		}
+
+		$product_links = get_post_meta( $feed_id, '_wpz-insta_product-links', true );
+		if ( ! is_array( $product_links ) ) {
+			$product_links = array();
+		}
+
+		// Validate and sanitize products
+		$valid_products = array();
+		foreach ( $products as $product ) {
+			if ( is_array( $product ) && isset( $product['id'] ) && intval( $product['id'] ) > 0 ) {
+				$sanitized = array(
+					'id'  => intval( $product['id'] ),
+					'tag' => null,
+				);
+				if ( isset( $product['tag'] ) && is_array( $product['tag'] ) ) {
+					$sanitized['tag'] = array(
+						'x'           => isset( $product['tag']['x'] ) ? floatval( $product['tag']['x'] ) : 0,
+						'y'           => isset( $product['tag']['y'] ) ? floatval( $product['tag']['y'] ) : 0,
+						'album_index' => isset( $product['tag']['album_index'] ) ? intval( $product['tag']['album_index'] ) : null,
+					);
+				}
+				$valid_products[] = $sanitized;
+			}
+		}
+
+		if ( ! empty( $valid_products ) ) {
+			$product_links[ $media_id ] = $valid_products;
+		} else {
+			unset( $product_links[ $media_id ] );
+		}
+
+		return update_post_meta( $feed_id, '_wpz-insta_product-links', $product_links );
+	}
+
+	/**
+	 * Save the linked WooCommerce product IDs for an Instagram media item.
+	 * Legacy method - converts to new format internally.
+	 *
+	 * @param int    $feed_id     The feed post ID.
+	 * @param string $media_id    The Instagram media ID.
+	 * @param int[]  $product_ids Array of WooCommerce product IDs. Empty array to remove all links.
+	 * @return bool True on success, false on failure.
+	 */
+	public static function save_linked_product_ids( $feed_id, $media_id, array $product_ids ) {
+		// Convert old format to new format
+		$products = array();
+		foreach ( $product_ids as $id ) {
+			if ( is_numeric( $id ) && intval( $id ) > 0 ) {
+				$products[] = array(
+					'id'  => intval( $id ),
+					'tag' => null,
+				);
+			}
+		}
+		return self::save_linked_products( $feed_id, $media_id, $products );
 	}
 }

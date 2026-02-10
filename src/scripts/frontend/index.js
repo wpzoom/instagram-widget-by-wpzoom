@@ -75,8 +75,10 @@
 				const allowedPostTypes = $button.attr('data-allowed-post-types');
 				const nextUrl = $button.attr('data-next-url');
 				const nonce = $button.attr('data-nonce');
+				const cacheOffset = parseInt($button.attr('data-cache-offset') || '-1', 10);
 				
-				if (!nextUrl) {
+				// Need either a cache offset or a next URL to load more
+				if (cacheOffset < 0 && !nextUrl) {
 					$button.hide();
 					return;
 				}
@@ -87,20 +89,26 @@
 				const originalText = $button.find('.button-text').text();
 				$button.find('.button-text').text('Loading...');
 				
+				// Build request data - include cache_offset for cache-based loading
+				var requestData = {
+					action: 'wpzoom_instagram_load_more',
+					feed_id: feedId,
+					item_amount: itemAmount,
+					image_size: imageSize,
+					allowed_post_types: allowedPostTypes,
+					next: nextUrl,
+					_wpnonce: nonce
+				};
+				if (cacheOffset >= 0) {
+					requestData.cache_offset = cacheOffset;
+				}
+				
 				// Make AJAX request
 				$.ajax({
 					url: wpzInstaAjax.ajaxurl,
 					type: 'POST',
 					dataType: 'json',
-					data: {
-						action: 'wpzoom_instagram_load_more',
-						feed_id: feedId,
-						item_amount: itemAmount,
-						image_size: imageSize,
-						allowed_post_types: allowedPostTypes,
-						next: nextUrl,
-						_wpnonce: nonce
-					},
+					data: requestData,
 									success: function(response) {
 					if (response.success && response.data.html) {
 						// Store current item count before adding new items
@@ -109,9 +117,18 @@
 						// Append new items
 						$itemsContainer.append(response.data.html);
 						
-						// Update button state
-						if (response.data.has_more && response.data.next_url) {
-							$button.attr('data-next-url', response.data.next_url);
+						// Update button state: track cache offset and API next URL
+						if (response.data.has_more) {
+							if (typeof response.data.cache_offset !== 'undefined' && response.data.cache_offset >= 0) {
+								// Still loading from cache - update cache offset
+								$button.attr('data-cache-offset', response.data.cache_offset);
+							} else {
+								// Cache exhausted - switch to API pagination
+								$button.attr('data-cache-offset', '-1');
+							}
+							if (response.data.next_url) {
+								$button.attr('data-next-url', response.data.next_url);
+							}
 						} else {
 							$button.hide();
 						}
@@ -587,13 +604,20 @@
 								if (video) {
 									video.play();
 								}
+
+								// Initialize product carousel in the active slide
+								if ( typeof window.wpzInstaInitProductCarousel === 'function' ) {
+									window.wpzInstaInitProductCarousel( $activeSlide );
+								}
 	
 							},
 						},
 					} );
 
 					$nested.each( function() {
-						new Swiper( $( this ).get(0), {
+						var $nestedSwiper = $( this );
+						var $imageWrapper = $nestedSwiper.closest( '.image-wrapper' );
+						new Swiper( $nestedSwiper.get(0), {
 							lazy:{
 								threshold: 50
 							},
@@ -606,36 +630,62 @@
 							nested: true,
 							watchOverflow: true,
 							pagination: {
-								el: $( this ).find( '> .swiper-pagination' ).get(0),
+								el: $nestedSwiper.find( '> .swiper-pagination' ).get(0),
 								type: 'bullets',
 								clickable: true,
 								hideOnClick: false
 							},
 							navigation: {
-								nextEl: $( this ).find( '> .swiper-button-next' ).get(0),
-								prevEl: $( this ).find( '> .swiper-button-prev' ).get(0)
+								nextEl: $nestedSwiper.find( '> .swiper-button-next' ).get(0),
+								prevEl: $nestedSwiper.find( '> .swiper-button-prev' ).get(0)
 							},
 							keyboard: {
 								enabled: true,
 								onlyInViewport: true
 							},
 							on: {
+								init: function() {
+									// Show tags for initial slide (index 0)
+									updateProductTagVisibility( $imageWrapper, 0 );
+								},
 								activeIndexChange: function () {
-		
+	
 									// Get the active slide
 									const activeSlide = this.slides[this.activeIndex];
 									const $activeSlide = $(activeSlide);
-		
+	
 									// Play the video in the active slide if it exists
 									const video = $activeSlide.find('video').get(0);
 									if (video) {
 										video.play();
 									}
-		
+
+									// Update product tag visibility for album carousels
+									updateProductTagVisibility( $imageWrapper, this.activeIndex );
 								},
 							},	
 						} );
 					} );
+
+					// Function to update product tag visibility based on album slide index
+					function updateProductTagVisibility( $imageWrapper, activeIndex ) {
+						var $tagsContainer = $imageWrapper.find( '.wpz-insta-lightbox-tags' );
+						if ( $tagsContainer.length === 0 ) return;
+
+						$tagsContainer.find( '.wpz-insta-lightbox-tag' ).each( function() {
+							var $tag = $( this );
+							var albumIndex = parseInt( $tag.attr( 'data-album-index' ), 10 );
+							
+							// Show tag if:
+							// - albumIndex is -1 (not album-specific, i.e., single image)
+							// - albumIndex matches the active slide index
+							if ( albumIndex === -1 || albumIndex === activeIndex ) {
+								$tag.addClass( 'wpz-insta-lightbox-tag--visible' );
+							} else {
+								$tag.removeClass( 'wpz-insta-lightbox-tag--visible' );
+							}
+						} );
+					}
 
 					// Find the gallery trigger using the same strategy as swiper element
 					let galleryTrigger = $( this ).closest( '.widget' ).find( '.zoom-instagram-widget__items' );
@@ -673,6 +723,12 @@
 										this.content.find( '> .swiper > .swiper-wrapper > .swiper-slide[data-uid="' + currentElement.data( 'mfp-src' ) + '"]' ).index()
 									);
 								}
+								
+								// Initialize product carousel in the current slide
+								const $currentSlide = this.content.find( '> .swiper > .swiper-wrapper > .swiper-slide[data-uid="' + currentElement.data( 'mfp-src' ) + '"]' );
+								if ( typeof window.wpzInstaInitProductCarousel === 'function' ) {
+									window.wpzInstaInitProductCarousel( $currentSlide );
+								}
 							},
 							afterClose: function () {
 								// Destroy swiper videos
@@ -687,6 +743,89 @@
 				}
 			} );
 		};
+
+		// Initialize product card carousel in lightbox
+		function initProductCarousel( $container ) {
+			const $carousels = $container.find( '.wpz-insta-lightbox-product--carousel' );
+			
+			$carousels.each( function() {
+				const $carousel = $( this );
+				
+				// Skip if already initialized
+				if ( $carousel.data( 'carousel-initialized' ) ) {
+					return;
+				}
+				
+				const $inner = $carousel.find( '.wpz-insta-lightbox-product__carousel-inner' );
+				const $cards = $inner.find( '.wpz-insta-lightbox-product__card' );
+				const $prevBtn = $carousel.find( '.wpz-insta-lightbox-product__carousel-prev' );
+				const $nextBtn = $carousel.find( '.wpz-insta-lightbox-product__carousel-next' );
+				const $dotsContainer = $carousel.find( '.wpz-insta-lightbox-product__carousel-dots' );
+				
+				if ( $cards.length <= 1 ) {
+					$prevBtn.hide();
+					$nextBtn.hide();
+					$dotsContainer.hide();
+					return;
+				}
+				
+				let currentIndex = 0;
+				const totalSlides = $cards.length;
+				
+				// Create dots
+				$dotsContainer.empty();
+				for ( let i = 0; i < totalSlides; i++ ) {
+					const $dot = $( '<span class="wpz-insta-lightbox-product__carousel-dot"></span>' );
+					if ( i === 0 ) {
+						$dot.addClass( 'active' );
+					}
+					$dot.on( 'click', function() {
+						goToSlide( i );
+					} );
+					$dotsContainer.append( $dot );
+				}
+				
+				function updateCarousel() {
+					$inner.css( 'transform', 'translateX(-' + ( currentIndex * 100 ) + '%)' );
+					
+					// Update dots
+					$dotsContainer.find( '.wpz-insta-lightbox-product__carousel-dot' )
+						.removeClass( 'active' )
+						.eq( currentIndex )
+						.addClass( 'active' );
+					
+					// Update buttons
+					$prevBtn.prop( 'disabled', currentIndex === 0 );
+					$nextBtn.prop( 'disabled', currentIndex === totalSlides - 1 );
+				}
+				
+				function goToSlide( index ) {
+					if ( index >= 0 && index < totalSlides ) {
+						currentIndex = index;
+						updateCarousel();
+					}
+				}
+				
+				$prevBtn.on( 'click', function() {
+					if ( currentIndex > 0 ) {
+						goToSlide( currentIndex - 1 );
+					}
+				} );
+				
+				$nextBtn.on( 'click', function() {
+					if ( currentIndex < totalSlides - 1 ) {
+						goToSlide( currentIndex + 1 );
+					}
+				} );
+				
+				// Initialize
+				updateCarousel();
+				$carousel.data( 'carousel-initialized', true );
+			} );
+		}
+		
+		// Expose globally for use in lightbox callbacks
+		window.wpzInstaInitProductCarousel = initProductCarousel;
 
 		$.fn.zoomInstagramWidget = function (options) {
 			return $(this).each(function () {
@@ -904,3 +1043,42 @@
 	} );
 
 } )( jQuery );
+
+// WooCommerce Product Link: notify parent when "Link to a product" is clicked (we're inside iframe)
+document.body.addEventListener( 'click', function( event ) {
+	var btn = event.target.closest( '.wpz-insta-link-product-btn' );
+
+	if ( ! btn ) {
+		return;
+	}
+	event.preventDefault();
+	event.stopPropagation();
+	if ( typeof window.parent.postMessage === 'function' ) {
+		// Find the parent item to get media type and image URL
+		var item = btn.closest( '.zoom-instagram-widget__item' );
+		var mediaType = item ? ( item.getAttribute( 'data-media-type' ) || 'image' ) : 'image';
+		var imageUrl = '';
+		var albumImages = [];
+
+		// Get image URL for tagging
+		var img = item ? item.querySelector( 'img.zoom-instagram-link' ) : null;
+		if ( img ) {
+			imageUrl = img.getAttribute( 'src' ) || img.getAttribute( 'data-src' ) || '';
+		}
+
+		// For carousel albums, collect all children images from the lightbox data if available
+		if ( mediaType === 'carousel_album' ) {
+			// Album children data will be fetched via AJAX when tagging view opens
+			// This is more reliable than trying to parse from DOM
+		}
+
+		window.parent.postMessage( {
+			action: 'wpz-insta-open-product-link',
+			mediaId: btn.getAttribute( 'data-media-id' ) || '',
+			feedId: btn.getAttribute( 'data-feed-id' ) || '',
+			productId: btn.getAttribute( 'data-product-id' ) || '',
+			mediaType: mediaType,
+			imageUrl: imageUrl
+		}, '*' );
+	}
+}, true );

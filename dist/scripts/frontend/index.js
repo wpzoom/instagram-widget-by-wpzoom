@@ -1,1 +1,980 @@
-(()=>{function t(e){return t="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(t){return typeof t}:function(t){return t&&"function"==typeof Symbol&&t.constructor===Symbol&&t!==Symbol.prototype?"symbol":typeof t},t(e)}function e(e,i,a){return(i=function(e){var i=function(e){if("object"!=t(e)||!e)return e;var i=e[Symbol.toPrimitive];if(void 0!==i){var a=i.call(e,"string");if("object"!=t(a))return a;throw new TypeError("@@toPrimitive must return a primitive value.")}return String(e)}(e);return"symbol"==t(i)?i:i+""}(i))in e?Object.defineProperty(e,i,{value:a,enumerable:!0,configurable:!0,writable:!0}):e[i]=a,e}!function(i){function a(){i(".zoom-instagram-widget__items").each(function(){i(this).find(".zoom-instagram-widget__item").each(function(){var t=i(this);if(!t.hasClass("wpz-insta-loaded")&&!t.data("shimmer-init")){t.data("shimmer-init",!0);var e=t.find("img.zoom-instagram-link, img.zoom-instagram-link-new").first();0!==e.length?e[0].complete&&e[0].naturalWidth>0?t.addClass("wpz-insta-loaded"):(e.on("load.shimmer",function(){t.addClass("wpz-insta-loaded")}),e.on("error.shimmer",function(){t.addClass("wpz-insta-loaded")})):t.addClass("wpz-insta-loaded")}})})}i(document).ready(function(){a()}),window.wpzInstaImageShimmerInit=a,i(window).on("load",function(){var n=!1;function o(){i(".wpzinsta-pro-load-more-btn").off("click.loadmore").on("click.loadmore",function(n){n.preventDefault();var o=i(this),s=o.closest(".wpzinsta-pro-load-more-wrapper"),r=o.closest(".zoom-instagram"),d=r.find(".zoom-instagram-widget__items");if("true"!==s.attr("data-disabled")&&!o.prop("disabled")&&!o.hasClass("loading")){var l=o.attr("data-feed-id"),m=o.attr("data-item-amount"),p=o.attr("data-image-size"),c=o.attr("data-allowed-post-types"),g=o.attr("data-next-url"),f=o.attr("data-nonce");if(g){o.addClass("loading").prop("disabled",!0),s.addClass("loading");var w=o.find(".button-text").text();o.find(".button-text").text("Loading..."),i.ajax({url:wpzInstaAjax.ajaxurl,type:"POST",dataType:"json",data:{action:"wpzoom_instagram_load_more",feed_id:l,item_amount:m,image_size:p,allowed_post_types:c,next:g,_wpnonce:f},success:function(n){if(n.success&&n.data.html){var s=d.find("li").length;if(d.append(n.data.html),n.data.has_more&&n.data.next_url?o.attr("data-next-url",n.data.next_url):o.hide(),d.zoomLoadAsyncImages(),a(),d.hasClass("layout-masonry"))if("function"==typeof i.fn.masonry){var l=d.find("li").slice(s);d.data("masonry")||d.masonry({itemSelector:".zoom-instagram-widget__item",columnWidth:".masonry-items-sizer",percentPosition:!0,gutter:parseInt(d.data("spacing")||10)}),d.masonry("appended",l)}else setTimeout(function(){d.zoomInstagramWidget({onlyNewItems:!0,startIndex:s})},100);else setTimeout(function(){d.zoomInstagramWidget({onlyNewItems:!0,startIndex:s})},100);if("1"===d.attr("data-lightbox")&&n.data.lightbox_html){var m=r.find(".wpz-insta-lightbox-wrapper .swiper-wrapper");if(m.length>0){m.append(n.data.lightbox_html);var p=m.parent();p.length>0&&p.get(0).swiper&&p.get(0).swiper.update(),m.find(".image-wrapper > .swiper").each(function(){this.swiper||new Swiper(this,e(e(e(e(e(e(e(e(e(e({lazy:{threshold:50},watchSlidesVisibility:!0,preloadImages:!1},"lazy",!0),"direction","horizontal"),"loop",!1),"spaceBetween",20),"nested",!0),"watchOverflow",!0),"pagination",{el:i(this).find("> .swiper-pagination").get(0),type:"bullets",clickable:!0,hideOnClick:!1}),"navigation",{nextEl:i(this).find("> .swiper-button-next").get(0),prevEl:i(this).find("> .swiper-button-prev").get(0)}),"keyboard",{enabled:!0,onlyInViewport:!0}),"on",{activeIndexChange:function(){var t=this.slides[this.activeIndex],e=i(t).find("video").get(0);e&&e.play()}}))});var c=d.find("li").slice(s).find(".zoom-instagram-link");c.length>0&&(c.magnificPopup({items:{type:"inline",src:m.closest(".wpz-insta-lightbox-wrapper")},closeBtnInside:!1,mainClass:"wpzoom-lightbox",midClick:!0,callbacks:{open:function(){var e=i.magnificPopup.instance.st.el,a=this.content.find("> .swiper").get(0).swiper;if(this.content.find('> .swiper > .swiper-wrapper > .swiper-slide[data-uid="'+e.data("mfp-src")+'"] video')&&this.content.find('> .swiper > .swiper-wrapper > .swiper-slide[data-uid="'+e.data("mfp-src")+'"] video').trigger("play"),"object"===t(a)){var n=this.content.find('> .swiper > .swiper-wrapper > .swiper-slide[data-uid="'+e.data("mfp-src")+'"]').index();a.slideTo(n)}},afterClose:function(){p.find("video").each(function(){this.pause(),this.currentTime=0})}}}),c.addClass("magnific-active"))}else d.zoomLightbox()}r.trigger("wpz-insta:loaded-more",[n.data])}else console.error("Load more failed:",n.data||"Unknown error"),o.hide()},error:function(t,e,i){console.error("AJAX load more error:",i),o.hide()},complete:function(){o.removeClass("loading").prop("disabled",!1),s.removeClass("loading"),o.find(".button-text").text(w)}})}else o.hide()}})}function s(){i(".zoom-instagram-widget__items").each(function(){var t=i(this);t.hasClass("layout-masonry")&&"function"==typeof i.fn.masonry?t.data("masonry")?t.masonry("layout"):t.masonry({itemSelector:".zoom-instagram-widget__item",columnWidth:".masonry-items-sizer",percentPosition:!0,gutter:parseInt(t.data("spacing")||10)}):t.zoomInstagramWidget()}),n=!1}a(),o(),i(".wpz-insta-ajax-placeholder").each(function(){var t=i(this),e=t.data("feed-id");!e||t.hasClass("loading")||t.hasClass("loaded")||(t.addClass("loading"),i.ajax({url:wpzInstaAjax.ajaxurl,type:"POST",dataType:"json",data:{action:"wpzoom_instagram_initial_load",feed_id:e},success:function(n){if(n.success&&n.data.html){var s=i(n.data.html);t.replaceWith(s);var r=s.hasClass("zoom-instagram")?s:s.find(".zoom-instagram");if(r.length>0){var d=r.find(".zoom-instagram-widget__items");if(d.length>0){if(r.hasClass("layout-carousel")){var l=r.find("> .zoom-instagram-widget__items-wrapper.swiper");if(l.length>0&&"undefined"!=typeof Swiper){var m=parseInt(d.data("perpage"))||3,p=parseInt(d.data("perpage-tablet"))||m,c=parseInt(d.data("perpage-mobile"))||m,g=parseFloat(d.data("spacing"))||20;"function"==typeof i.fn.lazy&&(d.find(".zoom-instagram-link-new").lazy(),d.find("a.zoom-instagram-link-old").lazy());var f=new Swiper(l.get(0),{direction:"horizontal",loop:!1,slidesPerView:m,spaceBetween:g,breakpoints:{320:{slidesPerView:c,spaceBetween:g},480:{slidesPerView:p,spaceBetween:g},769:{slidesPerView:m,spaceBetween:g}},autoHeight:!0,watchOverflow:!0,navigation:{nextEl:l.find("> .swiper-button-next").get(0),prevEl:l.find("> .swiper-button-prev").get(0)},keyboard:{enabled:!0,onlyInViewport:!0}});r.addClass("carousel-active");var w=d.find("img"),u=0,h=w.length;h>0&&(w.each(function(){this.complete?++u===h&&f.update():i(this).on("load error",function(){++u===h&&f.update()})}),setTimeout(function(){f.update()},500))}}else d.hasClass("layout-masonry")&&"function"==typeof i.fn.masonry?d.masonry({itemSelector:".zoom-instagram-widget__item",columnWidth:".masonry-items-sizer",percentPosition:!0,gutter:parseInt(d.data("spacing")||10)}):d.zoomInstagramWidget();d.zoomLoadAsyncImages(),"1"===d.attr("data-lightbox")&&d.zoomLightbox()}o(),a(),"function"==typeof window.wpzInstaFrontendInit&&window.wpzInstaFrontendInit(),"function"==typeof window.wpzInstaInitStories&&window.wpzInstaInitStories(),"function"==typeof window.wpzInstaMultiAccountStoriesInit&&window.wpzInstaMultiAccountStoriesInit(),"function"==typeof window.wpzInstaMultiAccountLoadMoreInit&&window.wpzInstaMultiAccountLoadMoreInit(),"function"==typeof window.wpzInstaProLoadMoreInit&&window.wpzInstaProLoadMoreInit(),r.trigger("wpz-insta:ajax-loaded",[e,n.data])}}else console.error("Failed to load Instagram feed:",n.data||"Unknown error"),t.removeClass("loading").addClass("error")},error:function(e,i,a){console.error("AJAX initial feed load error:",a),t.removeClass("loading").addClass("error")}}))}),i.fn.zoomLoadAsyncImages=function(){return i(this).each(function(){var t=i(this),e=t.data("image-width"),a=t.data("image-resolution"),n=t.find("li").filter(function(){return i(this).data("media-id")}).map(function(){return{"media-id":i(this).attr("data-media-id"),nonce:i(this).attr("data-nonce"),"regenerate-thumbnails":i(this)[0].hasAttribute("data-regenerate-thumbnails")}});n.length&&function(i,n){n=n||3;for(var o=0;o<i.length;o+=n)i.slice(o,o+n).forEach(function(i){wp.ajax.post("wpzoom_instagram_get_image_async",{"media-id":i["media-id"],nonce:i.nonce,"image-resolution":a,"image-width":e,"regenerate-thumbnails":i["regenerate-thumbnails"]}).done(function(e){t.find('li[data-media-id="'+i["media-id"]+'"] .zoom-instagram-link').css("background-image","url("+e.image_src+")")}).fail(function(){})})}(n.toArray(),3)})},i.fn.zoomLightbox=function(){return i(this).each(function(){var a=i(this).closest(".widget").find(".wpz-insta-lightbox-wrapper > .swiper");if(0===a.length&&(a=i(this).closest(".zoom-instagram").find(".wpz-insta-lightbox-wrapper > .swiper")),0===a.length&&(a=i(this).parent().parent().find(".wpz-insta-lightbox-wrapper > .swiper")),a.closest(".wpz-insta-lightbox-wrapper"),a.length>0){var n=a.find(".image-wrapper > .swiper");new Swiper(a.get(0),e(e(e(e(e(e(e(e(e({lazy:{threshold:50},watchSlidesVisibility:!0,preloadImages:!1},"lazy",!0),"direction","horizontal"),"loop",!1),"spaceBetween",20),"autoHeight",!1),"watchOverflow",!0),"navigation",{nextEl:a.find("> .swiper-button-next").get(0),prevEl:a.find("> .swiper-button-prev").get(0)}),"keyboard",{enabled:!0,onlyInViewport:!0}),"on",{activeIndexChange:function(){var t=this.slides[this.activeIndex],e=i(t).find("video").get(0);e&&e.play()}})),n.each(function(){new Swiper(i(this).get(0),e(e(e(e(e(e(e(e(e(e({lazy:{threshold:50},watchSlidesVisibility:!0,preloadImages:!1},"lazy",!0),"direction","horizontal"),"loop",!1),"spaceBetween",20),"nested",!0),"watchOverflow",!0),"pagination",{el:i(this).find("> .swiper-pagination").get(0),type:"bullets",clickable:!0,hideOnClick:!1}),"navigation",{nextEl:i(this).find("> .swiper-button-next").get(0),prevEl:i(this).find("> .swiper-button-prev").get(0)}),"keyboard",{enabled:!0,onlyInViewport:!0}),"on",{activeIndexChange:function(){var t=this.slides[this.activeIndex],e=i(t).find("video").get(0);e&&e.play()}}))});var o=i(this).closest(".widget").find(".zoom-instagram-widget__items");0===o.length&&(o=i(this).closest(".zoom-instagram").find(".zoom-instagram-widget__items")),0===o.length&&(o=i(this)),o.find(".zoom-instagram-link").magnificPopup({items:{type:"inline",src:a.closest(".wpz-insta-lightbox-wrapper")},closeBtnInside:!1,mainClass:"wpzoom-lightbox",midClick:!0,callbacks:{open:function(){var e=i.magnificPopup.instance.st.el,a=this.content.find("> .swiper").get(0).swiper;this.content.find('> .swiper > .swiper-wrapper > .swiper-slide[data-uid="'+e.data("mfp-src")+'"] video')&&this.content.find('> .swiper > .swiper-wrapper > .swiper-slide[data-uid="'+e.data("mfp-src")+'"] video').trigger("play"),"object"===t(a)&&a.slideTo(this.content.find('> .swiper > .swiper-wrapper > .swiper-slide[data-uid="'+e.data("mfp-src")+'"]').index())},afterClose:function(){a.find("video").each(function(){this.pause(),this.currentTime=0})}}}),o.find(".zoom-instagram-link").addClass("magnific-active")}})},i.fn.zoomInstagramWidget=function(t){return i(this).each(function(){var e,a,n=i(this),o=t||{},s=n.data("images-per-row"),r=n.data("image-width"),d=n.data("image-spacing"),l=(n.data("image-lazy-loading"),n.width());l/r<s?(e=s,a=Math.floor((l-1-(s-1)*d)/s)):(e=Math.floor((l-1)/r),a=Math.floor((l-1-(e-1)*d)/e)),(o.onlyNewItems&&void 0!==o.startIndex?n.find("li").slice(o.startIndex):n.find("li")).each(function(t){var a=(o.onlyNewItems&&void 0!==o.startIndex?o.startIndex+t:t)+1;a%e==1?i(this).css("clear","left"):i(this).css("clear","none"),a%e==0?i(this).css("margin-right","0"):(i(this).css("margin-right",d+"px"),i(this).css("margin-bottom",d+"px"))}),n.find("a.zoom-instagram-link").css({width:a,height:a}),n.find("a.zoom-instagram-link-old").lazy(),n.find(".zoom-instagram-link-new").lazy(),n.removeClass("zoom-instagram-widget__items--no-js")})},i(window).on("resize orientationchange",function(){n||(n=!0,(window.requestAnimationFrame||window.webkitRequestAnimationFrame||window.mozRequestAnimationFrame||function(t){window.setTimeout(t,1e3/60)})(s))}),i(".zoom-instagram-widget__items").each(function(){var t=i(this);t.hasClass("layout-masonry")&&"function"==typeof i.fn.masonry?t.masonry({itemSelector:".zoom-instagram-widget__item",columnWidth:".masonry-items-sizer",percentPosition:!0,gutter:parseInt(t.data("spacing")||10)}):t.zoomInstagramWidget()}),i(".zoom-instagram-widget__items").zoomLoadAsyncImages(),i('.zoom-instagram-widget__items[data-lightbox="1"]').zoomLightbox();var r=_.debounce(function(){var t=i(".zoom-instagram-widget__items");t.length&&(t.each(function(){var t=i(this);t.hasClass("layout-masonry")&&"function"==typeof i.fn.masonry?t.masonry({itemSelector:".zoom-instagram-widget__item",columnWidth:".masonry-items-sizer",percentPosition:!0,gutter:parseInt(t.data("spacing")||10)}):t.zoomInstagramWidget()}),i(".zoom-instagram-widget__items").zoomLoadAsyncImages())},1500);i(document).on("panels_setup_preview",r),i(document).on("wpz-insta:loaded-more",function(){o()}),i(window).on("elementor/frontend/init",function(){elementorFrontend.hooks.addAction("frontend/element_ready/widget",function(t){"wpzoom-elementor-instagram-widget.default"==t.data("widget_type")&&t.find(".zoom-instagram-widget__items").each(function(){var t=i(this);t.hasClass("layout-masonry")&&"function"==typeof i.fn.masonry?t.masonry({itemSelector:".zoom-instagram-widget__item",columnWidth:".masonry-items-sizer",percentPosition:!0,gutter:parseInt(t.data("spacing")||10)}):t.zoomInstagramWidget()})})})})}(jQuery)})();
+/******/ (() => { // webpackBootstrap
+/*!***************************************!*\
+  !*** ./src/scripts/frontend/index.js ***!
+  \***************************************/
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
+function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
+function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
+(function ($) {
+  // Image loading shimmer effect - needs to run early to catch images before they load
+  function initImageLoadingShimmer() {
+    $('.zoom-instagram-widget__items').each(function () {
+      var $container = $(this);
+      $container.find('.zoom-instagram-widget__item').each(function () {
+        var $item = $(this);
+
+        // Skip if already processed
+        if ($item.hasClass('wpz-insta-loaded') || $item.data('shimmer-init')) {
+          return;
+        }
+        $item.data('shimmer-init', true);
+        var $img = $item.find('img.zoom-instagram-link, img.zoom-instagram-link-new').first();
+        if ($img.length === 0) {
+          $item.addClass('wpz-insta-loaded');
+          return;
+        }
+
+        // Check if image is already loaded (cached)
+        if ($img[0].complete && $img[0].naturalWidth > 0) {
+          $item.addClass('wpz-insta-loaded');
+          return;
+        }
+
+        // Listen for image load
+        $img.on('load.shimmer', function () {
+          $item.addClass('wpz-insta-loaded');
+        });
+
+        // Handle error case - still show the item
+        $img.on('error.shimmer', function () {
+          $item.addClass('wpz-insta-loaded');
+        });
+      });
+    });
+  }
+
+  // Run as early as possible - on DOMContentLoaded
+  $(document).ready(function () {
+    initImageLoadingShimmer();
+  });
+
+  // Export globally so PRO plugin can call after Load More
+  window.wpzInstaImageShimmerInit = initImageLoadingShimmer;
+  $(window).on('load', function () {
+    var ticking = false;
+
+    // Re-run shimmer init in case new feeds were added
+    initImageLoadingShimmer();
+
+    // Fast AJAX Load More functionality
+    function initLoadMoreButtons() {
+      $('.wpzinsta-pro-load-more-btn').off('click.loadmore').on('click.loadmore', function (e) {
+        e.preventDefault();
+        var $button = $(this);
+        var $wrapper = $button.closest('.wpzinsta-pro-load-more-wrapper');
+        var $feedContainer = $button.closest('.zoom-instagram');
+        var $itemsContainer = $feedContainer.find('.zoom-instagram-widget__items');
+
+        // Check if disabled or already loading
+        if ($wrapper.attr('data-disabled') === 'true' || $button.prop('disabled') || $button.hasClass('loading')) {
+          return;
+        }
+
+        // Get data from button
+        var feedId = $button.attr('data-feed-id');
+        var itemAmount = $button.attr('data-item-amount');
+        var imageSize = $button.attr('data-image-size');
+        var allowedPostTypes = $button.attr('data-allowed-post-types');
+        var nextUrl = $button.attr('data-next-url');
+        var nonce = $button.attr('data-nonce');
+        var cacheOffset = parseInt($button.attr('data-cache-offset') || '-1', 10);
+
+        // Need either a cache offset or a next URL to load more
+        if (cacheOffset < 0 && !nextUrl) {
+          $button.hide();
+          return;
+        }
+
+        // Show loading state
+        $button.addClass('loading').prop('disabled', true);
+        $wrapper.addClass('loading');
+        var originalText = $button.find('.button-text').text();
+        $button.find('.button-text').text('Loading...');
+
+        // Build request data - include cache_offset for cache-based loading
+        var requestData = {
+          action: 'wpzoom_instagram_load_more',
+          feed_id: feedId,
+          item_amount: itemAmount,
+          image_size: imageSize,
+          allowed_post_types: allowedPostTypes,
+          next: nextUrl,
+          _wpnonce: nonce
+        };
+        if (cacheOffset >= 0) {
+          requestData.cache_offset = cacheOffset;
+        }
+
+        // Make AJAX request
+        $.ajax({
+          url: wpzInstaAjax.ajaxurl,
+          type: 'POST',
+          dataType: 'json',
+          data: requestData,
+          success: function success(response) {
+            if (response.success && response.data.html) {
+              // Store current item count before adding new items
+              var currentItemCount = $itemsContainer.find('li').length;
+
+              // Append new items
+              $itemsContainer.append(response.data.html);
+
+              // Update button state: track cache offset and API next URL
+              if (response.data.has_more) {
+                if (typeof response.data.cache_offset !== 'undefined' && response.data.cache_offset >= 0) {
+                  // Still loading from cache - update cache offset
+                  $button.attr('data-cache-offset', response.data.cache_offset);
+                } else {
+                  // Cache exhausted - switch to API pagination
+                  $button.attr('data-cache-offset', '-1');
+                }
+                if (response.data.next_url) {
+                  $button.attr('data-next-url', response.data.next_url);
+                }
+              } else {
+                $button.hide();
+              }
+
+              // Reinitialize any image processing for the specific container
+              $itemsContainer.zoomLoadAsyncImages();
+
+              // Initialize image loading shimmer for new items
+              initImageLoadingShimmer();
+
+              // Check if this is masonry layout and handle accordingly
+              if ($itemsContainer.hasClass('layout-masonry')) {
+                // Try to use WordPress masonry if available
+                if (typeof $.fn.masonry === 'function') {
+                  var $newItems = $itemsContainer.find('li').slice(currentItemCount);
+
+                  // Initialize masonry if not already done
+                  if (!$itemsContainer.data('masonry')) {
+                    $itemsContainer.masonry({
+                      itemSelector: '.zoom-instagram-widget__item',
+                      columnWidth: '.masonry-items-sizer',
+                      percentPosition: true,
+                      gutter: parseInt($itemsContainer.data('spacing') || 10)
+                    });
+                  }
+
+                  // Add new items to masonry
+                  $itemsContainer.masonry('appended', $newItems);
+                } else {
+                  // Fallback for masonry when library not available
+                  setTimeout(function () {
+                    $itemsContainer.zoomInstagramWidget({
+                      onlyNewItems: true,
+                      startIndex: currentItemCount
+                    });
+                  }, 100);
+                }
+              } else {
+                // For grid/other layouts, use existing function
+                setTimeout(function () {
+                  $itemsContainer.zoomInstagramWidget({
+                    onlyNewItems: true,
+                    startIndex: currentItemCount
+                  });
+                }, 100);
+              }
+
+              // Handle lightbox content for new items
+              if ($itemsContainer.attr('data-lightbox') === '1' && response.data.lightbox_html) {
+                // Find the existing lightbox wrapper
+                var $lightboxWrapper = $feedContainer.find('.wpz-insta-lightbox-wrapper .swiper-wrapper');
+                if ($lightboxWrapper.length > 0) {
+                  // Append new lightbox slides
+                  $lightboxWrapper.append(response.data.lightbox_html);
+
+                  // Update the existing Swiper instance to recognize new slides
+                  var $swiperContainer = $lightboxWrapper.parent();
+                  if ($swiperContainer.length > 0 && $swiperContainer.get(0).swiper) {
+                    $swiperContainer.get(0).swiper.update();
+                  }
+
+                  // Initialize nested Swipers for albums in the newly added content
+                  var $allNestedSwipers = $lightboxWrapper.find('.image-wrapper > .swiper');
+                  $allNestedSwipers.each(function () {
+                    // Only initialize if not already initialized
+                    if (!this.swiper) {
+                      new Swiper(this, _defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty({
+                        lazy: {
+                          threshold: 50
+                        },
+                        watchSlidesVisibility: true,
+                        preloadImages: false
+                      }, "lazy", true), "direction", 'horizontal'), "loop", false), "spaceBetween", 20), "nested", true), "watchOverflow", true), "pagination", {
+                        el: $(this).find('> .swiper-pagination').get(0),
+                        type: 'bullets',
+                        clickable: true,
+                        hideOnClick: false
+                      }), "navigation", {
+                        nextEl: $(this).find('> .swiper-button-next').get(0),
+                        prevEl: $(this).find('> .swiper-button-prev').get(0)
+                      }), "keyboard", {
+                        enabled: true,
+                        onlyInViewport: true
+                      }), "on", {
+                        activeIndexChange: function activeIndexChange() {
+                          // Get the active slide
+                          var activeSlide = this.slides[this.activeIndex];
+                          var $activeSlide = $(activeSlide);
+
+                          // Play the video in the active slide if it exists
+                          var video = $activeSlide.find('video').get(0);
+                          if (video) {
+                            video.play();
+                          }
+                        }
+                      }));
+                    }
+                  });
+
+                  // Initialize MagnificPopup on new grid items only
+                  var _$newItems = $itemsContainer.find('li').slice(currentItemCount);
+                  var $newLinks = _$newItems.find('.zoom-instagram-link');
+                  if ($newLinks.length > 0) {
+                    $newLinks.magnificPopup({
+                      items: {
+                        type: 'inline',
+                        src: $lightboxWrapper.closest('.wpz-insta-lightbox-wrapper')
+                      },
+                      closeBtnInside: false,
+                      mainClass: 'wpzoom-lightbox',
+                      midClick: true,
+                      callbacks: {
+                        open: function open() {
+                          var magnificPopup = $.magnificPopup.instance,
+                            currentElement = magnificPopup.st.el,
+                            $thisSwiper = this.content.find('> .swiper').get(0).swiper;
+                          if (this.content.find('> .swiper > .swiper-wrapper > .swiper-slide[data-uid="' + currentElement.data('mfp-src') + '"] video')) {
+                            this.content.find('> .swiper > .swiper-wrapper > .swiper-slide[data-uid="' + currentElement.data('mfp-src') + '"] video').trigger('play');
+                          }
+                          if (_typeof($thisSwiper) === 'object') {
+                            var targetSlideIndex = this.content.find('> .swiper > .swiper-wrapper > .swiper-slide[data-uid="' + currentElement.data('mfp-src') + '"]').index();
+                            $thisSwiper.slideTo(targetSlideIndex);
+                          }
+                        },
+                        afterClose: function afterClose() {
+                          // Destroy swiper videos
+                          $swiperContainer.find('video').each(function () {
+                            this.pause();
+                            this.currentTime = 0;
+                          });
+                        }
+                      }
+                    });
+                    $newLinks.addClass('magnific-active');
+                  }
+                } else {
+                  $itemsContainer.zoomLightbox();
+                }
+              }
+
+              // Trigger custom event for other scripts
+              $feedContainer.trigger('wpz-insta:loaded-more', [response.data]);
+            } else {
+              console.error('Load more failed:', response.data || 'Unknown error');
+              $button.hide();
+            }
+          },
+          error: function error(xhr, status, _error) {
+            console.error('AJAX load more error:', _error);
+            $button.hide();
+          },
+          complete: function complete() {
+            // Remove loading state
+            $button.removeClass('loading').prop('disabled', false);
+            $wrapper.removeClass('loading');
+            $button.find('.button-text').text(originalText);
+          }
+        });
+      });
+    }
+
+    // Initialize load more buttons
+    initLoadMoreButtons();
+
+    /**
+     * AJAX Initial Feed Load functionality
+     * Finds placeholder elements and fetches actual content via AJAX
+     */
+    function initAjaxFeeds() {
+      $('.wpz-insta-ajax-placeholder').each(function () {
+        var $placeholder = $(this);
+        var feedId = $placeholder.data('feed-id');
+        // Skip if already loading, loaded, or missing required data
+        if (!feedId || $placeholder.hasClass('loading') || $placeholder.hasClass('loaded')) {
+          return;
+        }
+        $placeholder.addClass('loading');
+        $.ajax({
+          url: wpzInstaAjax.ajaxurl,
+          type: 'POST',
+          dataType: 'json',
+          data: {
+            action: 'wpzoom_instagram_initial_load',
+            feed_id: feedId
+          },
+          success: function success(response) {
+            if (response.success && response.data.html) {
+              // Replace placeholder with actual content
+              var $newContent = $(response.data.html);
+              $placeholder.replaceWith($newContent);
+
+              // Find the new feed container
+              var $newFeed = $newContent.hasClass('zoom-instagram') ? $newContent : $newContent.find('.zoom-instagram');
+              if ($newFeed.length > 0) {
+                // Initialize the Instagram widget functionality
+                var $itemsContainer = $newFeed.find('.zoom-instagram-widget__items');
+                if ($itemsContainer.length > 0) {
+                  // Check if this is a carousel layout
+                  var isCarousel = $newFeed.hasClass('layout-carousel');
+                  if (isCarousel) {
+                    // Initialize Swiper for carousel layout
+                    // The swiper element is .zoom-instagram-widget__items-wrapper.swiper
+                    var $swiperEl = $newFeed.find('> .zoom-instagram-widget__items-wrapper.swiper');
+                    if ($swiperEl.length > 0 && typeof Swiper !== 'undefined') {
+                      // data-perpage is on the ul.swiper-wrapper element
+                      var perpage = parseInt($itemsContainer.data('perpage')) || 3;
+                      var perpageTablet = parseInt($itemsContainer.data('perpage-tablet')) || perpage;
+                      var perpageMobile = parseInt($itemsContainer.data('perpage-mobile')) || perpage;
+                      var spacing = parseFloat($itemsContainer.data('spacing')) || 20;
+
+                      // Initialize lazy loading BEFORE Swiper so images start loading
+                      if (typeof $.fn.lazy === 'function') {
+                        $itemsContainer.find('.zoom-instagram-link-new').lazy();
+                        $itemsContainer.find('a.zoom-instagram-link-old').lazy();
+                      }
+
+                      // Create Swiper instance
+                      var carouselSwiper = new Swiper($swiperEl.get(0), {
+                        direction: 'horizontal',
+                        loop: false,
+                        slidesPerView: perpage,
+                        spaceBetween: spacing,
+                        breakpoints: {
+                          320: {
+                            slidesPerView: perpageMobile,
+                            spaceBetween: spacing
+                          },
+                          480: {
+                            slidesPerView: perpageTablet,
+                            spaceBetween: spacing
+                          },
+                          769: {
+                            slidesPerView: perpage,
+                            spaceBetween: spacing
+                          }
+                        },
+                        autoHeight: true,
+                        watchOverflow: true,
+                        navigation: {
+                          nextEl: $swiperEl.find('> .swiper-button-next').get(0),
+                          prevEl: $swiperEl.find('> .swiper-button-prev').get(0)
+                        },
+                        keyboard: {
+                          enabled: true,
+                          onlyInViewport: true
+                        }
+                      });
+                      $newFeed.addClass('carousel-active');
+
+                      // Update Swiper after images load to fix autoHeight
+                      var $images = $itemsContainer.find('img');
+                      var loadedCount = 0;
+                      var totalImages = $images.length;
+                      if (totalImages > 0) {
+                        $images.each(function () {
+                          var img = this;
+                          if (img.complete) {
+                            loadedCount++;
+                            if (loadedCount === totalImages) {
+                              carouselSwiper.update();
+                            }
+                          } else {
+                            $(img).on('load error', function () {
+                              loadedCount++;
+                              if (loadedCount === totalImages) {
+                                carouselSwiper.update();
+                              }
+                            });
+                          }
+                        });
+                        // Fallback: update after a delay in case load events don't fire
+                        setTimeout(function () {
+                          carouselSwiper.update();
+                        }, 500);
+                      }
+                    }
+                  } else if ($itemsContainer.hasClass('layout-masonry') && typeof $.fn.masonry === 'function') {
+                    // Initialize masonry layout
+                    $itemsContainer.masonry({
+                      itemSelector: '.zoom-instagram-widget__item',
+                      columnWidth: '.masonry-items-sizer',
+                      percentPosition: true,
+                      gutter: parseInt($itemsContainer.data('spacing') || 10)
+                    });
+                  } else {
+                    // Initialize grid layout
+                    $itemsContainer.zoomInstagramWidget();
+                  }
+
+                  // Load async images
+                  $itemsContainer.zoomLoadAsyncImages();
+
+                  // Initialize lightbox if enabled
+                  if ($itemsContainer.attr('data-lightbox') === '1') {
+                    $itemsContainer.zoomLightbox();
+                  }
+                }
+
+                // Reinitialize load more buttons (free plugin button-based)
+                initLoadMoreButtons();
+
+                // Initialize image loading shimmer for new content
+                initImageLoadingShimmer();
+
+                // Initialize frontend (lightbox swipers from block.js)
+                if (typeof window.wpzInstaFrontendInit === 'function') {
+                  window.wpzInstaFrontendInit();
+                }
+
+                // Initialize stories (single account)
+                if (typeof window.wpzInstaInitStories === 'function') {
+                  window.wpzInstaInitStories();
+                }
+
+                // Initialize multi-account stories (PRO)
+                if (typeof window.wpzInstaMultiAccountStoriesInit === 'function') {
+                  window.wpzInstaMultiAccountStoriesInit();
+                }
+
+                // Initialize multi-account load more (PRO)
+                if (typeof window.wpzInstaMultiAccountLoadMoreInit === 'function') {
+                  window.wpzInstaMultiAccountLoadMoreInit();
+                }
+
+                // Initialize PRO form-based load more (single account)
+                if (typeof window.wpzInstaProLoadMoreInit === 'function') {
+                  window.wpzInstaProLoadMoreInit();
+                }
+
+                // Trigger custom event for other scripts
+                $newFeed.trigger('wpz-insta:ajax-loaded', [feedId, response.data]);
+              }
+            } else {
+              console.error('Failed to load Instagram feed:', response.data || 'Unknown error');
+              $placeholder.removeClass('loading').addClass('error');
+            }
+          },
+          error: function error(xhr, status, _error2) {
+            console.error('AJAX initial feed load error:', _error2);
+            $placeholder.removeClass('loading').addClass('error');
+          }
+        });
+      });
+    }
+
+    // Initialize AJAX feeds on page load
+    initAjaxFeeds();
+    $.fn.zoomLoadAsyncImages = function () {
+      return $(this).each(function () {
+        var $list = $(this);
+        var desiredItemWidth = $list.data('image-width');
+        var imageResolution = $list.data('image-resolution');
+        var delayedItems = $list.find('li').filter(function () {
+          return $(this).data('media-id');
+        }).map(function () {
+          return {
+            'media-id': $(this).attr('data-media-id'),
+            'nonce': $(this).attr('data-nonce'),
+            'regenerate-thumbnails': $(this)[0].hasAttribute("data-regenerate-thumbnails")
+          };
+        });
+
+        // Process images in parallel batches for better performance
+        var processImageBatch = function processImageBatch(images, batchSize) {
+          batchSize = batchSize || 3; // Process 3 images at once
+
+          for (var i = 0; i < images.length; i += batchSize) {
+            var batch = images.slice(i, i + batchSize);
+            batch.forEach(function (image) {
+              wp.ajax.post('wpzoom_instagram_get_image_async', {
+                'media-id': image['media-id'],
+                nonce: image['nonce'],
+                'image-resolution': imageResolution,
+                'image-width': desiredItemWidth,
+                'regenerate-thumbnails': image['regenerate-thumbnails']
+              }).done(function (data) {
+                $list.find('li[data-media-id="' + image['media-id'] + '"] .zoom-instagram-link').css('background-image', 'url(' + data.image_src + ')');
+              }).fail(function () {
+                // Silently fail for missing images
+              });
+            });
+          }
+        };
+        if (delayedItems.length) {
+          processImageBatch(delayedItems.toArray(), 3);
+        }
+      });
+    };
+    $.fn.zoomLightbox = function () {
+      return $(this).each(function () {
+        // Try multiple strategies to find the lightbox wrapper
+        var $swipe_el = $(this).closest('.widget').find('.wpz-insta-lightbox-wrapper > .swiper');
+
+        // Fallback 1: Look in the same Instagram widget container
+        if ($swipe_el.length === 0) {
+          $swipe_el = $(this).closest('.zoom-instagram').find('.wpz-insta-lightbox-wrapper > .swiper');
+        }
+
+        // Fallback 2: Look for siblings or nearby elements
+        if ($swipe_el.length === 0) {
+          $swipe_el = $(this).parent().parent().find('.wpz-insta-lightbox-wrapper > .swiper');
+        }
+
+        // Debug: Check if lightbox wrapper has content
+        var $lightboxWrapper = $swipe_el.closest('.wpz-insta-lightbox-wrapper');
+        if ($swipe_el.length > 0) {
+          // Function to update product tag visibility based on album slide index
+          var updateProductTagVisibility = function updateProductTagVisibility($imageWrapper, activeIndex) {
+            var $tagsContainer = $imageWrapper.find('.wpz-insta-lightbox-tags');
+            if ($tagsContainer.length === 0) return;
+            $tagsContainer.find('.wpz-insta-lightbox-tag').each(function () {
+              var $tag = $(this);
+              var albumIndex = parseInt($tag.attr('data-album-index'), 10);
+
+              // Show tag if:
+              // - albumIndex is -1 (not album-specific, i.e., single image)
+              // - albumIndex matches the active slide index
+              if (albumIndex === -1 || albumIndex === activeIndex) {
+                $tag.addClass('wpz-insta-lightbox-tag--visible');
+              } else {
+                $tag.removeClass('wpz-insta-lightbox-tag--visible');
+              }
+            });
+          }; // Find the gallery trigger using the same strategy as swiper element
+          var $nested = $swipe_el.find('.image-wrapper > .swiper');
+          var swiper = new Swiper($swipe_el.get(0), _defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty({
+            lazy: {
+              threshold: 50
+            },
+            watchSlidesVisibility: true,
+            preloadImages: false
+          }, "lazy", true), "direction", 'horizontal'), "loop", false), "spaceBetween", 20), "autoHeight", false), "watchOverflow", true), "navigation", {
+            nextEl: $swipe_el.find('> .swiper-button-next').get(0),
+            prevEl: $swipe_el.find('> .swiper-button-prev').get(0)
+          }), "keyboard", {
+            enabled: true,
+            onlyInViewport: true
+          }), "on", {
+            activeIndexChange: function activeIndexChange() {
+              // Get the active slide
+              var activeSlide = this.slides[this.activeIndex];
+              var $activeSlide = $(activeSlide);
+
+              // Play the video in the active slide if it exists
+              var video = $activeSlide.find('video').get(0);
+              if (video) {
+                video.play();
+              }
+
+              // Initialize product carousel in the active slide
+              if (typeof window.wpzInstaInitProductCarousel === 'function') {
+                window.wpzInstaInitProductCarousel($activeSlide);
+              }
+            }
+          }));
+          $nested.each(function () {
+            var $nestedSwiper = $(this);
+            var $imageWrapper = $nestedSwiper.closest('.image-wrapper');
+            new Swiper($nestedSwiper.get(0), _defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty({
+              lazy: {
+                threshold: 50
+              },
+              watchSlidesVisibility: true,
+              preloadImages: false
+            }, "lazy", true), "direction", 'horizontal'), "loop", false), "spaceBetween", 20), "nested", true), "watchOverflow", true), "pagination", {
+              el: $nestedSwiper.find('> .swiper-pagination').get(0),
+              type: 'bullets',
+              clickable: true,
+              hideOnClick: false
+            }), "navigation", {
+              nextEl: $nestedSwiper.find('> .swiper-button-next').get(0),
+              prevEl: $nestedSwiper.find('> .swiper-button-prev').get(0)
+            }), "keyboard", {
+              enabled: true,
+              onlyInViewport: true
+            }), "on", {
+              init: function init() {
+                // Show tags for initial slide (index 0)
+                updateProductTagVisibility($imageWrapper, 0);
+              },
+              activeIndexChange: function activeIndexChange() {
+                // Get the active slide
+                var activeSlide = this.slides[this.activeIndex];
+                var $activeSlide = $(activeSlide);
+
+                // Play the video in the active slide if it exists
+                var video = $activeSlide.find('video').get(0);
+                if (video) {
+                  video.play();
+                }
+
+                // Update product tag visibility for album carousels
+                updateProductTagVisibility($imageWrapper, this.activeIndex);
+              }
+            }));
+          });
+          var galleryTrigger = $(this).closest('.widget').find('.zoom-instagram-widget__items');
+
+          // Fallback 1: Look in the same Instagram widget container
+          if (galleryTrigger.length === 0) {
+            galleryTrigger = $(this).closest('.zoom-instagram').find('.zoom-instagram-widget__items');
+          }
+
+          // Fallback 2: Use this element directly if it's the items container
+          if (galleryTrigger.length === 0) {
+            galleryTrigger = $(this);
+          }
+
+          // Use the same approach as block.js - call magnificPopup directly on the links
+          galleryTrigger.find('.zoom-instagram-link').magnificPopup({
+            items: {
+              type: 'inline',
+              src: $swipe_el.closest('.wpz-insta-lightbox-wrapper')
+            },
+            closeBtnInside: false,
+            mainClass: 'wpzoom-lightbox',
+            midClick: true,
+            callbacks: {
+              open: function open() {
+                var magnificPopup = $.magnificPopup.instance,
+                  currentElement = magnificPopup.st.el,
+                  $thisSwiper = this.content.find('> .swiper').get(0).swiper;
+                if (this.content.find('> .swiper > .swiper-wrapper > .swiper-slide[data-uid="' + currentElement.data('mfp-src') + '"] video')) {
+                  this.content.find('> .swiper > .swiper-wrapper > .swiper-slide[data-uid="' + currentElement.data('mfp-src') + '"] video').trigger('play');
+                }
+                if (_typeof($thisSwiper) === 'object') {
+                  $thisSwiper.slideTo(this.content.find('> .swiper > .swiper-wrapper > .swiper-slide[data-uid="' + currentElement.data('mfp-src') + '"]').index());
+                }
+
+                // Initialize product carousel in the current slide
+                var $currentSlide = this.content.find('> .swiper > .swiper-wrapper > .swiper-slide[data-uid="' + currentElement.data('mfp-src') + '"]');
+                if (typeof window.wpzInstaInitProductCarousel === 'function') {
+                  window.wpzInstaInitProductCarousel($currentSlide);
+                }
+              },
+              afterClose: function afterClose() {
+                // Destroy swiper videos
+                $swipe_el.find('video').each(function () {
+                  this.pause();
+                  this.currentTime = 0;
+                });
+              }
+            }
+          });
+          galleryTrigger.find('.zoom-instagram-link').addClass('magnific-active');
+        }
+      });
+    };
+
+    // Initialize product card carousel in lightbox
+    function initProductCarousel($container) {
+      var $carousels = $container.find('.wpz-insta-lightbox-product--carousel');
+      $carousels.each(function () {
+        var $carousel = $(this);
+
+        // Skip if already initialized
+        if ($carousel.data('carousel-initialized')) {
+          return;
+        }
+        var $inner = $carousel.find('.wpz-insta-lightbox-product__carousel-inner');
+        var $cards = $inner.find('.wpz-insta-lightbox-product__card');
+        var $prevBtn = $carousel.find('.wpz-insta-lightbox-product__carousel-prev');
+        var $nextBtn = $carousel.find('.wpz-insta-lightbox-product__carousel-next');
+        var $dotsContainer = $carousel.find('.wpz-insta-lightbox-product__carousel-dots');
+        if ($cards.length <= 1) {
+          $prevBtn.hide();
+          $nextBtn.hide();
+          $dotsContainer.hide();
+          return;
+        }
+        var currentIndex = 0;
+        var totalSlides = $cards.length;
+
+        // Create dots
+        $dotsContainer.empty();
+        var _loop = function _loop(i) {
+          var $dot = $('<span class="wpz-insta-lightbox-product__carousel-dot"></span>');
+          if (i === 0) {
+            $dot.addClass('active');
+          }
+          $dot.on('click', function () {
+            goToSlide(i);
+          });
+          $dotsContainer.append($dot);
+        };
+        for (var i = 0; i < totalSlides; i++) {
+          _loop(i);
+        }
+        function updateCarousel() {
+          $inner.css('transform', 'translateX(-' + currentIndex * 100 + '%)');
+
+          // Update dots
+          $dotsContainer.find('.wpz-insta-lightbox-product__carousel-dot').removeClass('active').eq(currentIndex).addClass('active');
+
+          // Update buttons
+          $prevBtn.prop('disabled', currentIndex === 0);
+          $nextBtn.prop('disabled', currentIndex === totalSlides - 1);
+        }
+        function goToSlide(index) {
+          if (index >= 0 && index < totalSlides) {
+            currentIndex = index;
+            updateCarousel();
+          }
+        }
+        $prevBtn.on('click', function () {
+          if (currentIndex > 0) {
+            goToSlide(currentIndex - 1);
+          }
+        });
+        $nextBtn.on('click', function () {
+          if (currentIndex < totalSlides - 1) {
+            goToSlide(currentIndex + 1);
+          }
+        });
+
+        // Initialize
+        updateCarousel();
+        $carousel.data('carousel-initialized', true);
+      });
+    }
+
+    // Expose globally for use in lightbox callbacks
+    window.wpzInstaInitProductCarousel = initProductCarousel;
+    $.fn.zoomInstagramWidget = function (options) {
+      return $(this).each(function () {
+        var $list = $(this);
+        var opts = options || {};
+        var minItemsPerRow = $list.data('images-per-row');
+        var desiredItemWidth = $list.data('image-width');
+        var itemSpacing = $list.data('image-spacing');
+        var imageLazyLoading = $list.data('image-lazy-loading');
+        var containerWidth = $list.width();
+        var fitPerRow;
+        var itemWidth;
+        if (containerWidth / desiredItemWidth < minItemsPerRow) {
+          fitPerRow = minItemsPerRow;
+          itemWidth = Math.floor((containerWidth - 1 - (minItemsPerRow - 1) * itemSpacing) / minItemsPerRow);
+        } else {
+          fitPerRow = Math.floor((containerWidth - 1) / desiredItemWidth);
+          itemWidth = Math.floor((containerWidth - 1 - (fitPerRow - 1) * itemSpacing) / fitPerRow);
+        }
+
+        // If onlyNewItems is specified, only process items from that index onwards
+        var $itemsToProcess = opts.onlyNewItems && opts.startIndex !== undefined ? $list.find('li').slice(opts.startIndex) : $list.find('li');
+        $itemsToProcess.each(function (relativeIndex) {
+          // Calculate the global index (position among all items)
+          var globalIndex = opts.onlyNewItems && opts.startIndex !== undefined ? opts.startIndex + relativeIndex : relativeIndex;
+          var loop = globalIndex + 1; // 1-based indexing
+
+          if (loop % fitPerRow == 1) {
+            $(this).css('clear', 'left');
+          } else {
+            $(this).css('clear', 'none');
+          }
+          if (loop % fitPerRow == 0) {
+            $(this).css('margin-right', '0');
+          } else {
+            $(this).css('margin-right', itemSpacing + 'px');
+            $(this).css('margin-bottom', itemSpacing + 'px');
+          }
+        });
+
+        // Always update link dimensions for all items
+        $list.find('a.zoom-instagram-link').css({
+          width: itemWidth,
+          height: itemWidth
+        });
+
+        // if (imageLazyLoading) {
+        $list.find('a.zoom-instagram-link-old').lazy();
+        $list.find('.zoom-instagram-link-new').lazy();
+        // }
+
+        $list.removeClass('zoom-instagram-widget__items--no-js');
+      });
+    };
+    function requestTick() {
+      if (!ticking) {
+        ticking = true;
+        requestAnimationFrame()(update);
+      }
+    }
+    function requestAnimationFrame() {
+      return window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || function (callback) {
+        window.setTimeout(callback, 1000 / 60);
+      };
+    }
+    function update() {
+      $('.zoom-instagram-widget__items').each(function () {
+        var $container = $(this);
+        if ($container.hasClass('layout-masonry')) {
+          // Try to use WordPress masonry if available
+          if (typeof $.fn.masonry === 'function') {
+            // Initialize masonry for masonry layouts
+            if (!$container.data('masonry')) {
+              $container.masonry({
+                itemSelector: '.zoom-instagram-widget__item',
+                columnWidth: '.masonry-items-sizer',
+                percentPosition: true,
+                gutter: parseInt($container.data('spacing') || 10)
+              });
+            } else {
+              // Refresh masonry layout
+              $container.masonry('layout');
+            }
+          } else {
+            // Fallback for masonry when library not available
+            $container.zoomInstagramWidget();
+          }
+        } else {
+          // Use existing grid function for non-masonry layouts
+          $container.zoomInstagramWidget();
+        }
+      });
+      ticking = false;
+    }
+    $(window).on('resize orientationchange', requestTick);
+
+    // Initialize layouts on page load
+    $('.zoom-instagram-widget__items').each(function () {
+      var $container = $(this);
+      if ($container.hasClass('layout-masonry')) {
+        // Try to use WordPress masonry if available
+        if (typeof $.fn.masonry === 'function') {
+          // Initialize masonry for masonry layouts
+          $container.masonry({
+            itemSelector: '.zoom-instagram-widget__item',
+            columnWidth: '.masonry-items-sizer',
+            percentPosition: true,
+            gutter: parseInt($container.data('spacing') || 10)
+          });
+        } else {
+          // Fallback for masonry when library not available
+          $container.zoomInstagramWidget();
+        }
+      } else {
+        // Use existing grid function for non-masonry layouts
+        $container.zoomInstagramWidget();
+      }
+    });
+    $('.zoom-instagram-widget__items').zoomLoadAsyncImages();
+    $('.zoom-instagram-widget__items[data-lightbox="1"]').zoomLightbox();
+    var siteOriginInit = function siteOriginInit() {
+      var $widgets = $('.zoom-instagram-widget__items');
+      if ($widgets.length) {
+        $widgets.each(function () {
+          var $container = $(this);
+          if ($container.hasClass('layout-masonry')) {
+            // Try to use WordPress masonry if available
+            if (typeof $.fn.masonry === 'function') {
+              // Initialize masonry for masonry layouts
+              $container.masonry({
+                itemSelector: '.zoom-instagram-widget__item',
+                columnWidth: '.masonry-items-sizer',
+                percentPosition: true,
+                gutter: parseInt($container.data('spacing') || 10)
+              });
+            } else {
+              // Fallback for masonry when library not available
+              $container.zoomInstagramWidget();
+            }
+          } else {
+            // Use existing grid function for non-masonry layouts
+            $container.zoomInstagramWidget();
+          }
+        });
+        $('.zoom-instagram-widget__items').zoomLoadAsyncImages();
+      }
+    };
+    var debounceInit = _.debounce(siteOriginInit, 1500);
+    $(document).on('panels_setup_preview', debounceInit);
+
+    // Re-initialize load more buttons when new content is added dynamically
+    $(document).on('wpz-insta:loaded-more', function () {
+      initLoadMoreButtons();
+    });
+    $(window).on('elementor/frontend/init', function () {
+      elementorFrontend.hooks.addAction('frontend/element_ready/widget', function ($scope) {
+        if ($scope.data('widget_type') == "wpzoom-elementor-instagram-widget.default") {
+          // Handle both masonry and regular layouts for Elementor
+          $scope.find('.zoom-instagram-widget__items').each(function () {
+            var $container = $(this);
+            if ($container.hasClass('layout-masonry')) {
+              // Try to use WordPress masonry if available
+              if (typeof $.fn.masonry === 'function') {
+                // Initialize masonry for masonry layouts
+                $container.masonry({
+                  itemSelector: '.zoom-instagram-widget__item',
+                  columnWidth: '.masonry-items-sizer',
+                  percentPosition: true,
+                  gutter: parseInt($container.data('spacing') || 10)
+                });
+              } else {
+                // Fallback for masonry when library not available
+                $container.zoomInstagramWidget();
+              }
+            } else {
+              // Use existing grid function for non-masonry layouts
+              $container.zoomInstagramWidget();
+            }
+          });
+        }
+      });
+    });
+  });
+})(jQuery);
+
+// WooCommerce Product Link: notify parent when "Link to a product" is clicked (we're inside iframe)
+document.body.addEventListener('click', function (event) {
+  var btn = event.target.closest('.wpz-insta-link-product-btn');
+  if (!btn) {
+    return;
+  }
+  event.preventDefault();
+  event.stopPropagation();
+  if (typeof window.parent.postMessage === 'function') {
+    // Find the parent item to get media type and image URL
+    var item = btn.closest('.zoom-instagram-widget__item');
+    var mediaType = item ? item.getAttribute('data-media-type') || 'image' : 'image';
+    var imageUrl = '';
+    var albumImages = [];
+
+    // Get image URL for tagging
+    var img = item ? item.querySelector('img.zoom-instagram-link') : null;
+    if (img) {
+      imageUrl = img.getAttribute('src') || img.getAttribute('data-src') || '';
+    }
+
+    // For carousel albums, collect all children images from the lightbox data if available
+    if (mediaType === 'carousel_album') {
+      // Album children data will be fetched via AJAX when tagging view opens
+      // This is more reliable than trying to parse from DOM
+    }
+    window.parent.postMessage({
+      action: 'wpz-insta-open-product-link',
+      mediaId: btn.getAttribute('data-media-id') || '',
+      feedId: btn.getAttribute('data-feed-id') || '',
+      productId: btn.getAttribute('data-product-id') || '',
+      mediaType: mediaType,
+      imageUrl: imageUrl
+    }, '*');
+  }
+}, true);
+/******/ })()
+;
+//# sourceMappingURL=index.js.map

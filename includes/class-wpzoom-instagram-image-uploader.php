@@ -67,23 +67,16 @@ class WPZOOM_Instagram_Image_Uploader {
 			$image_src = wp_get_attachment_image_src( $attachment_id, self::get_image_size_name( $media_size ) );
 
 			return ! empty( $image_src ) ? $image_src[0] : $media_url;
-		
-		} else {
-			
-			$attachment_id = self::upload_image( $media_url, $media_id );
-			
-			if( ! is_wp_error( $attachment_id ) ) {
-				
-				self::$instance->set_images_to_transient( $attachment_id, $media_id );
-				$image_src = wp_get_attachment_image_src( $attachment_id, self::get_image_size_name( $media_size ) );
-			
-			} 
-			
-			return ! empty( $image_src ) ? $image_src[0] : $media_url;
-			
 		}
 
-		return false;
+		$attachment_id = self::upload_image( $media_url, $media_id );
+
+		if ( ! is_wp_error( $attachment_id ) ) {
+			self::$instance->set_images_to_transient( $attachment_id, $media_id );
+			$image_src = wp_get_attachment_image_src( $attachment_id, self::get_image_size_name( $media_size ) );
+		}
+
+		return ! empty( $image_src ) ? $image_src[0] : $media_url;
 	}
 
 	/**
