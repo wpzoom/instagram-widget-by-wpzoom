@@ -139,16 +139,19 @@ class Wpzoom_Instagram_Widget_Display {
 			);
 
 			if ( is_array( $all_items ) && ! empty( $all_items['items'] ) ) {
-				$cached_slice = array_slice( $all_items['items'], $cache_offset, $item_amount );
+				// Over-slice to compensate for hidden posts that will be filtered out by items_html.
+				// This ensures we get enough visible items to fill the requested $item_amount.
+				$hidden_count = 0;
+				if ( self::$instance->is_pro && $feed_id > 0 ) {
+					$hidden_posts_for_slice = get_post_meta( $feed_id, '_wpz-insta_hidden-posts', true );
+					if ( is_array( $hidden_posts_for_slice ) ) {
+						$hidden_count = count( $hidden_posts_for_slice );
+					}
+				}
+				$slice_amount = $item_amount + $hidden_count;
+				$cached_slice = array_slice( $all_items['items'], $cache_offset, $slice_amount );
 
 				if ( ! empty( $cached_slice ) ) {
-					$new_offset   = $cache_offset + count( $cached_slice );
-					$total_cached = count( $all_items['items'] );
-					// Cache has more items, or API has more pages
-					$api_has_more   = ! empty( $all_items['paging'] ) && property_exists( $all_items['paging'], 'next' ) && ! empty( $all_items['paging']->next );
-					$cache_has_more = $new_offset < $total_cached;
-					$has_more       = $cache_has_more || $api_has_more;
-
 					// Ensure images use valid URLs: local thumbnails may not exist for cached items
 					foreach ( $cached_slice as &$ci ) {
 						if ( ! empty( $ci['image-url'] ) && ! empty( $ci['original-image-url'] ) ) {
@@ -179,7 +182,22 @@ class Wpzoom_Instagram_Widget_Display {
 						'feed-id'                => $feed_id,
 					);
 
-					$html = self::items_html( $cached_slice, $args );
+					// When load more is from backend preview iframe, include "Link to a product" and moderate (eye) buttons
+					if ( ! empty( $_POST['preview'] ) && is_user_logged_in() && current_user_can( 'manage_options' ) ) {
+						$args['preview'] = true;
+					}
+
+					$items_consumed_count = 0;
+					$html = self::items_html( $cached_slice, $args, $items_consumed_count );
+
+					// Use items_consumed (actual items processed) for offset, not the full slice count.
+					// This prevents skipping unprocessed items when hidden posts cause early count-limit break.
+					$new_offset   = $cache_offset + $items_consumed_count;
+					$total_cached = count( $all_items['items'] );
+					// Cache has more items, or API has more pages
+					$api_has_more   = ! empty( $all_items['paging'] ) && property_exists( $all_items['paging'], 'next' ) && ! empty( $all_items['paging']->next );
+					$cache_has_more = $new_offset < $total_cached;
+					$has_more       = $cache_has_more || $api_has_more;
 
 					// Generate lightbox content for cached items (pass $args so feed-id is available for product tags)
 					$lightbox_html = '';
@@ -220,18 +238,14 @@ class Wpzoom_Instagram_Widget_Display {
 			wp_send_json_error( 'No more posts to load' );
 		}
 
-		// Over-fetch to compensate for hidden/moderated posts (PRO only)
-		$api_limit = $item_amount;
-		if ( self::$instance->is_pro && $feed_id > 0 ) {
-			$hidden_posts_meta = get_post_meta( $feed_id, '_wpz-insta_hidden-posts', true );
-			if ( is_array( $hidden_posts_meta ) && ! empty( $hidden_posts_meta ) ) {
-				$api_limit = $item_amount + count( $hidden_posts_meta );
-			}
-		}
-
+		// Don't over-fetch for API-based load more: items_html limits output to $item_amount
+		// visible items, but the API cursor moves past ALL fetched items. Over-fetching here
+		// would cause items between the rendered count and the over-fetch count to be permanently
+		// lost (never shown to the user). It's acceptable to show fewer items per batch if some
+		// are hidden — the user can simply click load more again.
 		$items = $this->api->get_items(
 			array(
-				'image-limit'          => $api_limit,
+				'image-limit'          => $item_amount,
 				'image-resolution'     => $image_size,
 				'image-width'          => $image_width,
 				'include-pagination'   => true,
@@ -1083,8 +1097,9 @@ class Wpzoom_Instagram_Widget_Display {
 
 						$wrapper_swiper_class = ( $this->is_pro && 'carousel' === $layout && ! $preview ) ? ' swiper' : '';
 						$masonry_sizer         = ( $this->is_pro && 'masonry' === $layout && ! $preview ) ? '<li class="masonry-items-sizer"></li>' : '';
+						$items_consumed_count = 0;
 						$output .= '<div class="zoom-instagram-widget__items-wrapper' . $wrapper_swiper_class . '"><ul class="' . $classes . '"' . $attrs . '>' . $masonry_sizer;
-						$output .= self::items_html( $items['items'], $args );
+						$output .= self::items_html( $items['items'], $args, $items_consumed_count );
 						$output .= '</ul>';
 						if ( $this->is_pro && 'carousel' === $layout && ! $preview ) {
 							$output .= '<div class="swiper-button-prev"></div><div class="swiper-button-next"></div>';
@@ -1104,14 +1119,17 @@ class Wpzoom_Instagram_Widget_Display {
 
 							if ( $show_load_more_button && 'fullwidth' !== $layout && 'carousel' !== $layout ) {
 								$next_url = ! empty( $items ) && array_key_exists( 'paging', $items ) && is_object( $items['paging'] ) && property_exists( $items['paging'], 'next' ) ? esc_url( $items['paging']->next ) : '';
-								$initial_display_count = is_array( $items ) && ! empty( $items['items'] ) ? count( $items['items'] ) : 0;
+								// Use items_consumed_count (actual items processed by items_html) instead of
+								// total fetched count, so load more doesn't skip unprocessed items from the over-fetch gap.
+								$initial_display_count = $items_consumed_count > 0 ? $items_consumed_count : ( is_array( $items ) && ! empty( $items['items'] ) ? count( $items['items'] ) : 0 );
 								// Has more: either more cached items (we fetch ~30 initially) or more from API
-								$has_more_in_cache = $initial_display_count > 0 && $initial_display_count < 30;
+								$total_cached = is_array( $items ) && ! empty( $items['items'] ) ? count( $items['items'] ) : 0;
+								$has_more_in_cache = $initial_display_count > 0 && $initial_display_count < $total_cached;
 								$has_more = $has_more_in_cache || ! empty( $next_url );
-								
+
 								// New fast button-based AJAX system (always generate for performance)
 								$output .= '<div class="wpzinsta-pro-load-more-wrapper"' . ( ! $this->is_pro ? ' data-disabled="true"' : '' ) . '>';
-								$output .= '<button type="button" class="wpzinsta-pro-load-more-btn"' . 
+								$output .= '<button type="button" class="wpzinsta-pro-load-more-btn"' .
 										   ' data-feed-id="' . esc_attr( isset( $args['feed-id'] ) ? intval( $args['feed-id'] ) : -1 ) . '"' .
 										   ' data-item-amount="' . esc_attr( $amount ) . '"' .
 										   ' data-image-size="' . esc_attr( $image_size ) . '"' .
@@ -1175,8 +1193,9 @@ class Wpzoom_Instagram_Widget_Display {
 	 * @param  array  $args  The arguments to define how to return the feed items.
 	 * @return string        The markup for the given feed items, empty string otherwise.
 	 */
-	public static function items_html( $items, $args ) {
+	public static function items_html( $items, $args, &$items_consumed = null ) {
 		$output = '';
+		$items_consumed = 0;
 
 		if ( ! empty( $items ) && is_array( $items ) ) {
 			$is_editor = ( defined( 'REST_REQUEST' ) && true === REST_REQUEST && 'edit' === filter_input( INPUT_GET, 'context', FILTER_SANITIZE_SPECIAL_CHARS ) )
@@ -1209,7 +1228,8 @@ class Wpzoom_Instagram_Widget_Display {
 				}
 			}
 
-			foreach ( $items as $item ) {                
+			foreach ( $items as $item ) {
+				$items_consumed++;
 
 				$inline_attrs  = '';
 				$overwrite_src = false;
@@ -1509,6 +1529,16 @@ class Wpzoom_Instagram_Widget_Display {
 		if ( ! empty( $items ) && is_array( $items ) ) {
 			$user = get_post( $user_id );
 			$feed_id = isset( $args['feed-id'] ) ? intval( $args['feed-id'] ) : 0;
+			$preview = isset( $args['preview'] ) ? true : false;
+
+			// Get hidden posts to skip in lightbox (must match items_html filtering)
+			$hidden_posts = array();
+			if ( self::$instance->is_pro && $feed_id > 0 ) {
+				$hidden_posts_meta = get_post_meta( $feed_id, '_wpz-insta_hidden-posts', true );
+				if ( is_array( $hidden_posts_meta ) ) {
+					$hidden_posts = $hidden_posts_meta;
+				}
+			}
 
 			if ( $user instanceof WP_Post ) {
 				$amount = count( $items );
@@ -1518,11 +1548,17 @@ class Wpzoom_Instagram_Widget_Display {
 				$user_image = get_the_post_thumbnail_url( $user, 'thumbnail' ) ?: WPZOOM_INSTAGRAM_PLUGIN_URL . 'dist/images/backend/icon-insta.png';
 
 				foreach ( $items as $item ) {
-					$count++;
 					$link     = isset( $item['link'] ) ? $item['link'] : '';
 					$src      = isset( $item['original-image-url'] ) ? $item['original-image-url'] : '';
 					$src_local = isset( $item['local-image-url'] ) ? $item['local-image-url'] : '';
 					$media_id = isset( $item['image-id'] ) ? $item['image-id'] : '';
+
+					// Skip hidden posts in lightbox (matches items_html filtering)
+					if ( ! $preview && ! empty( $media_id ) && in_array( $media_id, $hidden_posts, true ) ) {
+						continue;
+					}
+
+					$count++;
 					$alt      = isset( $item['image-caption'] ) ? esc_attr( $item['image-caption'] ) : '';
 					$typ      = isset( $item['type'] ) ? strtolower( $item['type'] ) : 'image';
 					$type     = in_array( $typ, array( 'video', 'carousel_album' ) ) ? $typ : false;
