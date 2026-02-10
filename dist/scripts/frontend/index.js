@@ -89,20 +89,27 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
         var originalText = $button.find('.button-text').text();
         $button.find('.button-text').text('Loading...');
 
+        // When in backend widget preview iframe, send preview flag so new items get moderate (eye) buttons
+        var isWidgetPreview = window.location.search.indexOf('wpz-insta-widget-preview') !== -1;
+        var ajaxData = {
+          action: 'wpzoom_instagram_load_more',
+          feed_id: feedId,
+          item_amount: itemAmount,
+          image_size: imageSize,
+          allowed_post_types: allowedPostTypes,
+          next: nextUrl,
+          _wpnonce: nonce
+        };
+        if (isWidgetPreview) {
+          ajaxData.preview = 1;
+        }
+
         // Make AJAX request
         $.ajax({
           url: wpzInstaAjax.ajaxurl,
           type: 'POST',
           dataType: 'json',
-          data: {
-            action: 'wpzoom_instagram_load_more',
-            feed_id: feedId,
-            item_amount: itemAmount,
-            image_size: imageSize,
-            allowed_post_types: allowedPostTypes,
-            next: nextUrl,
-            _wpnonce: nonce
-          },
+          data: ajaxData,
           success: function success(response) {
             if (response.success && response.data.html) {
               // Store current item count before adding new items

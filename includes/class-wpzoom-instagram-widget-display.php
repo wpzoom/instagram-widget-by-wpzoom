@@ -154,7 +154,13 @@ class Wpzoom_Instagram_Widget_Display {
 			'image-size'           => $image_size,
 			'show-likes'           => false, // Skip for performance
 			'show-comments'        => false, // Skip for performance
+			'feed-id'              => $feed_id,
 		);
+
+		// When load more is triggered from the backend preview iframe, include moderate (eye) buttons
+		if ( ! empty( $_POST['preview'] ) && is_user_logged_in() && current_user_can( 'manage_options' ) ) {
+			$args['preview'] = true;
+		}
 
 		// Generate HTML for new items
 		$html = self::items_html( $items['items'], $args );
