@@ -66,7 +66,6 @@ if ( ! class_exists( 'WPZOOM_Instagram_Widget_Assets ' ) ) {
 			add_action( 'enqueue_block_assets', array( $this, 'widget_styles' ), 5 );
 			
 			add_action( 'enqueue_block_editor_assets', array( $this, 'register_block_assets' ) );
-			add_action( 'enqueue_block_editor_assets', array( $this, 'widget_styles' ) );
 
 			add_action( 'wp_enqueue_scripts', array( $this, 'widget_styles' ) );
 			add_action( 'wp_enqueue_scripts', array( $this, 'register_widget_scripts' ) );
