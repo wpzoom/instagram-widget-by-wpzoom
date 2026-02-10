@@ -1596,6 +1596,7 @@ class WPZOOM_Instagram_Widget_Settings {
 						<ul>
 							<li class="active"><a href="<?php echo esc_url( '#config' ); ?>"><?php _e( 'Configure', 'instagram-widget-by-wpzoom' ); ?></a></li>
 							<li <?php echo $disabled_class; ?>><a href="<?php echo esc_url( '#design' ); ?>"><?php _e( 'Design', 'instagram-widget-by-wpzoom' ); ?></a></li>
+							<li <?php echo $disabled_class; ?>><a href="<?php echo esc_url( '#moderate' ); ?>"><?php _e( 'Moderate', 'instagram-widget-by-wpzoom' ); ?><?php echo apply_filters( 'wpz-insta_admin-pro-options-toggle', true ) ? ' <span class="wpz-insta-pro-badge">' . esc_html__( 'PRO', 'instagram-widget-by-wpzoom' ) . '</span>' : ''; ?></a></li>
 							<li <?php echo $disabled_class; ?>><a href="<?php echo esc_url( '#embed' ); ?>"><?php _e( 'Embed', 'instagram-widget-by-wpzoom' ); ?></a><?php echo $embed_pointer; ?></li>
 							<li <?php echo $disabled_class; ?>><a href="<?php echo esc_url( '#product-links' ); ?>"><?php _e( 'Product Links', 'instagram-widget-by-wpzoom' ); ?> <?php if ( apply_filters( 'wpz-insta_is-pro', false ) ) : ?><span class="wpz-insta-new-badge"><?php esc_html_e( 'New', 'instagram-widget-by-wpzoom' ); ?></span><?php else : ?><span class="wpz-insta-pro-badge"><?php esc_html_e( 'PRO', 'instagram-widget-by-wpzoom' ); ?></span><?php endif; ?></a></li>
 						</ul>
@@ -2523,6 +2524,29 @@ class WPZOOM_Instagram_Widget_Settings {
 									</label>
 								</div>
 							</div>
+						</div>
+
+						<div class="wpz-insta_sidebar-left-section" data-id="#moderate">
+							<h4 class="wpz-insta_sidebar-section-big-title"><?php esc_html_e( 'Moderate Posts', 'instagram-widget-by-wpzoom' ); ?><?php echo $pro_toggle ? ' <span class="wpz-insta-pro-badge">' . esc_html__( 'PRO', 'instagram-widget-by-wpzoom' ) . '</span>' : ''; ?></h4>
+
+							<?php if ( $pro_toggle ) : ?>
+							<div class="wpz-insta_sidebar-section wpz-insta_sidebar-section-moderate-intro no-top-border wpz-insta_pro-only-feature">
+								<p class="wpz-insta_sidebar-section-description"><?php esc_html_e( 'Hide or show individual posts in your feed. Click the eye icon on each post in the preview to control visibility—hidden posts will not be visible to visitors on your website.', 'instagram-widget-by-wpzoom' ); ?></p>
+								<a href="https://www.wpzoom.com/plugins/instagram-widget/?utm_source=plugin&utm_medium=moderate-section&utm_campaign=upgrade-to-pro" 
+								   target="_blank" 
+								   class="button button-primary wpz-insta-upgrade-pro-btn"
+								   style="margin-top: 16px;">
+									<?php esc_html_e( 'Upgrade to PRO', 'instagram-widget-by-wpzoom' ); ?>
+								</a>
+							</div>
+							<?php else : ?>
+							<div class="wpz-insta_sidebar-section wpz-insta_sidebar-section-moderate-intro no-top-border">
+								<h5 class="wpz-insta_sidebar-section-title smaller-title"><?php esc_html_e( 'Hide or Show Posts', 'instagram-widget-by-wpzoom' ); ?></h5>
+								<div class="wpz-insta_sidebar-section-description">
+									<p><?php esc_html_e( 'Click the eye icon on each Instagram post in the preview to hide or show it in your feed. Hidden posts will not be visible to visitors on your website', 'instagram-widget-by-wpzoom' ); ?></p>
+								</div>
+							</div>
+							<?php endif; ?>
 						</div>
 
 						<div class="wpz-insta_sidebar-left-section" data-id="#embed">
@@ -3541,6 +3565,38 @@ class WPZOOM_Instagram_Widget_Settings {
 		}
 
 				$should_clear_transients = ( $old_item_num != $new_item_num ) || ( $old_allowed_post_types != $new_allowed_post_types ) || ( $old_user_id != $new_user_id );
+
+			// Save pending hidden posts from the form submission (Moderate Posts feature — PRO only)
+			$pro_toggle_save = apply_filters( 'wpz-insta_admin-pro-options-toggle', true );
+			if ( ! $pro_toggle_save && isset( $_POST['_wpz-insta_pending-hidden-posts'] ) && ! empty( $_POST['_wpz-insta_pending-hidden-posts'] ) ) {
+				$pending_hidden_json = wp_unslash( $_POST['_wpz-insta_pending-hidden-posts'] );
+				$pending_hidden = json_decode( $pending_hidden_json, true );
+
+				if ( is_array( $pending_hidden ) && ! empty( $pending_hidden ) ) {
+					// Get existing hidden posts
+					$existing_hidden = get_post_meta( $post_ID, '_wpz-insta_hidden-posts', true );
+					if ( ! is_array( $existing_hidden ) ) {
+						$existing_hidden = array();
+					}
+
+					// Merge pending changes with existing hidden posts
+					foreach ( $pending_hidden as $media_id => $is_hidden ) {
+						$media_id = sanitize_text_field( $media_id );
+						if ( $is_hidden ) {
+							// Add to hidden list
+							if ( ! in_array( $media_id, $existing_hidden, true ) ) {
+								$existing_hidden[] = $media_id;
+							}
+						} else {
+							// Remove from hidden list
+							$existing_hidden = array_values( array_diff( $existing_hidden, array( $media_id ) ) );
+						}
+					}
+
+					// Save the updated hidden posts list
+					update_post_meta( $post_ID, '_wpz-insta_hidden-posts', $existing_hidden );
+				}
+			}
 
 		if ( ! empty( $meta_keys ) ) {
 			$meta_keys = array_filter( $meta_keys, function( $key ) { return strpos( $key, 'wpz-insta_' ) !== false; }, ARRAY_FILTER_USE_KEY );
@@ -4581,6 +4637,23 @@ class WPZOOM_Instagram_Widget_Settings {
 		return $text;
 	}
 
+	/**
+	 * Get hidden posts for the current feed (for JS localization).
+	 *
+	 * @return string JSON-encoded array of hidden media IDs, or empty string.
+	 */
+	private function get_hidden_posts_for_js() {
+		global $post;
+		if ( ! $post || 'wpz-insta_feed' !== get_post_type( $post ) ) {
+			return '[]';
+		}
+		$hidden_posts = get_post_meta( $post->ID, '_wpz-insta_hidden-posts', true );
+		if ( is_array( $hidden_posts ) ) {
+			return wp_json_encode( array_values( $hidden_posts ) );
+		}
+		return '[]';
+	}
+
 	public function scripts( $hook ) {
 		if ( self::is_wpzinsta_screen() ) {
 			wp_enqueue_media();
@@ -4608,7 +4681,8 @@ class WPZOOM_Instagram_Widget_Settings {
 					'i18n_delete_feed_confirm_content'  => __( 'Are you sure you want to delete this feed? <strong class="severe">This action cannot be undone!</strong>', 'instagram-widget-by-wpzoom' ),
 					'i18n_delete_confirm_button_ok'     => __( 'Yes', 'instagram-widget-by-wpzoom' ),
 					'i18n_delete_confirm_button_cancel' => __( 'No', 'instagram-widget-by-wpzoom' ),
-					'nonce'                             => wp_create_nonce( 'ajax-nonce' ),	
+					'nonce'                             => wp_create_nonce( 'ajax-nonce' ),
+					'hidden_posts'                      => $this->get_hidden_posts_for_js(),
 					'feeds_url'                         => admin_url( self::$any_feeds ? 'edit.php?post_type=wpz-insta_feed' : 'post-new.php?post_type=wpz-insta_feed' ),
 					'users_url' 					    => admin_url( self::$any_users ? 'edit.php?post_type=wpz-insta_user' : 'post-new.php?post_type=wpz-insta_user' ),
 					'edit_user_url'                     => admin_url( 'edit.php?post_type=wpz-insta_user#post-' ),

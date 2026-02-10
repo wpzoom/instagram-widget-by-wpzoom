@@ -564,7 +564,7 @@ jQuery( function( $ ) {
 		$(this).closest( '.wpz-insta_sidebar-right' ).addClass( 'hide-loading' );
 		// Sync current form state to preview via postMessage (so unsaved design changes apply without another reload)
 		wpzInstaSendPreviewUpdate();
-		// Re-send current tab so "Link to a product" buttons show if Product Links tab was clicked before iframe loaded
+		// Re-send current tab so "Link to a product" / Moderate buttons show if tab was clicked before iframe loaded
 		const iframe = this;
 		if ( iframe.contentWindow ) {
 			const activeTab = $( '.wpz-insta_feed-edit-nav li.active a' ).attr( 'href' );
@@ -716,7 +716,7 @@ jQuery( function( $ ) {
 			$tabs.removeClass( 'active' );
 			$tabs.filter( '[data-id="' + id + '"]' ).addClass( 'active' );
 
-			// Notify iframe of tab change so it can show/hide "Link to a product" buttons without reload
+			// Notify iframe of tab change so it can show/hide "Link to a product" / Moderate buttons without reload
 			const iframe = document.querySelector( '#wpz-insta_widget-preview-view iframe' );
 			if ( iframe && iframe.contentWindow ) {
 				const tabId = ( id + '' ).replace( /^#/, '' );
@@ -2084,4 +2084,110 @@ jQuery( function( $ ) {
 			loadProducts( search, page );
 		} );
 	}
+
+	// =============================
+	// Moderate Posts functionality
+	// =============================
+
+	// Pending hidden posts stored in memory (saved to DB when post is saved)
+	// Structure: { mediaId: true, ... } where true = hidden
+	var pendingHiddenPosts = {};
+
+	// Track which media IDs were hidden when page loaded (from DB)
+	var initialHiddenPosts = {};
+
+	// Initialize pending hidden posts from existing data
+	function initPendingHiddenPosts() {
+		var $hiddenInput = $( '#wpz-insta-pending-hidden-posts' );
+		if ( $hiddenInput.length === 0 ) {
+			$( 'form#post' ).append( '<input type="hidden" id="wpz-insta-pending-hidden-posts" name="_wpz-insta_pending-hidden-posts" value="" class="preview-exclude" />' );
+		}
+
+		// Load initial hidden posts from localized data
+		if ( typeof zoom_instagram_widget_admin !== 'undefined' && zoom_instagram_widget_admin.hidden_posts ) {
+			try {
+				var parsed = typeof zoom_instagram_widget_admin.hidden_posts === 'string'
+					? JSON.parse( zoom_instagram_widget_admin.hidden_posts )
+					: zoom_instagram_widget_admin.hidden_posts;
+				if ( Array.isArray( parsed ) ) {
+					parsed.forEach( function( id ) {
+						initialHiddenPosts[ id ] = true;
+					} );
+				}
+			} catch ( e ) {}
+		}
+	}
+
+	// Update the hidden input with current pending hidden posts
+	function updatePendingHiddenPostsInput() {
+		var $hiddenInput = $( '#wpz-insta-pending-hidden-posts' );
+		if ( $hiddenInput.length ) {
+			$hiddenInput.val( JSON.stringify( pendingHiddenPosts ) );
+		}
+
+		// Trigger form change detection so Save button becomes active
+		if ( hasAnyHiddenPostChanges() ) {
+			if ( ! ( '_wpz-insta_pending-hidden-posts' in formChangedValues ) ) {
+				formChangedValues[ '_wpz-insta_pending-hidden-posts' ] = true;
+			}
+		} else {
+			if ( '_wpz-insta_pending-hidden-posts' in formChangedValues ) {
+				delete formChangedValues[ '_wpz-insta_pending-hidden-posts' ];
+			}
+		}
+		$( 'input#publish' ).toggleClass( 'disabled', $.isEmptyObject( formChangedValues ) );
+	}
+
+	// Check if there are any pending changes compared to initial state
+	function hasAnyHiddenPostChanges() {
+		return ! $.isEmptyObject( pendingHiddenPosts );
+	}
+
+	// Check if a media ID is hidden (check pending first, then initial)
+	function isPostHidden( mediaId ) {
+		if ( mediaId in pendingHiddenPosts ) {
+			return pendingHiddenPosts[ mediaId ];
+		}
+		return !! initialHiddenPosts[ mediaId ];
+	}
+
+	// Toggle the hidden state of a media item
+	function togglePostVisibility( mediaId ) {
+		var currentlyHidden = isPostHidden( mediaId );
+		var newState = ! currentlyHidden;
+
+		// Store the new state
+		pendingHiddenPosts[ mediaId ] = newState;
+
+		// If we're reverting to the initial state, remove from pending
+		if ( ( !! initialHiddenPosts[ mediaId ] ) === newState ) {
+			delete pendingHiddenPosts[ mediaId ];
+		}
+
+		updatePendingHiddenPostsInput();
+
+		// Notify iframe to update the visual state
+		var iframe = document.querySelector( '#wpz-insta_widget-preview-view iframe' );
+		if ( iframe && iframe.contentWindow ) {
+			iframe.contentWindow.postMessage( {
+				action: 'wpz-insta-moderate-update',
+				mediaId: mediaId,
+				hidden: newState
+			}, '*' );
+		}
+	}
+
+	// Initialize moderate posts
+	initPendingHiddenPosts();
+
+	// Listen for moderate toggle messages from the iframe
+	window.addEventListener( 'message', function( e ) {
+		if ( ! e.data || e.data.action !== 'wpz-insta-toggle-visibility' ) {
+			return;
+		}
+		var mediaId = e.data.mediaId || '';
+		if ( mediaId ) {
+			togglePostVisibility( mediaId );
+		}
+	} );
 } );

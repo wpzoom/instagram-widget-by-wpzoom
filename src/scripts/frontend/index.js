@@ -89,7 +89,8 @@
 				const originalText = $button.find('.button-text').text();
 				$button.find('.button-text').text('Loading...');
 				
-				// Build request data - include cache_offset for cache-based loading
+				// Build request data: cache_offset for cache-based loading; preview for backend iframe (moderate buttons)
+				var isWidgetPreview = window.location.search.indexOf( 'wpz-insta-widget-preview' ) !== -1;
 				var requestData = {
 					action: 'wpzoom_instagram_load_more',
 					feed_id: feedId,
@@ -99,10 +100,13 @@
 					next: nextUrl,
 					_wpnonce: nonce
 				};
-				if (cacheOffset >= 0) {
+				if ( cacheOffset >= 0 ) {
 					requestData.cache_offset = cacheOffset;
 				}
-				
+				if ( isWidgetPreview ) {
+					requestData.preview = 1;
+				}
+
 				// Make AJAX request
 				$.ajax({
 					url: wpzInstaAjax.ajaxurl,
