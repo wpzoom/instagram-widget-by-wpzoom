@@ -53,7 +53,7 @@ class Wpzoom_Instagram_Block {
 		register_block_type(
 			'wpzoom/instagram-block',
 			array(
-				'api_version'     => 2,
+				'api_version'     => 3,
 				'category'        => 'wpzoom-blocks',
 				'editor_script'   => 'wpz-insta_block-backend-script',
 				'script'          => 'wpz-insta_block-frontend-script',

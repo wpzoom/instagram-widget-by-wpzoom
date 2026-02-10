@@ -631,6 +631,37 @@ class Wpzoom_Instagram_Widget_Display {
 	}
 
 	/**
+	 * Check if we are in any Elementor editing context.
+	 *
+	 * @return bool
+	 */
+	public static function is_elementor_editor() {
+		if ( ! defined( 'ELEMENTOR_VERSION' ) ) {
+			return false;
+		}
+
+		// Elementor preview URL parameter (most reliable check)
+		if ( isset( $_GET['elementor-preview'] ) ) {
+			return true;
+		}
+
+		// AJAX widget rendering in editor
+		if ( wp_doing_ajax() && ( ! empty( $_REQUEST['editor_post_id'] ) || ( isset( $_REQUEST['action'] ) && 'elementor_ajax' === $_REQUEST['action'] ) ) ) {
+			return true;
+		}
+
+		// Editor or preview mode via Elementor API
+		if ( isset( \Elementor\Plugin::$instance->editor ) && \Elementor\Plugin::$instance->editor->is_edit_mode() ) {
+			return true;
+		}
+		if ( isset( \Elementor\Plugin::$instance->preview ) && \Elementor\Plugin::$instance->preview->is_preview_mode() ) {
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
 	 * Returns the markup for a feed configured with the given arguments.
 	 *
 	 * @param  array  $args The arguments to define how to return the feed content.
@@ -649,7 +680,7 @@ class Wpzoom_Instagram_Widget_Display {
 		$is_admin_preview = is_admin() || ( isset( $_GET['wpz-insta-widget-preview'] ) );
 
 		// If AJAX loading enabled and not an AJAX request and not a preview and not in editor, render placeholder
-		if ( $ajax_initial_load && ! wp_doing_ajax() && ! $preview && ! $this->is_crawler() && ! $is_block_editor && ! $is_admin_preview ) {
+		if ( $ajax_initial_load && ! wp_doing_ajax() && ! $preview && ! $this->is_crawler() && ! $is_block_editor && ! $is_admin_preview && ! self::is_elementor_editor() ) {
 			return $this->render_skeleton_placeholder( $args );
 		}
 
@@ -710,6 +741,11 @@ class Wpzoom_Instagram_Widget_Display {
 
 					$attrs = '';
 					$wrapper_classes = '';
+					$is_editor_preview = ( defined( 'REST_REQUEST' ) && true === REST_REQUEST && 'edit' === filter_input( INPUT_GET, 'context', FILTER_SANITIZE_SPECIAL_CHARS ) )
+						|| self::is_elementor_editor();
+					if ( $is_editor_preview ) {
+						$wrapper_classes .= ' is-editor-preview';
+					}
 					$layout_names = array( 0 => 'grid', 1 => 'fullwidth', 2 => 'masonry', 3 => 'carousel' );
 					$raw_layout = isset( $args['layout'] ) ? intval( $args['layout'] ) : 0;
 					$layout_int = $this->is_pro ? $raw_layout : ( $raw_layout > 1 ? 0 : $raw_layout );
@@ -1119,7 +1155,8 @@ class Wpzoom_Instagram_Widget_Display {
 		$output = '';
 
 		if ( ! empty( $items ) && is_array( $items ) ) {
-			$is_editor = defined( 'REST_REQUEST' ) && true === REST_REQUEST && 'edit' === filter_input( INPUT_GET, 'context', FILTER_SANITIZE_SPECIAL_CHARS );
+			$is_editor = ( defined( 'REST_REQUEST' ) && true === REST_REQUEST && 'edit' === filter_input( INPUT_GET, 'context', FILTER_SANITIZE_SPECIAL_CHARS ) )
+				|| self::is_elementor_editor();
 			$count = 0;
 			$layout = isset( $args['layout'] ) ? intval( $args['layout'] ) : 0;
 			$amount = isset( $args['item-num'] ) ? intval( $args['item-num'] ) : 9;
@@ -1218,6 +1255,10 @@ class Wpzoom_Instagram_Widget_Display {
 				}
 
 				$src_attr = $is_editor ? sprintf( 'src="%s"', esc_url( $src ) ) : '';
+
+				if ( $is_editor ) {
+					$classes .= ' wpz-insta-loaded';
+				}
 
 				$output .= '<li class="zoom-instagram-widget__item' . $classes . '" ' . $inline_attrs . '><div class="zoom-instagram-widget__item-inner-wrap">';
 
@@ -1686,6 +1727,19 @@ class Wpzoom_Instagram_Widget_Display {
 					$output .= "margin:0 0 {$spacing_between}{$spacing_between_suffix}!important;";
 					$output .= "}";
 				}
+
+				// CSS columns fallback for masonry in editor previews (where JS masonry doesn't run)
+				// :not(.masonry-active) ensures this steps aside if JS masonry initializes (e.g. in Elementor)
+				$output .= ".zoom-instagram{$feed_id}.is-editor-preview:not(.masonry-active) .zoom-instagram-widget__items{";
+				$output .= "display:block!important;column-count:{$col_num}!important;";
+				if ( $spacing_between > -1 ) {
+					$output .= "column-gap:{$spacing_between}{$spacing_between_suffix}!important;";
+				}
+				$output .= "}";
+				$output .= ".zoom-instagram{$feed_id}.is-editor-preview:not(.masonry-active) .zoom-instagram-widget__item{";
+				$output .= "break-inside:avoid!important;width:100%!important;";
+				$output .= "}";
+				$output .= ".zoom-instagram{$feed_id}.is-editor-preview:not(.masonry-active) .masonry-items-sizer{display:none!important;}";
 			}
 
 			if ( $border_radius > -1 ) {

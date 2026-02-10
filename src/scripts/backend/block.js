@@ -20,7 +20,7 @@ import {
 } from '@wordpress/components';
 
 registerBlockType( 'wpzoom/instagram-block', {
-	apiVersion: 2,
+	apiVersion: 3,
 	title: 'Instagram Feed by WPZOOM',
 	icon: 'instagram',
 	category: 'wpzoom-blocks',
