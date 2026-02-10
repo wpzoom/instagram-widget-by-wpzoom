@@ -440,7 +440,7 @@ class Wpzoom_Instagram_Widget_Display {
 		$is_admin_preview = is_admin() || ( isset( $_GET['wpz-insta-widget-preview'] ) );
 
 		// If AJAX loading enabled and not an AJAX request and not a preview and not in editor, render placeholder
-		if ( $ajax_initial_load && ! wp_doing_ajax() && ! $preview && ! $this->is_crawler() && ! $is_block_editor && ! $is_admin_preview ) {
+		if ( $ajax_initial_load && ! wp_doing_ajax() && ! $preview && ! $this->is_crawler() && ! $is_block_editor && ! $is_admin_preview && ! self::is_elementor_editor() ) {
 			return $this->render_skeleton_placeholder( $args );
 		}
 
@@ -1290,16 +1290,17 @@ class Wpzoom_Instagram_Widget_Display {
 				}
 
 				// CSS columns fallback for masonry in editor previews (where JS masonry doesn't run)
-				$output .= ".zoom-instagram{$feed_id}.is-editor-preview .zoom-instagram-widget__items{";
+				// :not(.masonry-active) ensures this steps aside if JS masonry initializes (e.g. in Elementor)
+				$output .= ".zoom-instagram{$feed_id}.is-editor-preview:not(.masonry-active) .zoom-instagram-widget__items{";
 				$output .= "display:block!important;column-count:{$col_num}!important;";
 				if ( $spacing_between > -1 ) {
 					$output .= "column-gap:{$spacing_between}{$spacing_between_suffix}!important;";
 				}
 				$output .= "}";
-				$output .= ".zoom-instagram{$feed_id}.is-editor-preview .zoom-instagram-widget__item{";
+				$output .= ".zoom-instagram{$feed_id}.is-editor-preview:not(.masonry-active) .zoom-instagram-widget__item{";
 				$output .= "break-inside:avoid!important;width:100%!important;";
 				$output .= "}";
-				$output .= ".zoom-instagram{$feed_id}.is-editor-preview .masonry-items-sizer{display:none!important;}";
+				$output .= ".zoom-instagram{$feed_id}.is-editor-preview:not(.masonry-active) .masonry-items-sizer{display:none!important;}";
 			}
 
 			if ( $border_radius > -1 ) {
