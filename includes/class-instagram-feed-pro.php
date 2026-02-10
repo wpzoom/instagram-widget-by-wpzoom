@@ -728,16 +728,18 @@ class Instagram_Feed_Pro {
     public function clear_cache( $instagram_account_id ) {
         global $wpdb;
 
-        // Delete all transients matching this account
+        $account_hash = md5( $instagram_account_id );
+
+        // Delete transients matching this specific account
         $wpdb->query(
             $wpdb->prepare(
                 "DELETE FROM {$wpdb->options} WHERE option_name LIKE %s OR option_name LIKE %s",
-                '_transient_wpz_insta_insights_%',
-                '_transient_timeout_wpz_insta_insights_%'
+                '_transient_wpz_insta_insights_' . $wpdb->esc_like( $account_hash ) . '%',
+                '_transient_timeout_wpz_insta_insights_' . $wpdb->esc_like( $account_hash ) . '%'
             )
         );
 
         // Also clear media insights cache
-        delete_transient( 'wpz_insta_media_insights_' . md5( $instagram_account_id ) );
+        delete_transient( 'wpz_insta_media_insights_' . $account_hash );
     }
 }

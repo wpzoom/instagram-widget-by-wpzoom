@@ -114,6 +114,9 @@ function wpzoom_instagram_ignore_admin_notice() {
 	$user_id = $current_user->ID;
 	/* If user clicks to ignore the notice, add that to their user meta */
 	if ( isset( $_GET['wpzoom_instagram_ignore_admin_notice'] ) && '0' == $_GET['wpzoom_instagram_ignore_admin_notice'] ) {
+		if ( ! isset( $_GET['_wpnonce'] ) || ! wp_verify_nonce( $_GET['_wpnonce'], 'wpzoom_instagram_dismiss_notice' ) ) {
+			return;
+		}
 		add_user_meta( $user_id, 'wpzoom_instagram_admin_notice', 'true', true );
 	}
 }
@@ -124,12 +127,16 @@ function wpzoom_instagram_get_notice_dismiss_url() {
 	 *
 	 * @since 1.7.5
 	 */
+	$base_url = wpzoom_instagram_get_current_admin_url() ? wpzoom_instagram_get_current_admin_url() : admin_url( 'edit.php?post_type=wpz-insta_user' );
 	$hide_notices_url = html_entity_decode( // to convert &amp;s to normal &, otherwise produces invalid link.
-		add_query_arg(
-			array(
-				'wpzoom_instagram_ignore_admin_notice' => '0',
+		wp_nonce_url(
+			add_query_arg(
+				array(
+					'wpzoom_instagram_ignore_admin_notice' => '0',
+				),
+				$base_url
 			),
-			wpzoom_instagram_get_current_admin_url() ? wpzoom_instagram_get_current_admin_url() : admin_url( 'edit.php?post_type=wpz-insta_user' )
+			'wpzoom_instagram_dismiss_notice'
 		)
 	);
 
@@ -205,6 +212,8 @@ function wpzoom_instagram_plugin_deactivation() {
 /**
  * Check if the Elementor Page Builder is enabled load the widget
  */
-if ( defined( 'ELEMENTOR_VERSION' ) && is_callable( 'Elementor\Plugin::instance' ) ) {
-	require_once 'elementor/class-wpzoom-instagram-elementor.php';
-}
+add_action( 'plugins_loaded', function() {
+	if ( defined( 'ELEMENTOR_VERSION' ) && is_callable( 'Elementor\Plugin::instance' ) ) {
+		require_once WPZOOM_INSTAGRAM_PLUGIN_PATH . 'elementor/class-wpzoom-instagram-elementor.php';
+	}
+} );

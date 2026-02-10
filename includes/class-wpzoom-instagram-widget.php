@@ -188,7 +188,7 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 				<div class="zoom-instagram-widget-user-info-picture">
 					<a target="_blank" rel="noopener nofollow"
 					   href="<?php printf( 'https://instagram.com/%s?ref=badge', esc_attr( $user_info->data->username ) ); ?>"><img
-								width="90" src="<?php echo $user_info->data->profile_picture; ?>"
+								width="90" src="<?php echo esc_url( $user_info->data->profile_picture ); ?>"
 								alt="<?php echo esc_attr( $user_info->data->full_name ); ?>"/></a>
 				</div>
 			<?php endif; ?>
@@ -255,7 +255,7 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 		if ( ! empty( $instance['show-user-bio'] ) ) {
 			if ( ! empty( $user_info->data->bio ) ) :
 				?>
-				<div class="zoom-instagram-widget-user-info-bio"><?php echo nl2br( $user_info->data->bio ); ?></div>
+				<div class="zoom-instagram-widget-user-info-bio"><?php echo nl2br( esc_html( $user_info->data->bio ) ); ?></div>
 				<?php
 			endif;
 		}
@@ -350,48 +350,48 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 					$inline_style  = 'width:' . esc_attr( $instance['image-width'] ) . 'px;';
 					$inline_style .= 'height:' . esc_attr( $instance['image-width'] ) . 'px;';
 					if ( empty( $instance['lazy-load-images'] ) ) {
-						$inline_style .= "background-image: url('" . $src . "');";
+						$inline_style .= "background-image: url('" . esc_url( $src ) . "');";
 					}
 
 					if ( $show_overlay ) :
 						?>
-						<div class="hover-layout zoom-instagram-widget__overlay zoom-instagram-widget__black <?php echo $small_class; ?>">
+						<div class="hover-layout zoom-instagram-widget__overlay zoom-instagram-widget__black <?php echo esc_attr( $small_class ); ?>">
 							<?php if ( $show_media_type_icons && ! empty( $type ) ) : ?>
 								<svg class="svg-icon" shape-rendering="geometricPrecision">
-									<use xlink:href="<?php echo esc_url( $svg_icons ); ?>#<?php echo $type; ?>"></use>
+									<use xlink:href="<?php echo esc_url( $svg_icons ); ?>#<?php echo esc_attr( $type ); ?>"></use>
 								</svg>
 							<?php endif; ?>
 
 							<?php if ( ! empty( $likes ) && ! empty( $comments ) ) : ?>
 								<div class="hover-controls">
 									<span class="dashicons dashicons-heart"></span>
-									<span class="counter"><?php echo $this->format_number( $likes ); ?></span>
+									<span class="counter"><?php echo esc_html( $this->format_number( $likes ) ); ?></span>
 									<span class="dashicons dashicons-format-chat"></span>
-									<span class="counter"><?php echo $this->format_number( $comments ); ?></span>
+									<span class="counter"><?php echo esc_html( $this->format_number( $comments ) ); ?></span>
 								</div>
 							<?php endif; ?>
 							<div class="zoom-instagram-icon-wrap">
-								<a class="zoom-svg-instagram-stroke" href="<?php echo $link; ?>" rel="noopener nofollow"
+								<a class="zoom-svg-instagram-stroke" href="<?php echo esc_url( $link ); ?>" rel="noopener nofollow"
 								   target="_blank" title="<?php echo $alt; ?>"></a>
 							</div>
 
 
-							<a class="zoom-instagram-link zoom-instagram-link-old" data-src="<?php echo $src; ?>"
+							<a class="zoom-instagram-link zoom-instagram-link-old" data-src="<?php echo esc_url( $src ); ?>"
 							   style="<?php echo $inline_style; ?>"
-							   data-mfp-src="<?php echo $media_id; ?>"
-							   href="<?php echo $link; ?>" target="_blank" rel="noopener nofollow" title="<?php echo $alt; ?>"
+							   data-mfp-src="<?php echo esc_attr( $media_id ); ?>"
+							   href="<?php echo esc_url( $link ); ?>" target="_blank" rel="noopener nofollow" title="<?php echo $alt; ?>"
 							>
 							</a>
 						</div>
 					<?php else : ?>
-						<a class="zoom-instagram-link zoom-instagram-link-old" data-src="<?php echo $src; ?>"
+						<a class="zoom-instagram-link zoom-instagram-link-old" data-src="<?php echo esc_url( $src ); ?>"
 						   style="<?php echo $inline_style; ?>"
-						   data-mfp-src="<?php echo $media_id; ?>"
-						   href="<?php echo $link; ?>" target="_blank" rel="noopener nofollow" title="<?php echo $alt; ?>"
+						   data-mfp-src="<?php echo esc_attr( $media_id ); ?>"
+						   href="<?php echo esc_url( $link ); ?>" target="_blank" rel="noopener nofollow" title="<?php echo $alt; ?>"
 						>
 							<?php if ( $show_media_type_icons && ! empty( $type ) ) : ?>
 								<svg class="svg-icon" shape-rendering="geometricPrecision">
-									<use xlink:href="<?php echo esc_url( $svg_icons ); ?>#<?php echo $type; ?>"></use>
+									<use xlink:href="<?php echo esc_url( $svg_icons ); ?>#<?php echo esc_attr( $type ); ?>"></use>
 								</svg>
 							<?php endif; ?>
 						</a>

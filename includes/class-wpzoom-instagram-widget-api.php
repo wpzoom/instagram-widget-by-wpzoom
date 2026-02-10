@@ -216,23 +216,29 @@ class Wpzoom_Instagram_Widget_API {
 
                         $response      = self::remote_get( $request_url, $this->headers );
                         $response_code = wp_remote_retrieve_response_code( $response );
+                        $data          = null;
 
                         if ( ! is_wp_error( $response ) ) {
                             $body = wp_remote_retrieve_body( $response );
                             $data = json_decode( $body );
                         }
 
+                        if ( is_wp_error( $response ) || null === $data ) {
+                            error_log( 'WPZOOM Instagram Widget: Failed to refresh access token - invalid response.' );
+                            continue;
+                        }
+
                         if ( 200 === $response_code ) {
                             $date_format    = get_option( 'date_format' );
                             $time_format    = get_option( 'time_format' );
                             $notice_status  = 'success';
-                            $notice_message = sprintf( __( '<strong>WPZOOM Instagram Widget:</strong> The Instagram Access Token was refreshed automatically on %1$s at %2$s for the account <em>%3$s</em>.', 'instagram-widget-by-wpzoom' ), date( $date_format ), date( $time_format ), esc_html( $user_display ) );
+                            $notice_message = sprintf( __( '<strong>WPZOOM Instagram Widget:</strong> The Instagram Access Token was refreshed automatically on %1$s at %2$s for the account <em>%3$s</em>.', 'instagram-widget-by-wpzoom' ), wp_date( $date_format ), wp_date( $time_format ), esc_html( $user_display ) );
 
                             update_post_meta( $user->ID, '_wpz-insta_token', $data->access_token );
                             update_post_meta( $user->ID, '_wpz-insta_token_expire', strtotime( '+60 days' ) );
                         } else {
                             if ( ! isset( $data->error ) ) {
-                                error_log( __( 'Something went wrong: $data->error.', 'instagram-widget-by-wpzoom' ) );
+                                error_log( 'WPZOOM Instagram Widget: Something went wrong refreshing access token.' );
                                 return false;
                             } else {
                                 error_log( $data->error->error_user_msg );
@@ -919,7 +925,7 @@ class Wpzoom_Instagram_Widget_API {
         $keys   = array_keys( $values );
         $type   = in_array( $interval_suffix, $keys ) ? $values[ $interval_suffix ] : $values[2];
 
-        return intval( $type * $interval ) ;
+        return intval( $type * max( 1, $interval ) );
     }
 
     public function get_user_info( $injected_username = '' ) {
@@ -1357,15 +1363,17 @@ class Wpzoom_Instagram_Widget_API {
     // Add this new method to check if using Basic Display API
     public static function is_using_basic_display_api( $user_id ) {
 
-        if ( empty ( $user_id ) )
+        if ( empty ( $user_id ) ) {
             return false;
+        }
 
         $connection_type = get_post_meta( $user_id, '_wpz-insta_connection-type', true );
 
-        if ( empty( $connection_type ) || 'facebook_graph_api' !== $connection_type && 'business_instagram_login_api' !== $connection_type ) {
+        if ( empty( $connection_type ) || ( 'facebook_graph_api' !== $connection_type && 'business_instagram_login_api' !== $connection_type ) ) {
             return true;
         }
 
+        return false;
     }
 
     // Add this method to show the admin notice
@@ -1435,7 +1443,8 @@ class Wpzoom_Instagram_Widget_API {
                         $.ajax({
                             url: ajaxurl,
                             data: {
-                                action: 'dismiss_wpz_insta_basic_api_notice'
+                                action: 'dismiss_wpz_insta_basic_api_notice',
+                                _wpnonce: '<?php echo esc_js( wp_create_nonce( 'wpz_insta_dismiss_basic_api_notice' ) ); ?>'
                             }
                         });
                     });
@@ -1446,6 +1455,12 @@ class Wpzoom_Instagram_Widget_API {
 
             // Add AJAX handler for dismissing the notice
             add_action('wp_ajax_dismiss_wpz_insta_basic_api_notice', function() {
+                check_ajax_referer( 'wpz_insta_dismiss_basic_api_notice' );
+
+                if ( ! current_user_can( 'manage_options' ) ) {
+                    wp_send_json_error( 'Unauthorized', 403 );
+                }
+
                 update_option('wpz_insta_basic_api_notice_dismissed', true);
                 wp_die();
             });

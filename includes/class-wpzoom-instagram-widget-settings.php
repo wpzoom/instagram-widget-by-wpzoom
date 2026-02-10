@@ -202,7 +202,7 @@ class WPZOOM_Instagram_Widget_Settings {
 				),
 				'supports'            => array(
 					'title',
-					'thumbnaiicon-wrapl',
+					'thumbnail',
 					'custom-fields',
 				),
 				'hierarchical'        => false,
