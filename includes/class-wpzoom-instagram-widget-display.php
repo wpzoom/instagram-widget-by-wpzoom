@@ -819,7 +819,8 @@ class Wpzoom_Instagram_Widget_Display {
 		$output = '';
 
 		if ( ! empty( $items ) && is_array( $items ) ) {
-			$is_editor = defined( 'REST_REQUEST' ) && true === REST_REQUEST && 'edit' === filter_input( INPUT_GET, 'context', FILTER_SANITIZE_SPECIAL_CHARS );
+			$is_editor = ( defined( 'REST_REQUEST' ) && true === REST_REQUEST && 'edit' === filter_input( INPUT_GET, 'context', FILTER_SANITIZE_SPECIAL_CHARS ) )
+				|| ( defined( 'ELEMENTOR_VERSION' ) && isset( \Elementor\Plugin::$instance->editor ) && \Elementor\Plugin::$instance->editor->is_edit_mode() );
 			$count = 0;
 			$layout = isset( $args['layout'] ) ? intval( $args['layout'] ) : 0;
 			$amount = isset( $args['item-num'] ) ? intval( $args['item-num'] ) : 9;
@@ -909,6 +910,10 @@ class Wpzoom_Instagram_Widget_Display {
 				}
 
 				$src_attr = $is_editor ? sprintf( 'src="%s"', esc_url( $src ) ) : '';
+
+				if ( $is_editor ) {
+					$classes .= ' wpz-insta-loaded';
+				}
 
 				$output .= '<li class="zoom-instagram-widget__item' . $classes . '" ' . $inline_attrs . '><div class="zoom-instagram-widget__item-inner-wrap">';
 
