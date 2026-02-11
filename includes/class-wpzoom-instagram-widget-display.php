@@ -342,13 +342,12 @@ class Wpzoom_Instagram_Widget_Display {
 			wp_send_json_error( 'Invalid feed ID' );
 		}
 
-		// Get user account details for this feed.
-		// First try reading from saved post meta; if not valid (e.g. unsaved/new feed
-		// where the default is -1), fall back to the user_id passed from the preview form.
-		$user_id = intval( WPZOOM_Instagram_Widget_Settings::get_feed_setting_value( $feed_id, 'user-id' ) );
-
-		if ( $user_id < 1 && ! empty( $_POST['user_id'] ) ) {
-			$user_id = intval( $_POST['user_id'] );
+		// Use the account currently selected in the preview (from iframe URL / form).
+		// When the user switches account without saving, POST user_id reflects the new selection;
+		// prefer it so Load more fetches the correct account's posts.
+		$user_id = ! empty( $_POST['user_id'] ) ? intval( $_POST['user_id'] ) : 0;
+		if ( $user_id < 1 ) {
+			$user_id = intval( WPZOOM_Instagram_Widget_Settings::get_feed_setting_value( $feed_id, 'user-id' ) );
 		}
 
 		$user_account_token    = get_post_meta( $user_id, '_wpz-insta_token', true );
