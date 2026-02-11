@@ -1061,7 +1061,7 @@ jQuery( function( $ ) {
 	};
 
 	// Fields that require a full iframe reload (server-side: different data). All others are applied via postMessage.
-	var wpzInstaPreviewReloadKeys = [ '_wpz-insta_user-id', '_wpz-insta_item-num', '_wpz-insta_allowed-post-types-submitted' ];
+	var wpzInstaPreviewReloadKeys = [ '_wpz-insta_user-id', '_wpz-insta_user-ids', '_wpz-insta_item-num', '_wpz-insta_allowed-post-types-submitted' ];
 
 	function wpzInstaCollectPreviewState() {
 		var $form = $( 'form#post .wpz-insta_tabs-content > .wpz-insta_sidebar > .wpz-insta_sidebar-left' );

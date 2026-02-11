@@ -118,6 +118,11 @@
 				root.classList.remove( 'layout-' + name );
 			} );
 			root.classList.add( 'layout-' + layoutName );
+			// Sync body class for layout-dependent CSS (e.g. hide .wpz-insta-loaded when not grid/masonry).
+			LAYOUT_NAMES.forEach( function( name ) {
+				document.body.classList.remove( 'page-layout-' + name );
+			} );
+			document.body.classList.add( 'page-layout-' + layoutName );
 			var items = root.querySelector( '.zoom-instagram-widget__items' );
 			if ( items && items.style ) {
 				// Masonry in preview: use grid class so existing grid styles apply
@@ -226,11 +231,14 @@
 			root.style.removeProperty( 'padding' );
 		}
 
+		// Single-account and multi-account both use .wpzinsta-pro-load-more-wrapper for the block.
 		var loadMoreWrap = root.querySelector( '.wpzinsta-pro-load-more-wrapper' );
 		if ( loadMoreWrap ) loadMoreWrap.style.display = boolVal( data[ 'show-load-more' ] ) ? '' : 'none';
-		var loadMoreBtn = root.querySelector( '.wpzinsta-pro-load-more-btn' );
+		// Single: .wpzinsta-pro-load-more-btn; multi: .wpz-insta-multi-load-more (both may have .button-text inside).
+		var loadMoreBtn = root.querySelector( '.wpzinsta-pro-load-more-btn' ) || root.querySelector( '.wpz-insta-multi-load-more' );
 		if ( loadMoreBtn ) {
-			if ( data[ 'load-more-text' ] ) loadMoreBtn.textContent = data[ 'load-more-text' ];
+			var btnTextEl = loadMoreBtn.querySelector( '.button-text' );
+			if ( data[ 'load-more-text' ] ) ( btnTextEl || loadMoreBtn ).textContent = data[ 'load-more-text' ];
 			if ( data[ 'load-more-color' ] != null && data[ 'load-more-color' ] !== '' ) {
 				loadMoreBtn.style.setProperty( 'background-color', data[ 'load-more-color' ], 'important' );
 			} else {
@@ -356,13 +364,20 @@
 					if ( data.success && data.data && data.data.html ) {
 						var itemsContainer = document.querySelector( '.zoom-instagram-widget__items' );
 						if ( itemsContainer ) {
+							var countBefore = itemsContainer.querySelectorAll( '.zoom-instagram-widget__item' ).length;
 							itemsContainer.insertAdjacentHTML( 'beforeend', data.data.html );
 
+							// Mark only the items just inserted via AJAX (used by CSS to hide them in fullwidth/carousel layouts).
+							var allItems = itemsContainer.querySelectorAll( '.zoom-instagram-widget__item' );
+							for ( var i = countBefore; i < allItems.length; i++ ) {
+								allItems[ i ].classList.add( 'wpz-insta-ajax-loaded-item' );
+							}
 							// Initialize shimmer / loaded state for newly added items.
 							// The CSS shows a shimmer animation on items without .wpz-insta-loaded.
-							// Preview items use src (not data-src), so images may already be loaded
-							// from the browser cache or will fire load/error shortly.
-							var newItems = itemsContainer.querySelectorAll( '.zoom-instagram-widget__item:not(.wpz-insta-loaded)' );
+							var newItems = [];
+							for ( i = countBefore; i < allItems.length; i++ ) {
+								newItems.push( allItems[ i ] );
+							}
 							newItems.forEach( function( item ) {
 								var img = item.querySelector( 'img.zoom-instagram-link, img.zoom-instagram-link-new' );
 								if ( ! img ) {
@@ -554,6 +569,26 @@
 	window.addEventListener( 'resize', function() {
 		applyColNumToPreview();
 	} );
+
+	// On load: sync body.page-layout-* from .zoom-instagram.layout-* when HTML is server-rendered (before first postMessage).
+	function syncBodyLayoutClass() {
+		var root = document.querySelector( '.zoom-new-instagram-widget .zoom-instagram' );
+		if ( ! root ) return;
+		for ( var i = 0; i < LAYOUT_NAMES.length; i++ ) {
+			if ( root.classList.contains( 'layout-' + LAYOUT_NAMES[ i ] ) ) {
+				LAYOUT_NAMES.forEach( function( name ) {
+					document.body.classList.remove( 'page-layout-' + name );
+				} );
+				document.body.classList.add( 'page-layout-' + LAYOUT_NAMES[ i ] );
+				return;
+			}
+		}
+	}
+	if ( document.readyState === 'loading' ) {
+		document.addEventListener( 'DOMContentLoaded', syncBodyLayoutClass );
+	} else {
+		syncBodyLayoutClass();
+	}
 })();
 
 document.body.addEventListener(

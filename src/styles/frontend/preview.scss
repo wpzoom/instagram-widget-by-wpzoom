@@ -179,7 +179,7 @@ html {
 }
 
 // Show "Link to a product" buttons only when Product Links tab is active (no iframe reload)
-body.wpz-insta-product-links-tab-active .wpz-insta-link-product-btn {
+body.wpz-insta-product-links-tab-active .zoom-instagram-widget__item:not(.wpz-insta-post-hidden) .wpz-insta-link-product-btn {
 	display: flex;
 }
 
@@ -223,8 +223,7 @@ body.wpz-insta-moderate-tab-active .wpz-insta-moderate-btn {
 
 body:not(.wpz-insta-moderate-tab-active) .zoom-instagram-widget__item.wpz-insta-post-hidden {
 	img{
-		opacity: 0.4;
-		filter: blur(4px);
+		opacity: 0.2 !important;
 	}
 	&::after{
 		content: '';
@@ -272,6 +271,18 @@ body.wpz-insta-moderate-tab-active .zoom-instagram-widget__item.wpz-insta-post-h
 		&:hover {
 			background: rgba(220, 50, 50, 1);
 		}
+	}
+}
+
+// Hide items loaded via AJAX (Load more) and the Load more button when layout is not grid or masonry.
+// body.page-layout-* is set by preview.js when layout is updated via postMessage.
+// .wpz-insta-ajax-loaded-item is added by preview.js to items appended by the preview Load more AJAX.
+body:not(.page-layout-grid):not(.page-layout-masonry) {
+	.zoom-instagram-widget__item.wpz-insta-ajax-loaded-item {
+		display: none !important;
+	}
+	.wpzinsta-pro-load-more-wrapper {
+		display: none !important;
 	}
 }
 
