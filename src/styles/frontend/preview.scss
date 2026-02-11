@@ -317,7 +317,7 @@ body:not(.page-layout-grid):not(.page-layout-masonry) {
 	}
 
 	&.layout-carousel {
-		display: flex;
+		display: flex !important;
 		height: auto !important;
 		overflow: hidden;
 		flex-wrap: nowrap;
