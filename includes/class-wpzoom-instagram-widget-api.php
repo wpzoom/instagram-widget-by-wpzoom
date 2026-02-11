@@ -467,7 +467,7 @@ class Wpzoom_Instagram_Widget_API {
 			if( ! empty( $business_page_id ) ) {
 				$request_url = add_query_arg(
 					array(
-						'fields'       => 'media_url,media_product_type,thumbnail_url,caption,id,media_type,timestamp,username,permalink,children%7Bmedia_url,id,media_type,timestamp,permalink,thumbnail_url%7D',
+						'fields'       => 'media_url,media_product_type,thumbnail_url,caption,id,media_type,timestamp,username,permalink,children{media_url,id,media_type,timestamp,permalink,thumbnail_url}',
 						'access_token' => $access_token,
 						'limit'        => $api_limit,
 						'after'        => $after_cursor,
@@ -525,7 +525,7 @@ class Wpzoom_Instagram_Widget_API {
 			if( ! empty( $business_page_id ) ) {
 				$request_url = add_query_arg(
 					array(
-						'fields'       => 'media_url,media_product_type,thumbnail_url,caption,id,media_type,timestamp,username,permalink,children%7Bmedia_url,id,media_type,timestamp,permalink,thumbnail_url%7D',
+						'fields'       => 'media_url,media_product_type,thumbnail_url,caption,id,media_type,timestamp,username,permalink,children{media_url,id,media_type,timestamp,permalink,thumbnail_url}',
 						'access_token' => $access_token,
 						'limit'        => $api_limit,
 					),

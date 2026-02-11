@@ -873,13 +873,14 @@ class WPZOOM_Instagram_Widget_Settings {
 	 * @return array List of array( 'url', 'type', 'index' ), empty if not found.
 	 */
 	private function get_album_images_direct_api( $feed_id, $media_id ) {
-		// Collect all access tokens for this feed (primary + multi-account).
-		$tokens = array();
+		// Collect all access tokens (with account type info) for this feed.
+		$token_entries = array();
 		$user_id = get_post_meta( $feed_id, '_wpz-insta_user-id', true );
 		if ( ! empty( $user_id ) ) {
 			$token = get_post_meta( (int) $user_id, '_wpz-insta_token', true );
 			if ( ! empty( $token ) ) {
-				$tokens[] = $token;
+				$is_business = ! empty( get_post_meta( (int) $user_id, '_wpz-insta_page_id', true ) );
+				$token_entries[] = array( 'token' => $token, 'is_business' => $is_business );
 			}
 		}
 
@@ -893,20 +894,34 @@ class WPZOOM_Instagram_Widget_Settings {
 				}
 				$extra_token = get_post_meta( $extra_user_id, '_wpz-insta_token', true );
 				if ( ! empty( $extra_token ) ) {
-					$tokens[] = $extra_token;
+					$is_business = ! empty( get_post_meta( $extra_user_id, '_wpz-insta_page_id', true ) );
+					$token_entries[] = array( 'token' => $extra_token, 'is_business' => $is_business );
 				}
 			}
 		}
 
 		// Try each token to fetch the media's children directly.
-		foreach ( $tokens as $access_token ) {
-			$request_url = add_query_arg(
-				array(
-					'fields'       => 'media_type,children{media_url,media_type,thumbnail_url}',
-					'access_token' => $access_token,
-				),
-				'https://graph.instagram.com/' . $media_id
-			);
+		foreach ( $token_entries as $entry ) {
+			$access_token = $entry['token'];
+
+			// For Facebook Page API accounts, use the Facebook Graph API endpoint.
+			if ( $entry['is_business'] ) {
+				$request_url = add_query_arg(
+					array(
+						'fields'       => 'media_type,children{media_url,media_type,thumbnail_url}',
+						'access_token' => $access_token,
+					),
+					'https://graph.facebook.com/v21.0/' . $media_id
+				);
+			} else {
+				$request_url = add_query_arg(
+					array(
+						'fields'       => 'media_type,children{media_url,media_type,thumbnail_url}',
+						'access_token' => $access_token,
+					),
+					'https://graph.instagram.com/' . $media_id
+				);
+			}
 
 			$response = wp_remote_get( $request_url, array( 'timeout' => 15 ) );
 
