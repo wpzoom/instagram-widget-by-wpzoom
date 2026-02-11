@@ -322,6 +322,14 @@
         }
     }
 
+    // Hide Load more on fullwidth/carousel (button is always in DOM for preview).
+    &.layout-fullwidth,
+    &.layout-carousel {
+        .zoom-instagram-widget__footer .wpzinsta-pro-load-more-wrapper {
+            display: none !important;
+        }
+    }
+
     .zoom-instagram-widget__items-wrapper {
         // overflow: hidden; // TODO: remove this after testing
     }

@@ -1596,9 +1596,9 @@ class WPZOOM_Instagram_Widget_Settings {
 						<ul>
 							<li class="active"><a href="<?php echo esc_url( '#config' ); ?>"><?php _e( 'Configure', 'instagram-widget-by-wpzoom' ); ?></a></li>
 							<li <?php echo $disabled_class; ?>><a href="<?php echo esc_url( '#design' ); ?>"><?php _e( 'Design', 'instagram-widget-by-wpzoom' ); ?></a></li>
-							<li <?php echo $disabled_class; ?>><a href="<?php echo esc_url( '#moderate' ); ?>"><?php _e( 'Moderate', 'instagram-widget-by-wpzoom' ); ?><?php echo apply_filters( 'wpz-insta_admin-pro-options-toggle', true ) ? ' <span class="wpz-insta-pro-badge">' . esc_html__( 'PRO', 'instagram-widget-by-wpzoom' ) . '</span>' : ''; ?></a></li>
-							<li <?php echo $disabled_class; ?>><a href="<?php echo esc_url( '#embed' ); ?>"><?php _e( 'Embed', 'instagram-widget-by-wpzoom' ); ?></a><?php echo $embed_pointer; ?></li>
+							<li <?php echo $disabled_class; ?>><a href="<?php echo esc_url( '#moderate' ); ?>"><?php _e( 'Moderate', 'instagram-widget-by-wpzoom' ); ?> <?php if ( apply_filters( 'wpz-insta_is-pro', false ) ) : ?><span class="wpz-insta-new-badge"><?php esc_html_e( 'New', 'instagram-widget-by-wpzoom' ); ?></span><?php else : ?><span class="wpz-insta-pro-badge"><?php esc_html_e( 'PRO', 'instagram-widget-by-wpzoom' ); ?></span><?php endif; ?></a></li>
 							<li <?php echo $disabled_class; ?>><a href="<?php echo esc_url( '#product-links' ); ?>"><?php _e( 'Product Links', 'instagram-widget-by-wpzoom' ); ?> <?php if ( apply_filters( 'wpz-insta_is-pro', false ) ) : ?><span class="wpz-insta-new-badge"><?php esc_html_e( 'New', 'instagram-widget-by-wpzoom' ); ?></span><?php else : ?><span class="wpz-insta-pro-badge"><?php esc_html_e( 'PRO', 'instagram-widget-by-wpzoom' ); ?></span><?php endif; ?></a></li>
+							<li <?php echo $disabled_class; ?>><a href="<?php echo esc_url( '#embed' ); ?>"><?php _e( 'Embed', 'instagram-widget-by-wpzoom' ); ?></a><?php echo $embed_pointer; ?></li>
 						</ul>
 					</nav>
 				</div>

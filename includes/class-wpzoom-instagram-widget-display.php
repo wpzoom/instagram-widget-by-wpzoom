@@ -1110,7 +1110,7 @@ class Wpzoom_Instagram_Widget_Display {
 						}
 						$output .= '</div>';
 
-						if ( $show_view_on_insta_button || ( $show_load_more_button && 'fullwidth' !== $layout && 'carousel' !== $layout ) ) {
+						if ( $show_view_on_insta_button || $show_load_more_button ) {
 							$output .= '<div class="zoom-instagram-widget__footer">';
 
 							if ( $show_view_on_insta_button ) {
@@ -1121,7 +1121,8 @@ class Wpzoom_Instagram_Widget_Display {
 								$output .= '</a>';
 							}
 
-							if ( $show_load_more_button && 'fullwidth' !== $layout && 'carousel' !== $layout ) {
+							// Always output Load more in DOM when option is on (hidden via CSS for fullwidth/carousel).
+							if ( $show_load_more_button ) {
 								$next_url = ! empty( $items ) && array_key_exists( 'paging', $items ) && is_object( $items['paging'] ) && property_exists( $items['paging'], 'next' ) ? esc_url( $items['paging']->next ) : '';
 								// Use items_consumed_count (actual items processed by items_html) instead of
 								// total fetched count, so load more doesn't skip unprocessed items from the over-fetch gap.
