@@ -919,7 +919,7 @@ class Wpzoom_Instagram_Widget_Display {
 						}
 					}
 					
-					// Over-fetch to compensate for hidden/moderated posts (PRO only)
+					// Over-fetch to compensate for hidden/moderated posts (PRO only).
 					$feed_id_for_api = isset( $args['feed-id'] ) ? intval( $args['feed-id'] ) : -1;
 					$api_limit = $amount;
 					if ( $this->is_pro && $feed_id_for_api > 0 && ! $preview ) {
@@ -927,6 +927,10 @@ class Wpzoom_Instagram_Widget_Display {
 						if ( is_array( $hidden_posts_meta ) && ! empty( $hidden_posts_meta ) ) {
 							$api_limit = $amount + count( $hidden_posts_meta );
 						}
+					}
+					// In preview, fetch at least 30 items so "Load More" has more in cache (same idea as frontend).
+					if ( $preview && $this->is_pro && $api_limit < 30 ) {
+						$api_limit = 30;
 					}
 
 					$items  = $this->api->get_items(
