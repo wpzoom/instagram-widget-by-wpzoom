@@ -677,8 +677,9 @@ class Wpzoom_Instagram_Widget_API {
         }
 
         $result = array(
-            'items'    => $result,
-            'username' => $username,
+            'items'       => $result,
+            'username'    => $username,
+            'total_items' => is_array( $data->data ) ? count( $data->data ) : 0,
         );
 
         if ( $include_pagination && property_exists( $data, 'paging' ) ) {

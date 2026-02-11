@@ -1126,8 +1126,10 @@ class Wpzoom_Instagram_Widget_Display {
 								// Use items_consumed_count (actual items processed by items_html) instead of
 								// total fetched count, so load more doesn't skip unprocessed items from the over-fetch gap.
 								$initial_display_count = $items_consumed_count > 0 ? $items_consumed_count : ( is_array( $items ) && ! empty( $items['items'] ) ? count( $items['items'] ) : 0 );
-								// Has more: either more cached items (we fetch ~30 initially) or more from API
-								$total_cached = is_array( $items ) && ! empty( $items['items'] ) ? count( $items['items'] ) : 0;
+								// Has more: either more cached items (we fetch ~30 initially) or more from API.
+								// Use total_items (pre-truncation count from processing_response_data) to detect
+								// items beyond what get_items() returned (which is limited to $api_limit).
+								$total_cached = isset( $items['total_items'] ) ? intval( $items['total_items'] ) : ( is_array( $items ) && ! empty( $items['items'] ) ? count( $items['items'] ) : 0 );
 								$has_more_in_cache = $initial_display_count > 0 && $initial_display_count < $total_cached;
 								$has_more = $has_more_in_cache || ! empty( $next_url );
 
