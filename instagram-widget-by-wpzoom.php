@@ -47,6 +47,16 @@ require_once WPZOOM_INSTAGRAM_PLUGIN_PATH . 'includes/class-wpzoom-instagram-ass
 require_once WPZOOM_INSTAGRAM_PLUGIN_PATH . 'includes/class-wpzoom-instagram-widget-after-setup.php';
 require_once WPZOOM_INSTAGRAM_PLUGIN_PATH . 'includes/class-wpzoom-instagram-email-notification.php';
 require_once WPZOOM_INSTAGRAM_PLUGIN_PATH . 'includes/class-wpzoom-instagram-insights.php';
+
+// WPZOOM Notice Center (drop-in for aggregating admin notices).
+if ( ! class_exists( 'WPZOOM_Notice_Center' ) ) {
+	require_once WPZOOM_INSTAGRAM_PLUGIN_PATH . 'includes/class-wpzoom-notice-center.php';
+	WPZOOM_Notice_Center::get_instance()->set_assets( array(
+		'css_url' => WPZOOM_INSTAGRAM_PLUGIN_URL . 'assets/css/admin/notice-center.css',
+		'js_url'  => WPZOOM_INSTAGRAM_PLUGIN_URL . 'assets/js/admin/notice-center.js',
+	) );
+}
+
 require_once WPZOOM_INSTAGRAM_PLUGIN_PATH . 'includes/class-wpzoom-instagram-review-notice.php';
 
 add_action( 'widgets_init', 'zoom_instagram_widget_register' );

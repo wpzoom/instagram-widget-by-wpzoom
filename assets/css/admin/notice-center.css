@@ -1,0 +1,332 @@
+/**
+ * WPZOOM Notice Center
+ *
+ * @package WPZOOM_Notice_Center
+ * @version 1.0.0
+ */
+
+/* ──────────────────────────────────────────────
+   Variables (matching _variables.scss)
+   ────────────────────────────────────────────── */
+:root {
+	--wpzoom-nc-primary: #242628;
+	--wpzoom-nc-primary-hover: #414446;
+	--wpzoom-nc-accent: #2a79ce;
+	--wpzoom-nc-white: #ffffff;
+	--wpzoom-nc-grey: #dddddd;
+	--wpzoom-nc-dark-grey: #666666;
+	--wpzoom-nc-soft-grey: #c3c4c7;
+	--wpzoom-nc-light-grey: #f2f4f5;
+	--wpzoom-nc-bluish-grey: #878787;
+	--wpzoom-nc-red: #e64946;
+}
+
+/* ──────────────────────────────────────────────
+   Carousel container
+   ────────────────────────────────────────────── */
+/* Reset WordPress default .notice styles on the carousel */
+.notice.wpzoom-notice-center {
+	margin: 15px 0;
+	padding: 0;
+	border: none;
+	border-left: none;
+	background: none;
+	box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+	overflow: hidden;
+	position: relative;
+}
+
+/* ── Header ────────────────────────────────── */
+.wpzoom-nc-header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 16px 20px;
+	background: var(--wpzoom-nc-primary);
+	color: var(--wpzoom-nc-white);
+}
+
+.wpzoom-nc-header__left {
+	display: flex;
+    gap: 6px;
+    flex-direction: column;
+}
+
+.wpzoom-nc-header__title {
+	font-weight: 600;
+    font-size: 18px;
+    letter-spacing: 0.02em;
+}
+
+.wpzoom-nc-header__subtitle {
+	font-size: 13px;
+	opacity: 0.8;
+	font-weight: 400;
+}
+
+.wpzoom-nc-header__right {
+	display: flex;
+	align-items: center;
+}
+
+.wpzoom-nc-dismiss-slide {
+	background: none;
+    border: none;
+    color: var(--wpzoom-nc-white);
+    cursor: pointer;
+    padding: 4px;
+    line-height: 1;
+    transition: opacity 0.2s;
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    z-index: 99;
+}
+
+.wpzoom-nc-dismiss-slide:hover {
+	opacity: 0.7;
+}
+
+.wpzoom-nc-dismiss-slide .dashicons {
+	font-size: 20px;
+	width: 20px;
+	height: 20px;
+}
+
+/* ── Body / Slides ─────────────────────────── */
+.wpzoom-nc-body {
+	background: var(--wpzoom-nc-white);
+}
+
+.wpzoom-nc-slides-viewport {
+	overflow: hidden;
+}
+
+.wpzoom-nc-slide {
+	display: none;
+	padding: 24px 20px;
+	opacity: 0;
+	transition: opacity 0.35s ease;
+}
+
+.wpzoom-nc-slide--active {
+	display: flex;
+	opacity: 1;
+}
+
+.wpzoom-nc-slide__inner {
+	display: flex;
+	align-items: flex-start;
+	gap: 20px;
+	flex: 1;
+}
+
+.wpzoom-nc-slide__icon {
+	background-color: var(--wpzoom-nc-light-grey);
+	border-radius: 6px;
+	flex-shrink: 0;
+	width: 48px;
+	height: 48px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.wpzoom-nc-slide__icon img {
+	max-width: 48px;
+	max-height: 48px;
+	border-radius: 6px;
+}
+
+.wpzoom-nc-slide__icon .dashicons {
+	font-size: 28px;
+	width: 28px;
+	height: 28px;
+}
+
+.wpzoom-nc-slide__content {
+	flex: 1;
+}
+
+.wpzoom-nc-slide__heading {
+	margin: 0 0 8px;
+	font-size: 18px;
+	color: var(--wpzoom-nc-primary);
+}
+
+.wpzoom-nc-slide__text {
+	font-size: 14px;
+	color: var(--wpzoom-nc-dark-grey);
+	margin-bottom: 14px;
+	line-height: 1.5;
+}
+
+.wpzoom-nc-slide__text p {
+	margin: 0 0 8px;
+}
+
+/* ── Buttons ───────────────────────────────── */
+.wpzoom-nc-buttons {
+	margin-top: 12px;
+	display: flex;
+	gap: 8px;
+	flex-wrap: wrap;
+}
+
+.wpzoom-nc-buttons .button {
+	font-size: 14px;
+	font-weight: 600;
+	padding: 4px 14px;
+	border-radius: 4px;
+	text-decoration: none;
+}
+
+.wpzoom-nc-buttons .button-primary {
+	background-color: var(--wpzoom-nc-primary);
+	border-color: var(--wpzoom-nc-primary);
+	color: var(--wpzoom-nc-white);
+}
+
+.wpzoom-nc-buttons .button-primary:hover,
+.wpzoom-nc-buttons .button-primary:focus {
+	background-color: var(--wpzoom-nc-primary-hover);
+	border-color: var(--wpzoom-nc-primary-hover);
+	color: var(--wpzoom-nc-white);
+}
+
+.wpzoom-nc-buttons .button-secondary {
+	color: var(--wpzoom-nc-primary);
+	border-color: var(--wpzoom-nc-grey);
+    background-color: transparent;
+}
+
+.wpzoom-nc-buttons .button-secondary:hover,
+.wpzoom-nc-buttons .button-secondary:focus {
+	background-color: rgba(36, 38, 40, 0.06);
+}
+
+/* ── Footer: arrows + dots + counter ───────── */
+.wpzoom-nc-footer {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background-color: var(--wpzoom-nc-white);
+	gap: 12px;
+	padding: 18px 20px;
+	border-top: 1px solid var(--wpzoom-nc-grey);
+}
+
+.wpzoom-nc-dots {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+}
+
+.wpzoom-nc-dot {
+	width: 8px;
+	height: 8px;
+	border-radius: 50%;
+	border: none;
+	background: var(--wpzoom-nc-grey);
+	cursor: pointer;
+	padding: 0;
+	transition: background 0.2s, transform 0.2s;
+}
+
+.wpzoom-nc-dot--active {
+	background: var(--wpzoom-nc-primary);
+	transform: scale(1.25);
+}
+
+.wpzoom-nc-dot:hover {
+	background: #5e6164;
+}
+
+/* ──────────────────────────────────────────────
+   Single notice (1 notice mode)
+   ────────────────────────────────────────────── */
+.wpzoom-notice-single {
+	position: relative;
+	border-left: 4px solid var(--wpzoom-nc-primary);
+	border-radius: 4px;
+	padding: 16px 40px 16px 16px;
+	background: var(--wpzoom-nc-white);
+}
+
+.wpzoom-notice-single__inner {
+	display: flex;
+	align-items: flex-start;
+	gap: 16px;
+}
+
+.wpzoom-notice-single__icon {
+	background-color: var(--wpzoom-nc-light-grey);
+	border-radius: 6px;
+	flex-shrink: 0;
+	width: 48px;
+	height: 48px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.wpzoom-notice-single__icon img {
+	max-width: 40px;
+	border-radius: 4px;
+}
+
+.wpzoom-notice-single__icon .dashicons {
+	font-size: 28px;
+	width: 28px;
+	height: 28px;
+}
+
+.wpzoom-notice-single__body h3 {
+	margin: 0 0 6px;
+	font-size: 16px;
+}
+
+.wpzoom-notice-single__content {
+	font-size: 14px;
+	color: var(--wpzoom-nc-dark-grey);
+	margin-bottom: 10px;
+}
+
+/* ──────────────────────────────────────────────
+   Responsive
+   ────────────────────────────────────────────── */
+@media screen and (max-width: 782px) {
+	.wpzoom-nc-header__left {
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 4px;
+	}
+
+	.wpzoom-nc-slide__inner {
+		flex-direction: column;
+	}
+}
+
+@media screen and (max-width: 480px) {
+	.wpzoom-nc-header {
+		padding: 8px 12px;
+	}
+
+	.wpzoom-nc-slide {
+		padding: 16px 12px;
+	}
+
+	.wpzoom-nc-footer {
+		padding: 8px 12px;
+		gap: 8px;
+	}
+
+	.wpzoom-nc-buttons {
+		flex-direction: column;
+	}
+
+	.wpzoom-nc-buttons .button {
+		width: 100%;
+		text-align: center;
+	}
+}
