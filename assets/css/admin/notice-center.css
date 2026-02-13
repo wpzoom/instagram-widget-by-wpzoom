@@ -76,10 +76,7 @@
 	padding: 4px;
 	line-height: 1;
 	transition: opacity 0.2s;
-	position: absolute;
-	top: 20px;
-	right: 20px;
-	z-index: 99;
+	flex-shrink: 0;
 }
 
 .wpzoom-nc-dismiss-slide:hover {
@@ -98,19 +95,26 @@
 }
 
 .wpzoom-nc-slides-viewport {
+	position: relative;
 	overflow: hidden;
+	transition: height 0.35s ease;
 }
 
 .wpzoom-nc-slide {
-	display: none;
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	display: flex;
 	padding: 24px 20px;
 	opacity: 0;
-	transition: opacity 0.35s ease;
+	pointer-events: none;
+	transition: opacity 0.4s ease;
 }
 
 .wpzoom-nc-slide--active {
-	display: flex;
 	opacity: 1;
+	pointer-events: auto;
 }
 
 .wpzoom-nc-slide__inner {
