@@ -24,7 +24,6 @@
 /* ──────────────────────────────────────────────
    Carousel container
    ────────────────────────────────────────────── */
-/* Reset WordPress default .notice styles on the carousel */
 .notice.wpzoom-notice-center {
 	margin: 15px 0;
 	padding: 0;
@@ -48,14 +47,14 @@
 
 .wpzoom-nc-header__left {
 	display: flex;
-    gap: 6px;
-    flex-direction: column;
+	gap: 6px;
+	flex-direction: column;
 }
 
 .wpzoom-nc-header__title {
 	font-weight: 600;
-    font-size: 18px;
-    letter-spacing: 0.02em;
+	font-size: 18px;
+	letter-spacing: 0.02em;
 }
 
 .wpzoom-nc-header__subtitle {
@@ -71,16 +70,16 @@
 
 .wpzoom-nc-dismiss-slide {
 	background: none;
-    border: none;
-    color: var(--wpzoom-nc-white);
-    cursor: pointer;
-    padding: 4px;
-    line-height: 1;
-    transition: opacity 0.2s;
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    z-index: 99;
+	border: none;
+	color: var(--wpzoom-nc-white);
+	cursor: pointer;
+	padding: 4px;
+	line-height: 1;
+	transition: opacity 0.2s;
+	position: absolute;
+	top: 20px;
+	right: 20px;
+	z-index: 99;
 }
 
 .wpzoom-nc-dismiss-slide:hover {
@@ -165,6 +164,18 @@
 	margin: 0 0 8px;
 }
 
+.wpzoom-nc-slide__text ul,
+.wpzoom-notice-single__content ul {
+	margin: 0.5em 0 1em 1.5em;
+	list-style: disc;
+}
+
+.wpzoom-nc-slide__text ol,
+.wpzoom-notice-single__content ol {
+	margin: 0.5em 0 1em 1.5em;
+	list-style: decimal;
+}
+
 /* ── Buttons ───────────────────────────────── */
 .wpzoom-nc-buttons {
 	margin-top: 12px;
@@ -197,7 +208,7 @@
 .wpzoom-nc-buttons .button-secondary {
 	color: var(--wpzoom-nc-primary);
 	border-color: var(--wpzoom-nc-grey);
-    background-color: transparent;
+	background-color: transparent;
 }
 
 .wpzoom-nc-buttons .button-secondary:hover,
@@ -205,7 +216,7 @@
 	background-color: rgba(36, 38, 40, 0.06);
 }
 
-/* ── Footer: arrows + dots + counter ───────── */
+/* ── Footer ────────────────────────────────── */
 .wpzoom-nc-footer {
 	display: flex;
 	align-items: center;
@@ -242,9 +253,7 @@
 	background: #5e6164;
 }
 
-/* ──────────────────────────────────────────────
-   Single notice (1 notice mode)
-   ────────────────────────────────────────────── */
+/* ── Single notice (1 notice mode) ──────────── */
 .wpzoom-notice-single {
 	position: relative;
 	border-left: 4px solid var(--wpzoom-nc-primary);
@@ -292,9 +301,7 @@
 	margin-bottom: 10px;
 }
 
-/* ──────────────────────────────────────────────
-   Responsive
-   ────────────────────────────────────────────── */
+/* ── Responsive ────────────────────────────── */
 @media screen and (max-width: 782px) {
 	.wpzoom-nc-header__left {
 		flex-direction: column;
