@@ -19,6 +19,7 @@
 	--wpzoom-nc-light-grey: #f2f4f5;
 	--wpzoom-nc-bluish-grey: #878787;
 	--wpzoom-nc-red: #e64946;
+    --wpzoom-nc-header: #3b65d2;
 }
 
 /* ──────────────────────────────────────────────
@@ -27,12 +28,11 @@
 .notice.wpzoom-notice-center {
 	margin: 15px 0;
 	padding: 0;
-	border: none;
-	border-left: none;
+    border: 1px solid #c3c4c7;
 	background: none;
 	box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
-	overflow: hidden;
 	position: relative;
+    border-radius: 5px 5px 0 0
 }
 
 /* ── Header ────────────────────────────────── */
@@ -43,6 +43,8 @@
 	padding: 16px 20px;
 	background: var(--wpzoom-nc-primary);
 	color: var(--wpzoom-nc-white);
+    margin: -1px -1px 0 -1px;
+    border-radius: 5px 5px 0 0
 }
 
 .wpzoom-nc-header__left {
@@ -159,7 +161,6 @@
 
 .wpzoom-nc-slide__text {
 	font-size: 14px;
-	color: var(--wpzoom-nc-dark-grey);
 	margin-bottom: 14px;
 	line-height: 1.5;
 }
