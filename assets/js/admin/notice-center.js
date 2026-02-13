@@ -10,6 +10,8 @@
 	'use strict';
 
 	var container, slides, dots, currentIndex, total;
+	var DEFAULT_TIMEOUT = 6;
+	var rotateTimer = null;
 
 	function init() {
 		container = document.getElementById( 'wpzoom-notice-center' );
@@ -28,7 +30,9 @@
 		// Dot navigation.
 		dots.forEach( function ( dot ) {
 			dot.addEventListener( 'click', function () {
+				clearRotateTimer();
 				goTo( parseInt( dot.dataset.slideIndex, 10 ) );
+				startRotateTimer();
 			} );
 		} );
 
@@ -36,11 +40,41 @@
 		container.querySelectorAll( '.wpzoom-nc-dismiss-slide' ).forEach( function ( btn ) {
 			btn.addEventListener( 'click', function ( e ) {
 				e.preventDefault();
+				clearRotateTimer();
 				dismissNotice( btn.dataset.noticeId, false, function () {
 					removeSlide( btn.closest( '.wpzoom-nc-slide' ) );
 				} );
 			} );
 		} );
+
+		startRotateTimer();
+	}
+
+	function clearRotateTimer() {
+		if ( rotateTimer ) {
+			clearTimeout( rotateTimer );
+			rotateTimer = null;
+		}
+	}
+
+	function getSlideTimeoutMs( slideIndex ) {
+		if ( ! slides[ slideIndex ] ) {
+			return DEFAULT_TIMEOUT * 1000;
+		}
+		var timeout = parseInt( slides[ slideIndex ].dataset.slideTimeout, 10 );
+		return ( isNaN( timeout ) || timeout < 1 ? DEFAULT_TIMEOUT : timeout ) * 1000;
+	}
+
+	function startRotateTimer() {
+		clearRotateTimer();
+		if ( total <= 0 ) {
+			return;
+		}
+		rotateTimer = setTimeout( function () {
+			rotateTimer = null;
+			goTo( currentIndex + 1 );
+			startRotateTimer();
+		}, getSlideTimeoutMs( currentIndex ) );
 	}
 
 	/**
@@ -120,6 +154,7 @@
 				currentIndex = total - 1;
 			}
 			goTo( currentIndex );
+			startRotateTimer();
 		}, 250 );
 	}
 

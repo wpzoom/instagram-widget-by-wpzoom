@@ -206,6 +206,7 @@ if ( ! class_exists( 'WPZOOM_Notice_Center' ) ) {
 					'secondary_button' => array(),
 					'source'           => '',
 					'priority'         => 10,
+					'slide_timeout'    => 6,
 				) );
 
 				// Normalize icon: support object (array) or string.
@@ -311,9 +312,11 @@ if ( ! class_exists( 'WPZOOM_Notice_Center' ) ) {
 					<div class="wpzoom-nc-slides-viewport">
 						<div class="wpzoom-nc-slides-track">
 							<?php foreach ( $notices as $index => $notice ) : ?>
+								<?php $timeout = isset( $notice['slide_timeout'] ) ? max( 1, (int) $notice['slide_timeout'] ) : 6; ?>
 								<div class="wpzoom-nc-slide<?php echo 0 === $index ? ' wpzoom-nc-slide--active' : ''; ?>"
 									 data-slide-index="<?php echo (int) $index; ?>"
-									 data-notice-id="<?php echo esc_attr( $notice['id'] ); ?>">
+									 data-notice-id="<?php echo esc_attr( $notice['id'] ); ?>"
+									 data-slide-timeout="<?php echo (int) $timeout; ?>">
 									<div class="wpzoom-nc-slide__inner">
 										<?php $this->render_icon( $notice, 'wpzoom-nc-slide__icon' ); ?>
 										<div class="wpzoom-nc-slide__content">
