@@ -1258,6 +1258,7 @@ a.ig-b-v-24:hover {
         flex-wrap: wrap;
         align-items: center;
         gap: 12px;
+        line-height: 1;
 
         &:hover {
             opacity: 0.8;
@@ -1355,6 +1356,9 @@ a.ig-b-v-24:hover {
         text-decoration: none;
         white-space: nowrap;
         transition: background-color 0.2s;
+        text-transform: none;
+        line-height: 1;
+        border: none;
 
         &:hover {
             background-color: var(--wpz-insta-buy-now-hover, #3496ff) !important;
@@ -2325,6 +2329,7 @@ a.ig-b-v-24:hover {
         padding: 8px;
         text-decoration: none;
         color: inherit;
+        line-height: 1;
 
         &:hover {
             text-decoration: none;
