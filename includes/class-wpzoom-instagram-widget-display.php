@@ -834,9 +834,9 @@ class Wpzoom_Instagram_Widget_Display {
 						$wrapper_classes .= sprintf( ' feed-%d', intval( $args['feed-id'] ) );
 						if ( class_exists( 'WooCommerce' ) && apply_filters( 'wpz-insta_is-pro', false ) ) {
 							$feed_id = intval( $args['feed-id'] );
-							$buy_now_bg    = get_post_meta( $feed_id, '_wpz-insta_buy-now-bg', true ) ?: get_post_meta( $feed_id, '_wpz-insta_add-to-cart-bg', true ) ?: '#2271b1';
+							$buy_now_bg    = get_post_meta( $feed_id, '_wpz-insta_buy-now-bg', true ) ?: get_post_meta( $feed_id, '_wpz-insta_add-to-cart-bg', true ) ?: '#111111';
 							$buy_now_color = get_post_meta( $feed_id, '_wpz-insta_buy-now-color', true ) ?: get_post_meta( $feed_id, '_wpz-insta_add-to-cart-color', true ) ?: '#ffffff';
-							$buy_now_hover = get_post_meta( $feed_id, '_wpz-insta_buy-now-hover-bg', true ) ?: get_post_meta( $feed_id, '_wpz-insta_add-to-cart-hover-bg', true ) ?: '#135e96';
+							$buy_now_hover = get_post_meta( $feed_id, '_wpz-insta_buy-now-hover-bg', true ) ?: get_post_meta( $feed_id, '_wpz-insta_add-to-cart-hover-bg', true ) ?: '#3496ff';
 							$buy_now_radius_raw   = get_post_meta( $feed_id, '_wpz-insta_buy-now-border-radius', true );
 							if ( '' === (string) $buy_now_radius_raw ) {
 								$buy_now_radius_raw = get_post_meta( $feed_id, '_wpz-insta_add-to-cart-border-radius', true );
@@ -2207,9 +2207,9 @@ class Wpzoom_Instagram_Widget_Display {
 		$buy_now_new_tab_lt     = ( '1' === get_post_meta( $feed_id, '_wpz-insta_buy-now-new-tab', true ) );
 		$buy_now_rel_lt         = $buy_now_new_tab_lt ? 'noopener noreferrer' : 'noopener';
 		$buy_now_target_lt      = $buy_now_new_tab_lt ? ' target="_blank"' : '';
-		$buy_now_bg_lt          = get_post_meta( $feed_id, '_wpz-insta_buy-now-bg', true ) ?: get_post_meta( $feed_id, '_wpz-insta_add-to-cart-bg', true ) ?: '#2271b1';
+		$buy_now_bg_lt          = get_post_meta( $feed_id, '_wpz-insta_buy-now-bg', true ) ?: get_post_meta( $feed_id, '_wpz-insta_add-to-cart-bg', true ) ?: '#111111';
 		$buy_now_color_lt       = get_post_meta( $feed_id, '_wpz-insta_buy-now-color', true ) ?: get_post_meta( $feed_id, '_wpz-insta_add-to-cart-color', true ) ?: '#ffffff';
-		$buy_now_hover_lt       = get_post_meta( $feed_id, '_wpz-insta_buy-now-hover-bg', true ) ?: get_post_meta( $feed_id, '_wpz-insta_add-to-cart-hover-bg', true ) ?: '#135e96';
+		$buy_now_hover_lt       = get_post_meta( $feed_id, '_wpz-insta_buy-now-hover-bg', true ) ?: get_post_meta( $feed_id, '_wpz-insta_add-to-cart-hover-bg', true ) ?: '#3496ff';
 		$buy_now_radius_raw_lt  = get_post_meta( $feed_id, '_wpz-insta_buy-now-border-radius', true );
 		if ( '' === (string) $buy_now_radius_raw_lt ) {
 			$buy_now_radius_raw_lt = get_post_meta( $feed_id, '_wpz-insta_add-to-cart-border-radius', true );

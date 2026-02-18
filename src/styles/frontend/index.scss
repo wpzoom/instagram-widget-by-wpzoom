@@ -1357,7 +1357,7 @@ a.ig-b-v-24:hover {
         transition: background-color 0.2s;
 
         &:hover {
-            background-color: var(--wpz-insta-buy-now-hover, #135e96) !important;
+            background-color: var(--wpz-insta-buy-now-hover, #3496ff) !important;
         }
     }
 
@@ -1446,7 +1446,7 @@ a.ig-b-v-24:hover {
             padding: 12px 16px;
             font-size: 14px;
             &:hover {
-                background-color: var(--wpz-insta-buy-now-hover, #135e96) !important;
+                background-color: var(--wpz-insta-buy-now-hover, #3496ff) !important;
             }
         }
 
@@ -1679,7 +1679,7 @@ a.ig-b-v-24:hover {
         max-height: none;
     }
 
-    .wpz-insta-lightbox-wrapper .wpz-insta-lightbox .image-wrapper img {
+    .wpz-insta-lightbox-wrapper .wpz-insta-lightbox .image-wrapper img:not(.wpz-insta-lightbox-tag__img)  {
         max-height: 400px;
         min-width: 400px;
     }
@@ -1713,7 +1713,7 @@ a.ig-b-v-24:hover {
 
 @media screen and (max-width: 600px) {
 
-    .wpz-insta-lightbox-wrapper .wpz-insta-lightbox .image-wrapper img {
+    .wpz-insta-lightbox-wrapper .wpz-insta-lightbox .image-wrapper img:not(.wpz-insta-lightbox-tag__img) {
         min-height: 280px;
         min-width: 280px;
     }
@@ -1962,7 +1962,7 @@ a.ig-b-v-24:hover {
 }
 
 .wpz-insta-buy-now-btn {
-    background-color: var(--wpz-insta-buy-now-bg, #2271b1);
+    background-color: var(--wpz-insta-buy-now-bg, #111111);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -1970,14 +1970,14 @@ a.ig-b-v-24:hover {
     border: none;
     padding: 12px 26px;
     border-radius: var(--wpz-insta-buy-now-radius, 3px);
-    text-decoration: none;
+    text-decoration: none !important;
     font-size: 14px;
     font-weight: 600;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
     transition: background 0.2s;
 
     &:hover {
-        background: var(--wpz-insta-buy-now-hover-bg, #135e96);
+        background: var(--wpz-insta-buy-now-hover-bg, #3496ff);
         color: var(--wpz-insta-buy-now-color, #fff) !important;
     }
 }
@@ -2138,7 +2138,7 @@ a.ig-b-v-24:hover {
 
 .wpz-insta-product-popover-item-price {
     font-size: 12px;
-    color: #2271b1;
+    color: #111111;
     font-weight: 600;
     display: flex;
     align-items: center;
@@ -2177,7 +2177,7 @@ a.ig-b-v-24:hover {
     // Sale price
     ins {
         text-decoration: none;
-        color: #2271b1;
+        color: #111111;
         font-weight: 600;
 
         .woocommerce-Price-amount {
@@ -2205,13 +2205,13 @@ a.ig-b-v-24:hover {
     font-size: 12px;
     font-weight: 600;
     text-decoration: none;
-    background: #2271b1;
+    background: #111111;
     color: #fff !important;
     border-radius: 4px;
     transition: background 0.2s;
 
     &:hover {
-        background: #135e96;
+        background: #3496ff;
         color: #fff !important;
     }
 }
@@ -2361,7 +2361,7 @@ a.ig-b-v-24:hover {
         display: block;
         font-size: 14px;
         font-weight: 500;
-        color: #2271b1;
+        color: #111111;
 
         del {
             color: #999;

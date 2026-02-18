@@ -2781,7 +2781,7 @@ class WPZOOM_Instagram_Widget_Settings {
 									<label class="wpz-insta_table-row">
 										<strong class="wpz-insta_table-cell"><?php esc_html_e( 'Background', 'instagram-widget-by-wpzoom' ); ?></strong>
 										<div class="wpz-insta_table-cell">
-											<input type="text" name="_wpz-insta_buy-now-bg" id="_wpz-insta_buy-now-bg" value="<?php echo esc_attr( get_post_meta( $post->ID, '_wpz-insta_buy-now-bg', true ) ?: get_post_meta( $post->ID, '_wpz-insta_add-to-cart-bg', true ) ?: '#2271b1' ); ?>" size="8" class="wpz-insta_color-picker wp-color-picker preview-exclude" data-default-color="#2271b1" />
+											<input type="text" name="_wpz-insta_buy-now-bg" id="_wpz-insta_buy-now-bg" value="<?php echo esc_attr( get_post_meta( $post->ID, '_wpz-insta_buy-now-bg', true ) ?: get_post_meta( $post->ID, '_wpz-insta_add-to-cart-bg', true ) ?: '#111111' ); ?>" size="8" class="wpz-insta_color-picker wp-color-picker preview-exclude" data-default-color="#111111" />
 										</div>
 									</label>
 									<label class="wpz-insta_table-row">
@@ -2793,7 +2793,7 @@ class WPZOOM_Instagram_Widget_Settings {
 									<label class="wpz-insta_table-row">
 										<strong class="wpz-insta_table-cell"><?php esc_html_e( 'Hover background', 'instagram-widget-by-wpzoom' ); ?></strong>
 										<div class="wpz-insta_table-cell">
-											<input type="text" name="_wpz-insta_buy-now-hover-bg" id="_wpz-insta_buy-now-hover-bg" value="<?php echo esc_attr( get_post_meta( $post->ID, '_wpz-insta_buy-now-hover-bg', true ) ?: get_post_meta( $post->ID, '_wpz-insta_add-to-cart-hover-bg', true ) ?: '#135e96' ); ?>" size="8" class="wpz-insta_color-picker wp-color-picker preview-exclude" data-default-color="#135e96" />
+											<input type="text" name="_wpz-insta_buy-now-hover-bg" id="_wpz-insta_buy-now-hover-bg" value="<?php echo esc_attr( get_post_meta( $post->ID, '_wpz-insta_buy-now-hover-bg', true ) ?: get_post_meta( $post->ID, '_wpz-insta_add-to-cart-hover-bg', true ) ?: '#3496ff' ); ?>" size="8" class="wpz-insta_color-picker wp-color-picker preview-exclude" data-default-color="#3496ff" />
 										</div>
 									</label>
 									<label class="wpz-insta_table-row">
@@ -3706,7 +3706,7 @@ class WPZOOM_Instagram_Widget_Settings {
 				// Buy now button styling
 				if ( isset( $_POST['_wpz-insta_buy-now-bg'] ) ) {
 					$val = sanitize_text_field( $_POST['_wpz-insta_buy-now-bg'] );
-					update_post_meta( $post_ID, '_wpz-insta_buy-now-bg', $val ?: '#2271b1' );
+					update_post_meta( $post_ID, '_wpz-insta_buy-now-bg', $val ?: '#111111' );
 				}
 				if ( isset( $_POST['_wpz-insta_buy-now-color'] ) ) {
 					$val = sanitize_text_field( $_POST['_wpz-insta_buy-now-color'] );
@@ -3714,7 +3714,7 @@ class WPZOOM_Instagram_Widget_Settings {
 				}
 				if ( isset( $_POST['_wpz-insta_buy-now-hover-bg'] ) ) {
 					$val = sanitize_text_field( $_POST['_wpz-insta_buy-now-hover-bg'] );
-					update_post_meta( $post_ID, '_wpz-insta_buy-now-hover-bg', $val ?: '#135e96' );
+					update_post_meta( $post_ID, '_wpz-insta_buy-now-hover-bg', $val ?: '#3496ff' );
 				}
 				if ( isset( $_POST['_wpz-insta_buy-now-border-radius'] ) ) {
 					$val = isset( $_POST['_wpz-insta_buy-now-border-radius'] ) && is_numeric( $_POST['_wpz-insta_buy-now-border-radius'] ) ? floatval( $_POST['_wpz-insta_buy-now-border-radius'] ) : 3;
