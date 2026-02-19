@@ -303,6 +303,7 @@ class Wpzoom_Instagram_Widget_API {
 				'access-token',        // Add access token to parameters
 				'feed-id',            // Add feed ID to parameters  
 				'business-page-id',   // Add business page ID to parameters
+				'preview',            // Preview flag to skip image uploading
 			)
 		);
 
@@ -320,6 +321,7 @@ class Wpzoom_Instagram_Widget_API {
 		$access_token          = ! empty( $sliced['access-token'] ) ? $sliced['access-token'] : $this->access_token;
 		$feed_id              = ! empty( $sliced['feed-id'] ) ? $sliced['feed-id'] : $this->feed_id;
 		$business_page_id     = ! empty( $sliced['business-page-id'] ) ? $sliced['business-page-id'] : $this->business_page_id;
+		$is_preview           = ! empty( $sliced['preview'] );
 
 		$image_limit = intval( $image_limit );
 
@@ -360,6 +362,12 @@ class Wpzoom_Instagram_Widget_API {
 		// Use enhanced key as primary, but keep it reasonable length
 		$transient = strlen( $enhanced_transient ) > 170 ? $legacy_transient : $enhanced_transient;
 
+		// Preview uses a separate transient so CDN URLs don't overwrite the local-upload cache used on the frontend
+		if ( $is_preview ) {
+			$transient        .= '_prv';
+			$legacy_transient .= '_prv';
+		}
+
 		$injected_username = trim( $injected_username );
 
 		if ( ! $bypass_transient ) {
@@ -384,7 +392,7 @@ class Wpzoom_Instagram_Widget_API {
 		if ( ! empty( $access_token ) ) {
 			// Pass parameters directly to avoid instance state collision
 			try {
-				$data = $this->fetch_items_with_retry( $image_limit, $allowed_post_types, $skip_likes_comments, $include_pagination, $pagination_cursor, $access_token, $business_page_id );
+				$data = $this->fetch_items_with_retry( $image_limit, $allowed_post_types, $skip_likes_comments, $include_pagination, $pagination_cursor, $access_token, $business_page_id, $is_preview );
 
 				if ( false === $data ) {
 					// If primary cache fails, try fallback to legacy cache
@@ -446,7 +454,7 @@ class Wpzoom_Instagram_Widget_API {
 	 * Fetch items with retry mechanism for post type filtering
 	 * This ensures we get enough items of the allowed types while maintaining correct pagination
 	 */
-	private function fetch_items_with_retry( $image_limit, $allowed_post_types, $skip_likes_comments, $include_pagination, $after_cursor = '', $access_token = '', $business_page_id = '' ) {
+	private function fetch_items_with_retry( $image_limit, $allowed_post_types, $skip_likes_comments, $include_pagination, $after_cursor = '', $access_token = '', $business_page_id = '', $preview = false ) {
 		// For load more requests with pagination cursor, we don't need retries - just use exact pagination
 		$is_load_more_request = ! empty( $after_cursor );
 		
@@ -483,7 +491,7 @@ class Wpzoom_Instagram_Widget_API {
 			}
 
 			$raw_data = json_decode( wp_remote_retrieve_body( $response ) );
-			$converted_data = self::convert_items_to_old_structure( $raw_data, false, $access_token, $skip_likes_comments );
+			$converted_data = self::convert_items_to_old_structure( $raw_data, $preview, $access_token, $skip_likes_comments );
 
 			// Build final data structure
 			$final_data = new stdClass();
@@ -497,10 +505,7 @@ class Wpzoom_Instagram_Widget_API {
 		}
 		
 		// Original retry logic for initial loads only
-		// Always fetch at least 30 items so the cache has enough for "Load More" in the backend preview.
-		// This allows users to see and link products to posts beyond the initial display count.
-		$min_cache_items = 30;
-		$target_items = max( $image_limit, $min_cache_items );
+		$target_items = $image_limit;
 		$max_retries = 3;
 		$retry_count = 0;
 		$all_items = array();
@@ -545,7 +550,7 @@ class Wpzoom_Instagram_Widget_API {
 			}
 
 			$raw_data = json_decode( wp_remote_retrieve_body( $response ) );
-			$converted_data = self::convert_items_to_old_structure( $raw_data, false, $access_token, $skip_likes_comments );
+			$converted_data = self::convert_items_to_old_structure( $raw_data, $preview, $access_token, $skip_likes_comments );
 
 			// Collect items from this batch
 			if ( ! empty( $converted_data->data ) ) {

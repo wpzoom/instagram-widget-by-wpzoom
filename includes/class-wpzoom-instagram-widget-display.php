@@ -927,11 +927,6 @@ class Wpzoom_Instagram_Widget_Display {
 							$api_limit = $amount + count( $hidden_posts_meta );
 						}
 					}
-					// In preview, fetch at least 30 items so "Load More" has more in cache (same idea as frontend).
-					if ( $preview && $this->is_pro && $api_limit < 30 ) {
-						$api_limit = 30;
-					}
-
 					$items  = $this->api->get_items(
 						array(
 							'image-limit'          => $api_limit,
@@ -945,6 +940,7 @@ class Wpzoom_Instagram_Widget_Display {
 							'access-token'         => $user_account_token,   // Pass token directly to avoid state collision
 							'feed-id'             => $feed_id_for_api,
 							'business-page-id'    => $user_business_page_id, // Pass business page ID directly
+							'preview'              => $preview,               // Skip image uploading during preview rendering
 						)
 					);
 					$errors = $this->api->errors->get_error_messages();
