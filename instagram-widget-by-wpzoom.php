@@ -47,6 +47,18 @@ require_once WPZOOM_INSTAGRAM_PLUGIN_PATH . 'includes/class-wpzoom-instagram-ass
 require_once WPZOOM_INSTAGRAM_PLUGIN_PATH . 'includes/class-wpzoom-instagram-widget-after-setup.php';
 require_once WPZOOM_INSTAGRAM_PLUGIN_PATH . 'includes/class-wpzoom-instagram-email-notification.php';
 require_once WPZOOM_INSTAGRAM_PLUGIN_PATH . 'includes/class-wpzoom-instagram-insights.php';
+
+// WPZOOM Notice Center (submodule at includes/notice-center).
+$wpz_notice_center_path = WPZOOM_INSTAGRAM_PLUGIN_PATH . 'includes/notice-center/';
+$wpz_notice_center_url  = WPZOOM_INSTAGRAM_PLUGIN_URL . 'includes/notice-center/';
+if ( is_admin() && ! class_exists( 'WPZOOM_Notice_Center' ) && file_exists( $wpz_notice_center_path . 'notice-center.php' ) ) {
+	require_once $wpz_notice_center_path . 'notice-center.php';
+	WPZOOM_Notice_Center::get_instance()->set_assets( array(
+		'css_url' => $wpz_notice_center_url . 'assets/notice-center.css',
+		'js_url'  => $wpz_notice_center_url . 'assets/notice-center.js',
+	) );
+}
+
 require_once WPZOOM_INSTAGRAM_PLUGIN_PATH . 'includes/class-wpzoom-instagram-review-notice.php';
 
 add_action( 'widgets_init', 'zoom_instagram_widget_register' );
