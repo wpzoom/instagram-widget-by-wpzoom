@@ -5,7 +5,7 @@ Tags: instagram, instagram feed, instagram gallery, instagram photos, instagram 
 Requires at least: 6.0
 Tested up to: 6.9
 Requires PHP: 7.4
-Stable tag: 2.3.3
+Stable tag: 2.3.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -183,6 +183,14 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 
 == Changelog ==
 
+= 2.3.4 =
+* New: Refresh button for Instagram widget preview
+* Improved: Design options now applied via postMessage instead of URL reload for faster preview
+* Improved: API item fetching optimized with over-fetching for hidden/moderated posts
+* Improved: Cache-based loading for AJAX Load More functionality
+* Improved: Album (carousel) images fetched via direct API call by media ID
+* Fixed: Elementor integration now loads on `plugins_loaded` hook instead of immediately
+
 = 2.3.3 =
 * Minor bug fixes
 
@@ -204,7 +212,6 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 * Fixed: "Load CSS and JS on all pages" setting now works correctly
 * Fixed: Cache clearing when creating new feeds no longer affects other feeds
 * Fixed: Various security improvements with proper input sanitization and output escaping
-* Fixed: Duplicate HTML IDs in settings page
 * Fixed: Wrong text domain in some error messages
 
 = 2.2.12 =
