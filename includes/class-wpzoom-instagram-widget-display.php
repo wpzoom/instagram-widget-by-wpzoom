@@ -174,8 +174,8 @@ class Wpzoom_Instagram_Widget_Display {
 						'hover-date'             => WPZOOM_Instagram_Widget_Settings::get_feed_setting_value( $feed_id, 'hover-date' ),
 						'allowed-post-types'     => $allowed_post_types,
 						'image-size'             => $image_size,
-						'show-likes'             => false,
-						'show-comments'          => false,
+						'show-likes'             => WPZOOM_Instagram_Widget_Settings::get_feed_setting_value( $feed_id, 'show-likes' ),
+						'show-comments'          => WPZOOM_Instagram_Widget_Settings::get_feed_setting_value( $feed_id, 'show-comments' ),
 						'feed-id'                => $feed_id,
 					);
 
@@ -240,6 +240,11 @@ class Wpzoom_Instagram_Widget_Display {
 		// would cause items between the rendered count and the over-fetch count to be permanently
 		// lost (never shown to the user). It's acceptable to show fewer items per batch if some
 		// are hidden — the user can simply click load more again.
+		// Fetch likes/comments from API when the feed has them enabled (PRO)
+		$show_likes    = WPZOOM_Instagram_Widget_Settings::get_feed_setting_value( $feed_id, 'show-likes' );
+		$show_comments = WPZOOM_Instagram_Widget_Settings::get_feed_setting_value( $feed_id, 'show-comments' );
+		$skip_lc       = ! $show_likes && ! $show_comments;
+
 		$items = $this->api->get_items(
 			array(
 				'image-limit'          => $item_amount,
@@ -249,7 +254,7 @@ class Wpzoom_Instagram_Widget_Display {
 				'allowed-post-types'   => $allowed_post_types,
 				'pagination-cursor'    => $pagination_cursor,
 				'bypass-transient'     => true, // Always get fresh data for load more
-				'skip-likes-comments'  => true,
+				'skip-likes-comments'  => $skip_lc,
 				'access-token'         => $user_account_token,
 				'feed-id'              => $feed_id,
 				'business-page-id'     => $user_business_page_id,
@@ -272,8 +277,8 @@ class Wpzoom_Instagram_Widget_Display {
 			'hover-date'             => WPZOOM_Instagram_Widget_Settings::get_feed_setting_value( $feed_id, 'hover-date' ),
 			'allowed-post-types'     => $allowed_post_types,
 			'image-size'             => $image_size,
-			'show-likes'             => false,
-			'show-comments'          => false,
+			'show-likes'             => WPZOOM_Instagram_Widget_Settings::get_feed_setting_value( $feed_id, 'show-likes' ),
+			'show-comments'          => WPZOOM_Instagram_Widget_Settings::get_feed_setting_value( $feed_id, 'show-comments' ),
 			'feed-id'                => $feed_id,
 		);
 
@@ -425,8 +430,8 @@ class Wpzoom_Instagram_Widget_Display {
 			'hover-date'             => WPZOOM_Instagram_Widget_Settings::get_feed_setting_value( $feed_id, 'hover-date' ),
 			'allowed-post-types'     => $allowed_post_types,
 			'image-size'             => $image_size,
-			'show-likes'             => false,
-			'show-comments'          => false,
+			'show-likes'             => WPZOOM_Instagram_Widget_Settings::get_feed_setting_value( $feed_id, 'show-likes' ),
+			'show-comments'          => WPZOOM_Instagram_Widget_Settings::get_feed_setting_value( $feed_id, 'show-comments' ),
 			'feed-id'                => $feed_id,
 			'preview'                => true,  // Preview mode: includes "Link to a product" buttons
 		);
