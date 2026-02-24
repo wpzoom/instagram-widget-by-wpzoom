@@ -1061,7 +1061,14 @@ jQuery( function( $ ) {
 	};
 
 	// Fields that require a full iframe reload (server-side: different data). All others are applied via postMessage.
-	var wpzInstaPreviewReloadKeys = [ '_wpz-insta_user-id', '_wpz-insta_user-ids', '_wpz-insta_item-num', '_wpz-insta_allowed-post-types-submitted' ];
+	var wpzInstaPreviewReloadKeys = [
+		'_wpz-insta_user-id', '_wpz-insta_user-ids', '_wpz-insta_item-num', '_wpz-insta_allowed-post-types-submitted',
+		// These change the HTML structure (PHP conditionally renders elements), so a full reload is needed
+		'_wpz-insta_show-overlay', '_wpz-insta_hover-link', '_wpz-insta_show-likes', '_wpz-insta_show-comments',
+		'_wpz-insta_show-media-type-icons', '_wpz-insta_hover-media-type-icons', '_wpz-insta_hover-date',
+		// PRO multi-account settings that change HTML structure
+		'_wpz-insta_multi-account-header-mode', '_wpz-insta_multi-account-show-attribution'
+	];
 
 	function wpzInstaCollectPreviewState() {
 		var $form = $( 'form#post .wpz-insta_tabs-content > .wpz-insta_sidebar > .wpz-insta_sidebar-left' );
@@ -1113,14 +1120,24 @@ jQuery( function( $ ) {
 		if ( activeTab ) {
 			url += '&wpz-insta-tab=' + encodeURIComponent( ( activeTab + '' ).replace( /^#/, '' ) );
 		}
-		var itemNum = $( 'form#post input[name="_wpz-insta_item-num"]' ).val();
-		if ( itemNum != null && itemNum !== '' ) {
-			url += '&_wpz-insta_item-num=' + encodeURIComponent( itemNum );
-		}
-		var userId = $( 'form#post input[name="_wpz-insta_user-id"]' ).val();
-		if ( userId != null && userId !== '' ) {
-			url += '&_wpz-insta_user-id=' + encodeURIComponent( userId );
-		}
+		// Pass all reload-key values as URL params so PHP preview_frame() can overlay them on saved settings.
+		wpzInstaPreviewReloadKeys.forEach( function( key ) {
+			var $el = $( 'form#post [name="' + key + '"]' );
+			if ( ! $el.length ) return;
+			// When a hidden+checkbox pair shares the same name, prefer the checkbox element
+			var $cb = $el.filter( ':checkbox' );
+			if ( $cb.length ) $el = $cb;
+			var val;
+			if ( $el.is( ':checkbox' ) ) {
+				val = $el.is( ':checked' ) ? '1' : '0';
+			} else {
+				val = $.trim( '' + $el.val() );
+			}
+			if ( val != null && val !== '' ) {
+				url += '&' + encodeURIComponent( key ) + '=' + encodeURIComponent( val );
+			}
+		} );
+		// Also pass allowed post types (checkbox array, not in reload keys)
 		var allowedTypes = $( 'form#post input[name="_wpz-insta_allowed-post-types[]"]:checked' ).map( function() { return $( this ).val(); } ).get().join( ',' );
 		if ( allowedTypes ) {
 			url += '&_wpz-insta_allowed-post-types=' + encodeURIComponent( allowedTypes );
