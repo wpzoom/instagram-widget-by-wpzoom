@@ -521,6 +521,10 @@
 		initAjaxFeeds();
 
 		$.fn.zoomLoadAsyncImages = function () {
+			// Skip async image uploading in preview mode (images already use CDN URLs)
+			if ( window.location.search.indexOf( 'wpz-insta-widget-preview' ) !== -1 ) {
+				return this;
+			}
 			return $(this).each(function () {
 				var $list = $(this);
 

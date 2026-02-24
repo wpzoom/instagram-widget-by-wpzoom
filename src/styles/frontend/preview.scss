@@ -342,8 +342,9 @@ body:not(.page-layout-grid):not(.page-layout-masonry) {
 	display: none !important;
 }
 
-// Notice when masonry is selected (preview shows grid; masonry applied on frontend)
-.wpz-insta-preview-masonry-notice {
+// Notice when masonry or carousel is selected (preview shows static layout; effect applied on frontend)
+.wpz-insta-preview-masonry-notice,
+.wpz-insta-preview-carousel-notice {
 	display: block;
 	margin: 0 0 12px;
 	padding: 10px 14px;

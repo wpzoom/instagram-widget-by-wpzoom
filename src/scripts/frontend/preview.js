@@ -93,6 +93,7 @@
 			var layoutName = LAYOUT_NAMES[ layoutInt ];
 			// Masonry in preview: show as grid and display a notice (masonry is applied on frontend only)
 			var isMasonryPreview = layoutName === 'masonry';
+			var isCarouselPreview = layoutName === 'carousel';
 			if ( isMasonryPreview ) {
 				root.classList.add( 'wpz-insta-preview-masonry' );
 			} else {
@@ -113,6 +114,21 @@
 				noticeEl.style.display = '';
 			} else if ( noticeEl ) {
 				noticeEl.style.display = 'none';
+			}
+			// Carousel notice: show when layout is carousel
+			var carouselNoticeEl = root.querySelector( '.wpz-insta-preview-carousel-notice' );
+			if ( isCarouselPreview ) {
+				if ( ! carouselNoticeEl ) {
+					carouselNoticeEl = document.createElement( 'p' );
+					carouselNoticeEl.className = 'wpz-insta-preview-carousel-notice';
+					if ( wrapperForNotice && wrapperForNotice.parentNode ) {
+						wrapperForNotice.parentNode.insertBefore( carouselNoticeEl, wrapperForNotice );
+					}
+				}
+				carouselNoticeEl.textContent = 'The carousel slider will be applied on your live site. This preview shows a static layout for reference.';
+				carouselNoticeEl.style.display = '';
+			} else if ( carouselNoticeEl ) {
+				carouselNoticeEl.style.display = 'none';
 			}
 			LAYOUT_NAMES.forEach( function( name ) {
 				root.classList.remove( 'layout-' + name );
