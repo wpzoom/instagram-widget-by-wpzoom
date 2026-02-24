@@ -229,6 +229,21 @@ class Wpzoom_Instagram_Widget_Display {
 			}
 		}
 
+		// Fallback: if button had no usable next_url, try the cached transient paging data.
+		// The transient stores the raw API response including paging.next from the initial fetch.
+		if ( empty( $pagination_cursor ) && $cache_offset >= 0 && isset( $all_items ) && is_array( $all_items ) && ! empty( $all_items['paging'] ) ) {
+			$cached_paging = $all_items['paging'];
+			if ( property_exists( $cached_paging, 'next' ) && ! empty( $cached_paging->next ) ) {
+				$parsed_url = parse_url( $cached_paging->next );
+				if ( isset( $parsed_url['query'] ) ) {
+					parse_str( $parsed_url['query'], $params );
+					if ( isset( $params['after'] ) ) {
+						$pagination_cursor = $params['after'];
+					}
+				}
+			}
+		}
+
 		// Guard: If cache was attempted but exhausted AND there's no API pagination cursor,
 		// don't fetch from the beginning (which would return duplicates of already-displayed posts).
 		if ( $cache_offset >= 0 && empty( $pagination_cursor ) ) {
@@ -1010,7 +1025,7 @@ class Wpzoom_Instagram_Widget_Display {
 
 							// Always output Load more in DOM when option is on (hidden via CSS for fullwidth/carousel).
 							if ( $show_load_more_button ) {
-								$next_url = ! empty( $items ) && array_key_exists( 'paging', $items ) && is_object( $items['paging'] ) && property_exists( $items['paging'], 'next' ) ? esc_url( $items['paging']->next ) : '';
+								$next_url = ! empty( $items ) && array_key_exists( 'paging', $items ) && is_object( $items['paging'] ) && property_exists( $items['paging'], 'next' ) ? $items['paging']->next : '';
 								// Use items_consumed_count (actual items processed by items_html) instead of
 								// total fetched count, so load more doesn't skip unprocessed items from the over-fetch gap.
 								$initial_display_count = $items_consumed_count > 0 ? $items_consumed_count : ( is_array( $items ) && ! empty( $items['items'] ) ? count( $items['items'] ) : 0 );
