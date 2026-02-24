@@ -223,7 +223,13 @@
 		var viewBtn = root.querySelector( '.wpz-insta-view-on-insta-button' );
 		if ( viewBtn ) {
 			viewBtn.style.display = boolVal( data[ 'show-view-button' ] ) ? '' : 'none';
-			if ( data[ 'view-button-text' ] ) viewBtn.textContent = data[ 'view-button-text' ];
+			if ( data[ 'view-button-text' ] ) {
+				// Update only the text node to preserve the icon <span>
+				var lastChild = viewBtn.lastChild;
+				if ( lastChild && lastChild.nodeType === 3 ) {
+					lastChild.textContent = ' ' + data[ 'view-button-text' ];
+				}
+			}
 			if ( data[ 'view-button-bg-color' ] != null && data[ 'view-button-bg-color' ] !== '' ) {
 				viewBtn.style.setProperty( 'background-color', data[ 'view-button-bg-color' ], 'important' );
 			} else {

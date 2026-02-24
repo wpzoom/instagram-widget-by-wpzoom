@@ -1063,9 +1063,11 @@ jQuery( function( $ ) {
 	// Fields that require a full iframe reload (server-side: different data). All others are applied via postMessage.
 	var wpzInstaPreviewReloadKeys = [
 		'_wpz-insta_user-id', '_wpz-insta_user-ids', '_wpz-insta_item-num', '_wpz-insta_allowed-post-types-submitted',
+		'_wpz-insta_layout', '_wpz-insta_image-size',
 		// These change the HTML structure (PHP conditionally renders elements), so a full reload is needed
 		'_wpz-insta_show-overlay', '_wpz-insta_hover-link', '_wpz-insta_show-likes', '_wpz-insta_show-comments',
 		'_wpz-insta_show-media-type-icons', '_wpz-insta_hover-media-type-icons', '_wpz-insta_hover-date',
+		'_wpz-insta_show-view-button', '_wpz-insta_show-load-more', '_wpz-insta_show-stories',
 		// PRO multi-account settings that change HTML structure
 		'_wpz-insta_multi-account-header-mode', '_wpz-insta_multi-account-show-attribution'
 	];
