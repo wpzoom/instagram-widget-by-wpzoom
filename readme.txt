@@ -51,10 +51,12 @@ Create stunning **Instagram galleries** and **Instagram sliders** anywhere on yo
 
 Upgrade to **[Instagram Widget PRO](https://www.wpzoom.com/plugins/instagram-widget/?utm_source=wporg&utm_medium=insta-free-desc&utm_campaign=insta-free-pro-link)** for powerful features:
 
-* **📊 Instagram Insights & Analytics 🆕** - Track follower growth, reach, impressions, engagement, and individual post performance with beautiful charts
+* **🛍️ WooCommerce Product Tagging 🆕** - Turn your Instagram feed into a shoppable gallery by linking posts to WooCommerce products
+* **🛡️ Feed Moderation 🆕** - Hide or show individual posts from your feed without deleting them from Instagram
+* **📊 Instagram Insights & Analytics** - Track follower growth, reach, impressions, engagement, and individual post performance with beautiful charts
 * **Display Instagram Stories** - Show your Instagram Stories directly on your website
 * **Display Follower Count** - Show your real-time follower count in the feed header
-* **Multi-Account Feed 🆕** - Combine posts from multiple Instagram accounts into a single unified feed
+* **Multi-Account Feed** - Combine posts from multiple Instagram accounts into a single unified feed
 * **Masonry Layout** - Pinterest-style grid for a modern look
 * **Carousel/Slider** - Showcase your photos in an interactive slider
 * **Responsive Column Control** - Set different columns for desktop, tablet, and mobile
@@ -76,6 +78,25 @@ Track your Instagram performance directly from your WordPress dashboard:
 * **Interactive Charts**: Beautiful visualizations of your Instagram data
 * **Multiple Date Ranges**: View data for 7, 14, 30, or 90 days
 
+
+= 🛍️ NEW: Shoppable Instagram Feed with WooCommerce (PRO) =
+
+Turn your Instagram feed into a sales channel by tagging posts with WooCommerce products:
+
+* **Link Products to Posts**: Assign one or more WooCommerce products to any Instagram post directly from the feed editor
+* **Album Support**: Tag different products on each image in carousel/album posts
+* **Flexible Display**: Choose between a subtle shopping icon with product popover or a prominent "Buy Now" button
+* **Customizable Styling**: Control colors, positioning, and appearance of product tags
+* **Seamless Shopping**: Visitors can discover and buy products without leaving your site
+
+= 🛡️ NEW: Feed Moderation (PRO) =
+
+Take full control of which Instagram posts appear in your feed:
+
+* **Hide Individual Posts**: Remove specific posts from your feed with a single click
+* **Non-Destructive**: Hidden posts stay on Instagram — only removed from your website display
+* **Easy Toggle**: Use the eye icon in the Moderate tab to show or hide any post
+* **Instant Preview**: See your moderated feed in real-time before publishing
 
 = Works With Your Favorite Tools =
 
