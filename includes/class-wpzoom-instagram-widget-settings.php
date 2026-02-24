@@ -2988,7 +2988,7 @@ class WPZOOM_Instagram_Widget_Settings {
 			WPZOOM_INSTAGRAM_PLUGIN_URL . 'dist/scripts/frontend/preview.js',
 			array( 'jquery' ),
 			WPZOOM_INSTAGRAM_VERSION,
-			true
+			array( 'strategy' => 'defer', 'in_footer' => false )
 		);
 
 		// Localize AJAX URL and nonce for preview load more functionality

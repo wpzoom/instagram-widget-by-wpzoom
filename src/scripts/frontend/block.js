@@ -3,7 +3,7 @@
 		$( '.zoom-instagram-widget__items[data-lightbox="1"]' ).each( function () {
 			const $swipe_el = $( this ).parent().parent().find( '.wpz-insta-lightbox-wrapper > .swiper' );
 
-			if ( $swipe_el.length > 0 ) {
+			if ( $swipe_el.length > 0 && typeof Swiper !== 'undefined' ) {
 				const $nested = $swipe_el.find( '.image-wrapper > .swiper' );
 
 				const swiper = new Swiper( $swipe_el.get(0), {

@@ -586,7 +586,7 @@
 			// Debug: Check if lightbox wrapper has content
 			const $lightboxWrapper = $swipe_el.closest( '.wpz-insta-lightbox-wrapper' );
 
-			if ( $swipe_el.length > 0 ) {
+			if ( $swipe_el.length > 0 && typeof Swiper !== 'undefined' ) {
 					const $nested   = $swipe_el.find( '.image-wrapper > .swiper' );
 
 					const swiper = new Swiper( $swipe_el.get(0), {

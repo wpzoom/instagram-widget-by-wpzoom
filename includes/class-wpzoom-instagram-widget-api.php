@@ -429,8 +429,9 @@ class Wpzoom_Instagram_Widget_API {
 			}
 		}
 
-		if ( ! empty( $data->data ) ) {
-			// Always update cache when we have fresh data (e.g. from "Load latest") so frontend and next loads use it
+		if ( ! empty( $data->data ) && empty( $pagination_cursor ) ) {
+			// Update cache when we have fresh data from an initial load (not a paginated load-more,
+			// which only contains a partial page and would overwrite the full feed cache).
 			set_transient(
 				$transient,
 				wp_json_encode( $data ),
@@ -515,7 +516,7 @@ class Wpzoom_Instagram_Widget_API {
 		// Use a larger API limit when filtering to ensure we get enough of the desired type
 		$all_types = 'IMAGE,VIDEO,CAROUSEL_ALBUM';
 		$is_filtering = ( $allowed_post_types !== $all_types );
-		$api_limit = 25; // Always fetch max per request (Instagram max is 25) to build a larger cache
+		$api_limit = $is_filtering ? 25 : max( $image_limit, 12 ); // Fetch more when filtering by type; otherwise respect limit but ensure enough for cache-based load-more
 
 		do {
 			$request_url = add_query_arg(

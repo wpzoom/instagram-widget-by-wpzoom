@@ -78,16 +78,16 @@ class Wpzoom_Instagram_Widget_Display {
 		}
 		
 		// Verify nonce
-		if ( ! wp_verify_nonce( $_POST['_wpnonce'], 'wpzinsta-pro-load-more' ) ) {
+		if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( $_POST['_wpnonce'], 'wpzinsta-pro-load-more' ) ) {
 			wp_send_json_error( 'Invalid nonce' );
 		}
 
 		// Sanitize input data
-		$feed_id            = intval( $_POST['feed_id'] );
-		$item_amount        = intval( $_POST['item_amount'] );
-		$image_size         = sanitize_text_field( $_POST['image_size'] );
-		$allowed_post_types = sanitize_text_field( $_POST['allowed_post_types'] );
-		$next_url           = sanitize_text_field( $_POST['next'] );
+		$feed_id            = isset( $_POST['feed_id'] ) ? intval( $_POST['feed_id'] ) : 0;
+		$item_amount        = isset( $_POST['item_amount'] ) ? intval( $_POST['item_amount'] ) : 9;
+		$image_size         = isset( $_POST['image_size'] ) ? sanitize_text_field( $_POST['image_size'] ) : 'standard_resolution';
+		$allowed_post_types = isset( $_POST['allowed_post_types'] ) ? sanitize_text_field( $_POST['allowed_post_types'] ) : 'IMAGE,VIDEO,CAROUSEL_ALBUM';
+		$next_url           = isset( $_POST['next'] ) ? sanitize_text_field( $_POST['next'] ) : '';
 		$cache_offset       = isset( $_POST['cache_offset'] ) ? intval( $_POST['cache_offset'] ) : -1;
 
 		// Get feed settings
@@ -924,7 +924,7 @@ class Wpzoom_Instagram_Widget_Display {
 					if ( $this->is_pro && $feed_id_for_api > 0 && ! $preview ) {
 						$hidden_posts_meta = get_post_meta( $feed_id_for_api, '_wpz-insta_hidden-posts', true );
 						if ( is_array( $hidden_posts_meta ) && ! empty( $hidden_posts_meta ) ) {
-							$api_limit = $amount + count( $hidden_posts_meta );
+							$api_limit = min( $amount + count( $hidden_posts_meta ), $amount * 3 );
 						}
 					}
 					$items  = $this->api->get_items(
@@ -1323,7 +1323,7 @@ class Wpzoom_Instagram_Widget_Display {
 
 				$src_attr = $is_editor ? sprintf( 'src="%s"', esc_url( $src ) ) : '';
 
-				if ( $is_editor ) {
+				if ( $is_editor || $preview ) {
 					$classes .= ' wpz-insta-loaded';
 				}
 
