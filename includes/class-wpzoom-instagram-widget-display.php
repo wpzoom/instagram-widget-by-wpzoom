@@ -57,9 +57,6 @@ class Wpzoom_Instagram_Widget_Display {
 		// Add AJAX handler for preview load more (admin only - serves cached posts for product linking)
 		add_action( 'wp_ajax_wpzoom_instagram_preview_load_more', array( $this, 'ajax_preview_load_more_posts' ) );
 
-		// Add AJAX handlers for initial feed load (async loading)
-		add_action( 'wp_ajax_wpzoom_instagram_initial_load', array( $this, 'ajax_initial_load' ) );
-		add_action( 'wp_ajax_nopriv_wpzoom_instagram_initial_load', array( $this, 'ajax_initial_load' ) );
 	}
 
 	/**
@@ -445,104 +442,6 @@ class Wpzoom_Instagram_Widget_Display {
 	}
 
 	/**
-	 * AJAX handler for initial feed load functionality.
-	 * This allows the feed to be loaded asynchronously after page load.
-	 *
-	 * Note: This endpoint intentionally does not use nonce verification because:
-	 * 1. It's a read-only operation that only displays public Instagram feed content
-	 * 2. Nonces become stale when pages are cached (WP Rocket, etc.), causing failures
-	 * 3. The feed_id is validated against actual feed posts for security
-	 * 4. No user data is modified or sensitive actions performed
-	 *
-	 * @since 2.3.0
-	 * @return void
-	 */
-	public function ajax_initial_load() {
-		// Prevent caching of AJAX responses by optimization plugins
-		if ( ! headers_sent() ) {
-			header( 'Cache-Control: no-cache, must-revalidate, max-age=0' );
-			header( 'Pragma: no-cache' );
-			header( 'Expires: Wed, 11 Jan 1984 05:00:00 GMT' );
-		}
-
-		// Sanitize input data
-		$feed_id = isset( $_POST['feed_id'] ) ? intval( $_POST['feed_id'] ) : -1;
-
-		if ( $feed_id < 0 ) {
-			wp_send_json_error( 'Invalid feed ID' );
-		}
-
-		// Get feed post
-		$feed_post = get_post( $feed_id );
-		if ( ! $feed_post || 'wpz-insta_feed' !== $feed_post->post_type ) {
-			wp_send_json_error( 'Invalid feed' );
-		}
-
-		// Try to get cached HTML output first
-		$cache_key = 'wpz_insta_feed_html_' . $feed_id;
-		$cached_html = get_transient( $cache_key );
-
-		if ( false !== $cached_html && ! empty( $cached_html ) ) {
-			// Return cached HTML - much faster!
-			wp_send_json_success( array(
-				'html'    => $cached_html,
-				'feed_id' => $feed_id,
-				'cached'  => true,
-			) );
-		}
-
-		// Generate feed output using existing method (without AJAX loading to avoid recursion)
-		$feed_settings = array();
-		foreach ( WPZOOM_Instagram_Widget_Settings::$feed_settings as $setting_name => $setting_args ) {
-			$feed_settings[ $setting_name ] = WPZOOM_Instagram_Widget_Settings::get_feed_setting_value( $feed_id, $setting_name );
-		}
-
-		// Disable AJAX loading for this render to get actual content
-		$feed_settings['ajax-initial-load'] = false;
-		$feed_settings['feed-id'] = $feed_id;
-
-		// Get feed HTML
-		$html = $this->output_feed( $feed_id, false, $feed_settings );
-
-		// Cache the HTML output using the same lifetime as the feed's API cache
-		$cache_lifetime = $this->get_feed_cache_lifetime( $feed_id );
-		set_transient( $cache_key, $html, $cache_lifetime );
-
-		// Prepare response
-		$response = array(
-			'html'    => $html,
-			'feed_id' => $feed_id,
-			'cached'  => false,
-		);
-
-		wp_send_json_success( $response );
-	}
-
-	/**
-	 * Get the cache lifetime for a feed based on its settings.
-	 *
-	 * @since 2.3.0
-	 * @param int $feed_id The feed ID.
-	 * @return int Cache lifetime in seconds.
-	 */
-	private function get_feed_cache_lifetime( $feed_id ) {
-		$interval = (int) WPZOOM_Instagram_Widget_Settings::get_feed_setting_value( $feed_id, 'check-new-posts-interval-number' );
-		$interval_suffix = (int) WPZOOM_Instagram_Widget_Settings::get_feed_setting_value( $feed_id, 'check-new-posts-interval-suffix' );
-
-		$multipliers = array(
-			MINUTE_IN_SECONDS,
-			HOUR_IN_SECONDS,
-			DAY_IN_SECONDS,
-			WEEK_IN_SECONDS,
-			MONTH_IN_SECONDS,
-		);
-
-		$multiplier = isset( $multipliers[ $interval_suffix ] ) ? $multipliers[ $interval_suffix ] : DAY_IN_SECONDS;
-
-		return intval( $multiplier * max( 1, $interval ) );
-	}
-
-	/**
 	 * Returns the markup for the feed with the given ID.
 	 *
 	 * @param  int   $feed_id     The ID of the feed to return the markup for.
@@ -698,18 +597,6 @@ class Wpzoom_Instagram_Widget_Display {
 		$this->api = Wpzoom_Instagram_Widget_API::getInstance();
 		$output = '';
 		$user_id = isset( $args['user-id'] ) ? intval( $args['user-id'] ) : -1;
-
-		// Check if AJAX initial load is enabled
-		$ajax_initial_load = isset( $args['ajax-initial-load'] ) && boolval( $args['ajax-initial-load'] );
-
-		// Check if we're in the block editor (REST API request or admin context)
-		$is_block_editor = defined( 'REST_REQUEST' ) && REST_REQUEST;
-		$is_admin_preview = is_admin() || ( isset( $_GET['wpz-insta-widget-preview'] ) );
-
-		// If AJAX loading enabled and not an AJAX request and not a preview and not in editor, render placeholder
-		if ( $ajax_initial_load && ! wp_doing_ajax() && ! $preview && ! $this->is_crawler() && ! $is_block_editor && ! $is_admin_preview && ! self::is_elementor_editor() ) {
-			return $this->render_skeleton_placeholder( $args );
-		}
 
 		if( $preview ) {
 			$args['preview'] = true;
@@ -2070,89 +1957,6 @@ class Wpzoom_Instagram_Widget_Display {
 		}
 
 		return trim( $caption );
-	}
-
-	/**
-	 * Check if the current request is from a search engine crawler.
-	 * If so, render full content instead of placeholder for SEO.
-	 *
-	 * @since 2.3.0
-	 * @return bool True if crawler, false otherwise.
-	 */
-	private function is_crawler() {
-		if ( ! isset( $_SERVER['HTTP_USER_AGENT'] ) ) {
-			return false;
-		}
-
-		$user_agent = sanitize_text_field( wp_unslash( $_SERVER['HTTP_USER_AGENT'] ) );
-		$crawlers = array(
-			'googlebot',
-			'bingbot',
-			'slurp',
-			'duckduckbot',
-			'baiduspider',
-			'yandexbot',
-			'facebookexternalhit',
-			'twitterbot',
-			'linkedinbot',
-			'embedly',
-			'quora link preview',
-			'outbrain',
-			'pinterest',
-			'slack',
-			'vkshare',
-			'w3c_validator',
-			'applebot',
-		);
-
-		$user_agent_lower = strtolower( $user_agent );
-		foreach ( $crawlers as $crawler ) {
-			if ( strpos( $user_agent_lower, $crawler ) !== false ) {
-				return true;
-			}
-		}
-
-		return false;
-	}
-
-	/**
-	 * Renders a skeleton placeholder for AJAX-loaded feeds.
-	 *
-	 * @since 2.3.0
-	 * @param array $args Feed configuration arguments.
-	 * @return string HTML markup for skeleton placeholder.
-	 */
-	private function render_skeleton_placeholder( array $args ) {
-		$feed_id = isset( $args['feed-id'] ) ? intval( $args['feed-id'] ) : -1;
-		$col_num = isset( $args['col-num'] ) ? intval( $args['col-num'] ) : 3;
-		$item_num = isset( $args['item-num'] ) ? intval( $args['item-num'] ) : 9;
-		$show_header = isset( $args['show-account-username'] ) && boolval( $args['show-account-username'] );
-		$show_user_image = isset( $args['show-account-image'] ) && boolval( $args['show-account-image'] );
-		$spacing_between = isset( $args['spacing-between'] ) && floatval( $args['spacing-between'] ) > -1 ? floatval( $args['spacing-between'] ) : 10;
-
-		ob_start();
-		?>
-		<div class="wpz-insta-ajax-placeholder"
-			 data-feed-id="<?php echo esc_attr( $feed_id ); ?>">
-
-			<?php if ( $show_header || $show_user_image ) : ?>
-			<div class="wpz-insta-skeleton-header">
-				<div class="wpz-insta-skeleton-header-avatar"></div>
-				<div class="wpz-insta-skeleton-header-info">
-					<div class="wpz-insta-skeleton-header-info-name"></div>
-					<div class="wpz-insta-skeleton-header-info-stats"></div>
-				</div>
-			</div>
-			<?php endif; ?>
-
-			<div class="wpz-insta-skeleton-grid" style="grid-template-columns: repeat(<?php echo esc_attr( $col_num ); ?>, 1fr); gap: <?php echo esc_attr( $spacing_between ); ?>px;">
-				<?php for ( $i = 0; $i < $item_num; $i++ ) : ?>
-				<div class="wpz-insta-skeleton-grid-item"></div>
-				<?php endfor; ?>
-			</div>
-		</div>
-		<?php
-		return ob_get_clean();
 	}
 
 	/**

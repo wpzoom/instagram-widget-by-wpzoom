@@ -1827,7 +1827,6 @@ class WPZOOM_Instagram_Widget_Settings {
 			$image_aspect_ratio               = (string) self::get_feed_setting_value( $post->ID, 'image-aspect-ratio' );
 			$show_overlay                     = (bool) self::get_feed_setting_value( $post->ID, 'show-overlay' );
 			$lazy_load                        = (bool) self::get_feed_setting_value( $post->ID, 'lazy-load' );
-			$ajax_initial_load                = (bool) self::get_feed_setting_value( $post->ID, 'ajax-initial-load' );
 			$show_media_type_icons            = (bool) self::get_feed_setting_value( $post->ID, 'show-media-type-icons' );
 			$image_size                       = (string) self::get_feed_setting_value( $post->ID, 'image-size' );
 			$image_width                      = (float) self::get_feed_setting_value( $post->ID, 'image-width' );
@@ -2389,12 +2388,6 @@ class WPZOOM_Instagram_Widget_Settings {
 										<input type="hidden" name="_wpz-insta_lazy-load" value="0" />
 										<input type="checkbox" name="_wpz-insta_lazy-load" value="1"<?php checked( $lazy_load ); ?> />
 										<span><?php esc_html_e( 'Lazy load images', 'instagram-widget-by-wpzoom' ); ?></span>
-									</label>
-
-									<label class="wpz-insta_table-row">
-										<input type="hidden" name="_wpz-insta_ajax-initial-load" value="0" />
-										<input type="checkbox" name="_wpz-insta_ajax-initial-load" value="1"<?php checked( $ajax_initial_load ); ?> />
-										<span><?php esc_html_e( 'AJAX initial load (improves page speed on first visit)', 'instagram-widget-by-wpzoom' ); ?></span>
 									</label>
 
 									<label class="wpz-insta_table-row">
@@ -3894,9 +3887,6 @@ class WPZOOM_Instagram_Widget_Settings {
 				)
 			);
 		}
-
-		// Always clear the HTML output cache for AJAX initial load
-		delete_transient( 'wpz_insta_feed_html_' . $post_ID );
 	}
 
 	/**
