@@ -76,6 +76,7 @@ class WPZOOM_Elementor_Instagram {
 		wp_enqueue_style( 
 			'wpzoom-instagram-elementor', 
 			plugins_url( 'assets/css/wpzoom-instagram-elementor.css', __FILE__ ),
+			array(),
 			WPZOOM_INSTAGRAM_VERSION 
 		);
 	}
