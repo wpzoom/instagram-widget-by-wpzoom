@@ -244,6 +244,29 @@ class WPZOOM_Instagram_Image_Uploader {
 	}
 
 	/**
+	 * Map image output format to WebP if the setting is enabled and the server supports it.
+	 *
+	 * @param array $formats Existing format mappings.
+	 * @return array Modified format mappings.
+	 */
+	public static function map_to_webp_format( $formats ) {
+		$settings = get_option( 'wpzoom-instagram-general-settings', array() );
+
+		if ( empty( $settings['image-format'] ) || 'webp' !== $settings['image-format'] ) {
+			return $formats;
+		}
+
+		if ( ! wp_image_editor_supports( array( 'mime_type' => 'image/webp' ) ) ) {
+			return $formats;
+		}
+
+		$formats['image/jpeg'] = 'image/webp';
+		$formats['image/png']  = 'image/webp';
+
+		return $formats;
+	}
+
+	/**
 	 * @param $media_url
 	 * @param $media_id
 	 *
@@ -291,11 +314,17 @@ class WPZOOM_Instagram_Image_Uploader {
 
 		add_filter( 'intermediate_image_sizes_advanced', array( self::$instance, 'set_image_sizes' ), 10 );
 		add_filter( 'wp_insert_attachment_data', array( self::$instance, 'insert_post_data' ), 10 );
+		add_filter( 'image_editor_output_format', array( __CLASS__, 'map_to_webp_format' ), 10 );
 
 		$attachment_id = media_sideload_image( $media_url, null, null, 'id' );
 
+		remove_filter( 'image_editor_output_format', array( __CLASS__, 'map_to_webp_format' ), 10 );
 		remove_filter( 'intermediate_image_sizes_advanced', array( self::$instance, 'set_image_sizes' ), 10 );
 		remove_filter( 'wp_insert_attachment_data', array( self::$instance, 'insert_post_data' ), 10 );
+
+		if ( is_wp_error( $attachment_id ) ) {
+			return $attachment_id;
+		}
 
 		update_post_meta( $attachment_id, self::$media_metakey_name, $media_id );
 
