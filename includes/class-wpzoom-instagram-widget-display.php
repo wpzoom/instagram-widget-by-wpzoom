@@ -513,9 +513,9 @@ class Wpzoom_Instagram_Widget_Display {
 
 			if ( $feed_id > -1 ) {
 				return sprintf(
-					"<style type=\"text/css\">%s</style>\n%s",
-					$this->output_styles( $feed_id, false ),
-					$this->get_feed_output( $feed_id )
+					"%s\n<style type=\"text/css\">%s</style>",
+					$this->get_feed_output( $feed_id ),
+					$this->output_styles( $feed_id, false )
 				);
 			}
 		}
@@ -536,9 +536,9 @@ class Wpzoom_Instagram_Widget_Display {
 	 */
 	public function output_feed( int $feed_id, bool $echo = true, array $extra_attrs = array() ) {
 		$output = sprintf(
-			"<style type=\"text/css\">%s</style>\n%s",
-			$this->output_styles( $feed_id, false ),
-			$this->get_feed_output( $feed_id, $extra_attrs )
+			"%s\n<style type=\"text/css\">%s</style>",
+			$this->get_feed_output( $feed_id, $extra_attrs ),
+			$this->output_styles( $feed_id, false )
 		);
 
 		if ( $echo ) {
