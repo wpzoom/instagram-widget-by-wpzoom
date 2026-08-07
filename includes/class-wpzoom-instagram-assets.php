@@ -154,6 +154,8 @@ if ( ! class_exists( 'WPZOOM_Instagram_Widget_Assets ' ) ) {
 				$script_asset_file['version']
 			);
 
+			wp_set_script_translations( 'wpz-insta_block-backend-script', 'instagram-widget-by-wpzoom' );
+
 		}
 
 		/**
