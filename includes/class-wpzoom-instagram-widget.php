@@ -197,12 +197,12 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 					<div class="zoom-instagram-widget-user-info-names-wrapper">
 						<?php if ( ! empty( $user_info->data->full_name ) ) : ?>
 							<div class="zoom-instagram-widget-user-info-fullname">
-								<?php esc_html_e( $user_info->data->full_name, 'instagram-widget-by-wpzoom' ); ?>
+								<?php echo esc_html( $user_info->data->full_name ); ?>
 							</div>
 						<?php endif; ?>
 						<?php if ( ! empty( $user_info->data->username ) ) : ?>
 							<div class="zoom-instagram-widget-user-info-username">
-								<?php esc_html_e( '@' . $user_info->data->username, 'instagram-widget-by-wpzoom' ); ?>
+								<?php echo '@' . esc_html( $user_info->data->username ); ?>
 							</div>
 						<?php endif; ?>
 					</div>

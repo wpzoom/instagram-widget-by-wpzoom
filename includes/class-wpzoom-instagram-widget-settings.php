@@ -374,11 +374,18 @@ class WPZOOM_Instagram_Widget_Settings {
             $insta_link = admin_url( 'edit.php?post_type=wpz-insta_feed' );
 
 			if ( ! get_user_meta( get_current_user_id(), 'wpzinsta-settings-pointer-dismissed', true ) ) :
+				$pointer_content  = '<h3>' . esc_html__( '🏞️ Instagram Widget & Block 2.0', 'instagram-widget-by-wpzoom' ) . '</h3>';
+				$pointer_content .= '<h4>' . esc_html__( 'Connect your Instagram Account & Create a Feed!', 'instagram-widget-by-wpzoom' ) . '</h4>';
+				$pointer_content .= '<p>' . sprintf(
+					/* translators: %s: URL of the admin page that lists the Instagram feeds. */
+					__( 'Create <a href="%s"><strong>multiple feeds</strong></a> and embed them anywhere you want on your website. You can customize your feed with new design options and embed it using our new <strong>Gutenberg block</strong> or shortcode.', 'instagram-widget-by-wpzoom' ),
+					esc_url( $insta_link )
+				) . '</p>';
 				?>
 				<script>
 				jQuery( function( $ ) {
 					$( '#menu-posts-wpz-insta_feed' ).first().pointer( {
-						content: '<?php _e( '<h3>🏞️ Instagram Widget & Block 2.0</h3><h4>Connect your Instagram Account & Create a Feed!</h4><p>Create <a href="'. esc_url( $insta_link ) .'"><strong>multiple feeds</strong></a> and embed them anywhere you want on your website. You can customize your feed with new design options and embed it using our new <strong>Gutenberg block</strong> or shortcode.</p>', 'instagram-widget-by-wpzoom' ); ?>',
+						content: <?php echo wp_json_encode( wp_kses_post( $pointer_content ), JSON_HEX_TAG ); ?>,
 						position: { edge: 'left', align: 'left' },
 						pointerClass: 'wp-pointer arrow-top',
 						pointerWidth: 420,
