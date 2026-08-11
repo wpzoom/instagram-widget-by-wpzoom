@@ -110,6 +110,13 @@ class WPZOOM_Instagram_General_Settings {
 				'wpzoom_instagram_general_settings_section'
 		);
 		add_settings_field(
+			'wpzoom_instagram_general_settings_image_format',
+			esc_html__( 'Image Format', 'instagram-widget-by-wpzoom'),
+			array( $this, 'settings_field_image_format' ),
+			'wpzoom-instagram-general-settings',
+			'wpzoom_instagram_general_settings_section'
+		);
+		add_settings_field(
 			'wpzoom_instagram_general_settings_field_clear_data',
 			esc_html__( 'Delete All Images', 'instagram-widget-by-wpzoom'),
 			array( $this, 'settings_field_clear_data' ),
@@ -155,6 +162,9 @@ class WPZOOM_Instagram_General_Settings {
 	 * @since 1.0.0
 	 */
 	public function sanitize_field( $values ) {
+		if ( isset( $values['image-format'] ) ) {
+			$values['image-format'] = in_array( $values['image-format'], array( 'original', 'webp' ), true ) ? $values['image-format'] : 'original';
+		}
 		return $values;
 	}
 
@@ -197,6 +207,35 @@ class WPZOOM_Instagram_General_Settings {
 		<?php
 	}
 
+
+	public function settings_field_image_format() {
+		$settings     = get_option( 'wpzoom-instagram-general-settings' );
+		$image_format = ! empty( $settings['image-format'] ) ? $settings['image-format'] : 'original';
+		$supports_webp = wp_image_editor_supports( array( 'mime_type' => 'image/webp' ) );
+		?>
+		<select class="regular-text code"
+				id="wpzoom-instagram-widget-settings_image-format"
+				name="wpzoom-instagram-general-settings[image-format]">
+			<option value="original" <?php selected( $image_format, 'original' ); ?>>
+				<?php esc_html_e( 'JPG (Default)', 'instagram-widget-by-wpzoom' ); ?>
+			</option>
+			<option value="webp" <?php selected( $image_format, 'webp' ); ?> <?php disabled( ! $supports_webp ); ?>>
+				<?php esc_html_e( 'WebP', 'instagram-widget-by-wpzoom' ); ?>
+			</option>
+		</select>
+		<?php if ( ! $supports_webp ) : ?>
+			<p class="description" style="color: #d63638;">
+				<?php esc_html_e( 'WebP is not supported by your server. Please ensure GD or Imagick with WebP support is installed.', 'instagram-widget-by-wpzoom' ); ?>
+			</p>
+		<?php else : ?>
+			<p class="description">
+				<?php esc_html_e( 'Convert sideloaded Instagram images to WebP format for smaller file sizes and better performance.', 'instagram-widget-by-wpzoom' ); ?>
+			</p>
+		<?php endif; ?>
+		<br/>
+		<hr/>
+		<?php
+	}
 
 	/**
 	 * Output the Email Notificaiton section info
