@@ -1,5 +1,5 @@
 === WPZOOM Social Feed Widget & Block ===
-Contributors: WPZOOM, nvartolomei, ciorici
+Contributors: WPZOOM, ciorici
 Donate link: https://www.wpzoom.com/
 Tags: instagram, instagram feed, instagram gallery, instagram photos, instagram widget
 Requires at least: 6.5
