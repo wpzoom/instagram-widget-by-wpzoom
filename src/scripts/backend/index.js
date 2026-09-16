@@ -425,6 +425,7 @@ jQuery( function( $ ) {
 			$storiesRow.addClass( 'wpz-insta_disabled' );
 			$storiesCheckbox.prop( 'disabled', true ).prop( 'checked', false );
 		}
+		wpzInstaSyncStoriesRowOptions();
 
 		$( '#wpz-insta_tabs-config-cnnct' )
 			.removeClass( 'active' )
@@ -1061,6 +1062,35 @@ jQuery( function( $ ) {
 	};
 
 	// Fields that require a full iframe reload (server-side: different data). All others are applied via postMessage.
+	/**
+	 * Stories row sub-options are only meaningful when stories are enabled (and the account has a Facebook Page).
+	 * Grey them out otherwise so the dependency is obvious.
+	 */
+	function wpzInstaSyncStoriesRowOptions() {
+		var $storiesCheckbox = $( 'input[name="_wpz-insta_show-stories"]' ).filter( ':checkbox' );
+		var $rowCheckbox = $( 'input[name="_wpz-insta_stories-row"]' ).filter( ':checkbox' );
+		var $options = $( '.wpz-insta_stories-row-options' );
+		var $subOptions = $( '.wpz-insta_stories-row-suboptions' );
+
+		if ( ! $options.length ) {
+			return;
+		}
+
+		// In the free version the whole block sits in a PRO-only fieldset and stays locked.
+		var proLocked = $options.closest( '.wpz-insta_feed-only-pro' ).length > 0;
+		var storiesOn = ! proLocked && $storiesCheckbox.length > 0 && $storiesCheckbox.is( ':checked' ) && ! $storiesCheckbox.prop( 'disabled' );
+		var rowOn = storiesOn && $rowCheckbox.is( ':checked' );
+
+		$options.toggleClass( 'wpz-insta_disabled', ! storiesOn );
+		$rowCheckbox.prop( 'disabled', ! storiesOn );
+		$subOptions.toggleClass( 'wpz-insta_disabled', ! rowOn );
+		$subOptions.find( 'input, select' ).not( '[type="hidden"]' ).prop( 'disabled', ! rowOn );
+	}
+	window.wpzInstaSyncStoriesRowOptions = wpzInstaSyncStoriesRowOptions;
+
+	$( document ).on( 'change', 'input[name="_wpz-insta_show-stories"], input[name="_wpz-insta_stories-row"]', wpzInstaSyncStoriesRowOptions );
+	$( wpzInstaSyncStoriesRowOptions );
+
 	var wpzInstaPreviewReloadKeys = [
 		'_wpz-insta_user-id', '_wpz-insta_user-ids', '_wpz-insta_item-num', '_wpz-insta_allowed-post-types-submitted',
 		'_wpz-insta_layout', '_wpz-insta_image-size',
@@ -1068,6 +1098,9 @@ jQuery( function( $ ) {
 		'_wpz-insta_show-overlay', '_wpz-insta_hover-link', '_wpz-insta_show-likes', '_wpz-insta_show-comments',
 		'_wpz-insta_show-media-type-icons', '_wpz-insta_hover-media-type-icons', '_wpz-insta_hover-date',
 		'_wpz-insta_show-view-button', '_wpz-insta_show-load-more', '_wpz-insta_show-stories',
+		// Stories row (PRO): markup is rendered by PHP, so reload on every change
+		'_wpz-insta_stories-row', '_wpz-insta_stories-per-row', '_wpz-insta_stories-card-ratio',
+		'_wpz-insta_stories-row-show-name', '_wpz-insta_stories-row-show-time',
 		// PRO multi-account settings that change HTML structure
 		'_wpz-insta_multi-account-header-mode', '_wpz-insta_multi-account-show-attribution'
 	];

@@ -491,6 +491,214 @@ import 'zuck.js/skins/snapgram';
 	}
 
 	/**
+	 * Build the Zuck.js language object from the localized strings.
+	 */
+	function getZuckLanguage() {
+		const i18n = ( typeof wpzInstaStories !== 'undefined' && wpzInstaStories?.i18n ) || {};
+		return {
+			unmute: i18n.unmute || 'Touch to unmute',
+			keyboardTip: i18n.keyboardTip || 'Press space to see next',
+			visitLink: i18n.visitLink || 'Visit link',
+			time: {
+				ago: i18n.ago || 'ago',
+				hour: i18n.hour || 'hour',
+				hours: i18n.hours || 'hours',
+				minute: i18n.minute || 'minute',
+				minutes: i18n.minutes || 'minutes',
+				fromnow: i18n.fromnow || 'from now',
+				seconds: i18n.seconds || 'seconds',
+				yesterday: i18n.yesterday || 'yesterday',
+				tomorrow: i18n.tomorrow || 'tomorrow',
+				days: i18n.days || 'days',
+			},
+		};
+	}
+
+	/**
+	 * Create a hidden Zuck.js instance for a single account's stories.
+	 *
+	 * The returned instance gets two extra properties:
+	 * - wpzContainerId: id of the hidden container holding Zuck's story links
+	 * - wpzPendingItem: item index the viewer should start at on the next open (default 0)
+	 *
+	 * @param {Object} storiesData Stories data as printed by PHP (id, photo, name, link, items[]).
+	 * @return {Zuck|null}
+	 */
+	function createZuckInstance( storiesData ) {
+		if ( ! storiesData || ! storiesData.items || storiesData.items.length === 0 ) {
+			return null;
+		}
+
+		// Generate unique instance ID for this feed
+		const instanceId = ++instanceCounter;
+
+		// Transform data to Zuck.js format
+		// Use instanceId to ensure unique story IDs across different feeds
+		const timeline = [
+			{
+				id: 'wpz-feed-' + instanceId + '-' + ( storiesData.id || 'story' ),
+				photo: storiesData.photo || '',
+				name: storiesData.name || '',
+				link: storiesData.link || '',
+				lastUpdated: storiesData.lastUpdated || Math.floor( Date.now() / 1000 ),
+				seen: false,
+				items: storiesData.items.map( ( item, index ) => ( {
+					id: item.id || 'item-' + index,
+					type: item.type || 'photo', // 'photo' or 'video'
+					src: item.src || '',
+					preview: item.preview || item.src || '',
+					length: item.length || ( item.type === 'video' ? 0 : 5 ), // 0 = use video duration
+					link: item.link || '',
+					linkText: item.linkText || 'View on Instagram',
+					time: item.time || Math.floor( Date.now() / 1000 ),
+					seen: false,
+				} ) ),
+			},
+		];
+
+		// Create a unique container for Zuck.js
+		// Use instanceId to ensure each feed has its own container
+		const storiesContainerId = 'wpz-insta-zuck-' + instanceId;
+
+		// Create new container for this feed instance
+		const $storiesContainer = $( '<div>' )
+			.attr( 'id', storiesContainerId )
+			.addClass( 'wpz-insta-zuck-container' )
+			.css( {
+				position: 'absolute',
+				left: '-9999px',
+				top: '-9999px',
+				width: '1px',
+				height: '1px',
+				overflow: 'hidden',
+			} );
+
+		// Append to body for the modal to work properly
+		$( 'body' ).append( $storiesContainer );
+
+		/**
+		 * Reset a story so the next open starts at `startItem` with everything before it marked as seen.
+		 */
+		function resetStory( zuck, storyId, startItem ) {
+			const storyIndex = zuck.findStoryIndex( storyId );
+			if ( storyIndex !== -1 && zuck.data[ storyIndex ] ) {
+				const items = zuck.data[ storyIndex ].items || [];
+				const safeStart = Math.max( 0, Math.min( startItem || 0, items.length - 1 ) );
+
+				zuck.data[ storyIndex ].currentItem = safeStart;
+				zuck.data[ storyIndex ].seen = false;
+
+				items.forEach( function( item, idx ) {
+					item.seen = idx < safeStart;
+				} );
+			}
+		}
+
+		// Initialize Zuck.js
+		const zuckInstance = new Zuck( $storiesContainer.get( 0 ), {
+			skin: 'snapgram',
+			avatars: true,
+			list: false,
+			cubeEffect: true,
+			autoFullScreen: false,
+			backButton: true,
+			backNative: false, // Disable to prevent URL hash issues
+			previousTap: true,
+			localStorage: false,
+			stories: timeline,
+			language: getZuckLanguage(),
+			callbacks: {
+				onOpen: function( storyId, callback ) {
+					// Show overlay and lock body scroll
+					showModalOverlay();
+
+					// If a different Zuck instance was active, we need to clear the modal
+					// to prevent mixing stories from different feeds
+					if ( activeZuckInstance && activeZuckInstance !== zuckInstance ) {
+						// Clear the modal content to force fresh rendering
+						const $modalContent = $( '#zuck-modal-content' );
+						if ( $modalContent.length ) {
+							$modalContent.html( '' );
+						}
+					}
+
+					// Set active instance for keyboard navigation
+					activeZuckInstance = zuckInstance;
+
+					// Start at the requested item (a stories-row thumbnail) or at the first one (profile ring).
+					resetStory( zuckInstance, storyId, zuckInstance.wpzPendingItem || 0 );
+					zuckInstance.wpzPendingItem = 0;
+
+					callback();
+
+					// Start observer to continuously remove 'muted' class
+					startMutedClassObserver();
+
+					// After callback (which renders the modal), inject mute button and apply mute state
+					// Use setTimeout to ensure DOM is ready
+					setTimeout( function() {
+						injectMuteButton();
+						applyMuteState();
+					}, 100 );
+				},
+				onView: function( storyId ) {
+					// Story viewed - apply mute state when navigating between items
+					setTimeout( applyMuteState, 50 );
+				},
+				onEnd: function( storyId, callback ) {
+					// All stories viewed - close the modal
+					callback();
+				},
+				onClose: function( storyId, callback ) {
+					// Stop the muted class observer
+					stopMutedClassObserver();
+
+					// Hide overlay and unlock body scroll
+					hideModalOverlay();
+
+					// Modal closed - clear active instance
+					activeZuckInstance = null;
+
+					// Reset story position for next open
+					resetStory( zuckInstance, storyId, 0 );
+
+					callback();
+				},
+				onNavigateItem: function( storyId, nextStoryId, callback ) {
+					// IMPORTANT: Must call callback for navigation to work
+					callback();
+
+					// Apply mute state when navigating to next item
+					setTimeout( applyMuteState, 50 );
+				},
+			},
+		} );
+
+		zuckInstance.wpzContainerId = storiesContainerId;
+		zuckInstance.wpzPendingItem = 0;
+
+		return zuckInstance;
+	}
+
+	/**
+	 * Open the viewer of a Zuck instance, optionally at a specific item index.
+	 */
+	function openZuckInstance( zuckInstance, itemIndex ) {
+		if ( ! zuckInstance ) {
+			return;
+		}
+
+		zuckInstance.wpzPendingItem = parseInt( itemIndex, 10 ) || 0;
+
+		// Find and click the story in Zuck's container to trigger the modal
+		const $storyLink = $( '#' + zuckInstance.wpzContainerId ).find( '.story > a' );
+
+		if ( $storyLink.length ) {
+			$storyLink.get( 0 ).click();
+		}
+	}
+
+	/**
 	 * Initialize Instagram Stories with Zuck.js
 	 */
 	function initInstagramStories() {
@@ -499,7 +707,7 @@ import 'zuck.js/skins/snapgram';
 			return;
 		}
 
-		// Find all story containers
+		// Find all story containers (profile image ring triggers)
 		$( '.wpz-insta-stories' ).each( function() {
 			const $container = $( this );
 			const containerElement = $container.get( 0 );
@@ -523,193 +731,23 @@ import 'zuck.js/skins/snapgram';
 				return;
 			}
 
-			if ( ! storiesData || ! storiesData.items || storiesData.items.length === 0 ) {
+			const zuckInstance = createZuckInstance( storiesData );
+			if ( ! zuckInstance ) {
 				return;
 			}
 
 			// Mark as initialized
 			initializedContainers.add( containerElement );
 
-			// Generate unique instance ID for this feed
-			const instanceId = ++instanceCounter;
-
-			// Transform data to Zuck.js format
-			// Use instanceId to ensure unique story IDs across different feeds
-			const timeline = [
-				{
-					id: 'wpz-feed-' + instanceId + '-' + ( storiesData.id || 'story' ),
-					photo: storiesData.photo || '',
-					name: storiesData.name || '',
-					link: storiesData.link || '',
-					lastUpdated: storiesData.lastUpdated || Math.floor( Date.now() / 1000 ),
-					seen: false,
-					items: storiesData.items.map( ( item, index ) => ( {
-						id: item.id || 'item-' + index,
-						type: item.type || 'photo', // 'photo' or 'video'
-						src: item.src || '',
-						preview: item.preview || item.src || '',
-						length: item.length || ( item.type === 'video' ? 0 : 5 ), // 0 = use video duration
-						link: item.link || '',
-						linkText: item.linkText || 'View on Instagram',
-						time: item.time || Math.floor( Date.now() / 1000 ),
-						seen: false,
-					} ) ),
-				},
-			];
-
-			// Create a unique container for Zuck.js
-			// Use instanceId to ensure each feed has its own container
-			const storiesContainerId = 'wpz-insta-zuck-' + instanceId;
-
-			// Create new container for this feed instance
-			const $storiesContainer = $( '<div>' )
-				.attr( 'id', storiesContainerId )
-				.addClass( 'wpz-insta-zuck-container' )
-				.css( {
-					position: 'absolute',
-					left: '-9999px',
-					top: '-9999px',
-					width: '1px',
-					height: '1px',
-					overflow: 'hidden',
-				} );
-
-			// Append to body for the modal to work properly
-			$( 'body' ).append( $storiesContainer );
-
-			// Initialize Zuck.js
-			const zuckInstance = new Zuck( $storiesContainer.get( 0 ), {
-				skin: 'snapgram',
-				avatars: true,
-				list: false,
-				cubeEffect: true,
-				autoFullScreen: false,
-				backButton: true,
-				backNative: false, // Disable to prevent URL hash issues
-				previousTap: true,
-				localStorage: false,
-				stories: timeline,
-				language: {
-					unmute: ( typeof wpzInstaStories !== 'undefined' && wpzInstaStories?.i18n?.unmute ) || 'Touch to unmute',
-					keyboardTip: ( typeof wpzInstaStories !== 'undefined' && wpzInstaStories?.i18n?.keyboardTip ) || 'Press space to see next',
-					visitLink: ( typeof wpzInstaStories !== 'undefined' && wpzInstaStories?.i18n?.visitLink ) || 'Visit link',
-					time: {
-						ago: ( typeof wpzInstaStories !== 'undefined' && wpzInstaStories?.i18n?.ago ) || 'ago',
-						hour: ( typeof wpzInstaStories !== 'undefined' && wpzInstaStories?.i18n?.hour ) || 'hour',
-						hours: ( typeof wpzInstaStories !== 'undefined' && wpzInstaStories?.i18n?.hours ) || 'hours',
-						minute: ( typeof wpzInstaStories !== 'undefined' && wpzInstaStories?.i18n?.minute ) || 'minute',
-						minutes: ( typeof wpzInstaStories !== 'undefined' && wpzInstaStories?.i18n?.minutes ) || 'minutes',
-						fromnow: ( typeof wpzInstaStories !== 'undefined' && wpzInstaStories?.i18n?.fromnow ) || 'from now',
-						seconds: ( typeof wpzInstaStories !== 'undefined' && wpzInstaStories?.i18n?.seconds ) || 'seconds',
-						yesterday: ( typeof wpzInstaStories !== 'undefined' && wpzInstaStories?.i18n?.yesterday ) || 'yesterday',
-						tomorrow: ( typeof wpzInstaStories !== 'undefined' && wpzInstaStories?.i18n?.tomorrow ) || 'tomorrow',
-						days: ( typeof wpzInstaStories !== 'undefined' && wpzInstaStories?.i18n?.days ) || 'days',
-					},
-				},
-				callbacks: {
-					onOpen: function( storyId, callback ) {
-						// Show overlay and lock body scroll
-						showModalOverlay();
-
-						// If a different Zuck instance was active, we need to clear the modal
-						// to prevent mixing stories from different feeds
-						if ( activeZuckInstance && activeZuckInstance !== zuckInstance ) {
-							// Clear the modal content to force fresh rendering
-							const $modalContent = $( '#zuck-modal-content' );
-							if ( $modalContent.length ) {
-								$modalContent.html( '' );
-							}
-						}
-
-						// Set active instance for keyboard navigation
-						activeZuckInstance = zuckInstance;
-
-						// Reset story to first item when opening
-						const storyIndex = zuckInstance.findStoryIndex( storyId );
-						if ( storyIndex !== -1 && zuckInstance.data[ storyIndex ] ) {
-							zuckInstance.data[ storyIndex ].currentItem = 0;
-							zuckInstance.data[ storyIndex ].seen = false;
-
-							// Reset all items' seen status
-							if ( zuckInstance.data[ storyIndex ].items ) {
-								zuckInstance.data[ storyIndex ].items.forEach( function( item ) {
-									item.seen = false;
-								} );
-							}
-						}
-
-						callback();
-
-						// Start observer to continuously remove 'muted' class
-						startMutedClassObserver();
-
-						// After callback (which renders the modal), inject mute button and apply mute state
-						// Use setTimeout to ensure DOM is ready
-						setTimeout( function() {
-							injectMuteButton();
-							applyMuteState();
-						}, 100 );
-					},
-					onView: function( storyId ) {
-						// Story viewed - apply mute state when navigating between items
-						setTimeout( applyMuteState, 50 );
-					},
-					onEnd: function( storyId, callback ) {
-						// All stories viewed - close the modal
-						callback();
-					},
-					onClose: function( storyId, callback ) {
-						// Stop the muted class observer
-						stopMutedClassObserver();
-
-						// Hide overlay and unlock body scroll
-						hideModalOverlay();
-
-						// Modal closed - clear active instance
-						activeZuckInstance = null;
-
-						// Reset story position for next open
-						const storyIndex = zuckInstance.findStoryIndex( storyId );
-						if ( storyIndex !== -1 && zuckInstance.data[ storyIndex ] ) {
-							zuckInstance.data[ storyIndex ].currentItem = 0;
-							zuckInstance.data[ storyIndex ].seen = false;
-
-							// Reset all items' seen status
-							if ( zuckInstance.data[ storyIndex ].items ) {
-								zuckInstance.data[ storyIndex ].items.forEach( function( item ) {
-									item.seen = false;
-								} );
-							}
-						}
-
-						callback();
-					},
-					onNavigateItem: function( storyId, nextStoryId, callback ) {
-						// IMPORTANT: Must call callback for navigation to work
-						callback();
-
-						// Apply mute state when navigating to next item
-						setTimeout( applyMuteState, 50 );
-					},
-				},
-			} );
-
 			// Store reference for later use
 			$container.data( 'zuck', zuckInstance );
-			$container.data( 'zuck-container-id', storiesContainerId );
+			$container.data( 'zuck-container-id', zuckInstance.wpzContainerId );
 
 			// Handle click on the profile image to open stories
 			$container.on( 'click.wpzInstaStories', function( e ) {
 				e.preventDefault();
 				e.stopPropagation();
-
-				// Find and click the story in Zuck's container to trigger the modal
-				const $zuckContainer = $( '#' + storiesContainerId );
-				const $storyLink = $zuckContainer.find( '.story > a' );
-
-				if ( $storyLink.length ) {
-					$storyLink.get( 0 ).click();
-				}
+				openZuckInstance( zuckInstance, 0 );
 			} );
 
 			// Also handle keyboard activation
@@ -720,6 +758,118 @@ import 'zuck.js/skins/snapgram';
 				}
 			} );
 		} );
+
+		initStoriesRows();
+	}
+
+	/**
+	 * Initialize the stories rows (thumbnail carousels above the feed).
+	 *
+	 * - Single-account rows reuse the header ring's Zuck instance when present, otherwise
+	 *   they build one from their own `data-stories` attribute.
+	 * - Multi-account rows (`data-multi="1"`) get their click handlers from the PRO script;
+	 *   only the carousel is initialized here.
+	 */
+	function initStoriesRows() {
+		$( '.wpz-insta-stories-row' ).each( function() {
+			const $row = $( this );
+			const rowElement = $row.get( 0 );
+
+			if ( initializedContainers.has( rowElement ) ) {
+				return;
+			}
+			initializedContainers.add( rowElement );
+
+			initStoriesRowCarousel( $row );
+
+			if ( $row.data( 'multi' ) ) {
+				return;
+			}
+
+			const $feed = $row.closest( '.zoom-instagram' );
+			let zuckInstance = $feed.find( '.wpz-insta-stories' ).first().data( 'zuck' ) || null;
+
+			if ( ! zuckInstance ) {
+				const storiesDataAttr = $row.attr( 'data-stories' );
+				if ( ! storiesDataAttr ) {
+					return;
+				}
+
+				let storiesData;
+				try {
+					storiesData = JSON.parse( storiesDataAttr );
+				} catch ( e ) {
+					console.error( 'Instagram Stories: Failed to parse stories row data', e );
+					return;
+				}
+
+				zuckInstance = createZuckInstance( storiesData );
+				if ( ! zuckInstance ) {
+					return;
+				}
+			}
+
+			$row.data( 'zuck', zuckInstance );
+
+			$row.on( 'click.wpzInstaStories', '.wpz-insta-story-card', function( e ) {
+				e.preventDefault();
+				e.stopPropagation();
+				openZuckInstance( zuckInstance, $( this ).data( 'item-index' ) );
+			} );
+
+			$row.on( 'keydown.wpzInstaStories', '.wpz-insta-story-card', function( e ) {
+				if ( e.key === 'Enter' || e.key === ' ' ) {
+					e.preventDefault();
+					$( this ).trigger( 'click' );
+				}
+			} );
+		} );
+	}
+
+	/**
+	 * Turn a stories row into a Swiper carousel (Swiper is loaded by the main frontend script).
+	 * Without Swiper the row falls back to a CSS-only clipped list.
+	 */
+	function initStoriesRowCarousel( $row ) {
+		if ( typeof Swiper === 'undefined' ) {
+			return;
+		}
+
+		const $swiper = $row.find( '> .wpz-insta-stories-row__swiper' );
+		if ( ! $swiper.length || $swiper.hasClass( 'swiper-initialized' ) ) {
+			return;
+		}
+
+		const perRow = Math.max( 2, parseInt( $row.data( 'per-row' ), 10 ) || 5 );
+		const spacing = 10;
+
+		const swiperInstance = new Swiper( $swiper.get( 0 ), {
+			direction: 'horizontal',
+			loop: false,
+			slidesPerView: Math.min( perRow, 3 ),
+			spaceBetween: spacing,
+			breakpoints: {
+				480: {
+					slidesPerView: Math.min( perRow, 4 ),
+					spaceBetween: spacing,
+				},
+				769: {
+					slidesPerView: perRow,
+					spaceBetween: spacing,
+				},
+			},
+			watchOverflow: true,
+			navigation: {
+				nextEl: $swiper.find( '> .swiper-button-next' ).get( 0 ),
+				prevEl: $swiper.find( '> .swiper-button-prev' ).get( 0 ),
+			},
+			keyboard: {
+				enabled: true,
+				onlyInViewport: true,
+			},
+		} );
+
+		$row.data( 'swiper', swiperInstance ).addClass( 'is-carousel' );
 	}
 
 	// Setup global handlers once
@@ -734,5 +884,6 @@ import 'zuck.js/skins/snapgram';
 
 	// Export for external use
 	window.wpzInstaInitStories = initInstagramStories;
+	window.wpzInstaInitStoriesRowCarousel = initStoriesRowCarousel;
 
 } )( jQuery );

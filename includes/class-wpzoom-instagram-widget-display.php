@@ -857,6 +857,23 @@ class Wpzoom_Instagram_Widget_Display {
 					if ( ! is_array( $items ) ) {
 						return $this->get_errors( $errors );
 					} else {
+						// Stories (PRO): fetched once and shared by the header ring and the optional stories row.
+						$stories                  = array();
+						$stories_data             = array();
+						$has_stories              = false;
+						$stories_trigger_rendered = false;
+						$stories_row_enabled      = $show_stories && isset( $args['stories-row'] ) && boolval( $args['stories-row'] );
+
+						if ( $show_stories ) {
+							// Single API call (cached for 1 hour in a transient).
+							$stories     = $this->api->get_stories( $user_business_page_id, $user_account_token );
+							$has_stories = ! empty( $stories );
+
+							if ( $has_stories ) {
+								$stories_data = self::build_stories_data( 'wpz-insta-' . $user_business_page_id, $user_image, $user_name_display, $user_link, $stories );
+							}
+						}
+
 						// In preview always output header so design options (show/hide name, username, badge, etc.) can be toggled.
 						if ( $preview || $show_user_image || $show_user_nname || $show_user_name || $show_user_bio ) {
 							$output .= '<header class="zoom-instagram-widget__header">';
@@ -875,48 +892,11 @@ class Wpzoom_Instagram_Widget_Display {
 							$media_count = $account_stats['media_count'];
 
 							if ( ( $preview || $show_user_image ) && ! empty( $user_image ) ) {
-								// Stories feature is only available in Pro version and when enabled in feed settings
-								$stories = array();
-								$has_stories = false;
-								$story_ring_class = '';
-
-								if ( $show_stories ) {
-									// Get stories in a single API call (has_stories now uses cached data from get_stories)
-									$stories = $this->api->get_stories( $user_business_page_id, $user_account_token );
-									$has_stories = ! empty( $stories );
-									$story_ring_class = $has_stories ? ' has-stories' : '';
-								}
+								$story_ring_class = $has_stories ? ' has-stories' : '';
 
 								$output .= '<div class="zoom-instagram-widget__header-column-left' . esc_attr( $story_ring_class ) . '">';
 
 								if ( $has_stories ) {
-									// Build Zuck.js compatible data structure
-									$stories_data = array(
-										'id'          => 'wpz-insta-' . $user_business_page_id,
-										'photo'       => $user_image,
-										'name'        => $user_name_display,
-										'link'        => $user_link,
-										'lastUpdated' => time(),
-										'items'       => array(),
-									);
-
-									// Reverse order so oldest stories appear first (like Instagram)
-									$stories = array_reverse( $stories );
-
-									foreach ( $stories as $story ) {
-										$is_video = isset( $story->media_type ) && 'VIDEO' === $story->media_type;
-										$stories_data['items'][] = array(
-											'id'       => isset( $story->id ) ? $story->id : uniqid( 'story-' ),
-											'type'     => $is_video ? 'video' : 'photo',
-											'src'      => $story->media_url,
-											'preview'  => $is_video && ! empty( $story->thumbnail_url ) ? $story->thumbnail_url : $story->media_url,
-											'length'   => $is_video ? 0 : 5, // 0 = use video duration, 5 = 5 seconds for images
-											'link'     => isset( $story->permalink ) ? $story->permalink : '',
-											'linkText' => __( 'View on Instagram', 'instagram-widget-by-wpzoom' ),
-											'time'     => isset( $story->timestamp ) ? strtotime( $story->timestamp ) : time(),
-										);
-									}
-
 									// Add aria-label for accessibility
 									$aria_label = sprintf(
 										/* translators: %s: username */
@@ -928,6 +908,7 @@ class Wpzoom_Instagram_Widget_Display {
 									$output .= '<div class="wpz-insta-stories" data-stories="' . esc_attr( wp_json_encode( $stories_data ) ) . '" aria-label="' . $aria_label . '" role="button" tabindex="0">';
 									$output .= '<img src="' . esc_url( $user_image ) . '" alt="' . esc_attr( $user_name_display ) . '" width="70" />';
 									$output .= '</div>';
+									$stories_trigger_rendered = true;
 								} else {
 									// No stories - just show the image
 									$output .= '<img src="' . esc_url( $user_image ) . '" alt="' . esc_attr( $user_name_display ) . '" width="70" />';
@@ -991,6 +972,24 @@ class Wpzoom_Instagram_Widget_Display {
 							}
 
 							$output .= '</header>';
+						}
+
+						// Stories row (PRO): a carousel of story thumbnails above the feed items.
+						if ( $stories_row_enabled && ( $has_stories || $preview ) ) {
+							if ( $has_stories ) {
+								$cards = self::stories_row_cards( $stories_data, $stories_data['id'] );
+							} else {
+								// Preview without live stories: show placeholder cards so the design can still be configured.
+								$cards = self::stories_row_placeholder_cards( $user_image, $user_name_display );
+							}
+
+							$row_attrs = array();
+							// When the header ring is not rendered, the row carries the stories data so the viewer can still be built.
+							if ( $has_stories && ! $stories_trigger_rendered ) {
+								$row_attrs['data-stories'] = wp_json_encode( $stories_data );
+							}
+
+							$output .= self::stories_row_html( $cards, $args, $row_attrs );
 						}
 
 						// In preview use grid layout class so frontend does not init Swiper/masonry (scripts not enqueued).
@@ -1655,6 +1654,207 @@ class Wpzoom_Instagram_Widget_Display {
 	 * @param  array  $args The arguments to define how to return the feed CSS.
 	 * @return string
 	 */
+	/**
+	 * Build a Zuck.js compatible stories data structure for one account.
+	 *
+	 * @since 2.4.0
+	 *
+	 * @param string $id      Unique story ID (used by Zuck.js).
+	 * @param string $photo   Account avatar URL.
+	 * @param string $name    Account display name (e.g. "@username").
+	 * @param string $link    Account profile URL.
+	 * @param array  $stories Story objects as returned by the API (newest first).
+	 * @return array
+	 */
+	public static function build_stories_data( string $id, string $photo, string $name, string $link, array $stories ) {
+		$stories_data = array(
+			'id'          => $id,
+			'photo'       => $photo,
+			'name'        => $name,
+			'link'        => $link,
+			'lastUpdated' => time(),
+			'items'       => array(),
+		);
+
+		// Reverse order so oldest stories appear first (like Instagram)
+		$stories = array_reverse( $stories );
+
+		foreach ( $stories as $story ) {
+			$is_video = isset( $story->media_type ) && 'VIDEO' === $story->media_type;
+			$media_url = isset( $story->media_url ) ? $story->media_url : '';
+
+			$stories_data['items'][] = array(
+				'id'       => isset( $story->id ) ? $story->id : uniqid( 'story-' ),
+				'type'     => $is_video ? 'video' : 'photo',
+				'src'      => $media_url,
+				'preview'  => $is_video && ! empty( $story->thumbnail_url ) ? $story->thumbnail_url : $media_url,
+				'length'   => $is_video ? 0 : 5, // 0 = use video duration, 5 = 5 seconds for images
+				'link'     => isset( $story->permalink ) ? $story->permalink : '',
+				'linkText' => __( 'View on Instagram', 'instagram-widget-by-wpzoom' ),
+				'time'     => isset( $story->timestamp ) ? strtotime( $story->timestamp ) : time(),
+			);
+		}
+
+		return $stories_data;
+	}
+
+	/**
+	 * Convert Zuck.js stories data into thumbnail cards for the stories row.
+	 *
+	 * @since 2.4.0
+	 *
+	 * @param array  $stories_data Stories data built by build_stories_data().
+	 * @param string $story_id     Story ID the cards should open (matches the trigger's story ID).
+	 * @return array List of card arrays.
+	 */
+	public static function stories_row_cards( array $stories_data, string $story_id ) {
+		$cards = array();
+		$items = isset( $stories_data['items'] ) && is_array( $stories_data['items'] ) ? $stories_data['items'] : array();
+
+		foreach ( array_values( $items ) as $index => $item ) {
+			$cards[] = array(
+				'story_id' => $story_id,
+				'index'    => $index,
+				'preview'  => ! empty( $item['preview'] ) ? $item['preview'] : ( isset( $item['src'] ) ? $item['src'] : '' ),
+				'is_video' => isset( $item['type'] ) && 'video' === $item['type'],
+				'avatar'   => isset( $stories_data['photo'] ) ? $stories_data['photo'] : '',
+				'name'     => isset( $stories_data['name'] ) ? $stories_data['name'] : '',
+				'time'     => isset( $item['time'] ) ? intval( $item['time'] ) : 0,
+			);
+		}
+
+		return $cards;
+	}
+
+	/**
+	 * Placeholder cards used in the feed editor preview when the account has no live stories.
+	 *
+	 * @since 2.4.0
+	 *
+	 * @param string $avatar Account avatar URL.
+	 * @param string $name   Account display name.
+	 * @param int    $count  Number of placeholder cards.
+	 * @return array
+	 */
+	public static function stories_row_placeholder_cards( string $avatar, string $name, int $count = 6 ) {
+		$cards = array();
+
+		for ( $i = 0; $i < $count; $i++ ) {
+			$cards[] = array(
+				'story_id'    => 'wpz-insta-placeholder',
+				'index'       => $i,
+				'preview'     => '',
+				'is_video'    => 1 === $i % 3,
+				'avatar'      => $avatar,
+				'name'        => $name,
+				'time'        => time() - ( ( $count - $i ) * 2 * HOUR_IN_SECONDS ),
+				'placeholder' => true,
+			);
+		}
+
+		return $cards;
+	}
+
+	/**
+	 * Markup for the stories row: a Swiper carousel with one thumbnail card per story.
+	 *
+	 * Cards carry `data-story-id` and `data-item-index` so the frontend script can open
+	 * the Zuck.js viewer at exactly that story item.
+	 *
+	 * @since 2.4.0
+	 *
+	 * @param array $cards      Cards from stories_row_cards() (possibly from several accounts).
+	 * @param array $args       Feed arguments (uses the stories-* settings).
+	 * @param array $extra_attrs Extra HTML attributes for the row wrapper (name => value).
+	 * @return string
+	 */
+	public static function stories_row_html( array $cards, array $args, array $extra_attrs = array() ) {
+		if ( empty( $cards ) ) {
+			return '';
+		}
+
+		$per_row = isset( $args['stories-per-row'] ) ? intval( $args['stories-per-row'] ) : 5;
+		$per_row = max( 2, min( 10, $per_row > 0 ? $per_row : 5 ) );
+
+		$ratio = isset( $args['stories-card-ratio'] ) ? (string) $args['stories-card-ratio'] : 'portrait';
+		if ( ! in_array( $ratio, array( 'portrait', 'tall', 'square' ), true ) ) {
+			$ratio = 'portrait';
+		}
+
+		$show_name = ! isset( $args['stories-row-show-name'] ) || boolval( $args['stories-row-show-name'] );
+		$show_time = ! isset( $args['stories-row-show-time'] ) || boolval( $args['stories-row-show-time'] );
+
+		$attrs = ' data-per-row="' . esc_attr( $per_row ) . '"';
+		foreach ( $extra_attrs as $attr_name => $attr_value ) {
+			$attrs .= ' ' . sanitize_key( $attr_name ) . '="' . esc_attr( $attr_value ) . '"';
+		}
+
+		$play_icon = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path fill="currentColor" d="M8 5v14l11-7z"/></svg>';
+
+		$output  = '<div class="wpz-insta-stories-row wpz-insta-stories-row--' . esc_attr( $ratio ) . '" style="--wpz-insta-stories-per-row:' . esc_attr( $per_row ) . ';"' . $attrs . '>';
+		$output .= '<div class="wpz-insta-stories-row__swiper swiper">';
+		$output .= '<div class="swiper-wrapper">';
+
+		foreach ( $cards as $card ) {
+			$is_video       = ! empty( $card['is_video'] );
+			$is_placeholder = ! empty( $card['placeholder'] );
+			$name           = isset( $card['name'] ) ? (string) $card['name'] : '';
+			$time           = isset( $card['time'] ) ? intval( $card['time'] ) : 0;
+
+			$classes = 'swiper-slide wpz-insta-story-card';
+			$classes .= $is_video ? ' is-video' : '';
+			$classes .= $is_placeholder ? ' is-placeholder' : '';
+
+			$time_text = '';
+			if ( $show_time && $time > 0 ) {
+				/* translators: %s: human readable time difference, e.g. "3 hours" */
+				$time_text = sprintf( __( '%s ago', 'instagram-widget-by-wpzoom' ), human_time_diff( $time, time() ) );
+			}
+
+			$aria_label = '' !== $name
+				/* translators: %s: account name */
+				? sprintf( __( 'View story from %s', 'instagram-widget-by-wpzoom' ), $name )
+				: __( 'View story', 'instagram-widget-by-wpzoom' );
+
+			$output .= '<div class="' . esc_attr( $classes ) . '" data-story-id="' . esc_attr( $card['story_id'] ) . '" data-item-index="' . intval( $card['index'] ) . '" role="button" tabindex="0" aria-label="' . esc_attr( $aria_label ) . '">';
+			$output .= '<div class="wpz-insta-story-card__inner">';
+
+			if ( ! empty( $card['preview'] ) ) {
+				$output .= '<img class="wpz-insta-story-card__media" src="' . esc_url( $card['preview'] ) . '" alt="" loading="lazy" />';
+			}
+
+			if ( ! empty( $card['avatar'] ) ) {
+				$output .= '<span class="wpz-insta-story-card__avatar"><img src="' . esc_url( $card['avatar'] ) . '" alt="" /></span>';
+			}
+
+			if ( $is_video ) {
+				$output .= '<span class="wpz-insta-story-card__type" aria-hidden="true">' . $play_icon . '</span>';
+			}
+
+			if ( ( $show_name && '' !== $name ) || '' !== $time_text ) {
+				$output .= '<span class="wpz-insta-story-card__meta">';
+				if ( $show_name && '' !== $name ) {
+					$output .= '<span class="wpz-insta-story-card__name">' . esc_html( $name ) . '</span>';
+				}
+				if ( '' !== $time_text ) {
+					$output .= '<span class="wpz-insta-story-card__time">' . esc_html( $time_text ) . '</span>';
+				}
+				$output .= '</span>';
+			}
+
+			$output .= '</div>';
+			$output .= '</div>';
+		}
+
+		$output .= '</div>';
+		$output .= '<div class="swiper-button-prev" role="button" tabindex="0" aria-label="' . esc_attr__( 'Previous stories', 'instagram-widget-by-wpzoom' ) . '"></div>';
+		$output .= '<div class="swiper-button-next" role="button" tabindex="0" aria-label="' . esc_attr__( 'Next stories', 'instagram-widget-by-wpzoom' ) . '"></div>';
+		$output .= '</div>';
+		$output .= '</div>';
+
+		return $output;
+	}
+
 	public function style_content( array $args ) {
 		$output                 = '';
 		$is_preview             = ! empty( $args['preview'] );

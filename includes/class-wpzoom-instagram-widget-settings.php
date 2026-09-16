@@ -55,6 +55,11 @@ class WPZOOM_Instagram_Widget_Settings {
 		'show-account-badge'              => array( 'type' => 'boolean', 'default' => false ),
 		'show-account-stats'              => array( 'type' => 'boolean', 'default' => true ),
 		'show-stories'                    => array( 'type' => 'boolean', 'default' => true ),
+		'stories-row'                     => array( 'type' => 'boolean', 'default' => false ), // Show a row of story thumbnails above the feed (PRO)
+		'stories-per-row'                 => array( 'type' => 'integer', 'default' => 5 ),     // Thumbnails per row on desktop (PRO)
+		'stories-card-ratio'              => array( 'type' => 'string',  'default' => 'portrait' ), // portrait (9:16), tall (3:4), square (PRO)
+		'stories-row-show-name'           => array( 'type' => 'boolean', 'default' => true ),  // Show account name on thumbnails (PRO)
+		'stories-row-show-time'           => array( 'type' => 'boolean', 'default' => true ),  // Show "time ago" on thumbnails (PRO)
 		'show-account-image'              => array( 'type' => 'boolean', 'default' => true ),
 		'show-account-bio'                => array( 'type' => 'boolean', 'default' => true ),
 		'show-view-button'                => array( 'type' => 'boolean', 'default' => true ),
@@ -1817,6 +1822,11 @@ class WPZOOM_Instagram_Widget_Settings {
 			$show_account_badge               = (bool) self::get_feed_setting_value( $post->ID, 'show-account-badge' );
 			$show_account_stats               = (bool) self::get_feed_setting_value( $post->ID, 'show-account-stats' );
 			$show_stories                     = (bool) self::get_feed_setting_value( $post->ID, 'show-stories' );
+			$stories_row                      = (bool) self::get_feed_setting_value( $post->ID, 'stories-row' );
+			$stories_per_row                  = (int) self::get_feed_setting_value( $post->ID, 'stories-per-row' );
+			$stories_card_ratio               = (string) self::get_feed_setting_value( $post->ID, 'stories-card-ratio' );
+			$stories_row_show_name            = (bool) self::get_feed_setting_value( $post->ID, 'stories-row-show-name' );
+			$stories_row_show_time            = (bool) self::get_feed_setting_value( $post->ID, 'stories-row-show-time' );
 			$show_account_image               = (bool) self::get_feed_setting_value( $post->ID, 'show-account-image' );
 			$show_account_bio                 = (bool) self::get_feed_setting_value( $post->ID, 'show-account-bio' );
 			$show_view_instagram_button       = (bool) self::get_feed_setting_value( $post->ID, 'show-view-button' );
@@ -2193,51 +2203,9 @@ class WPZOOM_Instagram_Widget_Settings {
                                 <p class="wpz-insta_sidebar-section-description"><?php esc_html_e( 'Details like Name, Bio or Avatar need to be added manually on the', 'instagram-widget-by-wpzoom' ); ?> <a href="<?php echo esc_url( $user_edit_link ); ?>" target="_blank" class="wpz-insta_feed-user-select-edit-link"><?php esc_html_e( 'account details page', 'instagram-widget-by-wpzoom' ); ?></a>.</p>
 
 								<div class="wpz-insta_feed-profile-general wpz-insta_table">
-									<label class="wpz-insta_table-row">
-										<input type="hidden" name="_wpz-insta_show-account-name" value="0" />
-										<input type="checkbox" name="_wpz-insta_show-account-name" value="1"<?php checked( $show_account_name ); ?> />
-										<span>
-											<?php esc_html_e( 'Display account name', 'instagram-widget-by-wpzoom' ); ?>
-
-											<small class="help" aria-hidden="true" data-tooltip="<?php esc_html_e( 'You must set a display name for the user for this option to have any effect.', 'instagram-widget-by-wpzoom' ); ?>"><svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='16' height='16'><path fill='#000' fill-rule='evenodd' clip-rule='evenodd' d='M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm-1 16v-2h2v2h-2zm2-3v-1.141A3.991 3.991 0 0016 10a4 4 0 00-8 0h2c0-1.103.897-2 2-2s2 .897 2 2-.897 2-2 2a1 1 0 00-1 1v2h2z'></path></svg></small>
-										</span>
-									</label>
-
-									<label class="wpz-insta_table-row">
-										<input type="hidden" name="_wpz-insta_show-account-username" value="0" />
-										<input type="checkbox" name="_wpz-insta_show-account-username" value="1"<?php checked( $show_account_username ); ?> />
-										<span><?php esc_html_e( 'Display account username', 'instagram-widget-by-wpzoom' ); ?></span>
-									</label>
-									
-									<?php echo $pro_toggle ? '<fieldset class="wpz-insta_feed-only-pro wpz-insta_pro-only wpz-insta_pro-only-with-bottom"><legend><strong>' . esc_html__( 'PRO', 'instagram-widget-by-wpzoom' ) . '</strong></legend>' : ''; ?>
-										<label class="wpz-insta_table-row">
-											<input type="hidden" name="_wpz-insta_show-account-badge" value="0" />
-											<input type="checkbox" name="_wpz-insta_show-account-badge" value="1"<?php checked( $show_account_badge ); ?> />
-											<span><?php esc_html_e( 'Display verified badge', 'instagram-widget-by-wpzoom' ); ?></span> <svg width='24' height='24' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'><rect width='24' height='24' stroke='none' fill='#000000' opacity='0'/><g transform="matrix(0.42 0 0 0.42 12 12)" ><g style="" ><g transform="matrix(1 0 0 1 0 0)" ><polygon style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: rgb(66,165,245); fill-rule: nonzero; opacity: 1;" points="5.62,-21 9.05,-15.69 15.37,-15.38 15.69,-9.06 21,-5.63 18.12,0 21,5.62 15.69,9.05 15.38,15.37 9.06,15.69 5.63,21 0,18.12 -5.62,21 -9.05,15.69 -15.37,15.38 -15.69,9.06 -21,5.63 -18.12,0 -21,-5.62 -15.69,-9.05 -15.38,-15.37 -9.06,-15.69 -5.63,-21 0,-18.12 " /></g><g transform="matrix(1 0 0 1 -0.01 0.51)" ><polygon style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: rgb(255,255,255); fill-rule: nonzero; opacity: 1;" points="-2.6,6.74 -9.09,0.25 -6.97,-1.87 -2.56,2.53 7,-6.74 9.09,-4.59 " /></g></g></g></svg>
-										</label>
-
-										<label class="wpz-insta_table-row">
-											<input type="hidden" name="_wpz-insta_show-account-stats" value="0" />
-											<input type="checkbox" name="_wpz-insta_show-account-stats" value="1"<?php checked( $show_account_stats ); ?> />
-											<span>
-                                                <?php esc_html_e( 'Display following count', 'instagram-widget-by-wpzoom' ); ?>
-
-                                                <small class="help" aria-hidden="true" data-tooltip="<?php esc_html_e( 'This feature works only when your account is connected via your Facebook Page.', 'instagram-widget-by-wpzoom' ); ?>"><svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='16' height='16'><path fill='#000' fill-rule='evenodd' clip-rule='evenodd' d='M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm-1 16v-2h2v2h-2zm2-3v-1.141A3.991 3.991 0 0016 10a4 4 0 00-8 0h2c0-1.103.897-2 2-2s2 .897 2 2-.897 2-2 2a1 1 0 00-1 1v2h2z'></path></svg></small>
-                                            </span>
-										</label>
-
-										<label class="wpz-insta_table-row<?php echo ! $user_has_facebook_connection ? ' wpz-insta_disabled' : ''; ?>">
-											<input type="hidden" name="_wpz-insta_show-stories" value="0" />
-											<input type="checkbox" name="_wpz-insta_show-stories" value="1"<?php checked( $show_stories ); ?><?php disabled( ! $user_has_facebook_connection ); ?> />
-											<span>
-                                                <?php esc_html_e( 'Display Instagram Stories', 'instagram-widget-by-wpzoom' ); ?>
-
-                                                <small class="help" aria-hidden="true" data-tooltip="<?php esc_html_e( 'Shows a clickable stories ring around the profile image when the account has active stories. This feature works only when your account is connected via your Facebook Page.', 'instagram-widget-by-wpzoom' ); ?>"><svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='16' height='16'><path fill='#000' fill-rule='evenodd' clip-rule='evenodd' d='M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm-1 16v-2h2v2h-2zm2-3v-1.141A3.991 3.991 0 0016 10a4 4 0 00-8 0h2c0-1.103.897-2 2-2s2 .897 2 2-.897 2-2 2a1 1 0 00-1 1v2h2z'></path></svg></small>
-                                            </span>
-										</label>
-									<?php echo $pro_toggle ? '</fieldset>' : ''; ?>
-									
-									<label class="wpz-insta_table-row">
+									<div class="wpz-insta_table-group">
+									<strong class="wpz-insta_table-subtitle"><?php esc_html_e( 'Account details', 'instagram-widget-by-wpzoom' ); ?></strong>
+<label class="wpz-insta_table-row">
 										<input type="hidden" name="_wpz-insta_show-account-image" value="0" />
 										<input type="checkbox" name="_wpz-insta_show-account-image" value="1"<?php checked( $show_account_image ); ?> />
 										<span>
@@ -2246,8 +2214,21 @@ class WPZOOM_Instagram_Widget_Settings {
 											<small class="help" aria-hidden="true" data-tooltip="<?php esc_html_e( 'You must set a profile picture for the user for this option to have any effect.', 'instagram-widget-by-wpzoom' ); ?>"><svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='16' height='16'><path fill='#000' fill-rule='evenodd' clip-rule='evenodd' d='M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm-1 16v-2h2v2h-2zm2-3v-1.141A3.991 3.991 0 0016 10a4 4 0 00-8 0h2c0-1.103.897-2 2-2s2 .897 2 2-.897 2-2 2a1 1 0 00-1 1v2h2z'></path></svg></small>
 										</span>
 									</label>
+<label class="wpz-insta_table-row">
+										<input type="hidden" name="_wpz-insta_show-account-name" value="0" />
+										<input type="checkbox" name="_wpz-insta_show-account-name" value="1"<?php checked( $show_account_name ); ?> />
+										<span>
+											<?php esc_html_e( 'Display account name', 'instagram-widget-by-wpzoom' ); ?>
 
-									<label class="wpz-insta_table-row">
+											<small class="help" aria-hidden="true" data-tooltip="<?php esc_html_e( 'You must set a display name for the user for this option to have any effect.', 'instagram-widget-by-wpzoom' ); ?>"><svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='16' height='16'><path fill='#000' fill-rule='evenodd' clip-rule='evenodd' d='M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm-1 16v-2h2v2h-2zm2-3v-1.141A3.991 3.991 0 0016 10a4 4 0 00-8 0h2c0-1.103.897-2 2-2s2 .897 2 2-.897 2-2 2a1 1 0 00-1 1v2h2z'></path></svg></small>
+										</span>
+									</label>
+<label class="wpz-insta_table-row">
+										<input type="hidden" name="_wpz-insta_show-account-username" value="0" />
+										<input type="checkbox" name="_wpz-insta_show-account-username" value="1"<?php checked( $show_account_username ); ?> />
+										<span><?php esc_html_e( 'Display account username', 'instagram-widget-by-wpzoom' ); ?></span>
+									</label>
+<label class="wpz-insta_table-row">
 										<input type="hidden" name="_wpz-insta_show-account-bio" value="0" />
 										<input type="checkbox" name="_wpz-insta_show-account-bio" value="1"<?php checked( $show_account_bio ); ?> />
 										<span>
@@ -2257,23 +2238,102 @@ class WPZOOM_Instagram_Widget_Settings {
 										</span>
 									</label>
 
-									<label class="wpz-insta_table-row">
+									<?php echo $pro_toggle ? '<fieldset class="wpz-insta_feed-only-pro wpz-insta_pro-only wpz-insta_pro-only-with-bottom"><legend><strong>' . esc_html__( 'PRO', 'instagram-widget-by-wpzoom' ) . '</strong></legend>' : ''; ?>
+<label class="wpz-insta_table-row">
+											<input type="hidden" name="_wpz-insta_show-account-badge" value="0" />
+											<input type="checkbox" name="_wpz-insta_show-account-badge" value="1"<?php checked( $show_account_badge ); ?> />
+											<span><?php esc_html_e( 'Display verified badge', 'instagram-widget-by-wpzoom' ); ?></span> <svg width='24' height='24' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'><rect width='24' height='24' stroke='none' fill='#000000' opacity='0'/><g transform="matrix(0.42 0 0 0.42 12 12)" ><g style="" ><g transform="matrix(1 0 0 1 0 0)" ><polygon style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: rgb(66,165,245); fill-rule: nonzero; opacity: 1;" points="5.62,-21 9.05,-15.69 15.37,-15.38 15.69,-9.06 21,-5.63 18.12,0 21,5.62 15.69,9.05 15.38,15.37 9.06,15.69 5.63,21 0,18.12 -5.62,21 -9.05,15.69 -15.37,15.38 -15.69,9.06 -21,5.63 -18.12,0 -21,-5.62 -15.69,-9.05 -15.38,-15.37 -9.06,-15.69 -5.63,-21 0,-18.12 " /></g><g transform="matrix(1 0 0 1 -0.01 0.51)" ><polygon style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: rgb(255,255,255); fill-rule: nonzero; opacity: 1;" points="-2.6,6.74 -9.09,0.25 -6.97,-1.87 -2.56,2.53 7,-6.74 9.09,-4.59 " /></g></g></g></svg>
+										</label>
+
+<label class="wpz-insta_table-row">
+											<input type="hidden" name="_wpz-insta_show-account-stats" value="0" />
+											<input type="checkbox" name="_wpz-insta_show-account-stats" value="1"<?php checked( $show_account_stats ); ?> />
+											<span>
+                                                <?php esc_html_e( 'Display following count', 'instagram-widget-by-wpzoom' ); ?>
+
+                                                <small class="help" aria-hidden="true" data-tooltip="<?php esc_html_e( 'This feature works only when your account is connected via your Facebook Page.', 'instagram-widget-by-wpzoom' ); ?>"><svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='16' height='16'><path fill='#000' fill-rule='evenodd' clip-rule='evenodd' d='M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm-1 16v-2h2v2h-2zm2-3v-1.141A3.991 3.991 0 0016 10a4 4 0 00-8 0h2c0-1.103.897-2 2-2s2 .897 2 2-.897 2-2 2a1 1 0 00-1 1v2h2z'></path></svg></small>
+                                            </span>
+										</label>
+									<?php echo $pro_toggle ? '</fieldset>' : ''; ?>
+									</div>
+
+									<div class="wpz-insta_table-group">
+									<strong class="wpz-insta_table-subtitle"><?php esc_html_e( 'Stories', 'instagram-widget-by-wpzoom' ); ?></strong>
+									<?php echo $pro_toggle ? '<fieldset class="wpz-insta_feed-only-pro wpz-insta_pro-only wpz-insta_pro-only-with-bottom"><legend><strong>' . esc_html__( 'PRO', 'instagram-widget-by-wpzoom' ) . '</strong></legend>' : ''; ?>
+<label class="wpz-insta_table-row<?php echo ! $user_has_facebook_connection ? ' wpz-insta_disabled' : ''; ?>">
+											<input type="hidden" name="_wpz-insta_show-stories" value="0" />
+											<input type="checkbox" name="_wpz-insta_show-stories" value="1"<?php checked( $show_stories ); ?><?php disabled( ! $user_has_facebook_connection ); ?> />
+											<span>
+                                                <?php esc_html_e( 'Display Instagram Stories', 'instagram-widget-by-wpzoom' ); ?>
+
+                                                <small class="help" aria-hidden="true" data-tooltip="<?php esc_html_e( 'Shows a clickable stories ring around the profile image when the account has active stories. This feature works only when your account is connected via your Facebook Page.', 'instagram-widget-by-wpzoom' ); ?>"><svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='16' height='16'><path fill='#000' fill-rule='evenodd' clip-rule='evenodd' d='M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm-1 16v-2h2v2h-2zm2-3v-1.141A3.991 3.991 0 0016 10a4 4 0 00-8 0h2c0-1.103.897-2 2-2s2 .897 2 2-.897 2-2 2a1 1 0 00-1 1v2h2z'></path></svg></small>
+                                            </span>
+										</label>
+
+										<div class="wpz-insta_stories-row-options wpz-insta_sub-wrapper<?php echo ( ! $user_has_facebook_connection || ! $show_stories ) ? ' wpz-insta_disabled' : ''; ?>">
+											<label class="wpz-insta_table-row">
+												<input type="hidden" name="_wpz-insta_stories-row" value="0" />
+												<input type="checkbox" name="_wpz-insta_stories-row" value="1"<?php checked( $stories_row ); ?><?php disabled( $pro_toggle || ! $user_has_facebook_connection || ! $show_stories ); ?> />
+												<span>
+													<?php esc_html_e( 'Display stories row above the feed', 'instagram-widget-by-wpzoom' ); ?>
+
+													<small class="help" aria-hidden="true" data-tooltip="<?php esc_html_e( 'Shows a carousel with a thumbnail for each active story, similar to Facebook. Clicking a thumbnail opens that story in the viewer.', 'instagram-widget-by-wpzoom' ); ?>"><svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='16' height='16'><path fill='#000' fill-rule='evenodd' clip-rule='evenodd' d='M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm-1 16v-2h2v2h-2zm2-3v-1.141A3.991 3.991 0 0016 10a4 4 0 00-8 0h2c0-1.103.897-2 2-2s2 .897 2 2-.897 2-2 2a1 1 0 00-1 1v2h2z'></path></svg></small>
+												</span>
+											</label>
+
+											<div class="wpz-insta_stories-row-suboptions wpz-insta_sub-wrapper<?php echo ! $stories_row ? ' wpz-insta_disabled' : ''; ?>">
+												<div class="wpz-insta_table-row">
+													<label class="wpz-insta_table-cell" for="wpz-insta_stories-per-row"><?php esc_html_e( 'Stories per row', 'instagram-widget-by-wpzoom' ); ?></label>
+													<div class="wpz-insta_table-cell">
+														<input type="number" name="_wpz-insta_stories-per-row" id="wpz-insta_stories-per-row" value="<?php echo esc_attr( $stories_per_row ); ?>" size="3" min="2" max="10" step="1"<?php disabled( $pro_toggle ); ?> />
+													</div>
+												</div>
+
+												<div class="wpz-insta_table-row">
+													<label class="wpz-insta_table-cell" for="wpz-insta_stories-card-ratio"><?php esc_html_e( 'Thumbnail shape', 'instagram-widget-by-wpzoom' ); ?></label>
+													<div class="wpz-insta_table-cell">
+														<select name="_wpz-insta_stories-card-ratio" id="wpz-insta_stories-card-ratio"<?php disabled( $pro_toggle ); ?>>
+															<option value="portrait"<?php selected( $stories_card_ratio, 'portrait' ); ?>><?php esc_html_e( 'Portrait (9:16)', 'instagram-widget-by-wpzoom' ); ?></option>
+															<option value="tall"<?php selected( $stories_card_ratio, 'tall' ); ?>><?php esc_html_e( 'Tall (3:4)', 'instagram-widget-by-wpzoom' ); ?></option>
+															<option value="square"<?php selected( $stories_card_ratio, 'square' ); ?>><?php esc_html_e( 'Square (1:1)', 'instagram-widget-by-wpzoom' ); ?></option>
+														</select>
+													</div>
+												</div>
+
+												<label class="wpz-insta_table-row">
+													<input type="hidden" name="_wpz-insta_stories-row-show-name" value="0" />
+													<input type="checkbox" name="_wpz-insta_stories-row-show-name" value="1"<?php checked( $stories_row_show_name ); ?><?php disabled( $pro_toggle ); ?> />
+													<span><?php esc_html_e( 'Show account name on thumbnails', 'instagram-widget-by-wpzoom' ); ?></span>
+												</label>
+
+												<label class="wpz-insta_table-row">
+													<input type="hidden" name="_wpz-insta_stories-row-show-time" value="0" />
+													<input type="checkbox" name="_wpz-insta_stories-row-show-time" value="1"<?php checked( $stories_row_show_time ); ?><?php disabled( $pro_toggle ); ?> />
+													<span><?php esc_html_e( 'Show time on thumbnails', 'instagram-widget-by-wpzoom' ); ?></span>
+												</label>
+											</div>
+										</div>
+									<?php echo $pro_toggle ? '</fieldset>' : ''; ?>
+									</div>
+
+									<div class="wpz-insta_table-group">
+									<strong class="wpz-insta_table-subtitle"><?php esc_html_e( 'View on Instagram button', 'instagram-widget-by-wpzoom' ); ?></strong>
+<label class="wpz-insta_table-row">
 										<input type="hidden" name="_wpz-insta_show-view-button" value="0" />
 										<input type="checkbox" name="_wpz-insta_show-view-button" value="1"<?php checked( $show_view_instagram_button ); ?> />
 										<span><?php _e( 'Display <strong>View on Instagram</strong> button', 'instagram-widget-by-wpzoom' ); ?></span>
 									</label>
-
-									<label class="wpz-insta_table-row wpz-insta_table-row-full">
+<label class="wpz-insta_table-row wpz-insta_table-row-full">
 										<strong class="wpz-insta_table-cell"><?php esc_html_e( 'Button text', 'instagram-widget-by-wpzoom' ); ?></strong>
 										<div class="wpz-insta_table-cell"><input type="text" name="_wpz-insta_view-button-text" value="<?php echo esc_attr( $view_instagram_button_text ); ?>" class="widefat" /></div>
 									</label>
-
-									<label class="wpz-insta_table-row">
+<label class="wpz-insta_table-row">
 										<strong class="wpz-insta_table-cell"><?php esc_html_e( 'Button color', 'instagram-widget-by-wpzoom' ); ?></strong>
 										<div class="wpz-insta_table-cell">
 											<input type="text" name="_wpz-insta_view-button-bg-color" value="<?php echo esc_attr( $view_instagram_button_bg_color ); ?>" size="8" class="wpz-insta_color-picker" />
 										</div>
 									</label>
+									</div>
 								</div>
 							</div>
 

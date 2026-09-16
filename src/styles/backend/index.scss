@@ -2154,6 +2154,100 @@
 							}
 						}
 					}
+
+					// Sub-sections inside a settings table (e.g. Profile: Account details / Stories / Button)
+					.wpz-insta_table-group {
+						display: flex;
+						flex-direction: column;
+						gap: 20px;
+						width: 100%;
+						padding-top: 20px;
+						border-top: 1px solid rgba($dark-color, 0.08);
+
+						&:first-child {
+							padding-top: 0;
+							border-top: 0;
+						}
+
+						.wpz-insta_feed-only-pro {
+							width: 100%;
+						}
+					}
+
+					.wpz-insta_table-subtitle {
+						display: block;
+						font-size: 11px;
+						font-weight: 600;
+						letter-spacing: 0.06em;
+						text-transform: uppercase;
+						color: rgba($dark-color, 0.5);
+						margin: 0 0 -6px;
+					}
+
+					// Stories row (PRO): nested option groups under "Display Instagram Stories"
+					.wpz-insta_stories-row-options {
+						gap: 16px;
+						margin-top: -6px;
+						padding-top: 6px;
+
+						> .wpz-insta_table-row > input[type='checkbox'] {
+							margin-left: 0;
+						}
+
+						&.wpz-insta_disabled {
+							> .wpz-insta_table-row {
+								> input[type='checkbox'] {
+									opacity: 0.5;
+									pointer-events: none;
+								}
+
+								> span {
+									color: rgba($dark-color, 0.4);
+								}
+							}
+						}
+
+						.wpz-insta_stories-row-suboptions {
+							gap: 12px;
+							margin-top: -2px;
+							padding-top: 4px;
+							transition: opacity 0.15s ease;
+
+							&.wpz-insta_disabled {
+								opacity: 0.45;
+								pointer-events: none;
+							}
+
+							.wpz-insta_table-row {
+								min-height: 30px;
+
+								> input[type='checkbox'] {
+									margin-left: 0;
+								}
+
+								> span {
+									font-size: 13px;
+								}
+							}
+
+							label.wpz-insta_table-cell {
+								font-size: 13px;
+								line-height: 30px;
+							}
+
+							.wpz-insta_table-cell {
+								input[type='number'] {
+									width: 64px;
+									margin: 0;
+								}
+
+								select {
+									max-width: 100%;
+									margin: 0;
+								}
+							}
+						}
+					}
 				}
 
 				.wpz-insta_show-on-hover {
@@ -2200,7 +2294,8 @@
 						}
 					}
 
-					> label {
+					> label,
+					> .wpz-insta_stories-row-options {
 						opacity: 0.5;
 					}
 				}
@@ -3743,3 +3838,4 @@
         }
     }
 }
+
