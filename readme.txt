@@ -5,7 +5,7 @@ Tags: instagram, instagram feed, instagram gallery, instagram photos, instagram 
 Requires at least: 6.5
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 2.4.0
+Stable tag: 2.3.7
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -204,10 +204,10 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 
 == Changelog ==
 
-= 2.4.0 =
+= 2.3.7 =
 * New (PRO): Stories row - a carousel of story thumbnails above the feed, with options for stories per row, thumbnail shape, account name and time
-* Improved: Stories are fetched once per feed and shared by the profile ring and the stories row
 * Improved: Profile settings are grouped into Account details, Stories and View on Instagram button sub-sections
+* Minor bug fixes
 
 = 2.3.6 =
 * Minor bug fixes
