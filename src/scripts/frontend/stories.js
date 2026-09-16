@@ -127,9 +127,14 @@ import 'zuck.js/skins/snapgram';
 		if ( overlay ) {
 			overlay.classList.add( 'active' );
 		}
+
+		// Store the scroll position BEFORE locking the body: `position: fixed` resets window.scrollY to 0.
+		const scrollY = window.scrollY || window.pageYOffset || 0;
+		document.body.dataset.scrollY = scrollY;
+
 		document.body.classList.add( 'wpz-insta-stories-open' );
-		// Store scroll position
-		document.body.dataset.scrollY = window.scrollY;
+		// Keep the page visually where it was while the body is fixed.
+		document.body.style.top = -scrollY + 'px';
 	}
 
 	function hideModalOverlay() {
@@ -137,11 +142,18 @@ import 'zuck.js/skins/snapgram';
 		if ( overlay ) {
 			overlay.classList.remove( 'active' );
 		}
+
+		const scrollY = parseInt( document.body.dataset.scrollY || '0', 10 );
+
 		document.body.classList.remove( 'wpz-insta-stories-open' );
-		// Restore scroll position
-		const scrollY = document.body.dataset.scrollY;
-		if ( scrollY ) {
-			window.scrollTo( 0, parseInt( scrollY, 10 ) );
+		document.body.style.top = '';
+		delete document.body.dataset.scrollY;
+
+		// Restore scroll position instantly (ignore any `scroll-behavior: smooth` on the page).
+		try {
+			window.scrollTo( { top: scrollY, left: 0, behavior: 'instant' } );
+		} catch ( e ) {
+			window.scrollTo( 0, scrollY );
 		}
 	}
 
