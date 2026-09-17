@@ -3895,6 +3895,19 @@ class WPZOOM_Instagram_Widget_Settings {
 	}
 
 	/**
+	 * Clear the cached API data of every feed (e.g. after cached images were
+	 * regenerated, so feeds pick up the new image URLs).
+	 */
+	public static function clear_all_feed_caches() {
+		$feeds = get_posts( array( 'post_type' => 'wpz-insta_feed', 'post_status' => 'any', 'numberposts' => -1, 'fields' => 'ids' ) );
+		foreach ( $feeds as $feed_id ) {
+			self::get_instance()->clear_feed_transients( (int) $feed_id, true );
+		}
+		delete_transient( 'zoom_instagram_is_configured' );
+		delete_transient( 'zoom_instagram_user_info' );
+	}
+
+	/**
 	 * Clear all transients for a specific feed
 	 * This includes both regular and video-specific transient variants
 	 */
@@ -3908,21 +3921,36 @@ class WPZOOM_Instagram_Widget_Settings {
 		
 		// Generate the same specific transient patterns that would be used by this feed
 		// Note: Do NOT include global 'zoom_instagram_is_configured' here - that would clear cache for ALL feeds
-		$base_patterns = array(
-			'zoom_instagram_is_configured_feed_' . $post_ID,
-		);
-		
-		// Add account-specific patterns if we have the account details
+		//
+		// Mirrors the key built in Wpzoom_Instagram_Widget_API::get_items():
+		//   zoom_instagram_is_configured_feed_{id}[_acc_{hash}][_biz_{page}][_filtered_{types}][_lc][_prv]
+		// Every optional segment is enumerated so external object caches (which cannot
+		// be swept with a LIKE query) are covered too.
+		$feed_key = 'zoom_instagram_is_configured_feed_' . substr( (string) $post_ID, 0, 20 );
+		$bases    = array( $feed_key );
+
 		if ( ! empty( $user_account_token ) ) {
-			$account_hash = substr( md5( $user_account_token ), 0, 8 );
-			$base_patterns[] = 'zoom_instagram_is_configured_feed_' . $post_ID . '_acc_' . $account_hash;
-			
-			// Add business page variant if applicable
+			$acc_key = $feed_key . '_acc_' . substr( md5( $user_account_token ), 0, 8 );
+			$bases[] = $acc_key;
 			if ( ! empty( $user_business_page_id ) ) {
-				$page_suffix = substr( $user_business_page_id, 0, 10 );
-				$base_patterns[] = 'zoom_instagram_is_configured_feed_' . $post_ID . '_acc_' . $account_hash . '_page_' . $page_suffix;
+				$bases[] = $acc_key . '_biz_' . substr( $user_business_page_id, 0, 10 );
 			}
 		}
+
+		$allowed_types = (string) self::get_feed_setting_value( $post_ID, 'allowed-post-types' );
+		$filtered      = ( '' !== $allowed_types && 'IMAGE,VIDEO,CAROUSEL_ALBUM' !== $allowed_types ) ? '_filtered_' . substr( md5( $allowed_types ), 0, 8 ) : '';
+
+		$base_patterns = array();
+		foreach ( $bases as $base ) {
+			foreach ( array( '', $filtered ) as $f ) {
+				foreach ( array( '', '_lc' ) as $lc ) {
+					foreach ( array( '', '_prv' ) as $prv ) {
+						$base_patterns[] = $base . $f . $lc . $prv;
+					}
+				}
+			}
+		}
+		$base_patterns = array_values( array_unique( $base_patterns ) );
 
 		// Clear specific transients for this feed only
 		foreach ( $base_patterns as $pattern ) {

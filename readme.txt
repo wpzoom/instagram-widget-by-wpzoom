@@ -5,7 +5,7 @@ Tags: instagram, instagram feed, instagram gallery, instagram photos, instagram 
 Requires at least: 6.5
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 2.3.7
+Stable tag: 2.3.8
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -203,6 +203,12 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 
 
 == Changelog ==
+
+= 2.3.8 =
+* New: "Store cached images as WebP" option (Settings → Global) - feed image sizes downloaded from Instagram are saved as WebP, typically 30-45% smaller. Off by default; only affects images cached by the plugin
+* New: "Regenerate Cached Images" button to convert already-cached images after changing the option
+* Improved: feed images start loading as soon as the page is ready instead of after every other asset has finished
+* Fixed: "Update posts" did not clear the feed cache on sites using an object cache
 
 = 2.3.7 =
 * New (PRO): Stories row - a carousel of story thumbnails above the feed, with options for stories per row, thumbnail shape, account name and time

@@ -137,6 +137,40 @@ jQuery( function( $ ) {
 		}
 	});
 
+	// Cached images → WebP/JPEG: regenerate feed sizes in batches with progress.
+	$('#wpzoom_instagram_webp_regenerate').on( 'click', function( e ){
+		e.preventDefault();
+		var $btn = $(this), $status = $('#wpzoom_instagram_webp_regenerate_status');
+		if ( $btn.prop('disabled') || $btn.hasClass('busy') ) { return; }
+		if ( ! window.confirm( 'Regenerate the feed sizes of every cached Instagram image now? This can take a few minutes on large sites.' ) ) { return; }
+		$btn.addClass('busy');
+		var label = $btn.text();
+		function step( offset ) {
+			$.post( zoom_instagram_widget_admin.ajax_url, { action: 'wpzoom_instagram_webp_regenerate', nonce: $btn.data('nonce'), offset: offset } )
+				.done( function( response ) {
+					if ( ! response || ! response.success ) {
+						$status.text( ( response && response.data && response.data.message ) || 'Regeneration failed.' );
+						$btn.removeClass('busy').text( label );
+						return;
+					}
+					var d = response.data;
+					$btn.text( 'Regenerating… ' + d.next + ' / ' + d.total );
+					if ( d.done ) {
+						$status.text( 'Done — ' + d.total + ' images regenerated' + ( d.failed ? ' (' + d.failed + ' skipped)' : '' ) + '. Feed caches cleared.' );
+						$btn.removeClass('busy').text( label );
+						return;
+					}
+					step( d.next );
+				} )
+				.fail( function() {
+					$status.text( 'Regeneration failed — please try again.' );
+					$btn.removeClass('busy').text( label );
+				} );
+		}
+		$status.text('');
+		step( 0 );
+	});
+
 	$(window).on('beforeunload', function (e) {
 		if ( ! $.isEmptyObject( formChangedValues ) && ! formSubmitted ) {
 			e.preventDefault();
