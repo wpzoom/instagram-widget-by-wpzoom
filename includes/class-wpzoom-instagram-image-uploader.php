@@ -286,17 +286,29 @@ class WPZOOM_Instagram_Image_Uploader {
 	 * depending on the current setting). Driven in batches from the settings
 	 * screen so it works without WP-Cron and shows progress.
 	 *
+	 * Each call is bounded by wall time as well as count: encoding large photos
+	 * (WebP through GD especially) can take seconds apiece, and hosts commonly
+	 * kill PHP after ~30 s regardless of set_time_limit(). At least one image is
+	 * always processed so the job cannot stall.
+	 *
 	 * @return array{next:int,total:int,done:bool,failed:int}
 	 */
-	public static function regenerate_cached_batch( $offset, $limit = 8 ) {
+	public static function regenerate_cached_batch( $offset, $limit = 8, $time_budget = 10 ) {
 		require_once ABSPATH . 'wp-admin/includes/image.php';
 
-		$ids    = self::cached_attachment_ids();
-		$total  = count( $ids );
-		$slice  = array_slice( $ids, max( 0, (int) $offset ), max( 1, (int) $limit ) );
-		$failed = 0;
+		$ids     = self::cached_attachment_ids();
+		$total   = count( $ids );
+		$slice   = array_slice( $ids, max( 0, (int) $offset ), max( 1, (int) $limit ) );
+		$failed  = 0;
+		$did     = 0;
+		$started = microtime( true );
+		$budget  = (float) apply_filters( 'wpz_insta_regenerate_time_budget', $time_budget );
 
 		foreach ( $slice as $id ) {
+			if ( $did > 0 && ( microtime( true ) - $started ) > $budget ) {
+				break;
+			}
+			$did++;
 			$file = get_attached_file( $id );
 			if ( ! $file || ! file_exists( $file ) ) {
 				$failed++;
@@ -315,7 +327,7 @@ class WPZOOM_Instagram_Image_Uploader {
 			}
 		}
 
-		$next = (int) $offset + count( $slice );
+		$next = (int) $offset + $did;
 
 		return array(
 			'next'   => $next,
