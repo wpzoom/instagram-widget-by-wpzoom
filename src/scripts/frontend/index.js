@@ -47,7 +47,11 @@
 	// Export globally so PRO plugin can call after Load More
 	window.wpzInstaImageShimmerInit = initImageLoadingShimmer;
 
-	$( window ).on( 'load', function () {
+	// Initialise on DOM ready, not window.load: the script is enqueued in the
+	// footer, so every feed is already in the DOM here, and waiting for the
+	// load event held the lazy image loader back until every other asset on
+	// the page (fonts, third-party scripts, unrelated images) had finished.
+	$( function () {
 		var ticking = false;
 
 		// Re-run shimmer init in case new feeds were added
@@ -796,6 +800,17 @@
 		
 		$('.zoom-instagram-widget__items').zoomLoadAsyncImages();
 		$('.zoom-instagram-widget__items[data-lightbox="1"]').zoomLightbox();
+
+		// Masonry measures item heights, which can still shift as images arrive —
+		// settle the layout once everything has loaded.
+		$( window ).on( 'load', function () {
+			$('.zoom-instagram-widget__items.layout-masonry').each(function() {
+				const $container = $(this);
+				if ( typeof $.fn.masonry === 'function' && $container.data('masonry') ) {
+					$container.masonry('layout');
+				}
+			});
+		});
 
 		var siteOriginInit = function () {
 			var $widgets = $('.zoom-instagram-widget__items');
