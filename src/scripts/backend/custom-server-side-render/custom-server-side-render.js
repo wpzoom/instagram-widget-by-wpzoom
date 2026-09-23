@@ -12,7 +12,14 @@ import { __, sprintf } from '@wordpress/i18n';
 import apiFetch from '@wordpress/api-fetch';
 import { addQueryArgs } from '@wordpress/url';
 import { Placeholder, Spinner } from '@wordpress/components';
-import { __experimentalSanitizeBlockAttributes } from '@wordpress/blocks';
+import {
+	sanitizeBlockAttributes as stableSanitizeBlockAttributes,
+	__experimentalSanitizeBlockAttributes,
+} from '@wordpress/blocks';
+
+// WordPress 7.1 renamed the experimental helper; keep the old name as a fallback for older versions.
+const sanitizeBlockAttributes =
+	stableSanitizeBlockAttributes || __experimentalSanitizeBlockAttributes;
 
 export function rendererPath( block, attributes = null, urlQueryArgs = {} ) {
 	return addQueryArgs( `/wp/v2/block-renderer/${ block }`, {
@@ -90,7 +97,7 @@ export default function CustomServerSideRender( props ) {
 
 		const sanitizedAttributes =
 			attributes &&
-			__experimentalSanitizeBlockAttributes( block, attributes );
+			sanitizeBlockAttributes( block, attributes );
 
 		// If httpMethod is 'POST', send the attributes in the request body instead of the URL.
 		// This allows sending a larger attributes object than in a GET request, where the attributes are in the URL.
@@ -189,7 +196,8 @@ export default function CustomServerSideRender( props ) {
 	if ( isLoading ) {
 		return (
 			<LoadingResponsePlaceholder { ...props } showLoader={ showLoader }>
-				{ hasResponse && (
+				{ /* A previous error is an object, not HTML, so only show the last good render. */ }
+				{ hasResponse && ! hasError && (
 					<RawHTML className={ className }>{ response }</RawHTML>
 				) }
 			</LoadingResponsePlaceholder>
