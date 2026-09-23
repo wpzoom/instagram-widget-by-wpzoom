@@ -2318,6 +2318,10 @@ class WPZOOM_Instagram_Widget_Settings {
 												</span>
 											</label>
 
+											<?php if ( $pro_toggle ) : ?>
+												<a class="wpz-insta_pro-demo-link" href="https://demo.wpzoom.com/instagram-widget/stories/?utm_source=wpadmin&amp;utm_medium=feed-settings&amp;utm_campaign=stories-row-demo" target="_blank" rel="noopener"><?php esc_html_e( 'See the stories row in action', 'instagram-widget-by-wpzoom' ); ?> <span aria-hidden="true">&#8599;</span></a>
+											<?php endif; ?>
+
 											<div class="wpz-insta_stories-row-suboptions wpz-insta_sub-wrapper<?php echo ! $stories_row ? ' wpz-insta_disabled' : ''; ?>">
 												<div class="wpz-insta_table-row">
 													<label class="wpz-insta_table-cell" for="wpz-insta_stories-per-row"><?php esc_html_e( 'Stories per row', 'instagram-widget-by-wpzoom' ); ?></label>

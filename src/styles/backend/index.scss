@@ -2295,8 +2295,24 @@
 					}
 
 					> label,
-					> .wpz-insta_stories-row-options {
+					> .wpz-insta_stories-row-options > :not(.wpz-insta_pro-demo-link) {
 						opacity: 0.5;
+					}
+
+					// Demo link stays clickable inside the locked PRO box
+					.wpz-insta_pro-demo-link {
+						align-self: flex-start;
+						margin: -10px 0 0 26px;
+						font-size: 13px;
+						font-weight: 500;
+						color: $orange-color;
+						text-decoration: none;
+						pointer-events: auto;
+
+						&:hover,
+						&:focus {
+							text-decoration: underline;
+						}
 					}
 				}
 
