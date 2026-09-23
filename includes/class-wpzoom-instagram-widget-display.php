@@ -1682,22 +1682,46 @@ class Wpzoom_Instagram_Widget_Display {
 		$stories = array_reverse( $stories );
 
 		foreach ( $stories as $story ) {
-			$is_video = isset( $story->media_type ) && 'VIDEO' === $story->media_type;
-			$media_url = isset( $story->media_url ) ? $story->media_url : '';
+			$item = self::build_story_item( $story );
 
-			$stories_data['items'][] = array(
-				'id'       => isset( $story->id ) ? $story->id : uniqid( 'story-' ),
-				'type'     => $is_video ? 'video' : 'photo',
-				'src'      => $media_url,
-				'preview'  => $is_video && ! empty( $story->thumbnail_url ) ? $story->thumbnail_url : $media_url,
-				'length'   => $is_video ? 0 : 5, // 0 = use video duration, 5 = 5 seconds for images
-				'link'     => isset( $story->permalink ) ? $story->permalink : '',
-				'linkText' => __( 'View on Instagram', 'instagram-widget-by-wpzoom' ),
-				'time'     => isset( $story->timestamp ) ? strtotime( $story->timestamp ) : time(),
-			);
+			if ( null !== $item ) {
+				$stories_data['items'][] = $item;
+			}
 		}
 
 		return $stories_data;
+	}
+
+	/**
+	 * Convert one Graph API story into a Zuck.js item.
+	 *
+	 * Instagram omits media_url for media with licensed audio (e.g. a song picked from its
+	 * music library), so those stories fall back to their thumbnail as a still photo instead
+	 * of an empty, black video.
+	 *
+	 * @param object $story Story object from the Graph API.
+	 * @return array|null Zuck.js item, or null when the story has nothing to show.
+	 */
+	public static function build_story_item( $story ) {
+		$media_url = ! empty( $story->media_url ) ? $story->media_url : '';
+		$thumbnail = ! empty( $story->thumbnail_url ) ? $story->thumbnail_url : '';
+		$is_video  = isset( $story->media_type ) && 'VIDEO' === $story->media_type && '' !== $media_url;
+		$src       = '' !== $media_url ? $media_url : $thumbnail;
+
+		if ( '' === $src ) {
+			return null;
+		}
+
+		return array(
+			'id'       => isset( $story->id ) ? $story->id : uniqid( 'story-' ),
+			'type'     => $is_video ? 'video' : 'photo',
+			'src'      => $src,
+			'preview'  => $is_video && '' !== $thumbnail ? $thumbnail : $src,
+			'length'   => $is_video ? 0 : 5, // 0 = use video duration, 5 = 5 seconds for images
+			'link'     => isset( $story->permalink ) ? $story->permalink : '',
+			'linkText' => __( 'View on Instagram', 'instagram-widget-by-wpzoom' ),
+			'time'     => isset( $story->timestamp ) ? strtotime( $story->timestamp ) : time(),
+		);
 	}
 
 	/**
