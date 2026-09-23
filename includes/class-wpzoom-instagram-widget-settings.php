@@ -54,7 +54,7 @@ class WPZOOM_Instagram_Widget_Settings {
 		'show-account-username'           => array( 'type' => 'boolean', 'default' => true ),
 		'show-account-badge'              => array( 'type' => 'boolean', 'default' => false ),
 		'show-account-stats'              => array( 'type' => 'boolean', 'default' => true ),
-		'show-stories'                    => array( 'type' => 'boolean', 'default' => true ),
+		'show-stories'                    => array( 'type' => 'boolean', 'default' => false ), // Stories ring on the profile image (opt-in)
 		'stories-row'                     => array( 'type' => 'boolean', 'default' => false ), // Show a row of story thumbnails above the feed (PRO)
 		'stories-per-row'                 => array( 'type' => 'integer', 'default' => 5 ),     // Thumbnails per row on desktop (PRO)
 		'stories-card-ratio'              => array( 'type' => 'string',  'default' => 'portrait' ), // portrait (9:16), tall (3:4), square (PRO)
@@ -152,6 +152,7 @@ class WPZOOM_Instagram_Widget_Settings {
 		self::$settings = get_option( 'wpzoom-instagram-widget-settings', wpzoom_instagram_get_default_settings() );
 
 		add_action( 'init', array( $this, 'init' ) );
+		add_action( 'init', array( $this, 'maybe_migrate_stories_optin' ), 20 );
 
 		add_filter( 'views_edit-wpz-insta_feed', array( $this, 'views_filter' ) );
 		add_filter( 'views_edit-wpz-insta_user', array( $this, 'views_filter' ) );
@@ -1690,6 +1691,42 @@ class WPZOOM_Instagram_Widget_Settings {
 		return $out;
 	}
 
+	/**
+	 * One-time migration for the stories ring becoming a free, opt-in feature.
+	 *
+	 * While stories were PRO-only, free feeds could still save "show-stories" as on (the
+	 * locked checkbox defaulted to checked), so those are switched off to keep it opt-in.
+	 * With PRO active, feeds that never stored a value keep the old default (on).
+	 */
+	public function maybe_migrate_stories_optin() {
+		if ( get_option( 'wpz-insta_stories-optin-migrated' ) ) {
+			return;
+		}
+
+		$is_pro   = apply_filters( 'wpz-insta_is-pro', false );
+		$meta_key = '_wpz-insta_show-stories';
+		$feed_ids = get_posts(
+			array(
+				'post_type'   => 'wpz-insta_feed',
+				'post_status' => 'any',
+				'numberposts' => -1,
+				'fields'      => 'ids',
+			)
+		);
+
+		foreach ( $feed_ids as $feed_id ) {
+			if ( $is_pro ) {
+				if ( ! metadata_exists( 'post', $feed_id, $meta_key ) ) {
+					update_post_meta( $feed_id, $meta_key, '1' );
+				}
+			} else {
+				update_post_meta( $feed_id, $meta_key, '0' );
+			}
+		}
+
+		update_option( 'wpz-insta_stories-optin-migrated', 1, false );
+	}
+
 	public static function get_feed_setting_value( int $feed_id, string $setting_name ) {
 		$value = null;
 
@@ -2259,7 +2296,6 @@ class WPZOOM_Instagram_Widget_Settings {
 
 									<div class="wpz-insta_table-group">
 									<strong class="wpz-insta_table-subtitle"><?php esc_html_e( 'Stories', 'instagram-widget-by-wpzoom' ); ?></strong>
-									<?php echo $pro_toggle ? '<fieldset class="wpz-insta_feed-only-pro wpz-insta_pro-only wpz-insta_pro-only-with-bottom"><legend><strong>' . esc_html__( 'PRO', 'instagram-widget-by-wpzoom' ) . '</strong></legend>' : ''; ?>
 <label class="wpz-insta_table-row<?php echo ! $user_has_facebook_connection ? ' wpz-insta_disabled' : ''; ?>">
 											<input type="hidden" name="_wpz-insta_show-stories" value="0" />
 											<input type="checkbox" name="_wpz-insta_show-stories" value="1"<?php checked( $show_stories ); ?><?php disabled( ! $user_has_facebook_connection ); ?> />
@@ -2270,6 +2306,7 @@ class WPZOOM_Instagram_Widget_Settings {
                                             </span>
 										</label>
 
+										<?php echo $pro_toggle ? '<fieldset class="wpz-insta_feed-only-pro wpz-insta_pro-only wpz-insta_pro-only-with-bottom"><legend><strong>' . esc_html__( 'PRO', 'instagram-widget-by-wpzoom' ) . '</strong></legend>' : ''; ?>
 										<div class="wpz-insta_stories-row-options wpz-insta_sub-wrapper<?php echo ( ! $user_has_facebook_connection || ! $show_stories ) ? ' wpz-insta_disabled' : ''; ?>">
 											<label class="wpz-insta_table-row">
 												<input type="hidden" name="_wpz-insta_stories-row" value="0" />

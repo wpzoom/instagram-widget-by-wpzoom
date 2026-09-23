@@ -19,7 +19,7 @@ Instagram feed plugin for WordPress: Display your Instagram photos, videos & ree
 
 Create stunning **Instagram galleries** and **Instagram sliders** anywhere on your WordPress site. Perfect for showcasing your Instagram content, growing followers, and adding social proof to your website.
 
-⭐️ **[Get Instagram Widget PRO](https://www.wpzoom.com/plugins/instagram-widget/?utm_source=wporg&utm_medium=insta-free-desc&utm_campaign=insta-free-pro-link)** — Unlock Stories, Analytics, Carousel & More! ⭐️
+⭐️ **[Get Instagram Widget PRO](https://www.wpzoom.com/plugins/instagram-widget/?utm_source=wporg&utm_medium=insta-free-desc&utm_campaign=insta-free-pro-link)** — Unlock the Stories Row, Analytics, Carousel & More! ⭐️
 
 **[View Live Demo](https://demo.wpzoom.com/instagram-widget/)** | **[Documentation](https://www.wpzoom.com/documentation/instagram-widget/)**
 
@@ -43,6 +43,7 @@ Create stunning **Instagram galleries** and **Instagram sliders** anywhere on yo
 * **Multiple Layouts** - Grid and other layout options to match your design
 * **Lightbox Gallery** - View photos and videos in a beautiful popup
 * **Custom Header** - Add your own avatar and bio text
+* **Instagram Stories** - A stories ring on your profile image that opens your active stories in a viewer
 * **Lazy Loading** - Improves page speed and performance
 * **AJAX Initial Load** - Load feed content asynchronously for faster initial page loads
 * **Responsive Design** - Mobile-friendly out of the box
@@ -54,7 +55,7 @@ Upgrade to **[Instagram Widget PRO](https://www.wpzoom.com/plugins/instagram-wid
 * **🛍️ WooCommerce Product Tagging 🆕** - Turn your Instagram feed into a shoppable gallery by linking posts to WooCommerce products
 * **🛡️ Feed Moderation 🆕** - Hide or show individual posts from your feed without deleting them from Instagram
 * **📊 Instagram Insights & Analytics** - Track follower growth, reach, impressions, engagement, and individual post performance with beautiful charts
-* **Display Instagram Stories** - Show your Instagram Stories directly on your website
+* **Stories Row** - A carousel of story thumbnails above the feed, including stories from multiple accounts
 * **Display Follower Count** - Show your real-time follower count in the feed header
 * **Multi-Account Feed** - Combine posts from multiple Instagram accounts into a single unified feed
 * **Masonry Layout** - Pinterest-style grid for a modern look
@@ -203,6 +204,9 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 
 
 == Changelog ==
+
+= 2.3.8 =
+* New: Instagram Stories are now available in the free version. Turn on "Display Instagram Stories" in the feed's profile settings to show a stories ring on the profile image (off by default)
 
 = 2.3.7 =
 * New (PRO): Stories row - a carousel of story thumbnails above the feed, with options for stories per row, thumbnail shape, account name and time

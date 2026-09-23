@@ -312,34 +312,48 @@ if ( ! class_exists( 'WPZOOM_Instagram_Widget_Assets ' ) ) {
 					'nonce'   => wp_create_nonce( 'wpzinsta-ajax' )
 				) );
 
-				// Stories feature is only available in Pro version
+				// PRO loads the stories viewer up front (stories row, multi-account); the free version
+				// loads it from the feed markup only when a stories ring is actually rendered.
 				if ( apply_filters( 'wpz-insta_is-pro', false ) ) {
-					wp_enqueue_script( 'wpz-insta-stories' );
-					wp_enqueue_style( 'wpz-insta-stories' );
-
-					// Localize i18n strings for Instagram Stories
-					wp_localize_script( 'wpz-insta-stories', 'wpzInstaStories', array(
-						'i18n' => array(
-							'unmute'      => __( 'Touch to unmute', 'instagram-widget-by-wpzoom' ),
-							'keyboardTip' => __( 'Press space to see next', 'instagram-widget-by-wpzoom' ),
-							'visitLink'   => __( 'Visit link', 'instagram-widget-by-wpzoom' ),
-							'ago'         => __( 'ago', 'instagram-widget-by-wpzoom' ),
-							'hour'        => __( 'hour', 'instagram-widget-by-wpzoom' ),
-							'hours'       => __( 'hours', 'instagram-widget-by-wpzoom' ),
-							'minute'      => __( 'minute', 'instagram-widget-by-wpzoom' ),
-							'minutes'     => __( 'minutes', 'instagram-widget-by-wpzoom' ),
-							'fromnow'     => __( 'from now', 'instagram-widget-by-wpzoom' ),
-							'seconds'     => __( 'seconds', 'instagram-widget-by-wpzoom' ),
-							'yesterday'   => __( 'yesterday', 'instagram-widget-by-wpzoom' ),
-							'tomorrow'    => __( 'tomorrow', 'instagram-widget-by-wpzoom' ),
-							'days'        => __( 'days', 'instagram-widget-by-wpzoom' ),
-						),
-					) );
+					self::enqueue_stories_assets();
 				}
 			}
 
 		}
 
+
+		/**
+		 * Enqueue the stories viewer (Zuck.js) script, styles and strings. Safe to call more than once.
+		 *
+		 * Scripts load in the footer, so this also works when called while a feed is rendering.
+		 */
+		public static function enqueue_stories_assets() {
+			if ( wp_script_is( 'wpz-insta-stories', 'enqueued' ) ) {
+				return;
+			}
+
+			wp_enqueue_script( 'wpz-insta-stories' );
+			wp_enqueue_style( 'wpz-insta-stories' );
+
+			// Localize i18n strings for Instagram Stories
+			wp_localize_script( 'wpz-insta-stories', 'wpzInstaStories', array(
+				'i18n' => array(
+					'unmute'      => __( 'Touch to unmute', 'instagram-widget-by-wpzoom' ),
+					'keyboardTip' => __( 'Press space to see next', 'instagram-widget-by-wpzoom' ),
+					'visitLink'   => __( 'Visit link', 'instagram-widget-by-wpzoom' ),
+					'ago'         => __( 'ago', 'instagram-widget-by-wpzoom' ),
+					'hour'        => __( 'hour', 'instagram-widget-by-wpzoom' ),
+					'hours'       => __( 'hours', 'instagram-widget-by-wpzoom' ),
+					'minute'      => __( 'minute', 'instagram-widget-by-wpzoom' ),
+					'minutes'     => __( 'minutes', 'instagram-widget-by-wpzoom' ),
+					'fromnow'     => __( 'from now', 'instagram-widget-by-wpzoom' ),
+					'seconds'     => __( 'seconds', 'instagram-widget-by-wpzoom' ),
+					'yesterday'   => __( 'yesterday', 'instagram-widget-by-wpzoom' ),
+					'tomorrow'    => __( 'tomorrow', 'instagram-widget-by-wpzoom' ),
+					'days'        => __( 'days', 'instagram-widget-by-wpzoom' ),
+				),
+			) );
+		}
 
 		/**
 		 * Check the widget block based area has the block

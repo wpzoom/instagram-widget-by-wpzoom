@@ -629,7 +629,7 @@ class Wpzoom_Instagram_Widget_Display {
 				$show_user_name = isset( $args['show-account-username'] ) && boolval( $args['show-account-username'] );
 				$show_user_badge = $this->is_pro && isset( $args['show-account-badge'] ) && boolval( $args['show-account-badge'] );
                 $show_user_stats = $this->is_pro && isset( $args['show-account-stats'] ) && boolval( $args['show-account-stats'] );
-				$show_stories = $this->is_pro && ( ! isset( $args['show-stories'] ) || boolval( $args['show-stories'] ) );
+				$show_stories = isset( $args['show-stories'] ) && boolval( $args['show-stories'] );
 				$user_name = get_the_title( $user );
 				$user_name = preg_replace( '/[\x{200B}-\x{200D}\x{FEFF}]/u', '', $user_name );
 				$user_name_display = sprintf( '@%s', $user_name );
@@ -857,14 +857,15 @@ class Wpzoom_Instagram_Widget_Display {
 					if ( ! is_array( $items ) ) {
 						return $this->get_errors( $errors );
 					} else {
-						// Stories (PRO): fetched once and shared by the header ring and the optional stories row.
+						// Stories: fetched once and shared by the header ring (free) and the optional stories row (PRO).
 						$stories                  = array();
 						$stories_data             = array();
 						$has_stories              = false;
 						$stories_trigger_rendered = false;
-						$stories_row_enabled      = $show_stories && isset( $args['stories-row'] ) && boolval( $args['stories-row'] );
+						$stories_row_enabled      = $this->is_pro && $show_stories && isset( $args['stories-row'] ) && boolval( $args['stories-row'] );
 
-						if ( $show_stories ) {
+						// Without the row, the ring is the only place stories show, so skip the API call when the profile image is hidden.
+						if ( $show_stories && ( $preview || $show_user_image || $stories_row_enabled ) ) {
 							// Single API call (cached for 1 hour in a transient).
 							$stories     = $this->api->get_stories( $user_business_page_id, $user_account_token );
 							$has_stories = ! empty( $stories );
@@ -909,6 +910,7 @@ class Wpzoom_Instagram_Widget_Display {
 									$output .= '<img src="' . esc_url( $user_image ) . '" alt="' . esc_attr( $user_name_display ) . '" width="70" />';
 									$output .= '</div>';
 									$stories_trigger_rendered = true;
+									WPZOOM_Instagram_Widget_Assets::enqueue_stories_assets();
 								} else {
 									// No stories - just show the image
 									$output .= '<img src="' . esc_url( $user_image ) . '" alt="' . esc_attr( $user_name_display ) . '" width="70" />';
