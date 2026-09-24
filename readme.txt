@@ -5,7 +5,7 @@ Tags: instagram, instagram feed, instagram gallery, instagram photos, instagram 
 Requires at least: 6.5
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 2.3.7
+Stable tag: 2.3.8
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -207,6 +207,11 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 
 = 2.3.8 =
 * New: Instagram Stories are now available in the free version. Turn on "Display Instagram Stories" in the feed's profile settings to show a stories ring on the profile image (off by default)
+* Improved: Feed images start loading as soon as the page is ready instead of waiting for every other asset on the page
+* Improved: Link to the Stories row demo in the feed settings
+* Fixed: Stories with a song from Instagram's music library showed as a black screen; they now show as a photo
+* Fixed: Page jumping to the top after closing the stories viewer
+* Fixed: Block editor error when a new feed takes too long to load the first time
 
 = 2.3.7 =
 * New (PRO): Stories row - a carousel of story thumbnails above the feed, with options for stories per row, thumbnail shape, account name and time

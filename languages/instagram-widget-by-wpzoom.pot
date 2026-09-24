@@ -2,14 +2,14 @@
 # This file is distributed under the GPLv2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: WPZOOM Instagram Social Feed 2.3.6\n"
+"Project-Id-Version: WPZOOM Instagram Social Feed 2.3.8\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/instagram-widget-by-wpzoom\n"
-"Last-Translator: WPZOOM <support@wpzoom.com>\n"
-"Language-Team: WPZOOM <support@wpzoom.com>\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-08-10T10:56:27+00:00\n"
+"POT-Creation-Date: 2026-09-24T06:35:25+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: instagram-widget-by-wpzoom\n"
@@ -31,7 +31,7 @@ msgstr ""
 
 #. Author of the plugin
 #: instagram-widget-by-wpzoom.php
-#: includes/class-wpzoom-instagram-widget-settings.php:3145
+#: includes/class-wpzoom-instagram-widget-settings.php:3246
 msgid "WPZOOM"
 msgstr ""
 
@@ -49,7 +49,7 @@ msgid "WPZOOM Instagram Feed"
 msgstr ""
 
 #: elementor/widgets/wpzoom-instagram-feed/wpzoom-instagram-feed.php:151
-#: includes/class-wpzoom-instagram-widget-settings.php:247
+#: includes/class-wpzoom-instagram-widget-settings.php:253
 msgid "Instagram Feed"
 msgstr ""
 
@@ -62,55 +62,55 @@ msgstr ""
 msgid "<p class=\"error\"><strong>Please select a feed to display...</strong></p>"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-assets.php:323
+#: includes/class-wpzoom-instagram-assets.php:341
 msgid "Touch to unmute"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-assets.php:324
+#: includes/class-wpzoom-instagram-assets.php:342
 msgid "Press space to see next"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-assets.php:325
+#: includes/class-wpzoom-instagram-assets.php:343
 msgid "Visit link"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-assets.php:326
+#: includes/class-wpzoom-instagram-assets.php:344
 msgid "ago"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-assets.php:327
+#: includes/class-wpzoom-instagram-assets.php:345
 msgid "hour"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-assets.php:328
+#: includes/class-wpzoom-instagram-assets.php:346
 msgid "hours"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-assets.php:329
+#: includes/class-wpzoom-instagram-assets.php:347
 msgid "minute"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-assets.php:330
+#: includes/class-wpzoom-instagram-assets.php:348
 msgid "minutes"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-assets.php:331
+#: includes/class-wpzoom-instagram-assets.php:349
 msgid "from now"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-assets.php:332
+#: includes/class-wpzoom-instagram-assets.php:350
 msgid "seconds"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-assets.php:333
+#: includes/class-wpzoom-instagram-assets.php:351
 msgid "yesterday"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-assets.php:334
+#: includes/class-wpzoom-instagram-assets.php:352
 msgid "tomorrow"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-assets.php:335
+#: includes/class-wpzoom-instagram-assets.php:353
 msgid "days"
 msgstr ""
 
@@ -237,21 +237,22 @@ msgid "NEW"
 msgstr ""
 
 #: includes/class-wpzoom-instagram-insights.php:79
-#: includes/class-wpzoom-instagram-widget-settings.php:1621
-#: includes/class-wpzoom-instagram-widget-settings.php:1622
-#: includes/class-wpzoom-instagram-widget-settings.php:1929
-#: includes/class-wpzoom-instagram-widget-settings.php:2000
-#: includes/class-wpzoom-instagram-widget-settings.php:2109
-#: includes/class-wpzoom-instagram-widget-settings.php:2212
-#: includes/class-wpzoom-instagram-widget-settings.php:2291
-#: includes/class-wpzoom-instagram-widget-settings.php:2459
-#: includes/class-wpzoom-instagram-widget-settings.php:2497
-#: includes/class-wpzoom-instagram-widget-settings.php:2545
-#: includes/class-wpzoom-instagram-widget-settings.php:2625
-#: includes/class-wpzoom-instagram-widget-settings.php:2749
-#: includes/class-wpzoom-instagram-widget-settings.php:2778
-#: includes/class-wpzoom-instagram-widget-settings.php:2968
-#: includes/class-wpzoom-instagram-widget-settings.php:3240
+#: includes/class-wpzoom-instagram-widget-settings.php:1627
+#: includes/class-wpzoom-instagram-widget-settings.php:1628
+#: includes/class-wpzoom-instagram-widget-settings.php:1976
+#: includes/class-wpzoom-instagram-widget-settings.php:2047
+#: includes/class-wpzoom-instagram-widget-settings.php:2156
+#: includes/class-wpzoom-instagram-widget-settings.php:2278
+#: includes/class-wpzoom-instagram-widget-settings.php:2309
+#: includes/class-wpzoom-instagram-widget-settings.php:2392
+#: includes/class-wpzoom-instagram-widget-settings.php:2560
+#: includes/class-wpzoom-instagram-widget-settings.php:2598
+#: includes/class-wpzoom-instagram-widget-settings.php:2646
+#: includes/class-wpzoom-instagram-widget-settings.php:2726
+#: includes/class-wpzoom-instagram-widget-settings.php:2850
+#: includes/class-wpzoom-instagram-widget-settings.php:2879
+#: includes/class-wpzoom-instagram-widget-settings.php:3069
+#: includes/class-wpzoom-instagram-widget-settings.php:3341
 msgid "PRO"
 msgstr ""
 
@@ -296,7 +297,7 @@ msgid "Data for %s - %s"
 msgstr ""
 
 #: includes/class-wpzoom-instagram-insights.php:179
-#: includes/class-wpzoom-instagram-widget-display.php:971
+#: includes/class-wpzoom-instagram-widget-display.php:954
 #: includes/class-wpzoom-instagram-widget.php:235
 msgid "followers"
 msgstr ""
@@ -328,13 +329,13 @@ msgstr ""
 
 #: includes/class-wpzoom-instagram-insights.php:191
 #: includes/class-wpzoom-instagram-insights.php:637
-#: includes/class-wpzoom-instagram-widget-settings.php:2463
+#: includes/class-wpzoom-instagram-widget-settings.php:2564
 msgid "Likes"
 msgstr ""
 
 #: includes/class-wpzoom-instagram-insights.php:192
 #: includes/class-wpzoom-instagram-insights.php:641
-#: includes/class-wpzoom-instagram-widget-settings.php:2472
+#: includes/class-wpzoom-instagram-widget-settings.php:2573
 msgid "Comments"
 msgstr ""
 
@@ -359,7 +360,7 @@ msgid "No recent posts found."
 msgstr ""
 
 #: includes/class-wpzoom-instagram-insights.php:198
-#: includes/class-wpzoom-instagram-widget-settings.php:2522
+#: includes/class-wpzoom-instagram-widget-settings.php:2623
 msgid "Load More Posts"
 msgstr ""
 
@@ -482,8 +483,8 @@ msgstr ""
 
 #: includes/class-wpzoom-instagram-insights.php:289
 #: includes/class-wpzoom-instagram-insights.php:535
-#: includes/class-wpzoom-instagram-widget-settings.php:1621
-#: includes/class-wpzoom-instagram-widget-settings.php:1622
+#: includes/class-wpzoom-instagram-widget-settings.php:1627
+#: includes/class-wpzoom-instagram-widget-settings.php:1628
 msgid "New"
 msgstr ""
 
@@ -584,7 +585,7 @@ msgid "Interactive charts and visualizations"
 msgstr ""
 
 #: includes/class-wpzoom-instagram-insights.php:500
-#: includes/class-wpzoom-instagram-widget-settings.php:2554
+#: includes/class-wpzoom-instagram-widget-settings.php:2655
 msgid "Upgrade to PRO"
 msgstr ""
 
@@ -725,1671 +726,1740 @@ msgstr ""
 msgid "Preview bio text."
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-display.php:915
-#: includes/class-wpzoom-instagram-widget-display.php:1019
-#: includes/class-wpzoom-instagram-widget-display.php:1606
+#. translators: %s: username
+#: includes/class-wpzoom-instagram-widget-display.php:904
+#, php-format
+msgid "%s has stories available. Click to view."
+msgstr ""
+
+#: includes/class-wpzoom-instagram-widget-display.php:947
+#: includes/class-wpzoom-instagram-widget.php:224
+msgid "posts"
+msgstr ""
+
+#: includes/class-wpzoom-instagram-widget-display.php:961
+#: includes/class-wpzoom-instagram-widget.php:246
+msgid "following"
+msgstr ""
+
+#: includes/class-wpzoom-instagram-widget-display.php:1020
+#: includes/class-wpzoom-instagram-widget-display.php:1607
+#: includes/class-wpzoom-instagram-widget-display.php:1722
 #: includes/class-wpzoom-instagram-widget.php:32
 #: includes/class-wpzoom-instagram-widget.php:504
 msgid "View on Instagram"
 msgstr ""
 
-#. translators: %s: username
-#: includes/class-wpzoom-instagram-widget-display.php:923
-#, php-format
-msgid "%s has stories available. Click to view."
-msgstr ""
-
-#: includes/class-wpzoom-instagram-widget-display.php:964
-#: includes/class-wpzoom-instagram-widget.php:224
-msgid "posts"
-msgstr ""
-
-#: includes/class-wpzoom-instagram-widget-display.php:978
-#: includes/class-wpzoom-instagram-widget.php:246
-msgid "following"
-msgstr ""
-
-#: includes/class-wpzoom-instagram-widget-display.php:1051
+#: includes/class-wpzoom-instagram-widget-display.php:1052
 msgid "Load More&hellip;"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-display.php:1051
+#: includes/class-wpzoom-instagram-widget-display.php:1052
 msgid " [PRO only]"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-display.php:1091
+#: includes/class-wpzoom-instagram-widget-display.php:1092
 msgid "Please select an account in the panel to the left&hellip;"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-display.php:1241
+#: includes/class-wpzoom-instagram-widget-display.php:1242
 msgid "Show post"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-display.php:1241
+#: includes/class-wpzoom-instagram-widget-display.php:1242
 msgid "Hide post"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-display.php:1298
+#: includes/class-wpzoom-instagram-widget-display.php:1299
 #, php-format
 msgctxt "%2$s = human-readable time difference"
 msgid "%1$s ago"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-display.php:1324
+#: includes/class-wpzoom-instagram-widget-display.php:1325
 msgid "Edit Product Link"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-display.php:1324
+#: includes/class-wpzoom-instagram-widget-display.php:1325
 msgid "Link to a product"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-display.php:1335
-#: includes/class-wpzoom-instagram-widget-display.php:1362
-#: includes/class-wpzoom-instagram-widget-settings.php:2705
+#: includes/class-wpzoom-instagram-widget-display.php:1336
+#: includes/class-wpzoom-instagram-widget-display.php:1363
+#: includes/class-wpzoom-instagram-widget-settings.php:2806
 msgid "Product"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-display.php:1352
-#: includes/class-wpzoom-instagram-widget-settings.php:2678
+#: includes/class-wpzoom-instagram-widget-display.php:1353
+#: includes/class-wpzoom-instagram-widget-settings.php:2779
 msgid "Related products"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-display.php:1399
-#: includes/class-wpzoom-instagram-widget-display.php:2027
-#: includes/class-wpzoom-instagram-widget-settings.php:2697
+#: includes/class-wpzoom-instagram-widget-display.php:1400
+#: includes/class-wpzoom-instagram-widget-display.php:2253
+#: includes/class-wpzoom-instagram-widget-settings.php:2798
 msgid "Buy now"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-display.php:1524
+#: includes/class-wpzoom-instagram-widget-display.php:1525
 msgid "View Reel on Instagram"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-display.php:1567
+#: includes/class-wpzoom-instagram-widget-display.php:1568
 #: includes/class-wpzoom-instagram-widget.php:212
 #: includes/class-wpzoom-instagram-widget.php:486
 msgid "Follow"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-display.php:1583
+#. translators: %s: human readable time difference, e.g. "3 hours"
+#: includes/class-wpzoom-instagram-widget-display.php:1584
+#: includes/class-wpzoom-instagram-widget-display.php:1837
 #: includes/class-wpzoom-instagram-widget.php:499
 #, php-format
 msgid "%s ago"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-display.php:1633
+#: includes/class-wpzoom-instagram-widget-display.php:1634
 msgid "[Admin-only Notice] Instagram Widget misconfigured or your Access Token <strong>expired</strong>. Please check"
-msgstr ""
-
-#: includes/class-wpzoom-instagram-widget-display.php:1635
-#: includes/class-wpzoom-instagram-widget.php:169
-msgid "Instagram Settings Page"
 msgstr ""
 
 #: includes/class-wpzoom-instagram-widget-display.php:1636
 #: includes/class-wpzoom-instagram-widget.php:169
+msgid "Instagram Settings Page"
+msgstr ""
+
+#: includes/class-wpzoom-instagram-widget-display.php:1637
+#: includes/class-wpzoom-instagram-widget.php:169
 msgid "and reconnect your account."
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-display.php:2087
+#. translators: %s: account name
+#: includes/class-wpzoom-instagram-widget-display.php:1842
+#, php-format
+msgid "View story from %s"
+msgstr ""
+
+#: includes/class-wpzoom-instagram-widget-display.php:1843
+msgid "View story"
+msgstr ""
+
+#: includes/class-wpzoom-instagram-widget-display.php:1876
+msgid "Previous stories"
+msgstr ""
+
+#: includes/class-wpzoom-instagram-widget-display.php:1877
+msgid "Next stories"
+msgstr ""
+
+#: includes/class-wpzoom-instagram-widget-display.php:2313
 msgid "Previous product"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-display.php:2088
+#: includes/class-wpzoom-instagram-widget-display.php:2314
 msgid "Next product"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:172
 #: includes/class-wpzoom-instagram-widget-settings.php:178
+#: includes/class-wpzoom-instagram-widget-settings.php:184
 msgid "User"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:173
+#: includes/class-wpzoom-instagram-widget-settings.php:179
 msgid "Instagram User"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:175
+#: includes/class-wpzoom-instagram-widget-settings.php:181
 msgctxt "Post Type General Name"
 msgid "Instagram User"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:176
+#: includes/class-wpzoom-instagram-widget-settings.php:182
 msgctxt "Post Type Singular Name"
 msgid "User"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:177
-#: includes/class-wpzoom-instagram-widget-settings.php:182
+#: includes/class-wpzoom-instagram-widget-settings.php:183
+#: includes/class-wpzoom-instagram-widget-settings.php:188
 msgid "Users"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:179
+#: includes/class-wpzoom-instagram-widget-settings.php:185
 msgid "User Archives"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:180
+#: includes/class-wpzoom-instagram-widget-settings.php:186
 msgid "User Attributes"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:181
+#: includes/class-wpzoom-instagram-widget-settings.php:187
 msgid "Parent User:"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:183
-#: includes/class-wpzoom-instagram-widget-settings.php:184
+#: includes/class-wpzoom-instagram-widget-settings.php:189
+#: includes/class-wpzoom-instagram-widget-settings.php:190
 msgid "Add New User"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:185
+#: includes/class-wpzoom-instagram-widget-settings.php:191
 msgid "New User"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:186
+#: includes/class-wpzoom-instagram-widget-settings.php:192
 msgid "Edit User"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:187
+#: includes/class-wpzoom-instagram-widget-settings.php:193
 msgid "Update User"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:188
+#: includes/class-wpzoom-instagram-widget-settings.php:194
 msgid "View User"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:189
+#: includes/class-wpzoom-instagram-widget-settings.php:195
 msgid "View Users"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:190
+#: includes/class-wpzoom-instagram-widget-settings.php:196
 msgid "Search User"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:191
-#: includes/class-wpzoom-instagram-widget-settings.php:265
+#: includes/class-wpzoom-instagram-widget-settings.php:197
+#: includes/class-wpzoom-instagram-widget-settings.php:271
 msgid "Not found"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:192
-#: includes/class-wpzoom-instagram-widget-settings.php:266
+#: includes/class-wpzoom-instagram-widget-settings.php:198
+#: includes/class-wpzoom-instagram-widget-settings.php:272
 msgid "Not found in Trash"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:193
-#: includes/class-wpzoom-instagram-widget-settings.php:267
+#: includes/class-wpzoom-instagram-widget-settings.php:199
+#: includes/class-wpzoom-instagram-widget-settings.php:273
 msgid "Featured Image"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:194
-#: includes/class-wpzoom-instagram-widget-settings.php:268
+#: includes/class-wpzoom-instagram-widget-settings.php:200
+#: includes/class-wpzoom-instagram-widget-settings.php:274
 msgid "Set featured image"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:195
-#: includes/class-wpzoom-instagram-widget-settings.php:269
+#: includes/class-wpzoom-instagram-widget-settings.php:201
+#: includes/class-wpzoom-instagram-widget-settings.php:275
 msgid "Remove featured image"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:196
-#: includes/class-wpzoom-instagram-widget-settings.php:270
+#: includes/class-wpzoom-instagram-widget-settings.php:202
+#: includes/class-wpzoom-instagram-widget-settings.php:276
 msgid "Use as featured image"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:197
+#: includes/class-wpzoom-instagram-widget-settings.php:203
 msgid "Insert into user"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:198
+#: includes/class-wpzoom-instagram-widget-settings.php:204
 msgid "Uploaded to this user"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:199
+#: includes/class-wpzoom-instagram-widget-settings.php:205
 msgid "Users list"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:200
+#: includes/class-wpzoom-instagram-widget-settings.php:206
 msgid "Users list navigation"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:201
+#: includes/class-wpzoom-instagram-widget-settings.php:207
 msgid "Filter users list"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:230
+#: includes/class-wpzoom-instagram-widget-settings.php:236
 #, php-format
 msgctxt "User setting ID"
 msgid "_wpz-insta_%s"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:246
 #: includes/class-wpzoom-instagram-widget-settings.php:252
-#: includes/class-wpzoom-instagram-widget-settings.php:2281
+#: includes/class-wpzoom-instagram-widget-settings.php:258
+#: includes/class-wpzoom-instagram-widget-settings.php:2382
 msgid "Feed"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:249
+#: includes/class-wpzoom-instagram-widget-settings.php:255
 msgctxt "Post Type General Name"
 msgid "Instagram Widget"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:250
+#: includes/class-wpzoom-instagram-widget-settings.php:256
 msgctxt "Post Type Singular Name"
 msgid "Feed"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:251
+#: includes/class-wpzoom-instagram-widget-settings.php:257
 msgid "Instagram Widget"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:253
+#: includes/class-wpzoom-instagram-widget-settings.php:259
 msgid "Feed Archives"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:254
+#: includes/class-wpzoom-instagram-widget-settings.php:260
 msgid "Feed Attributes"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:255
+#: includes/class-wpzoom-instagram-widget-settings.php:261
 msgid "Parent Feed:"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:256
-#: includes/class-wpzoom-instagram-widget-settings.php:1013
-#: includes/class-wpzoom-instagram-widget-settings.php:3101
+#: includes/class-wpzoom-instagram-widget-settings.php:262
+#: includes/class-wpzoom-instagram-widget-settings.php:1019
+#: includes/class-wpzoom-instagram-widget-settings.php:3202
 msgid "Feeds"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:257
-#: includes/class-wpzoom-instagram-widget-settings.php:258
+#: includes/class-wpzoom-instagram-widget-settings.php:263
+#: includes/class-wpzoom-instagram-widget-settings.php:264
 msgid "Add New Feed"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:259
+#: includes/class-wpzoom-instagram-widget-settings.php:265
 msgid "New Feed"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:260
+#: includes/class-wpzoom-instagram-widget-settings.php:266
 msgid "Edit Feed"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:261
+#: includes/class-wpzoom-instagram-widget-settings.php:267
 msgid "Update Feed"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:262
+#: includes/class-wpzoom-instagram-widget-settings.php:268
 msgid "View Feed"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:263
+#: includes/class-wpzoom-instagram-widget-settings.php:269
 msgid "View Feeds"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:264
+#: includes/class-wpzoom-instagram-widget-settings.php:270
 msgid "Search Feed"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:271
+#: includes/class-wpzoom-instagram-widget-settings.php:277
 msgid "Insert into feed"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:272
+#: includes/class-wpzoom-instagram-widget-settings.php:278
 msgid "Uploaded to this feed"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:273
+#: includes/class-wpzoom-instagram-widget-settings.php:279
 msgid "Feeds list"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:274
+#: includes/class-wpzoom-instagram-widget-settings.php:280
 msgid "Feeds list navigation"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:275
+#: includes/class-wpzoom-instagram-widget-settings.php:281
 msgid "Filter feeds list"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:304
-#: includes/class-wpzoom-instagram-widget-settings.php:1695
+#: includes/class-wpzoom-instagram-widget-settings.php:310
+#: includes/class-wpzoom-instagram-widget-settings.php:1737
 #, php-format
 msgctxt "Feed setting ID"
 msgid "_wpz-insta_%s"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:377
+#: includes/class-wpzoom-instagram-widget-settings.php:383
 msgid "🏞️ Instagram Widget & Block 2.0"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:378
+#: includes/class-wpzoom-instagram-widget-settings.php:384
 msgid "Connect your Instagram Account & Create a Feed!"
 msgstr ""
 
 #. translators: %s: URL of the admin page that lists the Instagram feeds.
-#: includes/class-wpzoom-instagram-widget-settings.php:381
+#: includes/class-wpzoom-instagram-widget-settings.php:387
 #, php-format
 msgid "Create <a href=\"%s\"><strong>multiple feeds</strong></a> and embed them anywhere you want on your website. You can customize your feed with new design options and embed it using our new <strong>Gutenberg block</strong> or shortcode."
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:491
+#: includes/class-wpzoom-instagram-widget-settings.php:497
 msgid "Feed duplicated."
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:491
+#: includes/class-wpzoom-instagram-widget-settings.php:497
 msgid "There was an error duplicating the selected feed."
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:501
+#: includes/class-wpzoom-instagram-widget-settings.php:507
 msgid "Feed posts updated."
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:501
+#: includes/class-wpzoom-instagram-widget-settings.php:507
 msgid "There was an error updating the posts for the selected feed."
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:511
+#: includes/class-wpzoom-instagram-widget-settings.php:517
 msgid "Stories cache cleared."
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:511
+#: includes/class-wpzoom-instagram-widget-settings.php:517
 msgid "There was an error clearing the stories cache."
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:567
-#: includes/class-wpzoom-instagram-widget-settings.php:622
-#: includes/class-wpzoom-instagram-widget-settings.php:672
-#: includes/class-wpzoom-instagram-widget-settings.php:717
+#: includes/class-wpzoom-instagram-widget-settings.php:573
+#: includes/class-wpzoom-instagram-widget-settings.php:628
+#: includes/class-wpzoom-instagram-widget-settings.php:678
+#: includes/class-wpzoom-instagram-widget-settings.php:723
 msgid "Permission denied."
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:632
-#: includes/class-wpzoom-instagram-widget-settings.php:679
-#: includes/class-wpzoom-instagram-widget-settings.php:724
+#: includes/class-wpzoom-instagram-widget-settings.php:638
+#: includes/class-wpzoom-instagram-widget-settings.php:685
+#: includes/class-wpzoom-instagram-widget-settings.php:730
 msgid "Invalid feed ID or media ID."
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:638
+#: includes/class-wpzoom-instagram-widget-settings.php:644
 msgid "Invalid feed or insufficient permissions."
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:644
+#: includes/class-wpzoom-instagram-widget-settings.php:650
 msgid "Invalid product ID."
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:652
+#: includes/class-wpzoom-instagram-widget-settings.php:658
 msgid "Product links saved successfully."
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:653
+#: includes/class-wpzoom-instagram-widget-settings.php:659
 msgid "Product links removed successfully."
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:659
+#: includes/class-wpzoom-instagram-widget-settings.php:665
 msgid "Failed to save product link(s)."
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:730
+#: includes/class-wpzoom-instagram-widget-settings.php:736
 msgid "No images found for this media item."
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:999
+#: includes/class-wpzoom-instagram-widget-settings.php:1005
 msgid "Show posts from"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:1000
-#: includes/class-wpzoom-instagram-widget-settings.php:1015
+#: includes/class-wpzoom-instagram-widget-settings.php:1006
+#: includes/class-wpzoom-instagram-widget-settings.php:1021
 msgid "Actions"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:1008
-#: includes/class-wpzoom-instagram-widget-settings.php:4164
+#: includes/class-wpzoom-instagram-widget-settings.php:1014
+#: includes/class-wpzoom-instagram-widget-settings.php:4265
 msgid "Username"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:1009
+#: includes/class-wpzoom-instagram-widget-settings.php:1015
 msgid "Type"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:1010
+#: includes/class-wpzoom-instagram-widget-settings.php:1016
 msgid "Picture"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:1011
-#: includes/class-wpzoom-instagram-widget-settings.php:1193
-#: includes/class-wpzoom-instagram-widget-settings.php:4117
+#: includes/class-wpzoom-instagram-widget-settings.php:1017
+#: includes/class-wpzoom-instagram-widget-settings.php:1199
+#: includes/class-wpzoom-instagram-widget-settings.php:4218
 msgid "Bio"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:1012
-#: includes/class-wpzoom-instagram-widget-settings.php:1225
-#: includes/class-wpzoom-instagram-widget-settings.php:4146
+#: includes/class-wpzoom-instagram-widget-settings.php:1018
+#: includes/class-wpzoom-instagram-widget-settings.php:1231
+#: includes/class-wpzoom-instagram-widget-settings.php:4247
 msgid "Access Token"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:1070
+#: includes/class-wpzoom-instagram-widget-settings.php:1076
 msgid "Duplicate"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:1081
+#: includes/class-wpzoom-instagram-widget-settings.php:1087
 #, php-format
 msgctxt "WPZOOM Instagram user edit link"
 msgid "edit.php?post_type=wpz-insta_user#post-%d"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:1104
+#: includes/class-wpzoom-instagram-widget-settings.php:1110
 msgid "Expired on:"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:1105
+#: includes/class-wpzoom-instagram-widget-settings.php:1111
 msgid "Expires in:"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:1106
+#: includes/class-wpzoom-instagram-widget-settings.php:1112
 msgid "Expires on:"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:1112
+#: includes/class-wpzoom-instagram-widget-settings.php:1118
 #, php-format
 msgctxt "Token expire time label"
 msgid "<span id=\"wpz-insta_token-expire-time\"><strong>%1$s</strong> <%2$s class=\"%3$s\">%4$s</%2$s></span>"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:1167
+#: includes/class-wpzoom-instagram-widget-settings.php:1173
 msgid "Profile picture"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:1170
+#: includes/class-wpzoom-instagram-widget-settings.php:1176
 msgid "Profile Photo"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:1172
+#: includes/class-wpzoom-instagram-widget-settings.php:1178
 msgid "Change profile picture"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:1173
+#: includes/class-wpzoom-instagram-widget-settings.php:1179
 msgid "Reset picture"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:1186
+#: includes/class-wpzoom-instagram-widget-settings.php:1192
 msgid "Name"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:1213
+#: includes/class-wpzoom-instagram-widget-settings.php:1219
 msgid "Choose a method"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:1214
+#: includes/class-wpzoom-instagram-widget-settings.php:1220
 msgid "via Facebook Page"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:1215
+#: includes/class-wpzoom-instagram-widget-settings.php:1221
 #: includes/class-wpzoom-instagram-widget.php:31
 msgid "Instagram"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:1216
+#: includes/class-wpzoom-instagram-widget-settings.php:1222
 msgid "Reconnect"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:1217
+#: includes/class-wpzoom-instagram-widget-settings.php:1223
 msgid "If the connection fails, please generate a new API token <br/> and enter it in the field below."
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:1218
-#: includes/class-wpzoom-instagram-widget-settings.php:4554
-#: includes/class-wpzoom-instagram-widget-settings.php:4577
+#: includes/class-wpzoom-instagram-widget-settings.php:1224
+#: includes/class-wpzoom-instagram-widget-settings.php:4655
+#: includes/class-wpzoom-instagram-widget-settings.php:4678
 msgid "Connect with Access Token"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:1394
-#: includes/class-wpzoom-instagram-widget-settings.php:1441
+#: includes/class-wpzoom-instagram-widget-settings.php:1400
+#: includes/class-wpzoom-instagram-widget-settings.php:1447
 msgid "&mdash;"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:1411
+#: includes/class-wpzoom-instagram-widget-settings.php:1417
 msgid "Edit feed"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:1412
+#: includes/class-wpzoom-instagram-widget-settings.php:1418
 msgid "Duplicate feed"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:1413
+#: includes/class-wpzoom-instagram-widget-settings.php:1419
 msgid "Copy shortcode"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:1416
+#: includes/class-wpzoom-instagram-widget-settings.php:1422
 msgid "Update posts"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:1424
+#: includes/class-wpzoom-instagram-widget-settings.php:1430
 msgid "Update Stories"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:1428
+#: includes/class-wpzoom-instagram-widget-settings.php:1434
 msgid "Delete feed"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:1450
-#: includes/class-wpzoom-instagram-widget-settings.php:1477
-#: includes/class-wpzoom-instagram-widget-settings.php:1518
-#: includes/class-wpzoom-instagram-widget-settings.php:1788
+#: includes/class-wpzoom-instagram-widget-settings.php:1456
+#: includes/class-wpzoom-instagram-widget-settings.php:1483
+#: includes/class-wpzoom-instagram-widget-settings.php:1524
+#: includes/class-wpzoom-instagram-widget-settings.php:1830
 msgid "None"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:1497
+#: includes/class-wpzoom-instagram-widget-settings.php:1503
 msgid "⚠️ Reconnection required!"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:1504
+#: includes/class-wpzoom-instagram-widget-settings.php:1510
 msgid "Edit user"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:1506
+#: includes/class-wpzoom-instagram-widget-settings.php:1512
 msgid "Delete user"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:1600
+#: includes/class-wpzoom-instagram-widget-settings.php:1606
 msgid "Go here if you want to embed this feed"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:1608
+#: includes/class-wpzoom-instagram-widget-settings.php:1614
 msgid "Go to all feeds"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:1614
+#: includes/class-wpzoom-instagram-widget-settings.php:1620
 #, php-format
 msgid "Instagram Feed #%d"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:1619
+#: includes/class-wpzoom-instagram-widget-settings.php:1625
 msgid "Configure"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:1620
+#: includes/class-wpzoom-instagram-widget-settings.php:1626
 msgid "Design"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:1621
+#: includes/class-wpzoom-instagram-widget-settings.php:1627
 msgid "Moderate"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:1622
-#: includes/class-wpzoom-instagram-widget-settings.php:2613
-#: includes/class-wpzoom-instagram-widget-settings.php:2842
+#: includes/class-wpzoom-instagram-widget-settings.php:1628
+#: includes/class-wpzoom-instagram-widget-settings.php:2714
+#: includes/class-wpzoom-instagram-widget-settings.php:2943
 msgid "Product Links"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:1623
+#: includes/class-wpzoom-instagram-widget-settings.php:1629
 msgid "Embed"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:1632
-#: includes/class-wpzoom-instagram-widget-settings.php:3176
-#: includes/class-wpzoom-instagram-widget-settings.php:3194
-#: includes/class-wpzoom-instagram-widget-settings.php:3217
-#: includes/class-wpzoom-instagram-widget-settings.php:4714
+#: includes/class-wpzoom-instagram-widget-settings.php:1638
+#: includes/class-wpzoom-instagram-widget-settings.php:3277
+#: includes/class-wpzoom-instagram-widget-settings.php:3295
+#: includes/class-wpzoom-instagram-widget-settings.php:3318
+#: includes/class-wpzoom-instagram-widget-settings.php:4815
 msgid "Cancel"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:1633
-#: includes/class-wpzoom-instagram-widget-settings.php:4713
+#: includes/class-wpzoom-instagram-widget-settings.php:1639
+#: includes/class-wpzoom-instagram-widget-settings.php:4814
 msgid "Save"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:1849
+#: includes/class-wpzoom-instagram-widget-settings.php:1896
 #, php-format
 msgctxt "Instagram Feed Shortcode"
 msgid "[instagram feed=\"%s\"]"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:1863
+#: includes/class-wpzoom-instagram-widget-settings.php:1910
 msgid "Show PRO options"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:1870
+#: includes/class-wpzoom-instagram-widget-settings.php:1917
 msgid "Instagram Account"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:1871
+#: includes/class-wpzoom-instagram-widget-settings.php:1918
 msgid "Select an account"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:1882
+#: includes/class-wpzoom-instagram-widget-settings.php:1929
 msgid "Remove"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:1900
-#: includes/class-wpzoom-instagram-widget-settings.php:2916
+#: includes/class-wpzoom-instagram-widget-settings.php:1947
+#: includes/class-wpzoom-instagram-widget-settings.php:3017
 msgid "Select an Account"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:1904
+#: includes/class-wpzoom-instagram-widget-settings.php:1951
 msgid "Edit account details"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:1928
+#: includes/class-wpzoom-instagram-widget-settings.php:1975
 msgid "Add another account"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:1931
+#: includes/class-wpzoom-instagram-widget-settings.php:1978
 msgid "Combine posts from multiple Instagram accounts into a single feed."
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:1939
-#: includes/class-wpzoom-instagram-widget-settings.php:4173
+#: includes/class-wpzoom-instagram-widget-settings.php:1986
+#: includes/class-wpzoom-instagram-widget-settings.php:4274
 msgid "Check for new posts every"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:1945
-#: includes/class-wpzoom-instagram-widget-settings.php:4257
+#: includes/class-wpzoom-instagram-widget-settings.php:1992
+#: includes/class-wpzoom-instagram-widget-settings.php:4358
 msgid "Minutes"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:1946
-#: includes/class-wpzoom-instagram-widget-settings.php:4253
+#: includes/class-wpzoom-instagram-widget-settings.php:1993
+#: includes/class-wpzoom-instagram-widget-settings.php:4354
 msgid "Hours"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:1947
-#: includes/class-wpzoom-instagram-widget-settings.php:4255
+#: includes/class-wpzoom-instagram-widget-settings.php:1994
+#: includes/class-wpzoom-instagram-widget-settings.php:4356
 msgid "Days"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:1948
+#: includes/class-wpzoom-instagram-widget-settings.php:1995
 msgid "Weeks"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:1949
+#: includes/class-wpzoom-instagram-widget-settings.php:1996
 msgid "Months"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:1958
-#: includes/class-wpzoom-instagram-widget-settings.php:4181
+#: includes/class-wpzoom-instagram-widget-settings.php:2005
+#: includes/class-wpzoom-instagram-widget-settings.php:4282
 msgid "Enable request timeout"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:1959
+#: includes/class-wpzoom-instagram-widget-settings.php:2006
 msgid "The time within which a response must be returned will be set to 15 seconds to prevent your request from being blocked by the Instagram API."
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:1966
+#: includes/class-wpzoom-instagram-widget-settings.php:2013
 msgid "Layout"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:2036
+#: includes/class-wpzoom-instagram-widget-settings.php:2083
 msgid "Number of items"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:2042
+#: includes/class-wpzoom-instagram-widget-settings.php:2089
 msgid "Number of columns"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:2043
-#: includes/class-wpzoom-instagram-widget-settings.php:2070
+#: includes/class-wpzoom-instagram-widget-settings.php:2090
+#: includes/class-wpzoom-instagram-widget-settings.php:2117
 msgid "Responsive"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:2049
-#: includes/class-wpzoom-instagram-widget-settings.php:2077
-#: includes/class-wpzoom-instagram-widget-settings.php:2882
-#: includes/class-wpzoom-instagram-widget-settings.php:2883
+#: includes/class-wpzoom-instagram-widget-settings.php:2096
+#: includes/class-wpzoom-instagram-widget-settings.php:2124
+#: includes/class-wpzoom-instagram-widget-settings.php:2983
+#: includes/class-wpzoom-instagram-widget-settings.php:2984
 msgid "Desktop"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:2054
-#: includes/class-wpzoom-instagram-widget-settings.php:2082
-#: includes/class-wpzoom-instagram-widget-settings.php:2889
-#: includes/class-wpzoom-instagram-widget-settings.php:2890
+#: includes/class-wpzoom-instagram-widget-settings.php:2101
+#: includes/class-wpzoom-instagram-widget-settings.php:2129
+#: includes/class-wpzoom-instagram-widget-settings.php:2990
+#: includes/class-wpzoom-instagram-widget-settings.php:2991
 msgid "Tablet"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:2059
-#: includes/class-wpzoom-instagram-widget-settings.php:2087
-#: includes/class-wpzoom-instagram-widget-settings.php:2896
-#: includes/class-wpzoom-instagram-widget-settings.php:2897
+#: includes/class-wpzoom-instagram-widget-settings.php:2106
+#: includes/class-wpzoom-instagram-widget-settings.php:2134
+#: includes/class-wpzoom-instagram-widget-settings.php:2997
+#: includes/class-wpzoom-instagram-widget-settings.php:2998
 msgid "Mobile"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:2069
+#: includes/class-wpzoom-instagram-widget-settings.php:2116
 msgid "Number of visible items"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:2095
+#: includes/class-wpzoom-instagram-widget-settings.php:2142
 msgid "Padding around items"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:2101
-#: includes/class-wpzoom-instagram-widget-settings.php:2300
-#: includes/class-wpzoom-instagram-widget-settings.php:2317
-#: includes/class-wpzoom-instagram-widget-settings.php:2332
-#: includes/class-wpzoom-instagram-widget-settings.php:2380
-#: includes/class-wpzoom-instagram-widget-settings.php:2828
+#: includes/class-wpzoom-instagram-widget-settings.php:2148
+#: includes/class-wpzoom-instagram-widget-settings.php:2401
+#: includes/class-wpzoom-instagram-widget-settings.php:2418
+#: includes/class-wpzoom-instagram-widget-settings.php:2433
+#: includes/class-wpzoom-instagram-widget-settings.php:2481
+#: includes/class-wpzoom-instagram-widget-settings.php:2929
 msgid "px"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:2102
-#: includes/class-wpzoom-instagram-widget-settings.php:2301
-#: includes/class-wpzoom-instagram-widget-settings.php:2318
-#: includes/class-wpzoom-instagram-widget-settings.php:2333
-#: includes/class-wpzoom-instagram-widget-settings.php:2381
-#: includes/class-wpzoom-instagram-widget-settings.php:2829
+#: includes/class-wpzoom-instagram-widget-settings.php:2149
+#: includes/class-wpzoom-instagram-widget-settings.php:2402
+#: includes/class-wpzoom-instagram-widget-settings.php:2419
+#: includes/class-wpzoom-instagram-widget-settings.php:2434
+#: includes/class-wpzoom-instagram-widget-settings.php:2482
+#: includes/class-wpzoom-instagram-widget-settings.php:2930
 msgid "em"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:2103
-#: includes/class-wpzoom-instagram-widget-settings.php:2302
-#: includes/class-wpzoom-instagram-widget-settings.php:2319
-#: includes/class-wpzoom-instagram-widget-settings.php:2382
-#: includes/class-wpzoom-instagram-widget-settings.php:2830
+#: includes/class-wpzoom-instagram-widget-settings.php:2150
+#: includes/class-wpzoom-instagram-widget-settings.php:2403
+#: includes/class-wpzoom-instagram-widget-settings.php:2420
+#: includes/class-wpzoom-instagram-widget-settings.php:2483
+#: includes/class-wpzoom-instagram-widget-settings.php:2931
 msgid "%"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:2114
+#: includes/class-wpzoom-instagram-widget-settings.php:2161
 msgid "Highlight items"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:2119
+#: includes/class-wpzoom-instagram-widget-settings.php:2166
 msgid "Works only with 3-6 columns"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:2172
+#: includes/class-wpzoom-instagram-widget-settings.php:2219
 msgid "Highlight every 3rd post"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:2181
+#: includes/class-wpzoom-instagram-widget-settings.php:2228
 msgid "Responsive columns"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:2191
+#: includes/class-wpzoom-instagram-widget-settings.php:2238
 msgid "Profile"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:2193
+#: includes/class-wpzoom-instagram-widget-settings.php:2240
 msgid "Details like Name, Bio or Avatar need to be added manually on the"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:2193
+#: includes/class-wpzoom-instagram-widget-settings.php:2240
 msgid "account details page"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:2200
-msgid "Display account name"
-msgstr ""
-
-#: includes/class-wpzoom-instagram-widget-settings.php:2202
-msgid "You must set a display name for the user for this option to have any effect."
-msgstr ""
-
-#: includes/class-wpzoom-instagram-widget-settings.php:2209
-msgid "Display account username"
-msgstr ""
-
-#: includes/class-wpzoom-instagram-widget-settings.php:2216
-msgid "Display verified badge"
-msgstr ""
-
-#: includes/class-wpzoom-instagram-widget-settings.php:2223
-msgid "Display following count"
-msgstr ""
-
-#: includes/class-wpzoom-instagram-widget-settings.php:2225
-msgid "This feature works only when your account is connected via your Facebook Page."
-msgstr ""
-
-#: includes/class-wpzoom-instagram-widget-settings.php:2233
-msgid "Display Instagram Stories"
-msgstr ""
-
-#: includes/class-wpzoom-instagram-widget-settings.php:2235
-msgid "Shows a clickable stories ring around the profile image when the account has active stories. This feature works only when your account is connected via your Facebook Page."
-msgstr ""
-
 #: includes/class-wpzoom-instagram-widget-settings.php:2244
+msgid "Account details"
+msgstr ""
+
+#: includes/class-wpzoom-instagram-widget-settings.php:2249
 msgid "Display account image"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:2246
+#: includes/class-wpzoom-instagram-widget-settings.php:2251
 msgid "You must set a profile picture for the user for this option to have any effect."
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:2254
-msgid "Display bio in user details"
+#: includes/class-wpzoom-instagram-widget-settings.php:2258
+msgid "Display account name"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:2256
-msgid "You must set a profile bio for the user for this option to have any effect."
+#: includes/class-wpzoom-instagram-widget-settings.php:2260
+msgid "You must set a display name for the user for this option to have any effect."
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:2263
-msgid "Display <strong>View on Instagram</strong> button"
-msgstr ""
-
-#: includes/class-wpzoom-instagram-widget-settings.php:2267
-#: includes/class-wpzoom-instagram-widget-settings.php:2532
-#: includes/class-wpzoom-instagram-widget-settings.php:2695
-msgid "Button text"
+#: includes/class-wpzoom-instagram-widget-settings.php:2266
+msgid "Display account username"
 msgstr ""
 
 #: includes/class-wpzoom-instagram-widget-settings.php:2272
-msgid "Button color"
+msgid "Display bio in user details"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:2285
-msgid "Background color"
+#: includes/class-wpzoom-instagram-widget-settings.php:2274
+msgid "You must set a profile bio for the user for this option to have any effect."
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:2294
-msgid "Rounded corners"
+#: includes/class-wpzoom-instagram-widget-settings.php:2282
+msgid "Display verified badge"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:2311
-msgid "Outside padding"
+#: includes/class-wpzoom-instagram-widget-settings.php:2289
+msgid "Display following count"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:2326
-msgid "Text size"
+#: includes/class-wpzoom-instagram-widget-settings.php:2291
+msgid "This feature works only when your account is connected via your Facebook Page."
+msgstr ""
+
+#: includes/class-wpzoom-instagram-widget-settings.php:2298
+msgid "Stories"
+msgstr ""
+
+#: includes/class-wpzoom-instagram-widget-settings.php:2303
+msgid "Display Instagram Stories"
+msgstr ""
+
+#: includes/class-wpzoom-instagram-widget-settings.php:2305
+msgid "Shows a clickable stories ring around the profile image when the account has active stories. This feature works only when your account is connected via your Facebook Page."
+msgstr ""
+
+#: includes/class-wpzoom-instagram-widget-settings.php:2315
+msgid "Display stories row above the feed"
+msgstr ""
+
+#: includes/class-wpzoom-instagram-widget-settings.php:2317
+msgid "Shows a carousel with a thumbnail for each active story, similar to Facebook. Clicking a thumbnail opens that story in the viewer."
+msgstr ""
+
+#: includes/class-wpzoom-instagram-widget-settings.php:2322
+msgid "See the stories row in action"
+msgstr ""
+
+#: includes/class-wpzoom-instagram-widget-settings.php:2327
+msgid "Stories per row"
 msgstr ""
 
 #: includes/class-wpzoom-instagram-widget-settings.php:2334
+msgid "Thumbnail shape"
+msgstr ""
+
+#: includes/class-wpzoom-instagram-widget-settings.php:2337
+msgid "Portrait (9:16)"
+msgstr ""
+
+#: includes/class-wpzoom-instagram-widget-settings.php:2338
+msgid "Tall (3:4)"
+msgstr ""
+
+#: includes/class-wpzoom-instagram-widget-settings.php:2339
+#: includes/class-wpzoom-instagram-widget-settings.php:2468
+msgid "Square (1:1)"
+msgstr ""
+
+#: includes/class-wpzoom-instagram-widget-settings.php:2347
+msgid "Show account name on thumbnails"
+msgstr ""
+
+#: includes/class-wpzoom-instagram-widget-settings.php:2353
+msgid "Show time on thumbnails"
+msgstr ""
+
+#: includes/class-wpzoom-instagram-widget-settings.php:2361
+msgid "View on Instagram button"
+msgstr ""
+
+#: includes/class-wpzoom-instagram-widget-settings.php:2365
+msgid "Display <strong>View on Instagram</strong> button"
+msgstr ""
+
+#: includes/class-wpzoom-instagram-widget-settings.php:2368
+#: includes/class-wpzoom-instagram-widget-settings.php:2633
+#: includes/class-wpzoom-instagram-widget-settings.php:2796
+msgid "Button text"
+msgstr ""
+
+#: includes/class-wpzoom-instagram-widget-settings.php:2372
+msgid "Button color"
+msgstr ""
+
+#: includes/class-wpzoom-instagram-widget-settings.php:2386
+msgid "Background color"
+msgstr ""
+
+#: includes/class-wpzoom-instagram-widget-settings.php:2395
+msgid "Rounded corners"
+msgstr ""
+
+#: includes/class-wpzoom-instagram-widget-settings.php:2412
+msgid "Outside padding"
+msgstr ""
+
+#: includes/class-wpzoom-instagram-widget-settings.php:2427
+msgid "Text size"
+msgstr ""
+
+#: includes/class-wpzoom-instagram-widget-settings.php:2435
 msgid "pt"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:2341
+#: includes/class-wpzoom-instagram-widget-settings.php:2442
 msgid "Image size"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:2345
+#: includes/class-wpzoom-instagram-widget-settings.php:2446
 #: includes/class-wpzoom-instagram-widget.php:638
 msgid "By Default Algorithm"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:2348
+#: includes/class-wpzoom-instagram-widget-settings.php:2449
 msgid "Thumbnail (150x150)"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:2351
+#: includes/class-wpzoom-instagram-widget-settings.php:2452
 msgid "Standard Resolution (320x320)"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:2354
+#: includes/class-wpzoom-instagram-widget-settings.php:2455
 msgid "High Resolution (640x640)"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:2357
+#: includes/class-wpzoom-instagram-widget-settings.php:2458
 msgid "Full Size"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:2364
+#: includes/class-wpzoom-instagram-widget-settings.php:2465
 msgid "Image aspect ratio"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:2367
-msgid "Square (1:1)"
-msgstr ""
-
-#: includes/class-wpzoom-instagram-widget-settings.php:2368
+#: includes/class-wpzoom-instagram-widget-settings.php:2469
 msgid "Portrait (3:4)"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:2374
+#: includes/class-wpzoom-instagram-widget-settings.php:2475
 msgid "Image Width"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:2391
+#: includes/class-wpzoom-instagram-widget-settings.php:2492
 msgid "Show overlay with Instagram icon on hover"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:2397
+#: includes/class-wpzoom-instagram-widget-settings.php:2498
 msgid "Lazy load images"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:2403
+#: includes/class-wpzoom-instagram-widget-settings.php:2504
 msgid "Open items in lightbox"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:2407
+#: includes/class-wpzoom-instagram-widget-settings.php:2508
 msgid "Post Types to Show"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:2415
+#: includes/class-wpzoom-instagram-widget-settings.php:2516
 msgid "Photos"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:2419
+#: includes/class-wpzoom-instagram-widget-settings.php:2520
 msgid "Videos"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:2423
+#: includes/class-wpzoom-instagram-widget-settings.php:2524
 msgid "Albums/Carousels"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:2442
+#: includes/class-wpzoom-instagram-widget-settings.php:2543
 msgid "Note: When Load More is enabled with filtered post types, some posts may be skipped during pagination due to how Instagram's API handles filtering."
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:2452
+#: includes/class-wpzoom-instagram-widget-settings.php:2553
 msgid "Show media type icons"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:2456
+#: includes/class-wpzoom-instagram-widget-settings.php:2557
 msgid "Show on hover"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:2465
+#: includes/class-wpzoom-instagram-widget-settings.php:2566
 msgid "You must be connected via Facebook Graph API to display likes."
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:2474
+#: includes/class-wpzoom-instagram-widget-settings.php:2575
 msgid "You must be connected via Facebook Graph API to display comments."
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:2482
+#: includes/class-wpzoom-instagram-widget-settings.php:2583
 msgid "Media type icons"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:2488
+#: includes/class-wpzoom-instagram-widget-settings.php:2589
 msgid "Instagram link"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:2494
+#: includes/class-wpzoom-instagram-widget-settings.php:2595
 msgid "Date"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:2528
+#: includes/class-wpzoom-instagram-widget-settings.php:2629
 msgid "Display <strong>Load more</strong> button"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:2537
+#: includes/class-wpzoom-instagram-widget-settings.php:2638
 msgid "Load more button color"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:2545
+#: includes/class-wpzoom-instagram-widget-settings.php:2646
 msgid "Moderate Posts"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:2549
+#: includes/class-wpzoom-instagram-widget-settings.php:2650
 msgid "Hide or show individual posts in your feed. Click the eye icon on each post in the preview to control visibility—hidden posts will not be visible to visitors on your website."
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:2559
+#: includes/class-wpzoom-instagram-widget-settings.php:2660
 msgid "Hide or Show Posts"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:2561
+#: includes/class-wpzoom-instagram-widget-settings.php:2662
 msgid "Click the eye icon on each Instagram post in the preview to hide or show it in your feed. Hidden posts will not be visible to visitors on your website"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:2568
+#: includes/class-wpzoom-instagram-widget-settings.php:2669
 msgid "Display your Feed"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:2571
+#: includes/class-wpzoom-instagram-widget-settings.php:2672
 msgid "Shortcode"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:2572
+#: includes/class-wpzoom-instagram-widget-settings.php:2673
 msgid "Copy and paste the following shortcode directly into the page, post or widget where you&rsquo;d like the feed to show up:"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:2577
+#: includes/class-wpzoom-instagram-widget-settings.php:2678
 msgid "COPY"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:2578
+#: includes/class-wpzoom-instagram-widget-settings.php:2679
 msgid "COPIED!"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:2584
+#: includes/class-wpzoom-instagram-widget-settings.php:2685
 msgid "WordPress Block"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:2586
+#: includes/class-wpzoom-instagram-widget-settings.php:2687
 msgid "To embed this feed in the WordPress block editor:"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:2588
+#: includes/class-wpzoom-instagram-widget-settings.php:2689
 msgid "Search for the <strong>Instagram Feed by WPZOOM</strong> block."
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:2589
+#: includes/class-wpzoom-instagram-widget-settings.php:2690
 msgid "Add it to your post or page."
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:2590
+#: includes/class-wpzoom-instagram-widget-settings.php:2691
 msgid "In the block settings, select to display the feed with this name."
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:2596
+#: includes/class-wpzoom-instagram-widget-settings.php:2697
 msgid "WordPress Widget"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:2598
+#: includes/class-wpzoom-instagram-widget-settings.php:2699
 msgid "To embed this feed as a WordPress widget:"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:2600
+#: includes/class-wpzoom-instagram-widget-settings.php:2701
 #, php-format
 msgid "Go to the <a href=\"%s\">Appearance &raquo; Widgets</a> page or the <a href=\"%s\">Widgets</a> section of the Customizer."
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:2601
+#: includes/class-wpzoom-instagram-widget-settings.php:2702
 msgid "Then, add a <strong>Text Widget</strong>."
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:2602
+#: includes/class-wpzoom-instagram-widget-settings.php:2703
 msgid "Copy the <strong>Shortcode</strong> above and insert it in the Text widget."
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:2616
+#: includes/class-wpzoom-instagram-widget-settings.php:2717
 msgid "Link Instagram Items to Products"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:2618
+#: includes/class-wpzoom-instagram-widget-settings.php:2719
 msgid "To link a post to a product, click the \"Link to a product\" button that appears on each Instagram item in the preview."
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:2623
-#: includes/class-wpzoom-instagram-widget-settings.php:3109
-#: includes/class-wpzoom-instagram-widget-settings.php:4039
-#: includes/class-wpzoom-instagram-widget-settings.php:4040
+#: includes/class-wpzoom-instagram-widget-settings.php:2724
+#: includes/class-wpzoom-instagram-widget-settings.php:3210
+#: includes/class-wpzoom-instagram-widget-settings.php:4140
+#: includes/class-wpzoom-instagram-widget-settings.php:4141
 msgid "Settings"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:2629
+#: includes/class-wpzoom-instagram-widget-settings.php:2730
 msgid "Display"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:2676
+#: includes/class-wpzoom-instagram-widget-settings.php:2777
 msgid "Popover title"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:2683
+#: includes/class-wpzoom-instagram-widget-settings.php:2784
 msgid "Icon position"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:2686
+#: includes/class-wpzoom-instagram-widget-settings.php:2787
 msgid "Top left"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:2687
+#: includes/class-wpzoom-instagram-widget-settings.php:2788
 msgid "Top right"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:2688
+#: includes/class-wpzoom-instagram-widget-settings.php:2789
 msgid "Bottom left"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:2689
+#: includes/class-wpzoom-instagram-widget-settings.php:2790
 msgid "Bottom right"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:2702
+#: includes/class-wpzoom-instagram-widget-settings.php:2803
 msgid "Badge label"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:2706
+#: includes/class-wpzoom-instagram-widget-settings.php:2807
 msgid "Badge displayed on items linked to products. Leave empty to hide."
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:2711
+#: includes/class-wpzoom-instagram-widget-settings.php:2812
 msgid "Lightbox position"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:2715
+#: includes/class-wpzoom-instagram-widget-settings.php:2816
 msgid "Before profile"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:2716
+#: includes/class-wpzoom-instagram-widget-settings.php:2817
 msgid "After profile"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:2717
+#: includes/class-wpzoom-instagram-widget-settings.php:2818
 msgid "After details"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:2719
+#: includes/class-wpzoom-instagram-widget-settings.php:2820
 msgid "Choose where to display linked products in the lightbox."
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:2724
+#: includes/class-wpzoom-instagram-widget-settings.php:2825
 msgid "Lightbox layout"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:2728
+#: includes/class-wpzoom-instagram-widget-settings.php:2829
 msgid "List"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:2729
+#: includes/class-wpzoom-instagram-widget-settings.php:2830
 msgid "Card"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:2731
+#: includes/class-wpzoom-instagram-widget-settings.php:2832
 msgid "Choose the layout style for products in the lightbox."
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:2738
+#: includes/class-wpzoom-instagram-widget-settings.php:2839
 msgid "Open product links in new tab"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:2739
+#: includes/class-wpzoom-instagram-widget-settings.php:2840
 msgid "When enabled, all product links (images, buttons, and popover items) will open in a new browser tab."
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:2747
+#: includes/class-wpzoom-instagram-widget-settings.php:2848
 msgid "Icon design"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:2753
+#: includes/class-wpzoom-instagram-widget-settings.php:2854
 msgid "Icon size"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:2759
-#: includes/class-wpzoom-instagram-widget-settings.php:2782
+#: includes/class-wpzoom-instagram-widget-settings.php:2860
+#: includes/class-wpzoom-instagram-widget-settings.php:2883
 msgid "Background"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:2765
+#: includes/class-wpzoom-instagram-widget-settings.php:2866
 msgid "Color"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:2776
+#: includes/class-wpzoom-instagram-widget-settings.php:2877
 msgid "Button design"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:2788
+#: includes/class-wpzoom-instagram-widget-settings.php:2889
 msgid "Text color"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:2794
+#: includes/class-wpzoom-instagram-widget-settings.php:2895
 msgid "Hover background"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:2800
+#: includes/class-wpzoom-instagram-widget-settings.php:2901
 msgid "Border radius"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:2854
+#: includes/class-wpzoom-instagram-widget-settings.php:2955
 msgid "WooCommerce Required"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:2856
+#: includes/class-wpzoom-instagram-widget-settings.php:2957
 msgid "The Product Links feature allows you to link your Instagram posts directly to WooCommerce products, turning your feed into a shoppable gallery."
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:2859
+#: includes/class-wpzoom-instagram-widget-settings.php:2960
 msgid "To use this feature, please install and activate the WooCommerce plugin."
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:2862
+#: includes/class-wpzoom-instagram-widget-settings.php:2963
 msgid "Get WooCommerce"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:2874
+#: includes/class-wpzoom-instagram-widget-settings.php:2975
 msgid "Preview"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:2876
+#: includes/class-wpzoom-instagram-widget-settings.php:2977
 msgid "Fetch latest posts from Instagram"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:2878
+#: includes/class-wpzoom-instagram-widget-settings.php:2979
 msgid "Load latest"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:2917
+#: includes/class-wpzoom-instagram-widget-settings.php:3018
 msgid "Show posts from this account:"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:2963
+#: includes/class-wpzoom-instagram-widget-settings.php:3064
 msgid "Or add another account&hellip;"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:2968
+#: includes/class-wpzoom-instagram-widget-settings.php:3069
 msgid "Add New Account"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:3071
+#: includes/class-wpzoom-instagram-widget-settings.php:3172
 msgid "Error rendering preview!"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:3087
-#: includes/class-wpzoom-instagram-widget-settings.php:4472
+#: includes/class-wpzoom-instagram-widget-settings.php:3188
+#: includes/class-wpzoom-instagram-widget-settings.php:4573
 #, php-format
 msgid "Instagram Widget <small>by <a href=\"%s\" target=\"_blank\" title=\"WPZOOM - WordPress themes with modern features and professional support\">WPZOOM</a></small>"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:3105
+#: includes/class-wpzoom-instagram-widget-settings.php:3206
 msgid "Accounts"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:3113
-#: includes/class-wpzoom-instagram-widget-settings.php:3152
-#: includes/class-wpzoom-instagram-widget-settings.php:4048
-#: includes/class-wpzoom-instagram-widget-settings.php:4049
+#: includes/class-wpzoom-instagram-widget-settings.php:3214
+#: includes/class-wpzoom-instagram-widget-settings.php:3253
+#: includes/class-wpzoom-instagram-widget-settings.php:4149
+#: includes/class-wpzoom-instagram-widget-settings.php:4150
 msgid "Support"
 msgstr ""
 
 #. translators: %1$s = possible class attribute, %2$s = page url, %3$s = page name.
-#: includes/class-wpzoom-instagram-widget-settings.php:3122
+#: includes/class-wpzoom-instagram-widget-settings.php:3223
 #, php-format
 msgctxt "Main menu page item"
 msgid "<li%1$s><a href=\"%2$s\">%3$s</a></li>"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:3145
+#: includes/class-wpzoom-instagram-widget-settings.php:3246
 msgid "WPZOOM - WordPress themes with modern features and professional support"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:3149
+#: includes/class-wpzoom-instagram-widget-settings.php:3250
 msgid "Get the PRO version"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:3150
+#: includes/class-wpzoom-instagram-widget-settings.php:3251
 msgid "Check out our themes"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:3150
+#: includes/class-wpzoom-instagram-widget-settings.php:3251
 msgid "Themes"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:3151
+#: includes/class-wpzoom-instagram-widget-settings.php:3252
 msgid "See the latest updates on our blog"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:3151
+#: includes/class-wpzoom-instagram-widget-settings.php:3252
 msgid "Blog"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:3152
+#: includes/class-wpzoom-instagram-widget-settings.php:3253
 msgid "Get support"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:3160
+#: includes/class-wpzoom-instagram-widget-settings.php:3261
 msgid "Connection failed - action required!"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:3161
-#: includes/class-wpzoom-instagram-widget-settings.php:3185
-#: includes/class-wpzoom-instagram-widget-settings.php:3203
-#: includes/class-wpzoom-instagram-widget-settings.php:4718
+#: includes/class-wpzoom-instagram-widget-settings.php:3262
+#: includes/class-wpzoom-instagram-widget-settings.php:3286
+#: includes/class-wpzoom-instagram-widget-settings.php:3304
+#: includes/class-wpzoom-instagram-widget-settings.php:4819
 msgid "Close"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:3175
-#: includes/class-wpzoom-instagram-widget-settings.php:3193
+#: includes/class-wpzoom-instagram-widget-settings.php:3276
+#: includes/class-wpzoom-instagram-widget-settings.php:3294
 msgid "OK"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:3184
-#: includes/class-wpzoom-instagram-widget-settings.php:4680
+#: includes/class-wpzoom-instagram-widget-settings.php:3285
+#: includes/class-wpzoom-instagram-widget-settings.php:4781
 msgid "You&rsquo;ve successfully connected your account!"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:3189
-#: includes/class-wpzoom-instagram-widget-settings.php:4681
+#: includes/class-wpzoom-instagram-widget-settings.php:3290
+#: includes/class-wpzoom-instagram-widget-settings.php:4782
 msgid "Your account is now connected. You can now add a feed and customize it on the next screens."
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:3202
+#: includes/class-wpzoom-instagram-widget-settings.php:3303
 msgid "Please select the account you want to connect"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:3214
+#: includes/class-wpzoom-instagram-widget-settings.php:3315
 msgid "If your account is not shown here, make sure it's connected to a Facebook Page and reconnect. <a href=\"https://help.instagram.com/570895513091465?helpref=faq_content\" target=\"_blank\">View instructions</a>"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:3216
+#: includes/class-wpzoom-instagram-widget-settings.php:3317
 msgid "Connect"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:3234
+#: includes/class-wpzoom-instagram-widget-settings.php:3335
 msgid "Add new feed"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:3240
+#: includes/class-wpzoom-instagram-widget-settings.php:3341
 msgid "Connect a new Instagram account"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:3260
+#: includes/class-wpzoom-instagram-widget-settings.php:3361
 msgid "Manage Feeds"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4058
-#: includes/class-wpzoom-instagram-widget-settings.php:4059
+#: includes/class-wpzoom-instagram-widget-settings.php:4159
+#: includes/class-wpzoom-instagram-widget-settings.php:4160
 msgid "Connect Account"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4069
-#: includes/class-wpzoom-instagram-widget-settings.php:4070
+#: includes/class-wpzoom-instagram-widget-settings.php:4170
+#: includes/class-wpzoom-instagram-widget-settings.php:4171
 msgid "Upgrade to Pro &rarr;"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4094
+#: includes/class-wpzoom-instagram-widget-settings.php:4195
 msgid "User Details (optional)"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4101
+#: includes/class-wpzoom-instagram-widget-settings.php:4202
 msgid "Profile Picture"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4109
+#: includes/class-wpzoom-instagram-widget-settings.php:4210
 msgid "Your Name"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4125
+#: includes/class-wpzoom-instagram-widget-settings.php:4226
 msgid "Request Type"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4189
-#: includes/class-wpzoom-instagram-widget-settings.php:4198
+#: includes/class-wpzoom-instagram-widget-settings.php:4290
+#: includes/class-wpzoom-instagram-widget-settings.php:4299
 msgid "Request timeout in seconds"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4221
+#: includes/class-wpzoom-instagram-widget-settings.php:4322
 msgid "Using this method, you will be prompted to authorize the plugin to access your Instagram photos. The widget will automatically display the latest photos of the account which was authorized on this page."
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4222
+#: includes/class-wpzoom-instagram-widget-settings.php:4323
 msgid "Access tokens are valid for <u>60 days</u>. If the widget stops working, please generate a new Access Token below."
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4228
-#: includes/class-wpzoom-instagram-widget-settings.php:4531
+#: includes/class-wpzoom-instagram-widget-settings.php:4329
+#: includes/class-wpzoom-instagram-widget-settings.php:4632
 msgid "Connect with Instagram"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4230
+#: includes/class-wpzoom-instagram-widget-settings.php:4331
 msgid "Reconnect with Instagram"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4289
+#: includes/class-wpzoom-instagram-widget-settings.php:4390
 msgid "The default timeout to get your Instagram feed is 15 seconds, but on some servers, this might not be enough time. Enter a higher value like 30 (seconds) and save changes to see if there is a difference."
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4304
+#: includes/class-wpzoom-instagram-widget-settings.php:4405
 #, php-format
 msgid "The Instagram Access Token is a long string of characters unique to your account that grants other applications access to your Instagram feed. You can also get it manually from <a href=\"%1$s\">here</a>."
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4317
+#: includes/class-wpzoom-instagram-widget-settings.php:4418
 msgid "<strong style=\"color:#e44;\">This method is no longer supported by Instagram and it will be soon deprecated.</strong>"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4318
+#: includes/class-wpzoom-instagram-widget-settings.php:4419
 msgid "Using this method, a public feed, limited to <strong>12 photos</strong>, will be displayed in the widget.<br/>This option is useful if you want to display the feed of an Instagram account which you don't own or you have troubles getting your Access Token."
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4326
+#: includes/class-wpzoom-instagram-widget-settings.php:4427
 msgid "Below you can add additional details which you can display in the header of the Instagram Widget."
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4341
+#: includes/class-wpzoom-instagram-widget-settings.php:4442
 msgid "The username entered here will be used in the Instagram feed, unless a different username will be entered in the widget settings."
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4365
+#: includes/class-wpzoom-instagram-widget-settings.php:4466
 msgid "With Access Token (Instagram API)"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4376
+#: includes/class-wpzoom-instagram-widget-settings.php:4477
 msgid "Public Feed (12 photos)"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4403
-#: includes/class-wpzoom-instagram-widget-settings.php:4407
+#: includes/class-wpzoom-instagram-widget-settings.php:4504
+#: includes/class-wpzoom-instagram-widget-settings.php:4508
 msgid "Upload a picture"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4404
+#: includes/class-wpzoom-instagram-widget-settings.php:4505
 msgid "Replace Profile Picture"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4410
+#: includes/class-wpzoom-instagram-widget-settings.php:4511
 msgid "Remove Profile Picture"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4478
+#: includes/class-wpzoom-instagram-widget-settings.php:4579
 msgid "Connect your account"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4482
+#: includes/class-wpzoom-instagram-widget-settings.php:4583
 msgid "Let&rsquo;s connect your Instagram account"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4483
+#: includes/class-wpzoom-instagram-widget-settings.php:4584
 msgid "Are you connecting via Facebook Page or Instagram?"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4489
+#: includes/class-wpzoom-instagram-widget-settings.php:4590
 msgid "Connect via Facebook Page"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4489
+#: includes/class-wpzoom-instagram-widget-settings.php:4590
 msgid "Recommended"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4492
-#: includes/class-wpzoom-instagram-widget-settings.php:4514
+#: includes/class-wpzoom-instagram-widget-settings.php:4593
+#: includes/class-wpzoom-instagram-widget-settings.php:4615
 msgid "Works with Instagram Creator or Business accounts "
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4493
-#: includes/class-wpzoom-instagram-widget-settings.php:4515
+#: includes/class-wpzoom-instagram-widget-settings.php:4594
+#: includes/class-wpzoom-instagram-widget-settings.php:4616
 msgid "Show posts from your account"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4494
-#: includes/class-wpzoom-instagram-widget-settings.php:4516
+#: includes/class-wpzoom-instagram-widget-settings.php:4595
+#: includes/class-wpzoom-instagram-widget-settings.php:4617
 msgid "Display user info in the header"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4495
-#: includes/class-wpzoom-instagram-widget-settings.php:4518
+#: includes/class-wpzoom-instagram-widget-settings.php:4596
+#: includes/class-wpzoom-instagram-widget-settings.php:4619
 msgid "[PRO] Display Follower Count"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4496
-#: includes/class-wpzoom-instagram-widget-settings.php:4519
+#: includes/class-wpzoom-instagram-widget-settings.php:4597
+#: includes/class-wpzoom-instagram-widget-settings.php:4620
 msgid "[PRO] Display Instagram Stories"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4497
-#: includes/class-wpzoom-instagram-widget-settings.php:4520
+#: includes/class-wpzoom-instagram-widget-settings.php:4598
+#: includes/class-wpzoom-instagram-widget-settings.php:4621
 msgid "[PRO] Instagram Insights & Analytics"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4498
+#: includes/class-wpzoom-instagram-widget-settings.php:4599
 msgid "Display hashtag feeds <small><em>Coming Soon</em></small>"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4499
+#: includes/class-wpzoom-instagram-widget-settings.php:4600
 msgid "Display feeds with your mention <small><em>Coming Soon</em></small>"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4505
+#: includes/class-wpzoom-instagram-widget-settings.php:4606
 msgid "Connect with Facebook"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4511
+#: includes/class-wpzoom-instagram-widget-settings.php:4612
 msgid "Connect via Instagram"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4517
+#: includes/class-wpzoom-instagram-widget-settings.php:4618
 msgid "Does not require a Facebook page"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4523
+#: includes/class-wpzoom-instagram-widget-settings.php:4624
 msgid "If the connection fails, please generate a new API token manually and enter it in the field Instagram API Access Token at the bottom of this page."
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4537
+#: includes/class-wpzoom-instagram-widget-settings.php:4638
 msgid "Connect with API Access Token"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4539
+#: includes/class-wpzoom-instagram-widget-settings.php:4640
 msgid "Using this method, you can connect the Instagram accounts of your clients without having their passwords. Just ask your client to generate an access token using the links below each method:"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4544
+#: includes/class-wpzoom-instagram-widget-settings.php:4645
 msgid "Facebook API Access Token"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4546
+#: includes/class-wpzoom-instagram-widget-settings.php:4647
 msgid "Generate Access Token via Facebook"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4550
+#: includes/class-wpzoom-instagram-widget-settings.php:4651
 msgid "Enter your Facebook access token"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4563
+#: includes/class-wpzoom-instagram-widget-settings.php:4664
 msgid "Instagram API Access Token"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4565
+#: includes/class-wpzoom-instagram-widget-settings.php:4666
 msgid "Generate Access Token via Instagram"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4569
+#: includes/class-wpzoom-instagram-widget-settings.php:4670
 msgid "Enter your Business Instagram access token"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4597
+#: includes/class-wpzoom-instagram-widget-settings.php:4698
 msgid "Due to API limitations, you can no longer connect <strong>Personal Instagram</strong> accounts. The new Facebook/Instagram API supports only <strong>Creator and Business</strong> accounts."
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4615
+#: includes/class-wpzoom-instagram-widget-settings.php:4716
 msgid "Need assistance?"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4618
+#: includes/class-wpzoom-instagram-widget-settings.php:4719
 msgid "Need help setting up your Instagram feeds or have a question? Get in touch with our Support Team.<br/> We’d love the opportunity to help you."
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4620
+#: includes/class-wpzoom-instagram-widget-settings.php:4721
 msgid "Documentation"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4621
+#: includes/class-wpzoom-instagram-widget-settings.php:4722
 msgid "Open Support Desk"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4631
+#: includes/class-wpzoom-instagram-widget-settings.php:4732
 #, php-format
 msgid "<strong>WPZOOM Instagram:</strong> v%s&ensp;|&ensp;<strong>WordPress:</strong> %s"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4633
+#: includes/class-wpzoom-instagram-widget-settings.php:4734
 msgid "Version "
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4633
+#: includes/class-wpzoom-instagram-widget-settings.php:4734
 msgid "v"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4644
+#: includes/class-wpzoom-instagram-widget-settings.php:4745
 #, php-format
 msgid ", and using the <a href=\"%s\" target=\"_blank\">Instagram Widget by WPZOOM</a>.</span>"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4679
+#: includes/class-wpzoom-instagram-widget-settings.php:4780
 msgid ""
 "Instagram Widget is already connected to Instagram.\r\n"
 "\r\n"
 "Do you want to connect again?"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4682
+#: includes/class-wpzoom-instagram-widget-settings.php:4783
 msgid "You&rsquo;ve successfully reconnected your account!"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4683
+#: includes/class-wpzoom-instagram-widget-settings.php:4784
 msgid "Your account is now reconnected."
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4684
+#: includes/class-wpzoom-instagram-widget-settings.php:4785
 msgid "Shortcode copied!"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4685
+#: includes/class-wpzoom-instagram-widget-settings.php:4786
 msgid "The shortcode for the selected feed was copied to your clipboard."
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4686
+#: includes/class-wpzoom-instagram-widget-settings.php:4787
 msgid "Your account could not be connected!"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4687
+#: includes/class-wpzoom-instagram-widget-settings.php:4788
 msgid "There was a problem connecting your account. Please try again!"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4688
+#: includes/class-wpzoom-instagram-widget-settings.php:4789
 msgid "Shortcode not copied!"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4689
+#: includes/class-wpzoom-instagram-widget-settings.php:4790
 msgid "There was a problem copying the shortcode for the selected feed to your clipboard. Please try again."
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4690
+#: includes/class-wpzoom-instagram-widget-settings.php:4791
 msgid "Confirm Delete User"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4691
+#: includes/class-wpzoom-instagram-widget-settings.php:4792
 msgid "Are you sure you want to delete this user? <strong class=\"severe\">This action cannot be undone!</strong>"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4692
+#: includes/class-wpzoom-instagram-widget-settings.php:4793
 msgid "Confirm Delete Feed"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4693
+#: includes/class-wpzoom-instagram-widget-settings.php:4794
 msgid "Are you sure you want to delete this feed? <strong class=\"severe\">This action cannot be undone!</strong>"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4694
+#: includes/class-wpzoom-instagram-widget-settings.php:4795
 msgid "Yes"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4695
+#: includes/class-wpzoom-instagram-widget-settings.php:4796
 msgid "No"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4708
+#: includes/class-wpzoom-instagram-widget-settings.php:4809
 msgid "Link to Product"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4709
+#: includes/class-wpzoom-instagram-widget-settings.php:4810
 msgid "Search products..."
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4710
+#: includes/class-wpzoom-instagram-widget-settings.php:4811
 msgid "Select one or more products. Click an item to toggle selection."
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4711
+#: includes/class-wpzoom-instagram-widget-settings.php:4812
 msgid "Remove Link"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4712
+#: includes/class-wpzoom-instagram-widget-settings.php:4813
 msgid "Remove tag position"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4715
+#: includes/class-wpzoom-instagram-widget-settings.php:4816
 msgid "Unlock Product Links"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4716
+#: includes/class-wpzoom-instagram-widget-settings.php:4817
 msgid "Link your Instagram posts to WooCommerce products and display the product details or a Buy now button. This feature is available with an active Instagram Widget PRO license."
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4717
+#: includes/class-wpzoom-instagram-widget-settings.php:4818
 msgid "Get PRO License"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4743
+#: includes/class-wpzoom-instagram-widget-settings.php:4844
 #, php-format
 msgid " (%s x %s)"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4758
+#: includes/class-wpzoom-instagram-widget-settings.php:4859
 msgid "Provided Access Token expired. Please connect the plugin with your Instagram account again."
 msgstr ""
 
@@ -2520,34 +2590,43 @@ msgstr ""
 msgid "You have to generate Instagram Access Token to allow widget to display your media."
 msgstr ""
 
+#. translators: %s: error message describing the problem
+#: dist/scripts/backend/block.js:4
 #: src/scripts/backend/block.js:66
 msgid "(No title)"
 msgstr ""
 
-#: src/scripts/backend/block.js:81
-msgid "You must create some feeds to use this block properly."
-msgstr ""
-
+#: dist/scripts/backend/block.js:4
 #: src/scripts/backend/block.js:92
 msgid "Feed settings"
 msgstr ""
 
+#: dist/scripts/backend/block.js:4
 #: src/scripts/backend/block.js:94
 msgid "Feed to Display"
 msgstr ""
 
+#: dist/scripts/backend/block.js:4
 #: src/scripts/backend/block.js:98
 msgid "— Select a Feed —"
 msgstr ""
 
+#: dist/scripts/backend/block.js:4
 #: src/scripts/backend/block.js:119
 msgid "Instagram: No feed to show."
 msgstr ""
 
+#: dist/scripts/backend/block.js:4
 #: src/scripts/backend/block.js:129
 msgid "Instagram Feed by WPZOOM"
 msgstr ""
 
+#: dist/scripts/backend/block.js:4
 #: src/scripts/backend/block.js:138
 msgid "— Select a Feed to Display —"
+msgstr ""
+
+#: dist/scripts/backend/block.js:4
+#: src/scripts/backend/block.js:81
+msgid "You must create some feeds to use this block properly."
 msgstr ""
