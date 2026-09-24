@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-09-24T06:35:25+00:00\n"
+"POT-Creation-Date: 2026-09-24T06:37:05+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: instagram-widget-by-wpzoom\n"
@@ -123,112 +123,144 @@ msgstr ""
 msgid "[%s] Action Required: Your Instagram Access Token expired or is about to expire!"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-general-settings.php:54
-#: includes/class-wpzoom-instagram-general-settings.php:294
+#: includes/class-wpzoom-instagram-general-settings.php:55
+#: includes/class-wpzoom-instagram-general-settings.php:381
+#: includes/class-wpzoom-instagram-general-settings.php:404
 msgid "You do not have enough permission to view this page"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-general-settings.php:100
+#: includes/class-wpzoom-instagram-general-settings.php:101
 msgid "Load CSS and JS on all pages"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-general-settings.php:107
+#: includes/class-wpzoom-instagram-general-settings.php:108
 msgid "Enable Insecure API Requests"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-general-settings.php:114
+#: includes/class-wpzoom-instagram-general-settings.php:115
 msgid "Delete All Images"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-general-settings.php:127
+#: includes/class-wpzoom-instagram-general-settings.php:128
+msgid "Store cached images as WebP"
+msgstr ""
+
+#: includes/class-wpzoom-instagram-general-settings.php:135
+msgid "Regenerate cached images"
+msgstr ""
+
+#: includes/class-wpzoom-instagram-general-settings.php:148
 msgid "Notify if Access Token is about to expire"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-general-settings.php:134
+#: includes/class-wpzoom-instagram-general-settings.php:155
 msgid "Email Period"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-general-settings.php:149
+#: includes/class-wpzoom-instagram-general-settings.php:170
 msgid "Global Settings"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-general-settings.php:174
+#: includes/class-wpzoom-instagram-general-settings.php:195
 msgid "The plugin loads the CSS/JS assets only if an Instagram block, widget or shortcode is detected on a page. </br>If this doesn't happen, enable this option to load the assets on all pages."
 msgstr ""
 
-#: includes/class-wpzoom-instagram-general-settings.php:193
+#: includes/class-wpzoom-instagram-general-settings.php:214
 msgid "Allows insecure requests to the Instagram API. Normally this should be disabled, but it may be required for the plugin to work, </br>depending on the server configuration."
 msgstr ""
 
-#: includes/class-wpzoom-instagram-general-settings.php:193
+#: includes/class-wpzoom-instagram-general-settings.php:214
 msgid "<strong>Warning!</strong> Enable only if you know what you&rsquo;re doing."
 msgstr ""
 
-#: includes/class-wpzoom-instagram-general-settings.php:207
+#: includes/class-wpzoom-instagram-general-settings.php:228
 msgid "Email Notifications"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-general-settings.php:229
+#: includes/class-wpzoom-instagram-general-settings.php:250
 msgid "An email will be sent before the Access Token expires"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-general-settings.php:247
+#: includes/class-wpzoom-instagram-general-settings.php:268
 msgid "1 Day"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-general-settings.php:248
+#: includes/class-wpzoom-instagram-general-settings.php:269
 msgid "3 Days"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-general-settings.php:249
+#: includes/class-wpzoom-instagram-general-settings.php:270
 msgid "5 Days"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-general-settings.php:250
+#: includes/class-wpzoom-instagram-general-settings.php:271
 msgid "10 Days"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-general-settings.php:267
+#: includes/class-wpzoom-instagram-general-settings.php:288
 msgid "When should this email be sent?"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-general-settings.php:280
+#: includes/class-wpzoom-instagram-general-settings.php:301
 msgid "Delete all Instagram Images from the Media Library"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-general-settings.php:282
+#: includes/class-wpzoom-instagram-general-settings.php:303
 msgid "You can use this option to free up space on your server from images saved from your Instagram accounts. Other images from your Media Library will not be deleted."
 msgstr ""
 
-#: includes/class-wpzoom-instagram-general-settings.php:299
-msgid "This is not an AJAX request"
+#: includes/class-wpzoom-instagram-general-settings.php:317
+msgid "Cached Images"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-general-settings.php:304
-msgid "This is not a POST request"
+#: includes/class-wpzoom-instagram-general-settings.php:340
+msgid "Saves the feed sizes of images downloaded from Instagram as WebP instead of JPEG — typically 30–45% smaller, so feeds load faster. Only affects images cached by this plugin; the rest of your Media Library and the downloaded originals are left untouched."
 msgstr ""
 
-#: includes/class-wpzoom-instagram-general-settings.php:309
+#: includes/class-wpzoom-instagram-general-settings.php:344
+msgid "Your server&rsquo;s image library (GD/Imagick) cannot create WebP files, so this option is unavailable."
+msgstr ""
+
+#: includes/class-wpzoom-instagram-general-settings.php:358
+msgid "Regenerate Cached Images"
+msgstr ""
+
+#. translators: %d: number of cached Instagram images
+#: includes/class-wpzoom-instagram-general-settings.php:364
+#, php-format
+msgid "Rebuilds the feed sizes of the %d images already cached from Instagram in the format selected above (save the setting first). New images follow the setting automatically; run this once after changing it."
+msgstr ""
+
+#: includes/class-wpzoom-instagram-general-settings.php:384
+#: includes/class-wpzoom-instagram-general-settings.php:419
 msgid "Invalid nonce"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-general-settings.php:351
+#: includes/class-wpzoom-instagram-general-settings.php:409
+msgid "This is not an AJAX request"
+msgstr ""
+
+#: includes/class-wpzoom-instagram-general-settings.php:414
+msgid "This is not a POST request"
+msgstr ""
+
+#: includes/class-wpzoom-instagram-general-settings.php:461
 msgid "All images have been removed"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-image-uploader.php:132
+#: includes/class-wpzoom-instagram-image-uploader.php:138
 msgid "Invalid nonce."
 msgstr ""
 
-#: includes/class-wpzoom-instagram-image-uploader.php:132
+#: includes/class-wpzoom-instagram-image-uploader.php:138
 msgid "Invalid nonce provided for this action"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-image-uploader.php:140
+#: includes/class-wpzoom-instagram-image-uploader.php:146
 msgid "Invalid media id."
 msgstr ""
 
-#: includes/class-wpzoom-instagram-image-uploader.php:140
+#: includes/class-wpzoom-instagram-image-uploader.php:146
 msgid "Could not retrieve image url with provided media id"
 msgstr ""
 
@@ -1159,7 +1191,7 @@ msgid "Actions"
 msgstr ""
 
 #: includes/class-wpzoom-instagram-widget-settings.php:1014
-#: includes/class-wpzoom-instagram-widget-settings.php:4265
+#: includes/class-wpzoom-instagram-widget-settings.php:4293
 msgid "Username"
 msgstr ""
 
@@ -1173,13 +1205,13 @@ msgstr ""
 
 #: includes/class-wpzoom-instagram-widget-settings.php:1017
 #: includes/class-wpzoom-instagram-widget-settings.php:1199
-#: includes/class-wpzoom-instagram-widget-settings.php:4218
+#: includes/class-wpzoom-instagram-widget-settings.php:4246
 msgid "Bio"
 msgstr ""
 
 #: includes/class-wpzoom-instagram-widget-settings.php:1018
 #: includes/class-wpzoom-instagram-widget-settings.php:1231
-#: includes/class-wpzoom-instagram-widget-settings.php:4247
+#: includes/class-wpzoom-instagram-widget-settings.php:4275
 msgid "Access Token"
 msgstr ""
 
@@ -1253,8 +1285,8 @@ msgid "If the connection fails, please generate a new API token <br/> and enter 
 msgstr ""
 
 #: includes/class-wpzoom-instagram-widget-settings.php:1224
-#: includes/class-wpzoom-instagram-widget-settings.php:4655
-#: includes/class-wpzoom-instagram-widget-settings.php:4678
+#: includes/class-wpzoom-instagram-widget-settings.php:4683
+#: includes/class-wpzoom-instagram-widget-settings.php:4706
 msgid "Connect with Access Token"
 msgstr ""
 
@@ -1345,12 +1377,12 @@ msgstr ""
 #: includes/class-wpzoom-instagram-widget-settings.php:3277
 #: includes/class-wpzoom-instagram-widget-settings.php:3295
 #: includes/class-wpzoom-instagram-widget-settings.php:3318
-#: includes/class-wpzoom-instagram-widget-settings.php:4815
+#: includes/class-wpzoom-instagram-widget-settings.php:4843
 msgid "Cancel"
 msgstr ""
 
 #: includes/class-wpzoom-instagram-widget-settings.php:1639
-#: includes/class-wpzoom-instagram-widget-settings.php:4814
+#: includes/class-wpzoom-instagram-widget-settings.php:4842
 msgid "Save"
 msgstr ""
 
@@ -1394,22 +1426,22 @@ msgid "Combine posts from multiple Instagram accounts into a single feed."
 msgstr ""
 
 #: includes/class-wpzoom-instagram-widget-settings.php:1986
-#: includes/class-wpzoom-instagram-widget-settings.php:4274
+#: includes/class-wpzoom-instagram-widget-settings.php:4302
 msgid "Check for new posts every"
 msgstr ""
 
 #: includes/class-wpzoom-instagram-widget-settings.php:1992
-#: includes/class-wpzoom-instagram-widget-settings.php:4358
+#: includes/class-wpzoom-instagram-widget-settings.php:4386
 msgid "Minutes"
 msgstr ""
 
 #: includes/class-wpzoom-instagram-widget-settings.php:1993
-#: includes/class-wpzoom-instagram-widget-settings.php:4354
+#: includes/class-wpzoom-instagram-widget-settings.php:4382
 msgid "Hours"
 msgstr ""
 
 #: includes/class-wpzoom-instagram-widget-settings.php:1994
-#: includes/class-wpzoom-instagram-widget-settings.php:4356
+#: includes/class-wpzoom-instagram-widget-settings.php:4384
 msgid "Days"
 msgstr ""
 
@@ -1422,7 +1454,7 @@ msgid "Months"
 msgstr ""
 
 #: includes/class-wpzoom-instagram-widget-settings.php:2005
-#: includes/class-wpzoom-instagram-widget-settings.php:4282
+#: includes/class-wpzoom-instagram-widget-settings.php:4310
 msgid "Enable request timeout"
 msgstr ""
 
@@ -1857,8 +1889,8 @@ msgstr ""
 
 #: includes/class-wpzoom-instagram-widget-settings.php:2724
 #: includes/class-wpzoom-instagram-widget-settings.php:3210
-#: includes/class-wpzoom-instagram-widget-settings.php:4140
-#: includes/class-wpzoom-instagram-widget-settings.php:4141
+#: includes/class-wpzoom-instagram-widget-settings.php:4168
+#: includes/class-wpzoom-instagram-widget-settings.php:4169
 msgid "Settings"
 msgstr ""
 
@@ -2020,7 +2052,7 @@ msgid "Error rendering preview!"
 msgstr ""
 
 #: includes/class-wpzoom-instagram-widget-settings.php:3188
-#: includes/class-wpzoom-instagram-widget-settings.php:4573
+#: includes/class-wpzoom-instagram-widget-settings.php:4601
 #, php-format
 msgid "Instagram Widget <small>by <a href=\"%s\" target=\"_blank\" title=\"WPZOOM - WordPress themes with modern features and professional support\">WPZOOM</a></small>"
 msgstr ""
@@ -2031,8 +2063,8 @@ msgstr ""
 
 #: includes/class-wpzoom-instagram-widget-settings.php:3214
 #: includes/class-wpzoom-instagram-widget-settings.php:3253
-#: includes/class-wpzoom-instagram-widget-settings.php:4149
-#: includes/class-wpzoom-instagram-widget-settings.php:4150
+#: includes/class-wpzoom-instagram-widget-settings.php:4177
+#: includes/class-wpzoom-instagram-widget-settings.php:4178
 msgid "Support"
 msgstr ""
 
@@ -2078,7 +2110,7 @@ msgstr ""
 #: includes/class-wpzoom-instagram-widget-settings.php:3262
 #: includes/class-wpzoom-instagram-widget-settings.php:3286
 #: includes/class-wpzoom-instagram-widget-settings.php:3304
-#: includes/class-wpzoom-instagram-widget-settings.php:4819
+#: includes/class-wpzoom-instagram-widget-settings.php:4847
 msgid "Close"
 msgstr ""
 
@@ -2088,12 +2120,12 @@ msgid "OK"
 msgstr ""
 
 #: includes/class-wpzoom-instagram-widget-settings.php:3285
-#: includes/class-wpzoom-instagram-widget-settings.php:4781
+#: includes/class-wpzoom-instagram-widget-settings.php:4809
 msgid "You&rsquo;ve successfully connected your account!"
 msgstr ""
 
 #: includes/class-wpzoom-instagram-widget-settings.php:3290
-#: includes/class-wpzoom-instagram-widget-settings.php:4782
+#: includes/class-wpzoom-instagram-widget-settings.php:4810
 msgid "Your account is now connected. You can now add a feed and customize it on the next screens."
 msgstr ""
 
@@ -2121,345 +2153,345 @@ msgstr ""
 msgid "Manage Feeds"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4159
-#: includes/class-wpzoom-instagram-widget-settings.php:4160
+#: includes/class-wpzoom-instagram-widget-settings.php:4187
+#: includes/class-wpzoom-instagram-widget-settings.php:4188
 msgid "Connect Account"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4170
-#: includes/class-wpzoom-instagram-widget-settings.php:4171
+#: includes/class-wpzoom-instagram-widget-settings.php:4198
+#: includes/class-wpzoom-instagram-widget-settings.php:4199
 msgid "Upgrade to Pro &rarr;"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4195
+#: includes/class-wpzoom-instagram-widget-settings.php:4223
 msgid "User Details (optional)"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4202
+#: includes/class-wpzoom-instagram-widget-settings.php:4230
 msgid "Profile Picture"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4210
+#: includes/class-wpzoom-instagram-widget-settings.php:4238
 msgid "Your Name"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4226
+#: includes/class-wpzoom-instagram-widget-settings.php:4254
 msgid "Request Type"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4290
-#: includes/class-wpzoom-instagram-widget-settings.php:4299
+#: includes/class-wpzoom-instagram-widget-settings.php:4318
+#: includes/class-wpzoom-instagram-widget-settings.php:4327
 msgid "Request timeout in seconds"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4322
+#: includes/class-wpzoom-instagram-widget-settings.php:4350
 msgid "Using this method, you will be prompted to authorize the plugin to access your Instagram photos. The widget will automatically display the latest photos of the account which was authorized on this page."
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4323
+#: includes/class-wpzoom-instagram-widget-settings.php:4351
 msgid "Access tokens are valid for <u>60 days</u>. If the widget stops working, please generate a new Access Token below."
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4329
-#: includes/class-wpzoom-instagram-widget-settings.php:4632
+#: includes/class-wpzoom-instagram-widget-settings.php:4357
+#: includes/class-wpzoom-instagram-widget-settings.php:4660
 msgid "Connect with Instagram"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4331
+#: includes/class-wpzoom-instagram-widget-settings.php:4359
 msgid "Reconnect with Instagram"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4390
+#: includes/class-wpzoom-instagram-widget-settings.php:4418
 msgid "The default timeout to get your Instagram feed is 15 seconds, but on some servers, this might not be enough time. Enter a higher value like 30 (seconds) and save changes to see if there is a difference."
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4405
+#: includes/class-wpzoom-instagram-widget-settings.php:4433
 #, php-format
 msgid "The Instagram Access Token is a long string of characters unique to your account that grants other applications access to your Instagram feed. You can also get it manually from <a href=\"%1$s\">here</a>."
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4418
+#: includes/class-wpzoom-instagram-widget-settings.php:4446
 msgid "<strong style=\"color:#e44;\">This method is no longer supported by Instagram and it will be soon deprecated.</strong>"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4419
+#: includes/class-wpzoom-instagram-widget-settings.php:4447
 msgid "Using this method, a public feed, limited to <strong>12 photos</strong>, will be displayed in the widget.<br/>This option is useful if you want to display the feed of an Instagram account which you don't own or you have troubles getting your Access Token."
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4427
+#: includes/class-wpzoom-instagram-widget-settings.php:4455
 msgid "Below you can add additional details which you can display in the header of the Instagram Widget."
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4442
+#: includes/class-wpzoom-instagram-widget-settings.php:4470
 msgid "The username entered here will be used in the Instagram feed, unless a different username will be entered in the widget settings."
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4466
+#: includes/class-wpzoom-instagram-widget-settings.php:4494
 msgid "With Access Token (Instagram API)"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4477
+#: includes/class-wpzoom-instagram-widget-settings.php:4505
 msgid "Public Feed (12 photos)"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4504
-#: includes/class-wpzoom-instagram-widget-settings.php:4508
+#: includes/class-wpzoom-instagram-widget-settings.php:4532
+#: includes/class-wpzoom-instagram-widget-settings.php:4536
 msgid "Upload a picture"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4505
+#: includes/class-wpzoom-instagram-widget-settings.php:4533
 msgid "Replace Profile Picture"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4511
+#: includes/class-wpzoom-instagram-widget-settings.php:4539
 msgid "Remove Profile Picture"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4579
+#: includes/class-wpzoom-instagram-widget-settings.php:4607
 msgid "Connect your account"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4583
+#: includes/class-wpzoom-instagram-widget-settings.php:4611
 msgid "Let&rsquo;s connect your Instagram account"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4584
+#: includes/class-wpzoom-instagram-widget-settings.php:4612
 msgid "Are you connecting via Facebook Page or Instagram?"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4590
+#: includes/class-wpzoom-instagram-widget-settings.php:4618
 msgid "Connect via Facebook Page"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4590
+#: includes/class-wpzoom-instagram-widget-settings.php:4618
 msgid "Recommended"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4593
-#: includes/class-wpzoom-instagram-widget-settings.php:4615
+#: includes/class-wpzoom-instagram-widget-settings.php:4621
+#: includes/class-wpzoom-instagram-widget-settings.php:4643
 msgid "Works with Instagram Creator or Business accounts "
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4594
-#: includes/class-wpzoom-instagram-widget-settings.php:4616
+#: includes/class-wpzoom-instagram-widget-settings.php:4622
+#: includes/class-wpzoom-instagram-widget-settings.php:4644
 msgid "Show posts from your account"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4595
-#: includes/class-wpzoom-instagram-widget-settings.php:4617
+#: includes/class-wpzoom-instagram-widget-settings.php:4623
+#: includes/class-wpzoom-instagram-widget-settings.php:4645
 msgid "Display user info in the header"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4596
-#: includes/class-wpzoom-instagram-widget-settings.php:4619
+#: includes/class-wpzoom-instagram-widget-settings.php:4624
+#: includes/class-wpzoom-instagram-widget-settings.php:4647
 msgid "[PRO] Display Follower Count"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4597
-#: includes/class-wpzoom-instagram-widget-settings.php:4620
+#: includes/class-wpzoom-instagram-widget-settings.php:4625
+#: includes/class-wpzoom-instagram-widget-settings.php:4648
 msgid "[PRO] Display Instagram Stories"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4598
-#: includes/class-wpzoom-instagram-widget-settings.php:4621
+#: includes/class-wpzoom-instagram-widget-settings.php:4626
+#: includes/class-wpzoom-instagram-widget-settings.php:4649
 msgid "[PRO] Instagram Insights & Analytics"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4599
+#: includes/class-wpzoom-instagram-widget-settings.php:4627
 msgid "Display hashtag feeds <small><em>Coming Soon</em></small>"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4600
+#: includes/class-wpzoom-instagram-widget-settings.php:4628
 msgid "Display feeds with your mention <small><em>Coming Soon</em></small>"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4606
+#: includes/class-wpzoom-instagram-widget-settings.php:4634
 msgid "Connect with Facebook"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4612
+#: includes/class-wpzoom-instagram-widget-settings.php:4640
 msgid "Connect via Instagram"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4618
+#: includes/class-wpzoom-instagram-widget-settings.php:4646
 msgid "Does not require a Facebook page"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4624
+#: includes/class-wpzoom-instagram-widget-settings.php:4652
 msgid "If the connection fails, please generate a new API token manually and enter it in the field Instagram API Access Token at the bottom of this page."
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4638
+#: includes/class-wpzoom-instagram-widget-settings.php:4666
 msgid "Connect with API Access Token"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4640
+#: includes/class-wpzoom-instagram-widget-settings.php:4668
 msgid "Using this method, you can connect the Instagram accounts of your clients without having their passwords. Just ask your client to generate an access token using the links below each method:"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4645
+#: includes/class-wpzoom-instagram-widget-settings.php:4673
 msgid "Facebook API Access Token"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4647
+#: includes/class-wpzoom-instagram-widget-settings.php:4675
 msgid "Generate Access Token via Facebook"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4651
+#: includes/class-wpzoom-instagram-widget-settings.php:4679
 msgid "Enter your Facebook access token"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4664
+#: includes/class-wpzoom-instagram-widget-settings.php:4692
 msgid "Instagram API Access Token"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4666
+#: includes/class-wpzoom-instagram-widget-settings.php:4694
 msgid "Generate Access Token via Instagram"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4670
+#: includes/class-wpzoom-instagram-widget-settings.php:4698
 msgid "Enter your Business Instagram access token"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4698
+#: includes/class-wpzoom-instagram-widget-settings.php:4726
 msgid "Due to API limitations, you can no longer connect <strong>Personal Instagram</strong> accounts. The new Facebook/Instagram API supports only <strong>Creator and Business</strong> accounts."
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4716
+#: includes/class-wpzoom-instagram-widget-settings.php:4744
 msgid "Need assistance?"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4719
+#: includes/class-wpzoom-instagram-widget-settings.php:4747
 msgid "Need help setting up your Instagram feeds or have a question? Get in touch with our Support Team.<br/> We’d love the opportunity to help you."
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4721
+#: includes/class-wpzoom-instagram-widget-settings.php:4749
 msgid "Documentation"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4722
+#: includes/class-wpzoom-instagram-widget-settings.php:4750
 msgid "Open Support Desk"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4732
+#: includes/class-wpzoom-instagram-widget-settings.php:4760
 #, php-format
 msgid "<strong>WPZOOM Instagram:</strong> v%s&ensp;|&ensp;<strong>WordPress:</strong> %s"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4734
+#: includes/class-wpzoom-instagram-widget-settings.php:4762
 msgid "Version "
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4734
+#: includes/class-wpzoom-instagram-widget-settings.php:4762
 msgid "v"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4745
+#: includes/class-wpzoom-instagram-widget-settings.php:4773
 #, php-format
 msgid ", and using the <a href=\"%s\" target=\"_blank\">Instagram Widget by WPZOOM</a>.</span>"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4780
+#: includes/class-wpzoom-instagram-widget-settings.php:4808
 msgid ""
 "Instagram Widget is already connected to Instagram.\r\n"
 "\r\n"
 "Do you want to connect again?"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4783
+#: includes/class-wpzoom-instagram-widget-settings.php:4811
 msgid "You&rsquo;ve successfully reconnected your account!"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4784
+#: includes/class-wpzoom-instagram-widget-settings.php:4812
 msgid "Your account is now reconnected."
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4785
+#: includes/class-wpzoom-instagram-widget-settings.php:4813
 msgid "Shortcode copied!"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4786
+#: includes/class-wpzoom-instagram-widget-settings.php:4814
 msgid "The shortcode for the selected feed was copied to your clipboard."
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4787
+#: includes/class-wpzoom-instagram-widget-settings.php:4815
 msgid "Your account could not be connected!"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4788
+#: includes/class-wpzoom-instagram-widget-settings.php:4816
 msgid "There was a problem connecting your account. Please try again!"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4789
+#: includes/class-wpzoom-instagram-widget-settings.php:4817
 msgid "Shortcode not copied!"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4790
+#: includes/class-wpzoom-instagram-widget-settings.php:4818
 msgid "There was a problem copying the shortcode for the selected feed to your clipboard. Please try again."
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4791
+#: includes/class-wpzoom-instagram-widget-settings.php:4819
 msgid "Confirm Delete User"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4792
+#: includes/class-wpzoom-instagram-widget-settings.php:4820
 msgid "Are you sure you want to delete this user? <strong class=\"severe\">This action cannot be undone!</strong>"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4793
+#: includes/class-wpzoom-instagram-widget-settings.php:4821
 msgid "Confirm Delete Feed"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4794
+#: includes/class-wpzoom-instagram-widget-settings.php:4822
 msgid "Are you sure you want to delete this feed? <strong class=\"severe\">This action cannot be undone!</strong>"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4795
+#: includes/class-wpzoom-instagram-widget-settings.php:4823
 msgid "Yes"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4796
+#: includes/class-wpzoom-instagram-widget-settings.php:4824
 msgid "No"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4809
+#: includes/class-wpzoom-instagram-widget-settings.php:4837
 msgid "Link to Product"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4810
+#: includes/class-wpzoom-instagram-widget-settings.php:4838
 msgid "Search products..."
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4811
+#: includes/class-wpzoom-instagram-widget-settings.php:4839
 msgid "Select one or more products. Click an item to toggle selection."
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4812
+#: includes/class-wpzoom-instagram-widget-settings.php:4840
 msgid "Remove Link"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4813
+#: includes/class-wpzoom-instagram-widget-settings.php:4841
 msgid "Remove tag position"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4816
+#: includes/class-wpzoom-instagram-widget-settings.php:4844
 msgid "Unlock Product Links"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4817
+#: includes/class-wpzoom-instagram-widget-settings.php:4845
 msgid "Link your Instagram posts to WooCommerce products and display the product details or a Buy now button. This feature is available with an active Instagram Widget PRO license."
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4818
+#: includes/class-wpzoom-instagram-widget-settings.php:4846
 msgid "Get PRO License"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4844
+#: includes/class-wpzoom-instagram-widget-settings.php:4872
 #, php-format
 msgid " (%s x %s)"
 msgstr ""
 
-#: includes/class-wpzoom-instagram-widget-settings.php:4859
+#: includes/class-wpzoom-instagram-widget-settings.php:4887
 msgid "Provided Access Token expired. Please connect the plugin with your Instagram account again."
 msgstr ""
 
@@ -2593,40 +2625,48 @@ msgstr ""
 #. translators: %s: error message describing the problem
 #: dist/scripts/backend/block.js:4
 #: src/scripts/backend/block.js:66
+#: dist/scripts/backend/block.js:393
 msgid "(No title)"
 msgstr ""
 
 #: dist/scripts/backend/block.js:4
 #: src/scripts/backend/block.js:92
+#: dist/scripts/backend/block.js:419
 msgid "Feed settings"
 msgstr ""
 
 #: dist/scripts/backend/block.js:4
 #: src/scripts/backend/block.js:94
+#: dist/scripts/backend/block.js:421
 msgid "Feed to Display"
 msgstr ""
 
 #: dist/scripts/backend/block.js:4
 #: src/scripts/backend/block.js:98
+#: dist/scripts/backend/block.js:425
 msgid "— Select a Feed —"
 msgstr ""
 
 #: dist/scripts/backend/block.js:4
 #: src/scripts/backend/block.js:119
+#: dist/scripts/backend/block.js:446
 msgid "Instagram: No feed to show."
 msgstr ""
 
 #: dist/scripts/backend/block.js:4
 #: src/scripts/backend/block.js:129
+#: dist/scripts/backend/block.js:456
 msgid "Instagram Feed by WPZOOM"
 msgstr ""
 
 #: dist/scripts/backend/block.js:4
 #: src/scripts/backend/block.js:138
+#: dist/scripts/backend/block.js:465
 msgid "— Select a Feed to Display —"
 msgstr ""
 
 #: dist/scripts/backend/block.js:4
 #: src/scripts/backend/block.js:81
+#: dist/scripts/backend/block.js:408
 msgid "You must create some feeds to use this block properly."
 msgstr ""

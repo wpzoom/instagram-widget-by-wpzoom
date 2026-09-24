@@ -40,6 +40,7 @@ class WPZOOM_Instagram_General_Settings {
 		add_action( 'admin_init', array( $this, 'option_panel_init' ) );
 
 		add_action( 'wp_ajax_wpzoom_instagram_clear_data', array( $this, 'wpzoom_instagram_clear_data' ) );
+		add_action( 'wp_ajax_wpzoom_instagram_webp_regenerate', array( $this, 'wpzoom_instagram_webp_regenerate' ) );
 	}
 	
 
@@ -115,6 +116,26 @@ class WPZOOM_Instagram_General_Settings {
 			array( $this, 'settings_field_clear_data' ),
 			'wpzoom-instagram-general-settings',
 			'wpzoom_instagram_general_settings_section'
+		);
+		add_settings_section(
+			'wpzoom_instagram_images_section',
+			'',
+			array( $this, 'section_images' ),
+			'wpzoom-instagram-general-settings'
+		);
+		add_settings_field(
+			'wpzoom_instagram_general_settings_webp_cached_images',
+			esc_html__( 'Store cached images as WebP', 'instagram-widget-by-wpzoom' ),
+			array( $this, 'settings_field_webp_cached_images' ),
+			'wpzoom-instagram-general-settings',
+			'wpzoom_instagram_images_section'
+		);
+		add_settings_field(
+			'wpzoom_instagram_general_settings_webp_regenerate',
+			esc_html__( 'Regenerate cached images', 'instagram-widget-by-wpzoom' ),
+			array( $this, 'settings_field_webp_regenerate' ),
+			'wpzoom-instagram-general-settings',
+			'wpzoom_instagram_images_section'
 		);
 		add_settings_section(
 			'wpzoom_instagram_email_notification_section',
@@ -285,6 +306,95 @@ class WPZOOM_Instagram_General_Settings {
         <hr/>
 		<?php
 		
+	}
+
+	/**
+	 * Output the Images section info
+	 *
+	 * @since 2.3.8
+	 */
+	public function section_images( $args ) {
+		echo '<h2 class="section-title">' . esc_html__( 'Cached Images', 'instagram-widget-by-wpzoom' ) . '</h2>';
+	}
+
+	/**
+	 * Checkbox: generate the cached feed image sizes as WebP.
+	 *
+	 * @since 2.3.8
+	 */
+	public function settings_field_webp_cached_images() {
+		$settings  = get_option( 'wpzoom-instagram-general-settings' );
+		$key       = WPZOOM_Instagram_Image_Uploader::WEBP_SETTING;
+		$enabled   = ! empty( $settings[ $key ] ) ? wp_validate_boolean( $settings[ $key ] ) : false;
+		$supported = WPZOOM_Instagram_Image_Uploader::webp_supported();
+		?>
+		<input class="regular-text code"
+			   id="wpzoom-instagram-widget-settings_webp-cached-images"
+			   name="wpzoom-instagram-general-settings[<?php echo esc_attr( $key ); ?>]"
+			<?php checked( true, $enabled && $supported ); ?>
+			<?php disabled( false, $supported ); ?>
+			   value="1"
+			   type="checkbox">
+
+		<p class="description">
+			<?php _e( 'Saves the feed sizes of images downloaded from Instagram as WebP instead of JPEG — typically 30–45% smaller, so feeds load faster. Only affects images cached by this plugin; the rest of your Media Library and the downloaded originals are left untouched.', 'instagram-widget-by-wpzoom' ); ?>
+		</p>
+		<?php if ( ! $supported ) : ?>
+			<p class="description" style="color:#d63638;">
+				<?php _e( 'Your server&rsquo;s image library (GD/Imagick) cannot create WebP files, so this option is unavailable.', 'instagram-widget-by-wpzoom' ); ?>
+			</p>
+		<?php endif; ?>
+		<?php
+	}
+
+	/**
+	 * Button: rebuild the feed sizes of every cached image (in batches, via AJAX).
+	 *
+	 * @since 2.3.8
+	 */
+	public function settings_field_webp_regenerate() {
+		$count = count( WPZOOM_Instagram_Image_Uploader::cached_attachment_ids() );
+		?>
+		<a href="#" id="wpzoom_instagram_webp_regenerate" data-nonce="<?php echo esc_attr( wp_create_nonce( 'wpzoom_instagram_webp_regenerate' ) ); ?>" class="button button-secondary" <?php disabled( 0, $count ); ?>><?php esc_html_e( 'Regenerate Cached Images', 'instagram-widget-by-wpzoom' ); ?></a>
+		<span id="wpzoom_instagram_webp_regenerate_status" class="description" style="margin-left:8px;"></span>
+		<p class="description">
+			<?php
+			printf(
+				/* translators: %d: number of cached Instagram images */
+				esc_html__( 'Rebuilds the feed sizes of the %d images already cached from Instagram in the format selected above (save the setting first). New images follow the setting automatically; run this once after changing it.', 'instagram-widget-by-wpzoom' ),
+				(int) $count
+			);
+			?>
+		</p>
+		<br/>
+		<hr/>
+		<?php
+	}
+
+	/**
+	 * AJAX: regenerate one batch of cached images; clears feed caches when the last batch is done.
+	 *
+	 * @since 2.3.8
+	 */
+	public function wpzoom_instagram_webp_regenerate() {
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( array( 'message' => esc_html__( 'You do not have enough permission to view this page', 'instagram-widget-by-wpzoom' ) ), 403 );
+		}
+		if ( ! check_ajax_referer( 'wpzoom_instagram_webp_regenerate', 'nonce', false ) ) {
+			wp_send_json_error( array( 'message' => esc_html__( 'Invalid nonce', 'instagram-widget-by-wpzoom' ) ), 403 );
+		}
+		if ( function_exists( 'set_time_limit' ) ) {
+			@set_time_limit( 120 ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
+		}
+
+		$offset = isset( $_POST['offset'] ) ? absint( $_POST['offset'] ) : 0;
+		$result = WPZOOM_Instagram_Image_Uploader::regenerate_cached_batch( $offset, 8 );
+
+		if ( $result['done'] ) {
+			WPZOOM_Instagram_Widget_Settings::clear_all_feed_caches();
+		}
+
+		wp_send_json_success( $result );
 	}
 
 	public function wpzoom_instagram_clear_data() {

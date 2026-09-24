@@ -17,6 +17,12 @@ class WPZOOM_Instagram_Image_Uploader {
 	private static $post_status_name   = 'wpzoom-hidden';
 	private static $transient_name     = 'zoom_instagram_is_configured';
 
+	/** Option key (inside wpzoom-instagram-general-settings) that turns WebP storage on. */
+	const WEBP_SETTING = 'webp-cached-images';
+
+	/** WebP compression used for cached feed images; the JPEG originals are never rewritten. */
+	const WEBP_QUALITY = 75;
+
 	/**
 	 * WPZOOM_Instagram_Image_Uploader constructor.
 	 */
@@ -195,14 +201,140 @@ class WPZOOM_Instagram_Image_Uploader {
 	}
 
 	public function regenerate_thumbnails( $attachment_id ) {
-		$fullsizepath = get_attached_file( $attachment_id );
+		// Always resize from the original download: once WebP is on, WordPress makes the
+		// converted full-size copy the "attached" file, and re-encoding from that would
+		// stack lossy generations. wp_get_original_image_path() falls back to the attached file.
+		$fullsizepath = function_exists( 'wp_get_original_image_path' ) ? wp_get_original_image_path( $attachment_id ) : '';
+		if ( ! $fullsizepath ) {
+			$fullsizepath = get_attached_file( $attachment_id );
+		}
 
 		add_filter( 'intermediate_image_sizes_advanced', array( self::$instance, 'set_image_sizes' ), 10 );
+		self::start_webp();
 
 		$metadata = wp_generate_attachment_metadata( $attachment_id, $fullsizepath );
 
+		self::stop_webp();
 		remove_filter( 'intermediate_image_sizes_advanced', array( self::$instance, 'set_image_sizes' ), 10 );
 		return $metadata;
+	}
+
+	/* ------------------------------------------------------------------ *
+	 *  WebP storage for cached feed images
+	 *
+	 *  Scoped to this plugin's own sideloads/regenerations via core's
+	 *  image_editor_output_format filter, so the rest of the media library
+	 *  is untouched. Originals stay as downloaded; only the generated feed
+	 *  sizes change format, which makes the option fully reversible.
+	 * ------------------------------------------------------------------ */
+
+	/** Can this server write WebP at all (GD or Imagick with WebP support)? */
+	public static function webp_supported() {
+		return wp_image_editor_supports( array( 'mime_type' => 'image/webp' ) );
+	}
+
+	/** Option on and server capable. */
+	public static function webp_enabled() {
+		$settings = get_option( 'wpzoom-instagram-general-settings' );
+		$enabled  = ! empty( $settings[ self::WEBP_SETTING ] ) && wp_validate_boolean( $settings[ self::WEBP_SETTING ] );
+
+		return $enabled && self::webp_supported();
+	}
+
+	private static function start_webp() {
+		if ( ! self::webp_enabled() ) {
+			return;
+		}
+		add_filter( 'image_editor_output_format', array( __CLASS__, 'webp_output_format' ), 10, 3 );
+		add_filter( 'wp_editor_set_quality', array( __CLASS__, 'webp_quality' ), 10, 2 );
+	}
+
+	private static function stop_webp() {
+		remove_filter( 'image_editor_output_format', array( __CLASS__, 'webp_output_format' ), 10 );
+		remove_filter( 'wp_editor_set_quality', array( __CLASS__, 'webp_quality' ), 10 );
+	}
+
+	public static function webp_output_format( $formats, $filename = '', $mime_type = '' ) {
+		$formats['image/jpeg'] = 'image/webp';
+		$formats['image/png']  = 'image/webp';
+
+		return $formats;
+	}
+
+	public static function webp_quality( $quality, $mime_type ) {
+		return 'image/webp' === $mime_type ? (int) apply_filters( 'wpz_insta_webp_quality', self::WEBP_QUALITY ) : $quality;
+	}
+
+	/** IDs of every attachment this plugin downloaded from Instagram, oldest first. */
+	public static function cached_attachment_ids() {
+		return get_posts(
+			array(
+				'post_type'      => 'attachment',
+				// 'any' skips statuses flagged exclude_from_search — which is exactly our own wpzoom-hidden.
+				'post_status'    => array_keys( get_post_stati() ),
+				'posts_per_page' => -1,
+				'fields'         => 'ids',
+				'orderby'        => 'ID',
+				'order'          => 'ASC',
+				'meta_key'       => self::$media_metakey_name, // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
+			)
+		);
+	}
+
+	/**
+	 * Regenerate the feed sizes of a slice of cached attachments (WebP or JPEG,
+	 * depending on the current setting). Driven in batches from the settings
+	 * screen so it works without WP-Cron and shows progress.
+	 *
+	 * Each call is bounded by wall time as well as count: encoding large photos
+	 * (WebP through GD especially) can take seconds apiece, and hosts commonly
+	 * kill PHP after ~30 s regardless of set_time_limit(). At least one image is
+	 * always processed so the job cannot stall.
+	 *
+	 * @return array{next:int,total:int,done:bool,failed:int}
+	 */
+	public static function regenerate_cached_batch( $offset, $limit = 8, $time_budget = 10 ) {
+		require_once ABSPATH . 'wp-admin/includes/image.php';
+
+		$ids     = self::cached_attachment_ids();
+		$total   = count( $ids );
+		$slice   = array_slice( $ids, max( 0, (int) $offset ), max( 1, (int) $limit ) );
+		$failed  = 0;
+		$did     = 0;
+		$started = microtime( true );
+		$budget  = (float) apply_filters( 'wpz_insta_regenerate_time_budget', $time_budget );
+
+		foreach ( $slice as $id ) {
+			if ( $did > 0 && ( microtime( true ) - $started ) > $budget ) {
+				break;
+			}
+			$did++;
+			$file = get_attached_file( $id );
+			if ( ! $file || ! file_exists( $file ) ) {
+				$failed++;
+				continue;
+			}
+			$metadata = self::getInstance()->regenerate_thumbnails( $id );
+			if ( is_wp_error( $metadata ) || empty( $metadata ) ) {
+				$failed++;
+				continue;
+			}
+			wp_update_attachment_metadata( $id, $metadata );
+			// Keep the attached file in step with the (possibly converted) full-size file, as core does on upload.
+			if ( ! empty( $metadata['file'] ) ) {
+				$uploads = wp_get_upload_dir();
+				update_attached_file( $id, trailingslashit( $uploads['basedir'] ) . ltrim( $metadata['file'], '/' ) );
+			}
+		}
+
+		$next = (int) $offset + $did;
+
+		return array(
+			'next'   => $next,
+			'total'  => $total,
+			'done'   => $next >= $total,
+			'failed' => $failed,
+		);
 	}
 
 	/**
@@ -291,9 +423,11 @@ class WPZOOM_Instagram_Image_Uploader {
 
 		add_filter( 'intermediate_image_sizes_advanced', array( self::$instance, 'set_image_sizes' ), 10 );
 		add_filter( 'wp_insert_attachment_data', array( self::$instance, 'insert_post_data' ), 10 );
+		self::start_webp();
 
 		$attachment_id = media_sideload_image( $media_url, null, null, 'id' );
 
+		self::stop_webp();
 		remove_filter( 'intermediate_image_sizes_advanced', array( self::$instance, 'set_image_sizes' ), 10 );
 		remove_filter( 'wp_insert_attachment_data', array( self::$instance, 'insert_post_data' ), 10 );
 
