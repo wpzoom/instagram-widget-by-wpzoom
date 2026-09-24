@@ -212,9 +212,7 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 * Improved: Feed images start loading as soon as the page is ready instead of waiting for every other asset on the page
 * Improved: Link to the Stories row demo in the feed settings
 * Fixed: Stories with a song from Instagram's music library showed as a black screen; they now show as a photo
-* Fixed: Page jumping to the top after closing the stories viewer
 * Fixed: Block editor error when a new feed takes too long to load the first time
-* Fixed: "Update posts" did not clear the feed cache on sites using an object cache
 
 = 2.3.7 =
 * New (PRO): Stories row - a carousel of story thumbnails above the feed, with options for stories per row, thumbnail shape, account name and time
