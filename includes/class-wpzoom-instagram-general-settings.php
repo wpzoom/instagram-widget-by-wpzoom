@@ -311,7 +311,7 @@ class WPZOOM_Instagram_General_Settings {
 	/**
 	 * Output the Images section info
 	 *
-	 * @since 2.3.8
+	 * @since 2.4.0
 	 */
 	public function section_images( $args ) {
 		echo '<h2 class="section-title">' . esc_html__( 'Cached Images', 'instagram-widget-by-wpzoom' ) . '</h2>';
@@ -320,7 +320,7 @@ class WPZOOM_Instagram_General_Settings {
 	/**
 	 * Checkbox: generate the cached feed image sizes as WebP.
 	 *
-	 * @since 2.3.8
+	 * @since 2.4.0
 	 */
 	public function settings_field_webp_cached_images() {
 		$settings  = get_option( 'wpzoom-instagram-general-settings' );
@@ -350,7 +350,7 @@ class WPZOOM_Instagram_General_Settings {
 	/**
 	 * Button: rebuild the feed sizes of every cached image (in batches, via AJAX).
 	 *
-	 * @since 2.3.8
+	 * @since 2.4.0
 	 */
 	public function settings_field_webp_regenerate() {
 		$count = count( WPZOOM_Instagram_Image_Uploader::cached_attachment_ids() );
@@ -374,7 +374,7 @@ class WPZOOM_Instagram_General_Settings {
 	/**
 	 * AJAX: regenerate one batch of cached images; clears feed caches when the last batch is done.
 	 *
-	 * @since 2.3.8
+	 * @since 2.4.0
 	 */
 	public function wpzoom_instagram_webp_regenerate() {
 		if ( ! current_user_can( 'manage_options' ) ) {

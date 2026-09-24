@@ -2,7 +2,7 @@
 # This file is distributed under the GPLv2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: WPZOOM Instagram Social Feed 2.3.8\n"
+"Project-Id-Version: WPZOOM Instagram Social Feed 2.4.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/instagram-widget-by-wpzoom\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"

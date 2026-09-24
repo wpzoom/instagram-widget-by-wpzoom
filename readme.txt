@@ -5,7 +5,7 @@ Tags: instagram, instagram feed, instagram gallery, instagram photos, instagram 
 Requires at least: 6.5
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 2.3.8
+Stable tag: 2.4.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -205,7 +205,7 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 
 == Changelog ==
 
-= 2.3.8 =
+= 2.4.0 =
 * New: Instagram Stories are now available in the free version. Turn on "Display Instagram Stories" in the feed's profile settings to show a stories ring on the profile image (off by default)
 * New: "Store cached images as WebP" option (Settings → Global) - feed image sizes downloaded from Instagram are saved as WebP, typically 30-45% smaller. Off by default; only affects images cached by the plugin
 * New: "Regenerate Cached Images" button to convert already-cached images after changing the option
