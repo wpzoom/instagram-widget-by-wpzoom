@@ -190,7 +190,7 @@ if ( ! class_exists( 'WPZOOM_Instagram_Email_Notification' ) ) {
 
 												<br style="font-family:&quot;Helvetica Neue&quot;,&quot;Helvetica&quot;,Helvetica,Arial,sans-serif;box-sizing:border-box;font-size:14px;line-height:1.5">
 
-												<p>Best regards,<br/>The <a href="https://www.wpzoom.com/" target="_blank">WPZOOM</a> team</p>
+												<p>Best regards,<br/>The <a href="https://www.wpzoom.com/?utm_source=email&utm_medium=instagram-widget&utm_campaign=token-expired-email" target="_blank">WPZOOM</a> team</p>
 
 												</td>
 											</tr>

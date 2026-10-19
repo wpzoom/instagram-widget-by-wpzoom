@@ -463,7 +463,7 @@ class WPZOOM_Instagram_Insights {
      * Render the demo/upsell version of the insights page for non-Pro users
      */
     private function render_demo_insights_page() {
-        $upgrade_url = 'https://www.wpzoom.com/plugins/instagram-widget/?utm_source=wpadmin&utm_medium=insights-page&utm_campaign=upgrade-to-pro';
+        $upgrade_url = 'https://www.wpzoom.com/plugins/instagram-widget/?utm_source=wpadmin&utm_medium=instagram-widget&utm_campaign=insights-page';
         ?>
         <div class="wrap wpzoom-instagram-insights is-demo">
             <h1><?php esc_html_e( 'Instagram Insights', 'instagram-widget-by-wpzoom' ); ?></h1>

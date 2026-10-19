@@ -2648,7 +2648,7 @@ class WPZOOM_Instagram_Widget_Settings {
 							<?php if ( $pro_toggle ) : ?>
 							<div class="wpz-insta_sidebar-section wpz-insta_sidebar-section-moderate-intro no-top-border wpz-insta_pro-only-feature">
 								<p class="wpz-insta_sidebar-section-description"><?php esc_html_e( 'Hide or show individual posts in your feed. Click the eye icon on each post in the preview to control visibility—hidden posts will not be visible to visitors on your website.', 'instagram-widget-by-wpzoom' ); ?></p>
-								<a href="https://www.wpzoom.com/plugins/instagram-widget/?utm_source=plugin&utm_medium=moderate-section&utm_campaign=upgrade-to-pro" 
+								<a href="https://www.wpzoom.com/plugins/instagram-widget/?utm_source=wpadmin&utm_medium=instagram-widget&utm_campaign=moderate-section" 
 								   target="_blank" 
 								   class="button button-primary wpz-insta-upgrade-pro-btn"
 								   style="margin-top: 16px;">
@@ -3243,14 +3243,14 @@ class WPZOOM_Instagram_Widget_Settings {
 			?>
 			<footer class="wpz-insta_settings-footer">
 				<div class="wpz-insta_settings-footer-wrap">
-					<h3 class="wpz-insta_settings-footer-logo"><a href="https://wpzoom.com/" target="_blank" title="<?php _e( 'WPZOOM - WordPress themes with modern features and professional support', 'instagram-widget-by-wpzoom' ); ?>"><?php _e( 'WPZOOM', 'instagram-widget-by-wpzoom' ); ?></a></h3>
+					<h3 class="wpz-insta_settings-footer-logo"><a href="https://wpzoom.com/?utm_source=wpadmin&utm_medium=instagram-widget&utm_campaign=settings-footer" target="_blank" title="<?php _e( 'WPZOOM - WordPress themes with modern features and professional support', 'instagram-widget-by-wpzoom' ); ?>"><?php _e( 'WPZOOM', 'instagram-widget-by-wpzoom' ); ?></a></h3>
 
 					<ul class="wpz-insta_settings-footer-links">
 
-                        <?php if ( $pro_toggle ) : ?><li class="wpz-insta_settings-footer-links-themes"><a href="https://www.wpzoom.com/plugins/instagram-widget/?utm_campaign=liteplugin&utm_medium=footer-menu&utm_source=WordPress&utm_content=Upgrade+to+Pro" target="_blank" title="<?php _e( 'Get the PRO version', 'instagram-widget-by-wpzoom' ); ?>"><span style="color:#e4415f"><strong><?php _e( 'Get the PRO version', 'instagram-widget-by-wpzoom' ); ?></strong></span></a></li><?php endif; ?>
-                        <li class="wpz-insta_settings-footer-links-themes"><a href="https://www.wpzoom.com/themes/" target="_blank" title="<?php _e( 'Check out our themes', 'instagram-widget-by-wpzoom' ); ?>"><?php _e( 'Themes', 'instagram-widget-by-wpzoom' ); ?></a></li>
-						<li class="wpz-insta_settings-footer-links-blog"><a href="https://www.wpzoom.com/blog/" target="_blank" title="<?php _e( 'See the latest updates on our blog', 'instagram-widget-by-wpzoom' ); ?>"><?php _e( 'Blog', 'instagram-widget-by-wpzoom' ); ?></a></li>
-						<li class="wpz-insta_settings-footer-links-support"><a href="https://www.wpzoom.com/support/" target="_blank" title="<?php _e( 'Get support', 'instagram-widget-by-wpzoom' ); ?>"><?php _e( 'Support', 'instagram-widget-by-wpzoom' ); ?></a></li>
+                        <?php if ( $pro_toggle ) : ?><li class="wpz-insta_settings-footer-links-themes"><a href="https://www.wpzoom.com/plugins/instagram-widget/?utm_source=wpadmin&utm_medium=instagram-widget&utm_campaign=settings-footer" target="_blank" title="<?php _e( 'Get the PRO version', 'instagram-widget-by-wpzoom' ); ?>"><span style="color:#e4415f"><strong><?php _e( 'Get the PRO version', 'instagram-widget-by-wpzoom' ); ?></strong></span></a></li><?php endif; ?>
+                        <li class="wpz-insta_settings-footer-links-themes"><a href="https://www.wpzoom.com/themes/?utm_source=wpadmin&utm_medium=instagram-widget&utm_campaign=settings-footer" target="_blank" title="<?php _e( 'Check out our themes', 'instagram-widget-by-wpzoom' ); ?>"><?php _e( 'Themes', 'instagram-widget-by-wpzoom' ); ?></a></li>
+						<li class="wpz-insta_settings-footer-links-blog"><a href="https://www.wpzoom.com/blog/?utm_source=wpadmin&utm_medium=instagram-widget&utm_campaign=settings-footer" target="_blank" title="<?php _e( 'See the latest updates on our blog', 'instagram-widget-by-wpzoom' ); ?>"><?php _e( 'Blog', 'instagram-widget-by-wpzoom' ); ?></a></li>
+						<li class="wpz-insta_settings-footer-links-support"><a href="https://www.wpzoom.com/support/?utm_source=wpadmin&utm_medium=instagram-widget&utm_campaign=settings-footer" target="_blank" title="<?php _e( 'Get support', 'instagram-widget-by-wpzoom' ); ?>"><?php _e( 'Support', 'instagram-widget-by-wpzoom' ); ?></a></li>
 					</ul>
 				</div>
 			</footer>
@@ -4198,7 +4198,7 @@ class WPZOOM_Instagram_Widget_Settings {
                 esc_html__( 'Upgrade to Pro &rarr;', 'instagram-widget-by-wpzoom' ),
                 '<span style="color:#e4415f">' . esc_html__( 'Upgrade to Pro &rarr;', 'instagram-widget-by-wpzoom' ) . '</span>',
                 'manage_options',
-                esc_url( 'https://www.wpzoom.com/plugins/instagram-widget/?utm_campaign=liteplugin&utm_medium=admin-menu&utm_source=WordPress&utm_content=Upgrade+to+Pro' )
+                esc_url( 'https://www.wpzoom.com/plugins/instagram-widget/?utm_source=wpadmin&utm_medium=instagram-widget&utm_campaign=admin-menu' )
             );
         }
 		unset( $submenu['edit.php?post_type=wpz-insta_feed'][10] );
@@ -4746,7 +4746,7 @@ class WPZOOM_Instagram_Widget_Settings {
 
 					<p class="section-description"><?php _e( 'Need help setting up your Instagram feeds or have a question? Get in touch with our Support Team.<br/> We’d love the opportunity to help you.', 'instagram-widget-by-wpzoom' ); ?></p>
 
-					<a href="<?php echo esc_url( 'https://www.wpzoom.com/documentation/instagram-widget/' ); ?>" target="_blank" class="button-primary"><?php _e( 'Documentation', 'instagram-widget-by-wpzoom' ); ?></a>
+					<a href="<?php echo esc_url( 'https://www.wpzoom.com/documentation/instagram-widget/?utm_source=wpadmin&utm_medium=instagram-widget&utm_campaign=settings-help' ); ?>" target="_blank" class="button-primary"><?php _e( 'Documentation', 'instagram-widget-by-wpzoom' ); ?></a>
 					<a href="<?php echo esc_url( 'https://wpzoom.com/support/tickets/' ); ?>" target="_blank" class="button-primary"><?php _e( 'Open Support Desk', 'instagram-widget-by-wpzoom' ); ?></a>
 				</div>
 			</div>
@@ -4771,7 +4771,7 @@ class WPZOOM_Instagram_Widget_Settings {
 			$text = preg_replace( '/\.\s*\<\/span\>$/is', '', trim( $text ) );
 			$text .= apply_filters( 'wpz-insta_admin-footer-thanks', sprintf(
 				__( ', and using the <a href="%s" target="_blank">Instagram Widget by WPZOOM</a>.</span>', 'instagram-widget-by-wpzoom' ),
-				esc_url( 'https://www.wpzoom.com/plugins/instagram-widget/' )
+				esc_url( 'https://www.wpzoom.com/plugins/instagram-widget/?utm_source=wpadmin&utm_medium=instagram-widget&utm_campaign=settings-upsell' )
 			) );
 		}
 
@@ -4854,7 +4854,7 @@ class WPZOOM_Instagram_Widget_Settings {
 								'utm_medium'   => 'plugin',
 								'utm_campaign' => 'product_links_upsell',
 							),
-							'https://www.wpzoom.com/plugins/instagram-widget/'
+							'https://www.wpzoom.com/plugins/instagram-widget/?utm_source=wpadmin&utm_medium=instagram-widget&utm_campaign=settings-upsell'
 						)
 					),
 					'product_links_upsell_image_url'   => WPZOOM_INSTAGRAM_PLUGIN_URL . 'assets/backend/img/woo-products-upsell.jpg',
