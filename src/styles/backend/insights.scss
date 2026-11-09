@@ -8,8 +8,9 @@
 // Variables
 $color-positive: #28a745;
 $color-negative: #dc3545;
-$color-primary: #2271b1;
-$color-primary-hover: #135e96;
+// Follow the admin colour scheme; the hex values are fallbacks.
+$color-primary: var(--wp-admin-theme-color, #2271b1);
+$color-primary-hover: var(--wp-admin-theme-color-darker-10, #135e96);
 $color-border: #ddd;
 $color-text: #1d2327;
 $color-text-light: #666;

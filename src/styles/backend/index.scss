@@ -3342,7 +3342,7 @@
             background: none;
             border: none;
             cursor: pointer;
-            color: #2271b1;
+            color: var(--wp-admin-theme-color, #2271b1);
             padding: 4px;
             width: 32px;
             height: 32px;
@@ -3430,12 +3430,12 @@
 
             &:hover {
                 background: #f5f5f5;
-                border-color: #2271b1;
+                border-color: var(--wp-admin-theme-color, #2271b1);
             }
 
             &.selected {
                 background: #e7f3ff;
-                border-color: #2271b1;
+                border-color: var(--wp-admin-theme-color, #2271b1);
 
                 .wpz-insta-product-item-checkbox::after {
                     opacity: 1;
@@ -3467,8 +3467,8 @@
             }
 
             &.selected .wpz-insta-product-item-checkbox {
-                background: #2271b1;
-                border-color: #2271b1;
+                background: var(--wp-admin-theme-color, #2271b1);
+                border-color: var(--wp-admin-theme-color, #2271b1);
             }
 
             img {
@@ -3489,7 +3489,7 @@
                 }
 
                 .wpz-insta-product-price {
-                    color: #2271b1;
+                    color: var(--wp-admin-theme-color, #2271b1);
                     font-weight: 600;
                     font-size: 14px;
                 }
@@ -3651,7 +3651,7 @@
         transition: border-color 0.2s, transform 0.2s;
 
         &:hover {
-            border-color: #2271b1;
+            border-color: var(--wp-admin-theme-color, #2271b1);
             transform: scale(1.02);
         }
 
@@ -3809,7 +3809,7 @@
             display: block;
             width: 24px;
             height: 24px;
-            background: #2271b1;
+            background: var(--wp-admin-theme-color, #2271b1);
             border: 3px solid #fff;
             border-radius: 50%;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
