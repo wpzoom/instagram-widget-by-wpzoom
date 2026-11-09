@@ -5,7 +5,7 @@ Tags: instagram, instagram feed, instagram gallery, instagram photos, instagram 
 Requires at least: 6.5
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 2.4.0
+Stable tag: 2.4.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -204,6 +204,9 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 
 
 == Changelog ==
+
+= 2.4.1 =
+* Improved: Faster page loads - Dashicons is no longer loaded on the front-end, and feed icons are now inline SVGs
 
 = 2.4.0 =
 * New: Instagram Stories are now available in the free version. Turn on "Display Instagram Stories" in the feed's profile settings to show a stories ring on the profile image (off by default)
