@@ -127,10 +127,10 @@ if ( ! class_exists( 'WPZOOM_Instagram_Widget_Assets ' ) ) {
 				wp_register_style(
 					'magnific-popup',
 					WPZOOM_INSTAGRAM_PLUGIN_URL . 'dist/styles/library/magnific-popup.css',
-					array( 'dashicons' ),
+					array(),
 					WPZOOM_INSTAGRAM_VERSION
 				);
-			
+
 				wp_register_style(
 					'wpz-insta_block-frontend-style',
 					WPZOOM_INSTAGRAM_PLUGIN_URL . 'dist/styles/frontend/index.css',
@@ -199,16 +199,21 @@ if ( ! class_exists( 'WPZOOM_Instagram_Widget_Assets ' ) ) {
 				wp_enqueue_style(
 					'wpz-insta_block-frontend-style',
 					WPZOOM_INSTAGRAM_PLUGIN_URL . 'dist/styles/frontend/index.css',
-					array( 'dashicons' ),
+					array(),
 					WPZOOM_INSTAGRAM_VERSION
 				);
 
 				wp_enqueue_style(
 					'magnific-popup',
 					WPZOOM_INSTAGRAM_PLUGIN_URL . 'dist/styles/library/magnific-popup.css',
-					array( 'dashicons' ),
+					array(),
 					WPZOOM_INSTAGRAM_VERSION
 				);
+
+				// The "Link to a product" buttons in the settings preview still use Dashicons.
+				if ( $is_preview ) {
+					wp_enqueue_style( 'dashicons' );
+				}
 
 			}
 		}

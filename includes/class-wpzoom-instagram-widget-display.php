@@ -1522,7 +1522,7 @@ class Wpzoom_Instagram_Widget_Display {
 							if( ! self::is_video_url( $src ) ) {
 								$src = isset( $item['local-image-url'] ) ? $item['local-image-url'] : '';
 								$output .= '<img class="wpzoom-swiper-image swiper-lazy blurred" data-src="' . esc_url( $src_local ) . '" alt="' . esc_attr( $alt ) . '"/>';
-								$output .= '<div class="wpz-no-reel-link-wrapper"><a class="wpz-no-reel-link" target="_blank" href="' . esc_url( $link ) . '"><span class="dashicons dashicons-controls-play"></span>' . esc_html__( 'View Reel on Instagram', 'instagram-widget-by-wpzoom' ) . '</a></div>';
+								$output .= '<div class="wpz-no-reel-link-wrapper"><a class="wpz-no-reel-link" target="_blank" href="' . esc_url( $link ) . '">' . self::get_icon_svg( 'play' ) . esc_html__( 'View Reel on Instagram', 'instagram-widget-by-wpzoom' ) . '</a></div>';
 							} else {
 								$output .= '<video controls muted preload="none"><source src="' . esc_url( $src ) . '" type="video/mp4"/></video>';
 							}
@@ -1604,7 +1604,7 @@ class Wpzoom_Instagram_Widget_Display {
 					}
 
 					$output .= '<div class="view-post">
-					<a href="' . esc_url( $link ) . '" target="_blank" rel="noopener"><span class="dashicons dashicons-instagram"></span>' . __( 'View on Instagram', 'instagram-widget-by-wpzoom' ) . '</a>
+					<a href="' . esc_url( $link ) . '" target="_blank" rel="noopener">' . self::get_icon_svg( 'instagram' ) . __( 'View on Instagram', 'instagram-widget-by-wpzoom' ) . '</a>
 					<span class="delimiter">|</span>
 					<div class="wpz-insta-pagination">' . sprintf( '%d/%d', $count, $amount ) . '</div>
 					</div></div></div></div>';
@@ -2121,6 +2121,25 @@ class Wpzoom_Instagram_Widget_Display {
 	 */
 	function validate_color( string $color ) {
 		return preg_match( '/^(\#[\da-f]{3}|\#[\da-f]{6}|rgba\(((\d{1,2}|1\d\d|2([0-4]\d|5[0-5]))\s*,\s*){2}((\d{1,2}|1\d\d|2([0-4]\d|5[0-5]))\s*)(,\s*(0\.\d+|1))\)|hsla\(\s*((\d{1,2}|[1-2]\d{2}|3([0-5]\d|60)))\s*,\s*((\d{1,2}|100)\s*%)\s*,\s*((\d{1,2}|100)\s*%)(,\s*(0\.\d+|1))\)|rgb\(((\d{1,2}|1\d\d|2([0-4]\d|5[0-5]))\s*,\s*){2}((\d{1,2}|1\d\d|2([0-4]\d|5[0-5]))\s*)|hsl\(\s*((\d{1,2}|[1-2]\d{2}|3([0-5]\d|60)))\s*,\s*((\d{1,2}|100)\s*%)\s*,\s*((\d{1,2}|100)\s*%)\))$/i', $color ) ? $color : '';
+	}
+
+	/**
+	 * Returns a front-end icon as inline SVG, wrapped in a span that sizes it.
+	 *
+	 * Used instead of Dashicons so the feed doesn't need that stylesheet on the front-end.
+	 *
+	 * @param  string $name One of: instagram, play, heart, comment.
+	 * @return string       Static SVG markup, or an empty string for an unknown icon.
+	 */
+	public static function get_icon_svg( string $name ) {
+		$icons = array(
+			'instagram' => '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" focusable="false"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>',
+			'play'      => '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5v14l11-7z"/></svg>',
+			'heart'     => '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="2" d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>',
+			'comment'   => '<svg xmlns="http://www.w3.org/2000/svg" viewBox="4 4 24 24" width="20" height="20" aria-hidden="true" focusable="false"><path fill="currentColor" d="M25.784 21.017A10.992 10.992 0 0 0 27 16c0-6.065-4.935-11-11-11S5 9.935 5 16s4.935 11 11 11c1.742 0 3.468-.419 5.018-1.215l4.74 1.185a.996.996 0 0 0 .949-.263 1 1 0 0 0 .263-.95l-1.186-4.74zm-2.033.11.874 3.498-3.498-.875a1.006 1.006 0 0 0-.731.098A8.99 8.99 0 0 1 16 25c-4.963 0-9-4.038-9-9s4.037-9 9-9 9 4.038 9 9a8.997 8.997 0 0 1-1.151 4.395.995.995 0 0 0-.098.732z"/></svg>',
+		);
+
+		return isset( $icons[ $name ] ) ? '<span class="wpz-insta-icon">' . $icons[ $name ] . '</span>' : '';
 	}
 
 	/**

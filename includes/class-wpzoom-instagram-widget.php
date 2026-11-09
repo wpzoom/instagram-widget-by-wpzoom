@@ -364,9 +364,9 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 
 							<?php if ( ! empty( $likes ) && ! empty( $comments ) ) : ?>
 								<div class="hover-controls">
-									<span class="dashicons dashicons-heart"></span>
+									<?php echo Wpzoom_Instagram_Widget_Display::get_icon_svg( 'heart' ); // phpcs:ignore WordPress.Security.EscapeOutput ?>
 									<span class="counter"><?php echo esc_html( $this->format_number( $likes ) ); ?></span>
-									<span class="dashicons dashicons-format-chat"></span>
+									<?php echo Wpzoom_Instagram_Widget_Display::get_icon_svg( 'comment' ); // phpcs:ignore WordPress.Security.EscapeOutput ?>
 									<span class="counter"><?php echo esc_html( $this->format_number( $comments ) ); ?></span>
 								</div>
 							<?php endif; ?>
@@ -501,7 +501,7 @@ class Wpzoom_Instagram_Widget extends WP_Widget {
 										<?php endif; ?>
 
 										<div class="view-post">
-											<a href="<?php echo esc_url( $link ); ?>" target="_blank" rel="noopener"><span class="dashicons dashicons-instagram"></span><?php _e( 'View on Instagram', 'instagram-widget-by-wpzoom' ); ?></a>
+											<a href="<?php echo esc_url( $link ); ?>" target="_blank" rel="noopener"><?php echo Wpzoom_Instagram_Widget_Display::get_icon_svg( 'instagram' ); // phpcs:ignore WordPress.Security.EscapeOutput ?><?php _e( 'View on Instagram', 'instagram-widget-by-wpzoom' ); ?></a>
 											<span class="delimiter">|</span>
 											<div class="wpz-insta-pagination"><?php printf( '%d/%d', $count, $amount ); ?></div>
 										</div>
