@@ -84,7 +84,8 @@ class Wpzoom_Instagram_Widget_Display {
 		$item_amount        = isset( $_POST['item_amount'] ) ? intval( $_POST['item_amount'] ) : 9;
 		$image_size         = isset( $_POST['image_size'] ) ? sanitize_text_field( $_POST['image_size'] ) : 'standard_resolution';
 		$allowed_post_types = isset( $_POST['allowed_post_types'] ) ? sanitize_text_field( $_POST['allowed_post_types'] ) : 'IMAGE,VIDEO,CAROUSEL_ALBUM';
-		$next_url           = isset( $_POST['next'] ) ? sanitize_text_field( $_POST['next'] ) : '';
+		// Only parsed for its `after` cursor below (never echoed back); sanitize_text_field() on the raw value would strip percent-encoded characters.
+		$next_url           = isset( $_POST['next'] ) && is_string( $_POST['next'] ) ? wp_unslash( $_POST['next'] ) : '';
 		$cache_offset       = isset( $_POST['cache_offset'] ) ? intval( $_POST['cache_offset'] ) : -1;
 
 		// Get feed settings
@@ -207,7 +208,8 @@ class Wpzoom_Instagram_Widget_Display {
 						'html'         => $html,
 						'lightbox_html' => $lightbox_html,
 						'has_more'     => $has_more,
-						'next_url'     => $next_url, // Keep the API next URL for when cache is exhausted
+						// Token-free "?after=<cursor>" derived server-side, for when the cache is exhausted.
+						'next_url'     => $api_has_more ? $all_items['paging']->next : '',
 						'from_cache'   => true,
 						'cache_offset' => $new_offset,
 					) );
@@ -223,8 +225,8 @@ class Wpzoom_Instagram_Widget_Display {
 			$parsed_url = parse_url( $next_url );
 			if ( isset( $parsed_url['query'] ) ) {
 				parse_str( $parsed_url['query'], $params );
-				if ( isset( $params['after'] ) ) {
-					$pagination_cursor = $params['after'];
+				if ( isset( $params['after'] ) && is_string( $params['after'] ) ) {
+					$pagination_cursor = sanitize_text_field( $params['after'] );
 				}
 			}
 		}
@@ -813,13 +815,14 @@ class Wpzoom_Instagram_Widget_Display {
 							$allowed_post_types = sanitize_text_field( $_POST['allowed_post_types'] );
 						}
 						if ( isset( $_POST['next'] ) ) {
-							$next_url = sanitize_text_field( $_POST['next'] );
+							// Only parsed for its `after` cursor; sanitize_text_field() on the raw value would strip percent-encoded characters.
+							$next_url = is_string( $_POST['next'] ) ? wp_unslash( $_POST['next'] ) : '';
 							// Extract cursor from URL - the 'after' parameter contains the cursor
 							$parsed_url = parse_url( $next_url );
 							if ( isset( $parsed_url['query'] ) ) {
 								parse_str( $parsed_url['query'], $params );
-								if ( isset( $params['after'] ) ) {
-									$pagination_cursor = $params['after'];
+								if ( isset( $params['after'] ) && is_string( $params['after'] ) ) {
+									$pagination_cursor = sanitize_text_field( $params['after'] );
 								}
 							}
 						}

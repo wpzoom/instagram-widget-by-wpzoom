@@ -502,7 +502,7 @@ class Wpzoom_Instagram_Widget_API {
 			$final_data->data = $converted_data->data ?? array();
 
 			if ( $include_pagination && property_exists( $raw_data, 'paging' ) ) {
-				$final_data->paging = $raw_data->paging;
+				$final_data->paging = self::sanitize_paging( $raw_data->paging );
 			}
 
 			return $final_data;
@@ -594,10 +594,65 @@ class Wpzoom_Instagram_Widget_API {
 		$final_data->data = $all_items;
 
 		if ( $include_pagination && $final_paging ) {
-			$final_data->paging = $final_paging;
+			// Never keep the raw Graph API paging URLs: they contain the access token.
+			$final_data->paging = self::sanitize_paging( $final_paging );
 		}
 
 		return $final_data;
+	}
+
+	/**
+	 * Strip credentials from a Graph API paging object.
+	 *
+	 * The API returns `paging.next` / `paging.previous` as full request URLs that include
+	 * the `access_token` query parameter. Those must never be cached, returned to callers
+	 * or printed to the page. This returns a new object holding only the opaque cursors,
+	 * with `next` reduced to a token-free `?after=<cursor>` string (absent when there is
+	 * no further page), which callers can still parse for the `after` cursor.
+	 *
+	 * @param  object|mixed $paging Raw (or already sanitized) paging object.
+	 * @return object               Sanitized paging object.
+	 */
+	public static function sanitize_paging( $paging ) {
+		$clean          = new stdClass();
+		$clean->cursors = new stdClass();
+		// `next` is deliberately left undefined when there is no further page: callers
+		// (including older PRO versions) use property_exists( $paging, 'next' ) as "has more".
+
+		if ( ! is_object( $paging ) ) {
+			return $clean;
+		}
+
+		if ( isset( $paging->cursors ) && is_object( $paging->cursors ) ) {
+			foreach ( array( 'before', 'after' ) as $key ) {
+				if ( isset( $paging->cursors->{$key} ) && is_scalar( $paging->cursors->{$key} ) ) {
+					$clean->cursors->{$key} = (string) $paging->cursors->{$key};
+				}
+			}
+		}
+
+		// `next` is only present when another page exists.
+		if ( ! empty( $paging->next ) && is_string( $paging->next ) ) {
+			$after = '';
+			$query = wp_parse_url( $paging->next, PHP_URL_QUERY );
+
+			if ( ! empty( $query ) ) {
+				parse_str( $query, $params );
+				if ( ! empty( $params['after'] ) && is_string( $params['after'] ) ) {
+					$after = $params['after'];
+				}
+			}
+
+			if ( '' === $after && ! empty( $clean->cursors->after ) ) {
+				$after = $clean->cursors->after;
+			}
+
+			if ( '' !== $after ) {
+				$clean->next = '?after=' . rawurlencode( $after );
+			}
+		}
+
+		return $clean;
 	}
 
 	/**
@@ -692,7 +747,8 @@ class Wpzoom_Instagram_Widget_API {
         );
 
         if ( $include_pagination && property_exists( $data, 'paging' ) ) {
-            $result['paging'] = $data->paging;
+            // Also covers transients cached by older versions, which still hold the raw paging URLs.
+            $result['paging'] = self::sanitize_paging( $data->paging );
         }
 
         return $result;
