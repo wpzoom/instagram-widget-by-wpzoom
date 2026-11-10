@@ -5,7 +5,7 @@ Tags: instagram, instagram feed, instagram gallery, instagram photos, instagram 
 Requires at least: 6.5
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 2.4.1
+Stable tag: 2.4.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -204,6 +204,9 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 
 
 == Changelog ==
+
+= 2.4.2 =
+* Security: The Instagram access token is no longer exposed in the page source or in "Load More" responses. If your feed uses the "Load More" button (PRO), we recommend reconnecting your Instagram account after updating and clearing any page cache
 
 = 2.4.1 =
 * Improved: Faster page loads - Dashicons is no longer loaded on the front-end, and feed icons are now inline SVGs
