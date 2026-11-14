@@ -5,7 +5,7 @@ Tags: instagram, instagram feed, instagram gallery, instagram photos, instagram 
 Requires at least: 6.5
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 2.4.2
+Stable tag: 2.4.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -204,6 +204,9 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 
 
 == Changelog ==
+
+= 2.4.3 =
+* New: on the Feeds list, a tip shows how to manage your site by chatting with Claude or ChatGPT through the free WPZOOM AI Connect plugin, for example to add a feed to a page, with one button to install, activate or open it. Hide it once and it stays hidden for you. Shown on WordPress 6.9 and newer
 
 = 2.4.2 =
 * Security: The Instagram access token is no longer exposed in the page source or in "Load More" responses. If your feed uses the "Load More" button (PRO), we recommend reconnecting your Instagram account after updating and clearing any page cache

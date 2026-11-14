@@ -3,7 +3,7 @@
  * Plugin Name: WPZOOM Instagram Social Feed
  * Plugin URI: https://www.wpzoom.com/plugins/instagram-widget/
  * Description: Instagram feed plugin for WordPress - Display beautiful Instagram photos, videos & reels. Easy setup with Gutenberg block, widget, shortcode & Elementor.
- * Version: 2.4.2
+ * Version: 2.4.3
  * Author: WPZOOM
  * Author URI: https://www.wpzoom.com/
  * Text Domain: instagram-widget-by-wpzoom
@@ -60,6 +60,7 @@ if ( is_admin() && ! class_exists( 'WPZOOM_Notice_Center' ) && file_exists( $wpz
 }
 
 require_once WPZOOM_INSTAGRAM_PLUGIN_PATH . 'includes/class-wpzoom-instagram-review-notice.php';
+require_once WPZOOM_INSTAGRAM_PLUGIN_PATH . 'includes/class-wpzoom-instagram-ai-tip.php';
 
 add_action( 'widgets_init', 'zoom_instagram_widget_register' );
 function zoom_instagram_widget_register() {
