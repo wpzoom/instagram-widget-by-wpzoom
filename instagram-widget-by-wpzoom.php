@@ -59,6 +59,16 @@ if ( is_admin() && ! class_exists( 'WPZOOM_Notice_Center' ) && file_exists( $wpz
 	) );
 }
 
+add_filter( 'wpzoom_notice_center_strings', 'wpzoom_instagram_notice_center_strings' );
+function wpzoom_instagram_notice_center_strings( $strings ) {
+	return array_merge( (array) $strings, array(
+		'title'          => __( 'WPZOOM Notice Center', 'instagram-widget-by-wpzoom' ),
+		'subtitle'       => __( 'Stay updated with the latest from WPZOOM products and services!', 'instagram-widget-by-wpzoom' ),
+		'dismiss'        => __( 'Dismiss this notice', 'instagram-widget-by-wpzoom' ),
+		'dismiss_screen' => __( 'Dismiss this notice.', 'instagram-widget-by-wpzoom' ),
+	) );
+}
+
 require_once WPZOOM_INSTAGRAM_PLUGIN_PATH . 'includes/class-wpzoom-instagram-review-notice.php';
 require_once WPZOOM_INSTAGRAM_PLUGIN_PATH . 'includes/class-wpzoom-instagram-ai-tip.php';
 
