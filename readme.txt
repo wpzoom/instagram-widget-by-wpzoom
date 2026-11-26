@@ -3,9 +3,9 @@ Contributors: WPZOOM, ciorici
 Donate link: https://www.wpzoom.com/
 Tags: instagram, instagram feed, instagram gallery, instagram photos, instagram widget
 Requires at least: 6.5
-Tested up to: 7.1
+Tested up to: 7.2
 Requires PHP: 7.4
-Stable tag: 2.4.3
+Stable tag: 2.5.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -19,7 +19,7 @@ Instagram feed plugin for WordPress: Display your Instagram photos, videos & ree
 
 Create stunning **Instagram galleries** and **Instagram sliders** anywhere on your WordPress site. Perfect for showcasing your Instagram content, growing followers, and adding social proof to your website.
 
-⭐️ **[Get Instagram Widget PRO](https://www.wpzoom.com/plugins/instagram-widget/?utm_source=wporg&utm_medium=insta-free-desc&utm_campaign=insta-free-pro-link)** — Unlock the Stories Row, Analytics, Carousel & More! ⭐️
+⭐️ **[Get Instagram Widget PRO](https://www.wpzoom.com/plugins/instagram-widget/?utm_source=wporg&utm_medium=insta-free-desc&utm_campaign=insta-free-pro-link)** — Unlock Shoppable Feeds, Moderation, Insights, the Stories Row & More! ⭐️
 
 **[View Live Demo](https://demo.wpzoom.com/instagram-widget/)** | **[Documentation](https://www.wpzoom.com/documentation/instagram-widget/)**
 
@@ -40,7 +40,13 @@ Create stunning **Instagram galleries** and **Instagram sliders** anywhere on yo
 * **Create Unlimited Instagram Feeds** - Display as many feeds as you need
 * **Gutenberg Block** - Native WordPress block editor support
 * **Shortcode Support** - Embed feeds in Elementor, Beaver Builder, Divi, and any page builder
-* **Multiple Layouts** - Grid and other layout options to match your design
+* **Multiple Layouts** - Grid, full-width, masonry and carousel/slider layouts to match your design
+* **Highlighted Posts** - Make selected posts larger in the grid
+* **Responsive Column Control** - Set different columns for desktop, tablet, and mobile
+* **Load More Button** - Let visitors load additional posts without a page refresh
+* **Likes & Comments Counts** - Show engagement on each post
+* **Verified Badge & Account Stats** - Show the verified badge and your posts, followers and following counts in the feed header
+* **Connect Multiple Accounts** - Connect several Instagram accounts and show each one in its own feed
 * **Lightbox Gallery** - View photos and videos in a beautiful popup
 * **Custom Header** - Add your own avatar and bio text
 * **Instagram Stories** - A stories ring on your profile image that opens your active stories in a viewer
@@ -56,14 +62,7 @@ Upgrade to **[Instagram Widget PRO](https://www.wpzoom.com/plugins/instagram-wid
 * **🛡️ Feed Moderation 🆕** - Hide or show individual posts from your feed without deleting them from Instagram
 * **📊 Instagram Insights & Analytics** - Track follower growth, reach, impressions, engagement, and individual post performance with beautiful charts
 * **Stories Row** - A carousel of story thumbnails above the feed, including stories from multiple accounts
-* **Display Follower Count** - Show your real-time follower count in the feed header
 * **Multi-Account Feed** - Combine posts from multiple Instagram accounts into a single unified feed
-* **Masonry Layout** - Pinterest-style grid for a modern look
-* **Carousel/Slider** - Showcase your photos in an interactive slider
-* **Responsive Column Control** - Set different columns for desktop, tablet, and mobile
-* **Load More Button** - Let visitors load additional posts without page refresh
-* **Advanced Color Customization** - Full control over colors and styling
-* **Connect Multiple Accounts** - Display feeds from different Instagram accounts
 * **Priority Support** - Get help when you need it
 
 ⭐️ **[Upgrade to PRO Today!](https://www.wpzoom.com/plugins/instagram-widget/?utm_source=wporg&utm_medium=insta-free-desc&utm_campaign=insta-free-pro-link)** ⭐️
@@ -190,7 +189,7 @@ You can display your Instagram feed in Elementor in two ways:
 
 = Can I display multiple Instagram accounts? =
 
-Yes! With the **[PRO version](https://www.wpzoom.com/plugins/instagram-widget/)**, you can connect multiple Instagram accounts and display feeds from different accounts anywhere on your site. You can also combine posts from multiple accounts into a single unified feed - perfect for brands with multiple Instagram profiles.
+Yes! You can connect multiple Instagram accounts and display a feed from each of them anywhere on your site. With the **[PRO version](https://www.wpzoom.com/plugins/instagram-widget/)**, you can also combine posts from multiple accounts into a single unified feed - perfect for brands with multiple Instagram profiles.
 
 = How can I improve my page load speed with Instagram feeds? =
 
@@ -229,6 +228,15 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 
 
 == Changelog ==
+
+= 2.5.0 =
+* New: Masonry and carousel layouts, highlighted posts, the Load More button, likes and comments counts, the verified badge, account stats and responsive columns are now available in the free version
+* New: You can now connect more than one Instagram account in the free version and show each one in its own feed
+* Changed: Instagram Insights, the stories row, post moderation and WooCommerce product links are now provided entirely by the Instagram Widget PRO plugin. If you use PRO, update it to version 1.6.0 or newer to keep using these features
+* Improved: Updated Swiper to version 14 and Magnific Popup to version 1.2.0
+* Improved: The readme now documents the external services the plugin connects to
+* Improved: Stricter sanitization of plugin settings and escaping of feed output
+* Fixed: Cached feed images are now located through the uploads directory, which fixes image sizes on sites with a relocated uploads folder
 
 = 2.4.3 =
 * New: on the Feeds list, a tip shows how to manage your site by chatting with Claude or ChatGPT through the free WPZOOM AI Connect plugin, for example to add a feed to a page, with one button to install, activate or open it. Hide it once and it stays hidden for you. Shown on WordPress 6.9 and newer
@@ -338,6 +346,9 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 
 
 == Upgrade Notice ==
+
+= 2.5.0 =
+More features are now free. If you use Instagram Widget PRO, update it to 1.6.0 or newer first: Insights, the stories row, post moderation and product links are now provided by the PRO plugin itself.
 
 = 2.2.0 =
 ⚠️ IMPORTANT: Due to API limitations, you can no longer connect your Personal Instagram account and feeds with accounts connected before this update will stop working on December 4, 2024. The new Facebook/Instagram API supports only Creator and Business Instagram accounts. Please reconnect your account before December 2024 after updating to version 2.2 or higher.  [Learn More.](https://www.wpzoom.com/documentation/instagram-widget/basic-display-api-deprecation/)

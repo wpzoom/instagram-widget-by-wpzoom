@@ -7,12 +7,6 @@
 				const $nested = $swipe_el.find( '.image-wrapper > .swiper' );
 
 				const swiper = new Swiper( $swipe_el.get(0), {
-					lazy:{
-						threshold: 50
-					},
-					watchSlidesVisibility: true,
-                    preloadImages: false,
-                    lazy: true,
 					direction: 'horizontal',
 					loop: false,
 					spaceBetween: 20,
@@ -45,12 +39,6 @@
 
 				$nested.each( function () {
 					new Swiper( $( this ).get(0), {
-						lazy:{
-							threshold: 50
-						},
-						watchSlidesVisibility: true,	
-                        preloadImages: false,
-                        lazy: true,
 						direction: 'horizontal',
 						loop: false,
 						spaceBetween: 20,
@@ -95,6 +83,7 @@
 					},
 					closeBtnInside: false,
 					mainClass: 'wpzoom-lightbox',
+					closeMarkup: window.wpzInstaLightboxCloseMarkup,
 					midClick: true,
 					callbacks: {
 						open: function () {

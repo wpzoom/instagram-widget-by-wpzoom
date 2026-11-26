@@ -3,7 +3,7 @@
  * Plugin Name: WPZOOM Instagram Social Feed
  * Plugin URI: https://www.wpzoom.com/plugins/instagram-widget/
  * Description: Instagram feed plugin for WordPress - Display beautiful Instagram photos, videos & reels. Easy setup with Gutenberg block, widget, shortcode & Elementor.
- * Version: 2.4.3
+ * Version: 2.5.0
  * Requires at least: 6.5
  * Requires PHP: 7.4
  * Author: WPZOOM
@@ -34,10 +34,6 @@ if ( ! defined( 'WPZOOM_INSTAGRAM_PLUGIN_URL' ) ) {
 	define( 'WPZOOM_INSTAGRAM_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 }
 
-// First load the Feed Pro class
-require_once WPZOOM_INSTAGRAM_PLUGIN_PATH . 'includes/class-instagram-feed-pro.php';
-
-// Then load all other classes that might depend on it
 require_once WPZOOM_INSTAGRAM_PLUGIN_PATH . 'includes/class-wpzoom-instagram-image-uploader.php';
 require_once WPZOOM_INSTAGRAM_PLUGIN_PATH . 'includes/class-wpzoom-instagram-widget-settings.php';
 require_once WPZOOM_INSTAGRAM_PLUGIN_PATH . 'includes/class-wpzoom-instagram-general-settings.php';
@@ -48,7 +44,6 @@ require_once WPZOOM_INSTAGRAM_PLUGIN_PATH . 'includes/class-wpzoom-instagram-blo
 require_once WPZOOM_INSTAGRAM_PLUGIN_PATH . 'includes/class-wpzoom-instagram-assets.php';
 require_once WPZOOM_INSTAGRAM_PLUGIN_PATH . 'includes/class-wpzoom-instagram-widget-after-setup.php';
 require_once WPZOOM_INSTAGRAM_PLUGIN_PATH . 'includes/class-wpzoom-instagram-email-notification.php';
-require_once WPZOOM_INSTAGRAM_PLUGIN_PATH . 'includes/class-wpzoom-instagram-insights.php';
 
 // WPZOOM Notice Center (submodule at includes/notice-center).
 $wpz_notice_center_path = WPZOOM_INSTAGRAM_PLUGIN_PATH . 'includes/notice-center/';
@@ -73,6 +68,56 @@ function wpzoom_instagram_notice_center_strings( $strings ) {
 
 require_once WPZOOM_INSTAGRAM_PLUGIN_PATH . 'includes/class-wpzoom-instagram-review-notice.php';
 require_once WPZOOM_INSTAGRAM_PLUGIN_PATH . 'includes/class-wpzoom-instagram-ai-tip.php';
+
+add_filter( 'script_loader_src', 'wpzoom_instagram_asset_cache_version', 10, 1 );
+add_filter( 'style_loader_src', 'wpzoom_instagram_asset_cache_version', 10, 1 );
+/**
+ * Versions this plugin's built scripts and styles by their modification time, so browsers
+ * never keep a stale copy of a file that changed without the plugin version changing.
+ *
+ * @param  string $src Asset URL.
+ * @return string
+ */
+function wpzoom_instagram_asset_cache_version( $src ) {
+	$base = WPZOOM_INSTAGRAM_PLUGIN_URL . 'dist/';
+
+	if ( ! is_string( $src ) || 0 !== strpos( $src, $base ) ) {
+		return $src;
+	}
+
+	$file = WPZOOM_INSTAGRAM_PLUGIN_PATH . 'dist/' . strtok( substr( $src, strlen( $base ) ), '?' );
+
+	if ( 0 !== validate_file( substr( $file, strlen( WPZOOM_INSTAGRAM_PLUGIN_PATH ) ) ) || ! is_file( $file ) ) {
+		return $src;
+	}
+
+	return add_query_arg( 'ver', WPZOOM_INSTAGRAM_VERSION . '-' . filemtime( $file ), $src );
+}
+
+add_action( 'admin_notices', 'wpzoom_instagram_pro_outdated_notice' );
+/**
+ * Asks for an update of the PRO add-on when the installed copy predates the features that moved into it.
+ */
+function wpzoom_instagram_pro_outdated_notice() {
+	if ( ! defined( 'WPZOOM_INSTAGRAM_PRO_VERSION' ) || class_exists( '\\WPZOOM\\Instagram_Pro\\Moderation', false ) || ! current_user_can( 'update_plugins' ) ) {
+		return;
+	}
+
+	printf(
+		'<div class="notice notice-warning"><p>%s</p></div>',
+		wp_kses(
+			sprintf(
+				/* translators: %s: URL of the Plugins screen. */
+				__( '<strong>WPZOOM Instagram PRO needs an update.</strong> Insights, the stories row and post moderation are now provided by the PRO plugin itself, and stay unavailable until it is updated. <a href="%s">Go to Plugins</a>', 'instagram-widget-by-wpzoom' ),
+				esc_url( admin_url( 'plugins.php' ) )
+			),
+			array(
+				'strong' => array(),
+				'a'      => array( 'href' => array() ),
+			)
+		)
+	);
+}
 
 add_action( 'widgets_init', 'zoom_instagram_widget_register' );
 function zoom_instagram_widget_register() {

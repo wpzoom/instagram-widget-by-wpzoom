@@ -114,7 +114,7 @@ if ( ! class_exists( 'WPZOOM_Instagram_Widget_Assets ' ) ) {
 					'swiper-js',
 					WPZOOM_INSTAGRAM_PLUGIN_URL . 'dist/scripts/library/swiper.js',
 					array(),
-					'7.4.1'
+					'14.4.0'
 				);
 		
 				wp_register_script(
@@ -186,7 +186,7 @@ if ( ! class_exists( 'WPZOOM_Instagram_Widget_Assets ' ) ) {
 						'swiper-css',
 						WPZOOM_INSTAGRAM_PLUGIN_URL . 'dist/styles/library/swiper.css',
 						array(),
-						'7.4.1'
+						'14.4.0'
 					);
 				} else {
 					// Preview: don't load Swiper CSS; remove from frontend style deps so it still enqueues.
@@ -242,7 +242,7 @@ if ( ! class_exists( 'WPZOOM_Instagram_Widget_Assets ' ) ) {
 				'swiper-js',
 				WPZOOM_INSTAGRAM_PLUGIN_URL . 'dist/scripts/library/swiper.js',
 				array(),
-				'7.0.0-alpha.21',
+				'14.4.0',
 				true
 			);
 
@@ -317,9 +317,9 @@ if ( ! class_exists( 'WPZOOM_Instagram_Widget_Assets ' ) ) {
 					'nonce'   => wp_create_nonce( 'wpzinsta-ajax' )
 				) );
 
-				// PRO loads the stories viewer up front (stories row, multi-account); the free version
-				// loads it from the feed markup only when a stories ring is actually rendered.
-				if ( apply_filters( 'wpz-insta_is-pro', false ) ) {
+				// The stories viewer normally loads from the feed markup, only when a stories ring is rendered.
+				// Extensions that open stories from elsewhere can ask for it up front.
+				if ( apply_filters( 'wpz-insta_enqueue-stories-assets', false ) ) {
 					self::enqueue_stories_assets();
 				}
 			}

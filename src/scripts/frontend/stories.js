@@ -771,117 +771,7 @@ import 'zuck.js/skins/snapgram';
 			} );
 		} );
 
-		initStoriesRows();
-	}
-
-	/**
-	 * Initialize the stories rows (thumbnail carousels above the feed).
-	 *
-	 * - Single-account rows reuse the header ring's Zuck instance when present, otherwise
-	 *   they build one from their own `data-stories` attribute.
-	 * - Multi-account rows (`data-multi="1"`) get their click handlers from the PRO script;
-	 *   only the carousel is initialized here.
-	 */
-	function initStoriesRows() {
-		$( '.wpz-insta-stories-row' ).each( function() {
-			const $row = $( this );
-			const rowElement = $row.get( 0 );
-
-			if ( initializedContainers.has( rowElement ) ) {
-				return;
-			}
-			initializedContainers.add( rowElement );
-
-			initStoriesRowCarousel( $row );
-
-			if ( $row.data( 'multi' ) ) {
-				return;
-			}
-
-			const $feed = $row.closest( '.zoom-instagram' );
-			let zuckInstance = $feed.find( '.wpz-insta-stories' ).first().data( 'zuck' ) || null;
-
-			if ( ! zuckInstance ) {
-				const storiesDataAttr = $row.attr( 'data-stories' );
-				if ( ! storiesDataAttr ) {
-					return;
-				}
-
-				let storiesData;
-				try {
-					storiesData = JSON.parse( storiesDataAttr );
-				} catch ( e ) {
-					console.error( 'Instagram Stories: Failed to parse stories row data', e );
-					return;
-				}
-
-				zuckInstance = createZuckInstance( storiesData );
-				if ( ! zuckInstance ) {
-					return;
-				}
-			}
-
-			$row.data( 'zuck', zuckInstance );
-
-			$row.on( 'click.wpzInstaStories', '.wpz-insta-story-card', function( e ) {
-				e.preventDefault();
-				e.stopPropagation();
-				openZuckInstance( zuckInstance, $( this ).data( 'item-index' ) );
-			} );
-
-			$row.on( 'keydown.wpzInstaStories', '.wpz-insta-story-card', function( e ) {
-				if ( e.key === 'Enter' || e.key === ' ' ) {
-					e.preventDefault();
-					$( this ).trigger( 'click' );
-				}
-			} );
-		} );
-	}
-
-	/**
-	 * Turn a stories row into a Swiper carousel (Swiper is loaded by the main frontend script).
-	 * Without Swiper the row falls back to a CSS-only clipped list.
-	 */
-	function initStoriesRowCarousel( $row ) {
-		if ( typeof Swiper === 'undefined' ) {
-			return;
-		}
-
-		const $swiper = $row.find( '> .wpz-insta-stories-row__swiper' );
-		if ( ! $swiper.length || $swiper.hasClass( 'swiper-initialized' ) ) {
-			return;
-		}
-
-		const perRow = Math.max( 2, parseInt( $row.data( 'per-row' ), 10 ) || 5 );
-		const spacing = 10;
-
-		const swiperInstance = new Swiper( $swiper.get( 0 ), {
-			direction: 'horizontal',
-			loop: false,
-			slidesPerView: Math.min( perRow, 3 ),
-			spaceBetween: spacing,
-			breakpoints: {
-				480: {
-					slidesPerView: Math.min( perRow, 4 ),
-					spaceBetween: spacing,
-				},
-				769: {
-					slidesPerView: perRow,
-					spaceBetween: spacing,
-				},
-			},
-			watchOverflow: true,
-			navigation: {
-				nextEl: $swiper.find( '> .swiper-button-next' ).get( 0 ),
-				prevEl: $swiper.find( '> .swiper-button-prev' ).get( 0 ),
-			},
-			keyboard: {
-				enabled: true,
-				onlyInViewport: true,
-			},
-		} );
-
-		$row.data( 'swiper', swiperInstance ).addClass( 'is-carousel' );
+		$( document ).trigger( 'wpz-insta:stories-ready' );
 	}
 
 	// Setup global handlers once
@@ -896,6 +786,11 @@ import 'zuck.js/skins/snapgram';
 
 	// Export for external use
 	window.wpzInstaInitStories = initInstagramStories;
-	window.wpzInstaInitStoriesRowCarousel = initStoriesRowCarousel;
+
+	// Viewer API for extensions that open stories from their own markup.
+	window.wpzInstaStoriesViewer = {
+		create: createZuckInstance,
+		open: openZuckInstance,
+	};
 
 } )( jQuery );

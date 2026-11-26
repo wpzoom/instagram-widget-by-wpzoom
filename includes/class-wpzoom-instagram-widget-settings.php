@@ -55,11 +55,6 @@ class WPZOOM_Instagram_Widget_Settings {
 		'show-account-badge'              => array( 'type' => 'boolean', 'default' => false ),
 		'show-account-stats'              => array( 'type' => 'boolean', 'default' => true ),
 		'show-stories'                    => array( 'type' => 'boolean', 'default' => false ), // Stories ring on the profile image (opt-in)
-		'stories-row'                     => array( 'type' => 'boolean', 'default' => false ), // Show a row of story thumbnails above the feed (PRO)
-		'stories-per-row'                 => array( 'type' => 'integer', 'default' => 5 ),     // Thumbnails per row on desktop (PRO)
-		'stories-card-ratio'              => array( 'type' => 'string',  'default' => 'portrait' ), // portrait (9:16), tall (3:4), square (PRO)
-		'stories-row-show-name'           => array( 'type' => 'boolean', 'default' => true ),  // Show account name on thumbnails (PRO)
-		'stories-row-show-time'           => array( 'type' => 'boolean', 'default' => true ),  // Show "time ago" on thumbnails (PRO)
 		'show-account-image'              => array( 'type' => 'boolean', 'default' => true ),
 		'show-account-bio'                => array( 'type' => 'boolean', 'default' => true ),
 		'show-view-button'                => array( 'type' => 'boolean', 'default' => true ),
@@ -167,6 +162,17 @@ class WPZOOM_Instagram_Widget_Settings {
 	}
 
 	public function init() {
+
+		/**
+		 * Filters the feed settings schema (name => type and default), so extensions can add their own settings.
+		 *
+		 * @param array $feed_settings The feed settings schema.
+		 */
+		$filtered_settings = apply_filters( 'wpz-insta_feed-settings-schema', self::$feed_settings );
+
+		if ( is_array( $filtered_settings ) ) {
+			self::$feed_settings = $filtered_settings;
+		}
 
 		if( !current_user_can( 'manage_options' ) ) {
 			return;
@@ -355,13 +361,6 @@ class WPZOOM_Instagram_Widget_Settings {
 		add_action( 'wp_ajax_inline-save', array( $this, 'ajax_inline_save' ), 1 );
 		add_action( 'wp_ajax_wpz-insta_dismiss-cron-notice', array( $this, 'ajax_dismiss_cron_notice' ) );
 		
-		// WooCommerce product linking AJAX handlers
-		if ( class_exists( 'WooCommerce' ) ) {
-			add_action( 'wp_ajax_wpz-insta_get-products', array( $this, 'ajax_get_products' ) );
-			add_action( 'wp_ajax_wpz-insta_save-product-link', array( $this, 'ajax_save_product_link' ) );
-			add_action( 'wp_ajax_wpz-insta_get-product-link', array( $this, 'ajax_get_product_link' ) );
-			add_action( 'wp_ajax_wpz-insta_get-album-images', array( $this, 'ajax_get_album_images' ) );
-		}
 		
 		add_action( 'save_post_wpz-insta_feed', array( $this, 'save_feed' ), 15, 3 );
 		add_action( 'save_post_wpz-insta_user', array( $this, 'save_user' ), 15, 3 );
@@ -459,6 +458,7 @@ class WPZOOM_Instagram_Widget_Settings {
 						'wpz-insta_feed_page_wpz-insta_settings',
 						'wpz-insta_feed_page_wpzoom-instagram-support',
 						'wpz-insta_feed_page_wpzoom-instagram-insights',
+						'wpz-insta_feed_page_wpz-insta-upgrade',
 						'settings_page_wpz-insta-connect',
 						'wpz-insta_feed_page_wpz-insta-connect',
 					)
@@ -560,410 +560,6 @@ class WPZOOM_Instagram_Widget_Settings {
 
 			wp_send_json_error( null, 500 );
 		}
-	}
-
-	/**
-	 * AJAX handler to get WooCommerce products for the product link popup.
-	 *
-	 * @return void
-	 */
-	function ajax_get_products() {
-		check_ajax_referer( 'wpz-insta-product-link', 'nonce' );
-
-		if ( ! current_user_can( 'edit_posts' ) || ! class_exists( 'WooCommerce' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Permission denied.', 'instagram-widget-by-wpzoom' ) ) );
-		}
-
-		$search = isset( $_POST['search'] ) ? sanitize_text_field( $_POST['search'] ) : '';
-		$page = isset( $_POST['page'] ) ? intval( $_POST['page'] ) : 1;
-		$per_page = 20;
-
-		$args = array(
-			'post_type'      => 'product',
-			'post_status'    => 'publish',
-			'posts_per_page' => $per_page,
-			'paged'          => $page,
-			'orderby'        => 'title',
-			'order'          => 'ASC',
-		);
-
-		if ( ! empty( $search ) ) {
-			$args['s'] = $search;
-		}
-
-		$query = new WP_Query( $args );
-		$products = array();
-
-		if ( $query->have_posts() ) {
-			while ( $query->have_posts() ) {
-				$query->the_post();
-				$product = wc_get_product( get_the_ID() );
-				if ( $product ) {
-					$products[] = array(
-						'id'    => $product->get_id(),
-						'title' => $product->get_name(),
-						'price' => $product->get_price_html(),
-						'image' => $product->get_image_id() ? wp_get_attachment_image_url( $product->get_image_id(), 'thumbnail' ) : wc_placeholder_img_src(),
-					);
-				}
-			}
-			wp_reset_postdata();
-		}
-
-		wp_send_json_success( array(
-			'products' => $products,
-			'total'   => $query->found_posts,
-			'pages'   => $query->max_num_pages,
-		) );
-	}
-
-	/**
-	 * AJAX handler to save product link(s) for an Instagram media item (supports multiple products).
-	 *
-	 * @return void
-	 */
-	function ajax_save_product_link() {
-		check_ajax_referer( 'wpz-insta-product-link', 'nonce' );
-
-		if ( ! current_user_can( 'edit_posts' ) || ! class_exists( 'WooCommerce' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Permission denied.', 'instagram-widget-by-wpzoom' ) ) );
-		}
-
-		$feed_id = isset( $_POST['feed_id'] ) ? intval( $_POST['feed_id'] ) : 0;
-		$media_id = isset( $_POST['media_id'] ) ? sanitize_text_field( $_POST['media_id'] ) : '';
-		$product_ids = isset( $_POST['product_ids'] ) && is_array( $_POST['product_ids'] )
-			? array_map( 'intval', array_values( array_filter( $_POST['product_ids'], 'is_numeric' ) ) )
-			: array();
-
-		if ( empty( $feed_id ) || empty( $media_id ) ) {
-			wp_send_json_error( array( 'message' => __( 'Invalid feed ID or media ID.', 'instagram-widget-by-wpzoom' ) ) );
-		}
-
-		// Verify feed exists and user can edit it
-		$feed = get_post( $feed_id );
-		if ( ! $feed || 'wpz-insta_feed' !== $feed->post_type || ! current_user_can( 'edit_post', $feed_id ) ) {
-			wp_send_json_error( array( 'message' => __( 'Invalid feed or insufficient permissions.', 'instagram-widget-by-wpzoom' ) ) );
-		}
-
-		// Verify all product IDs exist
-		foreach ( $product_ids as $product_id ) {
-			if ( $product_id > 0 && ! wc_get_product( $product_id ) ) {
-				wp_send_json_error( array( 'message' => __( 'Invalid product ID.', 'instagram-widget-by-wpzoom' ) ) );
-			}
-		}
-
-		$result = Wpzoom_Instagram_Widget_Display::save_linked_product_ids( $feed_id, $media_id, $product_ids );
-
-		if ( $result ) {
-			$message = ! empty( $product_ids )
-				? __( 'Product links saved successfully.', 'instagram-widget-by-wpzoom' )
-				: __( 'Product links removed successfully.', 'instagram-widget-by-wpzoom' );
-			wp_send_json_success( array(
-				'message'     => $message,
-				'product_ids' => $product_ids,
-			) );
-		} else {
-			wp_send_json_error( array( 'message' => __( 'Failed to save product link(s).', 'instagram-widget-by-wpzoom' ) ) );
-		}
-	}
-
-	/**
-	 * AJAX handler to get the linked product(s) for an Instagram media item.
-	 *
-	 * @return void
-	 */
-	function ajax_get_product_link() {
-		check_ajax_referer( 'wpz-insta-product-link', 'nonce' );
-
-		if ( ! current_user_can( 'edit_posts' ) || ! class_exists( 'WooCommerce' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Permission denied.', 'instagram-widget-by-wpzoom' ) ) );
-		}
-
-		$feed_id  = isset( $_POST['feed_id'] ) ? intval( $_POST['feed_id'] ) : 0;
-		$media_id = isset( $_POST['media_id'] ) ? sanitize_text_field( $_POST['media_id'] ) : '';
-
-		if ( empty( $feed_id ) || empty( $media_id ) ) {
-			wp_send_json_error( array( 'message' => __( 'Invalid feed ID or media ID.', 'instagram-widget-by-wpzoom' ) ) );
-		}
-
-		// Get linked products with tag data (new format)
-		$linked_products = Wpzoom_Instagram_Widget_Display::get_linked_products( $feed_id, $media_id );
-		$product_ids     = array();
-		$products_data   = array();
-		
-		foreach ( $linked_products as $linked ) {
-			$product_id = $linked['id'];
-			$product    = wc_get_product( $product_id );
-			if ( $product ) {
-				$product_ids[] = $product_id;
-				$products_data[] = array(
-					'id'    => $product->get_id(),
-					'title' => $product->get_name(),
-					'price' => $product->get_price_html(),
-					'image' => $product->get_image_id() ? wp_get_attachment_image_url( $product->get_image_id(), 'thumbnail' ) : wc_placeholder_img_src(),
-				);
-			}
-		}
-
-		wp_send_json_success( array(
-			'product_ids' => $product_ids,
-			'products'    => $linked_products, // New format: array of { id, tag }
-			'products_data' => $products_data, // Product details for display
-		) );
-	}
-
-	/**
-	 * AJAX handler to get album (carousel) images for product tagging.
-	 *
-	 * @return void
-	 */
-	function ajax_get_album_images() {
-		check_ajax_referer( 'wpz-insta-product-link', 'nonce' );
-
-		if ( ! current_user_can( 'edit_posts' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Permission denied.', 'instagram-widget-by-wpzoom' ) ) );
-		}
-
-		$feed_id  = isset( $_POST['feed_id'] ) ? intval( $_POST['feed_id'] ) : 0;
-		$media_id = isset( $_POST['media_id'] ) ? sanitize_text_field( $_POST['media_id'] ) : '';
-
-		if ( empty( $feed_id ) || empty( $media_id ) ) {
-			wp_send_json_error( array( 'message' => __( 'Invalid feed ID or media ID.', 'instagram-widget-by-wpzoom' ) ) );
-		}
-
-		$images = $this->get_album_images_for_media( $feed_id, $media_id );
-
-		if ( empty( $images ) ) {
-			wp_send_json_error( array( 'message' => __( 'No images found for this media item.', 'instagram-widget-by-wpzoom' ) ) );
-		}
-
-		wp_send_json_success( array( 'images' => $images ) );
-	}
-
-	/**
-	 * Get album (carousel) child images for a media item. Uses feed's transient cache first, then API.
-	 *
-	 * @param int    $feed_id  Feed post ID.
-	 * @param string $media_id Instagram media ID.
-	 * @return array List of image entries (url, type, index).
-	 */
-	private function get_album_images_for_media( $feed_id, $media_id ) {
-		$images = array();
-
-		// 1. Try feed's transient cache (same cache the feed uses: zoom_instagram_is_configured_feed_* or legacy)
-		$legacy_key = 'zoom_instagram_is_configured_' . substr( (string) $feed_id, 0, 20 );
-		$cached     = get_transient( $legacy_key );
-		if ( false !== $cached && is_string( $cached ) ) {
-			$data = json_decode( $cached );
-			if ( is_object( $data ) && ! empty( $data->data ) && is_array( $data->data ) ) {
-				foreach ( $data->data as $item ) {
-					$item_id = isset( $item->id ) ? $item->id : '';
-					if ( $item_id === $media_id ) {
-						$images = $this->extract_images_from_album_item( $item );
-						if ( ! empty( $images ) ) {
-							return $images;
-						}
-						break;
-					}
-				}
-			}
-		}
-
-		// 2. Fallback: get feed items via API (uses/populates feed cache), then find this media's children
-		$user_id = get_post_meta( $feed_id, '_wpz-insta_user-id', true );
-		if ( ! empty( $user_id ) ) {
-			$access_token = get_post_meta( (int) $user_id, '_wpz-insta_token', true );
-			if ( ! empty( $access_token ) && class_exists( 'Wpzoom_Instagram_Widget_Api' ) ) {
-				$api   = Wpzoom_Instagram_Widget_Api::getInstance();
-				$items = $api->get_items( array(
-					'image-limit'        => 50,
-					'allowed-post-types' => 'IMAGE,VIDEO,CAROUSEL_ALBUM',
-					'feed-id'            => $feed_id,
-					'access-token'       => $access_token,
-				) );
-				if ( is_array( $items ) && ! empty( $items['items'] ) ) {
-					foreach ( $items['items'] as $item ) {
-						$item_id = isset( $item['image-id'] ) ? $item['image-id'] : '';
-						if ( $item_id === $media_id ) {
-							$images = $this->extract_images_from_album_item( (object) $item );
-							if ( ! empty( $images ) ) {
-								return $images;
-							}
-							break;
-						}
-					}
-				}
-			}
-		}
-
-		// 3. Direct API call: fetch this specific media's children by ID (fast, no full feed re-fetch).
-		$direct_images = $this->get_album_images_direct_api( $feed_id, $media_id );
-		if ( ! empty( $direct_images ) ) {
-			return $direct_images;
-		}
-
-		// 4. Allow PRO/multi-account to provide album images from merged cache (e.g. when item is from another account).
-		$filtered = apply_filters( 'wpz-insta_album_images_for_media', $images, $feed_id, $media_id );
-		if ( is_array( $filtered ) && ! empty( $filtered ) ) {
-			return $filtered;
-		}
-
-		// 5. Single image fallback: one image (caller may pass currentImageUrl on frontend)
-		return $images;
-	}
-
-	/**
-	 * Extract images array from a single media item (carousel children or main image).
-	 *
-	 * @param object $item Media item (object with children, image-url, etc.).
-	 * @return array List of array( 'url', 'type', 'index' ).
-	 */
-	private function extract_images_from_album_item( $item ) {
-		$images = array();
-
-		if ( ! empty( $item->children ) ) {
-			$children_data = $item->children;
-			if ( is_object( $children_data ) && isset( $children_data->data ) ) {
-				$children = $children_data->data;
-			} elseif ( is_array( $children_data ) ) {
-				$children = $children_data;
-			} else {
-				$children = array();
-			}
-
-			foreach ( $children as $index => $child ) {
-				$child_url  = '';
-				$child_type = 'image';
-				if ( is_object( $child ) ) {
-					$child_url  = isset( $child->media_url ) ? $child->media_url : '';
-					$child_type = isset( $child->media_type ) ? strtolower( $child->media_type ) : 'image';
-					if ( 'video' === $child_type && isset( $child->thumbnail_url ) ) {
-						$child_url = $child->thumbnail_url;
-					}
-				} elseif ( is_array( $child ) ) {
-					$child_url  = isset( $child['media_url'] ) ? $child['media_url'] : '';
-					$child_type = isset( $child['media_type'] ) ? strtolower( $child['media_type'] ) : 'image';
-					if ( 'video' === $child_type && isset( $child['thumbnail_url'] ) ) {
-						$child_url = $child['thumbnail_url'];
-					}
-				}
-				if ( ! empty( $child_url ) ) {
-					$images[] = array(
-						'url'   => $child_url,
-						'type'  => $child_type,
-						'index' => $index,
-					);
-				}
-			}
-		}
-
-		if ( empty( $images ) ) {
-			$main_url = isset( $item->{'image-url'} ) ? $item->{'image-url'} : '';
-			if ( empty( $main_url ) && isset( $item->{'original-image-url'} ) ) {
-				$main_url = $item->{'original-image-url'};
-			}
-			if ( empty( $main_url ) && isset( $item->media_url ) ) {
-				$main_url = $item->media_url;
-			}
-			if ( ! empty( $main_url ) ) {
-				$images[] = array(
-					'url'   => $main_url,
-					'type'  => 'image',
-					'index' => 0,
-				);
-			}
-		}
-
-		return $images;
-	}
-
-	/**
-	 * Fetch album children directly from the Instagram API by media ID.
-	 * Tries all account tokens associated with the feed until it finds the right one.
-	 * Much faster than re-fetching the full feed for paginated (Load More) items.
-	 *
-	 * @param int    $feed_id  Feed post ID.
-	 * @param string $media_id Instagram media ID.
-	 * @return array List of array( 'url', 'type', 'index' ), empty if not found.
-	 */
-	private function get_album_images_direct_api( $feed_id, $media_id ) {
-		// Collect all access tokens (with account type info) for this feed.
-		$token_entries = array();
-		$user_id = get_post_meta( $feed_id, '_wpz-insta_user-id', true );
-		if ( ! empty( $user_id ) ) {
-			$token = get_post_meta( (int) $user_id, '_wpz-insta_token', true );
-			if ( ! empty( $token ) ) {
-				$is_business = ! empty( get_post_meta( (int) $user_id, '_wpz-insta_page_id', true ) );
-				$token_entries[] = array( 'token' => $token, 'is_business' => $is_business );
-			}
-		}
-
-		// Also collect tokens from additional multi-account user IDs (PRO).
-		$user_ids_string = get_post_meta( $feed_id, '_wpz-insta_user-ids', true );
-		if ( ! empty( $user_ids_string ) ) {
-			$extra_user_ids = array_map( 'intval', array_filter( explode( ',', $user_ids_string ) ) );
-			foreach ( $extra_user_ids as $extra_user_id ) {
-				if ( $extra_user_id === (int) $user_id ) {
-					continue; // Already added.
-				}
-				$extra_token = get_post_meta( $extra_user_id, '_wpz-insta_token', true );
-				if ( ! empty( $extra_token ) ) {
-					$is_business = ! empty( get_post_meta( $extra_user_id, '_wpz-insta_page_id', true ) );
-					$token_entries[] = array( 'token' => $extra_token, 'is_business' => $is_business );
-				}
-			}
-		}
-
-		// Try each token to fetch the media's children directly.
-		foreach ( $token_entries as $entry ) {
-			$access_token = $entry['token'];
-
-			// For Facebook Page API accounts, use the Facebook Graph API endpoint.
-			if ( $entry['is_business'] ) {
-				$request_url = add_query_arg(
-					array(
-						'fields'       => 'media_type,children{media_url,media_type,thumbnail_url}',
-						'access_token' => $access_token,
-					),
-					'https://graph.facebook.com/v21.0/' . $media_id
-				);
-			} else {
-				$request_url = add_query_arg(
-					array(
-						'fields'       => 'media_type,children{media_url,media_type,thumbnail_url}',
-						'access_token' => $access_token,
-					),
-					'https://graph.instagram.com/' . $media_id
-				);
-			}
-
-			$response = wp_remote_get( $request_url, array( 'timeout' => 15 ) );
-
-			if ( is_wp_error( $response ) || 200 !== wp_remote_retrieve_response_code( $response ) ) {
-				continue; // Wrong token or error, try next.
-			}
-
-			$data = json_decode( wp_remote_retrieve_body( $response ) );
-			if ( ! is_object( $data ) ) {
-				continue;
-			}
-
-			// Extract children images.
-			$images = $this->extract_images_from_album_item( $data );
-			if ( ! empty( $images ) ) {
-				return $images;
-			}
-
-			// Media found but it's not a carousel — return main image.
-			if ( isset( $data->media_type ) ) {
-				$main_url = isset( $data->media_url ) ? $data->media_url : '';
-				if ( ! empty( $main_url ) ) {
-					return array( array( 'url' => $main_url, 'type' => strtolower( $data->media_type ), 'index' => 0 ) );
-				}
-			}
-		}
-
-		return array();
 	}
 
 	function admin_body_class_filter( $classes ) {
@@ -1271,11 +867,13 @@ class WPZOOM_Instagram_Widget_Settings {
 						}
 					}
 
-					// Explicitly copy linked products (stored as single serialized array; generic loop can miss or double-serialize).
-					$product_links = get_post_meta( $post_id, '_wpz-insta_product-links', true );
-					if ( is_array( $product_links ) ) {
-						update_post_meta( $new_post_id, '_wpz-insta_product-links', $product_links );
-					}
+					/**
+					 * Fires after a feed's settings were copied to its duplicate.
+					 *
+					 * @param int $post_id     ID of the original feed.
+					 * @param int $new_post_id ID of the duplicate.
+					 */
+					do_action( 'wpz-insta_feed-duplicated', $post_id, $new_post_id );
 
 					add_post_meta( $new_post_id, '_wpz-insta_feed_is_duplicate', true );
 
@@ -1625,8 +1223,22 @@ class WPZOOM_Instagram_Widget_Settings {
 						<ul>
 							<li class="active"><a href="<?php echo esc_url( '#config' ); ?>"><?php _e( 'Configure', 'instagram-widget-by-wpzoom' ); ?></a></li>
 							<li <?php echo $disabled_class; ?>><a href="<?php echo esc_url( '#design' ); ?>"><?php _e( 'Design', 'instagram-widget-by-wpzoom' ); ?></a></li>
-							<li <?php echo $disabled_class; ?>><a href="<?php echo esc_url( '#moderate' ); ?>"><?php _e( 'Moderate', 'instagram-widget-by-wpzoom' ); ?> <?php if ( apply_filters( 'wpz-insta_is-pro', false ) ) : ?><span class="wpz-insta-new-badge"><?php esc_html_e( 'New', 'instagram-widget-by-wpzoom' ); ?></span><?php else : ?><span class="wpz-insta-pro-badge"><?php esc_html_e( 'PRO', 'instagram-widget-by-wpzoom' ); ?></span><?php endif; ?></a></li>
-							<li <?php echo $disabled_class; ?>><a href="<?php echo esc_url( '#product-links' ); ?>"><?php _e( 'Product Links', 'instagram-widget-by-wpzoom' ); ?> <?php if ( apply_filters( 'wpz-insta_is-pro', false ) ) : ?><span class="wpz-insta-new-badge"><?php esc_html_e( 'New', 'instagram-widget-by-wpzoom' ); ?></span><?php else : ?><span class="wpz-insta-pro-badge"><?php esc_html_e( 'PRO', 'instagram-widget-by-wpzoom' ); ?></span><?php endif; ?></a></li>
+							<?php
+							/**
+							 * Fires in the feed editor tab list, before the Embed tab. Print `<li>` elements linking to `#section-id`.
+							 *
+							 * @param WP_Post $post           The feed being edited.
+							 * @param string  $disabled_class Class attribute to add while no account is selected.
+							 */
+							do_action( 'wpz-insta_feed-settings-tabs', $post, $disabled_class );
+
+							// Without the PRO add-on, point out the two tabs it adds.
+							$show_pro_tabs_info = ! has_action( 'wpz-insta_feed-settings-tabs' );
+							?>
+							<?php if ( $show_pro_tabs_info ) : ?>
+								<li <?php echo $disabled_class; ?>><a href="<?php echo esc_url( '#moderate' ); ?>"><?php esc_html_e( 'Moderate', 'instagram-widget-by-wpzoom' ); ?> <span class="wpz-insta-pro-badge"><?php esc_html_e( 'PRO', 'instagram-widget-by-wpzoom' ); ?></span></a></li>
+								<li <?php echo $disabled_class; ?>><a href="<?php echo esc_url( '#product-links' ); ?>"><?php esc_html_e( 'Product Links', 'instagram-widget-by-wpzoom' ); ?> <span class="wpz-insta-pro-badge"><?php esc_html_e( 'PRO', 'instagram-widget-by-wpzoom' ); ?></span></a></li>
+							<?php endif; ?>
 							<li <?php echo $disabled_class; ?>><a href="<?php echo esc_url( '#embed' ); ?>"><?php _e( 'Embed', 'instagram-widget-by-wpzoom' ); ?></a><?php echo $embed_pointer; ?></li>
 						</ul>
 					</nav>
@@ -1860,11 +1472,6 @@ class WPZOOM_Instagram_Widget_Settings {
 			$show_account_badge               = (bool) self::get_feed_setting_value( $post->ID, 'show-account-badge' );
 			$show_account_stats               = (bool) self::get_feed_setting_value( $post->ID, 'show-account-stats' );
 			$show_stories                     = (bool) self::get_feed_setting_value( $post->ID, 'show-stories' );
-			$stories_row                      = (bool) self::get_feed_setting_value( $post->ID, 'stories-row' );
-			$stories_per_row                  = (int) self::get_feed_setting_value( $post->ID, 'stories-per-row' );
-			$stories_card_ratio               = (string) self::get_feed_setting_value( $post->ID, 'stories-card-ratio' );
-			$stories_row_show_name            = (bool) self::get_feed_setting_value( $post->ID, 'stories-row-show-name' );
-			$stories_row_show_time            = (bool) self::get_feed_setting_value( $post->ID, 'stories-row-show-time' );
 			$show_account_image               = (bool) self::get_feed_setting_value( $post->ID, 'show-account-image' );
 			$show_account_bio                 = (bool) self::get_feed_setting_value( $post->ID, 'show-account-bio' );
 			$show_view_instagram_button       = (bool) self::get_feed_setting_value( $post->ID, 'show-view-button' );
@@ -1903,15 +1510,7 @@ class WPZOOM_Instagram_Widget_Settings {
 			?>
 			<div class="wpz-insta_tabs-content">
 				<div class="wpz-insta_sidebar active show-pro">
-					<div class="wpz-insta_sidebar-left<?php echo ! $pro_toggle ? ' is-pro' : ''; ?>">
-						<?php if ( $pro_toggle ) : ?>
-							<div class="wpz-insta_sidebar-left-section-head">
-								<label>
-									<input type="checkbox" name="_wpz-insta_show-pro" id="wpz-insta_show-pro" value="1" checked class="preview-exclude" />
-									<strong><?php esc_html_e( 'Show PRO options', 'instagram-widget-by-wpzoom' ); ?></strong>
-								</label>
-							</div>
-						<?php endif; ?>
+					<div class="wpz-insta_sidebar-left">
 
 						<div class="wpz-insta_sidebar-left-section active" data-id="#config">
 							<div class="wpz-insta_sidebar-section wpz-insta_sidebar-section-account">
@@ -1966,17 +1565,25 @@ class WPZOOM_Instagram_Widget_Settings {
 							 */
 							do_action( 'wpz-insta_feed-settings-after-account', $post->ID, $user_id, $user, $all_users, $pro_toggle );
 
-							// Show multi-account placeholder when PRO is not active
+							// Point out the multi-account feeds add-on when it is not active
 							if ( $pro_toggle && count( $all_users ) > 1 ) :
 							?>
 							<div class="wpz-insta_sidebar-section wpz-insta_sidebar-section-multi-account-promo<?php echo $user instanceof WP_Post ? ' active' : ''; ?>">
-								<div class="wpz-insta_add-another-account-wrap wpz-insta_pro-only-feature">
-									<button type="button" class="wpz-insta_add-another-account-btn-placeholder" disabled>
+								<div class="wpz-insta_add-another-account-wrap">
+									<a class="wpz-insta_add-another-account-btn-placeholder" href="<?php echo esc_url( 'https://www.wpzoom.com/plugins/instagram-widget/?utm_source=wpadmin&utm_medium=instagram-widget&utm_campaign=multi-account' ); ?>" target="_blank" rel="noopener">
 										<span class="dashicons dashicons-plus-alt2"></span>
 										<?php esc_html_e( 'Add another account', 'instagram-widget-by-wpzoom' ); ?>
 										<span class="wpz-insta-pro-badge"><?php esc_html_e( 'PRO', 'instagram-widget-by-wpzoom' ); ?></span>
-									</button>
-									<p class="wpz-insta_add-another-account-description"><?php esc_html_e( 'Combine posts from multiple Instagram accounts into a single feed.', 'instagram-widget-by-wpzoom' ); ?></p>
+									</a>
+									<p class="wpz-insta_add-another-account-description">
+										<?php
+										printf(
+											/* translators: %s: URL of the multi-account feed demo. */
+											wp_kses( __( 'Combine posts from multiple Instagram accounts into a single feed with the PRO add-on. <a href="%s" target="_blank" rel="noopener">View demo</a>', 'instagram-widget-by-wpzoom' ), array( 'a' => array( 'href' => array(), 'target' => array(), 'rel' => array() ) ) ),
+											esc_url( 'https://demo.wpzoom.com/instagram-widget/multi-account-feed/?utm_source=wpadmin&utm_medium=feed-settings&utm_campaign=multi-account-demo' )
+										);
+										?>
+									</p>
 								</div>
 							</div>
 							<?php
@@ -2209,9 +1816,6 @@ class WPZOOM_Instagram_Widget_Settings {
 													}
 													?>
 												</div>
-											<?php } else { ?>
-												<input type="checkbox"<?php checked( true ); disabled( true ); ?> />
-												<span><?php esc_html_e( 'Highlight every 3rd post', 'instagram-widget-by-wpzoom' ); ?></span>
 										</div>
 									</div>
 
@@ -2289,55 +1893,29 @@ class WPZOOM_Instagram_Widget_Settings {
                                             </span>
 										</label>
 
-										<?php echo $pro_toggle ? '<fieldset class="wpz-insta_feed-only-pro wpz-insta_pro-only wpz-insta_pro-only-with-bottom"><legend><strong>' . esc_html__( 'PRO', 'instagram-widget-by-wpzoom' ) . '</strong></legend>' : ''; ?>
-										<div class="wpz-insta_stories-row-options wpz-insta_sub-wrapper<?php echo ( ! $user_has_facebook_connection || ! $show_stories ) ? ' wpz-insta_disabled' : ''; ?>">
-											<label class="wpz-insta_table-row">
-												<input type="hidden" name="_wpz-insta_stories-row" value="0" />
-												<input type="checkbox" name="_wpz-insta_stories-row" value="1"<?php checked( $stories_row ); ?><?php disabled( $pro_toggle || ! $user_has_facebook_connection || ! $show_stories ); ?> />
-												<span>
-													<?php esc_html_e( 'Display stories row above the feed', 'instagram-widget-by-wpzoom' ); ?>
+										<?php
+										/**
+										 * Fires after the "Display Instagram Stories" option in the feed settings.
+										 *
+										 * @param WP_Post $post                         The feed being edited.
+										 * @param bool    $show_stories                 Whether stories are enabled for the feed.
+										 * @param bool    $user_has_facebook_connection Whether the account is connected through a Facebook Page.
+										 */
+										do_action( 'wpz-insta_feed-settings-stories', $post, $show_stories, $user_has_facebook_connection );
+										?>
 
-													<small class="help" aria-hidden="true" data-tooltip="<?php esc_html_e( 'Shows a carousel with a thumbnail for each active story, similar to Facebook. Clicking a thumbnail opens that story in the viewer.', 'instagram-widget-by-wpzoom' ); ?>"><svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='16' height='16'><path fill='#000' fill-rule='evenodd' clip-rule='evenodd' d='M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm-1 16v-2h2v2h-2zm2-3v-1.141A3.991 3.991 0 0016 10a4 4 0 00-8 0h2c0-1.103.897-2 2-2s2 .897 2 2-.897 2-2 2a1 1 0 00-1 1v2h2z'></path></svg></small>
-												</span>
-											</label>
-
-											<?php if ( $pro_toggle ) : ?>
-												<a class="wpz-insta_pro-demo-link" href="https://demo.wpzoom.com/instagram-widget/stories/?utm_source=wpadmin&amp;utm_medium=feed-settings&amp;utm_campaign=stories-row-demo" target="_blank" rel="noopener"><?php esc_html_e( 'See the stories row in action', 'instagram-widget-by-wpzoom' ); ?> <span aria-hidden="true">&#8599;</span></a>
-											<?php endif; ?>
-
-											<div class="wpz-insta_stories-row-suboptions wpz-insta_sub-wrapper<?php echo ! $stories_row ? ' wpz-insta_disabled' : ''; ?>">
-												<div class="wpz-insta_table-row">
-													<label class="wpz-insta_table-cell" for="wpz-insta_stories-per-row"><?php esc_html_e( 'Stories per row', 'instagram-widget-by-wpzoom' ); ?></label>
-													<div class="wpz-insta_table-cell">
-														<input type="number" name="_wpz-insta_stories-per-row" id="wpz-insta_stories-per-row" value="<?php echo esc_attr( $stories_per_row ); ?>" size="3" min="2" max="10" step="1"<?php disabled( $pro_toggle ); ?> />
-													</div>
-												</div>
-
-												<div class="wpz-insta_table-row">
-													<label class="wpz-insta_table-cell" for="wpz-insta_stories-card-ratio"><?php esc_html_e( 'Thumbnail shape', 'instagram-widget-by-wpzoom' ); ?></label>
-													<div class="wpz-insta_table-cell">
-														<select name="_wpz-insta_stories-card-ratio" id="wpz-insta_stories-card-ratio"<?php disabled( $pro_toggle ); ?>>
-															<option value="portrait"<?php selected( $stories_card_ratio, 'portrait' ); ?>><?php esc_html_e( 'Portrait (9:16)', 'instagram-widget-by-wpzoom' ); ?></option>
-															<option value="tall"<?php selected( $stories_card_ratio, 'tall' ); ?>><?php esc_html_e( 'Tall (3:4)', 'instagram-widget-by-wpzoom' ); ?></option>
-															<option value="square"<?php selected( $stories_card_ratio, 'square' ); ?>><?php esc_html_e( 'Square (1:1)', 'instagram-widget-by-wpzoom' ); ?></option>
-														</select>
-													</div>
-												</div>
-
-												<label class="wpz-insta_table-row">
-													<input type="hidden" name="_wpz-insta_stories-row-show-name" value="0" />
-													<input type="checkbox" name="_wpz-insta_stories-row-show-name" value="1"<?php checked( $stories_row_show_name ); ?><?php disabled( $pro_toggle ); ?> />
-													<span><?php esc_html_e( 'Show account name on thumbnails', 'instagram-widget-by-wpzoom' ); ?></span>
-												</label>
-
-												<label class="wpz-insta_table-row">
-													<input type="hidden" name="_wpz-insta_stories-row-show-time" value="0" />
-													<input type="checkbox" name="_wpz-insta_stories-row-show-time" value="1"<?php checked( $stories_row_show_time ); ?><?php disabled( $pro_toggle ); ?> />
-													<span><?php esc_html_e( 'Show time on thumbnails', 'instagram-widget-by-wpzoom' ); ?></span>
-												</label>
-											</div>
-										</div>
-									<?php echo $pro_toggle ? '</fieldset>' : ''; ?>
+										<?php if ( ! has_action( 'wpz-insta_feed-settings-stories' ) ) : ?>
+											<p class="description">
+												<?php
+												printf(
+													/* translators: 1: URL of the stories row demo, 2: URL of the PRO plugin page. */
+													wp_kses( __( 'Want a row of story thumbnails above the feed? <a href="%1$s" target="_blank" rel="noopener">See the stories row demo</a>, available in <a href="%2$s" target="_blank" rel="noopener">WPZOOM Instagram PRO</a>.', 'instagram-widget-by-wpzoom' ), array( 'a' => array( 'href' => array(), 'target' => array(), 'rel' => array() ) ) ),
+													esc_url( 'https://demo.wpzoom.com/instagram-widget/stories/?utm_source=wpadmin&utm_medium=feed-settings&utm_campaign=stories-row-demo' ),
+													esc_url( 'https://www.wpzoom.com/plugins/instagram-widget/?utm_source=wpadmin&utm_medium=instagram-widget&utm_campaign=stories-row' )
+												);
+												?>
+											</p>
+										<?php endif; ?>
 									</div>
 
 									<div class="wpz-insta_table-group">
@@ -2573,24 +2151,6 @@ class WPZOOM_Instagram_Widget_Settings {
 												<input type="checkbox" name="_wpz-insta_hover-date" value="1"<?php checked( $feed_hover_date ); ?> />
 												<span><?php esc_html_e( 'Date', 'instagram-widget-by-wpzoom' ); ?></span>
 											</label>
-
-
-                                            <?php /* Coming Soon
-
-											<label class="wpz-insta_table-row">
-												<input type="hidden" name="_wpz-insta_hover-autoplay" value="0" />
-												<input type="checkbox" name="_wpz-insta_hover-autoplay" value="1"<?php checked( $feed_hover_autoplay ); disabled( $pro_toggle ); ?> />
-												<span><?php esc_html_e( 'Auto-play on hover (videos and albums posts only)', 'instagram-widget-by-wpzoom' ); ?></span>
-											</label>
-
-											<label class="wpz-insta_table-row">
-												<input type="hidden" name="_wpz-insta_hover-tags-feed" value="0" />
-												<input type="checkbox" name="_wpz-insta_hover-tags-feed" value="1"<?php checked( $feed_hover_tags_feed ); disabled( $pro_toggle ); ?> />
-												<span><?php esc_html_e( 'Display a feed from tags', 'instagram-widget-by-wpzoom' ); ?></span>
-											</label>
-
-											*/ ?>
-
 										</div>
 									</div>
 								</div>
@@ -2619,28 +2179,53 @@ class WPZOOM_Instagram_Widget_Settings {
 							</div>
 						</div>
 
-						<div class="wpz-insta_sidebar-left-section" data-id="#moderate">
-							<h4 class="wpz-insta_sidebar-section-big-title"><?php esc_html_e( 'Moderate Posts', 'instagram-widget-by-wpzoom' ); ?><?php echo $pro_toggle ? ' <span class="wpz-insta-pro-badge">' . esc_html__( 'PRO', 'instagram-widget-by-wpzoom' ) . '</span>' : ''; ?></h4>
+						<?php
+						/**
+						 * Fires in the feed editor sidebar, before the Embed section. Print
+						 * `<div class="wpz-insta_sidebar-left-section" data-id="#section-id">` elements matching the tabs.
+						 *
+						 * @param WP_Post $post The feed being edited.
+						 */
+						do_action( 'wpz-insta_feed-settings-sections', $post );
+						?>
 
-							<?php if ( $pro_toggle ) : ?>
-							<div class="wpz-insta_sidebar-section wpz-insta_sidebar-section-moderate-intro no-top-border wpz-insta_pro-only-feature">
-								<p class="wpz-insta_sidebar-section-description"><?php esc_html_e( 'Hide or show individual posts in your feed. Click the eye icon on each post in the preview to control visibility—hidden posts will not be visible to visitors on your website.', 'instagram-widget-by-wpzoom' ); ?></p>
-								<a href="https://www.wpzoom.com/plugins/instagram-widget/?utm_source=wpadmin&utm_medium=instagram-widget&utm_campaign=moderate-section" 
-								   target="_blank" 
-								   class="button button-primary wpz-insta-upgrade-pro-btn"
-								   style="margin-top: 16px;">
-									<?php esc_html_e( 'Upgrade to PRO', 'instagram-widget-by-wpzoom' ); ?>
-								</a>
-							</div>
-							<?php else : ?>
-							<div class="wpz-insta_sidebar-section wpz-insta_sidebar-section-moderate-intro no-top-border">
-								<h5 class="wpz-insta_sidebar-section-title smaller-title"><?php esc_html_e( 'Hide or Show Posts', 'instagram-widget-by-wpzoom' ); ?></h5>
-								<div class="wpz-insta_sidebar-section-description">
-									<p><?php esc_html_e( 'Click the eye icon on each Instagram post in the preview to hide or show it in your feed. Hidden posts will not be visible to visitors on your website', 'instagram-widget-by-wpzoom' ); ?></p>
+						<?php if ( ! has_action( 'wpz-insta_feed-settings-sections' ) ) : ?>
+							<?php
+							// Information only: these features are not part of this plugin, they come with the PRO add-on.
+							$pro_info_sections = array(
+								'moderate'      => array(
+									'title'    => __( 'Moderate Posts', 'instagram-widget-by-wpzoom' ),
+									'text'     => __( 'Choose which Instagram posts appear in your feed: hide individual posts from your website without deleting them from Instagram. Post moderation is part of the WPZOOM Instagram PRO add-on.', 'instagram-widget-by-wpzoom' ),
+									'campaign' => 'moderate-section',
+									'image'    => 'pro-instagram-moderation.webp',
+								),
+								'product-links' => array(
+									'title'    => __( 'Product Links', 'instagram-widget-by-wpzoom' ),
+									'text'     => __( 'Turn your feed into a shoppable gallery: link Instagram posts to WooCommerce products, tag products on images and show them in the feed and the lightbox. Product links are part of the WPZOOM Instagram PRO add-on.', 'instagram-widget-by-wpzoom' ),
+									'campaign' => 'product-links-section',
+									'image'    => 'pro-instagram-woocommerce.webp',
+									'demo'     => 'https://demo.wpzoom.com/instagram-widget/woocommerce/?utm_source=wpadmin&utm_medium=feed-settings&utm_campaign=product-links-demo',
+								),
+							);
+
+							foreach ( $pro_info_sections as $section_id => $section ) :
+								?>
+								<div class="wpz-insta_sidebar-left-section" data-id="#<?php echo esc_attr( $section_id ); ?>">
+									<h4 class="wpz-insta_sidebar-section-big-title"><?php echo esc_html( $section['title'] ); ?></h4>
+
+									<div class="wpz-insta_sidebar-section no-top-border">
+										<img src="<?php echo esc_url( WPZOOM_INSTAGRAM_PLUGIN_URL . 'assets/backend/img/' . $section['image'] ); ?>" alt="" width="800" height="800" loading="lazy" style="display:block;width:100%;max-width:420px;height:auto;margin:0 0 16px;" />
+										<p class="wpz-insta_sidebar-section-description"><?php echo esc_html( $section['text'] ); ?></p>
+										<a href="<?php echo esc_url( 'https://www.wpzoom.com/plugins/instagram-widget/?utm_source=wpadmin&utm_medium=instagram-widget&utm_campaign=' . $section['campaign'] ); ?>" target="_blank" rel="noopener" class="button button-primary" style="margin-top: 16px;"><?php esc_html_e( 'Learn more about PRO', 'instagram-widget-by-wpzoom' ); ?></a>
+										<?php if ( ! empty( $section['demo'] ) ) : ?>
+											<a href="<?php echo esc_url( $section['demo'] ); ?>" target="_blank" rel="noopener" class="button" style="margin-top: 16px;"><?php esc_html_e( 'View demo', 'instagram-widget-by-wpzoom' ); ?></a>
+										<?php endif; ?>
+									</div>
 								</div>
-							</div>
-							<?php endif; ?>
-						</div>
+								<?php
+							endforeach;
+							?>
+						<?php endif; ?>
 
 						<div class="wpz-insta_sidebar-left-section" data-id="#embed">
 							<h4 class="wpz-insta_sidebar-section-big-title"><?php esc_html_e( 'Display your Feed', 'instagram-widget-by-wpzoom' ); ?></h4>
@@ -2683,266 +2268,6 @@ class WPZOOM_Instagram_Widget_Settings {
 							</div>
 						</div>
 
-						<?php if ( class_exists( 'WooCommerce' ) ) :
-							$product_links_display_type = get_post_meta( $post->ID, '_wpz-insta_product-links-display-type', true ) ?: 'icon';
-							$product_links_is_icon = ( 'icon' === $product_links_display_type );
-						?>
-						<div class="wpz-insta_sidebar-left-section" data-id="#product-links">
-							<h4 class="wpz-insta_sidebar-section-big-title"><?php esc_html_e( 'Product Links', 'instagram-widget-by-wpzoom' ); ?></h4>
-
-							<div class="wpz-insta_sidebar-section wpz-insta_sidebar-section-product-links-intro no-top-border">
-								<h5 class="wpz-insta_sidebar-section-title smaller-title"><?php esc_html_e( 'Link Instagram Items to Products', 'instagram-widget-by-wpzoom' ); ?></h5>
-								<div class="wpz-insta_sidebar-section-description">
-									<p><?php esc_html_e( 'To link a post to a product, click the "Link to a product" button that appears on each Instagram item in the preview.', 'instagram-widget-by-wpzoom' ); ?></p>
-								</div>
-							</div>
-
-							<div class="wpz-insta_sidebar-section wpz-insta_sidebar-section-product-links-settings">
-								<h4 class="wpz-insta_sidebar-section-title"><?php esc_html_e( 'Settings', 'instagram-widget-by-wpzoom' ); ?></h4>
-
-								<?php echo $pro_toggle ? '<fieldset class="wpz-insta_feed-only-pro wpz-insta_pro-only wpz-insta_pro-only-with-bottom' . ( 1 === $feed_layout ? ' hidden' : '' ) . '"><legend><strong>' . esc_html__( 'PRO', 'instagram-widget-by-wpzoom' ) . '</strong></legend>' : ''; ?>
-
-								<div class="wpz-insta_product-links-general wpz-insta_table">
-									<div class="wpz-insta_table-row wpz-insta-product-links-display-type-row">
-										<strong class="wpz-insta_table-cell"><?php esc_html_e( 'Display', 'instagram-widget-by-wpzoom' ); ?></strong>
-										<div class="wpz-insta_table-cell">
-											<?php
-											$product_links_display_type_value = get_post_meta( $post->ID, '_wpz-insta_product-links-display-type', true ) ?: 'icon';
-											?>
-											<div class="wpz-insta_product-links-display-type" id="_wpz-insta_product-links-display-type">
-												<label class="wpz-insta_product-links-display-option wpz-insta_product-links-display-icon">
-													<input type="radio" name="_wpz-insta_product-links-display-type" value="icon" class="preview-exclude" <?php checked( $product_links_display_type_value, 'icon' ); ?> />
-													<svg width="91" height="109" viewBox="0 0 91 109" fill="none" xmlns="http://www.w3.org/2000/svg">
-														<path d="M87.5 0H3.5C1.567 0 0 1.567 0 3.5V105.5C0 107.433 1.567 109 3.5 109H87.5C89.433 109 91 107.433 91 105.5V3.5C91 1.567 89.433 0 87.5 0Z"  fill-opacity="0.2"/>
-														<path d="M66.6875 80.1875C66.8035 80.1875 66.915 80.2334 66.9971 80.3154C67.0791 80.3975 67.125 80.509 67.125 80.625V81.0625C67.125 81.7587 66.8487 82.4267 66.3564 82.9189C65.8642 83.4112 65.1962 83.6875 64.5 83.6875C63.8038 83.6875 63.1358 83.4112 62.6436 82.9189C62.1513 82.4267 61.875 81.7587 61.875 81.0625V80.625C61.875 80.509 61.9209 80.3975 62.0029 80.3154C62.085 80.2334 62.1965 80.1875 62.3125 80.1875C62.4285 80.1875 62.54 80.2334 62.6221 80.3154C62.7041 80.3975 62.75 80.509 62.75 80.625V81.0625C62.75 81.5266 62.9345 81.9716 63.2627 82.2998C63.5909 82.628 64.0359 82.8125 64.5 82.8125C64.9641 82.8125 65.4091 82.628 65.7373 82.2998C66.0655 81.9716 66.25 81.5266 66.25 81.0625V80.625C66.25 80.509 66.2959 80.3975 66.3779 80.3154C66.46 80.2334 66.5715 80.1875 66.6875 80.1875Z" />
-														<path d="M64.5 76.25C64.9641 76.25 65.4091 76.4345 65.7373 76.7627C66.0655 77.0909 66.25 77.5359 66.25 78V78.4375H62.75V78C62.75 77.5359 62.9345 77.0909 63.2627 76.7627C63.5909 76.4345 64.0359 76.25 64.5 76.25Z" />
-														<path fill-rule="evenodd" clip-rule="evenodd" d="M74.9404 30.5C76.3539 30.5002 77.4998 31.6461 77.5 33.0596V91.9404C77.4998 93.3539 76.3539 94.4998 74.9404 94.5H16.0596C14.6461 94.4998 13.5002 93.3539 13.5 91.9404V33.0596C13.5002 31.6461 14.6461 30.5002 16.0596 30.5H74.9404ZM64.5 75.375C63.8038 75.375 63.1358 75.6513 62.6436 76.1436C62.1513 76.6358 61.875 77.3038 61.875 78V78.4375H60.7158C60.1559 78.4375 59.6868 78.8599 59.6279 79.417L58.8916 86.417C58.8756 86.5694 58.8912 86.7234 58.9385 86.8691C58.9858 87.0148 59.0636 87.1489 59.166 87.2627C59.2686 87.3766 59.3942 87.4679 59.5342 87.5303C59.6742 87.5926 59.8262 87.625 59.9795 87.625H69.0205C69.1738 87.625 69.3258 87.5926 69.4658 87.5303C69.6058 87.4679 69.7314 87.3766 69.834 87.2627C69.9364 87.1489 70.0142 87.0148 70.0615 86.8691C70.1088 86.7234 70.1244 86.5694 70.1084 86.417L69.3721 79.417C69.3438 79.1482 69.2165 78.8996 69.0156 78.7188C68.8148 78.5379 68.5544 78.4375 68.2842 78.4375H67.125V78C67.125 77.3038 66.8487 76.6358 66.3564 76.1436C65.8642 75.6513 65.1962 75.375 64.5 75.375Z" />
-														<path d="M15.5 19.0838V9.62926H19.0455C19.7718 9.62926 20.3812 9.76468 20.8736 10.0355C21.3691 10.3063 21.743 10.6787 21.9954 11.1527C22.2508 11.6236 22.3786 12.1591 22.3786 12.7592C22.3786 13.3655 22.2508 13.9041 21.9954 14.375C21.7399 14.8459 21.3629 15.2167 20.8643 15.4876C20.3658 15.7553 19.7518 15.8892 19.0224 15.8892H16.6726V14.4812H18.7915C19.2163 14.4812 19.564 14.4073 19.8349 14.2596C20.1057 14.1119 20.3058 13.9087 20.435 13.6502C20.5674 13.3917 20.6335 13.0947 20.6335 12.7592C20.6335 12.4238 20.5674 12.1283 20.435 11.8729C20.3058 11.6174 20.1042 11.4189 19.8303 11.2773C19.5594 11.1327 19.2101 11.0604 18.7823 11.0604H17.2127V19.0838H15.5Z" />
-														<path d="M32.3144 14.3565C32.3144 15.3752 32.1235 16.2478 31.7419 16.9741C31.3634 17.6973 30.8463 18.2513 30.1908 18.636C29.5383 19.0207 28.7981 19.2131 27.9703 19.2131C27.1424 19.2131 26.4007 19.0207 25.7451 18.636C25.0927 18.2482 24.5756 17.6927 24.194 16.9695C23.8154 16.2431 23.6262 15.3722 23.6262 14.3565C23.6262 13.3378 23.8154 12.4669 24.194 11.7436C24.5756 11.0173 25.0927 10.4618 25.7451 10.0771C26.4007 9.69235 27.1424 9.5 27.9703 9.5C28.7981 9.5 29.5383 9.69235 30.1908 10.0771C30.8463 10.4618 31.3634 11.0173 31.7419 11.7436C32.1235 12.4669 32.3144 13.3378 32.3144 14.3565ZM30.5924 14.3565C30.5924 13.6394 30.4801 13.0347 30.2554 12.5423C30.0338 12.0468 29.7261 11.6728 29.3321 11.4205C28.9382 11.165 28.4842 11.0373 27.9703 11.0373C27.4563 11.0373 27.0023 11.165 26.6084 11.4205C26.2145 11.6728 25.9052 12.0468 25.6805 12.5423C25.4589 13.0347 25.3481 13.6394 25.3481 14.3565C25.3481 15.0736 25.4589 15.6799 25.6805 16.1754C25.9052 16.6679 26.2145 17.0418 26.6084 17.2972C27.0023 17.5496 27.4563 17.6758 27.9703 17.6758C28.4842 17.6758 28.9382 17.5496 29.3321 17.2972C29.7261 17.0418 30.0338 16.6679 30.2554 16.1754C30.4801 15.6799 30.5924 15.0736 30.5924 14.3565Z" />
-														<path d="M33.9336 19.0838V9.62926H37.479C38.2054 9.62926 38.8148 9.76468 39.3072 10.0355C39.8027 10.3063 40.1766 10.6787 40.429 11.1527C40.6844 11.6236 40.8121 12.1591 40.8121 12.7592C40.8121 13.3655 40.6844 13.9041 40.429 14.375C40.1735 14.8459 39.7965 15.2167 39.2979 15.4876C38.7994 15.7553 38.1854 15.8892 37.456 15.8892H35.1062V14.4812H37.2251C37.6499 14.4812 37.9976 14.4073 38.2685 14.2596C38.5393 14.1119 38.7393 13.9087 38.8686 13.6502C39.0009 13.3917 39.0671 13.0947 39.0671 12.7592C39.0671 12.4238 39.0009 12.1283 38.8686 11.8729C38.7393 11.6174 38.5378 11.4189 38.2638 11.2773C37.993 11.1327 37.6437 11.0604 37.2159 11.0604H35.6463V19.0838H33.9336Z" />
-														<path d="M50.748 14.3565C50.748 15.3752 50.5571 16.2478 50.1755 16.9741C49.797 17.6973 49.2799 18.2513 48.6244 18.636C47.9719 19.0207 47.2317 19.2131 46.4039 19.2131C45.576 19.2131 44.8343 19.0207 44.1787 18.636C43.5262 18.2482 43.0092 17.6927 42.6276 16.9695C42.249 16.2431 42.0597 15.3722 42.0597 14.3565C42.0597 13.3378 42.249 12.4669 42.6276 11.7436C43.0092 11.0173 43.5262 10.4618 44.1787 10.0771C44.8343 9.69235 45.576 9.5 46.4039 9.5C47.2317 9.5 47.9719 9.69235 48.6244 10.0771C49.2799 10.4618 49.797 11.0173 50.1755 11.7436C50.5571 12.4669 50.748 13.3378 50.748 14.3565ZM49.026 14.3565C49.026 13.6394 48.9137 13.0347 48.689 12.5423C48.4674 12.0468 48.1597 11.6728 47.7657 11.4205C47.3718 11.165 46.9178 11.0373 46.4039 11.0373C45.8899 11.0373 45.4359 11.165 45.042 11.4205C44.6481 11.6728 44.3388 12.0468 44.1141 12.5423C43.8925 13.0347 43.7817 13.6394 43.7817 14.3565C43.7817 15.0736 43.8925 15.6799 44.1141 16.1754C44.3388 16.6679 44.6481 17.0418 45.042 17.2972C45.4359 17.5496 45.8899 17.6758 46.4039 17.6758C46.9178 17.6758 47.3718 17.5496 47.7657 17.2972C48.1597 17.0418 48.4674 16.6679 48.689 16.1754C48.9137 15.6799 49.026 15.0736 49.026 14.3565Z" />
-														<path d="M53.1243 9.62926L55.5849 17.071H55.6818L58.1378 9.62926H60.0213L56.6882 19.0838H54.5739L51.2454 9.62926H53.1243Z" />
-														<path d="M61.2666 19.0838V9.62926H67.4157V11.065H62.9793V13.6317H67.0972V15.0675H62.9793V17.6481H67.4527V19.0838H61.2666Z" />
-														<path d="M69.1631 19.0838V9.62926H72.7085C73.4349 9.62926 74.0442 9.75545 74.5367 10.0078C75.0322 10.2602 75.4061 10.6141 75.6585 11.0696C75.9139 11.522 76.0416 12.0498 76.0416 12.6531C76.0416 13.2594 75.9124 13.7856 75.6539 14.2319C75.3984 14.6751 75.0214 15.0182 74.5228 15.2614C74.0242 15.5014 73.4118 15.6214 72.6855 15.6214H70.1602V14.1996H72.4546C72.8794 14.1996 73.2271 14.1411 73.498 14.0241C73.7688 13.9041 73.9688 13.7302 74.0981 13.5025C74.2304 13.2717 74.2966 12.9885 74.2966 12.6531C74.2966 12.3176 74.2304 12.0314 74.0981 11.7944C73.9658 11.5543 73.7642 11.3728 73.4933 11.2496C73.2225 11.1235 72.8732 11.0604 72.4454 11.0604H70.8758V19.0838H69.1631ZM74.0473 14.7997L76.3879 19.0838H74.4767L72.1776 14.7997H74.0473Z" />
-														</svg>
-
-												</label>
-												<label class="wpz-insta_product-links-display-option wpz-insta_product-links-display-button">
-													<input type="radio" name="_wpz-insta_product-links-display-type" value="button" class="preview-exclude" <?php checked( $product_links_display_type_value, 'button' ); ?> />
-													<svg width="91" height="109" viewBox="0 0 91 109" fill="none" xmlns="http://www.w3.org/2000/svg">
-														<path d="M87.5 0H3.5C1.567 0 0 1.567 0 3.5V105.5C0 107.433 1.567 109 3.5 109H87.5C89.433 109 91 107.433 91 105.5V3.5C91 1.567 89.433 0 87.5 0Z"  fill-opacity="0.2"/>
-														<path d="M37.0225 79.7471V82.9961C37.0225 83.2081 37.0694 83.3969 37.1621 83.5625C37.2566 83.7282 37.3889 83.8587 37.5596 83.9531C37.7302 84.0459 37.9325 84.0918 38.166 84.0918C38.3995 84.0918 38.6019 84.0458 38.7725 83.9531C38.9448 83.8587 39.0781 83.7282 39.1709 83.5625C39.2636 83.3969 39.3095 83.208 39.3096 82.9961V79.7471H40.2324V83.0732C40.2324 83.4377 40.1459 83.7585 39.9736 84.0352C39.803 84.3117 39.5626 84.5279 39.2529 84.6836C38.943 84.8377 38.5803 84.915 38.166 84.915C37.7502 84.915 37.387 84.8377 37.0771 84.6836C36.7675 84.5279 36.5271 84.3117 36.3564 84.0352C36.1858 83.7585 36.1006 83.4377 36.1006 83.0732V79.7471H37.0225Z" />
-														<path fill-rule="evenodd" clip-rule="evenodd" d="M52.4609 79.6777C52.9067 79.6777 53.305 79.7812 53.6562 79.9883C54.0092 80.1954 54.2884 80.4946 54.4922 80.8857C54.6975 81.275 54.7998 81.7438 54.7998 82.292C54.7998 82.8405 54.6977 83.311 54.4922 83.7021C54.2884 84.0915 54.0092 84.3896 53.6562 84.5967C53.305 84.8037 52.9066 84.9072 52.4609 84.9072C52.0152 84.9072 51.6157 84.8038 51.2627 84.5967C50.9114 84.3879 50.6332 84.0886 50.4277 83.6992C50.2239 83.3081 50.1221 82.8389 50.1221 82.292C50.1221 81.7437 50.224 81.2751 50.4277 80.8857C50.6332 80.4947 50.9114 80.1954 51.2627 79.9883C51.6157 79.7811 52.0152 79.6777 52.4609 79.6777ZM52.4609 80.5049C52.1843 80.5049 51.9396 80.5735 51.7275 80.7109C51.5154 80.8468 51.3485 81.0486 51.2275 81.3154C51.1083 81.5805 51.0489 81.9061 51.0488 82.292C51.0488 82.678 51.1083 83.0047 51.2275 83.2715C51.3485 83.5366 51.5154 83.7384 51.7275 83.876C51.9396 84.0118 52.1842 84.0801 52.4609 84.0801C52.7377 84.0801 52.9822 84.0119 53.1943 83.876C53.4064 83.7384 53.5721 83.5366 53.6914 83.2715C53.8123 83.0047 53.873 82.678 53.873 82.292C53.873 81.906 53.8123 81.5805 53.6914 81.3154C53.5721 81.0486 53.4065 80.8468 53.1943 80.7109C52.9823 80.5734 52.7376 80.5049 52.4609 80.5049Z" />
-														<path fill-rule="evenodd" clip-rule="evenodd" d="M33.4492 79.7471C33.817 79.7471 34.1227 79.8049 34.3662 79.9209C34.6113 80.0352 34.7941 80.1919 34.915 80.3906C35.0376 80.5894 35.0995 80.8147 35.0996 81.0664C35.0996 81.2734 35.0599 81.4512 34.9805 81.5986C34.9009 81.7445 34.7934 81.863 34.6592 81.9541C34.5251 82.0451 34.3754 82.1106 34.21 82.1504V82.2002C34.3904 82.2102 34.5639 82.2662 34.7295 82.3672C34.8966 82.4666 35.0337 82.607 35.1396 82.7891C35.2457 82.9714 35.2979 83.1926 35.2979 83.4512C35.2978 83.7145 35.234 83.9518 35.1064 84.1621C34.9789 84.3706 34.7869 84.5354 34.5303 84.6562C34.2734 84.7772 33.95 84.8379 33.5605 84.8379H31.5V79.7471H33.4492ZM32.4219 82.5762V84.0674H33.4141C33.7488 84.0674 33.9902 84.0036 34.1377 83.876C34.2867 83.7468 34.3613 83.5809 34.3613 83.3789C34.3613 83.2281 34.3236 83.0917 34.249 82.9707C34.1745 82.8482 34.0681 82.7522 33.9307 82.6826C33.7932 82.6115 33.6289 82.5762 33.4385 82.5762H32.4219ZM32.4219 80.5078V81.9121H33.335C33.4939 81.9121 33.6372 81.8831 33.7646 81.8252C33.8922 81.7656 33.9925 81.6819 34.0654 81.5742C34.1399 81.4649 34.1767 81.3355 34.1768 81.1865C34.1768 80.9895 34.1077 80.8268 33.9688 80.6992C33.8312 80.5716 33.6262 80.5078 33.3545 80.5078H32.4219Z" />
-														<path d="M45.0723 79.7471V80.5195H43.499V84.8379H42.584V80.5195H41.0107V79.7471H45.0723Z" />
-														<path d="M49.6934 79.7471V80.5195H48.1201V84.8379H47.2051V80.5195H45.6318V79.7471H49.6934Z" />
-														<path d="M56.4971 79.7471L58.8936 83.2168H58.9385V79.7471H59.8555V84.8379H59.0352L56.6367 81.3701H56.5938V84.8379H55.6719V79.7471H56.4971Z" />
-														<path fill-rule="evenodd" clip-rule="evenodd" d="M74.9404 30.5C76.3539 30.5002 77.4998 31.6461 77.5 33.0596V91.9404C77.4998 93.3539 76.3539 94.4998 74.9404 94.5H16.0596C14.6461 94.4998 13.5002 93.3539 13.5 91.9404V33.0596C13.5002 31.6461 14.6461 30.5002 16.0596 30.5H74.9404ZM21.5 75.5C20.3954 75.5 19.5 76.3954 19.5 77.5V86.5C19.5 87.6046 20.3954 88.5 21.5 88.5H69.5C70.6046 88.5 71.5 87.6046 71.5 86.5V77.5C71.5 76.3954 70.6046 75.5 69.5 75.5H21.5Z" />
-														<path d="M19.5 19.5001V10.0455H23.1193C23.8026 10.0455 24.3704 10.1532 24.8228 10.3687C25.2783 10.581 25.6184 10.8719 25.843 11.2412C26.0708 11.6105 26.1847 12.0291 26.1847 12.4969C26.1847 12.8816 26.1108 13.2109 25.9631 13.4848C25.8153 13.7556 25.6168 13.9757 25.3675 14.145C25.1183 14.3142 24.8397 14.4358 24.532 14.5097V14.602C24.8674 14.6204 25.189 14.7236 25.4968 14.9113C25.8076 15.0959 26.0616 15.3575 26.2585 15.6961C26.4555 16.0346 26.554 16.444 26.554 16.9241C26.554 17.4134 26.4355 17.8535 26.1985 18.2444C25.9615 18.6322 25.6045 18.9384 25.1275 19.1631C24.6505 19.3877 24.0503 19.5001 23.3271 19.5001H19.5ZM21.2127 18.069H23.0547C23.6764 18.069 24.1242 17.9505 24.3981 17.7135C24.6751 17.4734 24.8136 17.1657 24.8136 16.7902C24.8136 16.5101 24.7443 16.2578 24.6058 16.0331C24.4673 15.8053 24.2704 15.6268 24.0149 15.4976C23.7595 15.3652 23.4548 15.2991 23.1009 15.2991H21.2127V18.069ZM21.2127 14.0665H22.907C23.2024 14.0665 23.4686 14.0126 23.7056 13.9049C23.9426 13.7941 24.1288 13.6387 24.2642 13.4386C24.4027 13.2355 24.4719 12.9955 24.4719 12.7185C24.4719 12.3522 24.3427 12.0506 24.0842 11.8136C23.8287 11.5767 23.4486 11.4582 22.9439 11.4582H21.2127V14.0665Z" />
-														<path d="M34.0038 10.0455H35.7165V16.2224C35.7165 16.8995 35.5565 17.495 35.2364 18.0089C34.9194 18.5229 34.4732 18.9245 33.8976 19.2138C33.3221 19.5001 32.6497 19.6432 31.8802 19.6432C31.1077 19.6432 30.4337 19.5001 29.8582 19.2138C29.2827 18.9245 28.8364 18.5229 28.5194 18.0089C28.2024 17.495 28.0439 16.8995 28.0439 16.2224V10.0455H29.7567V16.0793C29.7567 16.4732 29.8428 16.824 30.0152 17.1318C30.1906 17.4396 30.4368 17.6812 30.7538 17.8566C31.0708 18.029 31.4463 18.1151 31.8802 18.1151C32.3142 18.1151 32.6897 18.029 33.0067 17.8566C33.3267 17.6812 33.5729 17.4396 33.7453 17.1318C33.9176 16.824 34.0038 16.4732 34.0038 16.0793V10.0455Z" />
-														<path d="M37.1626 11.4812V10.0455H44.706V11.4812H41.7837V19.5001H40.0849V11.4812H37.1626Z" />
-														<path d="M45.7447 11.4812V10.0455H53.288V11.4812H50.3658V19.5001H48.6669V11.4812H45.7447Z" />
-														<path d="M62.7714 14.7728C62.7714 15.7915 62.5806 16.664 62.199 17.3903C61.8204 18.1136 61.3034 18.6676 60.6478 19.0523C59.9954 19.437 59.2552 19.6293 58.4273 19.6293C57.5994 19.6293 56.8577 19.437 56.2021 19.0523C55.5497 18.6645 55.0326 18.109 54.651 17.3857C54.2725 16.6594 54.0832 15.7884 54.0832 14.7728C54.0832 13.7541 54.2725 12.8831 54.651 12.1599C55.0326 11.4335 55.5497 10.878 56.2021 10.4933C56.8577 10.1086 57.5994 9.91626 58.4273 9.91626C59.2552 9.91626 59.9954 10.1086 60.6478 10.4933C61.3034 10.878 61.8204 11.4335 62.199 12.1599C62.5806 12.8831 62.7714 13.7541 62.7714 14.7728ZM61.0494 14.7728C61.0494 14.0557 60.9371 13.4509 60.7124 12.9585C60.4909 12.463 60.1831 12.0891 59.7892 11.8367C59.3952 11.5813 58.9413 11.4535 58.4273 11.4535C57.9133 11.4535 57.4594 11.5813 57.0654 11.8367C56.6715 12.0891 56.3622 12.463 56.1375 12.9585C55.9159 13.4509 55.8051 14.0557 55.8051 14.7728C55.8051 15.4899 55.9159 16.0962 56.1375 16.5917C56.3622 17.0841 56.6715 17.458 57.0654 17.7135C57.4594 17.9659 57.9133 18.092 58.4273 18.092C58.9413 18.092 59.3952 17.9659 59.7892 17.7135C60.1831 17.458 60.4909 17.0841 60.7124 16.5917C60.9371 16.0962 61.0494 15.4899 61.0494 14.7728Z" />
-														<path d="M72.1602 10.0455V19.5001H70.6367L66.1818 13.0601H66.1033V19.5001H64.3906V10.0455H65.9233L70.3736 16.4901H70.4567V10.0455H72.1602Z" />
-													</svg>
-												</label>
-											</div>
-										</div>
-									</div>
-
-									<label class="wpz-insta_table-row wpz-insta-product-links-popover-title-row">
-										<strong class="wpz-insta_table-cell"><?php esc_html_e( 'Popover title', 'instagram-widget-by-wpzoom' ); ?></strong>
-										<div class="wpz-insta_table-cell">
-											<input type="text" name="_wpz-insta_product-links-popover-title" class="preview-exclude" value="<?php echo esc_attr( get_post_meta( $post->ID, '_wpz-insta_product-links-popover-title', true ) ?: __( 'Related products', 'instagram-widget-by-wpzoom' ) ); ?>" placeholder="<?php esc_attr_e( 'Related products', 'instagram-widget-by-wpzoom' ); ?>" />
-										</div>
-									</label>
-
-									<label class="wpz-insta_table-row wpz-insta-product-links-icon-position-row<?php echo $product_links_is_icon ? '' : ' hidden'; ?>">
-										<strong class="wpz-insta_table-cell"><?php esc_html_e( 'Icon position', 'instagram-widget-by-wpzoom' ); ?></strong>
-										<div class="wpz-insta_table-cell">
-											<select name="_wpz-insta_product-links-icon-position" id="_wpz-insta_product-links-icon-position" class="preview-exclude">
-												<option value="top-left" <?php selected( get_post_meta( $post->ID, '_wpz-insta_product-links-icon-position', true ), 'top-left' ); ?>><?php esc_html_e( 'Top left', 'instagram-widget-by-wpzoom' ); ?></option>
-												<option value="top-right" <?php selected( get_post_meta( $post->ID, '_wpz-insta_product-links-icon-position', true ), 'top-right' ); ?>><?php esc_html_e( 'Top right', 'instagram-widget-by-wpzoom' ); ?></option>
-												<option value="bottom-left" <?php selected( get_post_meta( $post->ID, '_wpz-insta_product-links-icon-position', true ), 'bottom-left' ); ?>><?php esc_html_e( 'Bottom left', 'instagram-widget-by-wpzoom' ); ?></option>
-												<option value="bottom-right" <?php selected( ( get_post_meta( $post->ID, '_wpz-insta_product-links-icon-position', true ) ?: 'bottom-right' ), 'bottom-right' ); ?>><?php esc_html_e( 'Bottom right', 'instagram-widget-by-wpzoom' ); ?></option>
-											</select>
-										</div>
-									</label>
-
-									<label class="wpz-insta_table-row wpz-insta-buy-now-button-row<?php echo $product_links_is_icon ? ' hidden' : ''; ?>">
-										<strong class="wpz-insta_table-cell"><?php esc_html_e( 'Button text', 'instagram-widget-by-wpzoom' ); ?></strong>
-										<div class="wpz-insta_table-cell">
-											<input type="text" name="_wpz-insta_buy-now-text" class="preview-exclude" value="<?php echo esc_attr( get_post_meta( $post->ID, '_wpz-insta_buy-now-text', true ) ?: __( 'Buy now', 'instagram-widget-by-wpzoom' ) ); ?>" />
-										</div>
-									</label>
-
-									<label class="wpz-insta_table-row wpz-insta-product-links-badge-row" style="align-items: flex-start;">
-										<strong class="wpz-insta_table-cell"><?php esc_html_e( 'Badge label', 'instagram-widget-by-wpzoom' ); ?></strong>
-										<div class="wpz-insta_table-cell">
-											<?php $badge_label_value = get_post_meta( $post->ID, '_wpz-insta_product-badge-label', true ); ?>
-											<input type="text" name="_wpz-insta_product-badge-label" id="_wpz-insta_product-badge-label" class="preview-exclude" value="<?php echo esc_attr( '' !== $badge_label_value ? $badge_label_value : __( 'Product', 'instagram-widget-by-wpzoom' ) ); ?>" placeholder="<?php esc_attr_e( 'Product', 'instagram-widget-by-wpzoom' ); ?>" />
-											<p class="description"><?php esc_html_e( 'Badge displayed on items linked to products. Leave empty to hide.', 'instagram-widget-by-wpzoom' ); ?></p>
-										</div>
-									</label>
-
-									<label class="wpz-insta_table-row wpz-insta-lightbox-product-position-row" style="align-items: flex-start;">
-										<strong class="wpz-insta_table-cell"><?php esc_html_e( 'Lightbox position', 'instagram-widget-by-wpzoom' ); ?></strong>
-										<div class="wpz-insta_table-cell">
-											<?php $lightbox_product_position = get_post_meta( $post->ID, '_wpz-insta_lightbox-product-position', true ) ?: 'top'; ?>
-											<select name="_wpz-insta_lightbox-product-position" id="_wpz-insta_lightbox-product-position" class="preview-exclude">
-												<option value="top" <?php selected( $lightbox_product_position, 'top' ); ?>><?php esc_html_e( 'Before profile', 'instagram-widget-by-wpzoom' ); ?></option>
-												<option value="before-caption" <?php selected( $lightbox_product_position, 'before-caption' ); ?>><?php esc_html_e( 'After profile', 'instagram-widget-by-wpzoom' ); ?></option>
-												<option value="footer" <?php selected( $lightbox_product_position, 'footer' ); ?>><?php esc_html_e( 'After details', 'instagram-widget-by-wpzoom' ); ?></option>
-											</select>
-											<p class="description"><?php esc_html_e( 'Choose where to display linked products in the lightbox.', 'instagram-widget-by-wpzoom' ); ?></p>
-										</div>
-									</label>
-
-									<label class="wpz-insta_table-row wpz-insta-lightbox-product-layout-row" style="align-items: flex-start;">
-										<strong class="wpz-insta_table-cell"><?php esc_html_e( 'Lightbox layout', 'instagram-widget-by-wpzoom' ); ?></strong>
-										<div class="wpz-insta_table-cell">
-											<?php $lightbox_product_layout = get_post_meta( $post->ID, '_wpz-insta_lightbox-product-layout', true ) ?: 'list'; ?>
-											<select name="_wpz-insta_lightbox-product-layout" id="_wpz-insta_lightbox-product-layout" class="preview-exclude">
-												<option value="list" <?php selected( $lightbox_product_layout, 'list' ); ?>><?php esc_html_e( 'List', 'instagram-widget-by-wpzoom' ); ?></option>
-												<option value="card" <?php selected( $lightbox_product_layout, 'card' ); ?>><?php esc_html_e( 'Card', 'instagram-widget-by-wpzoom' ); ?></option>
-											</select>
-											<p class="description"><?php esc_html_e( 'Choose the layout style for products in the lightbox.', 'instagram-widget-by-wpzoom' ); ?></p>
-										</div>
-									</label>
-
-									<label class="wpz-insta_table-row">
-										<input type="hidden" name="_wpz-insta_buy-now-new-tab" value="0" />
-										<input type="checkbox" name="_wpz-insta_buy-now-new-tab" value="1" class="preview-exclude" <?php checked( get_post_meta( $post->ID, '_wpz-insta_buy-now-new-tab', true ), '1' ); ?> />
-										<span><?php esc_html_e( 'Open product links in new tab', 'instagram-widget-by-wpzoom' ); ?></span>
-										<small class="help" aria-hidden="true" data-tooltip="<?php esc_attr_e( 'When enabled, all product links (images, buttons, and popover items) will open in a new browser tab.', 'instagram-widget-by-wpzoom' ); ?>"><svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='16' height='16'><path fill='#000' fill-rule='evenodd' clip-rule='evenodd' d='M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm-1 16v-2h2v2h-2zm2-3v-1.141A3.991 3.991 0 0016 10a4 4 0 00-8 0h2c0-1.103.897-2 2-2s2 .897 2 2-.897 2-2 2a1 1 0 00-1 1v2h2z'></path></svg></small>
-									</label>
-								</div>
-
-								<?php echo $pro_toggle ? '</fieldset>' : ''; ?>
-							</div>
-
-							<div class="wpz-insta_sidebar-section wpz-insta_sidebar-section-product-links-icon-design<?php echo $product_links_is_icon ? '' : ' hidden'; ?>">
-								<h4 class="wpz-insta_sidebar-section-title"><?php esc_html_e( 'Icon design', 'instagram-widget-by-wpzoom' ); ?></h4>
-
-								<?php echo $pro_toggle ? '<fieldset class="wpz-insta_feed-only-pro wpz-insta_pro-only wpz-insta_pro-only-with-bottom' . ( 1 === $feed_layout ? ' hidden' : '' ) . '"><legend><strong>' . esc_html__( 'PRO', 'instagram-widget-by-wpzoom' ) . '</strong></legend>' : ''; ?>
-
-								<div class="wpz-insta_product-links-icon-design wpz-insta_table">
-									<label class="wpz-insta_table-row">
-										<strong class="wpz-insta_table-cell"><?php esc_html_e( 'Icon size', 'instagram-widget-by-wpzoom' ); ?></strong>
-										<div class="wpz-insta_table-cell">
-											<input type="text" name="_wpz-insta_product-icon-size" id="_wpz-insta_product-icon-size" class="preview-exclude" value="<?php echo esc_attr( get_post_meta( $post->ID, '_wpz-insta_product-icon-size', true ) ?: '36px' ); ?>" placeholder="36px" />
-										</div>
-									</label>
-									<label class="wpz-insta_table-row">
-										<strong class="wpz-insta_table-cell"><?php esc_html_e( 'Background', 'instagram-widget-by-wpzoom' ); ?></strong>
-										<div class="wpz-insta_table-cell">
-											<input type="text" name="_wpz-insta_product-icon-bg" id="_wpz-insta_product-icon-bg" value="<?php echo esc_attr( get_post_meta( $post->ID, '_wpz-insta_product-icon-bg', true ) ?: '#333333' ); ?>" size="8" class="wpz-insta_color-picker wp-color-picker preview-exclude" data-default-color="#333333" />
-										</div>
-									</label>
-									<label class="wpz-insta_table-row">
-										<strong class="wpz-insta_table-cell"><?php esc_html_e( 'Color', 'instagram-widget-by-wpzoom' ); ?></strong>
-										<div class="wpz-insta_table-cell">
-											<input type="text" name="_wpz-insta_product-icon-color" id="_wpz-insta_product-icon-color" value="<?php echo esc_attr( get_post_meta( $post->ID, '_wpz-insta_product-icon-color', true ) ?: '#ffffff' ); ?>" size="8" class="wpz-insta_color-picker wp-color-picker preview-exclude" data-default-color="#ffffff" />
-										</div>
-									</label>
-								</div>
-
-								<?php echo $pro_toggle ? '</fieldset>' : ''; ?>
-							</div>
-
-							<div class="wpz-insta_sidebar-section wpz-insta_sidebar-section-product-links-design<?php echo $product_links_is_icon ? ' hidden' : ''; ?>">
-								<h4 class="wpz-insta_sidebar-section-title"><?php esc_html_e( 'Button design', 'instagram-widget-by-wpzoom' ); ?></h4>
-
-								<?php echo $pro_toggle ? '<fieldset class="wpz-insta_feed-only-pro wpz-insta_pro-only wpz-insta_pro-only-with-bottom' . ( 1 === $feed_layout ? ' hidden' : '' ) . '"><legend><strong>' . esc_html__( 'PRO', 'instagram-widget-by-wpzoom' ) . '</strong></legend>' : ''; ?>
-
-								<div class="wpz-insta_product-links-design wpz-insta_table">
-									<label class="wpz-insta_table-row">
-										<strong class="wpz-insta_table-cell"><?php esc_html_e( 'Background', 'instagram-widget-by-wpzoom' ); ?></strong>
-										<div class="wpz-insta_table-cell">
-											<input type="text" name="_wpz-insta_buy-now-bg" id="_wpz-insta_buy-now-bg" value="<?php echo esc_attr( get_post_meta( $post->ID, '_wpz-insta_buy-now-bg', true ) ?: get_post_meta( $post->ID, '_wpz-insta_add-to-cart-bg', true ) ?: '#111111' ); ?>" size="8" class="wpz-insta_color-picker wp-color-picker preview-exclude" data-default-color="#111111" />
-										</div>
-									</label>
-									<label class="wpz-insta_table-row">
-										<strong class="wpz-insta_table-cell"><?php esc_html_e( 'Text color', 'instagram-widget-by-wpzoom' ); ?></strong>
-										<div class="wpz-insta_table-cell">
-											<input type="text" name="_wpz-insta_buy-now-color" id="_wpz-insta_buy-now-color" value="<?php echo esc_attr( get_post_meta( $post->ID, '_wpz-insta_buy-now-color', true ) ?: get_post_meta( $post->ID, '_wpz-insta_add-to-cart-color', true ) ?: '#ffffff' ); ?>" size="8" class="wpz-insta_color-picker wp-color-picker preview-exclude" data-default-color="#ffffff" />
-										</div>
-									</label>
-									<label class="wpz-insta_table-row">
-										<strong class="wpz-insta_table-cell"><?php esc_html_e( 'Hover background', 'instagram-widget-by-wpzoom' ); ?></strong>
-										<div class="wpz-insta_table-cell">
-											<input type="text" name="_wpz-insta_buy-now-hover-bg" id="_wpz-insta_buy-now-hover-bg" value="<?php echo esc_attr( get_post_meta( $post->ID, '_wpz-insta_buy-now-hover-bg', true ) ?: get_post_meta( $post->ID, '_wpz-insta_add-to-cart-hover-bg', true ) ?: '#3496ff' ); ?>" size="8" class="wpz-insta_color-picker wp-color-picker preview-exclude" data-default-color="#3496ff" />
-										</div>
-									</label>
-									<label class="wpz-insta_table-row">
-										<strong class="wpz-insta_table-cell"><?php esc_html_e( 'Border radius', 'instagram-widget-by-wpzoom' ); ?></strong>
-										<div class="wpz-insta_table-cell">
-											<?php
-											$buy_now_radius_saved   = get_post_meta( $post->ID, '_wpz-insta_buy-now-border-radius', true );
-											if ( '' === (string) $buy_now_radius_saved ) {
-												$buy_now_radius_saved = get_post_meta( $post->ID, '_wpz-insta_add-to-cart-border-radius', true );
-											}
-											$buy_now_radius_suffix  = get_post_meta( $post->ID, '_wpz-insta_buy-now-border-radius-suffix', true );
-											if ( '' === (string) $buy_now_radius_suffix ) {
-												$buy_now_radius_suffix = get_post_meta( $post->ID, '_wpz-insta_add-to-cart-border-radius-suffix', true );
-											}
-											$buy_now_radius_num     = 3;
-											$buy_now_radius_suffix_i = 0;
-											if ( '' !== $buy_now_radius_suffix && is_numeric( $buy_now_radius_suffix ) ) {
-												$buy_now_radius_suffix_i = (int) $buy_now_radius_suffix;
-												$buy_now_radius_num      = is_numeric( $buy_now_radius_saved ) ? (float) $buy_now_radius_saved : 3;
-											} elseif ( '' !== $buy_now_radius_saved ) {
-												$buy_now_radius_num = (float) preg_replace( '/[^0-9.]/', '', $buy_now_radius_saved ) ?: 3;
-												if ( false !== strpos( $buy_now_radius_saved, '%' ) ) {
-													$buy_now_radius_suffix_i = 2;
-												} elseif ( false !== strpos( $buy_now_radius_saved, 'em' ) ) {
-													$buy_now_radius_suffix_i = 1;
-												}
-											}
-											?>
-											<div class="wpz-insta_suffixed-number-input">
-												<input type="number" name="_wpz-insta_buy-now-border-radius" id="_wpz-insta_buy-now-border-radius" class="preview-exclude" value="<?php echo esc_attr( $buy_now_radius_num ); ?>" size="3" min="0" max="200" step="1" />
-												<select name="_wpz-insta_buy-now-border-radius-suffix" class="preview-exclude">
-													<option value="0" <?php selected( $buy_now_radius_suffix_i, 0 ); ?>><?php esc_html_e( 'px', 'instagram-widget-by-wpzoom' ); ?></option>
-													<option value="1" <?php selected( $buy_now_radius_suffix_i, 1 ); ?>><?php esc_html_e( 'em', 'instagram-widget-by-wpzoom' ); ?></option>
-													<option value="2" <?php selected( $buy_now_radius_suffix_i, 2 ); ?>><?php esc_html_e( '%', 'instagram-widget-by-wpzoom' ); ?></option>
-												</select>
-											</div>
-										</div>
-									</label>
-								</div>
-
-								<?php echo $pro_toggle ? '</fieldset>' : ''; ?>
-							</div>
-						</div>
-						<?php else : ?>
-						<div class="wpz-insta_sidebar-left-section" data-id="#product-links">
-							<h4 class="wpz-insta_sidebar-section-big-title"><?php esc_html_e( 'Product Links', 'instagram-widget-by-wpzoom' ); ?></h4>
-
-							<div class="wpz-insta_sidebar-section wpz-insta_sidebar-section-product-links-woo-notice no-top-border">
-								<div class="wpz-insta_woo-required-notice">
-									<div class="wpz-insta_woo-required-notice-icon">
-										<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="46" height="46" viewBox="0 -51.5 256 256" version="1.1" preserveAspectRatio="xMidYMid">
-											<g fill-rule="evenodd">
-												<path d="M232.137523,0 L23.7592719,0 C10.5720702,0 -0.103257595,10.7799647 0.000639559736,23.862498 L0.000639559736,103.404247 C0.000639559736,116.591115 10.6767385,127.266612 23.8639402,127.266612 L122.558181,127.266612 L167.667206,152.384995 L157.410382,127.266612 L232.137523,127.266612 C245.325059,127.266612 255.999888,116.591115 255.999888,103.404247 L255.999888,23.862498 C255.999888,10.6752964 245.325059,0 232.137523,0 Z M19.3640061,18.4201481 C16.4334946,18.6294847 14.2355942,19.6761007 12.7703719,21.6645976 C11.3051496,23.5484931 10.781875,25.9556632 11.095813,28.6768382 C17.2707741,67.9247058 23.027062,94.4034429 28.3647436,108.113986 C30.4579757,113.137395 32.8651458,115.5451 35.690989,115.335764 C40.086656,115.021425 45.3196694,108.951332 51.4946305,97.1248185 C54.73908,90.4260478 59.7628237,80.3792294 66.5657276,66.9823567 C72.2170797,86.762992 79.9618646,101.625221 89.6956814,111.567705 C92.417057,114.393415 95.2427665,115.649434 97.9634733,115.440098 C100.371178,115.230761 102.254539,113.974742 103.510558,111.672039 C104.557241,109.683676 104.975914,107.380974 104.766578,104.764601 C104.138568,95.2407893 105.080917,81.9489193 107.69729,64.8892584 C110.417997,47.3063898 113.767382,34.6424627 117.849111,27.1069476 C118.686458,25.5370569 119.000128,23.9670994 118.895794,22.0832708 C118.686458,19.6760338 117.639775,17.6875369 115.651411,16.1176463 C113.663048,14.5477557 111.46468,13.8151445 109.057643,14.0244142 C106.022597,14.2337508 103.719895,15.6989731 102.150205,18.6294847 C95.6614396,30.4560654 91.0560348,49.6088916 88.335328,76.1924977 C84.3579328,66.145211 81.0085475,54.3185634 78.3921746,40.3987506 C77.2411578,34.2238564 74.4154483,31.2933449 69.8100434,31.6073497 C66.670329,31.8166194 64.0538892,33.9098515 61.9606572,37.8869122 L39.0401069,81.5302462 C35.2723159,66.3544807 31.7138615,47.8296643 28.4694119,25.9556632 C27.7368007,20.5133802 24.7016209,18.0014749 19.3640061,18.4201481 Z M221.044022,25.9559976 C228.475136,27.5259551 234.022221,31.5030159 237.789611,38.0965832 C241.138996,43.7482697 242.81302,50.5511737 242.81302,58.7146317 C242.81302,69.4943957 240.092314,79.3325464 234.649562,88.3333508 C228.370134,98.7995112 220.206676,104.032257 210.054854,104.032257 C208.275828,104.032257 206.391799,103.82292 204.402767,103.404247 C196.972321,101.834557 191.425236,97.857831 187.657177,91.264063 C184.308461,85.5076413 182.633768,78.6002028 182.633768,70.5410787 C182.633768,59.7612478 185.355144,49.923164 190.797226,41.0270948 C197.181658,30.5610681 205.345116,25.3280548 215.392603,25.3280548 C217.171629,25.3280548 219.055659,25.5373913 221.044022,25.9559976 Z M216.648622,82.5769291 C220.521015,79.1232099 223.137388,73.9947979 224.602744,67.0873594 C225.021417,64.6802562 225.335087,62.0637496 225.335087,59.3425746 C225.335087,56.3074616 224.707078,53.0630121 223.451058,49.8184957 C221.881368,45.7367667 219.788002,43.5389332 217.275963,43.0155917 C213.508574,42.2829805 209.845518,44.3762126 206.391799,49.5045577 C203.566089,53.4816184 201.786394,57.6680157 200.844713,61.9590813 C200.321038,64.3663182 200.111701,66.9830255 200.111701,69.5993984 C200.111701,72.6344445 200.739711,75.8788272 201.99573,79.1232099 C203.566089,83.2049389 205.658786,85.4026386 208.170825,85.9263145 C210.787198,86.4493215 213.612908,85.2983047 216.648622,82.5769291 Z M172.167608,38.0965832 C168.399549,31.5030159 162.74813,27.5259551 155.422019,25.9559976 C153.432987,25.5373913 151.549626,25.3280548 149.769931,25.3280548 C139.723112,25.3280548 131.559654,30.5610681 125.175223,41.0270948 C119.732472,49.923164 117.011765,59.7612478 117.011765,70.5410787 C117.011765,78.6002028 118.686458,85.5076413 122.035174,91.264063 C125.803233,97.857831 131.350318,101.834557 138.780763,103.404247 C140.769126,103.82292 142.653156,104.032257 144.432851,104.032257 C154.584672,104.032257 162.74813,98.7995112 169.027559,88.3333508 C174.47031,79.3325464 177.191017,69.4943957 177.191017,58.7146317 C177.191017,50.5511737 175.516324,43.7482697 172.167608,38.0965832 Z M158.980072,67.0873594 C157.515384,73.9947979 154.898343,79.1232099 151.02595,82.5769291 C147.990904,85.2983047 145.165195,86.4493215 142.548822,85.9263145 C140.036783,85.4026386 137.943417,83.2049389 136.373727,79.1232099 C135.117707,75.8788272 134.489698,72.6344445 134.489698,69.5993984 C134.489698,66.9830255 134.699034,64.3663182 135.22271,61.9590813 C136.16439,57.6680157 137.943417,53.4816184 140.769126,49.5045577 C144.223514,44.3762126 147.88657,42.2829805 151.65396,43.0155917 C154.165999,43.5389332 156.259365,45.7367667 157.829055,49.8184957 C159.085074,53.0630121 159.713084,56.3074616 159.713084,59.3425746 C159.713084,62.0637496 159.503748,64.6802562 158.980072,67.0873594 Z" fill="#7F54B3">
-												</path>
-											</g>
-										</svg>
-									</div>
-									<h5 class="wpz-insta_woo-required-notice-title"><?php esc_html_e( 'WooCommerce Required', 'instagram-widget-by-wpzoom' ); ?></h5>
-									<p class="wpz-insta_woo-required-notice-desc">
-										<?php esc_html_e( 'The Product Links feature allows you to link your Instagram posts directly to WooCommerce products, turning your feed into a shoppable gallery.', 'instagram-widget-by-wpzoom' ); ?>
-									</p>
-									<p class="wpz-insta_woo-required-notice-desc">
-										<?php esc_html_e( 'To use this feature, please install and activate the WooCommerce plugin.', 'instagram-widget-by-wpzoom' ); ?>
-									</p>
-									<a href="<?php echo esc_url( admin_url( 'plugin-install.php?s=woocommerce&tab=search&type=term' ) ); ?>" class="button button-primary wpz-insta_woo-required-notice-btn">
-										<?php esc_html_e( 'Get WooCommerce', 'instagram-widget-by-wpzoom' ); ?>
-									</a>
-								</div>
-							</div>
-						</div>
-						<?php endif; ?>
 					</div>
 
 					<div class="wpz-insta_sidebar-right is-loading">
@@ -3040,7 +2365,7 @@ class WPZOOM_Instagram_Widget_Settings {
 
 					<h3 class="wpz-insta_tabs-config-connect-subtitle"><?php _e( 'Or add another account&hellip;', 'instagram-widget-by-wpzoom' ); ?></h3>
 					<?php
-					$new_user_link = admin_url( 'post-new.php?post_type=wpz-insta_user' );
+					$new_user_link = admin_url( 'edit.php?post_type=wpz-insta_feed&page=wpz-insta-connect' );
 					echo apply_filters(
 						'wpz-insta_select-user-add-button',
 						'<a href="' . esc_url( $new_user_link ) . '" class="wpz-insta_tabs-config-connect-add button button-primary">' . __( 'Add New Account', 'instagram-widget-by-wpzoom' ) . '</a>',
@@ -3193,6 +2518,14 @@ class WPZOOM_Instagram_Widget_Settings {
 							),
 						)
 					);
+
+					// Without the PRO add-on, a page describes what it adds.
+					if ( apply_filters( 'wpz-insta_admin-pro-options-toggle', true ) ) {
+						$pages['wpz-insta_feed_page_wpz-insta-upgrade'] = array(
+							'name' => __( 'Upgrade to PRO', 'instagram-widget-by-wpzoom' ),
+							'url'  => admin_url( 'edit.php?post_type=wpz-insta_feed&page=wpz-insta-upgrade' ),
+						);
+					}
 
 					foreach ( $pages as $id => $atts ) {
 						printf(
@@ -3659,38 +2992,6 @@ class WPZOOM_Instagram_Widget_Settings {
 
 				$should_clear_transients = ( $old_item_num != $new_item_num ) || ( $old_allowed_post_types != $new_allowed_post_types ) || ( $old_user_id != $new_user_id );
 
-			// Save pending hidden posts from the form submission (Moderate Posts feature — PRO only)
-			$pro_toggle_save = apply_filters( 'wpz-insta_admin-pro-options-toggle', true );
-			if ( ! $pro_toggle_save && isset( $_POST['_wpz-insta_pending-hidden-posts'] ) && ! empty( $_POST['_wpz-insta_pending-hidden-posts'] ) ) {
-				$pending_hidden_json = wp_unslash( $_POST['_wpz-insta_pending-hidden-posts'] );
-				$pending_hidden = json_decode( $pending_hidden_json, true );
-
-				if ( is_array( $pending_hidden ) && ! empty( $pending_hidden ) ) {
-					// Get existing hidden posts
-					$existing_hidden = get_post_meta( $post_ID, '_wpz-insta_hidden-posts', true );
-					if ( ! is_array( $existing_hidden ) ) {
-						$existing_hidden = array();
-					}
-
-					// Merge pending changes with existing hidden posts
-					foreach ( $pending_hidden as $media_id => $is_hidden ) {
-						$media_id = sanitize_text_field( $media_id );
-						if ( $is_hidden ) {
-							// Add to hidden list
-							if ( ! in_array( $media_id, $existing_hidden, true ) ) {
-								$existing_hidden[] = $media_id;
-							}
-						} else {
-							// Remove from hidden list
-							$existing_hidden = array_values( array_diff( $existing_hidden, array( $media_id ) ) );
-						}
-					}
-
-					// Save the updated hidden posts list
-					update_post_meta( $post_ID, '_wpz-insta_hidden-posts', $existing_hidden );
-				}
-			}
-
 		if ( ! empty( $meta_keys ) ) {
 			$meta_keys = array_filter( $meta_keys, function( $key ) { return strpos( $key, 'wpz-insta_' ) !== false; }, ARRAY_FILTER_USE_KEY );
 
@@ -3737,137 +3038,6 @@ class WPZOOM_Instagram_Widget_Settings {
 							continue;
 						}
 						update_post_meta( $post_ID, $key, $args['default'] );
-					}
-				}
-			}
-
-			// Save WooCommerce product link settings
-			if ( class_exists( 'WooCommerce' ) ) {
-				if ( isset( $_POST['_wpz-insta_buy-now-text'] ) ) {
-					$buy_now_text = sanitize_text_field( $_POST['_wpz-insta_buy-now-text'] );
-					update_post_meta( $post_ID, '_wpz-insta_buy-now-text', $buy_now_text );
-				}
-				update_post_meta( $post_ID, '_wpz-insta_buy-now-new-tab', ( isset( $_POST['_wpz-insta_buy-now-new-tab'] ) && '1' === $_POST['_wpz-insta_buy-now-new-tab'] ) ? '1' : '' );
-				if ( isset( $_POST['_wpz-insta_product-links-display-type'] ) && in_array( $_POST['_wpz-insta_product-links-display-type'], array( 'button', 'icon' ), true ) ) {
-					update_post_meta( $post_ID, '_wpz-insta_product-links-display-type', sanitize_text_field( $_POST['_wpz-insta_product-links-display-type'] ) );
-				}
-				if ( isset( $_POST['_wpz-insta_product-links-popover-title'] ) ) {
-					update_post_meta( $post_ID, '_wpz-insta_product-links-popover-title', sanitize_text_field( $_POST['_wpz-insta_product-links-popover-title'] ) );
-				}
-				if ( isset( $_POST['_wpz-insta_product-links-icon-position'] ) && in_array( $_POST['_wpz-insta_product-links-icon-position'], array( 'top-left', 'top-right', 'bottom-left', 'bottom-right' ), true ) ) {
-					update_post_meta( $post_ID, '_wpz-insta_product-links-icon-position', sanitize_text_field( $_POST['_wpz-insta_product-links-icon-position'] ) );
-				}
-				if ( isset( $_POST['_wpz-insta_product-badge-label'] ) ) {
-					update_post_meta( $post_ID, '_wpz-insta_product-badge-label', sanitize_text_field( $_POST['_wpz-insta_product-badge-label'] ) );
-				}
-				// Lightbox product position
-				if ( isset( $_POST['_wpz-insta_lightbox-product-position'] ) && in_array( $_POST['_wpz-insta_lightbox-product-position'], array( 'top', 'before-caption', 'footer' ), true ) ) {
-					update_post_meta( $post_ID, '_wpz-insta_lightbox-product-position', sanitize_text_field( $_POST['_wpz-insta_lightbox-product-position'] ) );
-				}
-				// Lightbox product layout
-				if ( isset( $_POST['_wpz-insta_lightbox-product-layout'] ) && in_array( $_POST['_wpz-insta_lightbox-product-layout'], array( 'list', 'card' ), true ) ) {
-					update_post_meta( $post_ID, '_wpz-insta_lightbox-product-layout', sanitize_text_field( $_POST['_wpz-insta_lightbox-product-layout'] ) );
-				}
-				// Product icon design
-				if ( isset( $_POST['_wpz-insta_product-icon-size'] ) ) {
-					$val = sanitize_text_field( $_POST['_wpz-insta_product-icon-size'] );
-					update_post_meta( $post_ID, '_wpz-insta_product-icon-size', $val ?: '36px' );
-				}
-				if ( isset( $_POST['_wpz-insta_product-icon-bg'] ) ) {
-					$val = sanitize_text_field( $_POST['_wpz-insta_product-icon-bg'] );
-					update_post_meta( $post_ID, '_wpz-insta_product-icon-bg', $val ?: '#333333' );
-				}
-				if ( isset( $_POST['_wpz-insta_product-icon-color'] ) ) {
-					$val = sanitize_text_field( $_POST['_wpz-insta_product-icon-color'] );
-					update_post_meta( $post_ID, '_wpz-insta_product-icon-color', $val ?: '#ffffff' );
-				}
-				// Buy now button styling
-				if ( isset( $_POST['_wpz-insta_buy-now-bg'] ) ) {
-					$val = sanitize_text_field( $_POST['_wpz-insta_buy-now-bg'] );
-					update_post_meta( $post_ID, '_wpz-insta_buy-now-bg', $val ?: '#111111' );
-				}
-				if ( isset( $_POST['_wpz-insta_buy-now-color'] ) ) {
-					$val = sanitize_text_field( $_POST['_wpz-insta_buy-now-color'] );
-					update_post_meta( $post_ID, '_wpz-insta_buy-now-color', $val ?: '#ffffff' );
-				}
-				if ( isset( $_POST['_wpz-insta_buy-now-hover-bg'] ) ) {
-					$val = sanitize_text_field( $_POST['_wpz-insta_buy-now-hover-bg'] );
-					update_post_meta( $post_ID, '_wpz-insta_buy-now-hover-bg', $val ?: '#3496ff' );
-				}
-				if ( isset( $_POST['_wpz-insta_buy-now-border-radius'] ) ) {
-					$val = isset( $_POST['_wpz-insta_buy-now-border-radius'] ) && is_numeric( $_POST['_wpz-insta_buy-now-border-radius'] ) ? floatval( $_POST['_wpz-insta_buy-now-border-radius'] ) : 3;
-					update_post_meta( $post_ID, '_wpz-insta_buy-now-border-radius', $val );
-				}
-				if ( isset( $_POST['_wpz-insta_buy-now-border-radius-suffix'] ) && in_array( (int) $_POST['_wpz-insta_buy-now-border-radius-suffix'], array( 0, 1, 2 ), true ) ) {
-					update_post_meta( $post_ID, '_wpz-insta_buy-now-border-radius-suffix', (int) $_POST['_wpz-insta_buy-now-border-radius-suffix'] );
-				}
-
-				// Save pending product links from the form submission
-				// This handles the case where product links are modified in the modal
-				// but not saved to DB until the post is saved
-				if ( isset( $_POST['_wpz-insta_pending-product-links'] ) && ! empty( $_POST['_wpz-insta_pending-product-links'] ) ) {
-					$pending_links_json = wp_unslash( $_POST['_wpz-insta_pending-product-links'] );
-					$pending_links = json_decode( $pending_links_json, true );
-
-					if ( is_array( $pending_links ) && ! empty( $pending_links ) ) {
-						// Get existing product links
-						$existing_links = get_post_meta( $post_ID, '_wpz-insta_product-links', true );
-						if ( ! is_array( $existing_links ) ) {
-							$existing_links = array();
-						}
-
-						// Merge pending links with existing links
-						foreach ( $pending_links as $media_id => $products ) {
-							$media_id = sanitize_text_field( $media_id );
-							
-							if ( is_array( $products ) ) {
-								// New format: array of { id, tag }
-								$valid_products = array();
-								foreach ( $products as $product ) {
-									// Check if it's new format (object with id) or old format (just ID)
-									if ( is_array( $product ) && isset( $product['id'] ) ) {
-										$product_id = intval( $product['id'] );
-										if ( $product_id > 0 && wc_get_product( $product_id ) ) {
-											$sanitized = array(
-												'id'  => $product_id,
-												'tag' => null,
-											);
-											// Sanitize tag data if present
-											if ( isset( $product['tag'] ) && is_array( $product['tag'] ) ) {
-												$sanitized['tag'] = array(
-													'x'           => isset( $product['tag']['x'] ) ? floatval( $product['tag']['x'] ) : 0,
-													'y'           => isset( $product['tag']['y'] ) ? floatval( $product['tag']['y'] ) : 0,
-													'album_index' => isset( $product['tag']['album_index'] ) && $product['tag']['album_index'] !== null ? intval( $product['tag']['album_index'] ) : null,
-												);
-											}
-											$valid_products[] = $sanitized;
-										}
-									} elseif ( is_numeric( $product ) && intval( $product ) > 0 ) {
-										// Old format: just product ID
-										$product_id = intval( $product );
-										if ( wc_get_product( $product_id ) ) {
-											$valid_products[] = array(
-												'id'  => $product_id,
-												'tag' => null,
-											);
-										}
-									}
-								}
-
-								if ( ! empty( $valid_products ) ) {
-									$existing_links[ $media_id ] = $valid_products;
-								} else {
-									// If empty array (all links removed), remove the entry
-									unset( $existing_links[ $media_id ] );
-								}
-							} else {
-								// If not an array, remove the entry
-								unset( $existing_links[ $media_id ] );
-							}
-						}
-
-						// Save the merged product links
-						update_post_meta( $post_ID, '_wpz-insta_product-links', $existing_links );
 					}
 				}
 			}
@@ -4149,6 +3319,18 @@ class WPZOOM_Instagram_Widget_Settings {
 			array( 'WPZOOM_Instagram_General_Settings', 'settings_page' )
 		);
 
+		// Without the PRO add-on, an information page explains where Insights is available.
+		if ( ! class_exists( 'WPZOOM_Instagram_Insights', false ) ) {
+			add_submenu_page(
+				'edit.php?post_type=wpz-insta_feed',
+				esc_html__( 'Insights', 'instagram-widget-by-wpzoom' ),
+				esc_html__( 'Insights', 'instagram-widget-by-wpzoom' ) . ' <span class="awaiting-mod">' . esc_html__( 'PRO', 'instagram-widget-by-wpzoom' ) . '</span>',
+				'manage_options',
+				'wpzoom-instagram-insights',
+				array( $this, 'insights_info_page' )
+			);
+		}
+
 		add_submenu_page(
 			'edit.php?post_type=wpz-insta_feed',
 			esc_html__( 'Support', 'instagram-widget-by-wpzoom' ),
@@ -4158,24 +3340,23 @@ class WPZOOM_Instagram_Widget_Settings {
 			array( $this, 'support_page' )
 		);
 
-		if ( ! $pro_toggle ) {
-			add_submenu_page(
-				'edit.php?post_type=wpz-insta_feed',
-				esc_html__( 'Connect Account', 'instagram-widget-by-wpzoom' ),
-				esc_html__( 'Connect Account', 'instagram-widget-by-wpzoom' ),
-				'manage_options',
-				'wpz-insta-connect',
-				array( $this, 'connect_page' )
-			);
-		}
+		add_submenu_page(
+			'edit.php?post_type=wpz-insta_feed',
+			esc_html__( 'Connect Account', 'instagram-widget-by-wpzoom' ),
+			esc_html__( 'Connect Account', 'instagram-widget-by-wpzoom' ),
+			'manage_options',
+			'wpz-insta-connect',
+			array( $this, 'connect_page' )
+		);
 
         if ($pro_toggle) {
             add_submenu_page(
                 'edit.php?post_type=wpz-insta_feed',
-                esc_html__( 'Upgrade to Pro &rarr;', 'instagram-widget-by-wpzoom' ),
-                '<span style="color:#e4415f">' . esc_html__( 'Upgrade to Pro &rarr;', 'instagram-widget-by-wpzoom' ) . '</span>',
+                esc_html__( 'Upgrade to PRO', 'instagram-widget-by-wpzoom' ),
+                '<span style="color:#e4415f">' . esc_html__( 'Upgrade to PRO &rarr;', 'instagram-widget-by-wpzoom' ) . '</span>',
                 'manage_options',
-                esc_url( 'https://www.wpzoom.com/plugins/instagram-widget/?utm_source=wpadmin&utm_medium=instagram-widget&utm_campaign=admin-menu' )
+                'wpz-insta-upgrade',
+                array( $this, 'upgrade_page' )
             );
         }
 		unset( $submenu['edit.php?post_type=wpz-insta_feed'][10] );
@@ -4601,8 +3782,8 @@ class WPZOOM_Instagram_Widget_Settings {
 							<li><?php _e( 'Works with Instagram Creator or Business accounts ', 'instagram-widget-by-wpzoom' ); ?></li>
 							<li><?php _e( 'Show posts from your account', 'instagram-widget-by-wpzoom' ); ?></li>
                             <li><?php _e( 'Display user info in the header', 'instagram-widget-by-wpzoom' ); ?></li>
-                            <li><strong><?php _e( '[PRO] Display Follower Count', 'instagram-widget-by-wpzoom' ); ?></strong></li>
-                            <li><strong><?php _e( '[PRO] Display Instagram Stories', 'instagram-widget-by-wpzoom' ); ?></strong></li>
+                            <li><strong><?php _e( 'Display Follower Count', 'instagram-widget-by-wpzoom' ); ?></strong></li>
+                            <li><strong><?php _e( 'Display Instagram Stories', 'instagram-widget-by-wpzoom' ); ?></strong></li>
                             <li><strong><?php _e( '[PRO] Instagram Insights & Analytics', 'instagram-widget-by-wpzoom' ); ?></strong></li>
 							<li class="no-feature"><?php _e( 'Display hashtag feeds <small><em>Coming Soon</em></small>', 'instagram-widget-by-wpzoom' ); ?></li>
                             <li class="no-feature"><?php _e( 'Display feeds with your mention <small><em>Coming Soon</em></small>', 'instagram-widget-by-wpzoom' ); ?></li>
@@ -4624,8 +3805,8 @@ class WPZOOM_Instagram_Widget_Settings {
                             <li><?php _e( 'Show posts from your account', 'instagram-widget-by-wpzoom' ); ?></li>
                             <li><?php _e( 'Display user info in the header', 'instagram-widget-by-wpzoom' ); ?></li>
                             <li><strong><?php _e( 'Does not require a Facebook page', 'instagram-widget-by-wpzoom' ); ?></strong></li>
-                            <li class="x-feature"><?php _e( '[PRO] Display Follower Count', 'instagram-widget-by-wpzoom' ); ?></li>
-                            <li class="x-feature"><?php _e( '[PRO] Display Instagram Stories', 'instagram-widget-by-wpzoom' ); ?></li>
+                            <li class="x-feature"><?php _e( 'Display Follower Count', 'instagram-widget-by-wpzoom' ); ?></li>
+                            <li class="x-feature"><?php _e( 'Display Instagram Stories', 'instagram-widget-by-wpzoom' ); ?></li>
                             <li class="x-feature"><?php _e( '[PRO] Instagram Insights & Analytics', 'instagram-widget-by-wpzoom' ); ?></li>
                         </ul>
 
@@ -4710,6 +3891,133 @@ class WPZOOM_Instagram_Widget_Settings {
 		<?php
 	}
 
+	/**
+	 * Information page describing the features of the separate PRO add-on.
+	 * It only describes them; none of these features are part of this plugin.
+	 */
+	public function upgrade_page() {
+		$pro_url = 'https://www.wpzoom.com/plugins/instagram-widget/?utm_source=wpadmin&utm_medium=instagram-widget&utm_campaign=upgrade-page';
+
+		$features = array(
+			array(
+				'icon'    => 'dashicons-cart',
+				'title'   => __( 'WooCommerce Product Links', 'instagram-widget-by-wpzoom' ),
+				'text'    => __( 'Turn your feed into a shoppable gallery. Link posts to WooCommerce products, tag products on images, and show them in the feed and the lightbox.', 'instagram-widget-by-wpzoom' ),
+				'without' => __( 'Posts cannot be linked to products.', 'instagram-widget-by-wpzoom' ),
+				'demo'    => 'https://demo.wpzoom.com/instagram-widget/woocommerce/',
+			),
+			array(
+				'icon'    => 'dashicons-hidden',
+				'title'   => __( 'Post Moderation', 'instagram-widget-by-wpzoom' ),
+				'text'    => __( 'Choose which posts appear in each feed. Hide individual posts from your website without deleting them from Instagram.', 'instagram-widget-by-wpzoom' ),
+				'without' => __( 'Every post from the account is shown.', 'instagram-widget-by-wpzoom' ),
+			),
+			array(
+				'icon'    => 'dashicons-chart-area',
+				'title'   => __( 'Instagram Insights', 'instagram-widget-by-wpzoom' ),
+				'text'    => __( 'Track follower growth, reach, views, engagement and the performance of each post, with charts in your WordPress dashboard.', 'instagram-widget-by-wpzoom' ),
+				'without' => __( 'No analytics in the dashboard.', 'instagram-widget-by-wpzoom' ),
+			),
+			array(
+				'icon'    => 'dashicons-images-alt2',
+				'title'   => __( 'Stories Row', 'instagram-widget-by-wpzoom' ),
+				'text'    => __( 'Show a carousel of story thumbnails above the feed. Clicking a thumbnail opens that story in the viewer.', 'instagram-widget-by-wpzoom' ),
+				'without' => __( 'Stories open only from the ring on the profile image.', 'instagram-widget-by-wpzoom' ),
+				'demo'    => 'https://demo.wpzoom.com/instagram-widget/stories/',
+			),
+			array(
+				'icon'    => 'dashicons-groups',
+				'title'   => __( 'Multi-Account Feeds', 'instagram-widget-by-wpzoom' ),
+				'text'    => __( 'Combine posts from several Instagram accounts into a single feed, with an optional account badge on each post.', 'instagram-widget-by-wpzoom' ),
+				'without' => __( 'Each feed shows one account.', 'instagram-widget-by-wpzoom' ),
+				'demo'    => 'https://demo.wpzoom.com/instagram-widget/multi-account-feed/',
+			),
+			array(
+				'icon'    => 'dashicons-sos',
+				'title'   => __( 'Priority Support', 'instagram-widget-by-wpzoom' ),
+				'text'    => __( 'Get help from the WPZOOM team through the private support desk.', 'instagram-widget-by-wpzoom' ),
+				'without' => __( 'Support through the WordPress.org forum.', 'instagram-widget-by-wpzoom' ),
+			),
+		);
+		?>
+		<div class="wrap">
+			<?php $this->page_header(); ?>
+			<div class="wpz-insta-wrap with-bg wpz-insta-upgrade">
+				<div class="wpz-insta-upgrade__hero">
+					<img src="<?php echo esc_url( WPZOOM_INSTAGRAM_PLUGIN_URL . 'assets/backend/img/plugin-icon.svg' ); ?>" alt="" width="96" height="96" />
+					<div>
+						<h2><?php esc_html_e( 'Upgrade to WPZOOM Instagram PRO', 'instagram-widget-by-wpzoom' ); ?></h2>
+						<p><?php esc_html_e( 'The PRO add-on builds on this plugin with shoppable feeds, moderation, analytics and more. Everything on this page is part of the separate PRO plugin.', 'instagram-widget-by-wpzoom' ); ?></p>
+						<a href="<?php echo esc_url( $pro_url ); ?>" target="_blank" rel="noopener" class="button button-primary button-hero"><?php esc_html_e( 'Upgrade to PRO', 'instagram-widget-by-wpzoom' ); ?></a>
+					</div>
+				</div>
+
+				<h3 class="wpz-insta-upgrade__subtitle"><?php esc_html_e( 'What the PRO add-on adds', 'instagram-widget-by-wpzoom' ); ?></h3>
+
+				<div class="wpz-insta-upgrade__grid">
+					<?php foreach ( $features as $feature ) : ?>
+						<div class="wpz-insta-upgrade__card">
+							<span class="wpz-insta-upgrade__badge"><?php esc_html_e( 'PRO', 'instagram-widget-by-wpzoom' ); ?></span>
+							<h4><span class="dashicons <?php echo esc_attr( $feature['icon'] ); ?>" aria-hidden="true"></span> <?php echo esc_html( $feature['title'] ); ?></h4>
+							<p><?php echo esc_html( $feature['text'] ); ?></p>
+							<p class="wpz-insta-upgrade__without"><strong><?php esc_html_e( 'Without PRO:', 'instagram-widget-by-wpzoom' ); ?></strong> <?php echo esc_html( $feature['without'] ); ?></p>
+							<?php if ( ! empty( $feature['demo'] ) ) : ?>
+								<a href="<?php echo esc_url( $feature['demo'] . '?utm_source=wpadmin&utm_medium=instagram-widget&utm_campaign=upgrade-page-demo' ); ?>" target="_blank" rel="noopener"><?php esc_html_e( 'View demo', 'instagram-widget-by-wpzoom' ); ?> &rarr;</a>
+							<?php endif; ?>
+						</div>
+					<?php endforeach; ?>
+				</div>
+			</div>
+		</div>
+		<?php
+	}
+
+	/**
+	 * Information page for Instagram Insights, a feature of the PRO add-on.
+	 * It only describes the feature; none of it is part of this plugin.
+	 */
+	public function insights_info_page() {
+		$features = array(
+			__( 'Follower growth', 'instagram-widget-by-wpzoom' )     => __( 'New followers, lost followers and net growth over time.', 'instagram-widget-by-wpzoom' ),
+			__( 'Reach and views', 'instagram-widget-by-wpzoom' )     => __( 'How many accounts your content reaches and how often it is viewed.', 'instagram-widget-by-wpzoom' ),
+			__( 'Engagement', 'instagram-widget-by-wpzoom' )          => __( 'Accounts engaged and total interactions.', 'instagram-widget-by-wpzoom' ),
+			__( 'Post performance', 'instagram-widget-by-wpzoom' )    => __( 'Likes, comments, saves and reach for each recent post.', 'instagram-widget-by-wpzoom' ),
+			__( 'Interactive charts', 'instagram-widget-by-wpzoom' )  => __( 'Clear visualizations of your Instagram data.', 'instagram-widget-by-wpzoom' ),
+			__( 'Flexible date ranges', 'instagram-widget-by-wpzoom' ) => __( 'View the last 7, 14, 30 or 90 days.', 'instagram-widget-by-wpzoom' ),
+		);
+		?>
+		<div class="wrap">
+			<?php $this->page_header(); ?>
+			<div class="wpz-insta-wrap with-bg wpz-insta_settings-support">
+				<div class="inner-wrap" style="display:flex;flex-wrap:wrap;gap:40px;align-items:center;">
+					<div style="flex:1 1 360px;min-width:0;">
+						<h2 class="section-title"><?php esc_html_e( 'Instagram Insights', 'instagram-widget-by-wpzoom' ); ?></h2>
+
+						<p class="section-description"><?php esc_html_e( 'See how your Instagram account is performing, right in your WordPress dashboard. Insights is part of the WPZOOM Instagram PRO add-on.', 'instagram-widget-by-wpzoom' ); ?></p>
+
+						<ul style="margin:16px 0 20px;list-style:none;padding:0;">
+							<?php foreach ( $features as $feature => $description ) : ?>
+								<li style="display:flex;align-items:flex-start;gap:8px;margin:0 0 10px;">
+									<span class="dashicons dashicons-yes-alt" style="color:#00a32a;flex:none;" aria-hidden="true"></span>
+									<span><strong><?php echo esc_html( $feature ); ?>:</strong> <?php echo esc_html( $description ); ?></span>
+								</li>
+							<?php endforeach; ?>
+						</ul>
+
+						<p class="section-description"><small><?php esc_html_e( 'Requires an Instagram Business or Creator account connected through a Facebook Page.', 'instagram-widget-by-wpzoom' ); ?></small></p>
+
+						<a href="<?php echo esc_url( 'https://www.wpzoom.com/plugins/instagram-widget/?utm_source=wpadmin&utm_medium=instagram-widget&utm_campaign=insights-page' ); ?>" target="_blank" rel="noopener" class="button-primary"><?php esc_html_e( 'Learn more about PRO', 'instagram-widget-by-wpzoom' ); ?></a>
+					</div>
+
+					<div style="flex:1 1 360px;min-width:0;">
+						<img src="<?php echo esc_url( WPZOOM_INSTAGRAM_PLUGIN_URL . 'assets/backend/img/pro-instagram-analytics.webp' ); ?>" alt="" width="900" height="638" loading="lazy" style="display:block;width:100%;max-width:560px;height:auto;margin:0 auto;" />
+					</div>
+				</div>
+			</div>
+		</div>
+		<?php
+	}
+
 	public function support_page() {
 		?>
 		<div class="wrap">
@@ -4758,23 +4066,6 @@ class WPZOOM_Instagram_Widget_Settings {
 		return $text;
 	}
 
-	/**
-	 * Get hidden posts for the current feed (for JS localization).
-	 *
-	 * @return string JSON-encoded array of hidden media IDs, or empty string.
-	 */
-	private function get_hidden_posts_for_js() {
-		global $post;
-		if ( ! $post || 'wpz-insta_feed' !== get_post_type( $post ) ) {
-			return '[]';
-		}
-		$hidden_posts = get_post_meta( $post->ID, '_wpz-insta_hidden-posts', true );
-		if ( is_array( $hidden_posts ) ) {
-			return wp_json_encode( array_values( $hidden_posts ) );
-		}
-		return '[]';
-	}
-
 	public function scripts( $hook ) {
 		if ( self::is_wpzinsta_screen() ) {
 			wp_enqueue_media();
@@ -4803,7 +4094,6 @@ class WPZOOM_Instagram_Widget_Settings {
 					'i18n_delete_confirm_button_ok'     => __( 'Yes', 'instagram-widget-by-wpzoom' ),
 					'i18n_delete_confirm_button_cancel' => __( 'No', 'instagram-widget-by-wpzoom' ),
 					'nonce'                             => wp_create_nonce( 'ajax-nonce' ),
-					'hidden_posts'                      => $this->get_hidden_posts_for_js(),
 					'feeds_url'                         => admin_url( self::$any_feeds ? 'edit.php?post_type=wpz-insta_feed' : 'post-new.php?post_type=wpz-insta_feed' ),
 					'users_url' 					    => admin_url( self::$any_users ? 'edit.php?post_type=wpz-insta_user' : 'post-new.php?post_type=wpz-insta_user' ),
 					'edit_user_url'                     => admin_url( 'edit.php?post_type=wpz-insta_user#post-' ),
@@ -4811,33 +4101,6 @@ class WPZOOM_Instagram_Widget_Settings {
 					'default_user_thumbnail'            => WPZOOM_INSTAGRAM_PLUGIN_URL . 'dist/images/backend/icon-insta.png',
 					'post_edit_url'                     => admin_url( 'post.php?action=edit&post=' ),
 					'ajax_url'                          => admin_url( 'admin-ajax.php' ),
-					'is_pro'                            => apply_filters( 'wpz-insta_is-pro', false ),
-					'product_link_nonce'                 => wp_create_nonce( 'wpz-insta-product-link' ),
-					'strings'                            => array(
-						'linkProduct'    => __( 'Link to Product', 'instagram-widget-by-wpzoom' ),
-						'searchProducts'  => __( 'Search products...', 'instagram-widget-by-wpzoom' ),
-						'selectProductsHint' => __( 'Select one or more products. Click an item to toggle selection.', 'instagram-widget-by-wpzoom' ),
-						'removeLink'        => __( 'Remove Link', 'instagram-widget-by-wpzoom' ),
-						'removeTagPosition' => __( 'Remove tag position', 'instagram-widget-by-wpzoom' ),
-						'save'              => __( 'Save', 'instagram-widget-by-wpzoom' ),
-						'cancel'            => __( 'Cancel', 'instagram-widget-by-wpzoom' ),
-						'productLinksUpsellTitle'   => __( 'Unlock Product Links', 'instagram-widget-by-wpzoom' ),
-						'productLinksUpsellMessage' => __( 'Link your Instagram posts to WooCommerce products and display the product details or a Buy now button. This feature is available with an active Instagram Widget PRO license.', 'instagram-widget-by-wpzoom' ),
-						'productLinksUpsellCta'     => __( 'Get PRO License', 'instagram-widget-by-wpzoom' ),
-						'productLinksUpsellClose'   => __( 'Close', 'instagram-widget-by-wpzoom' ),
-					),
-					'product_links_upsell_url'          => apply_filters(
-						'wpz-insta_product-links-upsell-url',
-						add_query_arg(
-							array(
-								'utm_source'   => 'instagram_widget',
-								'utm_medium'   => 'plugin',
-								'utm_campaign' => 'product_links_upsell',
-							),
-							'https://www.wpzoom.com/plugins/instagram-widget/?utm_source=wpadmin&utm_medium=instagram-widget&utm_campaign=settings-upsell'
-						)
-					),
-					'product_links_upsell_image_url'   => WPZOOM_INSTAGRAM_PLUGIN_URL . 'assets/backend/img/woo-products-upsell.jpg',
 				)
 			);
 		}
