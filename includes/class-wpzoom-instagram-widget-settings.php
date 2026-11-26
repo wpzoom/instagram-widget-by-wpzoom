@@ -539,9 +539,10 @@ class WPZOOM_Instagram_Widget_Settings {
 
 		if ( ( 'wpz-insta_feed' == $screen->id || 'edit-wpz-insta_feed' == $screen->id || 'edit-wpz-insta_user' == $screen->id ) && ! self::$any_users )
 		{
+			// Show the connect screen in place of the list table / editor, which stay in the
+			// page (hidden) so the normal admin page lifecycle and footer run untouched.
 			$this->connect_page();
-			require_once ABSPATH . 'wp-admin/admin-footer.php';
-			exit;
+			echo '<style>#wpbody-content > .wrap ~ .wrap, #wpbody-content > .wrap ~ #screen-meta-links { display: none !important; }</style>';
 		}
 	}
 
@@ -1840,13 +1841,13 @@ class WPZOOM_Instagram_Widget_Settings {
 			$new_posts_interval_suffix        = (int) self::get_feed_setting_value( $post->ID, 'check-new-posts-interval-suffix' );
 			$enable_request_timeout           = (bool) self::get_feed_setting_value( $post->ID, 'enable-request-timeout' );
 			$raw_feed_layout                  = (int) self::get_feed_setting_value( $post->ID, 'layout' );
-			$feed_layout                      = ! $pro_toggle ? $raw_feed_layout : ( $raw_feed_layout > 1 ? 0 : $raw_feed_layout );
+			$feed_layout                      = $raw_feed_layout;
 			$feed_items_num                   = (int) self::get_feed_setting_value( $post->ID, 'item-num' );
 			$feed_cols_num                    = (int) self::get_feed_setting_value( $post->ID, 'col-num' );
 			$feed_cols_num_tablet             = (int) self::get_feed_setting_value( $post->ID, 'col-num_tablet' );
 			$feed_cols_num_mobile             = (int) self::get_feed_setting_value( $post->ID, 'col-num_mobile' );
-			$feed_cols_num_responsive_enabled = ! $pro_toggle ? (bool) self::get_feed_setting_value( $post->ID, 'col-num_responsive-enabled' ) : false;
-			$feed_perpage_num_responsive_enabled = ! $pro_toggle ? (bool) self::get_feed_setting_value( $post->ID, 'perpage-num_responsive-enabled' ) : false;
+			$feed_cols_num_responsive_enabled = (bool) self::get_feed_setting_value( $post->ID, 'col-num_responsive-enabled' );
+			$feed_perpage_num_responsive_enabled = (bool) self::get_feed_setting_value( $post->ID, 'perpage-num_responsive-enabled' );
 			$feed_perpage_num                 = (int) self::get_feed_setting_value( $post->ID, 'perpage-num' );
 			$feed_perpage_num_tablet          = (int) self::get_feed_setting_value( $post->ID, 'perpage-num_tablet' );
 			$feed_perpage_num_mobile          = (int) self::get_feed_setting_value( $post->ID, 'perpage-num_mobile' );
@@ -2012,7 +2013,7 @@ class WPZOOM_Instagram_Widget_Settings {
 							<div class="wpz-insta_sidebar-section wpz-insta_sidebar-section-layout">
 								<h4 class="wpz-insta_sidebar-section-title"><?php esc_html_e( 'Layout', 'instagram-widget-by-wpzoom' ); ?></h4>
 
-								<div class="wpz-insta_feed-layout<?php echo $pro_toggle ? ' wpz-insta_pro-only' : ''; ?>">
+								<div class="wpz-insta_feed-layout">
 									<label class="wpz-insta_feed-layout-option wpz-insta_feed-layout-1">
 										<input type="radio" name="_wpz-insta_layout" value="0"<?php checked( $feed_layout, 0 ); ?> />
 
@@ -2044,9 +2045,8 @@ class WPZOOM_Instagram_Widget_Settings {
 										</svg>
 									</label>
 
-									<?php echo $pro_toggle ? '<fieldset class="wpz-insta_feed-layout-pro"><legend>' . esc_html__( 'PRO', 'instagram-widget-by-wpzoom' ) . '</legend>' : ''; ?>
 
-									<label class="wpz-insta_feed-layout-option wpz-insta_feed-layout-3<?php echo $pro_toggle ? ' disabled' : ''; ?>">
+									<label class="wpz-insta_feed-layout-option wpz-insta_feed-layout-3">
 										<input type="radio" name="_wpz-insta_layout" value="2"<?php checked( $feed_layout, 2 ); ?> />
 
 										<svg width="92" height="110" viewBox="0 0 92 110" xmlns="http://www.w3.org/2000/svg">
@@ -2062,7 +2062,7 @@ class WPZOOM_Instagram_Widget_Settings {
 										</svg>
 									</label>
 
-									<label class="wpz-insta_feed-layout-option wpz-insta_feed-layout-4<?php echo $pro_toggle ? ' disabled' : ''; ?>">
+									<label class="wpz-insta_feed-layout-option wpz-insta_feed-layout-4">
 										<input type="radio" name="_wpz-insta_layout" value="3"<?php checked( $feed_layout, 3 ); ?> />
 
 										<svg width="92" height="110" viewBox="0 0 92 110" xmlns="http://www.w3.org/2000/svg">
@@ -2074,7 +2074,6 @@ class WPZOOM_Instagram_Widget_Settings {
 										</svg>
 									</label>
 
-									<?php echo $pro_toggle ? '</fieldset>' : ''; ?>
 								</div>
 
 								<div class="wpz-insta_feed-layout-etc wpz-insta_table">
@@ -2087,7 +2086,7 @@ class WPZOOM_Instagram_Widget_Settings {
 									<div class="wpz-insta_table-row wpz-insta_responsive-table-row<?php echo ( 1 === $feed_layout || 3 === $feed_layout ? ' hidden' : '' ) . ( $feed_cols_num_responsive_enabled ? ' wpz-insta_responsive-enabled' : '' ); ?>">
 										<div class="wpz-insta_table-cell">
 											<label for="wpz-insta_col-num_desktop"><strong><?php esc_html_e( 'Number of columns', 'instagram-widget-by-wpzoom' ); ?></strong></label>
-											<input type="checkbox" name="_wpz-insta_col-num_responsive-enabled" id="_wpz-insta_col-num_responsive-enabled" class="wpz-insta_responsive-checkbox" title="<?php esc_attr_e( 'Responsive', 'instagram-widget-by-wpzoom' ); ?>" value="1"<?php checked( $feed_cols_num_responsive_enabled ); disabled( $pro_toggle ); ?> />
+											<input type="checkbox" name="_wpz-insta_col-num_responsive-enabled" id="_wpz-insta_col-num_responsive-enabled" class="wpz-insta_responsive-checkbox" title="<?php esc_attr_e( 'Responsive', 'instagram-widget-by-wpzoom' ); ?>" value="1"<?php checked( $feed_cols_num_responsive_enabled ); ?> />
 										</div>
 										<div class="wpz-insta_table-cell">
 											<div class="wpz-insta_responsive-field">
@@ -2114,7 +2113,7 @@ class WPZOOM_Instagram_Widget_Settings {
 										
 										<div class="wpz-insta_table-cell">
 											<label for="wpz-insta_col-num_desktop"><strong><?php esc_html_e( 'Number of visible items', 'instagram-widget-by-wpzoom' ); ?></strong></label>
-											<input type="checkbox" name="_wpz-insta_perpage-num_responsive-enabled" id="_wpz-insta_perpage-num_responsive-enabled" class="wpz-insta_responsive-checkbox" title="<?php esc_attr_e( 'Responsive', 'instagram-widget-by-wpzoom' ); ?>" value="1"<?php checked( $feed_cols_num_responsive_enabled ); disabled( $pro_toggle ); ?> />
+											<input type="checkbox" name="_wpz-insta_perpage-num_responsive-enabled" id="_wpz-insta_perpage-num_responsive-enabled" class="wpz-insta_responsive-checkbox" title="<?php esc_attr_e( 'Responsive', 'instagram-widget-by-wpzoom' ); ?>" value="1"<?php checked( $feed_perpage_num_responsive_enabled ); ?> />
 										</div>
 										<div class="wpz-insta_table-cell">
 											<div class="wpz-insta_responsive-field">
@@ -2153,10 +2152,8 @@ class WPZOOM_Instagram_Widget_Settings {
 										</div>
 									</label>
 
-									<?php echo $pro_toggle ? '<fieldset class="wpz-insta_feed-only-pro wpz-insta_pro-only wpz-insta_pro-only-with-bottom' . ( 1 === $feed_layout ? ' hidden' : '' ) . '"><legend><strong>' . esc_html__( 'PRO', 'instagram-widget-by-wpzoom' ) . '</strong></legend>' : ''; ?>
 
-									<div class="wpz-insta_table-row wpz-insta_table-row-full wpz-insta_table-row-featured-layout<?php echo ( 0 === $feed_layout && $feed_cols_num > 2 && $feed_cols_num < 7 ? '' : ' hidden' ) . ( ! $pro_toggle ? '' : ' pro-only-wrapper' ); ?>">
-										<?php if ( ! $pro_toggle ) { ?>
+									<div class="wpz-insta_table-row wpz-insta_table-row-full wpz-insta_table-row-featured-layout<?php echo ( 0 === $feed_layout && $feed_cols_num > 2 && $feed_cols_num < 7 ? '' : ' hidden' ); ?>">
 											<strong class="wpz-insta_table-cell table-cell-special">
 												<label for="_wpz-insta_featured-layout-enable"><?php esc_html_e( 'Highlight items', 'instagram-widget-by-wpzoom' ); ?></label>
 												<input type="hidden" name="_wpz-insta_featured-layout-enable" value="0" />
@@ -2164,10 +2161,8 @@ class WPZOOM_Instagram_Widget_Settings {
 											</strong>
 
 											<p class="description"><small><em><?php esc_html_e( 'Works only with 3-6 columns', 'instagram-widget-by-wpzoom' ); ?></em></small></p>
-										<?php } ?>
 
 										<div class="wpz-insta_table-cell">
-											<?php if ( ! $pro_toggle ) { ?>
 												<div class="wpz-insta_image-select<?php echo $enable_featured_layout ? '' : ' hidden'; ?>">
 													<?php
 													$featured_layouts = array(
@@ -2217,20 +2212,10 @@ class WPZOOM_Instagram_Widget_Settings {
 											<?php } else { ?>
 												<input type="checkbox"<?php checked( true ); disabled( true ); ?> />
 												<span><?php esc_html_e( 'Highlight every 3rd post', 'instagram-widget-by-wpzoom' ); ?></span>
-											<?php } ?>
 										</div>
 									</div>
 
-									<?php if ( $pro_toggle ) { ?>
-										<div class="wpz-insta_table-row wpz-insta_table-row-full pro-only-wrapper">
-											<label class="wpz-insta_table-cell">
-												<input type="checkbox"<?php checked( true ); disabled( true ); ?> />
-												<span><?php esc_html_e( 'Responsive columns', 'instagram-widget-by-wpzoom' ); ?></span>
-											</label>
-										</div>
-									<?php } ?>
 
-									<?php echo $pro_toggle ? '</fieldset>' : ''; ?>
 								</div>
 							</div>
 
@@ -2275,7 +2260,6 @@ class WPZOOM_Instagram_Widget_Settings {
 										</span>
 									</label>
 
-									<?php echo $pro_toggle ? '<fieldset class="wpz-insta_feed-only-pro wpz-insta_pro-only wpz-insta_pro-only-with-bottom"><legend><strong>' . esc_html__( 'PRO', 'instagram-widget-by-wpzoom' ) . '</strong></legend>' : ''; ?>
 <label class="wpz-insta_table-row">
 											<input type="hidden" name="_wpz-insta_show-account-badge" value="0" />
 											<input type="checkbox" name="_wpz-insta_show-account-badge" value="1"<?php checked( $show_account_badge ); ?> />
@@ -2291,7 +2275,6 @@ class WPZOOM_Instagram_Widget_Settings {
                                                 <small class="help" aria-hidden="true" data-tooltip="<?php esc_html_e( 'This feature works only when your account is connected via your Facebook Page.', 'instagram-widget-by-wpzoom' ); ?>"><svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='16' height='16'><path fill='#000' fill-rule='evenodd' clip-rule='evenodd' d='M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm-1 16v-2h2v2h-2zm2-3v-1.141A3.991 3.991 0 0016 10a4 4 0 00-8 0h2c0-1.103.897-2 2-2s2 .897 2 2-.897 2-2 2a1 1 0 00-1 1v2h2z'></path></svg></small>
                                             </span>
 										</label>
-									<?php echo $pro_toggle ? '</fieldset>' : ''; ?>
 									</div>
 
 									<div class="wpz-insta_table-group">
@@ -2389,7 +2372,6 @@ class WPZOOM_Instagram_Widget_Settings {
 										</div>
 									</label>
 
-									<?php echo $pro_toggle ? '<fieldset class="wpz-insta_feed-only-pro wpz-insta_pro-only wpz-insta_pro-only-with-bottom"><legend><strong>' . esc_html__( 'PRO', 'instagram-widget-by-wpzoom' ) . '</strong></legend>' : ''; ?>
 
 									<label class="wpz-insta_table-row">
 										<strong class="wpz-insta_table-cell"><?php esc_html_e( 'Rounded corners', 'instagram-widget-by-wpzoom' ); ?></strong>
@@ -2406,7 +2388,6 @@ class WPZOOM_Instagram_Widget_Settings {
 										</div>
 									</label>
 
-									<?php echo $pro_toggle ? '</fieldset>' : ''; ?>
 
 									<label class="wpz-insta_table-row">
 										<strong class="wpz-insta_table-cell"><?php esc_html_e( 'Outside padding', 'instagram-widget-by-wpzoom' ); ?></strong>
@@ -2557,7 +2538,6 @@ class WPZOOM_Instagram_Widget_Settings {
 										<strong><?php esc_html_e( 'Show on hover', 'instagram-widget-by-wpzoom' ); ?></strong>
 										<div class="wpz-insta_table">
 										
-											<?php echo $pro_toggle ? '<fieldset class="wpz-insta_feed-only-pro wpz-insta_pro-only wpz-insta_pro-only-with-bottom"><legend><strong>' . esc_html__( 'PRO', 'instagram-widget-by-wpzoom' ) . '</strong></legend>' : ''; ?>
 												<label class="wpz-insta_table-row">
 													<input type="hidden" name="_wpz-insta_show-likes" value="0" />
 													<input type="checkbox" name="_wpz-insta_show-likes" value="1"<?php checked( $feed_show_likes ); ?> />
@@ -2575,7 +2555,6 @@ class WPZOOM_Instagram_Widget_Settings {
 													   <small class="help" aria-hidden="true" data-tooltip="<?php esc_html_e( 'You must be connected via Facebook Graph API to display comments.', 'instagram-widget-by-wpzoom' ); ?>"><svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='16' height='16'><path fill='#000' fill-rule='evenodd' clip-rule='evenodd' d='M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm-1 16v-2h2v2h-2zm2-3v-1.141A3.991 3.991 0 0016 10a4 4 0 00-8 0h2c0-1.103.897-2 2-2s2 .897 2 2-.897 2-2 2a1 1 0 00-1 1v2h2z'></path></svg></small>
                                                     </span>
 												</label>
-											<?php echo $pro_toggle ? '</fieldset>' : ''; ?>
 
 											<label class="wpz-insta_table-row">
 												<input type="hidden" name="_wpz-insta_hover-media-type-icons" value="0" />
@@ -2595,7 +2574,6 @@ class WPZOOM_Instagram_Widget_Settings {
 												<span><?php esc_html_e( 'Date', 'instagram-widget-by-wpzoom' ); ?></span>
 											</label>
 
-											<?php echo $pro_toggle ? '<fieldset class="wpz-insta_feed-only-pro wpz-insta_pro-only' . ( 1 === $feed_layout || 3 === $feed_layout ? ' hidden' : '' ) . '"><legend><strong>' . esc_html__( 'PRO', 'instagram-widget-by-wpzoom' ) . '</strong></legend>' : ''; ?>
 
                                             <?php /* Coming Soon
 
@@ -2613,13 +2591,12 @@ class WPZOOM_Instagram_Widget_Settings {
 
 											*/ ?>
 
-											<?php echo $pro_toggle ? '</fieldset>' : ''; ?>
 										</div>
 									</div>
 								</div>
 							</div>
 
-							<div class="wpz-insta_sidebar-section wpz-insta_sidebar-section-load-more<?php echo ( $pro_toggle ? ' wpz-insta_pro-only' : '' ) . ( 1 === $feed_layout || 3 === $feed_layout ? ' hidden' : '' ); ?>">
+							<div class="wpz-insta_sidebar-section wpz-insta_sidebar-section-load-more<?php echo ( 1 === $feed_layout || 3 === $feed_layout ? ' hidden' : '' ); ?>">
 								<h4 class="wpz-insta_sidebar-section-title smaller-title"><?php esc_html_e( 'Load More Posts', 'instagram-widget-by-wpzoom' ); ?></h4>
 
 								<div class="wpz-insta_feed-load-more-general wpz-insta_table">
@@ -3066,7 +3043,7 @@ class WPZOOM_Instagram_Widget_Settings {
 					$new_user_link = admin_url( 'post-new.php?post_type=wpz-insta_user' );
 					echo apply_filters(
 						'wpz-insta_select-user-add-button',
-						'<a href="' . esc_url( $new_user_link ) . '" class="wpz-insta_tabs-config-connect-add button button-primary disabled">' . __( 'Add New Account', 'instagram-widget-by-wpzoom' ) . ' <small class="pro-only">' . __( 'PRO', 'instagram-widget-by-wpzoom' ) . '</small></a>',
+						'<a href="' . esc_url( $new_user_link ) . '" class="wpz-insta_tabs-config-connect-add button button-primary">' . __( 'Add New Account', 'instagram-widget-by-wpzoom' ) . '</a>',
 						$new_user_link
 					);
 					?>
@@ -3338,7 +3315,7 @@ class WPZOOM_Instagram_Widget_Settings {
 
 				echo apply_filters(
 					'wpz-insta_user-add-button',
-					'<a href="' . esc_url( $connect_page ) . '" class="button-primary' . ( self::$any_users ? ' disabled' : '' ) . '">' . __( 'Connect a new Instagram account', 'instagram-widget-by-wpzoom' ) . ' ' . ( self::$any_users ? '<small class="pro-only">' . __( 'PRO', 'instagram-widget-by-wpzoom' ) . '</small>' : '' ) . '</a>',
+					'<a href="' . esc_url( $connect_page ) . '" class="button-primary nojs">' . __( 'Connect a new Instagram account', 'instagram-widget-by-wpzoom' ) . '</a>',
 					$connect_page,
 					self::$any_users
 				);
@@ -4208,7 +4185,10 @@ class WPZOOM_Instagram_Widget_Settings {
 		register_setting(
 			'wpzoom-instagram-widget-settings-group',
 			'wpzoom-instagram-widget-settings',
-			array( $this, 'sanitize' )
+			array(
+				'type'              => 'array',
+				'sanitize_callback' => array( $this, 'sanitize' ),
+			)
 		);
 
 		add_settings_section(
@@ -4904,10 +4884,11 @@ class WPZOOM_Instagram_Widget_Settings {
 		}
 
 		$result['username']                 = sanitize_text_field( $input['username'] );
-		$result['transient-lifetime-value'] = sanitize_text_field( $input['transient-lifetime-value'] );
-		$result['transient-lifetime-type']  = sanitize_text_field( $input['transient-lifetime-type'] );
+		$lifetime_type                      = isset( $input['transient-lifetime-type'] ) ? sanitize_key( $input['transient-lifetime-type'] ) : 'days';
+		$result['transient-lifetime-value'] = isset( $input['transient-lifetime-value'] ) ? max( 1, absint( $input['transient-lifetime-value'] ) ) : 1;
+		$result['transient-lifetime-type']  = in_array( $lifetime_type, array( 'minutes', 'hours', 'days' ), true ) ? $lifetime_type : 'days';
 		$result['is-forced-timeout']        = ! empty( $input['is-forced-timeout'] ) ? wp_validate_boolean( $input['is-forced-timeout'] ) : false;
-		$result['request-timeout-value']    = sanitize_text_field( $input['request-timeout-value'] );
+		$result['request-timeout-value']    = isset( $input['request-timeout-value'] ) ? min( 300, max( 1, absint( $input['request-timeout-value'] ) ) ) : 15;
 		$result['user-info-avatar']         = sanitize_text_field( $input['user-info-avatar'] );
 		$result['user-info-fullname']       = sanitize_text_field( $input['user-info-fullname'] );
 		$result['user-info-biography']      = sanitize_text_field( $input['user-info-biography'] );

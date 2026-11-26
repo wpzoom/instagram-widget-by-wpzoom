@@ -294,7 +294,9 @@ class WPZOOM_Instagram_Image_Uploader {
 	 * @return array{next:int,total:int,done:bool,failed:int}
 	 */
 	public static function regenerate_cached_batch( $offset, $limit = 8, $time_budget = 10 ) {
-		require_once ABSPATH . 'wp-admin/includes/image.php';
+		if ( ! function_exists( 'wp_generate_attachment_metadata' ) ) {
+			require_once ABSPATH . 'wp-admin/includes/image.php';
+		}
 
 		$ids     = self::cached_attachment_ids();
 		$total   = count( $ids );

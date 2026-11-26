@@ -2,7 +2,6 @@
 *.sql
 *.tar.gz
 *.zip
-.babelrc
 .deployignore
 .distignore
 .editorconfig
@@ -19,11 +18,9 @@ behat.yml
 bitbucket-pipelines.yml
 bin
 .circleci/config.yml
-composer.json
 composer.lock
 dependencies.yml
 Gruntfile.js
-package.json
 package-lock.json
 phpunit.xml
 phpunit.xml.dist
@@ -37,7 +34,11 @@ phpcs.xml.dist
 phpstan.neon.dist
 README.md
 tests
-webpack.config.js
 .wordpress-org
 wp-cli.local.yml
 yarn.lock
+.vscode
+.claude
+.gitmodules
+SECURITY.md
+CLAUDE.md

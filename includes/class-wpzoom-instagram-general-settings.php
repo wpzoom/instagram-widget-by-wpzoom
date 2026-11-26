@@ -88,7 +88,10 @@ class WPZOOM_Instagram_General_Settings {
 		register_setting(
 				'wpzoom_instagram_general_settings_group',
 				'wpzoom-instagram-general-settings',
-				array( $this, 'sanitize_field' )
+				array(
+					'type'              => 'array',
+					'sanitize_callback' => array( $this, 'sanitize_field' ),
+				)
 		);
 		add_settings_section(
 			'wpzoom_instagram_general_settings_section',
@@ -176,7 +179,31 @@ class WPZOOM_Instagram_General_Settings {
 	 * @since 1.0.0
 	 */
 	public function sanitize_field( $values ) {
-		return $values;
+		$result = array();
+
+		if ( ! is_array( $values ) ) {
+			return $result;
+		}
+
+		$allowed_periods = array( '1 day', '3 days', '5 days', '10 days' );
+
+		foreach ( $values as $key => $value ) {
+			$key = sanitize_key( $key );
+
+			if ( '' === $key || ! is_scalar( $value ) ) {
+				continue;
+			}
+
+			if ( 'send-email-notification-days-before' === $key ) {
+				$value          = sanitize_text_field( wp_unslash( $value ) );
+				$result[ $key ] = in_array( $value, $allowed_periods, true ) ? $value : '1 day';
+			} else {
+				// Every other field on this screen is a checkbox.
+				$result[ $key ] = wp_validate_boolean( $value ) ? '1' : '';
+			}
+		}
+
+		return $result;
 	}
 
 	public function settings_field_load_css_js() {

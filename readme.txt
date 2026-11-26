@@ -142,6 +142,31 @@ Looking to contribute? [Fork the repository on GitHub](https://github.com/wpzoom
 6. Embed the feed using the Gutenberg block, shortcode, or widget
 
 
+== External services ==
+
+This plugin displays content from Instagram, so it relies on external services provided by Meta Platforms, Inc. Nothing is sent to these services until a site administrator connects an Instagram account.
+
+= Instagram API and Facebook Graph API (Meta) =
+
+Used to authorize your Instagram account and to retrieve the content shown in your feeds: profile details (username, name, biography, profile picture, post and follower counts), posts, reels, stories, captions, like and comment counts and, for accounts connected through Facebook, account insights.
+
+* What is sent: the access token of the connected Instagram account and the ID of the account or media item being requested. No data about your site visitors is sent by the plugin.
+* When: when an administrator connects or reconnects an account, when a feed is displayed and its cache has expired, when a visitor loads more posts or opens an album in the lightbox, when the access token is refreshed, and when the Insights screen is opened.
+* Endpoints: `graph.instagram.com`, `graph.facebook.com`, `api.instagram.com` and `www.facebook.com` (authorization dialogs).
+
+Images and videos that belong to the connected account are downloaded from Instagram's content servers (CDN) and stored in your Media Library, so feeds can be served from your own site. Videos, and images that have not been cached yet, are loaded by the visitor's browser directly from Instagram's servers, which means the visitor's IP address and browser information are visible to Meta, as with any embedded media.
+
+These services are provided by Meta Platforms, Inc.: [Terms of Use](https://help.instagram.com/581066165581870), [Meta Platform Terms](https://developers.facebook.com/terms/), [Privacy Policy](https://privacycenter.instagram.com/policy).
+
+= WPZOOM authorization service =
+
+Instagram and Facebook only return an authorization result to a pre-registered address, so the "Connect" buttons use a relay hosted on wpzoom.com (`/instagram-auth/`, `/instagram-business-auth/` and `/graph-auth/`). After you approve access on Instagram or Facebook, your browser passes through this page, which exchanges the authorization code for an access token and redirects you back to your own WordPress dashboard.
+
+* What is sent: the authorization code issued by Instagram/Facebook and the URL of your WordPress admin page to return to.
+* When: only when an administrator clicks one of the "Connect" buttons. It is not used when feeds are displayed.
+
+This service is provided by WPZOOM: [Terms of Use](https://www.wpzoom.com/terms-and-conditions/), [Privacy Policy](https://www.wpzoom.com/privacy-policy/).
+
 == Frequently Asked Questions ==
 
 = How do I create a new Instagram feed? =
