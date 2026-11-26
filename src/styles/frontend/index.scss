@@ -960,13 +960,64 @@ a.ig-b-v-24:hover {
 }
 
 /** Lightbox **/
-.wpzoom-lightbox .mfp-inline-holder .mfp-content {
-    max-width: none;
-    height: 100%;
+html.wpz-insta-lightbox-open {
+    overflow: hidden;
 }
 
-.wpzoom-lightbox .mfp-container {
-    backdrop-filter: blur(10px);
+// Hidden next to the feed until it is moved into the dialog.
+.wpz-insta-lightbox-wrapper.mfp-hide {
+    display: none !important;
+}
+
+.wpz-insta-lightbox-dialog {
+    position: fixed;
+    inset: 0;
+    z-index: 100000;
+    box-sizing: border-box;
+    width: 100vw;
+    height: 100vh;
+    height: 100dvh;
+    max-width: none;
+    max-height: none;
+    margin: 0;
+    padding: 0 8px;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    overflow: hidden;
+
+    &[open] {
+        display: block;
+    }
+
+    &::backdrop {
+        background: rgba(11, 11, 11, 0.8);
+        backdrop-filter: blur(10px);
+    }
+
+    &__close {
+        position: absolute;
+        top: 25px;
+        right: 15px;
+        z-index: 20;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 44px;
+        height: 44px;
+        padding: 0;
+        border: 0;
+        background: transparent;
+        color: #fff;
+        opacity: 0.65;
+        cursor: pointer;
+
+        &:hover,
+        &:focus {
+            opacity: 1;
+            background: transparent;
+        }
+    }
 }
 
 
@@ -1055,31 +1106,6 @@ a.ig-b-v-24:hover {
             min-height: 80px;
             border-bottom: 1px solid #efefef;
         }
-    }
-}
-
-
-.wpzoom-lightbox {
-    &.mfp-gallery {
-        z-index: 100000;
-        pointer-events: none;
-    }
-
-    button.mfp-close {
-        pointer-events: all;
-        color: #fff;
-        font-size: 50px;
-        font-weight: 100;
-        margin-top: 25px;
-        margin-right: 15px;
-    }
-
-    .mfp-prevent-close {
-        pointer-events: all;
-    }
-
-    button.mfp-close:hover {
-        text-decoration: none;
     }
 }
 

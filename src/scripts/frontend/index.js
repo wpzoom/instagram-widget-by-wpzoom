@@ -1,5 +1,188 @@
-// Close button of the lightbox (an SVG instead of the library's default "×").
-window.wpzInstaLightboxCloseMarkup = '<button title="%title%" type="button" class="mfp-close"><svg width="30" height="30" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 20 20" enable-background="new 0 0 20 20" xml:space="preserve"><path fill-rule="evenodd" clip-rule="evenodd" fill="#fff" d="M11.6,10.1l5.5-5.7c0.5-0.5,0.5-1.1,0-1.6c-0.5-0.5-1.1-0.5-1.6,0 l-5.5,5.6L4.4,2.8C4,2.4,3.3,2.4,2.8,2.8S2.4,4,2.8,4.4L8.4,10l-5.5,5.6c-0.5,0.5-0.5,1.1,0,1.6c0.5,0.5,1.1,0.5,1.6,0l5.5-5.6 l5.5,5.6c0.5,0.5,1.1,0.5,1.6,0c0.5-0.5,0.5-1.1,0-1.6C17,15.6,11.6,10.1,11.6,10.1z"></path></svg></button>';
+// Lightbox: the feed's lightbox markup (printed hidden next to the feed) is shown in a native
+// <dialog>, which provides the backdrop, Escape to close and focus handling.
+( function() {
+	const CLOSE_ICON = '<svg width="30" height="30" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 20 20" enable-background="new 0 0 20 20" xml:space="preserve"><path fill-rule="evenodd" clip-rule="evenodd" fill="#fff" d="M11.6,10.1l5.5-5.7c0.5-0.5,0.5-1.1,0-1.6c-0.5-0.5-1.1-0.5-1.6,0 l-5.5,5.6L4.4,2.8C4,2.4,3.3,2.4,2.8,2.8S2.4,4,2.8,4.4L8.4,10l-5.5,5.6c-0.5,0.5-0.5,1.1,0,1.6c0.5,0.5,1.1,0.5,1.6,0l5.5-5.6 l5.5,5.6c0.5,0.5,1.1,0.5,1.6,0c0.5-0.5,0.5-1.1,0-1.6C17,15.6,11.6,10.1,11.6,10.1z"></path></svg>';
+
+	let dialog      = null;
+	let wrapper     = null;
+	let placeholder = null;
+
+	function getDialog() {
+		if ( dialog ) {
+			return dialog;
+		}
+
+		dialog = document.createElement( 'dialog' );
+		dialog.className = 'wpz-insta-lightbox-dialog';
+		dialog.setAttribute( 'aria-label', 'Instagram post' );
+
+		const closeButton = document.createElement( 'button' );
+		closeButton.type = 'button';
+		closeButton.className = 'wpz-insta-lightbox-dialog__close';
+		closeButton.setAttribute( 'aria-label', 'Close' );
+		closeButton.innerHTML = CLOSE_ICON;
+		closeButton.addEventListener( 'click', close );
+		dialog.appendChild( closeButton );
+
+		// A click that lands outside the post and the navigation arrows closes the lightbox.
+		dialog.addEventListener( 'click', function( event ) {
+			if ( ! event.target.closest( '.wpz-insta-lightbox, .swiper-button-next, .swiper-button-prev, .wpz-insta-lightbox-dialog__close' ) ) {
+				close();
+			}
+		} );
+
+		dialog.addEventListener( 'close', restore );
+		document.body.appendChild( dialog );
+
+		return dialog;
+	}
+
+	function slides( swiperEl ) {
+		return Array.prototype.filter.call( swiperEl.querySelectorAll( '.swiper-slide' ), function( slide ) {
+			return slide.closest( '.swiper' ) === swiperEl;
+		} );
+	}
+
+	function open( lightboxWrapper, mediaId ) {
+		if ( ! lightboxWrapper || wrapper ) {
+			return;
+		}
+
+		const box = getDialog();
+
+		wrapper     = lightboxWrapper;
+		placeholder = document.createComment( 'wpz-insta-lightbox' );
+		wrapper.parentNode.insertBefore( placeholder, wrapper );
+		box.appendChild( wrapper );
+		wrapper.classList.remove( 'mfp-hide' );
+		document.documentElement.classList.add( 'wpz-insta-lightbox-open' );
+
+		if ( typeof box.showModal === 'function' ) {
+			box.showModal();
+		} else {
+			box.setAttribute( 'open', '' );
+		}
+
+		const swiperEl = wrapper.querySelector( ':scope > .swiper' );
+
+		if ( ! swiperEl ) {
+			return;
+		}
+
+		const all    = slides( swiperEl );
+		const target = all.filter( function( slide ) {
+			return slide.getAttribute( 'data-uid' ) === String( mediaId );
+		} )[ 0 ] || all[ 0 ];
+
+		if ( swiperEl.swiper ) {
+			swiperEl.swiper.update();
+			swiperEl.swiper.slideTo( Math.max( 0, all.indexOf( target ) ), 0 );
+		}
+
+		// Album carousels were set up while hidden, so let them measure themselves now.
+		Array.prototype.forEach.call( wrapper.querySelectorAll( '.image-wrapper > .swiper' ), function( nested ) {
+			if ( nested.swiper ) {
+				nested.swiper.update();
+			}
+		} );
+
+		if ( target ) {
+			const video = target.querySelector( 'video' );
+
+			if ( video ) {
+				const played = video.play();
+
+				if ( played && typeof played.catch === 'function' ) {
+					played.catch( function() {} );
+				}
+			}
+
+			if ( window.jQuery ) {
+				window.jQuery( document ).trigger( 'wpz-insta:lightbox-slide', [ window.jQuery( target ) ] );
+			}
+		}
+	}
+
+	function close() {
+		if ( ! dialog ) {
+			return;
+		}
+
+		if ( dialog.open && typeof dialog.close === 'function' ) {
+			dialog.close();
+		} else {
+			dialog.removeAttribute( 'open' );
+			restore();
+		}
+	}
+
+	// Put the lightbox markup back next to its feed.
+	function restore() {
+		if ( ! wrapper ) {
+			return;
+		}
+
+		Array.prototype.forEach.call( wrapper.querySelectorAll( 'video' ), function( video ) {
+			video.pause();
+			video.currentTime = 0;
+		} );
+
+		wrapper.classList.add( 'mfp-hide' );
+
+		if ( placeholder && placeholder.parentNode ) {
+			placeholder.parentNode.insertBefore( wrapper, placeholder );
+			placeholder.parentNode.removeChild( placeholder );
+		}
+
+		wrapper     = null;
+		placeholder = null;
+		document.documentElement.classList.remove( 'wpz-insta-lightbox-open' );
+	}
+
+	// The lightbox markup of the feed a link belongs to.
+	function findWrapper( link ) {
+		const scopes = [ link.closest( '.widget' ), link.closest( '.zoom-instagram' ) ];
+		const items  = link.closest( '.zoom-instagram-widget__items' );
+
+		if ( items && items.parentNode && items.parentNode.parentNode ) {
+			scopes.push( items.parentNode.parentNode );
+		}
+
+		for ( let i = 0; i < scopes.length; i++ ) {
+			const found = scopes[ i ] ? scopes[ i ].querySelector( '.wpz-insta-lightbox-wrapper' ) : null;
+
+			if ( found && found.querySelector( '.swiper-slide' ) ) {
+				return found;
+			}
+		}
+
+		return null;
+	}
+
+	// One delegated handler, so posts added later (load more) open the lightbox too.
+	document.addEventListener( 'click', function( event ) {
+		if ( event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey ) {
+			return;
+		}
+
+		const link = event.target.closest ? event.target.closest( '.zoom-instagram-link' ) : null;
+
+		if ( ! link || ! link.closest( '.zoom-instagram-widget__items[data-lightbox="1"]' ) ) {
+			return;
+		}
+
+		const lightboxWrapper = findWrapper( link );
+
+		if ( ! lightboxWrapper ) {
+			return;
+		}
+
+		event.preventDefault();
+		open( lightboxWrapper, link.getAttribute( 'data-mfp-src' ) );
+	} );
+
+	window.wpzInstaLightbox = { open: open, close: close };
+} )();
 
 // Lightbox images are printed with `data-src` and loaded once they come into view:
 // when the lightbox opens, and as the visitor moves through the slides.
@@ -341,41 +524,7 @@ window.wpzInstaLightboxCloseMarkup = '<button title="%title%" type="button" clas
 								
 								if ($newLinks.length > 0) {
 									
-									$newLinks.magnificPopup({
-										items: {
-											type: 'inline',
-											src: $lightboxWrapper.closest('.wpz-insta-lightbox-wrapper')
-										},
-										closeBtnInside: false,
-										mainClass: 'wpzoom-lightbox',
-										closeMarkup: window.wpzInstaLightboxCloseMarkup,
-										midClick: true,
-										callbacks: {
-											open: function() {
-												const magnificPopup = $.magnificPopup.instance,
-												currentElement = magnificPopup.st.el,
-												$thisSwiper = this.content.find('> .swiper').get(0).swiper;
-												
-												
-												if (this.content.find('> .swiper > .swiper-wrapper > .swiper-slide[data-uid="' + currentElement.data('mfp-src') + '"] video')) {
-													this.content.find('> .swiper > .swiper-wrapper > .swiper-slide[data-uid="' + currentElement.data('mfp-src') + '"] video').trigger('play');
-												}
-												if (typeof $thisSwiper === 'object') {
-													const targetSlideIndex = this.content.find('> .swiper > .swiper-wrapper > .swiper-slide[data-uid="' + currentElement.data('mfp-src') + '"]').index();
-													$thisSwiper.slideTo(targetSlideIndex);
-												}
-											},
-											afterClose: function() {
-												// Destroy swiper videos
-												$swiperContainer.find('video').each(function() {
-													this.pause();
-													this.currentTime = 0;
-												});
-											}
-										}
-									});
 									
-									$newLinks.addClass('magnific-active');
 								}
 							} else {
 								$itemsContainer.zoomLightbox();
@@ -570,44 +719,6 @@ window.wpzInstaLightboxCloseMarkup = '<button title="%title%" type="button" clas
 						galleryTrigger = $( this );
 					}
 					
-					// Use the same approach as block.js - call magnificPopup directly on the links
-					galleryTrigger.find( '.zoom-instagram-link' ).magnificPopup( {
-						items: {
-							type: 'inline',
-							src: $swipe_el.closest( '.wpz-insta-lightbox-wrapper' )
-						},
-						closeBtnInside: false,
-						mainClass: 'wpzoom-lightbox',
-						closeMarkup: window.wpzInstaLightboxCloseMarkup,
-						midClick: true,
-						callbacks: {
-							open: function () {
-								const magnificPopup = $.magnificPopup.instance,
-								currentElement = magnificPopup.st.el,
-								$thisSwiper = this.content.find( '> .swiper' ).get(0).swiper;
-								
-								if( this.content.find( '> .swiper > .swiper-wrapper > .swiper-slide[data-uid="' + currentElement.data( 'mfp-src' ) + '"] video' ) ) {
-									this.content.find( '> .swiper > .swiper-wrapper > .swiper-slide[data-uid="' + currentElement.data( 'mfp-src' ) + '"] video' ).trigger('play');
-								}
-								if ( typeof $thisSwiper === 'object' ) {
-									$thisSwiper.slideTo(
-										this.content.find( '> .swiper > .swiper-wrapper > .swiper-slide[data-uid="' + currentElement.data( 'mfp-src' ) + '"]' ).index()
-									);
-								}
-								
-								const $currentSlide = this.content.find( '> .swiper > .swiper-wrapper > .swiper-slide[data-uid="' + currentElement.data( 'mfp-src' ) + '"]' );
-								$( document ).trigger( 'wpz-insta:lightbox-slide', [ $currentSlide ] );
-							},
-							afterClose: function () {
-								// Destroy swiper videos
-								$swipe_el.find( 'video' ).each( function () {
-									this.pause();
-									this.currentTime = 0;
-								} );
-							}
-						}
-					} );
-					galleryTrigger.find( '.zoom-instagram-link' ).addClass( 'magnific-active' );
 				}
 			} );
 		};

@@ -76,33 +76,6 @@
 					} );
 				} );
 
-				$( this ).find( '.zoom-instagram-link' ).magnificPopup( {
-					items: {
-						type: 'inline',
-						src: $( this ).parent().parent().find( '.wpz-insta-lightbox-wrapper' )
-					},
-					closeBtnInside: false,
-					mainClass: 'wpzoom-lightbox',
-					closeMarkup: window.wpzInstaLightboxCloseMarkup,
-					midClick: true,
-					callbacks: {
-						open: function () {
-							const magnificPopup = $.magnificPopup.instance,
-							currentElement = magnificPopup.st.el,
-							$thisSwiper = this.content.find( '> .swiper' ).get(0).swiper;							
-
-							if( this.content.find( '> .swiper > .swiper-wrapper > .swiper-slide[data-uid="' + currentElement.data( 'mfp-src' ) + '"] video' ) ) {
-								this.content.find( '> .swiper > .swiper-wrapper > .swiper-slide[data-uid="' + currentElement.data( 'mfp-src' ) + '"] video' ).trigger('play');
-							}
-							if ( typeof $thisSwiper === 'object' ) {
-								$thisSwiper.slideTo(
-									this.content.find( '> .swiper > .swiper-wrapper > .swiper-slide[data-uid="' + currentElement.data( 'mfp-src' ) + '"]' ).index()
-								);
-							}
-						}
-					}
-				} );
-				$( this ).find( '.zoom-instagram-link' ).addClass( 'magnific-active' );
 			}
 		} );
 	};

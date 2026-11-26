@@ -5,7 +5,7 @@ Tags: instagram, instagram feed, instagram gallery, instagram photos, instagram 
 Requires at least: 6.5
 Tested up to: 7.2
 Requires PHP: 7.4
-Stable tag: 2.5.0
+Stable tag: 2.5.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -228,6 +228,10 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 
 
 == Changelog ==
+
+= 2.5.1 =
+* Changed: The lightbox no longer uses the Magnific Popup library. It now opens in the browser's native dialog, with the same look, Escape and click-outside to close, and one less script to load
+* Note: If your theme relied on the copy of Magnific Popup that this plugin used to load, it now needs to load its own
 
 = 2.5.0 =
 * New: Masonry and carousel layouts, highlighted posts, the Load More button, likes and comments counts, the verified badge, account stats and responsive columns are now available in the free version
